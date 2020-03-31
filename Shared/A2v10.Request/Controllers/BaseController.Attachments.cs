@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -20,7 +20,7 @@ namespace A2v10.Request
 
 	public class AttachmentUpdateInfo
 	{
-		public Int32 TenantId { get; set; }
+		public Int32? TenantId { get; set; }
 		public Int64 UserId { get; set; }
 		public String Key { get; set; }
 		public Object Id { get; set; }
@@ -94,12 +94,12 @@ namespace A2v10.Request
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
 			AttachmentUpdateInfo ii = new AttachmentUpdateInfo
 			{
-				// TODO: is not tenantId ???
-				TenantId = tenantId,
 				UserId = userId,
 				Id = rm._id,
 				Key = key
 			};
+			if (_host.IsMultiTenant)
+				ii.TenantId = tenantId;
 			var retList = new List<Object>();
 			for (Int32 i = 0; i < files.Count; i++)
 			{
