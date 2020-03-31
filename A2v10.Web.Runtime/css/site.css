@@ -3019,8 +3019,6 @@ table.data-grid tr.row-details td.details-cell {
 }
 table.data-grid tr.row-details .details-wrapper {
   padding: 4px 6px;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
 }
 table.data-grid td.danger,
 table.data-grid td.error,

@@ -125,12 +125,29 @@ namespace A2v10.Request
 				msg.Headers.Add(hp.Key, Resolve(hp.Value.ToString(), data));
 		}
 
+		ExpandoObject ResolveBodyObject(ExpandoObject obj, ExpandoObject data)
+		{
+			var retVal = new ExpandoObject();
+			foreach (var d in obj as IDictionary<String, Object>)
+			{
+				if (d.Value is String strVal)
+					retVal.Set(d.Key, Resolve(strVal, data));
+				else if (d.Value is ExpandoObject eoVal)
+					retVal.Set(d.Key, ResolveBodyObject(eoVal, data));
+				else
+					retVal.Set(d.Key, d.Value);
+			}
+			return retVal;
+		}
+
 		String ResolveBody(Object body, ExpandoObject data)
 		{
 			if (body is String strBody)
 				return Resolve(strBody, data);
-			else if (body is ExpandoObject eoBody)
-				return JsonConvert.SerializeObject(eoBody);
+			else if (body is ExpandoObject eoBody) {
+				var resolvedBody = ResolveBodyObject(eoBody, data);
+				return JsonConvert.SerializeObject(resolvedBody);
+			}
 			throw new InvalidOperationException($"Invalid body type for CallApi ({body.GetType().Name})");
 		}
 

@@ -166,8 +166,9 @@ async function getWeather() {
 async function testPost() {
 	const ctrl = this.$ctrl;
 	try {
-		let result = await ctrl.$invoke('testPost', { City: 'London', Body: {x:1, y:2, s:'i am the string'} }, null, { catchError: true });
+		let result = await ctrl.$invoke('testPost', { Body: {visitId:108, donorId:401} }, null, { catchError: true });
 		console.dir(result);
+		alert(result.instanceId);
 	}
 	catch (err) {
 		alert('1');

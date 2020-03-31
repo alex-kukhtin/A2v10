@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7616",
+	"$version": "10.0.7646",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -11,6 +11,8 @@
 		},
 		"model": { "type": "string" },
 		"schema": { "type": "string" },
+		"allowAddress": { "type": "string" },
+		"allowOrigin": { "type,": "string" },
 		"actions": {
 			"type": "object",
 			"patternProperties": {
@@ -113,7 +115,7 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"enum": [ "sql", "clr", "script" ]
+							"enum": [ "sql", "clr", "script", "xml", "startProcess", "resumeProcess", "callApi", "file" ]
 						},
 						"schema": { "type": "string" },
 						"source": { "type": "string" },
@@ -128,7 +130,15 @@
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
 						},
-						"async": { "type": "boolean" }
+						"async": { "type": "boolean" },
+						"method": {
+							"type": "string",
+							"enum": [ "get", "post", "put", "delete" ]
+						},
+						"authorize": { "type": "boolean" },
+						"allowOrigin": { "type": "string" },
+						"errorCode": { "type": "number" },
+						"parameters": { "type": "object" }
 					},
 					"additionalProperties": false
 				}
@@ -162,11 +172,16 @@
 						"model": { "type": "string" },
 						"type": {
 							"type": "string",
-							"enum": [ "parse" ]
+							"enum": [ "parse", "clr" ]
 						},
 						"parse": {
 							"type": "string",
 							"enum": [ "excel" ]
+						},
+						"async": { "type": "boolean" },
+						"clrType": {
+							"type": "string",
+							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
 						}
 					},
 					"additionalProperties": false

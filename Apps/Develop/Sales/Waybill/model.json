@@ -117,12 +117,15 @@
 		"testPost": {
 			"type": "callApi",
 			"parameters": {
-				"url": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
+				"url": "((ProcS.url))/api/process/start",
 				"method": "post",
-				"headers": {
-					"Authorization": "bearer ((MyApi.apiKey))"
-				},
-				"body": "[[Body]]"
+				"body": {
+					"processId": "bioprocs/donorpaid",
+					"parameters": {
+						"visitId": "[[Body.visitId]]",
+						"donorId": "[[Body.donorId]]"
+					}
+				}
 			}
 		}
 	},
