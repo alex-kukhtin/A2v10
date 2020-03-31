@@ -2087,10 +2087,6 @@ pre.a2-code {
 .control-group .input-group .a2-inline {
   margin-left: 0 !important;
 }
-.control-group .input-group .ico-clear {
-  font-size: 90%;
-  margin: 0.1em;
-}
 .control-group .input-group input.fake-pwd-field {
   width: 0;
   height: 0;
@@ -2109,6 +2105,12 @@ pre.a2-code {
 }
 .control-group.lg label {
   font-size: 1rem;
+}
+.control-group.lg .input-group > a {
+  line-height: 2.4rem;
+}
+.control-group.lg .input-group > a > i.ico {
+  font-size: 17px;
 }
 .control-group.with-width .input-group {
   width: 100%;
