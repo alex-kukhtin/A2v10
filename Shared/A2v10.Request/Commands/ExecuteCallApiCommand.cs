@@ -26,8 +26,8 @@ namespace A2v10.Request
 
 		public async Task<ServerCommandResult> Execute(RequestCommand cmd, ExpandoObject dataToExec)
 		{
-			String url = Resolve(dataToExec.Get<String>("url"), dataToExec);
-			String method = dataToExec.Get<String>("method")?.ToLowerInvariant();
+			String url = Resolve(dataToExec.Get<String>("url"), dataToExec)?.ToString();
+			String method = dataToExec.Get<String>("method")?.ToString()?.ToLowerInvariant();
 			var headers = dataToExec.Get<ExpandoObject>("headers");
 			var body = dataToExec.Get<Object>("body");
 			String bodyStr = null;
@@ -60,7 +60,7 @@ namespace A2v10.Request
 		}
 
 
-		String Resolve(String source, ExpandoObject data)
+		Object Resolve(Object source, ExpandoObject data)
 		{
 			if (source == null)
 				return null;
@@ -71,8 +71,9 @@ namespace A2v10.Request
 		static Regex _envRegEx;
 		static Regex _prmRegEx;
 
-		String ResolveEnvironment(String source)
+		Object ResolveEnvironment(Object src)
 		{
+			var source = src.ToString();
 			if (source.IndexOf("((") == -1)
 				return source;
 			if (_envRegEx == null)
@@ -91,8 +92,9 @@ namespace A2v10.Request
 			return sb.ToString();
 		}
 
-		String ResolveParameters(String source, ExpandoObject data)
+		Object ResolveParameters(Object src, ExpandoObject data)
 		{
+			var source = src.ToString();
 			if (source.IndexOf("[[") == -1)
 				return source;
 			if (_prmRegEx == null)
@@ -105,6 +107,8 @@ namespace A2v10.Request
 			{
 				String key = m.Groups[1].Value;
 				var valObj = data.Eval<Object>(key, null, throwIfError:true);
+				if (ms.Count == 1 && m.Groups[0].Value == source)
+					return valObj; // single element
 				if (valObj is String valStr)
 					sb.Replace(m.Value, valStr);
 				else if (valObj is ExpandoObject valEo)
@@ -122,7 +126,7 @@ namespace A2v10.Request
 				return;
 			var d = headers as IDictionary<String, Object>;
 			foreach (var hp in d)
-				msg.Headers.Add(hp.Key, Resolve(hp.Value.ToString(), data));
+				msg.Headers.Add(hp.Key, Resolve(hp.Value.ToString(), data)?.ToString());
 		}
 
 		ExpandoObject ResolveBodyObject(ExpandoObject obj, ExpandoObject data)
@@ -143,7 +147,7 @@ namespace A2v10.Request
 		String ResolveBody(Object body, ExpandoObject data)
 		{
 			if (body is String strBody)
-				return Resolve(strBody, data);
+				return Resolve(strBody, data)?.ToString();
 			else if (body is ExpandoObject eoBody) {
 				var resolvedBody = ResolveBodyObject(eoBody, data);
 				return JsonConvert.SerializeObject(resolvedBody);
