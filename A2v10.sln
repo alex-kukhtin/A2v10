@@ -57,12 +57,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 		SqlScripts\a2v10admin.sql = SqlScripts\a2v10admin.sql
 		SqlScripts\a2v10messaging.sql = SqlScripts\a2v10messaging.sql
 		SqlScripts\a2v10meta.sql = SqlScripts\a2v10meta.sql
+		SqlScripts\a2v10platform.sql = SqlScripts\a2v10platform.sql
 		SqlScripts\a2v10security.sql = SqlScripts\a2v10security.sql
 		SqlScripts\a2v10system.sql = SqlScripts\a2v10system.sql
 		SqlScripts\a2v10test.sql = SqlScripts\a2v10test.sql
 		SqlScripts\a2v10ui.sql = SqlScripts\a2v10ui.sql
 		SqlScripts\a2v10ui_simple.sql = SqlScripts\a2v10ui_simple.sql
 		SqlScripts\a2v10workflow.sql = SqlScripts\a2v10workflow.sql
+		SqlScripts\sql.json = SqlScripts\sql.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Runtime", "Desktop\A2v10.Runtime\A2v10.Runtime.csproj", "{DCD07C48-1983-4861-9717-3A770C3C37E0}"

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7649</version>
+		<version>10.0.7650</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
@@ -21,6 +21,8 @@
 			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net461" />
 			<frameworkAssembly assemblyName="System.Activities" targetFramework="net461" />
 		</frameworkAssemblies>
+		<contentFiles>
+		</contentFiles>
 	</metadata>
 	<files>
 		<file src="bin/A2v10.Data.dll" target="lib/net461" />

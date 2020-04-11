@@ -46,11 +46,13 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_application\%40sql\platform\a2v10admin.sql" />
     <Content Include="App_application\%40sql\platform\a2v10api.sql" />
     <Content Include="App_application\%40sql\platform\a2v10messaging.sql" />
+    <Content Include="App_application\%40sql\platform\a2v10platform.sql" />
     <Content Include="App_application\%40sql\platform\a2v10security.sql" />
     <Content Include="App_application\%40sql\platform\a2v10system.sql" />
     <Content Include="App_application\%40sql\platform\a2v10ui.sql" />
@@ -78,6 +80,7 @@
     <Content Include="scripts\vue.min.js" />
     <Content Include="App_application\%40schemas\model-json-schema.json" />
     <Content Include="App_application\%40schemas\sql-json-schema.json" />
+    <Content Include="tsconfig.json" />
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -91,22 +94,27 @@
     <Content Include="css\fonts\A2v10.ttf" />
     <Content Include="css\fonts\A2v10.woff" />
     <Content Include="css\fonts\A2v10.woff2" />
-    <Content Include="App_application\tsconfig.json" />
     <Content Include="Web.config.sample" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
+      <Project>{e0577880-9b04-4a2a-b791-8fdb47caa3bc}</Project>
+      <Name>A2v10.Xaml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
       <Project>{478240ab-9772-4f70-8e31-bd0303cbf836}</Project>
       <Name>A2v10.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <TypeScriptCompile Include="App_application\%40types\platform.d.ts" />
+    <TypeScriptCompile Include="App_application\%40types\platform.d.ts">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </TypeScriptCompile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

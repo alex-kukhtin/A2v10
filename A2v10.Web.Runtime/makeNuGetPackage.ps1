@@ -9,9 +9,11 @@ if ($ConfigurationName -ne "Release") {
 
 Set-Location -Path $target;
 
+..\Tools\BuildSql\bin\Release\BuildSql.exe ..\SqlScripts
+
 $SourceScripts = @("main.js", "d3.min.js", "vue.js", "vue.min.js", "locale-*.min.js");
 $SourceStyles = @("site.css", "site.min.css");
-$SourceSql = @("a2v10system.sql", "a2v10security.sql", "a2v10messaging.sql", "a2v10ui.sql", "a2v10workflow.sql", "a2v10api.sql");
+$SourceSql = @("a2v10system.sql", "a2v10security.sql", "a2v10messaging.sql", "a2v10ui.sql", "a2v10workflow.sql", "a2v10api.sql", "a2v10platform.sql");
 $i = 0;
 
 foreach ($elem in $SourceScripts) {
@@ -40,5 +42,5 @@ Write-Host "Successfully copied client files.";
 
 Remove-item -Path "d:\NuGet.Local\*.*";
 
-&nuget.exe pack -OutputDirectory "d:\NuGet.Local";
+# nuget.exe pack -OutputDirectory "d:\NuGet.Local" -Prop Configuration=Release;
 
