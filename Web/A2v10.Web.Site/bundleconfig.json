@@ -167,46 +167,6 @@
 	},
 	*/
 	{
-		"outputFileName": "Scripts/locale-uk.min.js",
-		"inputFiles": [
-			"app/localization/locale-uk.js"
-		],
-		"minify": {
-			"enabled": false,
-			"renameLocals": false
-		}
-	},
-	{
-		"outputFileName": "Scripts/locale-ru.min.js",
-		"inputFiles": [
-			"app/localization/locale-ru.js"
-		],
-		"minify": {
-			"enabled": false,
-			"renameLocals": false
-		}
-	},
-	{
-		"outputFileName": "Scripts/locale-en.min.js",
-		"inputFiles": [
-			"app/localization/locale-en.js"
-		],
-		"minify": {
-			"enabled": false,
-			"renameLocals": false
-		}
-	},
-	{
-		"outputFileName": "Scripts/locale-de.min.js",
-		"inputFiles": [
-			"app/localization/locale-de.js"
-		],
-		"minify": {
-			"enabled": false,
-			"renameLocals": false
-		}
-	},
-	{
 		"outputFileName": "Scripts/eusign.js",
 		"inputFiles": [
 			"app/services/eusign.js"

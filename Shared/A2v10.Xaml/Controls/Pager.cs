@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -24,7 +24,7 @@ namespace A2v10.Xaml
 			if (SkipRender(context))
 				return;
 			//<a2-pager :source = "Parent.pager" />
-			var pager = new TagBuilder("a2-pager");
+			var pager = new TagBuilder("a2-pager", null, IsInGrid);
 			if (Style != PagerStyle.Default)
 				pager.AddCssClass(Style.ToString().ToLowerInvariant());
 			MergeAttributes(pager, context, MergeAttrMode.Margin);
