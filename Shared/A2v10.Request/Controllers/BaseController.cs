@@ -314,6 +314,7 @@ namespace A2v10.Request
 						{
 							String htmlText = await tr.ReadToEndAsync();
 							htmlText = htmlText.Replace("$(RootId)", rootId);
+							htmlText = _localizer.Localize(null, htmlText, false);
 							writer.Write(htmlText);
 							bRendered = true;
 						}

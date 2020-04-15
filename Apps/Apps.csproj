@@ -67,6 +67,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Develop\pos\model.json" />
+    <Content Include="Develop\Purchase\Supplier\index.view.html">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Develop\Reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <None Include="Develop\sales\document\model.json" />
@@ -407,7 +411,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Purchase\Supplier\index.view.xaml">
+    <None Include="Develop\Purchase\Supplier\index.view.xaml_">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
