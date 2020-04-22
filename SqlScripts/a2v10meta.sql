@@ -456,7 +456,7 @@ go
 ------------------------------------------------
 begin
 	set nocount on;
-	--????grant execute on schema ::a2meta to public;
+	--???grant execute on schema ::a2meta to ddladmin;
 end
 go
 
