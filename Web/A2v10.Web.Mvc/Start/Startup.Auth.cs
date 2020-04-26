@@ -45,7 +45,7 @@ namespace A2v10.Web.Mvc.Start
 				}
 			};
 
-			var originalHandler = authProvider.OnApplyRedirect;
+			//var originalHandler = authProvider.OnApplyRedirect;
 
 			authProvider.OnApplyRedirect = (context) =>
 			{
@@ -65,6 +65,7 @@ namespace A2v10.Web.Mvc.Start
 				Provider = authProvider,
 				CookieName = GetApplicationCookieName()
 			});
+
 
 			//app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 			//AntiForgeryConfig.UniqueClaimTypeIdentifier = ClaimTypes.NameIdentifier; // 

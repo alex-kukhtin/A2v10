@@ -241,6 +241,7 @@ interface IErrorInfo {
 }
 
 interface IViewModel extends IController {
+	readonly $isLoading: boolean;
 	$errorMessage(path: string): string;
 	$hasError(path: string): boolean;
 	$getErrors(severity: Severity): IErrorInfo[] | null;
