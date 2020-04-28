@@ -216,7 +216,7 @@ app.modules['std:eusign'] = function () {
 		if (!cont.length)
 			cont = euSign.CreateEmptySign(data);
 		let result = euSign.AppendSigner(signer, cert, cont);
-		let info = euSign.VerifyDataInternal(result);
+		//let info = euSign.VerifyDataInternal(result);
 		return { data: result, ownerInfo: euSign.GetPrivateKeyOwnerInfo() };
 	}
 
