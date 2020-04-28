@@ -39,6 +39,12 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		[HttpGet]
+		public Task ShowPrev(String Base, String id)
+		{
+			return _baseController.ShowPrev(Base, id, Response, SetParams);
+		}
+
+		[HttpGet]
 		public Task Export(String Base, String id)
 		{
 			return _baseController.Download(Base, id, false, Response, SetParams);
