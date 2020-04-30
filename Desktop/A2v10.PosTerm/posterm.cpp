@@ -7,6 +7,7 @@
 #include "equipmentbase.h"
 #include "fiscalprinterimpl.h"
 #include "acqterminal.h"
+#include "stringtools.h"
 
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
 
@@ -26,6 +27,16 @@ pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* 
 	return AcqTerminal::Connect(model, port, log);
 }
 
+pos_result_t PosProcessCommandA(const char* json, std::string& result)
+{
+	std::wstring wjson = A2W(json);
+	std::wstring wresult;
+	auto res = PosProcessCommand(wjson.c_str(), wresult);
+	result = W2A(wresult.c_str());
+	return res;
+}
+
+
 pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 {
 	JsonParser parser;
@@ -34,7 +45,17 @@ pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 	{
 		parser.SetTarget(&cmd);
 		parser.Parse(json);
-		return cmd.ExecuteCommand(result);
+		result = L"{\"msgid\":";
+		result.append(std::to_wstring(cmd._msgid));
+		pos_result_t res;
+		if (cmd._command == L"connect")
+			res = cmd.ExecuteConnectCommand(result);
+		else 
+			res = cmd.ExecuteCommand(result);
+		if (res == pos_result_t::_success)
+			result.append(L", \"status\":\"success\"");
+		result.append(L"}");
+		return res;
 	}
 	catch (JsonException ex) {
 		result.assign(ex.GetMessage());

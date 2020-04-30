@@ -209,7 +209,7 @@ void CFiscalPrinter_Null::OpenCashDrawer()
 }
 
 // virtual 
-void CFiscalPrinter_Null::ServiceInOut(__currency sum)
+void CFiscalPrinter_Null::ServiceInOut(__currency sum, bool bOpenCashDrawer)
 {
 	long sum_c = sum.units();
 	if (sum_c < 0)
@@ -218,6 +218,8 @@ void CFiscalPrinter_Null::ServiceInOut(__currency sum)
 		TraceINFO(L"TESTPRINTER [%s]. ServiceInOut({mode:'deposit', sum:%ld})", _id.c_str(), sum_c);
 	else
 		TraceINFO(L"TESTPRINTER [%s]. ServiceInOut({mode:'null', sum:%ld})", _id.c_str(), sum_c);
+	if (bOpenCashDrawer)
+		OpenCashDrawer();
 }
 
 // virtual 

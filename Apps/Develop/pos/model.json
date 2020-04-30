@@ -5,5 +5,13 @@
 			"view": "pos.view",
 			"template": "pos.template"
 		}
+	},
+	"commands": {
+		"createReceipt": {
+
+		},
+		"fixReceipt": {
+
+		}
 	}
 }

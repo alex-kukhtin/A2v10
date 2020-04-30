@@ -25,6 +25,7 @@ public:
 	void OpenReturnReceipt(long retNo);
 	void PrintDiscountForBill(long discountPercent, long discountSum);
 	void NullReceipt(bool bOpenCashDrawer);
+	void ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer);
 
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
 	//LONG GetLastCheckNo(DB_ID termId, bool bFromPrinter = false);

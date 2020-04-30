@@ -235,6 +235,8 @@ void CFiscalPrinter_Datecs3141::Beep()
 // virtual 
 void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 {
+	CancelReceiptPrinter();
+
 	TraceINFO(L"DATECS [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
@@ -298,8 +300,8 @@ void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 				_payModeCard = L'0' + i;
 				TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
 				std::string flags = items[1];
-				int val = 0;
-				if (scanf_s(flags.c_str(), "%02x", &val) == 1)
+				unsigned int val = 0;
+				if (sscanf_s(flags.c_str(), "%02x", &val) == 1)
 					dwCardFlags = (DWORD)val;
 				bCardSet = true;
 			}
@@ -932,7 +934,7 @@ void CFiscalPrinter_Datecs3141::ZReport()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum)
+void CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum, bool bOpenCashDrawer)
 {
 	//long inCash = -1; // %%%%%
 	int op = 1; // %%%%%
@@ -942,24 +944,19 @@ void CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum)
 		bNeg = true;
 		sum_c = -sum_c;
 	}
-	wchar_t buff[MAX_COMMAND_LEN];
-	if (bNeg)
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%d;-%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
-	else
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%d;%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
-	try {
-		CreateCommand(L"SVCINOUT", FPCMD_SVCINOUT, buff);
-		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get bill id
 
+
+	if (bNeg)
+		CreateCommandV(L"SVCINOUT", FPCMD_SVCINOUT, L"%s%d;-%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
+	else
+		CreateCommandV(L"SVCINOUT", FPCMD_SVCINOUT, L"%s%d;%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
+
+	SendCommand();
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get bill id
+
+	if (bOpenCashDrawer) {
 		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 		SendCommand();
-
-	}
-	catch (EQUIPException ex)
-	{
-		m_strError = ex.GetError();
-		return;
 	}
 }
 

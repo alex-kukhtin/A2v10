@@ -5,19 +5,6 @@
 class FiscalPrinter;
 class PosCommand;
 
-class PosConnectData : public JsonTarget
-{
-public:
-	PosConnectData()
-		: m_baud(0) {}
-	std::wstring m_port;
-	int m_baud;
-protected:
-	BEGIN_JSON_PROPS(2)
-		STRING_PROP(port, m_port)
-		INT_PROP(baud, m_baud)
-	END_JSON_PROPS()
-};
 
 typedef void (PosCommand::*PFexecute)(FiscalPrinter*, JsonTarget*, std::wstring&);
 typedef JsonTarget* (PosCommand::*PFCreateData)();
@@ -32,16 +19,19 @@ class PosCommand : public JsonTarget
 public:
 	std::wstring _command;
 	std::wstring _id;
+	int _msgid;
 
 	std::unique_ptr<JsonTarget> _data;
 
 	PosCommand();
 	pos_result_t ExecuteCommand(std::wstring& result);
+	pos_result_t ExecuteConnectCommand(std::wstring& result);
 
 protected:
-	BEGIN_JSON_PROPS(2)
+	BEGIN_JSON_PROPS(3)
 		STRING_PROP(id, _id)
 		STRING_PROP(command, _command)
+		INT_PROP(msgid, _msgid)
 	END_JSON_PROPS()
 
 	pos_result_t ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result);
@@ -54,10 +44,14 @@ protected:
 	void PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 	void HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 	void AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void Connect(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	void ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
 
 	JsonTarget* NullReceiptData();
 	JsonTarget* PrintReceiptData();
 	JsonTarget* AcquirePaymentData();
+	JsonTarget* ConnectData();
+	JsonTarget* ServiceInOutData();
 
 private:
 	static COMMAND_BIND _binded_commands[];

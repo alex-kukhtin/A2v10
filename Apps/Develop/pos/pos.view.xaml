@@ -14,10 +14,13 @@
 		</DataGrid>
 		<GridDivider Grid.Col="2" Grid.RowSpan="3"/>
 		<Flex Orientation="Vertical" Grid.Row="1" Grid.Col="3" Grid.RowSpan="2">
-			<StackPanel Orientation="Horizontal">
+			<Button Block="True" Command="{BindCmd Execute, CommandName=connect}" Size="Large">Connect to printer</Button>
+			<StackPanel Orientation="Horizontal" Margin="1rem">
 				<Button>+1</Button>
 				<Button>-1</Button>
 			</StackPanel>
+			<Button Block="True" Command="{BindCmd Execute, CommandName=xReport}" Size="Large">X-Report</Button>
+			<Button Block="True" Command="{BindCmd Execute, CommandName=serviceInOut}" Size="Large">ServiceIn</Button>
 		</Flex>
 		<StackPanel Grid.Row="3">
 			<Header>Total Sum</Header>

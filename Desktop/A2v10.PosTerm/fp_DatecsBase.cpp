@@ -166,7 +166,7 @@ void CFiscalPrinter_DatecsBase::CreateCommand(const wchar_t* name, BYTE cmd, con
 {
 	TraceINFO(L"  %s\tSND:0x%X %s", name, (int)cmd, strCmd);
 	std::string cmdA = W2A(strCmd);
-	CreateCommandB(cmd, (BYTE*)cmdA.c_str(), (BYTE)cmdA.size());
+	CreateCommandB(cmd, (BYTE*)cmdA.c_str(), (BYTE)cmdA.length() - 1 /* without \0! */);
 }
 
 void CFiscalPrinter_DatecsBase::CreateCommandB(BYTE cmd, BYTE* data, BYTE len)
@@ -243,7 +243,7 @@ void CFiscalPrinter_DatecsBase::SendCommand(bool bResend /*= true*/)
 			m_rcvBuffer[m_rcvBytes++] = buff;
 	}
 
-	TraceERROR(L"  \tReceive bytes. count=%ld, bytes=%s", (int)m_rcvBytes, (const wchar_t*)ReceiveBuffer().c_str());
+	//TraceERROR(L"  \tReceive bytes. count=%ld, bytes=%s", (int)m_rcvBytes, (const wchar_t*)ReceiveBuffer().c_str());
 
 	if (m_rcvBytes == 0) {
 		// repeat again
@@ -291,11 +291,13 @@ std::wstring CFiscalPrinter_DatecsBase::GetLastErrorS()
 void CFiscalPrinter_DatecsBase::ThrowLastError()
 {
 	std::wstring err = GetLastErrorS();
+	TraceERROR(L"DATECS [%s]. ERROR({message='%s'})", _id.c_str(), err.c_str());
 	throw EQUIPException(err.c_str());
 }
 
 void CFiscalPrinter_DatecsBase::ThrowCommonError()
 {
+	TraceERROR(L"DATECS [%s]. ERROR({message='COMMON ERROR'})", _id.c_str());
 	throw EQUIPException(IDP_FP_ERROR);
 }
 
@@ -317,7 +319,7 @@ bool CFiscalPrinter_DatecsBase::ParseRcv()
 	m_bEndOfTape = false;
 	if (m_rcvBytes == 0)
 		return false;
-	TraceINFO(L"  \tRCV:%s", ReceiveBuffer().c_str());
+	//TraceINFO(L"  \tRCV:%s", ReceiveBuffer().c_str());
 	if (m_rcvBuffer[0] != 0x01)
 		return false;
 	int len = (int)m_rcvBuffer[1] - 0x20;

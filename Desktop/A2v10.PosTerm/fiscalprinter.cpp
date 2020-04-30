@@ -202,3 +202,12 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 
 	// Close Check
 }
+
+
+void FiscalPrinter::ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer)
+{
+	if (bOut)
+		_impl->ServiceInOut(-((long) amount), bOpenCashDrawer);
+	else
+		_impl->ServiceInOut(amount, bOpenCashDrawer);
+}

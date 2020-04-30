@@ -12,12 +12,14 @@
 	"externally_connectable": {
 		"matches": [
 			"*://*.a2start.com/*",
+			"*://localhost/*",
 			"*://thishost/*"
 		]
 	},
 	"background": {
 		"matches": [
 			"*://*.a2start.com/*",
+			"*://localhost/*",
 			"*://thishost/*"
 		],
 		"scripts": [ "background.js" ],

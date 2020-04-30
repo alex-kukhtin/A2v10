@@ -82,6 +82,8 @@
     <None Include="Develop\sql.json" />
     <TypeScriptCompile Include="Develop\document\commondoc.d.ts" />
     <TypeScriptCompile Include="Develop\document\common2.ts" />
+    <TypeScriptCompile Include="Develop\pos\posmodule.d.ts" />
+    <TypeScriptCompile Include="Develop\pos\posterm.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="Develop\dashboard\homepage.template.box.js" />
     <Content Include="Develop\pos\pos.template.js" />

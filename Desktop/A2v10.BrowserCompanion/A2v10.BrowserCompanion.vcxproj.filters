@@ -27,7 +27,6 @@
     <None Include="ChromeExtension\background.js">
       <Filter>ChromeExtension</Filter>
     </None>
-    <None Include="ChromeExtension\content.js" />
     <None Include="ChromeExtension\manifest.json" />
   </ItemGroup>
   <ItemGroup>

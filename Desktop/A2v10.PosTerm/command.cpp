@@ -14,12 +14,14 @@ const size_t CMD_MAX_LEN = 64;
 //static 
 PosCommand::COMMAND_BIND PosCommand::_binded_commands[] = 
 {
-	{L"nullReceipt",    &PosCommand::NullReceipt, &PosCommand::NullReceiptData},
-	{L"xReport",        &PosCommand::XReport,     nullptr},
-	{L"zReport",        &PosCommand::ZReport,     nullptr},
-	{L"printReceipt",   &PosCommand::PrintReceipt, &PosCommand::PrintReceiptData},
+	{L"nullReceipt",    &PosCommand::NullReceipt,    &PosCommand::NullReceiptData},
+	{L"xReport",        &PosCommand::XReport,        nullptr},
+	{L"zReport",        &PosCommand::ZReport,        nullptr},
+	{L"printReceipt",   &PosCommand::PrintReceipt,   &PosCommand::PrintReceiptData},
 	{L"hasAcqTerminal", &PosCommand::HasAcqTerminal, nullptr},
 	{L"acquirePayment", &PosCommand::AcquirePayment, &PosCommand::AcquirePaymentData},
+	{L"serviceInOut",   &PosCommand::ServiceInOut,   &PosCommand::ServiceInOutData},
+	{L"connect",        &PosCommand::Connect,        &PosCommand::ConnectData},
 	{nullptr, nullptr}
 };
 
@@ -29,11 +31,15 @@ PosCommand::PosCommand()
 
 pos_result_t PosCommand::ExecuteCommand(std::wstring& result)
 {
-	result.clear();
 	FiscalPrinter* pPrinter = FiscalPrinter::FindPrinter(_id.c_str());
 	if (pPrinter == nullptr)
 		return pos_result_t::_device_not_found;
 	return ExecuteCommandInt(pPrinter, result);
+}
+
+pos_result_t PosCommand::ExecuteConnectCommand(std::wstring& result)
+{
+	return ExecuteCommandInt(nullptr, result);
 }
 
 pos_result_t PosCommand::ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result)
@@ -85,6 +91,16 @@ void PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wst
 	pPrinter->NullReceipt(bOpenDrawer);
 }
 
+void PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
+{
+	PosConnectData* pcd = dynamic_cast<PosConnectData*>(data);
+	pos_result_t res = PosConnectToPrinter(pcd->_model.c_str(), pcd->_port.c_str(), pcd->_baud);
+	if (res == pos_result_t::_success)
+		result += L", \"result\":\"connected\"";
+	else
+		result += L", \"result\":\"error\"";
+}
+
 JsonTarget* PosCommand::NullReceiptData()
 {
 	return new PosNullReceiptData();
@@ -100,7 +116,15 @@ JsonTarget* PosCommand::PrintReceiptData()
 	return new PosPrintReceiptData();
 }
 
+JsonTarget* PosCommand::ConnectData()
+{
+	return new PosConnectData();
+}
 
+JsonTarget* PosCommand::ServiceInOutData()
+{
+	return new PosServiceInOutData();
+}
 
 void PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
 {
@@ -116,7 +140,7 @@ void PosCommand::PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::ws
 {
 	PosPrintReceiptData* pprd = dynamic_cast<PosPrintReceiptData*>(data);
 	pPrinter->PrintReceipt(pprd);
-	result.assign(L"{\"no\": 123}");
+	result.append(L", \"no\": 123");
 }
 
 void PosCommand::HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
@@ -124,9 +148,9 @@ void PosCommand::HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data, std::
 	//TODO: acqTerm id from printer
 	bool hasTerminals = AcqTerminal::HasTerminal();
 	if (hasTerminals)
-		result.assign(L"{\"hasAcqTerminal\": true}");
+		result.append(L", \"hasAcqTerminal\": true");
 	else
-		result.assign(L"{\"hasAcqTerminal\": false}");
+		result.append(L", \"hasAcqTerminal\": false");
 }
 
 void PosCommand::AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
@@ -135,8 +159,12 @@ void PosCommand::AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data, std::
 	PosAcquirePaymentData* pacqd = dynamic_cast<PosAcquirePaymentData*>(data);
 	auto pTerminal = AcqTerminal::FindTerminal(L"");
 	pTerminal->Payment(pacqd->_amount);
-	result.assign(pTerminal->Response().c_str());
+	// TODO: get element resposnse 
+	result.append(pTerminal->Response().c_str());
 }
 
-
-
+void PosCommand::ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
+{
+	PosServiceInOutData* siod = dynamic_cast<PosServiceInOutData*>(data);
+	pPrinter->ServiceInOut(siod->_out, siod->_amount, siod->_openCashDrawer);
+}

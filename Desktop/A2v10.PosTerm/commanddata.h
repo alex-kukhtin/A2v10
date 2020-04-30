@@ -2,6 +2,22 @@
 
 #pragma once
 
+class PosConnectData : public JsonTarget
+{
+public:
+	PosConnectData()
+		: _baud(0) {}
+	std::wstring _port;
+	std::wstring _model;
+	int _baud;
+protected:
+	BEGIN_JSON_PROPS(3)
+		STRING_PROP(port, _port)
+		STRING_PROP(model, _model)
+		INT_PROP(baud, _baud)
+	END_JSON_PROPS()
+};
+
 class PosNullReceiptData : public JsonTarget
 {
 public:
@@ -67,5 +83,22 @@ public:
 protected:
 	BEGIN_JSON_PROPS(1)
 		CURRENCY_PROP(amount, _amount)
+	END_JSON_PROPS()
+};
+
+class PosServiceInOutData : public JsonTarget
+{
+public:
+	bool _out;
+	bool _openCashDrawer;
+	__currency _amount;
+
+	PosServiceInOutData()
+		: _out(false), _openCashDrawer(false) {}
+protected:
+	BEGIN_JSON_PROPS(3)
+		CURRENCY_PROP(amount, _amount)
+		BOOL_PROP(out, _out)
+		BOOL_PROP(openCashDrawer, _openCashDrawer)
 	END_JSON_PROPS()
 };

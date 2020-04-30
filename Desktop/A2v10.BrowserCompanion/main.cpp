@@ -36,15 +36,15 @@ int main(int argc, char *argv[], char *envp[])
 			buf[len._len] = '\0';
 
 			// PosProcessMessage
-			std::wstring result;
-			//PosProcessCommand(buf, result);
+			std::string result;
 
-			len._len = strnlen_s(buf, MAX_LEN);
+			if (len._len > 0)
+				PosProcessCommandA(buf, result);
+
+			len._len = result.length() - 1;
 
 			std::cout << len._b[0] << len._b[1] << len._b[2] << len._b[3];
-			for (int i = 0; i < len._len; i++) {
-				std::cout << buf[i];
-			}
+			std::cout << result.c_str();
 		}
 	}
 	PosShutDown();
