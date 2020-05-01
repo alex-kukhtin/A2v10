@@ -41,18 +41,18 @@ bool FiscalPrinter::Create(const wchar_t* model) {
 }
 
 // static 
-pos_result_t FiscalPrinter::Connect(const wchar_t* model, const wchar_t* port, int baud)
+void FiscalPrinter::Connect(const PosConnectParams& prms)
 {
 	auto printer = std::unique_ptr<FiscalPrinter>(new FiscalPrinter());
-	if (printer->Create(model)) {
-		if (printer->Open(port, baud)) {
+	if (printer->Create(prms.model)) {
+		if (printer->Open(prms.port, prms.baud)) {
 			FiscalPrinter* pPrinter = printer.release();
 			_printers.push_back(std::unique_ptr<FiscalPrinter>(pPrinter));
-			return pos_result_t::_success;
+			return;
 		}
-		return pos_result_t::_could_not_connect;
+		throw EQUIPException(L"FP2:could_not_connect");
 	}
-	return pos_result_t::_invalid_model;
+	throw EQUIPException(L"FP1:invalid model");
 }
 
 // static 

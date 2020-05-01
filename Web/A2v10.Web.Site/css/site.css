@@ -4392,7 +4392,8 @@ ul.news-list > li {
 .toastr-stack li.toast.success {
   background-color: #5db750;
 }
-.toastr-stack li.toast.danger {
+.toastr-stack li.toast.danger,
+.toastr-stack li.toast.error {
   background-color: #da533f;
 }
 .toastr-stack li.toast.info {

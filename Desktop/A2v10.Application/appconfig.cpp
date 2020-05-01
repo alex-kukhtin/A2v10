@@ -7,7 +7,7 @@
 #define DEFAULT_BAUD 9600
 
 CAppConfigFiscalPrinter::CAppConfigFiscalPrinter()
-	:m_baud(DEFAULT_BAUD)
+	:_baud(DEFAULT_BAUD)
 {
 
 }
@@ -21,15 +21,23 @@ bool CAppConfig::ConnectToPrinter()
 {
 	if (!HasFiscalPrinters())
 		return true;
+	// first printer only ???
 	CAppConfigFiscalPrinter* pPrinter = m_fiscalPrinters.begin()->get();
-	pos_result_t rc = PosConnectToPrinter(pPrinter->m_model.c_str(), pPrinter->m_port.c_str(), pPrinter->m_baud);
-	if (rc == pos_result_t::_success)
-		return true;
-	CString msg;
-	msg.Format(L"Could not connect to fiscal printer.\n{\n  model:'%s',\n  port:'%s',\n  baud:%d,\n  error:'%s'\n}", 
-		pPrinter->m_model.c_str(), pPrinter->m_port.c_str(), pPrinter->m_baud, PosErrorMessage(rc));
-	AfxMessageBox(msg);
-	return false;
+	PosConnectParams prms;
+	prms.model = pPrinter->_model.c_str();
+	prms.port = pPrinter->_port.c_str();
+	prms.baud = pPrinter->_baud;
+	prms.payModes = pPrinter->_payModes.c_str();
+	prms.taxModes = pPrinter->_taxModes.c_str();
+	bool rc = PosConnectToPrinter(prms);
+	if (!rc) {
+		CString msg;
+		msg.Format(L"Could not connect to fiscal printer.\n{\n  model:'%s',\n  port:'%s',\n  baud:%d,\n  error:'%s'\n}",
+			pPrinter->_model.c_str(), pPrinter->_port.c_str(), pPrinter->_baud, PosLastErrorMessage());
+		AfxMessageBox(msg);
+		return false;
+	}
+	return true;
 }
 
 bool CAppConfig::ConnectToAcquiringTerminal() {

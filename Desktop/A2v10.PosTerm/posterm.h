@@ -12,6 +12,21 @@ enum pos_result_t {
 	_not_connected
 };
 
+struct PosConnectParams
+{
+	const wchar_t* id;
+	const wchar_t* model;
+	const wchar_t* port;
+	int baud;
+	const wchar_t* payModes;
+	const wchar_t* taxModes;
+};
+
+struct PosResult {
+	pos_result_t result;
+	std::wstring retvalue;
+	std::wstring message;
+};
 
 class ITraceTarget abstract {
 
@@ -23,9 +38,11 @@ public:
 	virtual void Trace(TraceType type, const wchar_t* message) = 0;
 };
 
-pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result);
-pos_result_t PosConnectToPrinter(const wchar_t* model, const wchar_t* port, int baud);
-pos_result_t PosProcessCommandA(const char* json, std::string& result);
+void PosProcessCommand(const wchar_t* json, std::wstring& result);
+
+bool PosConnectToPrinter(const PosConnectParams& prms);
+
+void PosProcessCommandA(const char* json, std::string& result);
 
 
 pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* port, const wchar_t* log);
@@ -33,5 +50,6 @@ pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* 
 void PosShutDown();
 
 const wchar_t* PosErrorMessage(pos_result_t res);
+const wchar_t* PosLastErrorMessage();
 
 void PosSetTraceTarget(ITraceTarget* target);

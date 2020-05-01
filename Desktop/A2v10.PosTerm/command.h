@@ -24,8 +24,8 @@ public:
 	std::unique_ptr<JsonTarget> _data;
 
 	PosCommand();
-	pos_result_t ExecuteCommand(std::wstring& result);
-	pos_result_t ExecuteConnectCommand(std::wstring& result);
+	void ExecuteCommand(std::wstring& result);
+	void ExecuteConnectCommand(std::wstring& result);
 
 protected:
 	BEGIN_JSON_PROPS(3)
@@ -34,7 +34,7 @@ protected:
 		INT_PROP(msgid, _msgid)
 	END_JSON_PROPS()
 
-	pos_result_t ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result);
+	void ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result);
 
 	virtual JsonTarget* CreateObject(const wchar_t* szName) override;
 

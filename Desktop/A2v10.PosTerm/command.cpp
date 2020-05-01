@@ -8,6 +8,7 @@
 #include "fiscalprinter.h"
 #include "fiscalprinterImpl.h"
 #include "acqterminal.h"
+#include "errors.h"
 
 const size_t CMD_MAX_LEN = 64;
 
@@ -29,37 +30,31 @@ PosCommand::PosCommand()
 {
 }
 
-pos_result_t PosCommand::ExecuteCommand(std::wstring& result)
+void PosCommand::ExecuteCommand(std::wstring& result)
 {
 	FiscalPrinter* pPrinter = FiscalPrinter::FindPrinter(_id.c_str());
 	if (pPrinter == nullptr)
-		return pos_result_t::_device_not_found;
-	return ExecuteCommandInt(pPrinter, result);
+		throw EQUIPException(FP_E_DEVICE_NOT_FOUND);
+	ExecuteCommandInt(pPrinter, result);
 }
 
-pos_result_t PosCommand::ExecuteConnectCommand(std::wstring& result)
+void PosCommand::ExecuteConnectCommand(std::wstring& result)
 {
 	return ExecuteCommandInt(nullptr, result);
 }
 
-pos_result_t PosCommand::ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result)
+void PosCommand::ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result)
 {
 	PosCommand::COMMAND_BIND* entry = _binded_commands;
 	while (entry && entry->_name) {
 		if (_command == entry->_name) {
 			auto func = entry->_func;
-			try {
-				(this->*entry->_func)(pPrinter, _data.get(), result);
-				return pos_result_t::_success;
-			}
-			catch (EQUIPException ex) {
-				result = ex.GetError();
-				return pos_result_t::_generic_error;
-			}
+			(this->*entry->_func)(pPrinter, _data.get(), result);
+			return;
 		}
 		entry++;
 	}
-	return pos_result_t::_success;
+	throw EQUIPException(FP_E_COMMAND_NOT_FOUND);
 }
 
 // virtual 
@@ -94,11 +89,19 @@ void PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wst
 void PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result)
 {
 	PosConnectData* pcd = dynamic_cast<PosConnectData*>(data);
-	pos_result_t res = PosConnectToPrinter(pcd->_model.c_str(), pcd->_port.c_str(), pcd->_baud);
-	if (res == pos_result_t::_success)
+	PosConnectParams prms;
+	prms.model = pcd->_model.c_str();
+	prms.port = pcd->_port.c_str();
+	prms.baud = pcd->_baud;
+	throw EQUIPException(L"not implemented");
+	//prms.payModes = pcd->PayModes;
+	//prms.payModes = pcd->PayModes;
+	bool rc = PosConnectToPrinter(prms);
+	if (rc)
 		result += L", \"result\":\"connected\"";
-	else
-		result += L", \"result\":\"error\"";
+	else {
+		result.append(L", \"result\":\"error\", \"msg\":\"\"");
+	}
 }
 
 JsonTarget* PosCommand::NullReceiptData()

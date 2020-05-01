@@ -75,6 +75,9 @@
     <ClInclude Include="acqt_Printec.h">
       <Filter>Header Files\acqterminals</Filter>
     </ClInclude>
+    <ClInclude Include="errors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

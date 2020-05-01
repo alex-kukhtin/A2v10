@@ -168,6 +168,7 @@
     <ClInclude Include="acqterminal.h" />
     <ClInclude Include="acqterminalimpl.h" />
     <ClInclude Include="equipmentbase.h" />
+    <ClInclude Include="errors.h" />
     <ClInclude Include="fiscalprinter.h" />
     <ClInclude Include="fiscalprinterImpl.h" />
     <ClInclude Include="fp_Datecs3141.h" />

@@ -12,7 +12,9 @@ class FiscalPrinter
 
 public:
 	static FiscalPrinter* FindPrinter(const wchar_t* id);
-	static pos_result_t Connect(const wchar_t* model, const wchar_t* port, int baud);
+
+	static void Connect(const PosConnectParams& prms);
+
 	static void ShutDown();
 
 	bool Create(const wchar_t* model);

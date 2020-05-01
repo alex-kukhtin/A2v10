@@ -8,18 +8,29 @@
 #include "fiscalprinterimpl.h"
 #include "acqterminal.h"
 #include "stringtools.h"
+#include "errors.h"
 
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
 
+std::wstring _lastErrorMessage;
 
 void PosSetTraceTarget(ITraceTarget* target)
 {
 	EquipmentBaseImpl::SetTraceTarget(target);
 }
 
-pos_result_t PosConnectToPrinter(const wchar_t* model, const wchar_t* port, int baud)
+bool PosConnectToPrinter(const PosConnectParams& prms)
 {
-	return FiscalPrinter::Connect(model, port, baud);
+	try 
+	{
+		FiscalPrinter::Connect(prms);
+		return true;
+	}
+	catch (EQUIPException ex) 
+	{
+		_lastErrorMessage.assign(ex.GetError());
+		return false;
+	}
 }
 
 pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* port, const wchar_t* log)
@@ -27,20 +38,20 @@ pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* 
 	return AcqTerminal::Connect(model, port, log);
 }
 
-pos_result_t PosProcessCommandA(const char* json, std::string& result)
+void PosProcessCommandA(const char* json, std::string& result)
 {
 	std::wstring wjson = A2W(json);
 	std::wstring wresult;
-	auto res = PosProcessCommand(wjson.c_str(), wresult);
+	PosProcessCommand(wjson.c_str(), wresult);
 	result = W2A(wresult.c_str());
-	return res;
 }
 
 
-pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
+void PosProcessCommand(const wchar_t* json, std::wstring& result)
 {
 	JsonParser parser;
 	PosCommand cmd;
+	const wchar_t* err;
 	try 
 	{
 		parser.SetTarget(&cmd);
@@ -49,33 +60,40 @@ pos_result_t PosProcessCommand(const wchar_t* json, std::wstring& result)
 		result.append(std::to_wstring(cmd._msgid));
 		pos_result_t res;
 		if (cmd._command == L"connect")
-			res = cmd.ExecuteConnectCommand(result);
+			cmd.ExecuteConnectCommand(result);
 		else 
-			res = cmd.ExecuteCommand(result);
-		if (res == pos_result_t::_success)
-			result.append(L", \"status\":\"success\"");
-		result.append(L"}");
-		return res;
+			cmd.ExecuteCommand(result);
+		result.append(L", \"status\":\"success\"}");
+		return;
 	}
-	catch (JsonException ex) {
-		result.assign(ex.GetMessage());
-		return pos_result_t::_invalid_json;
+	catch (JsonException ex) 
+	{
+		err = L"JSON";
+		_lastErrorMessage.assign(ex.GetMessage());
 	}
 	catch (EQUIPException ex) {
-		result.assign(ex.GetError());
-		return pos_result_t::_device_error;
+		err = L"EQ";
+		_lastErrorMessage.assign(ex.GetError());
 	}
 	catch (...) {
-		result.assign(L"Unknown exception");
-		return pos_result_t::_generic_error;
+		err = L"UNK";
+		_lastErrorMessage.assign(L"Unknown exception");
 	}
-	return pos_result_t::_success;
+	EquipmentBaseImpl::TraceERROR(L"%s:%s", err, _lastErrorMessage.c_str());
+	result.append(L", \"status\":\"error\",\"msg\":\"");
+	result.append(_lastErrorMessage.c_str());
+	result.append(L"\"}");
 }
 
 void PosShutDown()
 {
 	FiscalPrinter::ShutDown();
 	AcqTerminal::ShutDown();
+}
+
+const wchar_t* PosLastErrorMessage()
+{
+	return _lastErrorMessage.c_str();
 }
 
 const wchar_t* PosErrorMessage(pos_result_t res)
@@ -96,6 +114,8 @@ const wchar_t* PosErrorMessage(pos_result_t res)
 		return L"already connected";
 	case _device_not_found:
 		return L"device not found";
+	case _device_error:
+		return L"device error";
 	}
 	return L"unknown error";
 }

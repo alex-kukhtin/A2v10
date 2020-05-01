@@ -21,8 +21,8 @@ public:
 
 public:
 	static void SetTraceTarget(ITraceTarget* target);
-	void TraceINFO(const wchar_t* info, ...);
-	void TraceERROR(const wchar_t* info, ...);
+	static void TraceINFO(const wchar_t* info, ...);
+	static void TraceERROR(const wchar_t* info, ...);
 private:
-	void Trace(ITraceTarget::TraceType type, const wchar_t* msg, va_list args);
+	static void Trace(ITraceTarget::TraceType type, const wchar_t* msg, va_list args);
 };

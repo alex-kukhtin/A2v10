@@ -5,17 +5,21 @@
 class CAppConfigFiscalPrinter : public JsonTarget
 {
 public:
-	std::wstring m_model;
-	std::wstring m_port;
-	int m_baud;
+	std::wstring _model;
+	std::wstring _port;
+	int _baud;
+	std::wstring _payModes;
+	std::wstring _taxModes;
 
 	CAppConfigFiscalPrinter();
 
 protected:
-	BEGIN_JSON_PROPS(3)
-		STRING_PROP(model, m_model)
-		STRING_PROP(port, m_port)
-		INT_PROP(baud, m_baud)
+	BEGIN_JSON_PROPS(5)
+		STRING_PROP(model, _model)
+		STRING_PROP(port, _port)
+		INT_PROP(baud, _baud)
+		STRING_PROP(payModes, _payModes)
+		STRING_PROP(taxModes, _taxModes)
 	END_JSON_PROPS()
 };
 

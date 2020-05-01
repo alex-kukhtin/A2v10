@@ -1169,7 +1169,7 @@ std::wstring CFiscalPrinter_Datecs3141::GetLastErrorS()
 		_append(s, L"Необходимо скорректировать время");
 	}
 	else if (m_dwError == 0x080B) {
-		_append(s, L"В кассе недостаточно денежных средств");
+		_append(s, L"В касі недостатньо грошових коштів");
 	}
 	else if (m_dwError == 0x070B) {
 		_append(s, L"Копия заданных чеков недоступна");

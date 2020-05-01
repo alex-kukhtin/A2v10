@@ -6,6 +6,7 @@
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 #include "stringtools.h"
+#include "errors.h"
 
 #define MAX_COMMAND_LEN 255
 
@@ -23,9 +24,6 @@ bool CFiscalPrinter_DatecsBase::IS_EMULATION() const
 {
 	return EMULATION_MODE;
 }
-
-#define IDP_FP_ERROR L"Fiscal printer error"
-#define IDP_FP_COM_GENERIC L"General COM-port error"
 
 
 CFiscalPrinter_DatecsBase::CFiscalPrinter_DatecsBase()
@@ -78,14 +76,14 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	DWORD dwError = 0;
 	if (m_hCom == INVALID_HANDLE_VALUE) {
 		dwError = ::GetLastError();
-		throw EQUIPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(FP_E_COM_ERROR);
 		return;
 	}
 	DCB dcb = { 0 };
 	dcb.DCBlength = sizeof(DCB);
 	if (!GetCommState(m_hCom, &dcb)) {
 		Close();
-		throw EQUIPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(FP_E_COM_ERROR);
 		return;
 	}
 	dcb.BaudRate = baudRate;     // set the baud rate
@@ -97,13 +95,13 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	dcb.fAbortOnError = TRUE;
 	if (!SetCommState(m_hCom, &dcb)) {
 		Close();
-		throw EQUIPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(FP_E_COM_ERROR);
 		return;
 	}
 	COMMTIMEOUTS cmto = { 0 };
 	if (!GetCommTimeouts(m_hCom, &cmto)) {
 		Close();
-		throw EQUIPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(FP_E_COM_ERROR);
 		return;
 	}
 	cmto.ReadIntervalTimeout = 300;
@@ -113,17 +111,17 @@ void CFiscalPrinter_DatecsBase::OpenComPort(const wchar_t* Port, DWORD nBaudRate
 	cmto.WriteTotalTimeoutMultiplier = 20;
 	if (!SetCommTimeouts(m_hCom, &cmto)) {
 		Close();
-		throw EQUIPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(FP_E_COM_ERROR);
 		return;
 	}
 	if (!PurgeComm(m_hCom, PURGE_RXCLEAR | PURGE_TXCLEAR)) {
 		Close();
-		throw EQUIPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(FP_E_COM_ERROR);
 		return;
 	}
 	if (!SetupComm(m_hCom, 1024, 1024)) {
 		Close();
-		throw EQUIPException(IDP_FP_COM_GENERIC);
+		throw EQUIPException(FP_E_COM_ERROR);
 		return;
 	}
 }
@@ -298,7 +296,7 @@ void CFiscalPrinter_DatecsBase::ThrowLastError()
 void CFiscalPrinter_DatecsBase::ThrowCommonError()
 {
 	TraceERROR(L"DATECS [%s]. ERROR({message='COMMON ERROR'})", _id.c_str());
-	throw EQUIPException(IDP_FP_ERROR);
+	throw EQUIPException(FP_E_GENERIC_ERROR);
 }
 
 void CFiscalPrinter_DatecsBase::IncSeq()

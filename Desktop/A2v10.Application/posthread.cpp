@@ -28,7 +28,7 @@ BEGIN_MESSAGE_MAP(CPosThreadWnd, CWinThread)
 	ON_THREAD_MESSAGE(WMI_POS_COMMAND_SEND, OnPosCommand)
 END_MESSAGE_MAP()
 
-static CString s_result;
+static std::wstring s_result;
 
 // afx_msg
 void CPosThreadWnd::OnPosCommand(WPARAM wParam, LPARAM lParam)
@@ -36,31 +36,8 @@ void CPosThreadWnd::OnPosCommand(WPARAM wParam, LPARAM lParam)
 	const wchar_t* szCommand = reinterpret_cast<const wchar_t*>(lParam);
 	// RunCommand
 	std::wstring result;
-	pos_result_t rc = PosProcessCommand(szCommand, result);
-	BOOL rcBool = rc == pos_result_t::_success ? TRUE : FALSE;
-	s_result = ProcessResult(rc, result.c_str());
-	::PostMessage(m_hFrame, WMI_POS_COMMAND_RESULT, MAKEWPARAM(wParam, rcBool), (LPARAM) (LPCWSTR) s_result);
-}
-
-CString CPosThreadWnd::ProcessResult(pos_result_t rc, const wchar_t* result)
-{
-	const wchar_t* r = result && *result ? result : L"{}";
-	CString msg(r);
-	switch (rc)
-	{
-	case _success:
-		break;
-	case _invalid_json:
-		break;
-	case _could_not_connect:
-		msg = L"{\"message\":\"Device not connected\"}";
-		break;
-	case _already_connected:
-		msg = L"{\"message\":\"Device aready connected\"}";
-		break;
-	default:
-		break;
-	}
-	return msg;
+	PosProcessCommand(szCommand, result);
+	s_result.assign(result.c_str());
+	::PostMessage(m_hFrame, WMI_POS_COMMAND_RESULT, MAKEWPARAM(wParam, TRUE), (LPARAM) (LPCWSTR) s_result.c_str());
 }
 
