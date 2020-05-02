@@ -29,7 +29,7 @@ public:
 	virtual void XReport() override;
 	virtual void ZReport() override;
 	virtual void OpenCashDrawer() override;
-	virtual void ServiceInOut(__currency sum, bool bOpenCashDrawer) override;
+	virtual SERVICE_SUM_INFO ServiceInOut(__currency sum, bool bOpenCashDrawer) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false) override;
 	virtual void PrintFiscalText(const wchar_t* szText) override;

@@ -6,7 +6,7 @@ class FiscalPrinter;
 class PosCommand;
 
 
-typedef void (PosCommand::*PFexecute)(FiscalPrinter*, JsonTarget*, std::wstring&);
+typedef std::wstring (PosCommand::*PFexecute)(FiscalPrinter*, JsonTarget*);
 typedef JsonTarget* (PosCommand::*PFCreateData)();
 
 class PosCommand : public JsonTarget
@@ -24,8 +24,8 @@ public:
 	std::unique_ptr<JsonTarget> _data;
 
 	PosCommand();
-	void ExecuteCommand(std::wstring& result);
-	void ExecuteConnectCommand(std::wstring& result);
+	std::wstring ExecuteCommand();
+	std::wstring ExecuteConnectCommand();
 
 protected:
 	BEGIN_JSON_PROPS(3)
@@ -34,18 +34,18 @@ protected:
 		INT_PROP(msgid, _msgid)
 	END_JSON_PROPS()
 
-	void ExecuteCommandInt(FiscalPrinter* pPrinter, std::wstring& result);
+	std::wstring ExecuteCommandInt(FiscalPrinter* pPrinter);
 
 	virtual JsonTarget* CreateObject(const wchar_t* szName) override;
 
-	void NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	void XReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	void ZReport(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	void PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	void HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	void AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	void Connect(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
-	void ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data, std::wstring& result);
+	std::wstring NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring XReport(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring ZReport(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring Connect(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data);
 
 	JsonTarget* NullReceiptData();
 	JsonTarget* PrintReceiptData();

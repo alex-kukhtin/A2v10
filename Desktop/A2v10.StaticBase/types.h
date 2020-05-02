@@ -20,6 +20,8 @@ union __currency {
 	operator bool() const;
 
 	long units() const;
+	std::wstring to_wstring() const;
+	static __currency from_units(long units);
 };
 
 __currency operator +(const __currency& v1, const __currency& v2);

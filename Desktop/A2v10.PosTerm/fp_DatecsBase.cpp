@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "posterm.h"
 #include "equipmentbase.h"
+#include "fiscalprinter.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 #include "stringtools.h"

@@ -78,7 +78,7 @@ public:
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = nullptr);
 	//virtual bool CloseCheck2(int sum, int ret, int get, CFiscalPrinter::PAY_MODE pm);
-	virtual void ServiceInOut(__currency sum, bool bOpenCashDrawer) = 0;
+	virtual SERVICE_SUM_INFO ServiceInOut(__currency sum, bool bOpenCashDrawer) = 0;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To);
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) = 0;
 	virtual bool CopyBill() = 0;

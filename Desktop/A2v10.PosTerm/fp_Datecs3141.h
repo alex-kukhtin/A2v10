@@ -32,7 +32,7 @@ public:
 	virtual void NullReceipt(bool bOpenCashDrawer) override;
 	virtual void XReport() override;
 	virtual void ZReport() override;
-	virtual void ServiceInOut(__currency sum, bool bOpenCashDrawer) override;
+	virtual SERVICE_SUM_INFO ServiceInOut(__currency sum, bool bOpenCashDrawer) override;
 	virtual void OpenReceipt() override;
 	virtual void OpenReturnReceipt() override;
 	virtual void Payment(PAYMENT_MODE mode, long sum) override;

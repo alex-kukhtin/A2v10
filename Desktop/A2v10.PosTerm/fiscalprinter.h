@@ -4,6 +4,13 @@ class FiscalPrinterImpl;
 class PosPrintReceiptData;
 class PosReceiptItemData;
 
+struct SERVICE_SUM_INFO {
+	__currency dayIn;
+	__currency dayOut;
+	__currency sumOnHand;
+	int no;
+};
+
 class FiscalPrinter
 {
 	std::wstring _id;
@@ -27,7 +34,7 @@ public:
 	void OpenReturnReceipt(long retNo);
 	void PrintDiscountForBill(long discountPercent, long discountSum);
 	void NullReceipt(bool bOpenCashDrawer);
-	void ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer);
+	SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer);
 
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
 	//LONG GetLastCheckNo(DB_ID termId, bool bFromPrinter = false);

@@ -33,3 +33,20 @@ long __currency::units() const
 {
 	return (long) (int64 / 100);
 }
+
+std::wstring __currency::to_wstring() const
+{
+	long units = this->units();
+	long c = units / 100;
+	long f = units % 100;
+	std::wstring result = std::to_wstring(c);
+	if (f != 0)
+		result.append(L".").append(std::to_wstring(f));
+	return result;
+}
+
+//static 
+__currency __currency::from_units(long units)
+{
+	return __currency(units * 100);
+}

@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "posterm.h"
 #include "equipmentbase.h"
+#include "fiscalprinter.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
 #include "fp_Datecs3141.h"
@@ -202,7 +203,7 @@ bool CFiscalPrinter_Datecs3141::ReportModemState()
 		// print without service document!
 		CreateCommandV(L"MODEMSTATEREP", FPCMD_MODEMSTATEREP, L"%s%s", EMPTY_PARAM, L"1;"); //1 - print report;
 		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get bill ID
+		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt ID
 	}
 	catch (EQUIPException ex)
 	{
@@ -226,9 +227,9 @@ void CFiscalPrinter_Datecs3141::Beep()
 		CreateCommand(L"FPCMD_BEEP", FPCMD_BEEP, L"000000;2;"); /*1-KEY;2-OK;3-WARN;4-ERROR*/
 		SendCommand();
 	}
-	catch (EQUIPException ex)
+	catch (EQUIPException /*ex*/)
 	{
-		// do not show error??
+		// do not show error
 	}
 }
 
@@ -934,7 +935,7 @@ void CFiscalPrinter_Datecs3141::ZReport()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum, bool bOpenCashDrawer)
+SERVICE_SUM_INFO CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum, bool bOpenCashDrawer)
 {
 	//long inCash = -1; // %%%%%
 	int op = 1; // %%%%%
@@ -952,12 +953,15 @@ void CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum, bool bOpenCashDrawe
 		CreateCommandV(L"SVCINOUT", FPCMD_SVCINOUT, L"%s%d;%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
 
 	SendCommand();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get bill id
+	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
 
 	if (bOpenCashDrawer) {
 		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 		SendCommand();
 	}
+
+	SERVICE_SUM_INFO info;
+	return info;
 }
 
 //virtual 

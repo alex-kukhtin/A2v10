@@ -58,11 +58,13 @@ void PosProcessCommand(const wchar_t* json, std::wstring& result)
 		parser.Parse(json);
 		result = L"{\"msgid\":";
 		result.append(std::to_wstring(cmd._msgid));
-		pos_result_t res;
+		std::wstring cmdresult;
 		if (cmd._command == L"connect")
-			cmd.ExecuteConnectCommand(result);
+			cmdresult = cmd.ExecuteConnectCommand();
 		else 
-			cmd.ExecuteCommand(result);
+			cmdresult = cmd.ExecuteCommand();
+		result.append(L", ");
+		result.append(cmdresult.c_str());
 		result.append(L", \"status\":\"success\"}");
 		return;
 	}

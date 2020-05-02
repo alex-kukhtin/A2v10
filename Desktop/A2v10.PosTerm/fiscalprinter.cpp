@@ -204,10 +204,10 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 }
 
 
-void FiscalPrinter::ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer)
+SERVICE_SUM_INFO FiscalPrinter::ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer)
 {
 	if (bOut)
-		_impl->ServiceInOut(-((long) amount), bOpenCashDrawer);
+		return _impl->ServiceInOut(-((long) amount), bOpenCashDrawer);
 	else
-		_impl->ServiceInOut(amount, bOpenCashDrawer);
+		return _impl->ServiceInOut(amount, bOpenCashDrawer);
 }
