@@ -174,12 +174,8 @@ std::wstring PosCommand::ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data)
 	SERVICE_SUM_INFO info = pPrinter->ServiceInOut(siod->_out, siod->_amount, siod->_openCashDrawer);
 	std::wstring result;
 	return result
-	.append(L"\"no\": ")
-	.append(std::to_wstring(info.no))
-	.append(L", \"cashOnHand\":")
-	.append(info.sumOnHand.to_wstring())
-	.append(L", \"dayIn\":")
-	.append(info.dayIn.to_wstring())
-	.append(L", \"dayOut\":")
-	.append(info.dayOut.to_wstring());
+		.append(L"\"no\": ")
+		.append(std::to_wstring(info.no))
+		.append(L", \"cashOnHand\":")
+		.append(info.sumOnHand.to_wstring());
 }

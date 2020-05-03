@@ -3,12 +3,10 @@
 	"startUrl": "/pos",
 	"fiscalPrinters": [
 		{
-			"model": "TESTPRINTER",
-			"model88": "DATECS-Krypton",
+			"model2": "TESTPRINTER",
+			"model": "DATECS-Krypton",
 			"port": "COM5",
-			"baud": 19200,
-			"payModes": "0,1",
-			"taxModes": "А,Б,Г"
+			"baud": 19200
 		}
 	],
 	"acquiringTerminals": [

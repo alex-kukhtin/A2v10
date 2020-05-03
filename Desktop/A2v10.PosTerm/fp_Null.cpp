@@ -6,6 +6,7 @@
 #include "fiscalprinter.h"
 #include "fiscalprinterimpl.h"
 #include "fp_Null.h"
+#include "errors.h"
 
 #define MAX_COMMAND_LEN 512
 
@@ -19,6 +20,13 @@ bool CFiscalPrinter_Null::IsOpen() const
 bool CFiscalPrinter_Null::IsReady() const
 {
 	return true;
+}
+
+// virtual 
+void CFiscalPrinter_Null::SetParams(const PosConnectParams& prms)
+{
+	TraceINFO(L"TESTPRINTER [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
+		_id.c_str(), prms.payModes, prms.taxModes);
 }
 
 void CFiscalPrinter_Null::AddArticle(const RECEIPT_ITEM& item)
@@ -211,10 +219,10 @@ void CFiscalPrinter_Null::OpenCashDrawer()
 }
 
 // virtual 
-SERVICE_SUM_INFO CFiscalPrinter_Null::ServiceInOut(__currency sum, bool bOpenCashDrawer)
+SERVICE_SUM_INFO CFiscalPrinter_Null::ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer)
 {
 	long sum_c = sum.units();
-	if (sum_c < 0)
+	if (bOut)
 		TraceINFO(L"TESTPRINTER [%s]. ServiceInOut({mode:'withdraw', sum:%ld})", _id.c_str(), -sum_c);
 	else if (sum_c > 0)
 		TraceINFO(L"TESTPRINTER [%s]. ServiceInOut({mode:'deposit', sum:%ld})", _id.c_str(), sum_c);
@@ -223,8 +231,6 @@ SERVICE_SUM_INFO CFiscalPrinter_Null::ServiceInOut(__currency sum, bool bOpenCas
 	if (bOpenCashDrawer)
 		OpenCashDrawer();
 	SERVICE_SUM_INFO info;
-	info.dayIn = __currency::from_units(12300);
-	info.dayOut = __currency::from_units(15500);
 	info.sumOnHand = __currency::from_units(1534);
 	info.no = 55;
 	return info;

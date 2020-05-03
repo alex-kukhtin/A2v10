@@ -46,6 +46,7 @@ void FiscalPrinter::Connect(const PosConnectParams& prms)
 	auto printer = std::unique_ptr<FiscalPrinter>(new FiscalPrinter());
 	if (printer->Create(prms.model)) {
 		if (printer->Open(prms.port, prms.baud)) {
+			printer->SetParams(prms);
 			FiscalPrinter* pPrinter = printer.release();
 			_printers.push_back(std::unique_ptr<FiscalPrinter>(pPrinter));
 			return;
@@ -62,6 +63,11 @@ void FiscalPrinter::ShutDown()
 		auto p = it->get();
 		p->Disconnect();
 	}
+}
+
+void FiscalPrinter::SetParams(const PosConnectParams& prms)
+{
+	_impl->SetParams(prms);
 }
 
 bool FiscalPrinter::Open(const wchar_t* port, int baud)
@@ -206,8 +212,5 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 
 SERVICE_SUM_INFO FiscalPrinter::ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer)
 {
-	if (bOut)
-		return _impl->ServiceInOut(-((long) amount), bOpenCashDrawer);
-	else
-		return _impl->ServiceInOut(amount, bOpenCashDrawer);
+	return _impl->ServiceInOut(bOut, amount, bOpenCashDrawer);
 }

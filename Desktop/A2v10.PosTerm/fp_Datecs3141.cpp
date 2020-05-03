@@ -8,6 +8,7 @@
 #include "fp_DatecsBase.h"
 #include "fp_Datecs3141.h"
 #include "stringtools.h"
+#include "errors.h"
 
 #define MAX_COMMAND_LEN 255
 #define MAX_NAME_LEN    75
@@ -73,19 +74,6 @@ enum {
 
 #define EMPTY_PARAM L"000000;"
 
-std::vector<std::string> _split(const std::string& str, char delim = L' ')
-{
-	std::vector<std::string> result;
-	std::size_t current, previous = 0;
-	current = str.find(delim);
-	while (current != std::string::npos) {
-		result.push_back(str.substr(previous, current - previous));
-		previous = current + 1;
-		current = str.find(delim, previous);
-	}
-	result.push_back(str.substr(previous, current - previous));
-	return result;
-}
 
 void _toUpper(std::string& s) {
 	setlocale(LC_ALL, "uk-UA");
@@ -93,9 +81,11 @@ void _toUpper(std::string& s) {
 }
 
 CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
-	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0),
-	_payModeCash(L'0'), _payModeCard(L'2')
+	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0)
 {
+	// default values. 
+	_payModeCash = L'0';
+	_payModeCard = L'1';
 }
 
 
@@ -185,7 +175,7 @@ bool CFiscalPrinter_Datecs3141::ReportByArticles()
 
 		CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"000000;0;");
 		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
+		m_nLastReceiptNo = GetPrinterLastReceiptNo(); // get receipt id
 	}
 	catch (EQUIPException ex)
 	{
@@ -198,18 +188,10 @@ bool CFiscalPrinter_Datecs3141::ReportByArticles()
 // virtual 
 bool CFiscalPrinter_Datecs3141::ReportModemState()
 {
-	try
-	{
-		// print without service document!
-		CreateCommandV(L"MODEMSTATEREP", FPCMD_MODEMSTATEREP, L"%s%s", EMPTY_PARAM, L"1;"); //1 - print report;
-		SendCommand();
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt ID
-	}
-	catch (EQUIPException ex)
-	{
-		m_strError = ex.GetError();
-		return false;
-	}
+	// print without service document!
+	CreateCommandV(L"MODEMSTATEREP", FPCMD_MODEMSTATEREP, L"%s%s", EMPTY_PARAM, L"1;"); //1 - print report;
+	SendCommand();
+	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // get receipt ID
 	return true;
 }
 
@@ -267,6 +249,31 @@ void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 		bit 1. allowed to return receipt
 		bit 7. cash change allowed
 */
+// virtual 
+void CFiscalPrinter_Datecs3141::SetParams(const PosConnectParams& prms)
+{
+	TraceINFO(L"DATECS [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
+		_id.c_str(), prms.payModes, prms.taxModes);
+	if (prms.payModes && *prms.payModes) {
+		std::wstring wpayModes = prms.payModes;
+		auto payModes = _wsplit(wpayModes, L',');
+		if (payModes.size() < 2)
+			throw EQUIPException(FP_E_INVALID_PAYMODES);
+		_payModeCash = payModes.at(0).at(0);
+		_payModeCard = payModes.at(1).at(0);
+	}
+	TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
+	TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
+
+	if (prms.taxModes && *prms.taxModes) {
+		std::wstring wtaxModes = prms.taxModes;
+		auto taxModes = _wsplit(wtaxModes, L',');
+		// 20, 7, 0, [EXCISE]
+		if (taxModes.size() < 2)
+			throw EQUIPException(FP_E_INVALID_TAXMODES);
+	}
+}
+
 
 void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 {
@@ -358,12 +365,12 @@ void CFiscalPrinter_Datecs3141::Init()
 
 	// Get status (with buffer print)
 
-	GetPrinterPayModes();
-	GetTaxRates();
+	//GetPrinterPayModes();
+	//GetTaxRates();
 	DisplayDateTime(); // customer display
 
 	m_nLastZReportNo = GetPrinterLastZReportNo();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // for status processing
+	//m_nLastReceiptNo = GetPrinterLastReceiptNo(); // for status processing
 
 	// last article
 	RECEIPT_STATUS cs = GetReceiptStatus();
@@ -375,7 +382,7 @@ void CFiscalPrinter_Datecs3141::Init()
 	}
 
 	CancelReceiptPrinter();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, false); // again
+	//m_nLastReceiptNo = GetPrinterLastReceiptNo(, false); // again
 	// CheckPrinterSession(); 24 часа Z-отчета?
 	//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
 }
@@ -689,7 +696,7 @@ bool CFiscalPrinter_Datecs3141::FillZReportInfo(ZREPORT_INFO& zri)
 int CFiscalPrinter_Datecs3141::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
-		GetPrinterLastReceiptNo(m_nLastReceiptNo, false);
+		m_nLastReceiptNo = GetPrinterLastReceiptNo();
 	return m_nLastReceiptNo;
 }
 
@@ -921,7 +928,7 @@ void CFiscalPrinter_Datecs3141::XReport()
 	TraceINFO(L"DATECS [%s]. XReport()", _id.c_str());
 	CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s1;", EMPTY_PARAM);
 	SendCommand();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
+	m_nLastReceiptNo = GetPrinterLastReceiptNo();
 }
 
 
@@ -931,36 +938,39 @@ void CFiscalPrinter_Datecs3141::ZReport()
 	TraceINFO(L"DATECS [%s]. ZReport()", _id.c_str());
 	CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s0;", EMPTY_PARAM);
 	SendCommand();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
+	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // get receipt id
 }
 
 // virtual 
-SERVICE_SUM_INFO CFiscalPrinter_Datecs3141::ServiceInOut(__currency sum, bool bOpenCashDrawer)
+SERVICE_SUM_INFO CFiscalPrinter_Datecs3141::ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer)
 {
+	TraceINFO(L"DATECS [%s]. ServiceInOut({out: %s, amount: %ld, openCashDrawer: $s})", _id.c_str(), 
+		bOut ? L"true" : L"false",
+		sum.units(), bOpenCashDrawer ? L"true" : L"false");
 	//long inCash = -1; // %%%%%
+
 	int op = 1; // %%%%%
 	long sum_c = sum.units();
-	bool bNeg = false;
-	if (sum_c < 0) {
-		bNeg = true;
-		sum_c = -sum_c;
-	}
 
-
-	if (bNeg)
+	if (bOut)
 		CreateCommandV(L"SVCINOUT", FPCMD_SVCINOUT, L"%s%d;-%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
 	else
 		CreateCommandV(L"SVCINOUT", FPCMD_SVCINOUT, L"%s%d;%d.%02d;", EMPTY_PARAM, (int)op, (int)(sum_c / 100), (int)(sum_c % 100));
 
 	SendCommand();
-	GetPrinterLastReceiptNo(m_nLastReceiptNo, true); // get receipt id
+	std::string result((char*) m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
+	auto elems = _split(result, ';');
+
+	SERVICE_SUM_INFO info;
+	info.sumOnHand = __currency::from_string(elems[1]);
+	info.no = GetPrinterLastReceiptNo();
 
 	if (bOpenCashDrawer) {
 		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 		SendCommand();
 	}
-
-	SERVICE_SUM_INFO info;
+	TraceStatus();
 	return info;
 }
 
@@ -1082,7 +1092,7 @@ long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
 	return z_no;
 }
 
-bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowStateError /*= true*/)
+long CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo()
 {
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;3;");
 	SendCommand();
@@ -1094,26 +1104,7 @@ bool CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo(long& chNo, bool bShowSt
 	if (arr.size() > 1) {
 		rcpNo = atol(arr[1].c_str());
 	}
-	return true;
-	/*
-	USES_CONVERSION;
-	CString info = A2W((char*)m_data);
-	TraceINFO(L"RCV:%s", info);
-	CString r;
-	if (!AfxExtractSubString(r, info, 1, L';'))
-		return false;
-	chNo = _ttol(r); //%%%% - 1; // выдается ТЕКУЩИЙ чек
-	if (!m_bKrypton)
-		chNo--;  // почему-то в 3141 ошибка
-	CHECK_STATUS cs = GetCheckStatus();
-	if (cs != CHS_NORMAL)
-	{
-		if (bShowStateError)
-			AfxMessageBox(L"Ошибка состояния чека.\nАннулируйте текущий чек", NULL, MB_ICONEXCLAMATION);
-		return false;
-	}
-	*/
-	return true;
+	return rcpNo;
 }
 
 // virtual 
@@ -1130,10 +1121,27 @@ static void _append(std::wstring& s, const wchar_t* szAdd)
 	s += szAdd;
 };
 
+void CFiscalPrinter_Datecs3141::TraceStatus()
+{
+	std::wstring s(L"");
+	// or or
+	if (m_status[1] & FPS1_CHK_TAPE_ENDED)
+		_append(s, L"Закончилась чековая лента");
+	else if (m_status[1] & FPS1_CHK_TAPE_ENDING)
+		_append(s, L"Заканчивается чековая лента");
+
+	// or or
+	if (m_status[1] & FPS1_CTL_TAPE_ENDING)
+		_append(s, L"Закінчується контрольна стрічка");
+	else if (m_status[1] & FPS1_CTL_TAPE_ENDED)
+		_append(s, L"Закінчилася контрольна стрічка");
+	if (s.length() > 0)
+		TraceINFO(s.c_str());
+}
+
 std::wstring CFiscalPrinter_Datecs3141::GetLastErrorS()
 {
 	std::wstring s(L"");
-
 	// или или
 	if (m_status[1] & FPS1_CHK_TAPE_ENDED)
 		_append(s, L"Закончилась чековая лента");
@@ -1193,7 +1201,6 @@ std::wstring CFiscalPrinter_Datecs3141::GetLastErrorS()
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Общая ошибка принтера: 0x%x", (int)m_dwError);
 		_append(s, buff);
 	}
-
 
 	return s;
 }

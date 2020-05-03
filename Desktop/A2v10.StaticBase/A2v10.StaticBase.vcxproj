@@ -166,6 +166,7 @@
     <ClInclude Include="jsonparser.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="staticbase.h" />
+    <ClInclude Include="strings.h" />
     <ClInclude Include="types.h" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +179,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="jsonparser.cpp" />
+    <ClCompile Include="strings.cpp" />
     <ClCompile Include="types.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

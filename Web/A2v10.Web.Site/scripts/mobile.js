@@ -4331,7 +4331,7 @@ app.modules['std:accel'] = function () {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200206-7625
+// 20200206-7653
 // components/control.js
 
 (function () {
@@ -4359,7 +4359,10 @@ app.modules['std:accel'] = function () {
 		},
 		computed: {
 			path() {
-				return this.item._path_ + '.' + this.prop;
+				if (this.item._path_)
+					return this.item._path_ + '.' + this.prop;
+				else
+					return this.prop;
 			},
 			pathToValidate() {
 				return this.itemToValidate._path_ + '.' + this.propToValidate;

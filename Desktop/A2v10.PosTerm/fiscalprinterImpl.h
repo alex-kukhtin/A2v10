@@ -3,6 +3,8 @@
 #pragma once
 
 
+struct PosConnectParams;
+
 struct RECEIPT_ITEM {
 	__int64 article;
 	const wchar_t* name;
@@ -51,6 +53,7 @@ public:
 	virtual bool IsReady() const;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) = 0;
 	virtual void Init();
+	virtual void SetParams(const PosConnectParams& prms) = 0;
 	virtual void Close();
 	virtual DWORD GetFlags();
 
@@ -78,7 +81,7 @@ public:
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = nullptr);
 	//virtual bool CloseCheck2(int sum, int ret, int get, CFiscalPrinter::PAY_MODE pm);
-	virtual SERVICE_SUM_INFO ServiceInOut(__currency sum, bool bOpenCashDrawer) = 0;
+	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) = 0;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To);
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) = 0;
 	virtual bool CopyBill() = 0;

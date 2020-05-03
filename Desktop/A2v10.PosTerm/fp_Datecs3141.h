@@ -27,12 +27,13 @@ class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
 public:
 	CFiscalPrinter_Datecs3141();
 
+	virtual void SetParams(const PosConnectParams& prms) override;
 	virtual void PrintDiagnostic();
 	virtual bool ProgramOperator(LPCWSTR Name, LPCWSTR Password);
 	virtual void NullReceipt(bool bOpenCashDrawer) override;
 	virtual void XReport() override;
 	virtual void ZReport() override;
-	virtual SERVICE_SUM_INFO ServiceInOut(__currency sum, bool bOpenCashDrawer) override;
+	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) override;
 	virtual void OpenReceipt() override;
 	virtual void OpenReturnReceipt() override;
 	virtual void Payment(PAYMENT_MODE mode, long sum) override;
@@ -88,11 +89,12 @@ protected:
 	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat);
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
 	void CancelReceiptPrinter();
-	bool GetPrinterLastReceiptNo(long& chNo, bool bShowStateError = true);
 	bool GetPrinterCheckNoForCopy(long& chNo, bool bShowStateError = true);
 	//bool GetDaySum(long src, long ix, CY& value1, CY& value2);
 private:
+	long GetPrinterLastReceiptNo();
 	long GetPrinterLastZReportNo();
 	void GetPrinterPayModes();
 	void GetTaxRates();
+	void TraceStatus();
 };

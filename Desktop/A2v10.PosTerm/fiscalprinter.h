@@ -5,10 +5,14 @@ class PosPrintReceiptData;
 class PosReceiptItemData;
 
 struct SERVICE_SUM_INFO {
-	__currency dayIn;
-	__currency dayOut;
 	__currency sumOnHand;
 	int no;
+	int flags;
+
+	SERVICE_SUM_INFO()
+		: no(0), flags(0) {
+
+	}
 };
 
 class FiscalPrinter
@@ -26,6 +30,7 @@ public:
 
 	bool Create(const wchar_t* model);
 	bool Open(const wchar_t* port, int baud);
+	void SetParams(const PosConnectParams& prms);
 	void Disconnect();
 	const wchar_t* GetLastError();
 

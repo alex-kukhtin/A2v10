@@ -188,6 +188,10 @@ bool CCefClientHandler::HandleKey(WPARAM wKey)
 	case VK_F12: 
 		::PostMessage(m_hWndFrame, WM_COMMAND, ID_SHOW_DEVTOOLS, 0L);
 		break;
+	case L'R':
+		if (GetAsyncKeyState(VK_CONTROL) < 0)
+			::PostMessage(m_hWndFrame, WM_COMMAND, ID_NAVIGATE_REFRESH, 0L);
+		break;
 	default:
 		return false;
 	}

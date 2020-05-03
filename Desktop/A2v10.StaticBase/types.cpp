@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "types.h"
 #include "jsonparser.h"
+#include "strings.h"
 
 __currency& __currency::operator=(long v)
 {
@@ -49,4 +50,19 @@ std::wstring __currency::to_wstring() const
 __currency __currency::from_units(long units)
 {
 	return __currency(units * 100);
+}
+
+__currency __currency::from_string(const std::string& units)
+{
+	auto vals = _split(units, '.');
+	if (vals.size() == 2) {
+		long c = atol(vals[0].c_str());
+		long f = atol(vals[1].c_str());
+		return __currency::from_units(c * 100 + f);
+	}
+	else if (vals.size() == 1) {
+		long c = atol(vals[0].c_str());
+		return __currency::from_units(c * 100);
+	}
+	throw 1;
 }
