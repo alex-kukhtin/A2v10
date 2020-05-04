@@ -1468,6 +1468,7 @@ header .dropdown.separate.show .btn.btn-success,
   padding: 8px 6px 8px 0;
 }
 .page.page-grid .page-content {
+  position: relative;
   grid-row: 2;
   grid-column: 1;
   overflow: auto;

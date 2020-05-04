@@ -90,6 +90,9 @@
     <ClInclude Include="consolewnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="terminal.h">
+      <Filter>Header Files\NativeFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="A2v10.Application.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="consolewnd.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="terminal.cpp">
+      <Filter>Source Files\NativeFunctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

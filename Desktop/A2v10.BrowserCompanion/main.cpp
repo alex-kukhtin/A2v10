@@ -19,6 +19,8 @@ int main(int argc, char *argv[], char *envp[])
 	} len;
 
 
+	PosCreateMonitor();
+
 	while (!std::cin.eof()) {
 		std::cin >> len._b[0] >> len._b[1] >> len._b[2] >> len._b[3];
 

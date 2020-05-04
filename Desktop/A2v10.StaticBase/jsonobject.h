@@ -8,9 +8,11 @@ class JsonObject
 public:
 	void Add(const wchar_t* name, const wchar_t* value);
 	void Add(const wchar_t* name, bool value);
+	void Add(const wchar_t* name, long value);
 	void Add(const wchar_t* name, JsonObject* value);
 
 	std::wstring ToString();
+	std::wstring Value();
 private:
 	void addName(const wchar_t* name);
 };

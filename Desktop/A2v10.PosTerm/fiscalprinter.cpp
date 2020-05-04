@@ -11,6 +11,7 @@
 #include "fp_Datecs3141.h"
 
 #include "commanddata.h"
+#include "errors.h"
 
 const size_t PRINTER_NAME_LEN = 64;
 const wchar_t* TEST_PRINTER   = L"TESTPRINTER";
@@ -51,9 +52,9 @@ void FiscalPrinter::Connect(const PosConnectParams& prms)
 			_printers.push_back(std::unique_ptr<FiscalPrinter>(pPrinter));
 			return;
 		}
-		throw EQUIPException(L"FP2:could_not_connect");
+		throw EQUIPException(FP_E_UNABLE_TO_CONNECT);
 	}
-	throw EQUIPException(L"FP1:invalid model");
+	throw EQUIPException(FP_E_INVALID_FP_MODEL);
 }
 
 // static 

@@ -7,6 +7,7 @@
 #include "callbackmap.h"
 #include "upload.h"
 #include "posterm.h"
+#include "terminal.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,6 +15,7 @@
 
 //static 
 bool CCefApplication::m_bInit = false;
+long CCefApplication::_terminalId = 0;
 
 // virtual
 CCefApplication::~CCefApplication()
@@ -102,9 +104,13 @@ void CCefApplication::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<
 	CefRefPtr<CefV8Handler> posterm = new CNativePosTermHandler();
 	CefRefPtr<CefV8Value> postermFunc = CefV8Value::CreateFunction(L"posterm", posterm);
 
+	CefRefPtr<CefV8Handler> terminal = new CNativeTerminalHandler();
+	CefRefPtr<CefV8Value> terminalFunc = CefV8Value::CreateFunction(L"terminal", terminal);
+
 	host->SetValue(L"version", str, V8_PROPERTY_ATTRIBUTE_READONLY);
 	host->SetValue(L"upload", uploadFunc, V8_PROPERTY_ATTRIBUTE_READONLY);
 	host->SetValue(L"posterm", postermFunc, V8_PROPERTY_ATTRIBUTE_READONLY);
+	host->SetValue(L"terminal", terminalFunc, V8_PROPERTY_ATTRIBUTE_READONLY);
 	global->SetValue(L"cefHost", host, V8_PROPERTY_ATTRIBUTE_READONLY);
 }
 
@@ -125,11 +131,19 @@ bool CCefApplication::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 
 	// RESULT from UI thread
 	CallbackMap* pMap = CallbackMap::Current();
-	if (wcsncmp(message->GetName().c_str(), L"pos_result", 32) == 0) {
+	const wchar_t* msgname = message->GetName().c_str();
+	if (wcsncmp(msgname, L"pos_result", 32) == 0) {
 		CefRefPtr<CefListValue> args = message->GetArgumentList();
 		auto argList = message->GetArgumentList();
 		int wParam = argList->GetInt(0);
 		pMap->Process(wParam, argList->GetString(1).c_str());
+		return true;
+	}
+	else if (wcsncmp(msgname, L"pos_termid", 32) == 0) {
+		CefRefPtr<CefListValue> args = message->GetArgumentList();
+		auto argList = message->GetArgumentList();
+		long termId = argList->GetInt(0);
+		CCefApplication::_terminalId = termId;
 		return true;
 	}
 	return false;

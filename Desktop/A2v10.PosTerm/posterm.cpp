@@ -1,3 +1,4 @@
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
 #include "framework.h"
@@ -13,6 +14,7 @@
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
 
 std::wstring _lastErrorMessage;
+long _lastMsgId = -1;
 
 void PosSetTraceTarget(ITraceTarget* target)
 {
@@ -21,16 +23,14 @@ void PosSetTraceTarget(ITraceTarget* target)
 
 bool PosConnectToPrinter(const PosConnectParams& prms)
 {
-	try 
-	{
+	try {
 		FiscalPrinter::Connect(prms);
 		return true;
 	}
-	catch (EQUIPException ex) 
-	{
+	catch (EQUIPException ex) {
 		_lastErrorMessage.assign(ex.GetError());
-		return false;
 	}
+	return false;
 }
 
 pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* port, const wchar_t* log)
@@ -56,6 +56,9 @@ void PosProcessCommand(const wchar_t* json, std::wstring& result)
 	{
 		parser.SetTarget(&cmd);
 		parser.Parse(json);
+		if (cmd._msgid == _lastMsgId)
+			return; //
+		_lastMsgId = cmd._msgid;
 		result = L"{\"msgid\":";
 		result.append(std::to_wstring(cmd._msgid));
 		std::wstring cmdresult;

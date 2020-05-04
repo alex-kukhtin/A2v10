@@ -39,6 +39,7 @@ BEGIN_MESSAGE_MAP(CCefView, CView)
 	ON_WM_DESTROY()
 	ON_WM_SETFOCUS()
 	ON_MESSAGE(WMI_POS_COMMAND_RESULT, OnPosCommandResult)
+	//ON_MESSAGE(WMI_POS_SET_TERMINAL, OnPosSetTerminal)
 END_MESSAGE_MAP()
 
 CCefView::CCefView()
@@ -208,9 +209,18 @@ LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
+void CCefView::SetTerminalId(long terminalId)
+{
+	CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create(L"pos_termid");
+	CefRefPtr<CefListValue> args = msg->GetArgumentList();
+	args->SetInt(0, terminalId);
+	m_browser->GetMainFrame()->SendProcessMessage(PID_RENDERER, msg);
+}
+
 HWND CCefView::OnBrowserCreated(CefRefPtr<CefBrowser> browser)
 {
 	m_browser = browser;
+	SetTerminalId(theApp._terminalId);
 	return ::GetParent(GetSafeHwnd());
 }
 

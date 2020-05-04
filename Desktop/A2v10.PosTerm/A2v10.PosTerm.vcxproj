@@ -191,6 +191,7 @@
     <ClCompile Include="fp_Datecs3141.cpp" />
     <ClCompile Include="fp_DatecsBase.cpp" />
     <ClCompile Include="fp_Null.cpp" />
+    <ClCompile Include="monitor.cpp" />
     <ClCompile Include="posterm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

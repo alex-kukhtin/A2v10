@@ -122,5 +122,8 @@
     <ClCompile Include="acqt_Printec.cpp">
       <Filter>Source Files\acqterminals</Filter>
     </ClCompile>
+    <ClCompile Include="monitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

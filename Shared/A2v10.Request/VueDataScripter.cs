@@ -408,10 +408,12 @@ const vm = new DataModelController({
 
 				if (moduleText.Contains("define([\"require\", \"exports\"]"))
 				{
-					sb.Append("app.modules['").Append(moduleName).Append("'] = function() {return ")
+					sb.Append($"if (app.modules['{moduleName}'] == undefined) {{")
+					.AppendLine()
+					.Append($"app.modules['{moduleName}'] = function() {{return ")
 					.AppendLine(Localize(moduleText))
 					.AppendLine()
-					.AppendLine("};");
+					.AppendLine("}};");
 				}
 				else
 				{

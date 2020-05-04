@@ -1,5 +1,3 @@
-
-
 // Copyright © 2020 Alex Kukhtin. All rights reserved.
 
 #include "stdafx.h"

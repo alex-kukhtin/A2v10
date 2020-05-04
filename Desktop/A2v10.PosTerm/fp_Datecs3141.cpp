@@ -944,10 +944,8 @@ void CFiscalPrinter_Datecs3141::ZReport()
 // virtual 
 SERVICE_SUM_INFO CFiscalPrinter_Datecs3141::ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer)
 {
-	TraceINFO(L"DATECS [%s]. ServiceInOut({out: %s, amount: %ld, openCashDrawer: $s})", _id.c_str(), 
-		bOut ? L"true" : L"false",
-		sum.units(), bOpenCashDrawer ? L"true" : L"false");
-	//long inCash = -1; // %%%%%
+	TraceINFO(L"DATECS [%s]. ServiceInOut({out: %s, amount: %ld, openCashDrawer: %s})", _id.c_str(),
+		bool2string(bOut), sum.units(), bool2string(bOpenCashDrawer)); 
 
 	int op = 1; // %%%%%
 	long sum_c = sum.units();
@@ -964,7 +962,8 @@ SERVICE_SUM_INFO CFiscalPrinter_Datecs3141::ServiceInOut(bool bOut, __currency s
 
 	SERVICE_SUM_INFO info;
 	info.sumOnHand = __currency::from_string(elems[1]);
-	info.no = GetPrinterLastReceiptNo();
+	if (sum.int64 != 0)
+		info.no = GetPrinterLastReceiptNo();
 
 	if (bOpenCashDrawer) {
 		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);

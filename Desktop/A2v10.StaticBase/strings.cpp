@@ -29,3 +29,8 @@ std::vector<std::wstring> _wsplit(const std::wstring& str, wchar_t delim /*= L' 
 	result.push_back(str.substr(previous, current - previous));
 	return result;
 }
+
+const wchar_t* bool2string(bool v)
+{
+	return v ? L"true" : L"false";
+}

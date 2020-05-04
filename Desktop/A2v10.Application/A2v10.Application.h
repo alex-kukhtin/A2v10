@@ -28,11 +28,13 @@ public:
 	CString m_strInitialUrl;
 	CString m_strConnectionString;
 	CAppTraceTarget _traceTarget;
+	long _terminalId;
 protected:
 	CMultiDocTemplate* m_pDocTemplate;
 	DWORD m_dwPosThreadId;
 	HANDLE m_hPosThreadHandle;
 	CAppConfig* m_pAppConfig;
+
 public:
 	virtual BOOL InitInstance() override;
 	virtual int ExitInstance() override;

@@ -47,11 +47,11 @@ bool CNativePosTermHandler::Execute(const CefString& name, CefRefPtr<CefV8Value>
 	CefRefPtr<CefV8Value> fail = arguments[1];
 	CefRefPtr<CefV8Value> data = arguments[2];
 
-	//CefRefPtr<CefV8Value> global = context->GetGlobal();
-	//CefRefPtr<CefV8Value> stringify = global->GetValue(L"JSON")->GetValue(L"stringify");
-	//CefV8ValueList list;
-	//list.push_back(data);
-	//auto json = stringify->ExecuteFunction(nullptr, list);
+	CefRefPtr<CefV8Value> global = context->GetGlobal();
+	CefRefPtr<CefV8Value> stringify = global->GetValue(L"JSON")->GetValue(L"stringify");
+	CefV8ValueList list;
+	list.push_back(data);
+	CefRefPtr<CefV8Value> json = stringify->ExecuteFunction(nullptr, list);
 
 	auto cbMap = CallbackMap::Current();
 	int key = cbMap->Add(context, success, fail);
@@ -59,7 +59,7 @@ bool CNativePosTermHandler::Execute(const CefString& name, CefRefPtr<CefV8Value>
 	CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create(L"pos_src");
 	auto argList = msg->GetArgumentList();
 	argList->SetInt(0, key);
-	argList->SetString(1, data->GetStringValue());
+	argList->SetString(1, json->GetStringValue());
 	browser->GetMainFrame()->SendProcessMessage(PID_BROWSER, msg);
 
 	retval = CefV8Value::CreateBool(true);

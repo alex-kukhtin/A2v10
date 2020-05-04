@@ -10,14 +10,16 @@ public:
 	int _baud;
 	std::wstring _payModes;
 	std::wstring _taxModes;
+	int _terminal;
 
 	CAppConfigFiscalPrinter();
 
 protected:
-	BEGIN_JSON_PROPS(5)
+	BEGIN_JSON_PROPS(6)
 		STRING_PROP(model, _model)
 		STRING_PROP(port, _port)
 		INT_PROP(baud, _baud)
+		INT_PROP(terminal, _terminal)
 		STRING_PROP(payModes, _payModes)
 		STRING_PROP(taxModes, _taxModes)
 	END_JSON_PROPS()

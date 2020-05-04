@@ -6,15 +6,17 @@ class PosConnectData : public JsonTarget
 {
 public:
 	PosConnectData()
-		: _baud(0) {}
+		: _baud(0), _terminal(0) {}
 	std::wstring _port;
 	std::wstring _model;
 	int _baud;
+	int _terminal;
 protected:
-	BEGIN_JSON_PROPS(3)
+	BEGIN_JSON_PROPS(4)
 		STRING_PROP(port, _port)
 		STRING_PROP(model, _model)
 		INT_PROP(baud, _baud)
+		INT_PROP(terminal, _terminal)
 	END_JSON_PROPS()
 };
 

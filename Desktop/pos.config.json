@@ -6,7 +6,8 @@
 			"model2": "TESTPRINTER",
 			"model": "DATECS-Krypton",
 			"port": "COM5",
-			"baud": 19200
+			"baud": 19200,
+			"terminal": 112
 		}
 	],
 	"acquiringTerminals": [

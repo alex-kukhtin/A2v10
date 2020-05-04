@@ -2,12 +2,14 @@
 
 #include "stdafx.h"
 #include "appconfig.h"
+#include "posterm.h"
+#include "A2v10.Application.h"
 
 #define PROP_LENGTH 64
 #define DEFAULT_BAUD 9600
 
 CAppConfigFiscalPrinter::CAppConfigFiscalPrinter()
-	:_baud(DEFAULT_BAUD)
+	:_baud(DEFAULT_BAUD), _terminal(0)
 {
 
 }
@@ -29,6 +31,12 @@ bool CAppConfig::ConnectToPrinter()
 	prms.baud = pPrinter->_baud;
 	prms.payModes = pPrinter->_payModes.c_str();
 	prms.taxModes = pPrinter->_taxModes.c_str();
+	theApp._terminalId = pPrinter->_terminal;
+
+	if (!pPrinter->_terminal) {
+		AfxMessageBox(L"'terminal' value not specified in configuration file");
+		return false;
+	}
 	bool rc = PosConnectToPrinter(prms);
 	if (!rc) {
 		CString msg;

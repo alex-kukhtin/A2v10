@@ -218,8 +218,6 @@ namespace A2v10.Xaml
 		{
 			if (path == null)
 				throw new ArgumentNullException(nameof(path));
-			if (!path.Contains("."))
-				path = $"Root.{path}";
 			const String rootKey = "Root.";
 			if (_stackScope.Count == 0)
 			{

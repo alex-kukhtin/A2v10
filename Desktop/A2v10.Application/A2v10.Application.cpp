@@ -38,7 +38,8 @@ END_MESSAGE_MAP()
 
 CMainApp::CMainApp()
 	:m_dwPosThreadId(0), m_hPosThreadHandle(0),
-	m_pDocTemplate(nullptr), m_pAppConfig(nullptr)
+	m_pDocTemplate(nullptr), m_pAppConfig(nullptr),
+	_terminalId(0)
 {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;
@@ -172,12 +173,14 @@ bool CMainApp::StartPosThread()
 		return false;
 	if (!m_pAppConfig->ConnectToAcquiringTerminal())
 		return false;
+
 	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(CPosThreadWnd), THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, nullptr);
 	pThread->m_bAutoDelete = TRUE;
 	pThread->ResumeThread();
 
 	m_dwPosThreadId = pThread->m_nThreadID;
 	m_hPosThreadHandle = pThread->m_hThread;
+
 	return true;
 }
 

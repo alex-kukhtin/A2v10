@@ -93,15 +93,14 @@ std::wstring PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data)
 	prms.model = pcd->_model.c_str();
 	prms.port = pcd->_port.c_str();
 	prms.baud = pcd->_baud;
-	throw EQUIPException(L"not implemented");
 	//prms.payModes = pcd->PayModes;
 	//prms.payModes = pcd->PayModes;
-	bool rc = PosConnectToPrinter(prms);
-	if (rc)
-		return L"\"result\":\"connected\"";
-	else {
-		return L"\"result\":\"error\", \"msg\":\"\"";
-	}
+	FiscalPrinter::Connect(prms);
+	JsonObject js;
+	js.Add(L"model", pcd->_model.c_str());
+	js.Add(L"port", pcd->_port.c_str());
+	js.Add(L"terminal", (long) pcd->_terminal);
+	return js.Value();
 }
 
 JsonTarget* PosCommand::NullReceiptData()
@@ -172,10 +171,8 @@ std::wstring PosCommand::ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	PosServiceInOutData* siod = dynamic_cast<PosServiceInOutData*>(data);
 	SERVICE_SUM_INFO info = pPrinter->ServiceInOut(siod->_out, siod->_amount, siod->_openCashDrawer);
-	std::wstring result;
-	return result
-		.append(L"\"no\": ")
-		.append(std::to_wstring(info.no))
-		.append(L", \"cashOnHand\":")
-		.append(info.sumOnHand.to_wstring());
+	JsonObject js;
+	js.Add(L"no", (long) info.no);
+	js.Add(L"cashOnHand", info.sumOnHand.to_wstring().c_str());
+	return js.Value();
 }
