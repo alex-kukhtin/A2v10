@@ -31,7 +31,7 @@ public:
 	virtual void PrintDiagnostic();
 	virtual bool ProgramOperator(LPCWSTR Name, LPCWSTR Password);
 	virtual void NullReceipt(bool bOpenCashDrawer) override;
-	virtual void XReport() override;
+	virtual long XReport() override;
 	virtual void ZReport() override;
 	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) override;
 	virtual void OpenReceipt() override;

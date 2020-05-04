@@ -27,7 +27,7 @@ public:
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
 	virtual void NullReceipt(bool bOpenCashDrawer) override;
 	virtual bool CopyBill() override;
-	virtual void XReport() override;
+	virtual long XReport() override;
 	virtual void ZReport() override;
 	virtual void OpenCashDrawer() override;
 	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) override;

@@ -200,10 +200,10 @@ bool CFiscalPrinter_Null::FillZReportInfo(ZREPORT_INFO& zri)
 */
 
 // virtual 
-void CFiscalPrinter_Null::XReport()
+long CFiscalPrinter_Null::XReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. XReport()", _id.c_str());
-	throw EQUIPException(L"X-report error");
+	return 523;
 }
 
 // virtual 

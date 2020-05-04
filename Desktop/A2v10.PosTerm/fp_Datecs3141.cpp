@@ -923,12 +923,13 @@ void CFiscalPrinter_Datecs3141::CloseFiscal(long& chNo)
 }
 
 // virtual
-void CFiscalPrinter_Datecs3141::XReport()
+long CFiscalPrinter_Datecs3141::XReport()
 {
 	TraceINFO(L"DATECS [%s]. XReport()", _id.c_str());
 	CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s1;", EMPTY_PARAM);
 	SendCommand();
 	m_nLastReceiptNo = GetPrinterLastReceiptNo();
+	return m_nLastReceiptNo;
 }
 
 
@@ -1125,9 +1126,9 @@ void CFiscalPrinter_Datecs3141::TraceStatus()
 	std::wstring s(L"");
 	// or or
 	if (m_status[1] & FPS1_CHK_TAPE_ENDED)
-		_append(s, L"Закончилась чековая лента");
+		_append(s, L"Закінчилася чекова стрічка");
 	else if (m_status[1] & FPS1_CHK_TAPE_ENDING)
-		_append(s, L"Заканчивается чековая лента");
+		_append(s, L"Закінчується чекова стрічка");
 
 	// or or
 	if (m_status[1] & FPS1_CTL_TAPE_ENDING)

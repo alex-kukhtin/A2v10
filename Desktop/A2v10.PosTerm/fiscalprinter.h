@@ -50,7 +50,7 @@ public:
 	void PrintNonFiscalText(const wchar_t* szText);
 
 	void OpenCashDrawer();
-	void XReport();
+	long XReport();
 	void ZReport();
 
 	// customer display

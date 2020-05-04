@@ -76,16 +76,6 @@ JsonTarget* PosCommand::CreateObject(const wchar_t* szName)
 	return _data.get();
 }
 
-std::wstring PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
-{
-	PosNullReceiptData* pnrd = dynamic_cast<PosNullReceiptData*>(data);
-	bool bOpenDrawer = false;
-	if (pnrd)
-		bOpenDrawer = pnrd->m_openCashDrawer;
-	pPrinter->NullReceipt(bOpenDrawer);
-	return L"\"no\":\"112233\"";
-}
-
 std::wstring PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	PosConnectData* pcd = dynamic_cast<PosConnectData*>(data);
@@ -130,14 +120,26 @@ JsonTarget* PosCommand::ServiceInOutData()
 
 std::wstring PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data)
 {
-	pPrinter->XReport();
-	return L"\"no\":\"2233\"";
+	long no = pPrinter->XReport();
+	JsonObject json;
+	json.Add(L"no", no);
+	return json.Value();
 }
 
 std::wstring PosCommand::ZReport(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	pPrinter->ZReport();
 	return L"\"no\":\"2233\"";
+}
+
+std::wstring PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	PosNullReceiptData* pnrd = dynamic_cast<PosNullReceiptData*>(data);
+	bool bOpenDrawer = false;
+	if (pnrd)
+		bOpenDrawer = pnrd->m_openCashDrawer;
+	pPrinter->NullReceipt(bOpenDrawer);
+	return L"\"no\":\"112233\"";
 }
 
 std::wstring PosCommand::PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
@@ -151,10 +153,9 @@ std::wstring PosCommand::HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* dat
 {
 	//TODO: acqTerm id from printer
 	bool hasTerminals = AcqTerminal::HasTerminal();
-	if (hasTerminals)
-		return L"\"hasAcqTerminal\": true";
-	else
-		return L", \"hasAcqTerminal\": false";
+	JsonObject json;
+	json.Add(L"hasAcqTerminal", hasTerminals);
+	return json.Value();
 }
 
 std::wstring PosCommand::AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data)

@@ -116,9 +116,9 @@ void FiscalPrinter::OpenReturnReceipt(long retNo)
 	_impl->OpenReturnReceipt();
 }
 
-void FiscalPrinter::XReport()
+long FiscalPrinter::XReport()
 {
-	_impl->XReport();
+	return _impl->XReport();
 }
 
 void FiscalPrinter::ZReport()

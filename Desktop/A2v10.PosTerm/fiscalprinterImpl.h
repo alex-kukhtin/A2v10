@@ -63,7 +63,7 @@ public:
 
 	//virtual void SetPrinterInfo(const CFiscalPrinterInfo& info);
 	//virtual bool PrintDiagnostic();
-	virtual void XReport()  = 0;
+	virtual long XReport()  = 0;
 	virtual void ZReport() = 0;
 	virtual void NullReceipt(bool bOpenCashDrawer) = 0;
 	//virtual bool PostNullCheck(__int64 hid);
