@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191213-7599
+// 20200505-7564
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -76,7 +76,8 @@ app.modules['std:utils'] = function () {
 			sanitize,
 			splitPath,
 			capitalize,
-			maxChars
+			maxChars,
+			equalNoCase: stringEqualNoCase
 		},
 		currency: {
 			round: currencyRound,
@@ -562,6 +563,10 @@ app.modules['std:utils'] = function () {
 		if (text.length < length)
 			return text;
 		return text.substring(0, length - 1) + '\u2026' /*ellipsis*/;
+	}
+
+	function stringEqualNoCase(s1, s2) {
+		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
 	}
 
 	function textContains(text, probe) {

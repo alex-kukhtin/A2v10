@@ -174,9 +174,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191213-7599
+// 20200505-7564
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -252,7 +252,8 @@ app.modules['std:utils'] = function () {
 			sanitize,
 			splitPath,
 			capitalize,
-			maxChars
+			maxChars,
+			equalNoCase: stringEqualNoCase
 		},
 		currency: {
 			round: currencyRound,
@@ -738,6 +739,10 @@ app.modules['std:utils'] = function () {
 		if (text.length < length)
 			return text;
 		return text.substring(0, length - 1) + '\u2026' /*ellipsis*/;
+	}
+
+	function stringEqualNoCase(s1, s2) {
+		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
 	}
 
 	function textContains(text, probe) {
@@ -3839,7 +3844,7 @@ app.components['std:store'] = {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200505-7653
+// 20200505-7654
 // components/collectionview.js
 
 /*
@@ -3857,9 +3862,7 @@ TODO:
 
 	const DEFAULT_PAGE_SIZE = 20;
 
-	function eqlower(s1, s2) {
-		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
-	}
+	const eqlower = utils.text.equalNoCase;
 
 	function getModelInfoProp(src, propName) {
 		if (!src) return undefined;
@@ -4017,7 +4020,7 @@ TODO:
 				this.localQuery.offset = offset;
 			},
 			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
+				return eqlower(order, this.order) ? this.dir : undefined;
 			},
 			doSort(order) {
 				let nq = this.makeNewQuery();
@@ -4129,10 +4132,10 @@ TODO:
 				this.reload();
 			},
 			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
+				return eqlower(order, this.order) ? this.dir : undefined;
 			},
 			doSort(order) {
-				if (order === this.order) {
+				if (eqlower(order, this.order)) {
 					let dir = eqlower(this.dir, 'asc') ? 'desc' : 'asc';
 					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
 				} else {
@@ -4298,7 +4301,7 @@ TODO:
 				this.$store.commit('setquery', query);
 			},
 			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
+				return eqlower(order, this.order) ? this.dir : undefined;
 			},
 			$setOffset(offset) {
 				if (this.offset === offset)

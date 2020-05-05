@@ -174,9 +174,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191213-7599
+// 20200505-7564
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -252,7 +252,8 @@ app.modules['std:utils'] = function () {
 			sanitize,
 			splitPath,
 			capitalize,
-			maxChars
+			maxChars,
+			equalNoCase: stringEqualNoCase
 		},
 		currency: {
 			round: currencyRound,
@@ -738,6 +739,10 @@ app.modules['std:utils'] = function () {
 		if (text.length < length)
 			return text;
 		return text.substring(0, length - 1) + '\u2026' /*ellipsis*/;
+	}
+
+	function stringEqualNoCase(s1, s2) {
+		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
 	}
 
 	function textContains(text, probe) {
@@ -6037,7 +6042,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200206-7625
+// 20200505-7654
 // components/datagrid.js*/
 
 (function () {
@@ -6057,6 +6062,8 @@ Vue.component('validator-control', {
 	const log = require('std:log');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
+
+	const eqlower = utils.text.equalNoCase;
 
 	/* group marker
 				<th v-if="isGrouping" class="group-cell" style="display:none">
@@ -6754,8 +6761,8 @@ Vue.component('validator-control', {
 			doSort(order) {
 				// TODO: // collectionView || locally
 				if (this.isLocal) {
-					if (this.localSort.order === order)
-						this.localSort.dir = this.localSort.dir === 'asc' ? 'desc' : 'asc';
+					if (eqlower(this.localSort.order, order))
+						this.localSort.dir = eqlower(this.localSort.dir, 'asc') ? 'desc' : 'asc';
 					else {
 						this.localSort = { order: order, dir: 'asc' };
 					}
@@ -6766,7 +6773,7 @@ Vue.component('validator-control', {
 			sortDir(order) {
 				// TODO: 
 				if (this.isLocal)
-					return this.localSort.order === order ? this.localSort.dir : undefined;
+					return eqlower(this.localSort.order, order) ? this.localSort.dir : undefined;
 				else
 					return this.$parent.sortDir(order);
 			},
@@ -7369,7 +7376,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200505-7653
+// 20200505-7654
 // components/collectionview.js
 
 /*
@@ -7387,9 +7394,7 @@ TODO:
 
 	const DEFAULT_PAGE_SIZE = 20;
 
-	function eqlower(s1, s2) {
-		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
-	}
+	const eqlower = utils.text.equalNoCase;
 
 	function getModelInfoProp(src, propName) {
 		if (!src) return undefined;
@@ -7547,7 +7552,7 @@ TODO:
 				this.localQuery.offset = offset;
 			},
 			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
+				return eqlower(order, this.order) ? this.dir : undefined;
 			},
 			doSort(order) {
 				let nq = this.makeNewQuery();
@@ -7659,10 +7664,10 @@ TODO:
 				this.reload();
 			},
 			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
+				return eqlower(order, this.order) ? this.dir : undefined;
 			},
 			doSort(order) {
-				if (order === this.order) {
+				if (eqlower(order, this.order)) {
 					let dir = eqlower(this.dir, 'asc') ? 'desc' : 'asc';
 					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
 				} else {
@@ -7828,7 +7833,7 @@ TODO:
 				this.$store.commit('setquery', query);
 			},
 			sortDir(order) {
-				return order === this.order ? this.dir : undefined;
+				return eqlower(order, this.order) ? this.dir : undefined;
 			},
 			$setOffset(offset) {
 				if (this.offset === offset)

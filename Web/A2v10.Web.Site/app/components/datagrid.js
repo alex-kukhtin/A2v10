@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200206-7625
+// 20200505-7654
 // components/datagrid.js*/
 
 (function () {
@@ -20,6 +20,8 @@
 	const log = require('std:log');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
+
+	const eqlower = utils.text.equalNoCase;
 
 	/* group marker
 				<th v-if="isGrouping" class="group-cell" style="display:none">
@@ -717,8 +719,8 @@
 			doSort(order) {
 				// TODO: // collectionView || locally
 				if (this.isLocal) {
-					if (this.localSort.order === order)
-						this.localSort.dir = this.localSort.dir === 'asc' ? 'desc' : 'asc';
+					if (eqlower(this.localSort.order, order))
+						this.localSort.dir = eqlower(this.localSort.dir, 'asc') ? 'desc' : 'asc';
 					else {
 						this.localSort = { order: order, dir: 'asc' };
 					}
@@ -729,7 +731,7 @@
 			sortDir(order) {
 				// TODO: 
 				if (this.isLocal)
-					return this.localSort.order === order ? this.localSort.dir : undefined;
+					return eqlower(this.localSort.order, order) ? this.localSort.dir : undefined;
 				else
 					return this.$parent.sortDir(order);
 			},
