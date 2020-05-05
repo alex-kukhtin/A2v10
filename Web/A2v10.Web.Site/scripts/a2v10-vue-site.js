@@ -3837,9 +3837,9 @@ app.modules['std:popup'] = function () {
 app.components['std:store'] = {
 };
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190902-7550
+// 20200505-7653
 // components/collectionview.js
 
 /*
@@ -3856,6 +3856,10 @@ TODO:
 	const eventBus = require('std:eventBus');
 
 	const DEFAULT_PAGE_SIZE = 20;
+
+	function eqlower(s1, s2) {
+		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
+	}
 
 	function getModelInfoProp(src, propName) {
 		if (!src) return undefined;
@@ -3975,7 +3979,7 @@ TODO:
 				// sort
 				if (this.order && this.dir) {
 					let p = this.order;
-					let d = this.dir === 'asc';
+					let d = eqlower(this.dir, 'asc');
 					arr.sort((a, b) => {
 						if (a[p] === b[p])
 							return 0;
@@ -4017,8 +4021,8 @@ TODO:
 			},
 			doSort(order) {
 				let nq = this.makeNewQuery();
-				if (nq.order === order)
-					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+				if (eqlower(nq.order, order))
+					nq.dir = eqlower(nq.dir, 'asc') ? 'desc' : 'asc';
 				else {
 					nq.order = order;
 					nq.dir = 'asc';
@@ -4129,7 +4133,7 @@ TODO:
 			},
 			doSort(order) {
 				if (order === this.order) {
-					let dir = this.dir === 'asc' ? 'desc' : 'asc';
+					let dir = eqlower(this.dir, 'asc') ? 'desc' : 'asc';
 					setModelInfoProp(this.ItemsSource, 'SortDir', dir);
 				} else {
 					setModelInfoProp(this.ItemsSource, 'SortOrder', order);
@@ -4304,8 +4308,8 @@ TODO:
 			},
 			doSort(order) {
 				let nq = this.makeNewQuery();
-				if (nq.order === order)
-					nq.dir = nq.dir === 'asc' ? 'desc' : 'asc';
+				if (eqlower(nq.order, order))
+					nq.dir = eqlower(nq.dir ,'asc') ? 'desc' : 'asc';
 				else {
 					nq.order = order;
 					nq.dir = 'asc';

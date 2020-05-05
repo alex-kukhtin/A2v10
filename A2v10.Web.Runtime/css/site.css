@@ -1468,6 +1468,7 @@ header .dropdown.separate.show .btn.btn-success,
   padding: 8px 6px 8px 0;
 }
 .page.page-grid .page-content {
+  position: relative;
   grid-row: 2;
   grid-column: 1;
   overflow: auto;
@@ -4392,7 +4393,8 @@ ul.news-list > li {
 .toastr-stack li.toast.success {
   background-color: #5db750;
 }
-.toastr-stack li.toast.danger {
+.toastr-stack li.toast.danger,
+.toastr-stack li.toast.error {
   background-color: #da533f;
 }
 .toastr-stack li.toast.info {
