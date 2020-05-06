@@ -158,6 +158,8 @@
   <ItemGroup>
     <None Include="ChromeExtension\background.js" />
     <None Include="ChromeExtension\manifest.json" />
+    <None Include="ChromeExtension\options.html" />
+    <None Include="ChromeExtension\options.js" />
     <None Include="manifest.json" />
   </ItemGroup>
   <ItemGroup>

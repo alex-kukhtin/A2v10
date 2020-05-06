@@ -27,7 +27,11 @@
     <None Include="ChromeExtension\background.js">
       <Filter>ChromeExtension</Filter>
     </None>
-    <None Include="ChromeExtension\manifest.json" />
+    <None Include="ChromeExtension\manifest.json">
+      <Filter>ChromeExtension</Filter>
+    </None>
+    <None Include="ChromeExtension\options.html" />
+    <None Include="ChromeExtension\options.js" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="ChromeExtension\a2v10-128.png">

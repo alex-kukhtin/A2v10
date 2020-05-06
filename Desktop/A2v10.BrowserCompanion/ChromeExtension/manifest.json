@@ -1,8 +1,9 @@
 ﻿{
-	"name": "A2v10 browser companion",
-	"version": "10.0.7001",
+	"name": "A2v10 equipment host",
+	"version": "10.0.7506",
 	"manifest_version": 2,
-	"description": "Communicate with A2v10 native applications.",
+	"description": "Communicate with A2v10 native applications",
+	"options_page": "options.html",
 	"permissions": [
 		"nativeMessaging"
 	],
@@ -12,14 +13,14 @@
 	"externally_connectable": {
 		"matches": [
 			"*://*.a2start.com/*",
-			"*://localhost/*",
+			"*://bookkeeper.kiev.ua/*",
 			"*://thishost/*"
 		]
 	},
 	"background": {
 		"matches": [
 			"*://*.a2start.com/*",
-			"*://localhost/*",
+			"*://bookkeeper.kiev.ua/*",
 			"*://thishost/*"
 		],
 		"scripts": [ "background.js" ],

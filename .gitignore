@@ -283,3 +283,7 @@ __pycache__/
 /Apps/Develop/_tests/TestRunner.config
 /Apps/Develop/_tests/Tests.Runner.config
 /Desktop/GPUCache
+*.pem
+/Desktop/A2v10.BrowserCompanion/manifest.release.json
+/Desktop/A2v10.BrowserCompanion/ChromeExtension.crx
+/Desktop/A2v10.BrowserCompanion/ChromeExtension/extension.zip

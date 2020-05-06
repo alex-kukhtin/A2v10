@@ -31,7 +31,7 @@ bool PosMonitor::Create()
 // virtual 
 void PosMonitor::Trace(TraceType type, const wchar_t* message)
 {
-	if (!hWnd)
+	if (!hWnd || !::IsWindow(hWnd))
 		hWnd = ::FindWindow(MONITOR_WNDCLASS, MONITOR_WNDNAME);
 	if (!hWnd || !::IsWindow(hWnd))
 		return; // may be closed

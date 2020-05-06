@@ -89,7 +89,7 @@ std::wstring PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data)
 	JsonObject js;
 	js.Add(L"model", pcd->_model.c_str());
 	js.Add(L"port", pcd->_port.c_str());
-	js.Add(L"terminal", (long) pcd->_terminal);
+	js.Add(L"terminal", pcd->_terminal.c_str());
 	return js.Value();
 }
 

@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+	<style>
+		body,select,input, button {
+			font-size: 15px;
+		}
+		.page {
+			width:640px;
+			background-color:#f8f8f8;
+			margin:0 auto;
+			padding:40px;
+		}
+		.control {
+			display:flex;
+			flex-direction:column;
+			margin-bottom:20px;
+		}
+		label {
+			color:#777;
+			margin-bottom:5px;
+		}
+		select, input {
+			padding:5px;
+			width:300px;
+		}
+		.btn {
+			padding:12px 30px;
+			background-color:royalblue;
+			color:white;
+			border:none;
+		}
+		.btn:active {
+			background-color:darkblue;
+		}
+	</style>
+</head>
+<body>
+	<div class="page">
+		<h1>Налаштування фіскального реєстратора</h1>
+
+		<div class="control">
+			<label for="">Модель фіскального реєстратора</label>
+			<select id="model">
+				<option value="NOPRINTER">NOPRINTER</option>
+				<option value="DATECS-Krypton">DATECS-Krypton</option>
+			</select>
+		</div>
+		<div class="control">
+			<label for="">Порт</label>
+			<select id="port"></select>
+		</div>
+		<div class="control">
+			<label for="">Швидкість порту</label>
+			<select id="baud">
+				<option value="9600">9600</option>
+				<option value="19200">19200</option>
+			</select>
+		</div>
+		<div class="control">
+			<label for="">Код термінала</label>
+			<input id="terminal" >
+		</div>
+		<div>
+			<button class="btn" id="set">Зберегти</button>
+		</div>
+	</div>
+	<script type="text/javascript" src="options.js"></script>
+</body>
+</html>
