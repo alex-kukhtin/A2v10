@@ -31,8 +31,8 @@ void CFiscalPrinter_Null::SetParams(const PosConnectParams& prms)
 
 void CFiscalPrinter_Null::AddArticle(const RECEIPT_ITEM& item)
 {
-	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%I64d, price:%ld})", 
-		_id.c_str(), item.article, item.name, item.vat, item.price);
+	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%I64d, price:%ld, excise:%I64d})", 
+		_id.c_str(), item.article, item.name, item.vat, item.price, item.excise);
 }
 
 // virtual 
@@ -59,9 +59,10 @@ void CFiscalPrinter_Null::Payment(PAYMENT_MODE mode, long sum)
 }
 
 // virtual 
-void CFiscalPrinter_Null::CloseReceipt()
+long CFiscalPrinter_Null::CloseReceipt()
 {
 	TraceINFO(L"TESTPRINTER [%s]. CloseReceipt()", _id.c_str());
+	return m_nLastReceipt;
 }
 
 // virtual 
@@ -71,7 +72,7 @@ void CFiscalPrinter_Null::Close()
 }
 
 //virtual 
-int CFiscalPrinter_Null::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= false*/)
+int CFiscalPrinter_Null::GetLastReceiptNo(bool bFromPrinter /*= false*/)
 {
 	return m_nLastReceipt++;
 }
@@ -84,9 +85,10 @@ bool CFiscalPrinter_Null::Open(const wchar_t* port, DWORD baud)
 }
 
 // virtual 
-void CFiscalPrinter_Null::NullReceipt(bool bOpenCashDrawer)
+long CFiscalPrinter_Null::NullReceipt(bool bOpenCashDrawer)
 {
 	TraceINFO(L"TESTPRINTER [%s]. NullReceipt({openCashDrawer:%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
+	return m_nLastReceipt++;
 }
 
 
@@ -110,14 +112,20 @@ bool CFiscalPrinter_Null::CancelReceipt(__int64 termId, bool& bClosed)
 }
 
 // virtual 
-bool CFiscalPrinter_Null::CancelReceiptCommand(__int64 termId)
+void CFiscalPrinter_Null::PrintTotal()
+{
+	TraceINFO(L"TESTPRINTER [%s]. PrintTotal()", _id.c_str());
+}
+
+// virtual 
+bool CFiscalPrinter_Null::CancelReceiptCommand()
 {
 	TraceINFO(L"TESTPRINTER [%s]. CancelReceiptCommand()", _id.c_str());
 	return true;
 }
 
 // virtual 
-bool CFiscalPrinter_Null::CopyBill()
+bool CFiscalPrinter_Null::CopyReceipt()
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print bill copy", _id.c_str());
@@ -156,7 +164,7 @@ bool CFiscalPrinter_Null::PrintCheckItem(const CFPCheckItemInfo& info)
 */
 
 // virtual
-LONG CFiscalPrinter_Null::GetCurrentZReportNo(__int64 termId, bool bFromPrinter /*= false*/)
+LONG CFiscalPrinter_Null::GetCurrentZReportNo(bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
 		m_nLastZReportNo = GetPrinterLastZReportNo();
@@ -207,9 +215,13 @@ long CFiscalPrinter_Null::XReport()
 }
 
 // virtual 
-void CFiscalPrinter_Null::ZReport()
+ZREPORT_RESULT CFiscalPrinter_Null::ZReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. ZReport()", _id.c_str());
+	ZREPORT_RESULT result;
+	result.no = 10;
+	result.zno = 50;
+	return result;
 }
 
 // virtual 

@@ -30,8 +30,12 @@
     <None Include="ChromeExtension\manifest.json">
       <Filter>ChromeExtension</Filter>
     </None>
-    <None Include="ChromeExtension\options.html" />
-    <None Include="ChromeExtension\options.js" />
+    <None Include="ChromeExtension\options.html">
+      <Filter>ChromeExtension</Filter>
+    </None>
+    <None Include="ChromeExtension\options.js">
+      <Filter>ChromeExtension</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="ChromeExtension\a2v10-128.png">

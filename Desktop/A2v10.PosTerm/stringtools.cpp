@@ -4,8 +4,7 @@
 #include "stringtools.h"
 
 
-std::wstring A2W(const char* source) {
-	UINT acp = CP_THREAD_ACP;
+std::wstring A2W(const char* source, UINT acp /*= CP_THREAD_ACP*/) {
 	std::wstring result;
 	int need = MultiByteToWideChar(acp, 0, source, -1, nullptr, 0);
 	result.resize(need);
@@ -13,8 +12,7 @@ std::wstring A2W(const char* source) {
 	return result;
 }
 
-std::string W2A(const wchar_t* source) {
-	UINT acp = CP_THREAD_ACP;
+std::string W2A(const wchar_t* source, UINT acp /*= CP_THREAD_ACP*/) {
 	std::string result;
 	int need = WideCharToMultiByte(acp, 0, source, -1, nullptr, 0, nullptr, nullptr);
 	result.resize(need);

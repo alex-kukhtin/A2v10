@@ -10,6 +10,7 @@ public:
 	void Add(const wchar_t* name, bool value);
 	void Add(const wchar_t* name, long value);
 	void Add(const wchar_t* name, JsonObject* value);
+	void Add(const wchar_t* name, __currency value);
 
 	std::wstring ToString();
 	std::wstring Value();

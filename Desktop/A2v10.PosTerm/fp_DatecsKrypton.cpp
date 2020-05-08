@@ -6,7 +6,7 @@
 #include "fiscalprinter.h"
 #include "fiscalprinterimpl.h"
 #include "fp_DatecsBase.h"
-#include "fp_Datecs3141.h"
+#include "fp_DatecsKrypton.h"
 #include "stringtools.h"
 #include "errors.h"
 
@@ -80,7 +80,7 @@ void _toUpper(std::string& s) {
 	std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 }
 
-CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
+CFiscalPrinter_DatecsKrypton::CFiscalPrinter_DatecsKrypton()
 	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0)
 {
 	// default values. 
@@ -90,7 +90,7 @@ CFiscalPrinter_Datecs3141::CFiscalPrinter_Datecs3141()
 
 
 // virtual 
-void CFiscalPrinter_Datecs3141::PrintDiagnostic()
+void CFiscalPrinter_DatecsKrypton::PrintDiagnostic()
 {
 	CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
 	SendCommand();
@@ -103,7 +103,7 @@ void CFiscalPrinter_Datecs3141::PrintDiagnostic()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::PeriodicalByNo(BOOL Short, LONG From, LONG To)
+bool CFiscalPrinter_DatecsKrypton::PeriodicalByNo(BOOL Short, LONG From, LONG To)
 {
 	/*
 	CString info;
@@ -133,7 +133,7 @@ bool CFiscalPrinter_Datecs3141::PeriodicalByNo(BOOL Short, LONG From, LONG To)
 
 // virtual 
 /*
-bool CFiscalPrinter_Datecs3141::PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To)
+bool CFiscalPrinter_DatecsKrypton::PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To)
 {
 	CString info;
 	try
@@ -163,7 +163,7 @@ bool CFiscalPrinter_Datecs3141::PeriodicalByDate(BOOL Short, COleDateTime From, 
 */
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::ReportByArticles()
+bool CFiscalPrinter_DatecsKrypton::ReportByArticles()
 {
 	try
 	{
@@ -186,7 +186,7 @@ bool CFiscalPrinter_Datecs3141::ReportByArticles()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::ReportModemState()
+bool CFiscalPrinter_DatecsKrypton::ReportModemState()
 {
 	// print without service document!
 	CreateCommandV(L"MODEMSTATEREP", FPCMD_MODEMSTATEREP, L"%s%s", EMPTY_PARAM, L"1;"); //1 - print report;
@@ -196,13 +196,13 @@ bool CFiscalPrinter_Datecs3141::ReportModemState()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::ProgramOperator(LPCWSTR Name, LPCWSTR Password)
+bool CFiscalPrinter_DatecsKrypton::ProgramOperator(LPCWSTR Name, LPCWSTR Password)
 {
 	return true;
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::Beep()
+void CFiscalPrinter_DatecsKrypton::Beep()
 {
 	try
 	{
@@ -216,7 +216,7 @@ void CFiscalPrinter_Datecs3141::Beep()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
+long CFiscalPrinter_DatecsKrypton::NullReceipt(bool bOpenCashDrawer)
 {
 	CancelReceiptPrinter();
 
@@ -234,13 +234,14 @@ void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 	CreateCommand(L"PAYMENT", FPCMD_PAYMENT, L"000000;0;0.00;");
 	SendCommand();
 
-	CloseFiscal(m_nLastReceiptNo);
+	m_nLastReceiptNo = CloseFiscal();
 
 	if (bOpenCashDrawer)
 	{
 		CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 		SendCommand();
 	}
+	return m_nLastReceiptNo;
 }
 
 /*
@@ -250,8 +251,9 @@ void CFiscalPrinter_Datecs3141::NullReceipt(bool bOpenCashDrawer)
 		bit 7. cash change allowed
 */
 // virtual 
-void CFiscalPrinter_Datecs3141::SetParams(const PosConnectParams& prms)
+void CFiscalPrinter_DatecsKrypton::SetParams(const PosConnectParams& prms)
 {
+	/*
 	TraceINFO(L"DATECS [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
 		_id.c_str(), prms.payModes, prms.taxModes);
 	if (prms.payModes && *prms.payModes) {
@@ -262,8 +264,6 @@ void CFiscalPrinter_Datecs3141::SetParams(const PosConnectParams& prms)
 		_payModeCash = payModes.at(0).at(0);
 		_payModeCard = payModes.at(1).at(0);
 	}
-	TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
-	TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
 
 	if (prms.taxModes && *prms.taxModes) {
 		std::wstring wtaxModes = prms.taxModes;
@@ -272,10 +272,11 @@ void CFiscalPrinter_Datecs3141::SetParams(const PosConnectParams& prms)
 		if (taxModes.size() < 2)
 			throw EQUIPException(FP_E_INVALID_TAXMODES);
 	}
+	*/
 }
 
 
-void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
+void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 {
 	TraceINFO(L"DATECS [%s]. GetPaymentModes()", _id.c_str());
 	bool bCashSet = false;
@@ -301,12 +302,10 @@ void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 			_toUpper(payName);
 			if (payName == "ÃÎÒ²ÂÊÀ" || payName == "ÍÀËÈ×ÍÛÅ" || payName == "ÃÐÎØ²") {
 				_payModeCash = L'0' + i;
-				TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
 				bCashSet = true;
 			}
 			else if (payName == "ÊÀÐÒÊÀ" || payName == "ÊÀÐÒÀ" || payName == "ÊÀÐÒÎ×ÊÀ") {
 				_payModeCard = L'0' + i;
-				TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
 				std::string flags = items[1];
 				unsigned int val = 0;
 				if (sscanf_s(flags.c_str(), "%02x", &val) == 1)
@@ -330,9 +329,12 @@ void CFiscalPrinter_Datecs3141::GetPrinterPayModes()
 
 	if ((dwCardFlags & 0x02) == 0)
 		throw EQUIPException(L"Ô³ñêàëüíèé ðåºñòðàòîð.\nÄëÿ ôîðìè îïëàòè ÊÀÐÒÊÀ çàáîðîíåí³ ïîâåðíåííÿ.\nÏåðåïðîãðàìóéòå ðåºñòðàòîð.");
+
+	TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
+	TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
 }
 
-void CFiscalPrinter_Datecs3141::GetTaxRates()
+void CFiscalPrinter_DatecsKrypton::GetTaxRates()
 {
 	TraceINFO(L"DATECS [%s]. GetTaxRates()", _id.c_str());
 	for (int i = 0; i < 5; i++)
@@ -342,35 +344,46 @@ void CFiscalPrinter_Datecs3141::GetTaxRates()
 		std::string info((char*)m_data);
 		TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 		auto elems = _split(info, ';');
-		if (elems.size() > 2) 
+		if (elems.size() > 4) 
 		{
 			std::string vatPercent = elems[2];
+			long nested = atol(elems[4].c_str());
 			long taxIndex = (long) std::round(atof(vatPercent.c_str()) * 100.0);
+			if (nested != -1)
+				taxIndex = -taxIndex;
 			_taxChars[taxIndex] = L'0' + i;
-			TraceINFO(L"  Vat rate: %ld. Tax code: %C", taxIndex, L'0' + i);
+			//TraceINFO(L"  Vat rate: %ld. Tax code: %C", taxIndex, L'0' + i);
 		}
 	}
 	if (IS_EMULATION()) {
 		_taxChars[2000] = L'2';
 		_taxChars[700]  = L'7';
+		_taxChars[-2000] = L'3';
 		_taxChars[0]   =  L'0';
 	}
+
+	for (auto it = _taxChars.begin(); it != _taxChars.end(); ++it) {
+		long  prc = it->first;
+		wchar_t ch = it->second;
+		TraceINFO(L"  Tax mode: char: '%C', value: %ld", ch, prc);
+	}
+
 }
 
 
 // virtual 
-void CFiscalPrinter_Datecs3141::Init()
+void CFiscalPrinter_DatecsKrypton::Init()
 {
 	TraceINFO(L"DATECS [%s]. Init()", _id.c_str());
 
 	// Get status (with buffer print)
 
-	//GetPrinterPayModes();
-	//GetTaxRates();
+	GetPrinterPayModes();
+	GetTaxRates();
 	DisplayDateTime(); // customer display
 
 	m_nLastZReportNo = GetPrinterLastZReportNo();
-	//m_nLastReceiptNo = GetPrinterLastReceiptNo(); // for status processing
+	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // for status processing
 
 	// last article
 	RECEIPT_STATUS cs = GetReceiptStatus();
@@ -382,13 +395,15 @@ void CFiscalPrinter_Datecs3141::Init()
 	}
 
 	CancelReceiptPrinter();
-	//m_nLastReceiptNo = GetPrinterLastReceiptNo(, false); // again
+	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // again
 	// CheckPrinterSession(); 24 ÷àñà Z-îò÷åòà?
 	//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
+	TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
+	TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::CopyBill()
+bool CFiscalPrinter_DatecsKrypton::CopyReceipt()
 {
 	try
 	{
@@ -412,7 +427,7 @@ bool CFiscalPrinter_Datecs3141::CopyBill()
 		SendCommand();
 		CreateCommandV(L"PRINTCOPY", FPCMD_PRINTCOPY, L"%s%ld;%ld;", EMPTY_PARAM, checkNo, checkNo);
 		SendCommand();
-		CloseFiscal(m_nLastReceiptNo);
+		m_nLastReceiptNo = CloseFiscal();
 	}
 	catch (EQUIPException ex) {
 		m_strError = ex.GetError();
@@ -422,7 +437,7 @@ bool CFiscalPrinter_Datecs3141::CopyBill()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::CheckStatus()
+void CFiscalPrinter_DatecsKrypton::CheckStatus()
 {
 	//FPS1_CHK_TAPE_ENDING  = 0x01,  // 0
 	//FPS1_CTL_TAPE_ENDING  = 0x02,  // 1
@@ -442,7 +457,7 @@ void CFiscalPrinter_Datecs3141::CheckStatus()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::CancelReceiptCommand(__int64 termId)
+bool CFiscalPrinter_DatecsKrypton::CancelReceiptCommand()
 {
 	RECEIPT_STATUS cs = GetReceiptStatus();
 	/*
@@ -484,7 +499,7 @@ bool CFiscalPrinter_Datecs3141::CancelReceiptCommand(__int64 termId)
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::CancelReceipt(__int64 termId, bool& bClosed)
+bool CFiscalPrinter_DatecsKrypton::CancelReceipt(__int64 termId, bool& bClosed)
 {
 	try
 	{
@@ -499,7 +514,7 @@ bool CFiscalPrinter_Datecs3141::CancelReceipt(__int64 termId, bool& bClosed)
 	return true;
 }
 
-void CFiscalPrinter_Datecs3141::CancelReceiptPrinter()
+void CFiscalPrinter_DatecsKrypton::CancelReceiptPrinter()
 {
 	RECEIPT_STATUS cs = GetReceiptStatus();
 	if (cs == CHS_NORMAL)
@@ -516,7 +531,7 @@ void CFiscalPrinter_Datecs3141::CancelReceiptPrinter()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::GetErrorCode()
+void CFiscalPrinter_DatecsKrypton::GetErrorCode()
 {
 	m_dwError = 0;
 	char errCode[5];
@@ -532,7 +547,7 @@ void CFiscalPrinter_Datecs3141::GetErrorCode()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::OpenReceipt()
+void CFiscalPrinter_DatecsKrypton::OpenReceipt()
 {
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
@@ -543,7 +558,7 @@ void CFiscalPrinter_Datecs3141::OpenReceipt()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::OpenReturnReceipt()
+void CFiscalPrinter_DatecsKrypton::OpenReturnReceipt()
 {
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
@@ -553,13 +568,13 @@ void CFiscalPrinter_Datecs3141::OpenReturnReceipt()
 	OpenFiscalReturn(op, L"", tno, info);
 }
 
-RECEIPT_STATUS CFiscalPrinter_Datecs3141::GetReceiptStatus()
+RECEIPT_STATUS CFiscalPrinter_DatecsKrypton::GetReceiptStatus()
 {
 	return (RECEIPT_STATUS)(m_status[2] & FPS2_CHECK_STATE);
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::SetCurrentTime()
+void CFiscalPrinter_DatecsKrypton::SetCurrentTime()
 {
 	try
 	{
@@ -578,19 +593,19 @@ void CFiscalPrinter_Datecs3141::SetCurrentTime()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::DisplayDateTime()
+void CFiscalPrinter_DatecsKrypton::DisplayDateTime()
 {
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::DisplayClear()
+void CFiscalPrinter_DatecsKrypton::DisplayClear()
 {
 	DisplayRow(0, L"");
 	DisplayRow(1, L"");
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::DisplayRow(int nRow, LPCTSTR szString)
+void CFiscalPrinter_DatecsKrypton::DisplayRow(int nRow, LPCTSTR szString)
 {
 	/*
 	CString txt(szString ? szString : EMPTYSTR);
@@ -616,7 +631,7 @@ void CFiscalPrinter_Datecs3141::DisplayRow(int nRow, LPCTSTR szString)
 
 // virtual 
 /*
-bool CFiscalPrinter_Datecs3141::GetCash(__int64 termId, COleCurrency& cy)
+bool CFiscalPrinter_DatecsKrypton::GetCash(__int64 termId, COleCurrency& cy)
 {
 	CY sum;
 	CY dummy;
@@ -638,7 +653,7 @@ bool CFiscalPrinter_Datecs3141::GetCash(__int64 termId, COleCurrency& cy)
 
 // virtual 
 /*
-bool CFiscalPrinter_Datecs3141::FillZReportInfo(ZREPORT_INFO& zri)
+bool CFiscalPrinter_DatecsKrypton::FillZReportInfo(ZREPORT_INFO& zri)
 {
 	try {
 		// 0 - ix = íîìåð íàëîãà
@@ -693,7 +708,7 @@ bool CFiscalPrinter_Datecs3141::FillZReportInfo(ZREPORT_INFO& zri)
 */
 
 // virtual 
-int CFiscalPrinter_Datecs3141::GetLastReceiptNo(__int64 termId, bool bFromPrinter /*= false*/)
+int CFiscalPrinter_DatecsKrypton::GetLastReceiptNo(bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
 		m_nLastReceiptNo = GetPrinterLastReceiptNo();
@@ -701,14 +716,14 @@ int CFiscalPrinter_Datecs3141::GetLastReceiptNo(__int64 termId, bool bFromPrinte
 }
 
 // virtual 
-LONG CFiscalPrinter_Datecs3141::GetCurrentZReportNo(__int64 termId, bool bFromPrinter /*= false*/)
+LONG CFiscalPrinter_DatecsKrypton::GetCurrentZReportNo(bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
 		m_nLastZReportNo = GetPrinterLastZReportNo();
 	return m_nLastZReportNo;
 }
 
-bool CFiscalPrinter_Datecs3141::CheckPaymentSum(int get)
+bool CFiscalPrinter_DatecsKrypton::CheckPaymentSum(int get)
 {
 	/*
 	Çàùèòà îò íåïðàâèëüíûõ ñóìì ïî àðòèêóëàì.
@@ -740,7 +755,7 @@ bool CFiscalPrinter_Datecs3141::CheckPaymentSum(int get)
 
 
 // virtual 
-void CFiscalPrinter_Datecs3141::PrintFiscalText(const wchar_t* szText)
+void CFiscalPrinter_DatecsKrypton::PrintFiscalText(const wchar_t* szText)
 {
 	std::wstring text(szText);
 	if (text.empty())
@@ -755,13 +770,13 @@ void CFiscalPrinter_Datecs3141::PrintFiscalText(const wchar_t* szText)
 }
 
 // virtual 
-DWORD CFiscalPrinter_Datecs3141::GetFlags()
+DWORD CFiscalPrinter_DatecsKrypton::GetFlags()
 {
 	return FiscalPrinterImpl::FP_SYNCTIME | FiscalPrinterImpl::FP_MODEMSTATE;
 }
 
 /*
-bool CFiscalPrinter_Datecs3141::CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText /*= nullptr* /)
+bool CFiscalPrinter_DatecsKrypton::CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText /*= nullptr* /)
 {
 	USES_CONVERSION;
 	try
@@ -812,16 +827,16 @@ bool CFiscalPrinter_Datecs3141::CloseCheck(int sum, int get, CFiscalPrinter::PAY
 */
 
 // virtual 
-void CFiscalPrinter_Datecs3141::AddArticle(const RECEIPT_ITEM& item)
+void CFiscalPrinter_DatecsKrypton::AddArticle(const RECEIPT_ITEM& item)
 {
 	if (_mapCodes.count(item.article) > 0)
 		return;
-	long code = (long) item.article;
+	long code = ((long) item.article) % 1000000;
 	AddPrinterArticle(code, item.name, item.unit, item.vat.units());
 	_mapCodes[item.article] = code;
 }
 
-void CFiscalPrinter_Datecs3141::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
+void CFiscalPrinter_DatecsKrypton::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%02d;%02d;0;", EMPTY_PARAM, opNo, tNo);
@@ -830,7 +845,7 @@ void CFiscalPrinter_Datecs3141::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo, s
 }
 
 
-void CFiscalPrinter_Datecs3141::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
+void CFiscalPrinter_DatecsKrypton::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%02d;%02d;1;", EMPTY_PARAM, opNo, tNo);
@@ -839,7 +854,7 @@ void CFiscalPrinter_Datecs3141::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, int 
 }
 
 /*
-bool CFiscalPrinter_Datecs3141::GetDaySum(long src, long ix, CY& value1, CY& value2)
+bool CFiscalPrinter_DatecsKrypton::GetDaySum(long src, long ix, CY& value1, CY& value2)
 {
 	value1.int64 = 0I64;
 	value2.int64 = 0I64;
@@ -865,14 +880,14 @@ bool CFiscalPrinter_Datecs3141::GetDaySum(long src, long ix, CY& value1, CY& val
 }
 */
 
-void CFiscalPrinter_Datecs3141::PrintTotal()
+void CFiscalPrinter_DatecsKrypton::PrintTotal()
 {
 	CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
 	SendCommand();
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::Payment(PAYMENT_MODE mode, long sum)
+void CFiscalPrinter_DatecsKrypton::Payment(PAYMENT_MODE mode, long sum)
 {
 	std::wstring info;
 	switch (mode)
@@ -887,13 +902,12 @@ void CFiscalPrinter_Datecs3141::Payment(PAYMENT_MODE mode, long sum)
 };
 
 // virtual 
-void CFiscalPrinter_Datecs3141::CloseReceipt()
+long CFiscalPrinter_DatecsKrypton::CloseReceipt()
 {
-	long chNo = 0;
-	CloseFiscal(chNo);
+	return CloseFiscal();
 }
 
-void CFiscalPrinter_Datecs3141::Payment(WCHAR mode, int sum, std::wstring& info)
+void CFiscalPrinter_DatecsKrypton::Payment(WCHAR mode, int sum, std::wstring& info)
 {
 	int sum1 = sum / 100;
 	int sum2 = sum % 100;
@@ -901,7 +915,7 @@ void CFiscalPrinter_Datecs3141::Payment(WCHAR mode, int sum, std::wstring& info)
 	SendCommand();
 }
 
-void CFiscalPrinter_Datecs3141::CloseFiscal(long& chNo)
+long CFiscalPrinter_DatecsKrypton::CloseFiscal()
 {
 	//USES_CONVERSION;
 	wchar_t buff[MAX_COMMAND_LEN];
@@ -911,19 +925,16 @@ void CFiscalPrinter_Datecs3141::CloseFiscal(long& chNo)
 	/*00000;<RECEIPT_NO>;*/
 	std::string info((char*) m_data);
 	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
-	/*
-	CString res = A2W((char*)m_data);
-	TraceINFO(L"RCV:%s", res);
-	CString info;
-	AfxExtractSubString(info, res, 1, L';');
-	if (info.GetLength() > 9)
-		info = info.Left(9);
-	chNo = _ttol(info);
-	*/
+	auto arr = _split(info, ';');
+	long rcpNo = 0;
+	if (arr.size() > 1) {
+		rcpNo = atol(arr[1].c_str());
+	}
+	return rcpNo;
 }
 
 // virtual
-long CFiscalPrinter_Datecs3141::XReport()
+long CFiscalPrinter_DatecsKrypton::XReport()
 {
 	TraceINFO(L"DATECS [%s]. XReport()", _id.c_str());
 	CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s1;", EMPTY_PARAM);
@@ -934,16 +945,21 @@ long CFiscalPrinter_Datecs3141::XReport()
 
 
 // virtual 
-void CFiscalPrinter_Datecs3141::ZReport()
+ZREPORT_RESULT CFiscalPrinter_DatecsKrypton::ZReport()
 {
 	TraceINFO(L"DATECS [%s]. ZReport()", _id.c_str());
 	CreateCommandV(L"DAYREPORTS", FPCMD_DAYREPORTS, L"%s0;", EMPTY_PARAM);
 	SendCommand();
+	ZREPORT_RESULT result;
 	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // get receipt id
+	m_nLastZReportNo = GetPrinterLastZReportNo();
+	result.no = m_nLastReceiptNo;
+	result.zno = m_nLastZReportNo;
+	return result;
 }
 
 // virtual 
-SERVICE_SUM_INFO CFiscalPrinter_Datecs3141::ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer)
+SERVICE_SUM_INFO CFiscalPrinter_DatecsKrypton::ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer)
 {
 	TraceINFO(L"DATECS [%s]. ServiceInOut({out: %s, amount: %ld, openCashDrawer: %s})", _id.c_str(),
 		bool2string(bOut), sum.units(), bool2string(bOpenCashDrawer)); 
@@ -975,7 +991,7 @@ SERVICE_SUM_INFO CFiscalPrinter_Datecs3141::ServiceInOut(bool bOut, __currency s
 }
 
 //virtual 
-void CFiscalPrinter_Datecs3141::PrintReceiptItem(const RECEIPT_ITEM& item)
+void CFiscalPrinter_DatecsKrypton::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
 	long code = GetPrintCodeByArticle(item.article, item.name);
 	long price_c = item.price.units();
@@ -991,7 +1007,7 @@ void CFiscalPrinter_Datecs3141::PrintReceiptItem(const RECEIPT_ITEM& item)
 		CreateCommandV(L"DISCOUNTABS", FPCMD_DISCOUNTABS, L"%s-%ld.%02ld;", EMPTY_PARAM, disc_c / 100, disc_c % 100);
 		SendCommand();
 	}
-	//void CFiscalPrinter_Datecs3141::PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight)
+	//void CFiscalPrinter_DatecsKrypton::PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight)
 	//ÏÅ×ÀÒÜ ÄÐÎÁÍÎÃÎ ÊÎËÈ×ÅÑÒÂÀ!!!!
 	/*
 	CString s;
@@ -1026,14 +1042,14 @@ void CFiscalPrinter_Datecs3141::PrintReceiptItem(const RECEIPT_ITEM& item)
 	*/
 }
 
-int CFiscalPrinter_Datecs3141::GetPrintCodeByArticle(__int64 art, LPCWSTR szName)
+int CFiscalPrinter_DatecsKrypton::GetPrintCodeByArticle(__int64 art, LPCWSTR szName)
 {
 	if (_mapCodes.count(art) > 0)
 		return _mapCodes[art];
 	return 0;
 }
 
-void CFiscalPrinter_Datecs3141::AddPrinterArticle(int code, const wchar_t* name, const wchar_t* unit, long vat)
+void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(int code, const wchar_t* name, const wchar_t* unit, long vat)
 {
 	//%%%%TODO: TERMINAL
 	long tno = 1;
@@ -1064,7 +1080,7 @@ void CFiscalPrinter_Datecs3141::AddPrinterArticle(int code, const wchar_t* name,
 	SendCommand();
 }
 
-long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
+long CFiscalPrinter_DatecsKrypton::GetPrinterLastZReportNo()
 {
 	long z_no = 0;
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;0;");
@@ -1092,7 +1108,7 @@ long CFiscalPrinter_Datecs3141::GetPrinterLastZReportNo()
 	return z_no;
 }
 
-long CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo()
+long CFiscalPrinter_DatecsKrypton::GetPrinterLastReceiptNo()
 {
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;3;");
 	SendCommand();
@@ -1108,7 +1124,7 @@ long CFiscalPrinter_Datecs3141::GetPrinterLastReceiptNo()
 }
 
 // virtual 
-void CFiscalPrinter_Datecs3141::OpenCashDrawer()
+void CFiscalPrinter_DatecsKrypton::OpenCashDrawer()
 {
 	CreateCommand(L"CASHDRAWER", FPCMD_CASHDRAWER, EMPTY_PARAM);
 	SendCommand();
@@ -1121,7 +1137,7 @@ static void _append(std::wstring& s, const wchar_t* szAdd)
 	s += szAdd;
 };
 
-void CFiscalPrinter_Datecs3141::TraceStatus()
+void CFiscalPrinter_DatecsKrypton::TraceStatus()
 {
 	std::wstring s(L"");
 	// or or
@@ -1139,7 +1155,7 @@ void CFiscalPrinter_Datecs3141::TraceStatus()
 		TraceINFO(s.c_str());
 }
 
-std::wstring CFiscalPrinter_Datecs3141::GetLastErrorS()
+std::wstring CFiscalPrinter_DatecsKrypton::GetLastErrorS()
 {
 	std::wstring s(L"");
 	// èëè èëè
@@ -1206,7 +1222,7 @@ std::wstring CFiscalPrinter_Datecs3141::GetLastErrorS()
 }
 
 // virtual 
-bool CFiscalPrinter_Datecs3141::IsEndOfTape()
+bool CFiscalPrinter_DatecsKrypton::IsEndOfTape()
 {
 	return m_bEndOfTape;
 }

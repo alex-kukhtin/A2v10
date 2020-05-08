@@ -11,6 +11,12 @@ void JsonObject::Add(const wchar_t* name, const wchar_t* value)
 	_value.append(L"\"").append(value).append(L"\"");
 }
 
+void JsonObject::Add(const wchar_t* name, __currency value)
+{
+	addName(name);
+	_value.append(value.to_wstring());
+}
+
 void JsonObject::Add(const wchar_t* name, bool value)
 {
 	addName(name);

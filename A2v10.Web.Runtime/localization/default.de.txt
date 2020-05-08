@@ -53,7 +53,7 @@
 @Print=Drucken
 @Search=Suchen
 @Help=Hilfe
-@Export=Экспорт
+@Export=Export
 ;
 @General=Algemeine
 @Properties=Eigenschaften

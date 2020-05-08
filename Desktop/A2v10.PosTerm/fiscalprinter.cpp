@@ -8,7 +8,7 @@
 
 #include "fp_Null.h"
 #include "fp_DatecsBase.h"
-#include "fp_Datecs3141.h"
+#include "fp_DatecsKrypton.h"
 
 #include "commanddata.h"
 #include "errors.h"
@@ -35,9 +35,9 @@ bool FiscalPrinter::Create(const wchar_t* model) {
 	if (wcsncmp(model, TEST_PRINTER, PRINTER_NAME_LEN) == 0)
 		_impl.reset(new CFiscalPrinter_Null());
 	else if (wcsncmp(model, DATECS_KRYPTON, PRINTER_NAME_LEN) == 0)
-		_impl.reset(new CFiscalPrinter_Datecs3141());
+		_impl.reset(new CFiscalPrinter_DatecsKrypton());
 	else if (wcsncmp(model, FP_DATECST260, PRINTER_NAME_LEN) == 0)
-		_impl.reset(new CFiscalPrinter_Datecs3141());
+		_impl.reset(new CFiscalPrinter_DatecsKrypton());
 	return _impl.get() != nullptr;
 }
 
@@ -93,9 +93,9 @@ void FiscalPrinter::Disconnect() {
 }
 
 // virtual 
-void FiscalPrinter::NullReceipt(bool bOpenCashDrawer)
+long FiscalPrinter::NullReceipt(bool bOpenCashDrawer)
 {
-	_impl->NullReceipt(bOpenCashDrawer);
+	return _impl->NullReceipt(bOpenCashDrawer);
 }
 
 // const 
@@ -121,9 +121,9 @@ long FiscalPrinter::XReport()
 	return _impl->XReport();
 }
 
-void FiscalPrinter::ZReport()
+ZREPORT_RESULT FiscalPrinter::ZReport()
 {
-	_impl->ZReport();
+	return _impl->ZReport();
 }
 
 void FiscalPrinter::OpenCashDrawer() {
@@ -146,6 +146,7 @@ static void _fillReceiptItem(RECEIPT_ITEM& item, const PosReceiptItemData* pItem
 	item.name = pItem->_name.c_str();
 	item.unit = pItem->_unit.c_str();
 	item.vat = pItem->_vat;
+	item.excise = pItem->_excise;
 	item.price = pItem->_price;
 	item.sum = pItem->_sum;
 	item.qty = pItem->_qty;
@@ -167,7 +168,7 @@ void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
 	_impl->PrintReceiptItem(item);
 }
 
-void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
+long FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 {
 	_impl->TraceCommand(L"PrintReceipt()");
 	//_impl->CancelReceipt(); // discard previous, if needed
@@ -189,25 +190,16 @@ void FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 		totalDiscountSum += pItem->_dscSum;
 		PrintItem(pItem);
 	}
-	
+
+	_impl->PrintTotal();
+
 	if (pData->_cardSum)
 		_impl->Payment(PAYMENT_MODE::_pay_card, pData->_cardSum);
 	else if (pData->_cashSum)
 		_impl->Payment(PAYMENT_MODE::_pay_cash, pData->_cashSum);
 
-	_impl->CloseReceipt();
-	/*
-	validate amounts
-
-	if (pData->_cardSum != 0)
-		_impl->Payment(payment_mode::card, pData->_cardSum);
-	if (pData->_cashSum != 0)
-		_impl->Payment(payment_mode::sum)
-
-	long chNo = _impl.CloseCheck();
-	*/
-
-	// Close Check
+	// Close receipt
+	return _impl->CloseReceipt();
 }
 
 

@@ -128,8 +128,11 @@ std::wstring PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data)
 
 std::wstring PosCommand::ZReport(FiscalPrinter* pPrinter, JsonTarget* data)
 {
-	pPrinter->ZReport();
-	return L"\"no\":\"2233\"";
+	ZREPORT_RESULT zrr = pPrinter->ZReport();
+	JsonObject js;
+	js.Add(L"no", (long) zrr.no);
+	js.Add(L"zno", (long) zrr.zno);
+	return js.Value();
 }
 
 std::wstring PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
@@ -138,15 +141,19 @@ std::wstring PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 	bool bOpenDrawer = false;
 	if (pnrd)
 		bOpenDrawer = pnrd->m_openCashDrawer;
-	pPrinter->NullReceipt(bOpenDrawer);
-	return L"\"no\":\"112233\"";
+	long no = pPrinter->NullReceipt(bOpenDrawer);
+	JsonObject js;
+	js.Add(L"no", no);
+	return js.Value();
 }
 
 std::wstring PosCommand::PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	PosPrintReceiptData* pprd = dynamic_cast<PosPrintReceiptData*>(data);
-	pPrinter->PrintReceipt(pprd);
-	return L"\"no\": 123";
+	long no = pPrinter->PrintReceipt(pprd);
+	JsonObject js;
+	js.Add(L"no", no);
+	return js.Value();
 }
 
 std::wstring PosCommand::HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data)
@@ -174,6 +181,6 @@ std::wstring PosCommand::ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data)
 	SERVICE_SUM_INFO info = pPrinter->ServiceInOut(siod->_out, siod->_amount, siod->_openCashDrawer);
 	JsonObject js;
 	js.Add(L"no", (long) info.no);
-	js.Add(L"cashOnHand", info.sumOnHand.to_wstring().c_str());
+	js.Add(L"cashOnHand", info.sumOnHand);
 	return js.Value();
 }

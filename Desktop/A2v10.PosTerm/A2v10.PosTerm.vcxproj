@@ -171,7 +171,7 @@
     <ClInclude Include="errors.h" />
     <ClInclude Include="fiscalprinter.h" />
     <ClInclude Include="fiscalprinterImpl.h" />
-    <ClInclude Include="fp_Datecs3141.h" />
+    <ClInclude Include="fp_DatecsKrypton.h" />
     <ClInclude Include="fp_DatecsBase.h" />
     <ClInclude Include="fp_Null.h" />
     <ClInclude Include="framework.h" />
@@ -188,7 +188,7 @@
     <ClCompile Include="equipmentbase.cpp" />
     <ClCompile Include="fiscalprinter.cpp" />
     <ClCompile Include="fiscalprinterimpl.cpp" />
-    <ClCompile Include="fp_Datecs3141.cpp" />
+    <ClCompile Include="fp_DatecsKrypton.cpp" />
     <ClCompile Include="fp_DatecsBase.cpp" />
     <ClCompile Include="fp_Null.cpp" />
     <ClCompile Include="monitor.cpp" />

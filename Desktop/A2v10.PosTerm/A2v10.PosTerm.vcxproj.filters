@@ -42,9 +42,6 @@
     <ClInclude Include="fp_DatecsBase.h">
       <Filter>Header Files\fiscalprinters</Filter>
     </ClInclude>
-    <ClInclude Include="fp_Datecs3141.h">
-      <Filter>Header Files\fiscalprinters</Filter>
-    </ClInclude>
     <ClInclude Include="fp_Null.h">
       <Filter>Header Files\fiscalprinters</Filter>
     </ClInclude>
@@ -78,6 +75,9 @@
     <ClInclude Include="errors.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fp_DatecsKrypton.h">
+      <Filter>Header Files\fiscalprinters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -90,9 +90,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fp_DatecsBase.cpp">
-      <Filter>Source Files\fiscalprinters</Filter>
-    </ClCompile>
-    <ClCompile Include="fp_Datecs3141.cpp">
       <Filter>Source Files\fiscalprinters</Filter>
     </ClCompile>
     <ClCompile Include="fp_Null.cpp">
@@ -124,6 +121,9 @@
     </ClCompile>
     <ClCompile Include="monitor.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fp_DatecsKrypton.cpp">
+      <Filter>Source Files\fiscalprinters</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -40,10 +40,10 @@ pos_result_t PosConnectToAcquiringTerminal(const wchar_t* model, const wchar_t* 
 
 void PosProcessCommandA(const char* json, std::string& result)
 {
-	std::wstring wjson = A2W(json);
+	std::wstring wjson = A2W(json, CP_UTF8);
 	std::wstring wresult;
 	PosProcessCommand(wjson.c_str(), wresult);
-	result = W2A(wresult.c_str());
+	result = W2A(wresult.c_str(), CP_UTF8);
 }
 
 

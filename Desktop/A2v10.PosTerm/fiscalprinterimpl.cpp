@@ -67,7 +67,7 @@ bool FiscalPrinterImpl::ReportRems()
 }
 
 // virtual 
-bool FiscalPrinterImpl::CancelReceiptCommand(__int64 termId)
+bool FiscalPrinterImpl::CancelReceiptCommand()
 {
 	return true;
 }

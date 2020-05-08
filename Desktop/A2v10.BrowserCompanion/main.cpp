@@ -31,10 +31,7 @@ int main(int argc, char *argv[], char *envp[])
 		else 
 		{
 
-			for (int i = 0; i < len._len; i++) {
-				std::cin >> buf[i];
-			}
-
+			std::cin.read(buf, len._len);
 			buf[len._len] = '\0';
 
 			// PosProcessMessage
@@ -46,7 +43,7 @@ int main(int argc, char *argv[], char *envp[])
 			len._len = result.length() - 1;
 
 			std::cout << len._b[0] << len._b[1] << len._b[2] << len._b[3];
-			std::cout << result.c_str();
+			std::cout.write(result.c_str(), len._len);
 		}
 	}
 	PosShutDown();

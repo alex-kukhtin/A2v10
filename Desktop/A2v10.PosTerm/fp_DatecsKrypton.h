@@ -1,4 +1,4 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright 3© 2015-2020 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -16,7 +16,7 @@ enum RECEIPT_STATUS
 	CHS_CANCELED = 9,   // режим анулирования
 };
 
-class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
+class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
 {
 	long m_nLastReceiptNo;
 	long m_nLastZReportNo;
@@ -25,25 +25,26 @@ class CFiscalPrinter_Datecs3141 : public CFiscalPrinter_DatecsBase
 	wchar_t _payModeCard;
 	std::unordered_map <long, wchar_t> _taxChars; // prc*100 -> char
 public:
-	CFiscalPrinter_Datecs3141();
+	CFiscalPrinter_DatecsKrypton();
 
 	virtual void SetParams(const PosConnectParams& prms) override;
 	virtual void PrintDiagnostic();
 	virtual bool ProgramOperator(LPCWSTR Name, LPCWSTR Password);
-	virtual void NullReceipt(bool bOpenCashDrawer) override;
+	virtual long NullReceipt(bool bOpenCashDrawer) override;
 	virtual long XReport() override;
-	virtual void ZReport() override;
+	virtual ZREPORT_RESULT ZReport() override;
 	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) override;
 	virtual void OpenReceipt() override;
 	virtual void OpenReturnReceipt() override;
 	virtual void Payment(PAYMENT_MODE mode, long sum) override;
-	virtual void CloseReceipt() override;
+	virtual void PrintTotal() override;
+	virtual long CloseReceipt() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
 
-	virtual int GetLastReceiptNo(__int64 termId, bool bFromPrinter = false) override;
-	virtual LONG GetCurrentZReportNo(__int64 termId, bool bFromPrinter = false) override;
+	virtual int GetLastReceiptNo(bool bFromPrinter = false) override;
+	virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy);
 	virtual void SetCurrentTime() override;
@@ -53,7 +54,7 @@ public:
 
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
 	virtual void AddArticle(const RECEIPT_ITEM& item) override;
-	virtual bool CopyBill() override;
+	virtual bool CopyReceipt() override;
 	virtual void Init() override;
 	virtual void OpenCashDrawer() override;
 	virtual void PrintFiscalText(const wchar_t* szText) override;
@@ -63,7 +64,7 @@ public:
 	virtual bool ReportByArticles() override;
 	virtual bool ReportModemState() override;
 	virtual bool CancelReceipt(__int64 termId, bool& bClosed) override;
-	virtual bool CancelReceiptCommand(__int64 termId) override;
+	virtual bool CancelReceiptCommand() override;
 	virtual bool IsEndOfTape() override;
 
 protected:
@@ -84,8 +85,7 @@ protected:
 	void OpenFiscal(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
 	void OpenFiscalReturn(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
 	void Payment(WCHAR mode, int sum, std::wstring& info);
-	void CloseFiscal(long& chNo);
-	void PrintTotal();
+	long CloseFiscal();
 	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat);
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
 	void CancelReceiptPrinter();

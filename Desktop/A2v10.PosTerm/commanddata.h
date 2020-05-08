@@ -39,6 +39,7 @@ public:
 	std::wstring _unit;
 	__int64 _article;
 	__currency _vat;
+	__currency _excise;
 	__currency _price;
 	int _qty;
 	__currency _weight;
@@ -47,7 +48,7 @@ public:
 	PosReceiptItemData()
 		: _article(0), _qty(0) {}
 protected:
-	BEGIN_JSON_PROPS(9)
+	BEGIN_JSON_PROPS(10)
 		STRING_PROP(name, _name)
 		STRING_PROP(unit, _unit)
 		INT64_PROP(article, _article)
@@ -57,6 +58,7 @@ protected:
 		CURRENCY_PROP(sum, _sum)
 		CURRENCY_PROP(dscSum, _dscSum)
 		CURRENCY_PROP(vat, _vat)
+		CURRENCY_PROP(vat, _excise)
 	END_JSON_PROPS()
 };
 
@@ -66,14 +68,16 @@ public:
 	std::wstring _topText;
 	__currency _cashSum;
 	__currency _cardSum;
+	__currency _sum;
 	JsonTargetTypedArray<PosReceiptItemData> _items;
 
 	PosPrintReceiptData() {}
 protected:
-	BEGIN_JSON_PROPS(4)
+	BEGIN_JSON_PROPS(5)
 		STRING_PROP(topText, _topText)
 		CURRENCY_PROP(cashSum, _cashSum)
 		CURRENCY_PROP(cardSum, _cardSum)
+		CURRENCY_PROP(sum, _sum)
 		ARRAY_PROP(items, _items)
 	END_JSON_PROPS()
 };

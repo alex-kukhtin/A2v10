@@ -1,0 +1,11 @@
+Подключение POS-терминалов к браузеру.
+
+1. Устанавливаем расширение хрома 
+https://chrome.google.com/webstore/detail/knopcophdgepmijgkhdehmbkmkalhidj
+
+2. Устанавливаем нативный хост A2v10.BrowserCompanion.msi из
+
+
+3
+
+

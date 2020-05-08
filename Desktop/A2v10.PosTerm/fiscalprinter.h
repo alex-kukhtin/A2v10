@@ -10,9 +10,14 @@ struct SERVICE_SUM_INFO {
 	int flags;
 
 	SERVICE_SUM_INFO()
-		: no(0), flags(0) {
+		: no(0), flags(0) {}
+};
 
-	}
+struct ZREPORT_RESULT {
+	int no;
+	int zno;
+	ZREPORT_RESULT()
+		: no(0), zno(0) {}
 };
 
 class FiscalPrinter
@@ -38,7 +43,7 @@ public:
 	void OpenReceipt();
 	void OpenReturnReceipt(long retNo);
 	void PrintDiscountForBill(long discountPercent, long discountSum);
-	void NullReceipt(bool bOpenCashDrawer);
+	long NullReceipt(bool bOpenCashDrawer);
 	SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer);
 
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
@@ -51,14 +56,14 @@ public:
 
 	void OpenCashDrawer();
 	long XReport();
-	void ZReport();
+	ZREPORT_RESULT ZReport();
 
 	// customer display
 	void DisplayDateTime();
 	void DisplayClear();
 	void DisplayRow(int rowNo, const wchar_t* szString);
 
-	void PrintReceipt(const PosPrintReceiptData* pData);
+	long PrintReceipt(const PosPrintReceiptData* pData);
 
 private:
 	void PrintItem(const PosReceiptItemData* pData);
