@@ -234,7 +234,7 @@ long CFiscalPrinter_DatecsKrypton::NullReceipt(bool bOpenCashDrawer)
 	CreateCommand(L"PAYMENT", FPCMD_PAYMENT, L"000000;0;0.00;");
 	SendCommand();
 
-	m_nLastReceiptNo = CloseFiscal();
+	m_nLastReceiptNo = CloseFiscal(true);
 
 	if (bOpenCashDrawer)
 	{
@@ -317,8 +317,8 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 		}
 	}
 	if (IS_EMULATION()) {
-		_payModeCard = L'1';
-		_payModeCash = L'2';
+		_payModeCash = L'1';
+		_payModeCard = L'2';
 		dwCardFlags = 0x02;
 		bCardSet = true;
 		bCashSet = true;
@@ -348,26 +348,54 @@ void CFiscalPrinter_DatecsKrypton::GetTaxRates()
 		{
 			std::string vatPercent = elems[2];
 			long nested = atol(elems[4].c_str());
+			TAX_KEY taxKey;
+			taxKey.tax = (long)std::round(atof(vatPercent.c_str()) * 100.0);
+			taxKey.nested = nested;
 			long taxIndex = (long) std::round(atof(vatPercent.c_str()) * 100.0);
-			if (nested != -1)
-				taxIndex = -taxIndex;
-			_taxChars[taxIndex] = L'0' + i;
-			//TraceINFO(L"  Vat rate: %ld. Tax code: %C", taxIndex, L'0' + i);
+			_taxChars[taxKey.key] = L'0' + i;
 		}
 	}
 	if (IS_EMULATION()) {
-		_taxChars[2000] = L'2';
-		_taxChars[700]  = L'7';
-		_taxChars[-2000] = L'3';
-		_taxChars[0]   =  L'0';
+		TAX_KEY key;
+		key.tax = 2000;
+		key.nested = -1;
+		_taxChars[key.key] = L'0'; // 20%
+		key.tax = 500;
+		_taxChars[key.key] = L'1'; // 5% (not used)
+		key.tax = 2000;
+		key.nested = 1;
+		_taxChars[key.key] = L'2'; // 20% + 5%
+		key.tax = 0;
+		key.nested = -1;
+		_taxChars[key.key] = L'3'; // 0%
 	}
 
+	TAX_KEY key;
 	for (auto it = _taxChars.begin(); it != _taxChars.end(); ++it) {
-		long  prc = it->first;
+		key.key = it->first;
 		wchar_t ch = it->second;
-		TraceINFO(L"  Tax mode: char: '%C', value: %ld", ch, prc);
+		TraceINFO(L"  Tax mode: char: '%C', tax: %ld, nested:%ld", ch, key.tax, key.nested);
 	}
 
+}
+
+wchar_t CFiscalPrinter_DatecsKrypton::FindTaxChar(long tax, long excise)
+{
+	TAX_KEY key;
+	key.tax = tax;
+	key.nested = -1;
+	// without excise
+	const wchar_t taxCode = _taxChars[key.key];
+	if (!excise)
+		return taxCode;
+	// find nested tax
+	TAX_KEY exciseKey;
+	exciseKey.tax = excise;
+	exciseKey.nested = -1;
+	const wchar_t exciseCode = _taxChars[exciseKey.key];
+	// nested tax (excise)
+	key.nested = exciseCode - L'0';
+	return _taxChars[key.key];
 }
 
 
@@ -427,7 +455,7 @@ bool CFiscalPrinter_DatecsKrypton::CopyReceipt()
 		SendCommand();
 		CreateCommandV(L"PRINTCOPY", FPCMD_PRINTCOPY, L"%s%ld;%ld;", EMPTY_PARAM, checkNo, checkNo);
 		SendCommand();
-		m_nLastReceiptNo = CloseFiscal();
+		m_nLastReceiptNo = CloseFiscal(false);
 	}
 	catch (EQUIPException ex) {
 		m_strError = ex.GetError();
@@ -708,14 +736,6 @@ bool CFiscalPrinter_DatecsKrypton::FillZReportInfo(ZREPORT_INFO& zri)
 */
 
 // virtual 
-int CFiscalPrinter_DatecsKrypton::GetLastReceiptNo(bool bFromPrinter /*= false*/)
-{
-	if (bFromPrinter)
-		m_nLastReceiptNo = GetPrinterLastReceiptNo();
-	return m_nLastReceiptNo;
-}
-
-// virtual 
 LONG CFiscalPrinter_DatecsKrypton::GetCurrentZReportNo(bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
@@ -832,7 +852,7 @@ void CFiscalPrinter_DatecsKrypton::AddArticle(const RECEIPT_ITEM& item)
 	if (_mapCodes.count(item.article) > 0)
 		return;
 	long code = ((long) item.article) % 1000000;
-	AddPrinterArticle(code, item.name, item.unit, item.vat.units());
+	AddPrinterArticle(code, item.name, item.unit, item.vat.units(), item.excise.units());
 	_mapCodes[item.article] = code;
 }
 
@@ -884,6 +904,8 @@ void CFiscalPrinter_DatecsKrypton::PrintTotal()
 {
 	CreateCommand(L"PRINTTOTAL", FPCMD_PRINTTOTAL, L"000000;0;");
 	SendCommand();
+	std::string  result((char*)m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
 }
 
 // virtual 
@@ -902,9 +924,9 @@ void CFiscalPrinter_DatecsKrypton::Payment(PAYMENT_MODE mode, long sum)
 };
 
 // virtual 
-long CFiscalPrinter_DatecsKrypton::CloseReceipt()
+long CFiscalPrinter_DatecsKrypton::CloseReceipt(bool bDisplay)
 {
-	return CloseFiscal();
+	return CloseFiscal(bDisplay);
 }
 
 void CFiscalPrinter_DatecsKrypton::Payment(WCHAR mode, int sum, std::wstring& info)
@@ -913,19 +935,22 @@ void CFiscalPrinter_DatecsKrypton::Payment(WCHAR mode, int sum, std::wstring& in
 	int sum2 = sum % 100;
 	CreateCommandV(L"PAYMENT", FPCMD_PAYMENT, L"%s%c;%d.%02d;", EMPTY_PARAM, mode, sum1, sum2);
 	SendCommand();
+	std::string  result((char*)m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
 }
 
-long CFiscalPrinter_DatecsKrypton::CloseFiscal()
+long CFiscalPrinter_DatecsKrypton::CloseFiscal(bool bDisplay)
 {
-	//USES_CONVERSION;
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s0;", EMPTY_PARAM);
-	CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, buff);
+	CreateCommandV(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"%s%s;", EMPTY_PARAM, bDisplay ? L"1" : L"0");
 	SendCommand();
 	/*00000;<RECEIPT_NO>;*/
-	std::string info((char*) m_data);
-	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
-	auto arr = _split(info, ';');
+	std::string result((char*) m_data);
+
+	if (IS_EMULATION())
+		result = "0000;27;";
+
+	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
+	auto arr = _split(result, ';');
 	long rcpNo = 0;
 	if (arr.size() > 1) {
 		rcpNo = atol(arr[1].c_str());
@@ -974,6 +999,11 @@ SERVICE_SUM_INFO CFiscalPrinter_DatecsKrypton::ServiceInOut(bool bOut, __currenc
 
 	SendCommand();
 	std::string result((char*) m_data);
+
+	if (IS_EMULATION()) {
+		result = "000000;124.00;";
+	}
+
 	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
 	auto elems = _split(result, ';');
 
@@ -998,14 +1028,21 @@ void CFiscalPrinter_DatecsKrypton::PrintReceiptItem(const RECEIPT_ITEM& item)
 	if (item.qty)
 		CreateCommandV(L"PRINTITEM", FPCMD_PRINTITEM, L"%s%ld;%ld.000;%ld.%02ld;", EMPTY_PARAM,
 			code, item.qty, price_c / 100, price_c % 100);
-	else
-		CreateCommandV(L"PRINTITEM", FPCMD_PRINTITEM, L"%s%ld;%#.03f;%ld.%02ld;", EMPTY_PARAM, 
-			code, item.weight, price_c / 100, price_c % 100);
+	else {
+		long weight_c = item.weight.units() * 10; // g!
+		CreateCommandV(L"PRINTITEM", FPCMD_PRINTITEM, L"%s%ld;%ld.$03ld;%ld.%02ld;", EMPTY_PARAM,
+			code, weight_c / 1000, weight_c % 1000, price_c / 100, price_c % 100);
+	}
 	SendCommand();
+	std::string  result((char*)m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
+
 	if (item.discount) {
 		long disc_c = item.discount.units();
 		CreateCommandV(L"DISCOUNTABS", FPCMD_DISCOUNTABS, L"%s-%ld.%02ld;", EMPTY_PARAM, disc_c / 100, disc_c % 100);
 		SendCommand();
+		result = (char*)m_data;
+		TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
 	}
 	//void CFiscalPrinter_DatecsKrypton::PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight)
 	//ÏÅ×ÀÒÜ ÄÐÎÁÍÎÃÎ ÊÎËÈ×ÅÑÒÂÀ!!!!
@@ -1049,14 +1086,19 @@ int CFiscalPrinter_DatecsKrypton::GetPrintCodeByArticle(__int64 art, LPCWSTR szN
 	return 0;
 }
 
-void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(int code, const wchar_t* name, const wchar_t* unit, long vat)
+void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(int code, const wchar_t* name, const wchar_t* unit, long vat, long excise)
 {
 	//%%%%TODO: TERMINAL
 	long tno = 1;
 
 	CreateCommandV(L"FINDARTICLE", PFCMD_FINDARTICLE, L"%s%ld;", EMPTY_PARAM, code);
 	SendCommand();
+
 	std::string found((char*) m_data); // char!
+
+	if (IS_EMULATION())
+		found = "0000;FFFFFF;";
+
 	TraceINFO(L"\t\tRCV:%s", A2W(found.c_str()).c_str());
 	if (found.size() > 0 && found.find("FFFFFF") == -1)
 		return; // already programmed
@@ -1073,7 +1115,7 @@ void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(int code, const wchar_t* na
 		sunit.resize(MAX_UNIT_LEN);
 
 	//00-weight modifier ??
-	wchar_t taxGroup = _taxChars[vat];
+	wchar_t taxGroup = FindTaxChar(vat, excise);
 
 	CreateCommandV(L"ADDARTICLE", FPCMD_ADDARTICLE, L"%s%ld;%s;%c;%ld;00;%s;", EMPTY_PARAM, 
 		code, sname.c_str(), taxGroup, tno, sunit.c_str());
@@ -1225,4 +1267,48 @@ std::wstring CFiscalPrinter_DatecsKrypton::GetLastErrorS()
 bool CFiscalPrinter_DatecsKrypton::IsEndOfTape()
 {
 	return m_bEndOfTape;
+}
+
+// virtual 
+long CFiscalPrinter_DatecsKrypton::PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to)
+{
+	const int NAME_LEN = 32;
+	BYTE cmd = 0;
+	const wchar_t* repname;
+	if (wcsncmp(report, L"number", NAME_LEN) == 0) {
+		cmd = FPCMD_NUMREPORTS;
+		repname = L"FPCMD_NUMREPORTS";
+	}
+	else if (wcsncmp(report, L"date", NAME_LEN) == 0) {
+		cmd = FPCMD_DATEREPORTS;
+		repname = L"FPCMD_DATEREPORTS";
+	}
+	else
+		throw EQUIPException(FP_E_INVALID_ARGUMENT);
+
+	CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
+	SendCommand();
+
+	CreateCommandV(repname, cmd, L"%s%s;%s;%s;", EMPTY_PARAM, from, to, bShort ? L"0" : L"1");
+	SendCommand();
+	/*
+	CString s;
+	s.Format(L"%s%04d;%04d;%s;", EMPTY_PARAM, From, To,
+		Short ? L"0" : L"1");
+	CreateCommand(FPCMD_NUMREPORTS, s);
+	SendCommand();
+		CString s;
+		s.Format(L"%s%02d%02d%02d;%02d%02d%02d;%s;", EMPTY_PARAM,
+			From.GetDay(), From.GetMonth(), From.GetYear() - 2000,
+			To.GetDay(), To.GetMonth(), To.GetYear() - 2000,
+			Short ? L"0" : L"1");
+		CreateCommand(FPCMD_DATEREPORTS, s);
+		SendCommand();
+	*/
+
+	CreateCommand(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"000000;0;");
+	SendCommand();
+
+	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // get receipt id
+	return m_nLastReceiptNo;
 }

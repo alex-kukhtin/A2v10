@@ -4,16 +4,24 @@
 
 enum RECEIPT_STATUS
 {
-	CHS_NORMAL = 0,     // закрыт
-	CHS_TITLED = 1,     // отпечатан заголовок
-	CHS_ITEMED = 2,     // выполнена продажа
-	CHS_PAYED = 3,      // оплачивается
-	CHS_CLOSING = 4,    // завершение
-	CHS_NF_OPENED = 5,  // открыт нефискальный чек
-	CHS_DISCOUNTED = 6, // сделана скидка
+	CHS_NORMAL = 0,
+	CHS_TITLED = 1,
+	CHS_ITEMED = 2,
+	CHS_PAYED = 3,
+	CHS_CLOSING = 4,
+	CHS_NF_OPENED = 5,
+	CHS_DISCOUNTED = 6,
 	CHS_NOTUSED = 7,
-	CHS_CANCELING = 8,  // выполнены анулирования
-	CHS_CANCELED = 9,   // режим анулирования
+	CHS_CANCELING = 8,
+	CHS_CANCELED = 9,
+};
+
+union TAX_KEY {
+	struct {
+		__int32 tax;
+		__int32 nested;
+	};
+	__int64 key;
 };
 
 class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
@@ -23,7 +31,7 @@ class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
 	std::unordered_map <__int64, long> _mapCodes;
 	wchar_t _payModeCash;
 	wchar_t _payModeCard;
-	std::unordered_map <long, wchar_t> _taxChars; // prc*100 -> char
+	std::unordered_map <__int64, wchar_t> _taxChars;
 public:
 	CFiscalPrinter_DatecsKrypton();
 
@@ -38,12 +46,12 @@ public:
 	virtual void OpenReturnReceipt() override;
 	virtual void Payment(PAYMENT_MODE mode, long sum) override;
 	virtual void PrintTotal() override;
-	virtual long CloseReceipt() override;
+	virtual long CloseReceipt(bool bDisplay) override;
+	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
 
-	virtual int GetLastReceiptNo(bool bFromPrinter = false) override;
 	virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy);
@@ -85,8 +93,8 @@ protected:
 	void OpenFiscal(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
 	void OpenFiscalReturn(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
 	void Payment(WCHAR mode, int sum, std::wstring& info);
-	long CloseFiscal();
-	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat);
+	long CloseFiscal(bool bDisplay);
+	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat, long excise);
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
 	void CancelReceiptPrinter();
 	bool GetPrinterCheckNoForCopy(long& chNo, bool bShowStateError = true);
@@ -97,4 +105,5 @@ private:
 	void GetPrinterPayModes();
 	void GetTaxRates();
 	void TraceStatus();
+	wchar_t FindTaxChar(long tax, long excise);
 };

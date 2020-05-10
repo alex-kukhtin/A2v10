@@ -15,7 +15,6 @@ public:
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
 	virtual void SetParams(const PosConnectParams& prms) override;
 	virtual void Close() override;
-	virtual int GetLastReceiptNo(bool bFromPrinter = false) override;
 
 	virtual void AddArticle(const RECEIPT_ITEM& item) override;
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
@@ -23,7 +22,8 @@ public:
 	virtual void OpenReturnReceipt() override;
 	virtual void Payment(PAYMENT_MODE mode, long sum) override;
 	virtual void PrintTotal() override;
-	virtual long CloseReceipt() override;
+	virtual long CloseReceipt(bool bDisplay) override;
+	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) override { return 0; };
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
 	virtual long NullReceipt(bool bOpenCashDrawer) override;

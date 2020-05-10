@@ -38,6 +38,7 @@ namespace A2v10.Request
 		protected readonly IDataScripter _scripter;
 		protected readonly IMessageService _messageService;
 		protected readonly IUserStateManager _userStateManager;
+		protected readonly IExternalDataProvider _externalDataProvider;
 
 		public class DataModelAndView
 		{
@@ -61,6 +62,7 @@ namespace A2v10.Request
 			_scripter = locator.GetService<IDataScripter>();
 			_messageService = locator.GetServiceOrNull<IMessageService>();
 			_userStateManager = locator.GetServiceOrNull<IUserStateManager>();
+			_externalDataProvider = locator.GetServiceOrNull<IExternalDataProvider>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;

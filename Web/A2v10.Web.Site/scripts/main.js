@@ -1328,9 +1328,9 @@ app.modules['std:period'] = function () {
 };
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20181019-7323
+// 20200509-7655
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -1342,6 +1342,7 @@ app.modules['std:modelInfo'] = function () {
 	};
 
 	function copyFromQuery(mi, q) {
+		if (!mi) return;
 		let psq = { PageSize: q.pageSize, Offset: q.offset, SortDir: q.dir, SortOrder: q.order, GroupBy: q.group };
 		for (let p in psq) {
 			mi[p] = psq[p];
@@ -1998,7 +1999,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200214-7632*/
+/*20200510-7655*/
 // services/datamodel.js
 
 (function () {
@@ -2753,6 +2754,10 @@ app.modules['std:validators'] = function () {
 				}
 			}
 			return this;
+		};
+
+		arr.$sum = function (fn) {
+			return this.reduce((a, c) => a + fn(c), 0);
 		};
 
 		arr.__fireChange__ = function (opts) {

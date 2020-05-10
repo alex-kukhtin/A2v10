@@ -8,5 +8,6 @@
 #define FP_E_INVALID_TAXMODES  L"FP1006: Invalid configuration. (taxModes)"
 #define FP_E_INVALID_FP_MODEL  L"FP1007: Invalid printer model"
 #define FP_E_UNABLE_TO_CONNECT L"FP1008: Unable to connect to fiscal printer"
+#define FP_E_INVALID_ARGUMENT  L"FP1009: Invalid argument"
 
 

@@ -42,8 +42,24 @@ namespace A2v10.Request
 				case RequestFileType.parse:
 					{
 						savePrms.Set("Id", ru.Id);
-						var dm = await SaveExcel(ru, files[0].InputStream, savePrms);
-						WriteDataModel(dm, writer);
+						IDataModel dm = null;
+						switch (ru.parse)
+						{
+							case RequestFileParseType.excel:
+								dm = await SaveExcel(ru, files[0].InputStream, savePrms);
+								break;
+							case RequestFileParseType.csv:
+								dm = await SaveFlat("csv", ru, files[0].InputStream, savePrms);
+								break;
+							case RequestFileParseType.dbf:
+								dm = await SaveFlat("dbf", ru, files[0].InputStream, savePrms);
+								break;
+							case RequestFileParseType.xml:
+								dm = await SaveFlat("xml", ru, files[0].InputStream, savePrms);
+								break;
+						}
+						if (dm != null)
+							WriteDataModel(dm, writer);
 					}
 					break;
 				case RequestFileType.sql:
@@ -66,6 +82,17 @@ namespace A2v10.Request
 				});
 				return dm;
 			}
+		}
+
+		async Task<IDataModel> SaveFlat(String format, RequestFile ru, Stream stream, ExpandoObject prms)
+		{
+			if (_externalDataProvider == null)
+				throw new ArgumentNullException(nameof(_externalDataProvider));
+			var rdr = _externalDataProvider.GetReader(format, null, null);
+			IDataModel dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) => {
+				return rdr.ParseFile(stream, table);
+			});
+			return dm;
 		}
 
 		async Task<Object> DoUploadClr(RequestFile ru, ExpandoObject prms)

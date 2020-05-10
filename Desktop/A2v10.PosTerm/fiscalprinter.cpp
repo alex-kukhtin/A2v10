@@ -151,7 +151,7 @@ static void _fillReceiptItem(RECEIPT_ITEM& item, const PosReceiptItemData* pItem
 	item.sum = pItem->_sum;
 	item.qty = pItem->_qty;
 	item.weight = pItem->_weight;
-	item.discount = pItem->_dscSum;
+	item.discount = pItem->_discount;
 }
 
 void FiscalPrinter::AddArticle(const PosReceiptItemData* pItem)
@@ -187,7 +187,7 @@ long FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
 		auto pItem = it->get();
 		totalAmount += pItem->_sum;
-		totalDiscountSum += pItem->_dscSum;
+		totalDiscountSum += pItem->_discount;
 		PrintItem(pItem);
 	}
 
@@ -199,11 +199,16 @@ long FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 		_impl->Payment(PAYMENT_MODE::_pay_cash, pData->_cashSum);
 
 	// Close receipt
-	return _impl->CloseReceipt();
+	return _impl->CloseReceipt(true);
 }
 
 
 SERVICE_SUM_INFO FiscalPrinter::ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer)
 {
 	return _impl->ServiceInOut(bOut, amount, bOpenCashDrawer);
+}
+
+long FiscalPrinter::PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to)
+{
+	return _impl->PeriodReport(report, bShort, from, to);
 }

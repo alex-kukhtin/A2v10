@@ -1,7 +1,7 @@
 ﻿
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20181019-7323
+// 20200509-7655
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -13,6 +13,7 @@ app.modules['std:modelInfo'] = function () {
 	};
 
 	function copyFromQuery(mi, q) {
+		if (!mi) return;
 		let psq = { PageSize: q.pageSize, Offset: q.offset, SortDir: q.dir, SortOrder: q.order, GroupBy: q.group };
 		for (let p in psq) {
 			mi[p] = psq[p];

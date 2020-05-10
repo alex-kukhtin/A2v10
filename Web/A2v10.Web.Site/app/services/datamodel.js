@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200214-7632*/
+/*20200510-7655*/
 // services/datamodel.js
 
 (function () {
@@ -755,6 +755,10 @@
 				}
 			}
 			return this;
+		};
+
+		arr.$sum = function (fn) {
+			return this.reduce((a, c) => a + fn(c), 0);
 		};
 
 		arr.__fireChange__ = function (opts) {

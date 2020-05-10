@@ -9,7 +9,7 @@ struct RECEIPT_ITEM {
 	__int64 article;
 	const wchar_t* name;
 	const wchar_t* unit;
-	__currency vat; /* percent * 100 */
+	__currency vat;
 	__currency excise;
 	int qty;
 	__currency weight;
@@ -58,7 +58,7 @@ public:
 	virtual void Close();
 	virtual DWORD GetFlags();
 
-	virtual int GetLastReceiptNo(bool bFromPrinter = false) = 0;
+	//virtual int GetLastReceiptNo(bool bFromPrinter = false) = 0;
 	virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) = 0;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 
@@ -77,7 +77,9 @@ public:
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) = 0;
 	virtual void PrintTotal() = 0;
 	virtual void Payment(PAYMENT_MODE mode, long sum) = 0;
-	virtual long CloseReceipt() = 0;
+	virtual long CloseReceipt(bool bDisplay) = 0;
+	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) = 0;
+
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
 	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr);
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);

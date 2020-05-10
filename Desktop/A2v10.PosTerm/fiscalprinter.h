@@ -45,6 +45,7 @@ public:
 	void PrintDiscountForBill(long discountPercent, long discountSum);
 	long NullReceipt(bool bOpenCashDrawer);
 	SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer);
+	long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to);
 
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
 	//LONG GetLastCheckNo(DB_ID termId, bool bFromPrinter = false);

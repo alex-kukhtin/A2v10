@@ -44,7 +44,7 @@ public:
 	int _qty;
 	__currency _weight;
 	__currency _sum;
-	__currency _dscSum;
+	__currency _discount;
 	PosReceiptItemData()
 		: _article(0), _qty(0) {}
 protected:
@@ -56,9 +56,9 @@ protected:
 		INT_PROP(qty, _qty)
 		CURRENCY_PROP(weight, _weight)
 		CURRENCY_PROP(sum, _sum)
-		CURRENCY_PROP(dscSum, _dscSum)
+		CURRENCY_PROP(discount, _discount)
 		CURRENCY_PROP(vat, _vat)
-		CURRENCY_PROP(vat, _excise)
+		CURRENCY_PROP(excise, _excise)
 	END_JSON_PROPS()
 };
 
@@ -106,5 +106,24 @@ protected:
 		CURRENCY_PROP(amount, _amount)
 		BOOL_PROP(out, _out)
 		BOOL_PROP(openCashDrawer, _openCashDrawer)
+	END_JSON_PROPS()
+};
+
+class PosPeriodReportData : public JsonTarget
+{
+public:
+	std::wstring _report;
+	bool _short;
+	std::wstring _from;
+	std::wstring _to;
+
+	PosPeriodReportData()
+		: _short(false) {}
+protected:
+	BEGIN_JSON_PROPS(4)
+		STRING_PROP(report, _report)
+		BOOL_PROP(@short, _short)
+		STRING_PROP(from, _from)
+		STRING_PROP(to, _to)
 	END_JSON_PROPS()
 };

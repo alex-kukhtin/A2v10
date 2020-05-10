@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7653 */
+/* Version 10.0.7655 */
 
 
 declare function require(url: string): any;
@@ -86,6 +86,7 @@ interface IElementArray<T> extends Array<T> {
 	$empty(): IElementArray<T>;
 	$renumberRows(): IElementArray<T>;
 	$copy(src: any[]): IElementArray<T>;
+	$sum(fn: (item: T) => number): number;
 }
 
 interface IRoot extends IElement {

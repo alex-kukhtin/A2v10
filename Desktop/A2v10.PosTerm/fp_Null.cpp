@@ -59,7 +59,7 @@ void CFiscalPrinter_Null::Payment(PAYMENT_MODE mode, long sum)
 }
 
 // virtual 
-long CFiscalPrinter_Null::CloseReceipt()
+long CFiscalPrinter_Null::CloseReceipt(bool bDisplay)
 {
 	TraceINFO(L"TESTPRINTER [%s]. CloseReceipt()", _id.c_str());
 	return m_nLastReceipt;
@@ -69,12 +69,6 @@ long CFiscalPrinter_Null::CloseReceipt()
 void CFiscalPrinter_Null::Close()
 {
 	TraceINFO(L"TESTPRINTER [%s]. Close()", _id.c_str());
-}
-
-//virtual 
-int CFiscalPrinter_Null::GetLastReceiptNo(bool bFromPrinter /*= false*/)
-{
-	return m_nLastReceipt++;
 }
 
 // virtual 
@@ -128,7 +122,7 @@ bool CFiscalPrinter_Null::CancelReceiptCommand()
 bool CFiscalPrinter_Null::CopyReceipt()
 {
 	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print bill copy", _id.c_str());
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print receipt copy", _id.c_str());
 	ReportMessage(buff);
 	return true;
 }

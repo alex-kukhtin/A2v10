@@ -11,7 +11,7 @@
 
 #define MAX_COMMAND_LEN 255
 
-#define EMULATION_MODE false
+#define EMULATION_MODE true
 
 #define SYN 0x16
 

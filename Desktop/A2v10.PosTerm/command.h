@@ -46,12 +46,14 @@ protected:
 	std::wstring AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring Connect(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring PeriodReport(FiscalPrinter* pPrinter, JsonTarget* data);
 
 	JsonTarget* NullReceiptData();
 	JsonTarget* PrintReceiptData();
 	JsonTarget* AcquirePaymentData();
 	JsonTarget* ConnectData();
 	JsonTarget* ServiceInOutData();
+	JsonTarget* PeriodReportData();
 
 private:
 	static COMMAND_BIND _binded_commands[];

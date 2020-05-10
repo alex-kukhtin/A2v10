@@ -23,6 +23,7 @@ PosCommand::COMMAND_BIND PosCommand::_binded_commands[] =
 	{L"acquirePayment", &PosCommand::AcquirePayment, &PosCommand::AcquirePaymentData},
 	{L"serviceInOut",   &PosCommand::ServiceInOut,   &PosCommand::ServiceInOutData},
 	{L"connect",        &PosCommand::Connect,        &PosCommand::ConnectData},
+	{L"periodReport",   &PosCommand::PeriodReport,   &PosCommand::PeriodReportData},
 	{nullptr, nullptr}
 };
 
@@ -118,6 +119,11 @@ JsonTarget* PosCommand::ServiceInOutData()
 	return new PosServiceInOutData();
 }
 
+JsonTarget* PosCommand::PeriodReportData()
+{
+	return new PosPeriodReportData();
+}
+
 std::wstring PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	long no = pPrinter->XReport();
@@ -182,5 +188,14 @@ std::wstring PosCommand::ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data)
 	JsonObject js;
 	js.Add(L"no", (long) info.no);
 	js.Add(L"cashOnHand", info.sumOnHand);
+	return js.Value();
+}
+
+std::wstring PosCommand::PeriodReport(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	PosPeriodReportData* prd = dynamic_cast<PosPeriodReportData*>(data);
+	long no = pPrinter->PeriodReport(prd->_report.c_str(), prd->_short, prd->_from.c_str(), prd->_to.c_str());
+	JsonObject js;
+	js.Add(L"no", no);
 	return js.Value();
 }
