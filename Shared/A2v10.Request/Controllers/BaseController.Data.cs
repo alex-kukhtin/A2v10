@@ -287,6 +287,15 @@ namespace A2v10.Request
 				writer.Write("{}");
 		}
 
+		void WriteExpandoObject(ExpandoObject model, TextWriter writer)
+		{
+			// Write data to output
+			if (model != null)
+				writer.Write(JsonConvert.SerializeObject(model, JsonHelpers.StandardSerializerSettings));
+			else
+				writer.Write("{}");
+		}
+
 		async Task InvokeData(Action<ExpandoObject> setParams, String json, HttpResponseBase response)
 		{
 			ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());

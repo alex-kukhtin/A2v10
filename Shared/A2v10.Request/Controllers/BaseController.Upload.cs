@@ -42,7 +42,7 @@ namespace A2v10.Request
 				case RequestFileType.parse:
 					{
 						savePrms.Set("Id", ru.Id);
-						IDataModel dm = null;
+						ExpandoObject dm = null;
 						switch (ru.parse)
 						{
 							case RequestFileParseType.excel:
@@ -59,7 +59,7 @@ namespace A2v10.Request
 								break;
 						}
 						if (dm != null)
-							WriteDataModel(dm, writer);
+							WriteExpandoObject(dm, writer);
 					}
 					break;
 				case RequestFileType.sql:
@@ -72,7 +72,7 @@ namespace A2v10.Request
 			}
 		}
 
-		async Task<IDataModel> SaveExcel(RequestFile ru, Stream stream, ExpandoObject prms)
+		async Task<ExpandoObject> SaveExcel(RequestFile ru, Stream stream, ExpandoObject prms)
 		{
 			using (var xp = new ExcelParser())
 			{
@@ -80,19 +80,27 @@ namespace A2v10.Request
 				IDataModel dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) => {
 					return xp.ParseFile(stream, table);
 				});
-				return dm;
+				return dm?.Root;
 			}
 		}
 
-		async Task<IDataModel> SaveFlat(String format, RequestFile ru, Stream stream, ExpandoObject prms)
+		async Task<ExpandoObject> SaveFlat(String format, RequestFile ru, Stream stream, ExpandoObject prms)
 		{
 			if (_externalDataProvider == null)
 				throw new ArgumentNullException(nameof(_externalDataProvider));
 			var rdr = _externalDataProvider.GetReader(format, null, null);
-			IDataModel dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) => {
-				return rdr.ParseFile(stream, table);
-			});
-			return dm;
+			if (String.IsNullOrEmpty(ru.CurrentModel))
+			{
+				return rdr.CreateDataModel(stream);
+			}
+			else
+			{
+				var dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) =>
+				{
+					return rdr.ParseFile(stream, table);
+				});
+				return dm?.Root;
+			}
 		}
 
 		async Task<Object> DoUploadClr(RequestFile ru, ExpandoObject prms)

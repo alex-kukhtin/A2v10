@@ -4915,11 +4915,14 @@ label.checkbox.small span:after {
 .a2-pager > .a2-pager-title {
   font-size: 0.9em;
   color: #777;
+  white-space: nowrap;
+  padding-left: 4px;
 }
 .a2-pager .a2-pager-dots {
   display: inline-block;
   width: 25.5px;
   text-align: center;
+  margin-right: -1px;
 }
 .a2-pager.rounded {
   padding: 1rem 0 0 0;

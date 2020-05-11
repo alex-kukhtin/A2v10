@@ -3677,6 +3677,7 @@ iframe.eusign-iframe {
   display: inline-block;
   width: 25.5px;
   text-align: center;
+  margin-right: -1px;
 }
 .a2-pager.rounded {
   padding: 0.7rem 0 0 0;

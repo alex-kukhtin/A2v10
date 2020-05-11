@@ -180,6 +180,7 @@
 			</FlexList>
 		</TabBar.Description>
 	</TabBar>
+	<UploadFile Url="/sales/invoice/uploadCsv" Delegate="uploadCsv"/>
 
 	<List ItemsSource="{Bind Parent.ItemsSource}" GroupBy="Agent.Name" Mark="{Bind $Mark}" MarkerStyle="Row"
 		  Border="True" Margin="50" Padding="20" Style="Underlined" Compact="True">

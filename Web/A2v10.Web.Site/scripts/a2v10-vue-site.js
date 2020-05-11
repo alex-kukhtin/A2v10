@@ -4375,7 +4375,7 @@ TODO:
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200106-7607
+// 20200511-7656
 /*components/pager.js*/
 
 
@@ -4488,23 +4488,35 @@ template: `
 			// first
 			if (this.pages > 0)
 				children.push(renderBtn(1));
-			if (this.pages > 1)
-				children.push(renderBtn(2));
 			// middle
-			let ms = Math.max(this.currentPage - 2, 3);
-			let me = Math.min(ms + 5, this.pages - 1);
-			if (me - ms < 5)
-				ms = Math.max(me - 5, 3);
-			if (ms > 3)
-				children.push(h('span', dotsClass, '...'));
-			for (let mi = ms; mi < me; ++mi) {
-				children.push(renderBtn(mi));
+			let ms = 2;
+			let me = this.pages - 1;
+			let sd = false, ed = false, cp = this.currentPage;
+			let len = me - ms;
+			if (len > 4) {
+				if (cp > 4)
+					sd = true;
+				if (cp < this.pages - 3)
+					ed = true;
+				if (sd && !ed)
+					ms = me - 3;
+				else if (!sd && ed)
+					me = ms + 3;
+				 else if (sd && ed) {
+					ms = cp - 1;
+					me = cp + 1;
+				}
 			}
-			if (me < this.pages - 1)
+			if (me -ms + 1 > 3) {
+				console.dir(me - ms + 1);
+			}
+			if (sd)
+				children.push(h('span', dotsClass, '...'));
+			for (let mi = ms; mi <= me; ++mi)
+				children.push(renderBtn(mi));
+			if (ed)
 				children.push(h('span', dotsClass, '...'));
 			// last
-			if (this.pages > 3)
-				children.push(renderBtn(this.pages - 1));
 			if (this.pages > 2)
 				children.push(renderBtn(this.pages));
 			// next
