@@ -76,6 +76,7 @@ enum {
 
 
 void _toUpper(std::string& s) {
+
 	setlocale(LC_ALL, "uk-UA");
 	std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 }
@@ -367,7 +368,7 @@ void CFiscalPrinter_DatecsKrypton::GetTaxRates()
 		_taxChars[key.key] = L'2'; // 20% + 5%
 		key.tax = 0;
 		key.nested = -1;
-		_taxChars[key.key] = L'3'; // 0%
+		_taxChars[key.key] = L'4'; // 0%
 	}
 
 	TAX_KEY key;
@@ -814,12 +815,20 @@ void CFiscalPrinter_DatecsKrypton::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, i
 DAY_SUM CFiscalPrinter_DatecsKrypton::GetDaySum(long src, long ix)
 {
 	DAY_SUM result;
-	CreateCommandV(L"DAYSUMS", FPCMD_DAYSUMS, L"%$s%ld;%ld;0;", EMPTY_PARAM, src, ix);
+	CreateCommandV(L"DAYSUMS", FPCMD_DAYSUMS, L"%s%ld;%ld;0;", EMPTY_PARAM, src, ix);
 	SendCommand();
 	std::string  info((char*)m_data);
 
-	if (IS_EMULATION())
-		info = "0000;27.93;0.55";
+	if (IS_EMULATION()) {
+		if (src == 0 && ix == 0)
+			info = "0000;280.50;-19.50;";
+		else if (src == 1 && ix == 0)
+			info = "0000;46.75;-3.25";
+		else if (src == 0 && ix == 1)
+			info = "0000;210.60;0.00";
+		else if (src == 1 && ix == 1)
+			info = "0000;10.03;0.00;";
+	}
 
 	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 	// XXXX;TURN;RET
@@ -1203,6 +1212,9 @@ std::wstring CFiscalPrinter_DatecsKrypton::GetLastErrorS()
 	else if (m_dwError == 0x070B) {
 		_append(s, L"Копия заданных чеков недоступна");
 	}
+	else if (m_dwError == 0x0F05) {
+		_append(s, L"Есть не отправленные эквайру документы в течение 72 часов или более");
+	}
 	else if ((m_dwError & 0xFF03) != 0) {
 		wchar_t buff[MAX_COMMAND_LEN];
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Ошибка в команде (формат аргумента %d)", (int)(m_dwError & 0xFF00 >> 8));
@@ -1275,6 +1287,8 @@ long CFiscalPrinter_DatecsKrypton::PeriodReport(const wchar_t* report, bool bSho
 // virtual 
 JsonObject CFiscalPrinter_DatecsKrypton::FillZReportInfo()
 {
+	TraceINFO(L"DATECS [%s]. FillZReportInfo()", _id.c_str());
+		
 	JsonObject result;
 
 	m_nLastZReportNo = GetPrinterLastZReportNo();
@@ -1287,7 +1301,7 @@ JsonObject CFiscalPrinter_DatecsKrypton::FillZReportInfo()
 		taxKey.key = it->first;
 		DAY_SUM turn = GetDaySum(0, taxNo);
 		DAY_SUM tax = GetDaySum(1, taxNo);
-		if (turn.value1 && turn.value2 && tax.value1 && tax.value2) {
+		if (turn.value1 || turn.value2 || tax.value1 || tax.value2) {
 			JsonObject taxObj;
 			taxObj.Add(L"sum", turn.value1);
 			taxObj.Add(L"return", turn.value2);
@@ -1301,6 +1315,7 @@ JsonObject CFiscalPrinter_DatecsKrypton::FillZReportInfo()
 			payments.AddArray(&taxObj);
 		}
 	}
+
 	result.AddArray(L"sums", &payments);
 
 	DAY_SUM payCash = GetDaySum(2, _payModeCash - L'0');

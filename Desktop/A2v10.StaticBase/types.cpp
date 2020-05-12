@@ -38,12 +38,18 @@ long __currency::units() const
 std::wstring __currency::to_wstring() const
 {
 	long units = this->units();
+	wchar_t sign[2];
+	sign[0] = 0;
+	sign[1] = 0;
+	if (units < 0) {
+		units = -units;
+		sign[0] = L'-';
+	}
 	long c = units / 100;
 	long f = units % 100;
-	std::wstring result = std::to_wstring(c);
-	if (f != 0)
-		result.append(L".").append(std::to_wstring(f));
-	return result;
+	wchar_t buf[255];
+	swprintf_s(buf, 255, L"%s%ld.%02ld", sign, c, f);
+	return std::wstring(buf);
 }
 
 //static 
@@ -52,17 +58,27 @@ __currency __currency::from_units(long units)
 	return __currency(units * 100);
 }
 
+//static 
+__currency __currency::from_units(long c, long f)
+{
+	if (c < 0)
+		return __currency(-(-c * 100 + f) * 100);
+	else
+		return __currency((c * 100 + f) * 100);
+}
+
+
 __currency __currency::from_string(const std::string& units)
 {
 	auto vals = _split(units, '.');
 	if (vals.size() == 2) {
 		long c = atol(vals[0].c_str());
 		long f = atol(vals[1].c_str());
-		return __currency::from_units(c * 100 + f);
+		return __currency::from_units(c, f);
 	}
 	else if (vals.size() == 1) {
 		long c = atol(vals[0].c_str());
-		return __currency::from_units(c * 100);
+		return __currency::from_units(c, 0);
 	}
 	throw 1;
 }

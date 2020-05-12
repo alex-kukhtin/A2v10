@@ -37,6 +37,7 @@ bool CAppConfig::ConnectToPrinter()
 		AfxMessageBox(L"'terminal' value not specified in configuration file");
 		return false;
 	}
+
 	bool rc = PosConnectToPrinter(prms);
 	if (!rc) {
 		CString msg;

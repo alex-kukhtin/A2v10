@@ -28,6 +28,7 @@ __currency _string2Currency(const wchar_t* szString)
 	__currency cur;
 	if (!szString || !*szString)
 		return cur;
+	_wsetlocale(LC_ALL, L"en_US");
 	cur.int64 = std::llround(_wtof(szString) * 10000.0);
 	return cur;
 }
