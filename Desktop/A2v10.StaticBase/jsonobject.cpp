@@ -29,10 +29,28 @@ void JsonObject::Add(const wchar_t* name, long value)
 	_value.append(std::to_wstring(value));
 }
 
+void JsonObject::Add(const wchar_t* name, int value)
+{
+	Add(name, (long)value);
+}
+
 void JsonObject::Add(const wchar_t* name, JsonObject* value)
 {
 	addName(name);
 	_value.append(value->ToString());
+}
+
+void JsonObject::AddArray(JsonObject* value)
+{
+	if (!_value.empty())
+		_value.append(L",");
+	_value.append(value->ToString());
+}
+
+void JsonObject::AddArray(const wchar_t* name, JsonObject* value)
+{
+	addName(name);
+	_value.append(value->ToArray());
 }
 
 void JsonObject::addName(const wchar_t* name)
@@ -47,6 +65,14 @@ std::wstring JsonObject::ToString()
 	std::wstring result(L"{");
 	result.append(_value);
 	result.append(L"}");
+	return result;
+}
+
+std::wstring JsonObject::ToArray()
+{
+	std::wstring result(L"[");
+	result.append(_value);
+	result.append(L"]");
 	return result;
 }
 

@@ -15,15 +15,17 @@ const size_t CMD_MAX_LEN = 64;
 //static 
 PosCommand::COMMAND_BIND PosCommand::_binded_commands[] = 
 {
-	{L"nullReceipt",    &PosCommand::NullReceipt,    &PosCommand::NullReceiptData},
-	{L"xReport",        &PosCommand::XReport,        nullptr},
-	{L"zReport",        &PosCommand::ZReport,        nullptr},
-	{L"printReceipt",   &PosCommand::PrintReceipt,   &PosCommand::PrintReceiptData},
-	{L"hasAcqTerminal", &PosCommand::HasAcqTerminal, nullptr},
-	{L"acquirePayment", &PosCommand::AcquirePayment, &PosCommand::AcquirePaymentData},
-	{L"serviceInOut",   &PosCommand::ServiceInOut,   &PosCommand::ServiceInOutData},
-	{L"connect",        &PosCommand::Connect,        &PosCommand::ConnectData},
-	{L"periodReport",   &PosCommand::PeriodReport,   &PosCommand::PeriodReportData},
+	{L"nullReceipt",        &PosCommand::NullReceipt,        &PosCommand::NullReceiptData},
+	{L"xReport",            &PosCommand::XReport,            nullptr},
+	{L"zReport",            &PosCommand::ZReport,            nullptr},
+	{L"printReceipt",       &PosCommand::PrintReceipt,       &PosCommand::PrintReceiptData},
+	{L"printReturnReceipt", &PosCommand::PrintReturnReceipt, &PosCommand::PrintReceiptData},
+	{L"hasAcqTerminal",     &PosCommand::HasAcqTerminal,     nullptr},
+	{L"acquirePayment",     &PosCommand::AcquirePayment,     &PosCommand::AcquirePaymentData},
+	{L"serviceInOut",       &PosCommand::ServiceInOut,       &PosCommand::ServiceInOutData},
+	{L"connect",            &PosCommand::Connect,            &PosCommand::ConnectData},
+	{L"periodReport",       &PosCommand::PeriodReport,       &PosCommand::PeriodReportData},
+	{L"zReportInfo",        &PosCommand::ZReportInfo,        nullptr},
 	{nullptr, nullptr}
 };
 
@@ -162,6 +164,15 @@ std::wstring PosCommand::PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 	return js.Value();
 }
 
+std::wstring PosCommand::PrintReturnReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	PosPrintReceiptData* pprd = dynamic_cast<PosPrintReceiptData*>(data);
+	long no = pPrinter->PrintReturnReceipt(pprd);
+	JsonObject js;
+	js.Add(L"no", no);
+	return js.Value();
+}
+
 std::wstring PosCommand::HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	//TODO: acqTerm id from printer
@@ -197,5 +208,11 @@ std::wstring PosCommand::PeriodReport(FiscalPrinter* pPrinter, JsonTarget* data)
 	long no = pPrinter->PeriodReport(prd->_report.c_str(), prd->_short, prd->_from.c_str(), prd->_to.c_str());
 	JsonObject js;
 	js.Add(L"no", no);
+	return js.Value();
+}
+
+std::wstring PosCommand::ZReportInfo(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	JsonObject js = pPrinter->FillZReportInfo();
 	return js.Value();
 }

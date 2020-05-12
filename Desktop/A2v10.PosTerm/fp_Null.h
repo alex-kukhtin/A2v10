@@ -24,6 +24,7 @@ public:
 	virtual void PrintTotal() override;
 	virtual long CloseReceipt(bool bDisplay) override;
 	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) override { return 0; };
+	virtual JsonObject  FillZReportInfo() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
 	virtual long NullReceipt(bool bOpenCashDrawer) override;
@@ -41,8 +42,7 @@ public:
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To) override;
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) override;
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy) override;
-	virtual bool CancelReceipt(__int64 termId, bool& bClosed) override;
-	virtual bool CancelReceiptCommand() override;
+	virtual void CancelReceipt() override;
 	virtual void DisplayDateTime() override;
 	virtual void DisplayClear()  override;
 	virtual void DisplayRow(int rowNo, const wchar_t* szString)  override;

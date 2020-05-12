@@ -45,7 +45,28 @@ namespace A2v10.Request
 						ExpandoObject dm = null;
 						switch (ru.parse)
 						{
+							case RequestFileParseType.auto:
+								var ext = Path.GetExtension(files[0].FileName).ToLowerInvariant();
+								switch (ext)
+								{
+									case ".xlsx":
+										dm = await SaveExcel(ru, files[0].InputStream, savePrms);
+										break;
+									case ".csv":
+										dm = await SaveFlat("csv", ru, files[0].InputStream, savePrms);
+										break;
+									case ".dbf":
+										dm = await SaveFlat("dbf", ru, files[0].InputStream, savePrms);
+										break;
+									case ".xml":
+										dm = await SaveFlat("xml", ru, files[0].InputStream, savePrms);
+										break;
+									default:
+										throw new RequestModelException($"'{ext}' file not yet supported");
+								}
+								break;
 							case RequestFileParseType.excel:
+							case RequestFileParseType.xlsx:
 								dm = await SaveExcel(ru, files[0].InputStream, savePrms);
 								break;
 							case RequestFileParseType.csv:
@@ -74,13 +95,24 @@ namespace A2v10.Request
 
 		async Task<ExpandoObject> SaveExcel(RequestFile ru, Stream stream, ExpandoObject prms)
 		{
-			using (var xp = new ExcelParser())
+			if (String.IsNullOrEmpty(ru.CurrentModel))
 			{
-				xp.ErrorMessage = "UI:@[Error.FileFormatException]";
-				IDataModel dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) => {
-					return xp.ParseFile(stream, table);
-				});
-				return dm?.Root;
+				using (var xp = new ExcelParser())
+				{
+					return xp.CreateDataModel(stream);
+				}
+			}
+			else
+			{
+				using (var xp = new ExcelParser())
+				{
+					xp.ErrorMessage = "UI:@[Error.FileFormatException]";
+					IDataModel dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) =>
+					{
+						return xp.ParseFile(stream, table);
+					});
+					return dm?.Root;
+				}
 			}
 		}
 

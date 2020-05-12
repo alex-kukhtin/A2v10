@@ -70,8 +70,7 @@ public:
 	//virtual bool PostNullCheck(__int64 hid);
 	//virtual bool PostClose(__int64 hid);
 	//virtual bool ProgramOperator(const wchar_t* Name, const wchar_t* Password);
-	virtual bool CancelReceipt(__int64 termId, bool& bClosed) = 0;
-	virtual bool CancelReceiptCommand() = 0;
+	virtual void CancelReceipt() = 0;
 	virtual void OpenReceipt() = 0;
 	virtual void OpenReturnReceipt() = 0;
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) = 0;
@@ -79,7 +78,7 @@ public:
 	virtual void Payment(PAYMENT_MODE mode, long sum) = 0;
 	virtual long CloseReceipt(bool bDisplay) = 0;
 	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) = 0;
-
+	virtual JsonObject FillZReportInfo() = 0;
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
 	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr);
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);

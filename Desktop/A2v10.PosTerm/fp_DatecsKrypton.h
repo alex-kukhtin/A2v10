@@ -24,6 +24,11 @@ union TAX_KEY {
 	__int64 key;
 };
 
+struct DAY_SUM {
+	__currency value1;
+	__currency value2;
+};
+
 class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
 {
 	long m_nLastReceiptNo;
@@ -48,6 +53,7 @@ public:
 	virtual void PrintTotal() override;
 	virtual long CloseReceipt(bool bDisplay) override;
 	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) override;
+	virtual JsonObject FillZReportInfo() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
@@ -59,6 +65,7 @@ public:
 	virtual void DisplayDateTime() override;
 	virtual void DisplayClear() override;
 	virtual void DisplayRow(int rowNo, LPCTSTR szString) override;
+	virtual void CancelReceipt() override;
 
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
 	virtual void AddArticle(const RECEIPT_ITEM& item) override;
@@ -71,8 +78,6 @@ public:
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) override;
 	virtual bool ReportByArticles() override;
 	virtual bool ReportModemState() override;
-	virtual bool CancelReceipt(__int64 termId, bool& bClosed) override;
-	virtual bool CancelReceiptCommand() override;
 	virtual bool IsEndOfTape() override;
 
 protected:
@@ -96,9 +101,7 @@ protected:
 	long CloseFiscal(bool bDisplay);
 	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat, long excise);
 	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
-	void CancelReceiptPrinter();
 	bool GetPrinterCheckNoForCopy(long& chNo, bool bShowStateError = true);
-	//bool GetDaySum(long src, long ix, CY& value1, CY& value2);
 private:
 	long GetPrinterLastReceiptNo();
 	long GetPrinterLastZReportNo();
@@ -106,4 +109,6 @@ private:
 	void GetTaxRates();
 	void TraceStatus();
 	wchar_t FindTaxChar(long tax, long excise);
+	TAX_KEY FindTaxKey(wchar_t tax);
+	DAY_SUM GetDaySum(long src, long ix);
 };

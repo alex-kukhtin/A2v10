@@ -511,9 +511,11 @@ namespace A2v10.Request
 	{
 		none,
 		excel,
+		xlsx,
 		csv,
 		dbf,
-		xml
+		xml,
+		auto
 	}
 
 	public enum RequestFileType

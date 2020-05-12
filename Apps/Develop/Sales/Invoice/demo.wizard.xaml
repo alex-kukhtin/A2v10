@@ -14,6 +14,7 @@
 		<Grid>
 			<TextBox Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" Required="True"
 					 Description="Введите сюда код ЕДПРОУ контрагента"/>
+			<Button></Button>
 		</Grid>
 	</WizardPage>
 	<WizardPage Header="Step # 3" Description="Fill Account data" Padding="0, 10">

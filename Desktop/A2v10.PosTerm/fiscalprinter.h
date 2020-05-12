@@ -41,11 +41,11 @@ public:
 
 
 	void OpenReceipt();
-	void OpenReturnReceipt(long retNo);
-	void PrintDiscountForBill(long discountPercent, long discountSum);
+	void OpenReturnReceipt();
 	long NullReceipt(bool bOpenCashDrawer);
 	SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer);
 	long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to);
+	JsonObject  FillZReportInfo();
 
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
 	//LONG GetLastCheckNo(DB_ID termId, bool bFromPrinter = false);
@@ -65,6 +65,7 @@ public:
 	void DisplayRow(int rowNo, const wchar_t* szString);
 
 	long PrintReceipt(const PosPrintReceiptData* pData);
+	long PrintReturnReceipt(const PosPrintReceiptData* pData);
 
 private:
 	void PrintItem(const PosReceiptItemData* pData);

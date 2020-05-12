@@ -28,6 +28,12 @@ namespace A2v10.Interop
 
 		}
 
+		public ExpandoObject CreateDataModel(Stream stream)
+		{
+			var table = new FlatTableHandler();
+			return ParseFile(stream, table);
+		}
+
 		public ExpandoObject ParseFile(Stream stream, ITableDescription table)
 		{
 			try
@@ -95,12 +101,36 @@ namespace A2v10.Interop
 							String str = sharedStringTable.ChildElements[ssid].InnerText;
 							table.SetValue(dataRow, columns[colIndex], str);
 						}
+						else if (c.StyleIndex != null)
+						{
+							Int32 ix = Int32.Parse(c.StyleIndex);
+							var cellFormat = workBookPart.WorkbookStylesPart.Stylesheet.CellFormats.ChildElements[ix] as CellFormat;
+							Object cellVal = GetCellValue(c.CellValue.Text, cellFormat);
+							if (cellVal != null)
+								table.SetValue(dataRow, columns[colIndex], cellVal);
+						}
 						else if (c.CellValue != null)
 							table.SetValue(dataRow, columns[colIndex], c.CellValue.Text);
 					}
 				}
 			}
 			return table.ToObject();
+		}
+
+		Object GetCellValue(String text, CellFormat format)
+		{
+			if (format == null)
+				return text;
+			var formatId = format.NumberFormatId;
+			var strFormat = ExcelFormats.GetDateTimeFormat(formatId);
+			if (!String.IsNullOrEmpty(strFormat))
+			{
+				if (Double.TryParse(text, out Double dblDate))
+				{
+					return DateTime.FromOADate(dblDate);
+				}
+			}
+			return text;
 		}
 
 		Int32 ToIndex(String refs)

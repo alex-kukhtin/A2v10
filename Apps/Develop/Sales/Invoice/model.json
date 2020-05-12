@@ -87,7 +87,7 @@
 		"uploadCsv": {
 			"model": "",
 			"type": "parse",
-			"parse": "csv"
+			"parse": "auto"
 		}
 	}
 }

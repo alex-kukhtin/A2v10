@@ -218,7 +218,7 @@ void CFiscalPrinter_DatecsKrypton::Beep()
 // virtual 
 long CFiscalPrinter_DatecsKrypton::NullReceipt(bool bOpenCashDrawer)
 {
-	CancelReceiptPrinter();
+	CancelReceipt();
 
 	TraceINFO(L"DATECS [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
@@ -379,6 +379,19 @@ void CFiscalPrinter_DatecsKrypton::GetTaxRates()
 
 }
 
+TAX_KEY CFiscalPrinter_DatecsKrypton::FindTaxKey(wchar_t tax)
+{
+	TAX_KEY taxKey;
+	taxKey.key = 0;
+	for (auto it = _taxChars.begin(); it != _taxChars.end(); ++it) {
+		if (it->second == tax) {
+			taxKey.key = it->first;
+			return taxKey;
+		}
+	}
+	return taxKey;
+}
+
 wchar_t CFiscalPrinter_DatecsKrypton::FindTaxChar(long tax, long excise)
 {
 	TAX_KEY key;
@@ -422,7 +435,7 @@ void CFiscalPrinter_DatecsKrypton::Init()
 		return;
 	}
 
-	CancelReceiptPrinter();
+	CancelReceipt();
 	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // again
 	// CheckPrinterSession(); 24 часа Z-отчета?
 	//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
@@ -485,6 +498,7 @@ void CFiscalPrinter_DatecsKrypton::CheckStatus()
 }
 
 // virtual 
+/*
 bool CFiscalPrinter_DatecsKrypton::CancelReceiptCommand()
 {
 	RECEIPT_STATUS cs = GetReceiptStatus();
@@ -522,27 +536,12 @@ bool CFiscalPrinter_DatecsKrypton::CancelReceiptCommand()
 		ex.ReportError2();
 		return false;
 	}
-	*/
+	* /
 	return true;
 }
+*/
 
-// virtual 
-bool CFiscalPrinter_DatecsKrypton::CancelReceipt(__int64 termId, bool& bClosed)
-{
-	try
-	{
-		bClosed = false;
-		CancelReceiptPrinter();
-	}
-	catch (EQUIPException e)
-	{
-		m_strError = e.GetError();
-		return false;
-	}
-	return true;
-}
-
-void CFiscalPrinter_DatecsKrypton::CancelReceiptPrinter()
+void CFiscalPrinter_DatecsKrypton::CancelReceipt()
 {
 	RECEIPT_STATUS cs = GetReceiptStatus();
 	if (cs == CHS_NORMAL)
@@ -581,7 +580,7 @@ void CFiscalPrinter_DatecsKrypton::OpenReceipt()
 	int tno = 1;
 
 	std::wstring info;
-	CancelReceiptPrinter();
+	CancelReceipt();
 	OpenFiscal(op, L"", tno, info);
 }
 
@@ -592,7 +591,7 @@ void CFiscalPrinter_DatecsKrypton::OpenReturnReceipt()
 	int tno = 1;
 
 	std::wstring info;
-	CancelReceiptPrinter();
+	CancelReceipt();
 	OpenFiscalReturn(op, L"", tno, info);
 }
 
@@ -669,62 +668,6 @@ bool CFiscalPrinter_DatecsKrypton::GetCash(__int64 termId, COleCurrency& cy)
 	{
 		GetDaySum(3, 0, sum, dummy);
 		cy = sum;
-	}
-	catch (EQUIPException ex)
-	{
-		ex.ReportError2();
-		return false;
-	}
-	return true;
-}
-*/
-
-// virtual 
-/*
-bool CFiscalPrinter_DatecsKrypton::FillZReportInfo(ZREPORT_INFO& zri)
-{
-	try {
-		// 0 - ix = номер налога
-		// 1 - ix = номер налога
-		// 2 - ix = номер формы оплаты
-		// 3 - ix = 1 // всегда касса
-		int vatNo20 = (m_vatTaxGroup20 - L'0');
-		int vatNo7 = (m_vatTaxGroup7 - L'0');
-		int noVatNo = (m_novatTaxGroup - L'0');
-		int payCash = (m_payModeCash - L'0');
-		int payCard = (m_payModeCard - L'0');
-
-		int vatNo = vatNo20; // пока так
-
-		GetDaySum(0, noVatNo, zri.m_sum_nv, zri.m_ret_sum_nv); // Продажи,возвраты - БЕЗ НДС
-		if (noVatNo != vatNo)
-		{
-			// если равны, значит НДС не запрограммирован! - НДС-продаж НЕ БЫЛО
-			GetDaySum(0, vatNo, zri.m_sum_v, zri.m_ret_sum_v); // Продажи,возвраты - С НДС
-			GetDaySum(1, vatNo, zri.m_vsum, zri.m_ret_vsum);   // Продажи, возвраты - НДС
-		}
-
-		GetDaySum(2, payCash, zri.m_pay0, zri.m_ret0);   // Оплаты, возвраты (0 - наличные)
-		GetDaySum(2, payCard, zri.m_pay1, zri.m_ret1);   // Оплаты, возвраты (2 - карточка)
-		if (m_payModeCredit != L'-')
-		{
-			int payCredit = (m_payModeCredit - L'0');
-			GetDaySum(2, payCredit, zri.m_pay2, zri.m_ret2); // Оплаты, возвраты (3 - кредит)
-		}
-
-		CY dummy;
-		dummy.int64 = 0I64;
-		GetDaySum(3, 0, zri.m_cash, dummy);	            // В кассе
-		GetDaySum(3, 1, zri.m_cash_in, zri.m_cash_out); // Внос, вынос
-
-		// абсолютные значения для возвратов и выноса
-		zri.m_cash_out.int64 = _abs64(zri.m_cash_out.int64);
-		zri.m_ret0.int64 = _abs64(zri.m_ret0.int64);
-		zri.m_ret1.int64 = _abs64(zri.m_ret1.int64);
-		zri.m_ret2.int64 = _abs64(zri.m_ret2.int64);
-		zri.m_ret_sum_v.int64 = _abs64(zri.m_ret_sum_v.int64);
-		zri.m_ret_sum_nv.int64 = _abs64(zri.m_ret_sum_nv.int64);
-		zri.m_ret_vsum.int64 = _abs64(zri.m_ret_vsum.int64);
 	}
 	catch (EQUIPException ex)
 	{
@@ -858,19 +801,35 @@ void CFiscalPrinter_DatecsKrypton::AddArticle(const RECEIPT_ITEM& item)
 
 void CFiscalPrinter_DatecsKrypton::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%02d;%02d;0;", EMPTY_PARAM, opNo, tNo);
-	CreateCommand(L"OPENFISCAL", FPCMD_OPENFISCAL, buff);
+	CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%02d;0;", EMPTY_PARAM, opNo, tNo);
 	SendCommand();
 }
 
-
 void CFiscalPrinter_DatecsKrypton::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s%02d;%02d;1;", EMPTY_PARAM, opNo, tNo);
-	CreateCommand(L"OPENFISCAL", FPCMD_OPENFISCAL, buff);
+	CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%02d;1;", EMPTY_PARAM, opNo, tNo);
 	SendCommand();
+}
+
+DAY_SUM CFiscalPrinter_DatecsKrypton::GetDaySum(long src, long ix)
+{
+	DAY_SUM result;
+	CreateCommandV(L"DAYSUMS", FPCMD_DAYSUMS, L"%$s%ld;%ld;0;", EMPTY_PARAM, src, ix);
+	SendCommand();
+	std::string  info((char*)m_data);
+
+	if (IS_EMULATION())
+		info = "0000;27.93;0.55";
+
+	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
+	// XXXX;TURN;RET
+	auto arr = _split(info, ';');
+	long rcpNo = 0;
+	if (arr.size() > 2) {
+		result.value1 = __currency::from_string(arr[1]);
+		result.value2 = __currency::from_string(arr[2]);
+	}
+	return result;
 }
 
 /*
@@ -1312,3 +1271,106 @@ long CFiscalPrinter_DatecsKrypton::PeriodReport(const wchar_t* report, bool bSho
 	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // get receipt id
 	return m_nLastReceiptNo;
 }
+
+// virtual 
+JsonObject CFiscalPrinter_DatecsKrypton::FillZReportInfo()
+{
+	JsonObject result;
+
+	m_nLastZReportNo = GetPrinterLastZReportNo();
+	result.Add(L"zno", m_nLastZReportNo);
+
+	JsonObject payments;
+	for (auto it = _taxChars.begin(); it != _taxChars.end(); ++it) {
+		long taxNo = it->second - L'0';
+		TAX_KEY taxKey;
+		taxKey.key = it->first;
+		DAY_SUM turn = GetDaySum(0, taxNo);
+		DAY_SUM tax = GetDaySum(1, taxNo);
+		if (turn.value1 && turn.value2 && tax.value1 && tax.value2) {
+			JsonObject taxObj;
+			taxObj.Add(L"sum", turn.value1);
+			taxObj.Add(L"return", turn.value2);
+			taxObj.Add(L"taxSum", tax.value1);
+			taxObj.Add(L"taxReturn", tax.value2);
+			taxObj.Add(L"tax", (long)taxKey.tax);
+			if (taxKey.nested != -1) {
+				auto nestedKey = FindTaxKey(taxKey.nested + L'0');
+				taxObj.Add(L"nested", (long)nestedKey.tax);
+			}
+			payments.AddArray(&taxObj);
+		}
+	}
+	result.AddArray(L"sums", &payments);
+
+	DAY_SUM payCash = GetDaySum(2, _payModeCash - L'0');
+	JsonObject cash;
+	cash.Add(L"payment", payCash.value1);
+	cash.Add(L"return", payCash.value2);
+	result.Add(L"cash", &cash);
+
+	DAY_SUM payCard = GetDaySum(2, _payModeCard - L'0');
+	JsonObject card;
+	card.Add(L"payment", payCard.value1);
+	card.Add(L"return", payCard.value2);
+	result.Add(L"card", &card);
+
+	DAY_SUM cashOnHand = GetDaySum(3, 0);
+	result.Add(L"cashOnHand", cashOnHand.value1);
+	return result;
+}
+
+// virtual 
+/*
+bool CFiscalPrinter_DatecsKrypton::FillZReportInfo(ZREPORT_INFO& zri)
+{
+	try {
+		// 0 - ix = номер налога
+		// 1 - ix = номер налога
+		// 2 - ix = номер формы оплаты
+		// 3 - ix = 1 // всегда касса
+		int vatNo20 = (m_vatTaxGroup20 - L'0');
+		int vatNo7 = (m_vatTaxGroup7 - L'0');
+		int noVatNo = (m_novatTaxGroup - L'0');
+		int payCash = (m_payModeCash - L'0');
+		int payCard = (m_payModeCard - L'0');
+
+		int vatNo = vatNo20; // пока так
+
+		GetDaySum(0, noVatNo, zri.m_sum_nv, zri.m_ret_sum_nv); // Продажи,возвраты - БЕЗ НДС
+		if (noVatNo != vatNo)
+		{
+			// если равны, значит НДС не запрограммирован! - НДС-продаж НЕ БЫЛО
+			GetDaySum(0, vatNo, zri.m_sum_v, zri.m_ret_sum_v); // Продажи,возвраты - С НДС
+			GetDaySum(1, vatNo, zri.m_vsum, zri.m_ret_vsum);   // Продажи, возвраты - НДС
+		}
+
+		GetDaySum(2, payCash, zri.m_pay0, zri.m_ret0);   // Оплаты, возвраты (0 - наличные)
+		GetDaySum(2, payCard, zri.m_pay1, zri.m_ret1);   // Оплаты, возвраты (2 - карточка)
+		if (m_payModeCredit != L'-')
+		{
+			int payCredit = (m_payModeCredit - L'0');
+			GetDaySum(2, payCredit, zri.m_pay2, zri.m_ret2); // Оплаты, возвраты (3 - кредит)
+		}
+
+		CY dummy;
+		dummy.int64 = 0I64;
+		GetDaySum(3, 0, zri.m_cash, dummy);	            // В кассе
+		GetDaySum(3, 1, zri.m_cash_in, zri.m_cash_out); // Внос, вынос
+
+		// абсолютные значения для возвратов и выноса
+		zri.m_cash_out.int64 = _abs64(zri.m_cash_out.int64);
+		zri.m_ret0.int64 = _abs64(zri.m_ret0.int64);
+		zri.m_ret1.int64 = _abs64(zri.m_ret1.int64);
+		zri.m_ret2.int64 = _abs64(zri.m_ret2.int64);
+		zri.m_ret_sum_v.int64 = _abs64(zri.m_ret_sum_v.int64);
+		zri.m_ret_sum_nv.int64 = _abs64(zri.m_ret_sum_nv.int64);
+		zri.m_ret_vsum.int64 = _abs64(zri.m_ret_vsum.int64);
+	}
+	catch (EQUIPException ex)
+	{
+		ex.ReportError2();
+		return false;
+	}
+	return true;
+*/

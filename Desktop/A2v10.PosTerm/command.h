@@ -42,11 +42,13 @@ protected:
 	std::wstring XReport(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring ZReport(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring PrintReturnReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring HasAcqTerminal(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring AcquirePayment(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring Connect(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring PeriodReport(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring ZReportInfo(FiscalPrinter* pPrinter, JsonTarget* data);
 
 	JsonTarget* NullReceiptData();
 	JsonTarget* PrintReceiptData();

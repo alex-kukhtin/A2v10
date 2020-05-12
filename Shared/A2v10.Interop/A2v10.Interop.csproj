@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClrInvoker.cs" />
+    <Compile Include="ExcelFormats.cs" />
     <Compile Include="ExcelParser.cs" />
     <Compile Include="ExcelReportGenerator.cs" />
     <Compile Include="ExportTo\Enums.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="ExportTo\HtmlReader.cs" />
     <Compile Include="ExportTo\Html2Excel.cs" />
     <Compile Include="ExportTo\Utils.cs" />
+    <Compile Include="FlatTableHandler.cs" />
     <Compile Include="InteropException.cs" />
     <Compile Include="Ip2SmsClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

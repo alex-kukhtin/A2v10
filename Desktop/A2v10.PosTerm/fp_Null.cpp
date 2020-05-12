@@ -100,22 +100,15 @@ void CFiscalPrinter_Null::OpenReturnReceipt()
 
 
 // virtual 
-bool CFiscalPrinter_Null::CancelReceipt(__int64 termId, bool& bClosed)
+void CFiscalPrinter_Null::CancelReceipt()
 {
-	throw EQUIPException(L"Yet not implemented");
+	TraceINFO(L"TESTPRINTER [%s]. CancelReceipt()", _id.c_str());
 }
 
 // virtual 
 void CFiscalPrinter_Null::PrintTotal()
 {
 	TraceINFO(L"TESTPRINTER [%s]. PrintTotal()", _id.c_str());
-}
-
-// virtual 
-bool CFiscalPrinter_Null::CancelReceiptCommand()
-{
-	TraceINFO(L"TESTPRINTER [%s]. CancelReceiptCommand()", _id.c_str());
-	return true;
 }
 
 // virtual 
@@ -389,4 +382,11 @@ void CFiscalPrinter_Null::ReportMessage(const wchar_t* msg)
 void CFiscalPrinter_Null::TraceCommand(const wchar_t* command)
 {
 	TraceINFO(L"TESTPRINTER [%s]. %s", _id.c_str(), command);
+}
+
+// virtual 
+JsonObject  CFiscalPrinter_Null::FillZReportInfo()
+{
+	JsonObject json;
+	return json;
 }

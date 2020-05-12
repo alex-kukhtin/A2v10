@@ -111,7 +111,7 @@ void FiscalPrinter::OpenReceipt()
 	_impl->OpenReceipt();
 }
 
-void FiscalPrinter::OpenReturnReceipt(long retNo)
+void FiscalPrinter::OpenReturnReceipt()
 {
 	_impl->OpenReturnReceipt();
 }
@@ -171,7 +171,7 @@ void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
 long FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 {
 	_impl->TraceCommand(L"PrintReceipt()");
-	//_impl->CancelReceipt(); // discard previous, if needed
+	_impl->CancelReceipt(); // discard previous, if needed
 
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
 		AddArticle(it->get());
@@ -203,6 +203,40 @@ long FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 }
 
 
+long FiscalPrinter::PrintReturnReceipt(const PosPrintReceiptData* pData)
+{
+	_impl->TraceCommand(L"PrintReturnReceipt()");
+	_impl->CancelReceipt(); // discard previous, if needed
+
+	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
+		AddArticle(it->get());
+	}
+
+	_impl->OpenReturnReceipt();
+	if (!pData->_topText.empty())
+		_impl->PrintFiscalText(pData->_topText.c_str());
+
+	__currency totalAmount;
+	__currency totalDiscountSum;
+
+	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
+		auto pItem = it->get();
+		totalAmount += pItem->_sum;
+		totalDiscountSum += pItem->_discount;
+		PrintItem(pItem);
+	}
+
+	_impl->PrintTotal();
+
+	if (pData->_cardSum)
+		_impl->Payment(PAYMENT_MODE::_pay_card, pData->_cardSum);
+	else if (pData->_cashSum)
+		_impl->Payment(PAYMENT_MODE::_pay_cash, pData->_cashSum);
+
+	// Close receipt
+	return _impl->CloseReceipt(true);
+}
+
 SERVICE_SUM_INFO FiscalPrinter::ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer)
 {
 	return _impl->ServiceInOut(bOut, amount, bOpenCashDrawer);
@@ -211,4 +245,10 @@ SERVICE_SUM_INFO FiscalPrinter::ServiceInOut(bool bOut, __currency amount, bool 
 long FiscalPrinter::PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to)
 {
 	return _impl->PeriodReport(report, bShort, from, to);
+}
+
+// virtual 
+JsonObject  FiscalPrinter::FillZReportInfo()
+{
+	return _impl->FillZReportInfo();
 }

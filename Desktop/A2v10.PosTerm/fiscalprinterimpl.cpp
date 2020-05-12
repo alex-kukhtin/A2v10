@@ -67,12 +67,6 @@ bool FiscalPrinterImpl::ReportRems()
 }
 
 // virtual 
-bool FiscalPrinterImpl::CancelReceiptCommand()
-{
-	return true;
-}
-
-// virtual 
 bool FiscalPrinterImpl::PrintDiscount(long Type, long Sum, const wchar_t* szDescr)
 {
 	return true;
