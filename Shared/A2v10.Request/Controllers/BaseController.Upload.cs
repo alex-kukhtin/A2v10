@@ -25,6 +25,7 @@ namespace A2v10.Request
 
 			ExpandoObject savePrms = new ExpandoObject();
 			setParams?.Invoke(savePrms);
+			savePrms.AppendIfNotExists(ru.parameters);
 
 			switch (ru.type)
 			{

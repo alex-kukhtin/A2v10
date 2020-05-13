@@ -532,7 +532,6 @@ namespace A2v10.Request
 		public RequestFileParseType parse;
 		public String clrType;
 		public Boolean async;
-		public String procedure;
 		[JsonIgnore]
 		public String FileProcedureUpdate => $"[{CurrentSchema}].[{CurrentModel}.Update]";
 		[JsonIgnore]
