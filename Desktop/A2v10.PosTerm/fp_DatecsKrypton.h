@@ -95,8 +95,8 @@ protected:
 
 	RECEIPT_STATUS GetReceiptStatus();
 
-	void OpenFiscal(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
-	void OpenFiscalReturn(int opNo, LPCTSTR pwd, int tNo, std::wstring& info);
+	void OpenFiscal(int opNo, LPCTSTR pwd, int tNo);
+	void OpenFiscalReturn(int opNo, LPCTSTR pwd, int tNo);
 	void Payment(WCHAR mode, int sum, std::wstring& info);
 	long CloseFiscal(bool bDisplay);
 	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat, long excise);

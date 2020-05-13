@@ -26,7 +26,10 @@ namespace A2v10.Interop
 		public void SetValue(ExpandoObject obj, String propName, Object value)
 		{
 			var d = obj as IDictionary<String, Object>;
-			d.Add(propName, value);
+			if (d.ContainsKey(propName))
+				d[propName] = value;
+			else
+				d.Add(propName, value);
 		}
 
 		public ExpandoObject ToObject()

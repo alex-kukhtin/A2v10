@@ -580,9 +580,8 @@ void CFiscalPrinter_DatecsKrypton::OpenReceipt()
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
 
-	std::wstring info;
 	CancelReceipt();
-	OpenFiscal(op, L"", tno, info);
+	OpenFiscal(op, L"", tno);
 }
 
 // virtual 
@@ -591,9 +590,8 @@ void CFiscalPrinter_DatecsKrypton::OpenReturnReceipt()
 	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
 
-	std::wstring info;
 	CancelReceipt();
-	OpenFiscalReturn(op, L"", tno, info);
+	OpenFiscalReturn(op, L"", tno);
 }
 
 RECEIPT_STATUS CFiscalPrinter_DatecsKrypton::GetReceiptStatus()
@@ -800,13 +798,13 @@ void CFiscalPrinter_DatecsKrypton::AddArticle(const RECEIPT_ITEM& item)
 	_mapCodes[item.article] = code;
 }
 
-void CFiscalPrinter_DatecsKrypton::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
+void CFiscalPrinter_DatecsKrypton::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo)
 {
 	CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%02d;0;", EMPTY_PARAM, opNo, tNo);
 	SendCommand();
 }
 
-void CFiscalPrinter_DatecsKrypton::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, int tNo, std::wstring& info)
+void CFiscalPrinter_DatecsKrypton::OpenFiscalReturn(int opNo, LPCTSTR /*pwd*/, int tNo)
 {
 	CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%02d;1;", EMPTY_PARAM, opNo, tNo);
 	SendCommand();
@@ -1335,57 +1333,3 @@ JsonObject CFiscalPrinter_DatecsKrypton::FillZReportInfo()
 	return result;
 }
 
-// virtual 
-/*
-bool CFiscalPrinter_DatecsKrypton::FillZReportInfo(ZREPORT_INFO& zri)
-{
-	try {
-		// 0 - ix = номер налога
-		// 1 - ix = номер налога
-		// 2 - ix = номер формы оплаты
-		// 3 - ix = 1 // всегда касса
-		int vatNo20 = (m_vatTaxGroup20 - L'0');
-		int vatNo7 = (m_vatTaxGroup7 - L'0');
-		int noVatNo = (m_novatTaxGroup - L'0');
-		int payCash = (m_payModeCash - L'0');
-		int payCard = (m_payModeCard - L'0');
-
-		int vatNo = vatNo20; // пока так
-
-		GetDaySum(0, noVatNo, zri.m_sum_nv, zri.m_ret_sum_nv); // Продажи,возвраты - БЕЗ НДС
-		if (noVatNo != vatNo)
-		{
-			// если равны, значит НДС не запрограммирован! - НДС-продаж НЕ БЫЛО
-			GetDaySum(0, vatNo, zri.m_sum_v, zri.m_ret_sum_v); // Продажи,возвраты - С НДС
-			GetDaySum(1, vatNo, zri.m_vsum, zri.m_ret_vsum);   // Продажи, возвраты - НДС
-		}
-
-		GetDaySum(2, payCash, zri.m_pay0, zri.m_ret0);   // Оплаты, возвраты (0 - наличные)
-		GetDaySum(2, payCard, zri.m_pay1, zri.m_ret1);   // Оплаты, возвраты (2 - карточка)
-		if (m_payModeCredit != L'-')
-		{
-			int payCredit = (m_payModeCredit - L'0');
-			GetDaySum(2, payCredit, zri.m_pay2, zri.m_ret2); // Оплаты, возвраты (3 - кредит)
-		}
-
-		CY dummy;
-		dummy.int64 = 0I64;
-		GetDaySum(3, 0, zri.m_cash, dummy);	            // В кассе
-		GetDaySum(3, 1, zri.m_cash_in, zri.m_cash_out); // Внос, вынос
-
-		// абсолютные значения для возвратов и выноса
-		zri.m_cash_out.int64 = _abs64(zri.m_cash_out.int64);
-		zri.m_ret0.int64 = _abs64(zri.m_ret0.int64);
-		zri.m_ret1.int64 = _abs64(zri.m_ret1.int64);
-		zri.m_ret2.int64 = _abs64(zri.m_ret2.int64);
-		zri.m_ret_sum_v.int64 = _abs64(zri.m_ret_sum_v.int64);
-		zri.m_ret_sum_nv.int64 = _abs64(zri.m_ret_sum_nv.int64);
-		zri.m_ret_vsum.int64 = _abs64(zri.m_ret_vsum.int64);
-	}
-	catch (EQUIPException ex)
-	{
-		ex.ReportError2();
-		return false;
-	}
-	return true;
-*/
