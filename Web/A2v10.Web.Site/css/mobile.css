@@ -3496,6 +3496,9 @@ tr:hover .commandbar.visible-hover {
 .field-set.horizontal .field-set-item:last-child {
   margin-right: 0;
 }
+.page.absolute {
+  height: 100%;
+}
 .full-height-panel {
   display: grid;
   height: 100%;

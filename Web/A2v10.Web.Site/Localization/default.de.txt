@@ -1,5 +1,5 @@
 ﻿;
-@About=About
+@About=Über A2v10
 @Confidentiality=Vertraulichkeit
 @Contacts=Kontakt
 @Version=Version
@@ -33,7 +33,7 @@
 ;
 @Home=Home
 @Documents=Dokumente
-@Catalogs=Kataloge 
+@Catalogs=Kataloge
 @Sales=Verkäufe
 @Purchase=Einkäufe
 @Inventory=Inventar

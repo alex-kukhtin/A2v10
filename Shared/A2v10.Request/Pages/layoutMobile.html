@@ -33,7 +33,7 @@
 			</div>
 		</header>
 		<footer class="footer">
-			<a class="f-link" href="" @click.stop.prevent="about">про систему</a>
+			<a class="f-link" href="" @click.stop.prevent="about">@[About]</a>
 			<a class="f-link" v-for="lnk in appData.links" v-text="lnk.title" href="" @click.stop.prevent="appLink(lnk)"></a>
 		</footer>
 		<a2-main-view-mobile></a2-main-view-mobile>

@@ -7021,9 +7021,6 @@ template: `
 					me = cp + 1;
 				}
 			}
-			if (me -ms + 1 > 3) {
-				console.dir(me - ms + 1);
-			}
 			if (sd)
 				children.push(h('span', dotsClass, '...'));
 			for (let mi = ms; mi <= me; ++mi)

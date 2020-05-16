@@ -1,6 +1,6 @@
 ﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
-/*20200129-7623*/
+/*20200516-7660*/
 /* mobile/shell.js */
 
 
@@ -423,7 +423,7 @@
 				let seg1 = this.$store.getters.seg1;
 				for (let m of this.menu) {
 					if (m.Url === seg0) {
-						if (!seg1)
+						if (!seg1 || !m.Menu)
 							return m.Name;
 						for (let sm of m.Menu) {
 							if (sm.Url === seg1)

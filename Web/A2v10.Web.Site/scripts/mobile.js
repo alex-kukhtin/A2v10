@@ -7021,9 +7021,6 @@ template: `
 					me = cp + 1;
 				}
 			}
-			if (me -ms + 1 > 3) {
-				console.dir(me - ms + 1);
-			}
 			if (sd)
 				children.push(h('span', dotsClass, '...'));
 			for (let mi = ms; mi <= me; ++mi)
@@ -12028,7 +12025,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
-/*20200129-7623*/
+/*20200516-7660*/
 /* mobile/shell.js */
 
 
@@ -12451,7 +12448,7 @@ Vue.directive('resize', {
 				let seg1 = this.$store.getters.seg1;
 				for (let m of this.menu) {
 					if (m.Url === seg0) {
-						if (!seg1)
+						if (!seg1 || !m.Menu)
 							return m.Name;
 						for (let sm of m.Menu) {
 							if (sm.Url === seg1)
