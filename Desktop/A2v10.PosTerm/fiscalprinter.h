@@ -29,7 +29,7 @@ class FiscalPrinter
 public:
 	static FiscalPrinter* FindPrinter(const wchar_t* id);
 
-	static void Connect(const PosConnectParams& prms);
+	static FiscalPrinter* Connect(const PosConnectParams& prms);
 
 	static void ShutDown();
 
@@ -38,6 +38,7 @@ public:
 	void SetParams(const PosConnectParams& prms);
 	void Disconnect();
 	const wchar_t* GetLastError();
+	void ReadErrorCode();
 
 
 	void OpenReceipt();
@@ -46,6 +47,8 @@ public:
 	SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency amount, bool bOpenCashDrawer);
 	long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to);
 	JsonObject  FillZReportInfo();
+	void AddMessages(JsonObject& json);
+	void GetInfo(JsonObject& json);
 
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
 	//LONG GetLastCheckNo(DB_ID termId, bool bFromPrinter = false);

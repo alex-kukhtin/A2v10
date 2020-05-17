@@ -26,6 +26,7 @@ PosCommand::COMMAND_BIND PosCommand::_binded_commands[] =
 	{L"connect",            &PosCommand::Connect,            &PosCommand::ConnectData},
 	{L"periodReport",       &PosCommand::PeriodReport,       &PosCommand::PeriodReportData},
 	{L"zReportInfo",        &PosCommand::ZReportInfo,        nullptr},
+	{L"getStatus",          &PosCommand::GetStatus,          nullptr},
 	{nullptr, nullptr}
 };
 
@@ -86,13 +87,12 @@ std::wstring PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data)
 	prms.model = pcd->_model.c_str();
 	prms.port = pcd->_port.c_str();
 	prms.baud = pcd->_baud;
-	//prms.payModes = pcd->PayModes;
-	//prms.payModes = pcd->PayModes;
-	FiscalPrinter::Connect(prms);
+	pPrinter = FiscalPrinter::Connect(prms);
 	JsonObject js;
 	js.Add(L"model", pcd->_model.c_str());
 	js.Add(L"port", pcd->_port.c_str());
 	js.Add(L"terminal", pcd->_terminal.c_str());
+	pPrinter->AddMessages(js);
 	return js.Value();
 }
 
@@ -152,6 +152,7 @@ std::wstring PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 	long no = pPrinter->NullReceipt(bOpenDrawer);
 	JsonObject js;
 	js.Add(L"no", no);
+	pPrinter->AddMessages(js);
 	return js.Value();
 }
 
@@ -199,6 +200,7 @@ std::wstring PosCommand::ServiceInOut(FiscalPrinter* pPrinter, JsonTarget* data)
 	JsonObject js;
 	js.Add(L"no", (long) info.no);
 	js.Add(L"cashOnHand", info.sumOnHand);
+	pPrinter->AddMessages(js);
 	return js.Value();
 }
 
@@ -214,5 +216,14 @@ std::wstring PosCommand::PeriodReport(FiscalPrinter* pPrinter, JsonTarget* data)
 std::wstring PosCommand::ZReportInfo(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	JsonObject js = pPrinter->FillZReportInfo();
+	return js.Value();
+}
+
+std::wstring PosCommand::GetStatus(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	pPrinter->ReadErrorCode();
+	JsonObject js;
+	pPrinter->GetInfo(js);
+	pPrinter->AddMessages(js);
 	return js.Value();
 }

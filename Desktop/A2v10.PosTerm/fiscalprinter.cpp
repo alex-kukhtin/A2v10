@@ -35,14 +35,14 @@ bool FiscalPrinter::Create(const wchar_t* model) {
 	if (wcsncmp(model, TEST_PRINTER, PRINTER_NAME_LEN) == 0)
 		_impl.reset(new CFiscalPrinter_Null());
 	else if (wcsncmp(model, DATECS_KRYPTON, PRINTER_NAME_LEN) == 0)
-		_impl.reset(new CFiscalPrinter_DatecsKrypton());
+		_impl.reset(new CFiscalPrinter_DatecsKrypton(model));
 	else if (wcsncmp(model, FP_DATECST260, PRINTER_NAME_LEN) == 0)
-		_impl.reset(new CFiscalPrinter_DatecsKrypton());
+		_impl.reset(new CFiscalPrinter_DatecsKrypton(model));
 	return _impl.get() != nullptr;
 }
 
 // static 
-void FiscalPrinter::Connect(const PosConnectParams& prms)
+FiscalPrinter* FiscalPrinter::Connect(const PosConnectParams& prms)
 {
 	auto printer = std::unique_ptr<FiscalPrinter>(new FiscalPrinter());
 	if (printer->Create(prms.model)) {
@@ -50,7 +50,7 @@ void FiscalPrinter::Connect(const PosConnectParams& prms)
 			printer->SetParams(prms);
 			FiscalPrinter* pPrinter = printer.release();
 			_printers.push_back(std::unique_ptr<FiscalPrinter>(pPrinter));
-			return;
+			return pPrinter;
 		}
 		throw EQUIPException(FP_E_UNABLE_TO_CONNECT);
 	}
@@ -251,4 +251,27 @@ long FiscalPrinter::PeriodReport(const wchar_t* report, bool bShort, const wchar
 JsonObject  FiscalPrinter::FillZReportInfo()
 {
 	return _impl->FillZReportInfo();
+}
+
+void FiscalPrinter::AddMessages(JsonObject& json)
+{
+	std::vector<std::wstring> msgs;
+	_impl->GetStatusMessages(msgs);
+	if (msgs.size() <= 0)
+		return;
+
+	JsonObject status;
+	for (auto it = msgs.begin(); it != msgs.end(); ++it)
+		status.AddArray(it->c_str());
+	json.AddArray(L"messages", &status);
+}
+
+void FiscalPrinter::ReadErrorCode()
+{
+	_impl->GetErrorCode();
+}
+
+void FiscalPrinter::GetInfo(JsonObject& json)
+{
+	_impl->GetPrinterInfo(json);
 }

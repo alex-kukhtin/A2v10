@@ -24,6 +24,8 @@ protected:
 	virtual void GetErrorCode();
 	virtual std::wstring GetLastErrorS();
 
+	std::wstring _port;
+
 	BYTE m_sndBuffer[256];
 	BYTE m_rcvBuffer[256];
 	BYTE m_status[6];

@@ -15,5 +15,6 @@
 #include "codecvt"
 #include "list"
 #include "vector"
+#include "algorithm"
 
 #endif //PCH_H

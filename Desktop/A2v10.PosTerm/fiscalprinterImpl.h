@@ -57,6 +57,9 @@ public:
 	virtual void SetParams(const PosConnectParams& prms) = 0;
 	virtual void Close();
 	virtual DWORD GetFlags();
+	virtual void GetStatusMessages(std::vector<std::wstring>& msgs) = 0;
+	virtual void GetPrinterInfo(JsonObject& json) = 0;
+	virtual void GetErrorCode() = 0;
 
 	//virtual int GetLastReceiptNo(bool bFromPrinter = false) = 0;
 	virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) = 0;

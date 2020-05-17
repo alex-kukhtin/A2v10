@@ -37,8 +37,10 @@ class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
 	wchar_t _payModeCash;
 	wchar_t _payModeCard;
 	std::unordered_map <__int64, wchar_t> _taxChars;
+	int _op;
+	std::wstring _model;
 public:
-	CFiscalPrinter_DatecsKrypton();
+	CFiscalPrinter_DatecsKrypton(const wchar_t* model);
 
 	virtual void SetParams(const PosConnectParams& prms) override;
 	virtual void PrintDiagnostic();
@@ -79,6 +81,7 @@ public:
 	virtual bool ReportByArticles() override;
 	virtual bool ReportModemState() override;
 	virtual bool IsEndOfTape() override;
+	virtual void GetErrorCode() override;
 
 protected:
 
@@ -88,8 +91,9 @@ protected:
 	};
 
 	virtual void CheckStatus() override;
-	virtual void GetErrorCode() override;
 	virtual std::wstring GetLastErrorS() override;
+	virtual void GetStatusMessages(std::vector<std::wstring>& msgs) override;
+	virtual void GetPrinterInfo(JsonObject& json) override;
 
 	bool CheckPaymentSum(int get);
 

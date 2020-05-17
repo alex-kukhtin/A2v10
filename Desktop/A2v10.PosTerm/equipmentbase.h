@@ -4,7 +4,6 @@ class EQUIPException
 {
 	UINT m_nID;
 	std::wstring _error;
-
 public:
 	EQUIPException(unsigned nID)
 		: m_nID(nID) {};

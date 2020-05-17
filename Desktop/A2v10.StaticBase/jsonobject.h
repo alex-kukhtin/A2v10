@@ -13,7 +13,9 @@ public:
 	void Add(const wchar_t* name, JsonObject* value);
 	void Add(const wchar_t* name, __currency value);
 	void AddArray(const wchar_t* name, JsonObject* value);
+
 	void AddArray(JsonObject* value);
+	void AddArray(const wchar_t* value);
 
 	std::wstring ToString();
 	std::wstring ToArray();

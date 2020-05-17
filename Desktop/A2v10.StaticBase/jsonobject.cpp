@@ -5,10 +5,12 @@
 #include "jsonobject.h"
 
 
-void JsonObject::Add(const wchar_t* name, const wchar_t* value)
+void JsonObject::Add(const wchar_t* name, const wchar_t* str)
 {
 	addName(name);
-	_value.append(L"\"").append(value).append(L"\"");
+	std::wstring strval(str);
+	std::replace(strval.begin(), strval.end(), L'"', L'\'');
+	_value.append(L"\"").append(strval).append(L"\"");
 }
 
 void JsonObject::Add(const wchar_t* name, __currency value)
@@ -45,6 +47,15 @@ void JsonObject::AddArray(JsonObject* value)
 	if (!_value.empty())
 		_value.append(L",");
 	_value.append(value->ToString());
+}
+
+void JsonObject::AddArray(const wchar_t* str)
+{
+	if (!_value.empty())
+		_value.append(L",");
+	std::wstring strval(str);
+	std::replace(strval.begin(), strval.end(), L'"', L'\'');
+	_value.append(L"\"").append(strval).append(L"\"");
 }
 
 void JsonObject::AddArray(const wchar_t* name, JsonObject* value)

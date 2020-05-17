@@ -11,7 +11,7 @@
 
 #define MAX_COMMAND_LEN 255
 
-#define EMULATION_MODE false
+#define EMULATION_MODE true
 
 #define SYN 0x16
 
@@ -47,6 +47,7 @@ bool CFiscalPrinter_DatecsBase::Open(const wchar_t* Port, DWORD nBaudRate)
 		if (IsOpen())
 			return true; // already open
 		OpenComPort(Port, nBaudRate);
+		_port = Port;
 	}
 	catch (EQUIPException ex)
 	{
@@ -165,7 +166,7 @@ void CFiscalPrinter_DatecsBase::CreateCommand(const wchar_t* name, BYTE cmd, con
 {
 	TraceINFO(L"  %s\tSND:0x%X %s", name, (int)cmd, strCmd);
 	std::string cmdA = W2A(strCmd);
-	CreateCommandB(cmd, (BYTE*)cmdA.c_str(), (BYTE)cmdA.length() - 1 /* without \0! */);
+	CreateCommandB(cmd, (BYTE*)cmdA.c_str(), (BYTE)cmdA.length());
 }
 
 void CFiscalPrinter_DatecsBase::CreateCommandB(BYTE cmd, BYTE* data, BYTE len)

@@ -49,27 +49,27 @@ enum FP_COMMANDS {
 };
 
 enum {
-	FPS0_SERVICE_MODE = 0x01, // 0
-	FPS0_BUFFER_OVER = 0x02, // 1
-	FPS0_NO_FAILURE = 0x04, // 2
-	FPS0_NO_DISPLAY = 0x08, // 3
+	FPS0_SERVICE_MODE   = 0x01, // 0
+	FPS0_BUFFER_OVER    = 0x02, // 1
+	FPS0_NO_FAILURE     = 0x04, // 2
+	FPS0_NO_DISPLAY     = 0x08, // 3
 	FPS0_PRINTER_NOTRDY = 0x10, // 4
-	FPS0_NEED_RESET = 0x20, // 5
+	FPS0_NEED_RESET     = 0x20, // 5
 	FPS0_OTHER_HW_ERROR = 0x40, // 6
 
-	FPS1_CHK_TAPE_ENDING = 0x01,  // 0
+	FPS1_RCP_TAPE_ENDING = 0x01,  // 0
 	FPS1_CTL_TAPE_ENDING = 0x02,  // 1
-	FPS1_CHK_TAPE_ENDED = 0x04,  // 2
-	FPS1_CTL_TAPE_ENDED = 0x08,  // 3
-	FPS1_COVER_OPENED = 0x10,  // 4 
-	FPS1_PAPER_SKIPPING = 0x20,  // 5
+	FPS1_RCP_TAPE_ENDED  = 0x04,  // 2
+	FPS1_CTL_TAPE_ENDED  = 0x08,  // 3
+	FPS1_COVER_OPENED    = 0x10,  // 4 
+	FPS1_PAPER_SKIPPING  = 0x20,  // 5
 	FPS1_BUFFER_NOTEMPTY = 0x40,  // 6
 
-	FPS2_CHECK_STATE = 0x0F, // CHECK_STATUS (0..3)
+	FPS2_CHECK_STATE     = 0x0F, // CHECK_STATUS (0..3)
 	FPS2_RETCHECK_OPENED = 0x10, // 4
 
 	FPS3_SECURITY_ERROR = 0x01, // 0
-	FPS3_SIM_ERROR = 0x02, // 1
+	FPS3_SIM_ERROR      = 0x02, // 1
 };
 
 #define EMPTY_PARAM L"000000;"
@@ -81,12 +81,14 @@ void _toUpper(std::string& s) {
 	std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 }
 
-CFiscalPrinter_DatecsKrypton::CFiscalPrinter_DatecsKrypton()
+CFiscalPrinter_DatecsKrypton::CFiscalPrinter_DatecsKrypton(const wchar_t* model)
 	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0)
 {
+	_model = model;
 	// default values. 
 	_payModeCash = L'0';
 	_payModeCard = L'1';
+	_op = 1; // TODO: operator
 }
 
 
@@ -222,9 +224,8 @@ long CFiscalPrinter_DatecsKrypton::NullReceipt(bool bOpenCashDrawer)
 	CancelReceipt();
 
 	TraceINFO(L"DATECS [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
-	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
-	CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%01d;0;", EMPTY_PARAM, op, tno);
+	CreateCommandV(L"OPENFISCAL", FPCMD_OPENFISCAL, L"%s%02d;%01d;0;", EMPTY_PARAM, _op, tno);
 	SendCommand();
 
 	// print total
@@ -481,12 +482,12 @@ bool CFiscalPrinter_DatecsKrypton::CopyReceipt()
 // virtual 
 void CFiscalPrinter_DatecsKrypton::CheckStatus()
 {
-	//FPS1_CHK_TAPE_ENDING  = 0x01,  // 0
+	//FPS1_RCP_TAPE_ENDING  = 0x01,  // 0
 	//FPS1_CTL_TAPE_ENDING  = 0x02,  // 1
-	//FPS1_CHK_TAPE_ENDED   = 0x04,  // 2
+	//FPS1_RCP_TAPE_ENDED   = 0x04,  // 2
 	//FPS1_CTL_TAPE_ENDED   = 0x08,  // 3
 
-	if (m_status[1] & FPS1_CHK_TAPE_ENDED)
+	if (m_status[1] & FPS1_RCP_TAPE_ENDED)
 		m_bEndOfTape = true;
 	if (m_status[1] & FPS1_CTL_TAPE_ENDED)
 		m_bEndOfTape = true;
@@ -577,21 +578,19 @@ void CFiscalPrinter_DatecsKrypton::GetErrorCode()
 // virtual 
 void CFiscalPrinter_DatecsKrypton::OpenReceipt()
 {
-	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
 
 	CancelReceipt();
-	OpenFiscal(op, L"", tno);
+	OpenFiscal(_op, L"", tno);
 }
 
 // virtual 
 void CFiscalPrinter_DatecsKrypton::OpenReturnReceipt()
 {
-	int op = 1; // %%%%TODO: OPERATOR/TERMINAL
 	int tno = 1;
 
 	CancelReceipt();
-	OpenFiscalReturn(op, L"", tno);
+	OpenFiscalReturn(_op, L"", tno);
 }
 
 RECEIPT_STATUS CFiscalPrinter_DatecsKrypton::GetReceiptStatus()
@@ -826,6 +825,16 @@ DAY_SUM CFiscalPrinter_DatecsKrypton::GetDaySum(long src, long ix)
 			info = "0000;210.60;0.00";
 		else if (src == 1 && ix == 1)
 			info = "0000;10.03;0.00;";
+		else if (src == 0 && ix == 2)
+			info = "0000;200.57;0.00;";
+		else if (src == 1 && ix == 2)
+			info = "0000;33.43;0.00;";
+		else if (src == 2 && ix == 0)
+			info = "0000;491.10;-19.50;";
+		else if (src == 3 && ix == 0)
+			info = "0000;424.35;0.00";
+		else
+			info = "0000;0.00;0.00;";
 	}
 
 	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
@@ -1083,6 +1092,10 @@ void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(int code, const wchar_t* na
 	//00-weight modifier ??
 	wchar_t taxGroup = FindTaxChar(vat, excise);
 
+	// DEBUG
+	if (taxGroup == '\0')
+		taxGroup = L'0';
+
 	CreateCommandV(L"ADDARTICLE", FPCMD_ADDARTICLE, L"%s%ld;%s;%c;%ld;00;%s;", EMPTY_PARAM, 
 		code, sname.c_str(), taxGroup, tno, sunit.c_str());
 	SendCommand();
@@ -1138,98 +1151,66 @@ void CFiscalPrinter_DatecsKrypton::OpenCashDrawer()
 	SendCommand();
 }
 
-static void _append(std::wstring& s, const wchar_t* szAdd)
-{
-	if (!s.empty())
-		s += L"\n";
-	s += szAdd;
-};
-
 void CFiscalPrinter_DatecsKrypton::TraceStatus()
 {
-	std::wstring s(L"");
-	// or or
-	if (m_status[1] & FPS1_CHK_TAPE_ENDED)
-		_append(s, L"Закінчилася чекова стрічка");
-	else if (m_status[1] & FPS1_CHK_TAPE_ENDING)
-		_append(s, L"Закінчується чекова стрічка");
+	if (m_status[1] & FPS1_RCP_TAPE_ENDED)
+		TraceINFO(FP_E_RECEIPT_TAPE_OVER);
+	else if (m_status[1] & FPS1_RCP_TAPE_ENDING)
+		TraceINFO(FP_W_RECEIPT_TAPE_ENDS);
 
 	// or or
 	if (m_status[1] & FPS1_CTL_TAPE_ENDING)
-		_append(s, L"Закінчується контрольна стрічка");
+		TraceINFO(FP_W_CONTROL_TAPE_ENDS);
 	else if (m_status[1] & FPS1_CTL_TAPE_ENDED)
-		_append(s, L"Закінчилася контрольна стрічка");
-	if (s.length() > 0)
-		TraceINFO(s.c_str());
+		TraceINFO(FP_E_CONTROL_TAPE_OVER);
 }
 
 std::wstring CFiscalPrinter_DatecsKrypton::GetLastErrorS()
 {
-	std::wstring s(L"");
-	// или или
-	if (m_status[1] & FPS1_CHK_TAPE_ENDED)
-		_append(s, L"Закончилась чековая лента");
-	else if (m_status[1] & FPS1_CHK_TAPE_ENDING)
-		_append(s, L"Заканчивается чековая лента");
+	wchar_t buff[MAX_COMMAND_LEN];
 
-	// или или
-	if (m_status[1] & FPS1_CTL_TAPE_ENDING)
-		_append(s, L"Заканчивается контрольная лента");
-	else if (m_status[1] & FPS1_CTL_TAPE_ENDED)
-		_append(s, L"Закончилась контрольная лента");
+	if (m_status[1] & FPS1_RCP_TAPE_ENDED)
+		return FP_E_RECEIPT_TAPE_OVER;
+
+	if (m_status[1] & FPS1_CTL_TAPE_ENDED)
+		return FP_E_CONTROL_TAPE_OVER;
 
 	if (m_status[0] & FPS0_NO_DISPLAY)
-		_append(s, L"Не подключен дисплей покупателя");
+		return L"Не подключен дисплей покупателя";
 
 	if (m_dwError == 0)
-		return s;
-	if (m_dwError == err_NOT_CONNECTED) {
-		_append(s, L"Невозможно подключиться к фискальному регистратору. Проверьте скорость порта.");
-	}
-	else if (m_dwError == 0x0002) {
-		_append(s, L"Неправильный код инструкции");
-	}
-	else if (m_dwError == 0x000b) {
-		_append(s, L"Ошибка состояния чека");
-	}
-	else if (m_dwError == 0x0405) {
-		_append(s, L"Переход через сутки. Сделайте Z-отчет");
-	}
-	else if (m_dwError == 0x0705) {
-		_append(s, L"Фискальный принтер не фискализирован.\nВыполнить операцию невозможно");
-	}
-	else if (m_dwError == 0x0905) {
-		_append(s, L"С начала смены прошло более 24-х часов. Сделайте Z-отчет");
-	}
-	else if (m_dwError == 0x0A05) {
-		_append(s, L"Необходимо скорректировать время");
-	}
-	else if (m_dwError == 0x080B) {
-		_append(s, L"В касі недостатньо грошових коштів");
-	}
-	else if (m_dwError == 0x070B) {
-		_append(s, L"Копия заданных чеков недоступна");
-	}
-	else if (m_dwError == 0x0F05) {
-		_append(s, L"Есть не отправленные эквайру документы в течение 72 часов или более");
-	}
+		return L"";
+
+	if (m_dwError == err_NOT_CONNECTED)
+		return L"Невозможно подключиться к фискальному регистратору. Проверьте скорость порта.";
+	else if (m_dwError == 0x0002)
+		return FP_E_INVALID_CODE;
+	else if (m_dwError == 0x000b)
+		return L"Ошибка состояния чека";
+	else if (m_dwError == 0x0405)
+		return L"Переход через сутки. Сделайте Z-отчет";
+	else if (m_dwError == 0x0705)
+		return L"Фискальный принтер не фискализирован.\nВыполнить операцию невозможно";
+	else if (m_dwError == 0x0905)
+		return L"С начала смены прошло более 24-х часов. Сделайте Z-отчет";
+	else if (m_dwError == 0x0A05)
+		return L"Необходимо скорректировать время";
+	else if (m_dwError == 0x080B)
+		return L"В касі недостатньо грошових коштів";
+	else if (m_dwError == 0x070B)
+		return L"Копия заданных чеков недоступна";
+	else if (m_dwError == 0x0F05)
+		return FP_E_DOCS_NOT_SENT;
 	else if ((m_dwError & 0xFF03) != 0) {
-		wchar_t buff[MAX_COMMAND_LEN];
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Ошибка в команде (формат аргумента %d)", (int)(m_dwError & 0xFF00 >> 8));
-		_append(s, buff);
+		return buff;
 	}
 	else if ((m_dwError & 0xFF04) != 0) {
-		wchar_t buff[MAX_COMMAND_LEN];
 		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Ошибка в команде - (значение аргумента %d)", (int)(m_dwError & 0xFF00 >> 8));
-		_append(s, buff);
+		return buff;
 	}
-	else {
-		wchar_t buff[MAX_COMMAND_LEN];
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Общая ошибка принтера: 0x%x", (int)m_dwError);
-		_append(s, buff);
-	}
-
-	return s;
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Общая ошибка принтера: 0x%x", (int)m_dwError);
+	return buff;
 }
 
 // virtual 
@@ -1333,3 +1314,19 @@ JsonObject CFiscalPrinter_DatecsKrypton::FillZReportInfo()
 	return result;
 }
 
+// virtual 
+void CFiscalPrinter_DatecsKrypton::GetStatusMessages(std::vector<std::wstring>& msgs) 
+{
+	if (m_status[1] & FPS1_RCP_TAPE_ENDING)
+		msgs.push_back(FP_W_RECEIPT_TAPE_ENDS);
+	if (m_status[1] & FPS1_CTL_TAPE_ENDING)
+		msgs.push_back(FP_W_CONTROL_TAPE_ENDS);
+}
+
+// virtual 
+void CFiscalPrinter_DatecsKrypton::GetPrinterInfo(JsonObject& json)
+{
+	json.Add(L"model", _model.c_str());
+	json.Add(L"port", _port.c_str());
+	json.Add(L"zno", m_nLastZReportNo);
+}

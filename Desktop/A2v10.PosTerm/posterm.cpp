@@ -56,8 +56,14 @@ void PosProcessCommand(const wchar_t* json, std::wstring& result)
 	{
 		parser.SetTarget(&cmd);
 		parser.Parse(json);
-		if (cmd._msgid == _lastMsgId)
+		
+		if (cmd._command == L"getStatus")
+			_lastMsgId = -1;
+
+		if (cmd._msgid == _lastMsgId) {
+			result = L"{}";
 			return; //
+		}
 		_lastMsgId = cmd._msgid;
 		result = L"{\"msgid\":";
 		result.append(std::to_wstring(cmd._msgid));
@@ -101,6 +107,7 @@ const wchar_t* PosLastErrorMessage()
 	return _lastErrorMessage.c_str();
 }
 
+// TODO: убрать!
 const wchar_t* PosErrorMessage(pos_result_t res)
 {
 	switch (res)

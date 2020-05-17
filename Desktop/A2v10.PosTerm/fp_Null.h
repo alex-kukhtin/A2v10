@@ -15,6 +15,7 @@ public:
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
 	virtual void SetParams(const PosConnectParams& prms) override;
 	virtual void Close() override;
+	virtual void GetErrorCode() override;
 
 	virtual void AddArticle(const RECEIPT_ITEM& item) override;
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
@@ -52,6 +53,9 @@ public:
 	virtual bool ReportRems() override;
 	virtual bool ReportModemState() override;
 	virtual void TraceCommand(const wchar_t* command) override;
+	virtual void GetStatusMessages(std::vector<std::wstring>& msgs) override;
+	virtual void GetPrinterInfo(JsonObject& json) override;
+
 protected:
 	long GetPrinterLastZReportNo();
 	void ReportMessage(const wchar_t* msg);

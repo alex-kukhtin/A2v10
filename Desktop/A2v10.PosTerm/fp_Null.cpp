@@ -23,6 +23,12 @@ bool CFiscalPrinter_Null::IsReady() const
 }
 
 // virtual 
+void CFiscalPrinter_Null::GetErrorCode() 
+{
+
+}
+
+// virtual 
 void CFiscalPrinter_Null::SetParams(const PosConnectParams& prms)
 {
 	TraceINFO(L"TESTPRINTER [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
@@ -389,4 +395,14 @@ JsonObject  CFiscalPrinter_Null::FillZReportInfo()
 {
 	JsonObject json;
 	return json;
+}
+
+// virtual 
+void CFiscalPrinter_Null::GetStatusMessages(std::vector<std::wstring>& msgs)
+{
+}
+
+// virtual 
+void CFiscalPrinter_Null::GetPrinterInfo(JsonObject& json)
+{
 }
