@@ -101,7 +101,7 @@ namespace A2v10.Interop
 							String str = sharedStringTable.ChildElements[ssid].InnerText;
 							table.SetValue(dataRow, columns[colIndex], str);
 						}
-						else if (c.StyleIndex != null)
+						else if (c.StyleIndex != null && c.CellValue != null)
 						{
 							Int32 ix = Int32.Parse(c.StyleIndex);
 							var cellFormat = workBookPart.WorkbookStylesPart.Stylesheet.CellFormats.ChildElements[ix] as CellFormat;
