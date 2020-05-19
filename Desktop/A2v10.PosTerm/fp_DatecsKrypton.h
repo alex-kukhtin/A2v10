@@ -39,6 +39,7 @@ class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
 	std::unordered_map <__int64, wchar_t> _taxChars;
 	int _op;
 	std::wstring _model;
+	long _testReceiptNo;
 public:
 	CFiscalPrinter_DatecsKrypton(const wchar_t* model);
 

@@ -89,6 +89,7 @@ CFiscalPrinter_DatecsKrypton::CFiscalPrinter_DatecsKrypton(const wchar_t* model)
 	_payModeCash = L'0';
 	_payModeCard = L'1';
 	_op = 1; // TODO: operator
+	_testReceiptNo = 123;
 }
 
 
@@ -297,6 +298,15 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 		SendCommand();
 		// 000;xxxx;NAME;
 		std::string  info((char*)m_data);
+
+		if (IS_EMULATION()) {
+			if (i == 0)
+				info = "RCV:0000;83;Ãîò³âêà;";
+			else if (i == 1)
+				info = "RCV:0000;03;ÊÀÐÒÊÀ;";
+		}
+
+
 		TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 		auto items = _split(info, ';');
 		if (items.size() > 2) {
@@ -317,13 +327,6 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 			if (bCashSet && bCardSet)
 				break;
 		}
-	}
-	if (IS_EMULATION()) {
-		_payModeCash = L'1';
-		_payModeCard = L'2';
-		dwCardFlags = 0x02;
-		bCardSet = true;
-		bCashSet = true;
 	}
 	// TODO: LOCALIZE MESSAGES
 	if (!bCardSet)
@@ -831,8 +834,8 @@ DAY_SUM CFiscalPrinter_DatecsKrypton::GetDaySum(long src, long ix)
 			info = "0000;33.43;0.00;";
 		else if (src == 2 && ix == 0)
 			info = "0000;491.10;-19.50;";
-		else if (src == 3 && ix == 0)
-			info = "0000;424.35;0.00";
+		//else if (src == 3 && ix == 0)
+			//info = "0000;424.35;0.00"; // cashOnHand
 		else
 			info = "0000;0.00;0.00;";
 	}
@@ -1131,6 +1134,8 @@ long CFiscalPrinter_DatecsKrypton::GetPrinterLastZReportNo()
 
 long CFiscalPrinter_DatecsKrypton::GetPrinterLastReceiptNo()
 {
+	if (IS_EMULATION())
+		return _testReceiptNo++;
 	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;3;");
 	SendCommand();
 	std::string info((char*)m_data);
