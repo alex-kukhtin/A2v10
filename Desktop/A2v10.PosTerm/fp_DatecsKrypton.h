@@ -33,7 +33,7 @@ class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
 {
 	long m_nLastReceiptNo;
 	long m_nLastZReportNo;
-	std::unordered_map <__int64, long> _mapCodes;
+	std::unordered_map <__int64, __int64> _mapCodes;
 	wchar_t _payModeCash;
 	wchar_t _payModeCard;
 	std::unordered_map <__int64, wchar_t> _taxChars;
@@ -104,8 +104,8 @@ protected:
 	void OpenFiscalReturn(int opNo, LPCTSTR pwd, int tNo);
 	void Payment(WCHAR mode, int sum, std::wstring& info);
 	long CloseFiscal(bool bDisplay);
-	void AddPrinterArticle(int code, const wchar_t* name, const wchar_t*  unit, long vat, long excise);
-	int GetPrintCodeByArticle(__int64 art, LPCWSTR szName);
+	void AddPrinterArticle(__int64 code, const wchar_t* name, const wchar_t*  unit, long vat, long excise);
+	__int64 GetPrintCodeByArticle(__int64 art, LPCWSTR szName, __currency price);
 	bool GetPrinterCheckNoForCopy(long& chNo, bool bShowStateError = true);
 private:
 	long GetPrinterLastReceiptNo();

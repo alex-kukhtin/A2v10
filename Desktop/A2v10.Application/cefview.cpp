@@ -209,18 +209,18 @@ LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-void CCefView::SetTerminalId(long terminalId)
+void CCefView::SetTerminalCode(const wchar_t* terminalCode)
 {
 	CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create(L"pos_termid");
 	CefRefPtr<CefListValue> args = msg->GetArgumentList();
-	args->SetInt(0, terminalId);
+	args->SetString(0, terminalCode);
 	m_browser->GetMainFrame()->SendProcessMessage(PID_RENDERER, msg);
 }
 
 HWND CCefView::OnBrowserCreated(CefRefPtr<CefBrowser> browser)
 {
 	m_browser = browser;
-	SetTerminalId(theApp._terminalId);
+	SetTerminalCode(theApp._terminalCode);
 	return ::GetParent(GetSafeHwnd());
 }
 

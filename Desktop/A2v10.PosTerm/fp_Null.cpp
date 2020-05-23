@@ -31,8 +31,8 @@ void CFiscalPrinter_Null::GetErrorCode()
 // virtual 
 void CFiscalPrinter_Null::SetParams(const PosConnectParams& prms)
 {
-	TraceINFO(L"TESTPRINTER [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
-		_id.c_str(), prms.payModes, prms.taxModes);
+	//TraceINFO(L"TESTPRINTER [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
+		//_id.c_str(), prms.payModes, prms.taxModes);
 }
 
 void CFiscalPrinter_Null::AddArticle(const RECEIPT_ITEM& item)
@@ -405,4 +405,7 @@ void CFiscalPrinter_Null::GetStatusMessages(std::vector<std::wstring>& msgs)
 // virtual 
 void CFiscalPrinter_Null::GetPrinterInfo(JsonObject& json)
 {
+	json.Add(L"model", L"Null Printer");
+	json.Add(L"port", L"Any");
+	json.Add(L"zno", m_nLastZReportNo);
 }

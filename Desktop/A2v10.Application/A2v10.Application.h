@@ -28,7 +28,7 @@ public:
 	CString m_strInitialUrl;
 	CString m_strConnectionString;
 	CAppTraceTarget _traceTarget;
-	long _terminalId;
+	CString _terminalCode;
 protected:
 	CMultiDocTemplate* m_pDocTemplate;
 	DWORD m_dwPosThreadId;

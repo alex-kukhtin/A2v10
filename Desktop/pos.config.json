@@ -7,7 +7,7 @@
 			"model": "DATECS-Krypton",
 			"port": "COM5",
 			"baud": 19200,
-			"terminal": 112
+			"terminal": "MAIN"
 		}
 	],
 	"acquiringTerminals": [

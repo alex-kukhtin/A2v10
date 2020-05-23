@@ -15,6 +15,7 @@
 
 const size_t PRINTER_NAME_LEN = 64;
 const wchar_t* TEST_PRINTER   = L"TESTPRINTER";
+const wchar_t* NO_PRINTER     = L"NOPRINTER";
 const wchar_t* DATECS_KRYPTON = L"DATECS-Krypton";
 const wchar_t* FP_DATECST260  = L"DATECS-T260";
 
@@ -33,6 +34,8 @@ FiscalPrinter* FiscalPrinter::FindPrinter(const wchar_t* id)
 
 bool FiscalPrinter::Create(const wchar_t* model) {
 	if (wcsncmp(model, TEST_PRINTER, PRINTER_NAME_LEN) == 0)
+		_impl.reset(new CFiscalPrinter_Null());
+	else if (wcsncmp(model, NO_PRINTER, PRINTER_NAME_LEN) == 0)
 		_impl.reset(new CFiscalPrinter_Null());
 	else if (wcsncmp(model, DATECS_KRYPTON, PRINTER_NAME_LEN) == 0)
 		_impl.reset(new CFiscalPrinter_DatecsKrypton(model));

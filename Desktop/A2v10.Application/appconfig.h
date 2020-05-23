@@ -8,20 +8,16 @@ public:
 	std::wstring _model;
 	std::wstring _port;
 	int _baud;
-	std::wstring _payModes;
-	std::wstring _taxModes;
-	int _terminal;
+	std::wstring _terminal;
 
 	CAppConfigFiscalPrinter();
 
 protected:
-	BEGIN_JSON_PROPS(6)
+	BEGIN_JSON_PROPS(4)
 		STRING_PROP(model, _model)
 		STRING_PROP(port, _port)
 		INT_PROP(baud, _baud)
-		INT_PROP(terminal, _terminal)
-		STRING_PROP(payModes, _payModes)
-		STRING_PROP(taxModes, _taxModes)
+		STRING_PROP(terminal, _terminal)
 	END_JSON_PROPS()
 };
 

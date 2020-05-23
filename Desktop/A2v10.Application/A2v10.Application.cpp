@@ -39,7 +39,7 @@ END_MESSAGE_MAP()
 CMainApp::CMainApp()
 	:m_dwPosThreadId(0), m_hPosThreadHandle(0),
 	m_pDocTemplate(nullptr), m_pAppConfig(nullptr),
-	_terminalId(0)
+	_terminalCode(L"")
 {
 	// support Restart Manager
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_ALL_ASPECTS;

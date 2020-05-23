@@ -8,7 +8,7 @@ class CFiscalPrinter_Null : public FiscalPrinterImpl
 	long m_nLastZReportNo;
 public:
 	CFiscalPrinter_Null()
-		: m_nLastReceipt(0), m_nLastZReportNo(0) {}
+		: m_nLastReceipt(1234), m_nLastZReportNo(2233) {}
 	virtual void Init() override;
 	virtual bool IsOpen() const override;
 	virtual bool IsReady() const override;

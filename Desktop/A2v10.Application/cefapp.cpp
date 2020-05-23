@@ -15,7 +15,7 @@
 
 //static 
 bool CCefApplication::m_bInit = false;
-long CCefApplication::_terminalId = 0;
+std::wstring CCefApplication::_terminalCode;
 
 // virtual
 CCefApplication::~CCefApplication()
@@ -142,8 +142,8 @@ bool CCefApplication::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 	else if (wcsncmp(msgname, L"pos_termid", 32) == 0) {
 		CefRefPtr<CefListValue> args = message->GetArgumentList();
 		auto argList = message->GetArgumentList();
-		long termId = argList->GetInt(0);
-		CCefApplication::_terminalId = termId;
+		CefString termCode = argList->GetString(0);
+		CCefApplication::_terminalCode = termCode.c_str();
 		return true;
 	}
 	return false;

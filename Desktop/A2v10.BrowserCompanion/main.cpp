@@ -40,7 +40,7 @@ int main(int argc, char *argv[], char *envp[])
 			if (len._len > 0)
 				PosProcessCommandA(buf, result);
 
-			len._len = result.length() - 1;
+			len._len = result.length();
 
 			std::cout << len._b[0] << len._b[1] << len._b[2] << len._b[3];
 			std::cout.write(result.c_str(), len._len);

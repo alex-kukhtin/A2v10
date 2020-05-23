@@ -81,6 +81,10 @@ void _toUpper(std::string& s) {
 	std::transform(s.begin(), s.end(), s.begin(), ::toupper);
 }
 
+__int64 makeCode(__int64 art, __currency price) {
+	return (art % 10000000) * 10000000 + price.units();
+}
+
 CFiscalPrinter_DatecsKrypton::CFiscalPrinter_DatecsKrypton(const wchar_t* model)
 	: CFiscalPrinter_DatecsBase(), m_nLastReceiptNo(0), m_nLastZReportNo(0)
 {
@@ -793,11 +797,11 @@ bool CFiscalPrinter_DatecsKrypton::CloseCheck(int sum, int get, CFiscalPrinter::
 // virtual 
 void CFiscalPrinter_DatecsKrypton::AddArticle(const RECEIPT_ITEM& item)
 {
-	if (_mapCodes.count(item.article) > 0)
+	__int64 code64 = makeCode(item.article, item.price);
+	if (_mapCodes.count(code64) > 0)
 		return;
-	long code = ((long) item.article) % 1000000;
-	AddPrinterArticle(code, item.name, item.unit, item.vat.units(), item.excise.units());
-	_mapCodes[item.article] = code;
+	AddPrinterArticle(code64, item.name, item.unit, item.vat.units(), item.excise.units());
+	_mapCodes[code64] = code64;
 }
 
 void CFiscalPrinter_DatecsKrypton::OpenFiscal(int opNo, LPCTSTR /*pwd*/, int tNo)
@@ -921,11 +925,12 @@ long CFiscalPrinter_DatecsKrypton::CloseFiscal(bool bDisplay)
 {
 	CreateCommandV(L"CLOSEFISCAL", FPCMD_CLOSEFISCAL, L"%s%s;", EMPTY_PARAM, bDisplay ? L"1" : L"0");
 	SendCommand();
+
 	/*00000;<RECEIPT_NO>;*/
 	std::string result((char*) m_data);
 
 	if (IS_EMULATION())
-		result = "0000;27;";
+		result = Format("0000;%ld;", _testReceiptNo++);
 
 	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
 	auto arr = _split(result, ';');
@@ -1001,10 +1006,10 @@ SERVICE_SUM_INFO CFiscalPrinter_DatecsKrypton::ServiceInOut(bool bOut, __currenc
 //virtual 
 void CFiscalPrinter_DatecsKrypton::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
-	long code = GetPrintCodeByArticle(item.article, item.name);
+	__int64 code = GetPrintCodeByArticle(item.article, item.name, item.price);
 	long price_c = item.price.units();
 	if (item.qty)
-		CreateCommandV(L"PRINTITEM", FPCMD_PRINTITEM, L"%s%ld;%ld.000;%ld.%02ld;", EMPTY_PARAM,
+		CreateCommandV(L"PRINTITEM", FPCMD_PRINTITEM, L"%s%I64d;%ld.000;%ld.%02ld;", EMPTY_PARAM,
 			code, item.qty, price_c / 100, price_c % 100);
 	else {
 		long weight_c = item.weight.units() * 10; // g!
@@ -1037,39 +1042,23 @@ void CFiscalPrinter_DatecsKrypton::PrintReceiptItem(const RECEIPT_ITEM& item)
 	else
 		s.Format(L"%s%ld;%ld.000;%d.%02d;",
 			EMPTY_PARAM, (long) code, (long) qty, price / 100, price % 100);
-	* /
-	CreateCommand(FPCMD_PRINTITEM, s);
-	SendCommand();
-	if (dscPrc != 0)
-	{
-		ATLASSERT(dscSum == 0);
-		s.Format(L"%s-%d.%02d;", EMPTY_PARAM, dscPrc / 100, dscPrc % 100);
-		CreateCommand(FPCMD_DISCOUNTPRCNT, s);
-		SendCommand();
-	}
-	else if (dscSum != 0)
-	{
-		ATLASSERT(dscPrc == 0);
-		s.Format(L"%s-%d.%02d;", EMPTY_PARAM, dscSum / 100, dscSum % 100);
-		CreateCommand(FPCMD_DISCOUNTABS, s);
-		SendCommand();
-	}
 	*/
 }
 
-int CFiscalPrinter_DatecsKrypton::GetPrintCodeByArticle(__int64 art, LPCWSTR szName)
+__int64 CFiscalPrinter_DatecsKrypton::GetPrintCodeByArticle(__int64 art, LPCWSTR szName, __currency price)
 {
-	if (_mapCodes.count(art) > 0)
-		return _mapCodes[art];
+	__int64 code64 = makeCode(art, price);
+	if (_mapCodes.count(code64) > 0)
+		return _mapCodes[code64];
 	return 0;
 }
 
-void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(int code, const wchar_t* name, const wchar_t* unit, long vat, long excise)
+void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(__int64 code, const wchar_t* name, const wchar_t* unit, long vat, long excise)
 {
 	//%%%%TODO: TERMINAL
 	long tno = 1;
 
-	CreateCommandV(L"FINDARTICLE", PFCMD_FINDARTICLE, L"%s%ld;", EMPTY_PARAM, code);
+	CreateCommandV(L"FINDARTICLE", PFCMD_FINDARTICLE, L"%s%I64d;", EMPTY_PARAM, code);
 	SendCommand();
 
 	std::string found((char*) m_data); // char!
@@ -1099,7 +1088,7 @@ void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(int code, const wchar_t* na
 	if (taxGroup == '\0')
 		taxGroup = L'0';
 
-	CreateCommandV(L"ADDARTICLE", FPCMD_ADDARTICLE, L"%s%ld;%s;%c;%ld;00;%s;", EMPTY_PARAM, 
+	CreateCommandV(L"ADDARTICLE", FPCMD_ADDARTICLE, L"%s%I64d;%s;%c;%ld;00;%s;", EMPTY_PARAM, 
 		code, sname.c_str(), taxGroup, tno, sunit.c_str());
 	SendCommand();
 }

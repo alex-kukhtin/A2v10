@@ -9,7 +9,7 @@
 #define DEFAULT_BAUD 9600
 
 CAppConfigFiscalPrinter::CAppConfigFiscalPrinter()
-	:_baud(DEFAULT_BAUD), _terminal(0)
+	:_baud(DEFAULT_BAUD)
 {
 
 }
@@ -29,11 +29,9 @@ bool CAppConfig::ConnectToPrinter()
 	prms.model = pPrinter->_model.c_str();
 	prms.port = pPrinter->_port.c_str();
 	prms.baud = pPrinter->_baud;
-	prms.payModes = pPrinter->_payModes.c_str();
-	prms.taxModes = pPrinter->_taxModes.c_str();
-	theApp._terminalId = pPrinter->_terminal;
+	theApp._terminalCode = pPrinter->_terminal.c_str();
 
-	if (!pPrinter->_terminal) {
+	if (pPrinter->_terminal.empty()) {
 		AfxMessageBox(L"'terminal' value not specified in configuration file");
 		return false;
 	}

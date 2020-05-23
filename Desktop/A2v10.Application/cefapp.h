@@ -6,7 +6,7 @@ class CCefApplication :
 	public CefRenderProcessHandler
 {
 	static bool m_bInit;
-	static long _terminalId;
+	static std::wstring _terminalCode;
 public:
 	CCefApplication() {};
 	virtual ~CCefApplication();
@@ -19,7 +19,7 @@ public:
 	static void Init(HINSTANCE hInstance);
 	static void Destroy();
 	static bool IsInit() { return m_bInit; }
-	static long TerminalId() { return _terminalId; }
+	static const wchar_t* TerminalCode() { return _terminalCode.c_str(); }
 
 	// CefBrowserProcessHandler
 	virtual void OnBeforeChildProcessLaunch(CefRefPtr<CefCommandLine> command_line) override;

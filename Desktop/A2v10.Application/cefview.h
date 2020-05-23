@@ -67,7 +67,7 @@ protected:
 	afx_msg LRESULT OnIdleUpdateButtons(WPARAM wParam, LPARAM lParam);
 	afx_msg LRESULT OnPosCommandResult(WPARAM wParam, LPARAM lParam);
 private:
-	void SetTerminalId(long id);
+	void SetTerminalCode(const wchar_t* code);
 };
 
 #ifndef _DEBUG  // debug version in mainview.cpp
