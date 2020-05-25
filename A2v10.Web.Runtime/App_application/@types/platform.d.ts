@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7655 */
+/* Version 10.0.7662 */
 
 
 declare function require(url: string): any;
@@ -57,7 +57,6 @@ interface IModelInfo {
 }
 
 interface IElementArray<T> extends Array<T> {
-	[index: number]: T;
 
 	readonly Count: number;
 	readonly $isEmpty: boolean;

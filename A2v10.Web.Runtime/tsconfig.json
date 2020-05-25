@@ -8,7 +8,7 @@
 		"listFiles": false,
 		"baseUrl": ".",
 		"traceResolution": false,
-		"lib": [ "es2017", "dom"],
+		"lib": [ "es2017", "dom" ],
 		"typeRoots": [ "@types" ],
 		"paths": {
 		}
@@ -16,5 +16,8 @@
 	"include": [
 		"./**/*.ts",
 		"@types/platfrom.d.ts"
+	],
+	"exclude": [
+		"./packages/**/*.ts"
 	]
 }
