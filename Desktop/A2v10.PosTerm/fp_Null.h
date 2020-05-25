@@ -5,10 +5,10 @@
 class CFiscalPrinter_Null : public FiscalPrinterImpl
 {
 	long m_nLastReceipt;
-	long m_nLastZReportNo;
+	long _nLastZReportNo;
 public:
 	CFiscalPrinter_Null()
-		: m_nLastReceipt(1234), m_nLastZReportNo(2233) {}
+		: m_nLastReceipt(1234), _nLastZReportNo(2233) {}
 	virtual void Init() override;
 	virtual bool IsOpen() const override;
 	virtual bool IsReady() const override;
@@ -26,16 +26,16 @@ public:
 	virtual long CloseReceipt(bool bDisplay) override;
 	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) override { return 0; };
 	virtual JsonObject  FillZReportInfo() override;
+	virtual long CopyReceipt() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
 	virtual long NullReceipt(bool bOpenCashDrawer) override;
-	virtual bool CopyReceipt() override;
 	virtual long XReport() override;
 	virtual ZREPORT_RESULT ZReport() override;
 	virtual void OpenCashDrawer() override;
 	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) override;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
-	virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) override;
+	//virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) override;
 	virtual void PrintFiscalText(const wchar_t* szText) override;
 	virtual void PrintNonFiscalText(const wchar_t* szText) override;
 	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr) override;

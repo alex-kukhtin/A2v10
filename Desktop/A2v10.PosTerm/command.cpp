@@ -27,6 +27,7 @@ PosCommand::COMMAND_BIND PosCommand::_binded_commands[] =
 	{L"periodReport",       &PosCommand::PeriodReport,       &PosCommand::PeriodReportData},
 	{L"zReportInfo",        &PosCommand::ZReportInfo,        nullptr},
 	{L"getStatus",          &PosCommand::GetStatus,          nullptr},
+	{L"copyReceipt",        &PosCommand::CopyReceipt,        nullptr},
 	{nullptr, nullptr}
 };
 
@@ -210,6 +211,7 @@ std::wstring PosCommand::PeriodReport(FiscalPrinter* pPrinter, JsonTarget* data)
 	long no = pPrinter->PeriodReport(prd->_report.c_str(), prd->_short, prd->_from.c_str(), prd->_to.c_str());
 	JsonObject js;
 	js.Add(L"no", no);
+	pPrinter->AddMessages(js);
 	return js.Value();
 }
 
@@ -224,6 +226,15 @@ std::wstring PosCommand::GetStatus(FiscalPrinter* pPrinter, JsonTarget* data)
 	pPrinter->ReadErrorCode();
 	JsonObject js;
 	pPrinter->GetInfo(js);
+	pPrinter->AddMessages(js);
+	return js.Value();
+}
+
+std::wstring PosCommand::CopyReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	long no = pPrinter->CopyReceipt();
+	JsonObject js;
+	js.Add(L"no", no);
 	pPrinter->AddMessages(js);
 	return js.Value();
 }

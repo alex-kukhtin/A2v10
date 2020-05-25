@@ -37,8 +37,8 @@ void CFiscalPrinter_Null::SetParams(const PosConnectParams& prms)
 
 void CFiscalPrinter_Null::AddArticle(const RECEIPT_ITEM& item)
 {
-	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%I64d, price:%ld, excise:%I64d})", 
-		_id.c_str(), item.article, item.name, item.vat, item.price, item.excise);
+	TraceINFO(L"TESTPRINTER [%s]. AddArticle({article:%I64d, name:'%s', tax:%ld, price:%ld, excise:%ld})", 
+		_id.c_str(), item.article, item.name, item.vat.units(), item.price.units(), item.excise.units());
 }
 
 // virtual 
@@ -68,7 +68,7 @@ void CFiscalPrinter_Null::Payment(PAYMENT_MODE mode, long sum)
 long CFiscalPrinter_Null::CloseReceipt(bool bDisplay)
 {
 	TraceINFO(L"TESTPRINTER [%s]. CloseReceipt()", _id.c_str());
-	return m_nLastReceipt;
+	return m_nLastReceipt++;
 }
 
 // virtual 
@@ -118,12 +118,10 @@ void CFiscalPrinter_Null::PrintTotal()
 }
 
 // virtual 
-bool CFiscalPrinter_Null::CopyReceipt()
+long CFiscalPrinter_Null::CopyReceipt()
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER (key=%s): Print receipt copy", _id.c_str());
-	ReportMessage(buff);
-	return true;
+	TraceINFO(L"TESTPRINTER [%s]. CopyReceipt()", _id.c_str());
+	return m_nLastReceipt++;
 }
 
 //virtual 
@@ -157,27 +155,25 @@ bool CFiscalPrinter_Null::PrintCheckItem(const CFPCheckItemInfo& info)
 */
 
 // virtual
-LONG CFiscalPrinter_Null::GetCurrentZReportNo(bool bFromPrinter /*= false*/)
+/*
+LONG CFiscalPrinter_Null::GetCurrentZReportNo(bool bFromPrinter /*= false * /)
 {
 	if (bFromPrinter)
-		m_nLastZReportNo = GetPrinterLastZReportNo();
-	return m_nLastZReportNo;
+		_nLastZReportNo = GetPrinterLastZReportNo();
+	return _nLastZReportNo;
 }
+*/
 
 // virtual 
 void CFiscalPrinter_Null::Init()
 {
 	TraceINFO(L"TESTPRINTER [%s]. Init()", _id.c_str());
-	m_nLastZReportNo = GetPrinterLastZReportNo();
+	_nLastZReportNo = GetPrinterLastZReportNo();
 }
 
 long CFiscalPrinter_Null::GetPrinterLastZReportNo()
 {
-	__int64 no = 0; //TODO: ZREPORT_INFO::GetTestNumber(termId);
-	if (no == 0)
-		return false;
-	return (LONG)no;
-	return true;
+	return _nLastZReportNo;
 }
 
 // virtual 
@@ -204,7 +200,7 @@ bool CFiscalPrinter_Null::FillZReportInfo(ZREPORT_INFO& zri)
 long CFiscalPrinter_Null::XReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. XReport()", _id.c_str());
-	return 523;
+	return m_nLastReceipt++;
 }
 
 // virtual 
@@ -212,8 +208,8 @@ ZREPORT_RESULT CFiscalPrinter_Null::ZReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. ZReport()", _id.c_str());
 	ZREPORT_RESULT result;
-	result.no = 10;
-	result.zno = 50;
+	result.no = m_nLastReceipt++;
+	result.zno = _nLastZReportNo++;
 	return result;
 }
 
@@ -394,6 +390,7 @@ void CFiscalPrinter_Null::TraceCommand(const wchar_t* command)
 JsonObject  CFiscalPrinter_Null::FillZReportInfo()
 {
 	JsonObject json;
+	json.Add(L"zno", _nLastZReportNo);
 	return json;
 }
 
@@ -407,5 +404,5 @@ void CFiscalPrinter_Null::GetPrinterInfo(JsonObject& json)
 {
 	json.Add(L"model", L"Null Printer");
 	json.Add(L"port", L"Any");
-	json.Add(L"zno", m_nLastZReportNo);
+	json.Add(L"zno", _nLastZReportNo);
 }

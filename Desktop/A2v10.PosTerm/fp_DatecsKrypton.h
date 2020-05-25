@@ -38,6 +38,7 @@ class CFiscalPrinter_DatecsKrypton : public CFiscalPrinter_DatecsBase
 	wchar_t _payModeCard;
 	std::unordered_map <__int64, wchar_t> _taxChars;
 	int _op;
+	int _tno;
 	std::wstring _model;
 	long _testReceiptNo;
 public:
@@ -57,12 +58,13 @@ public:
 	virtual long CloseReceipt(bool bDisplay) override;
 	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) override;
 	virtual JsonObject FillZReportInfo() override;
+	virtual long CopyReceipt() override;
 
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText = NULL);
 	virtual DWORD GetFlags();
 
-	virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) override;
-	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
+	//virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) override;
+
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy);
 	virtual void SetCurrentTime() override;
 	virtual void DisplayDateTime() override;
@@ -72,7 +74,6 @@ public:
 
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
 	virtual void AddArticle(const RECEIPT_ITEM& item) override;
-	virtual bool CopyReceipt() override;
 	virtual void Init() override;
 	virtual void OpenCashDrawer() override;
 	virtual void PrintFiscalText(const wchar_t* szText) override;

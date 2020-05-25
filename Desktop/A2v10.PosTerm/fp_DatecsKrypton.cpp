@@ -93,6 +93,7 @@ CFiscalPrinter_DatecsKrypton::CFiscalPrinter_DatecsKrypton(const wchar_t* model)
 	_payModeCash = L'0';
 	_payModeCard = L'1';
 	_op = 1; // TODO: operator
+	_tno = 1; // TODO: terminal
 	_testReceiptNo = 123;
 }
 
@@ -453,37 +454,29 @@ void CFiscalPrinter_DatecsKrypton::Init()
 }
 
 // virtual 
-bool CFiscalPrinter_DatecsKrypton::CopyReceipt()
+long CFiscalPrinter_DatecsKrypton::CopyReceipt()
 {
-	try
-	{
-		long checkNo = -1;
-		CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;5;"); // last available receipt for copy
-		SendCommand();
-		std::string info((char*)m_data);
-		TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
-		/*
-		USES_CONVERSION;
-		CString r;
-		if (!AfxExtractSubString(r, info, 1, L';'))
-			return false;
-		checkNo = _wtol(r); //%%%% - 1; // выдается ТЕКУЩИЙ чек
-		if (checkNo == -1)
-			return false; // НЕТ ДОСТУПНЫХ ЧЕКОВ
-		//if (!GetPrinterLastCheckNo(checkNo, true))
-			//return false;
-		*/
-		CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
-		SendCommand();
-		CreateCommandV(L"PRINTCOPY", FPCMD_PRINTCOPY, L"%s%ld;%ld;", EMPTY_PARAM, checkNo, checkNo);
-		SendCommand();
-		m_nLastReceiptNo = CloseFiscal(false);
-	}
-	catch (EQUIPException ex) {
-		m_strError = ex.GetError();
-		return false;
-	}
-	return true;
+	long rcpNo = -1;
+	CreateCommand(L"DAYCOUNTERS", FPCMD_DAYCOUNTERS, L"000000;5;"); // last available receipt for copy
+	SendCommand();
+	std::string info((char*)m_data);
+	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
+
+
+	// 00000;RCP_NO;
+	auto sinfo = _split(info, ';');
+	if (sinfo.size() < 2)
+		throw EQUIPException(FP_E_DATA_ERROR);
+	std::string r = sinfo[1];
+	rcpNo = atol(r.c_str());
+	if (rcpNo == -1)
+		return -1; // no receipts available
+	CreateCommand(L"OPENNONFISCAL", FPCMD_OPENNONFISCAL, EMPTY_PARAM);
+	SendCommand();
+	CreateCommandV(L"PRINTCOPY", FPCMD_PRINTCOPY, L"%s%ld;%ld;", EMPTY_PARAM, rcpNo, rcpNo);
+	SendCommand();
+	m_nLastReceiptNo = CloseFiscal(false);
+	return m_nLastReceiptNo;
 }
 
 // virtual 
@@ -684,12 +677,14 @@ bool CFiscalPrinter_DatecsKrypton::GetCash(__int64 termId, COleCurrency& cy)
 */
 
 // virtual 
-LONG CFiscalPrinter_DatecsKrypton::GetCurrentZReportNo(bool bFromPrinter /*= false*/)
+/*
+LONG CFiscalPrinter_DatecsKrypton::GetCurrentZReportNo(bool bFromPrinter /*= false* /)
 {
 	if (bFromPrinter)
 		m_nLastZReportNo = GetPrinterLastZReportNo();
 	return m_nLastZReportNo;
 }
+*/
 
 bool CFiscalPrinter_DatecsKrypton::CheckPaymentSum(int get)
 {
@@ -854,33 +849,6 @@ DAY_SUM CFiscalPrinter_DatecsKrypton::GetDaySum(long src, long ix)
 	}
 	return result;
 }
-
-/*
-bool CFiscalPrinter_DatecsKrypton::GetDaySum(long src, long ix, CY& value1, CY& value2)
-{
-	value1.int64 = 0I64;
-	value2.int64 = 0I64;
-	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"000000;%ld;%ld;0;", src, ix);
-	CreateCommand(FPCMD_DAYSUMS, buff);
-	SendCommand();
-	USES_CONVERSION;
-	CString info = A2W((char*)m_data);
-	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
-	CString r1;
-	CString r2;
-	if (!AfxExtractSubString(r1, info, 1, L';'))
-		return false;
-	if (!AfxExtractSubString(r2, info, 2, L';'))
-		return false;
-
-	COleCurrency cy1 = CConvert::String2Currency(r1);
-	COleCurrency cy2 = CConvert::String2Currency(r2);
-	value1 = (CY)cy1;
-	value2 = (CY)cy2;
-	return true;
-}
-*/
 
 void CFiscalPrinter_DatecsKrypton::PrintTotal()
 {
@@ -1055,9 +1023,6 @@ __int64 CFiscalPrinter_DatecsKrypton::GetPrintCodeByArticle(__int64 art, LPCWSTR
 
 void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(__int64 code, const wchar_t* name, const wchar_t* unit, long vat, long excise)
 {
-	//%%%%TODO: TERMINAL
-	long tno = 1;
-
 	CreateCommandV(L"FINDARTICLE", PFCMD_FINDARTICLE, L"%s%I64d;", EMPTY_PARAM, code);
 	SendCommand();
 
@@ -1089,7 +1054,7 @@ void CFiscalPrinter_DatecsKrypton::AddPrinterArticle(__int64 code, const wchar_t
 		taxGroup = L'0';
 
 	CreateCommandV(L"ADDARTICLE", FPCMD_ADDARTICLE, L"%s%I64d;%s;%c;%ld;00;%s;", EMPTY_PARAM, 
-		code, sname.c_str(), taxGroup, tno, sunit.c_str());
+		code, sname.c_str(), taxGroup, _tno, sunit.c_str());
 	SendCommand();
 }
 
@@ -1170,7 +1135,7 @@ std::wstring CFiscalPrinter_DatecsKrypton::GetLastErrorS()
 		return FP_E_CONTROL_TAPE_OVER;
 
 	if (m_status[0] & FPS0_NO_DISPLAY)
-		return L"Не подключен дисплей покупателя";
+		return FP_E_NO_DISPLAY;
 
 	if (m_dwError == 0)
 		return L"";

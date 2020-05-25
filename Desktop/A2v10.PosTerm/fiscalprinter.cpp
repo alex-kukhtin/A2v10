@@ -278,3 +278,8 @@ void FiscalPrinter::GetInfo(JsonObject& json)
 {
 	_impl->GetPrinterInfo(json);
 }
+
+long FiscalPrinter::CopyReceipt()
+{
+	return _impl->CopyReceipt();
+}

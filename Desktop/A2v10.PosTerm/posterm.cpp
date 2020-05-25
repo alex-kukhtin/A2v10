@@ -72,8 +72,10 @@ void PosProcessCommand(const wchar_t* json, std::wstring& result)
 			cmdresult = cmd.ExecuteConnectCommand();
 		else 
 			cmdresult = cmd.ExecuteCommand();
-		result.append(L", ");
-		result.append(cmdresult.c_str());
+		if (!cmdresult.empty()) {
+			result.append(L", ");
+			result.append(cmdresult.c_str());
+		}
 		result.append(L", \"status\":\"success\"}");
 		return;
 	}

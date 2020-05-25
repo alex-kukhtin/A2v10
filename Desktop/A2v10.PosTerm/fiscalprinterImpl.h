@@ -62,7 +62,7 @@ public:
 	virtual void GetErrorCode() = 0;
 
 	//virtual int GetLastReceiptNo(bool bFromPrinter = false) = 0;
-	virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) = 0;
+	//virtual LONG GetCurrentZReportNo(bool bFromPrinter = false) = 0;
 	//virtual bool FillZReportInfo(ZREPORT_INFO& zri);
 
 	//virtual void SetPrinterInfo(const CFiscalPrinterInfo& info);
@@ -82,6 +82,7 @@ public:
 	virtual long CloseReceipt(bool bDisplay) = 0;
 	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) = 0;
 	virtual JsonObject FillZReportInfo() = 0;
+	virtual long CopyReceipt() = 0;
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info) = 0;
 	virtual bool PrintDiscount(long Type, long Sum, const wchar_t* szDescr);
 	virtual bool PrintDiscountForAllReceipt(long dscPercent, long dscSum);
@@ -90,7 +91,6 @@ public:
 	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) = 0;
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To);
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) = 0;
-	virtual bool CopyReceipt() = 0;
 	virtual bool ReportByArticles() = 0;
 	virtual bool ReportRems();
 	virtual bool ReportModemState() = 0;

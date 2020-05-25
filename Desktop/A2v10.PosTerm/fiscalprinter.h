@@ -49,6 +49,7 @@ public:
 	JsonObject  FillZReportInfo();
 	void AddMessages(JsonObject& json);
 	void GetInfo(JsonObject& json);
+	long CopyReceipt();
 
 	//void Close(long TotalSum, long GetSum, PAY_MODE payMode, LPCWSTR szText = NULL);
 	//LONG GetLastCheckNo(DB_ID termId, bool bFromPrinter = false);

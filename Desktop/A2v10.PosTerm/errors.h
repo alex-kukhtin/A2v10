@@ -13,6 +13,8 @@
 #define FP_E_RECEIPT_TAPE_OVER L"FP1011: Receipt tape is over"
 #define FP_E_DOCS_NOT_SENT     L"FP1012: Documents not sent to acquire within 72 hours or more"
 #define FP_E_INVALID_CODE      L"FP1013: Invalid instruction code"
+#define FP_E_DATA_ERROR        L"FP1014: Data error"
+#define FP_E_NO_DISPLAY        L"FP1015: Display not connected"
 
 #define FP_W_CONTROL_TAPE_ENDS L"FPW2010: Ñontrol tape ends"
 #define FP_W_RECEIPT_TAPE_ENDS L"FPW2011: Receipt tape ends"
