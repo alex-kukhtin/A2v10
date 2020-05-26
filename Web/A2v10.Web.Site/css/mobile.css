@@ -746,6 +746,9 @@
 .ico-warehouse:before {
   content: "\eac9";
 }
+.ico-a2logo:before {
+  content: "\ea10";
+}
 * {
   box-sizing: border-box;
 }
