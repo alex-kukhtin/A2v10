@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200122-7619
+// 20200526-7662
 // locale-en.js
 
 "use strict";
@@ -59,6 +59,8 @@
 		$PrevYear: 'Previous year',
 		$AllPeriodData: 'For all time',
 		$CustomPeriod: 'Custom',
+		$Hours: 'Hours',
+		$Minutes: 'Minutes',
 		$License: 'license',
 		$HomePage: 'homepage',
 		$CreatedOpenSource: 'Created using the following open source software',

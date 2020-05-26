@@ -94,6 +94,7 @@ interface IRoot extends IElement {
 	readonly $isCopy: boolean;
 	readonly $ready: boolean;
 	readonly $template: Template;
+	readonly $dirty: boolean;
 
 	$defer(handler: () => any): void;
 	$emit(event: string, ...params: any[]): void;
@@ -242,6 +243,9 @@ interface IErrorInfo {
 
 interface IViewModel extends IController {
 	readonly $isLoading: boolean;
+	readonly $isDirty: boolean;
+	readonly $isPristine: boolean;
+	readonly $canSave: boolean;
 	$errorMessage(path: string): string;
 	$hasError(path: string): boolean;
 	$getErrors(severity: Severity): IErrorInfo[] | null;
@@ -299,7 +303,10 @@ interface UtilsDate {
 
 interface UtilsText {
 	contains(text: string, probe: string): boolean;
+	containsText(obj: object, props: string, probe: string): boolean;
 	capitalize(text: string): string;
+	equalNoCase(s1: string, s2: string): boolean;
+	maxChars(s1: string, len: number): string;
 }
 
 interface UtilsCurrency {

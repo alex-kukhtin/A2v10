@@ -22,9 +22,5 @@
 	{
 		"outputFile": "Scripts/locale-de.min.js",
 		"inputFile": "app/localization/locale-de.js"
-	},
-	{
-		"outputFile": "Scripts/main.min.js",
-		"inputFile": "scripts/main.js"
 	}
 ]

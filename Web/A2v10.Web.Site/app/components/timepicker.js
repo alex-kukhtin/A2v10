@@ -25,7 +25,7 @@
 		template: `
 <div @click.stop.prevent="dummy" class="time-picker-pane calendar-pane">
 <table class="table-hours">
-<thead><tr><th colspan="6">Години</th></tr></thead>
+<thead><tr><th colspan="6" v-text="locale.$Hours">Години</th></tr></thead>
 <tbody>
 	<tr v-for="row in hours">
 		<td v-for="h in row" :class="getHourClass(h)"><a @click.stop.prevent="clickHours(h)" v-text="h"/></td>
@@ -33,7 +33,7 @@
 </tbody></table>
 <div class="divider"/>
 <table class="table-minutes">
-<thead><tr><th colspan="3">Хвилини</th></tr></thead>
+<thead><tr><th colspan="3" v-text="locale.$Minutes">Хвилини</th></tr></thead>
 <tbody>
 	<tr v-for="row in minutes">
 		<td v-for="m in row" :class="getMinuteClass(m)"><a @click.stop.prevent="clickMinutes(m)" v-text="m"/></td>
@@ -55,6 +55,7 @@
 			}
 		},
 		computed: {
+			locale() { console.dir(locale); return locale; },
 			hours() {
 				let a = [];
 				for (let y = 0; y < 4; y++) {

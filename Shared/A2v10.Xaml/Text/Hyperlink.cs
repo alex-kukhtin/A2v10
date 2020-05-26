@@ -59,6 +59,14 @@ namespace A2v10.Xaml
 			}
 		}
 
+		Boolean IsNavigateExternal()
+		{
+			var c = GetBindingCommand(nameof(Command));
+			if (c == null)
+				return false;
+			return c.Command == CommandType.NavigateExternal;
+		}
+
 		void RenderHyperlink(RenderContext context, Boolean inGrid, Action<TagBuilder> onRender = null, Boolean inside = false, Boolean addOn = false)
 		{
 			Boolean bHasDropDown = DropDown != null;
@@ -74,6 +82,9 @@ namespace A2v10.Xaml
 			tag.AddCssClassBool(Highlight, "highlight");
 			if (!Block)
 				tag.AddCssClass("a2-inline");
+
+			if (IsNavigateExternal())
+				tag.MergeAttribute("rel", "noopener");
 
 			if (Size != ControlSize.Default)
 			{

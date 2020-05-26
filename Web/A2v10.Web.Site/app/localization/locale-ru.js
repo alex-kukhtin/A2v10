@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200122-7619
+// 20200526-7662
 // locale-ru.js
 
 "use strict";
@@ -59,6 +59,8 @@
 		$CurrYear: 'Текущий год',
 		$PrevYear: 'Предыдущий год',
 		$CustomPeriod: 'Произвольно',
+		$Hours: 'Часы',
+		$Minutes: 'Минуты',
 		$License: 'лицензия',
 		$HomePage: 'домашняя страница',
 		$CreatedOpenSource: 'Создано с использованием программного обеспечения с открытым исходным кодом',
