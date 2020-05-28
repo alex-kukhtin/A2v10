@@ -1527,6 +1527,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BA57A7E1BD174F729FE3958BDC3E8F25"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_BFE5D71FAC384D64BD95E47DF5193416"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -4846,6 +4852,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BA57A7E1BD174F729FE3958BDC3E8F25"
+            {
+            "SourcePath" = "8:..\\SqlScripts\\a2v10platform.sql"
+            "TargetName" = "8:a2v10platform.sql"
+            "Tag" = "8:"
+            "Folder" = "8:_700A39D0EB1B49B88280033DB7F60418"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BFE5D71FAC384D64BD95E47DF5193416"
             {
             "AssemblyRegister" = "3:1"
@@ -5892,15 +5918,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
-        "ProductCode" = "8:{BEC63022-652E-4E53-BFCE-6AABA2016FC5}"
-        "PackageCode" = "8:{FDB5E5A1-A234-4EE9-9748-53ACBAE0BAC1}"
+        "ProductCode" = "8:{5D81BDE7-F611-4EF0-9F5F-B7760549CB08}"
+        "PackageCode" = "8:{E11F43E0-D4CF-44B2-9DE1-F8F6F9060909}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:10.0.7662"
+        "ProductVersion" = "8:10.0.7663"
         "Manufacturer" = "8:Alex Kukhtin"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

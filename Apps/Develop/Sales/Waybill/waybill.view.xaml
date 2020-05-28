@@ -84,7 +84,10 @@
 						<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 					</TextBox.AddOns>
 				</TextBox>
-				<ValidatorLabel Grid.Row="4" Grid.Col="4"  Value="{Bind Document.Agent}"/>
+				<Selector Label="Selector" Grid.Row="4" Grid.Col="4" Grid.ColSpan="3" Value="{Bind Document.Agent}" DisplayProperty="Name">
+					
+				</Selector>
+				<ValidatorLabel Grid.Row="5" Grid.Col="4"  Value="{Bind Document.Agent}"/>
 				<ComboBox Grid.Row="4" Grid.ColSpan="3" Label="Склад" ItemsSource="{Bind Warehouses}" Value="{Bind Document.DepFrom}" Style="Hyperlink"/>
 				<Table Grid.Row="5" Grid.ColSpan="3" Background="Rose" Border="False" GridLines="None">
 					<TableRow>

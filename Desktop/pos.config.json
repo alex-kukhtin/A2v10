@@ -3,14 +3,14 @@
 	"startUrl": "/pos",
 	"fiscalPrinters": [
 		{
-			"model22": "TESTPRINTER",
-			"model": "DATECS-Krypton",
+			"model": "TESTPRINTER",
+			"model2": "DATECS-Krypton",
 			"port": "COM5",
 			"baud": 19200,
 			"terminal": "MAIN"
 		}
 	],
-	"acquiringTerminals": [
+	"acquiringTerminals2": [
 		{
 			"id": "main",
 			"model22": "PRINTEC-3.1",

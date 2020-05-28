@@ -20,7 +20,7 @@
 				<Button Icon="Approve" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross2'}"/>
 			</Toolbar>
 			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True"
-					ItemsSource="{Bind Agents}" FolderSelect="True">
+					ItemsSource="{Bind Agents}" FolderSelect="False">
 				<TreeViewItem ItemsSource="{Bind SubItems}" Label="{Bind Name}" Icon="{Bind Icon}" IsGroup="{Bind Id}"/>
 			</TreeView>
 		</Block>
