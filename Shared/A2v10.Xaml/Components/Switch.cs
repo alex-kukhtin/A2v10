@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -6,13 +6,16 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
-	public class Case : Container
+	[ContentProperty("Children")]
+	public class Case : XamlElement
 	{
+		public UIElementCollection Children { get; set; } = new UIElementCollection();
 		public String Value { get; set; }
 
-		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+		public void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
-			RenderChildren(context);
+			foreach (var c in Children)
+				c.RenderElement(context);
 		}
 	}
 
@@ -46,7 +49,8 @@ namespace A2v10.Xaml
 				var ifKey = (i == 0) ? "v-if " : "v-else-if";
 				if (itm is Else)
 					ifKey = "v-else";
-				t.MergeAttribute("v-if", $"({expr.GetPathFormat(context)}) === '{itm.Value}'");
+				// conver values to string!
+				t.MergeAttribute("v-if", $"('' + {expr.GetPathFormat(context)}) === '{itm.Value}'");
 				t.RenderStart(context);
 				itm.RenderElement(context);
 				t.RenderEnd(context);

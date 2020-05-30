@@ -107,7 +107,8 @@ namespace A2v10.Web.Identity
 
 		public void SetCustomSchema(String schema)
 		{
-			_customSchema = schema;
+			if (schema != null)
+				_customSchema = schema;
 		}
 
 		internal String DataSource => _host.CatalogDataSource;

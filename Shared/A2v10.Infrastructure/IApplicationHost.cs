@@ -5,6 +5,11 @@ using System.Dynamic;
 
 namespace A2v10.Infrastructure
 {
+	public static class AppHostKeys
+	{
+		public const String customSecuritySchema = "customSecuritySchema";
+	}
+
 	public interface IApplicationHost
 	{
 		IProfiler Profiler { get; }
@@ -32,6 +37,7 @@ namespace A2v10.Infrastructure
 
 		Boolean IsMultiTenant { get; }
 		Boolean IsMultiCompany { get; }
+		String CustomSecuritySchema { get; }
 		Boolean IsUsePeriodAndCompanies { get; }
 
 		Int32? TenantId { get; set; }

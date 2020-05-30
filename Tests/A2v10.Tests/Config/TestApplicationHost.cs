@@ -87,6 +87,7 @@ namespace A2v10.Tests.Config
 		public String TenantDataSource => null;
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
+		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
 
 		public String ScriptEngine => "ChakraCore";
 

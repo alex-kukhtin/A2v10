@@ -1,3 +1,11 @@
+links:
+
+Chrome Web Store Dashboard
+https://chrome.google.com/webstore/devconsole/5d07416e-cba6-4a16-91e8-6e9b4624b328/knopcophdgepmijgkhdehmbkmkalhidj/edit/package?hl=en
+
+Само расширение
+https://chrome.google.com/webstore/detail/a2v10-equipment-host/knopcophdgepmijgkhdehmbkmkalhidj
+
 
 == Designer
 1. Показать в свойствах полное имя файла solution.json
@@ -20,3 +28,5 @@
 4. Доделать отказы эквайринга в приложении
 5. Эквайринг. Таймауты в конфиг.
 6. Сделать команду проверки версии BrowserCompanion из Extension.
+7. Сделать проверку наличия appHost.
+

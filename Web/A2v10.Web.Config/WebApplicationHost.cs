@@ -149,6 +149,7 @@ namespace A2v10.Web.Config
 		public Boolean IsMultiCompany => IsAppSettingsIsTrue("multiCompany");
 		public Boolean IsRegistrationEnabled => IsAppSettingsIsTrue("registration");
 		public Boolean IsDTCEnabled => IsAppSettingsIsTrue("enableDTC");
+		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
 
 		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
 

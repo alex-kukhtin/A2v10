@@ -53,16 +53,20 @@ namespace A2v10.Xaml
 					if (uiElem == null)
 						throw new XamlException("Xaml. Root is not 'UIElement'");
 
-					using (var stylesStream = _host.ApplicationReader.FileStream(String.Empty, "styles.xaml"))
+					var stylesPath = _host.ApplicationReader.MakeFullPath(String.Empty, "styles.xaml");
+					if (_host.ApplicationReader.FileExists(stylesPath))
 					{
-						if (stylesStream != null)
+						using (var stylesStream = _host.ApplicationReader.FileStreamFullPathRO(stylesPath))
 						{
-							if (!(XamlServices.Load(stylesStream) is Styles styles))
-								throw new XamlException("Xaml. Styles is not 'Styles'");
-							if (uiElem is RootContainer root)
+							if (stylesStream != null)
 							{
-								root.Styles = styles;
-								root?.OnSetStyles();
+								if (!(XamlServices.Load(stylesStream) is Styles styles))
+									throw new XamlException("Xaml. Styles is not 'Styles'");
+								if (uiElem is RootContainer root)
+								{
+									root.Styles = styles;
+									root?.OnSetStyles();
+								}
 							}
 						}
 					}

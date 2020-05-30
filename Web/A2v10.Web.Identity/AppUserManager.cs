@@ -24,6 +24,7 @@ namespace A2v10.Web.Identity
 			IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
 			IApplicationHost host = ServiceLocator.Current.GetService<IApplicationHost>();
 			AppUserStore store = new AppUserStore(dbContext, host);
+			store.SetCustomSchema(host.CustomSecuritySchema);
 			AppUserManager manager = new AppUserManager(store);
 			manager.Construct(options);
 			return manager;

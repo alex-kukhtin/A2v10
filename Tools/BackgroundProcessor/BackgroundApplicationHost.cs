@@ -35,6 +35,7 @@ namespace BackgroundProcessor
 		public String Theme => throw new NotImplementedException(nameof(Theme));
 		public String HelpUrl => throw new NotImplementedException(nameof(HelpUrl));
 		public String HostingPath => throw new NotImplementedException(nameof(HostingPath));
+		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
 
 		public Boolean IsDebugConfiguration
 		{
