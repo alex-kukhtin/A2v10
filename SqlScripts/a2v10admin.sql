@@ -1,9 +1,9 @@
 /*
 ------------------------------------------------
-Copyright © 2008-2019 Alex Kukhtin
+Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 23 dec 2019
-module version : 7170
+Last updated : 31 may 2020
+module version : 7664
 */
 ------------------------------------------------
 begin
@@ -887,14 +887,11 @@ begin
 	declare @menu table(id bigint, p0 bigint, [name] nvarchar(255), [url] nvarchar(255), icon nvarchar(255), [order] int);
 	insert into @menu(id, p0, [name], [url], icon, [order])
 	values
-		(900, null,	N'Admin',           null,			null,		0),
-		(901, 900,	N'Пользователи',	N'identity',	null,		10),
-		(902, 900,	N'Бизнес процессы', N'workflow',	null,		20),
-		(910, 901,	N'Пользователи',	N'user',		N'user',	10),
-		(911, 901,	N'Группы',			N'group',		N'users',	20),
-		(912, 901,	N'Роли',			N'role',		N'users',	30),
-		(921, 902,	N'Процессы',		N'process',		N'process', 10),
-		(922, 902,	N'Задачи',			N'inbox',		N'queue',	20);
+		(900, null,	N'Admin',       null,			null,		0),
+		(901, 900,	N'@[Users]',	N'identity',	null,		10),
+		(910, 901,	N'@[Users]',	N'user',		N'user',	10),
+		(911, 901,	N'@[Groups]',	N'group',		N'users',	20),
+		(912, 901,	N'@[Roles]',	N'role',		N'users',	30);
 			
 	merge a2ui.Menu as target
 	using @menu as source

@@ -1,7 +1,7 @@
 [
 	{
-		"version": "10.0.7650",
-		"name": "segment",
+		"version": "10.0.7664",
+		"name": "platform",
 		"outputFile": "a2v10platform.sql",
 		"inputFiles": [
 			"a2v10system.sql",
