@@ -23,6 +23,7 @@ namespace BuildSql
 			if (!File.Exists(jsonPath))
 			{
 				Console.WriteLine($"File not found: {jsonPath}");
+				return;
 			}
 
 			String jsonText = File.ReadAllText(jsonPath);
@@ -37,6 +38,11 @@ namespace BuildSql
 		void ProcessOneItem(ConfigItem item)
 		{
 			String outFilePath = Path.Combine(_path, item.outputFile);
+
+			String dirName = Path.GetDirectoryName(Path.GetFullPath(outFilePath));
+			if (!Directory.Exists(dirName))
+				Directory.CreateDirectory(dirName);
+
 			File.Delete(outFilePath);
 			var nl = Environment.NewLine;
 			FileStream fw = null;

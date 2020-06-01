@@ -1,11 +1,7 @@
 ﻿// Copyright © 2018-2019 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BuildSql
 {
