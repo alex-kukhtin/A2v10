@@ -1,5 +1,5 @@
 ﻿
-/*20200122-7619*/
+/*20200602-7669*/
 
 (function () {
 
@@ -8,6 +8,8 @@
 	const menu = $(Menu);
 	const companies = $(Companies);
 	const initialPeriod = $(Period);
+
+	const sp = menu ? menu.SysParams : {};
 
 	const shell = new Shell({
 		el: '#shell',
@@ -18,9 +20,10 @@
 			settingsMenu: menu.SettingsMenu,
 			companies: companies,
 			initialPeriod: initialPeriod,
-			title: menu.SysParams ? menu.SysParams.AppTitle : '',
-			subtitle: menu.SysParams ? menu.SysParams.AppSubTitle : '',
-			sideBarMode: menu.SysParams ? menu.SysParams.SideBarMode : '',
+			title: sp.AppTitle || '',
+			subtitle: sp.AppSubTitle || '',
+			sideBarMode: sp.SideBarMode || '',
+			navBarMode: sp.NavBarMode || '',
 			pages: menu.SysParams ? (menu.SysParams.Pages + ',') : '',
 			userState: menu.UserState,
 			userIsAdmin: $(Admin),

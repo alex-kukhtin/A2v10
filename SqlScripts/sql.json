@@ -1,6 +1,6 @@
 [
 	{
-		"version": "10.0.7664",
+		"version": "10.0.7669",
 		"name": "platform",
 		"outputFile": "a2v10platform.sql",
 		"inputFiles": [

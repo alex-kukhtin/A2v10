@@ -49,14 +49,14 @@
     <Reference Include="System.Xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_application\%40sql\platform\a2v10admin.sql" />
-    <Content Include="App_application\%40sql\platform\a2v10api.sql" />
-    <Content Include="App_application\%40sql\platform\a2v10messaging.sql" />
     <Content Include="App_application\%40sql\platform\a2v10platform.sql" />
-    <Content Include="App_application\%40sql\platform\a2v10security.sql" />
-    <Content Include="App_application\%40sql\platform\a2v10system.sql" />
-    <Content Include="App_application\%40sql\platform\a2v10ui.sql" />
-    <Content Include="App_application\%40sql\platform\a2v10workflow.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10admin.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10api.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10messaging.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10security.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10system.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10ui.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10workflow.sql" />
     <Content Include="css\fonts\A2v10.svg" />
     <Content Include="css\site.css" />
     <Content Include="css\site.min.css" />

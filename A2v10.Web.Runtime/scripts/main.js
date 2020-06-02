@@ -12026,7 +12026,7 @@ Vue.directive('resize', {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200129-7624*/
+/*20200602-7669*/
 /* controllers/shell.js */
 
 (function () {
@@ -12121,11 +12121,13 @@ Vue.directive('resize', {
 	const a2AppHeader = {
 		template: `
 <header class="header">
-	<div class="h-block">
+	<div class=h-menu v-if=isNavBarMenu @click.stop.prevent=clickMenu><i class="ico ico-grid"></i></div>
+	<div class=h-block>
 		<!--<i class="ico-user"></i>-->
-		<a class="app-title" href='/' @click.prevent="root" v-text="title" tabindex="-1"></a>
-		<span class="app-subtitle" v-text="subtitle"></span>
+		<a class=app-title href='/' @click.prevent="root" v-text="title" tabindex="-1"></a>
+		<span class=app-subtitle v-text="subtitle"></span>
 	</div>
+	<div class=h-menu-title v-if=isNavBarMenu>MENU TITLE</div>
 	<div class="aligner"></div>
 	<span class="title-notify" v-if="notifyText" v-text="notifyText" :title="notifyText" :class="notifyClass"></span>
 	<div class="aligner"></div>
@@ -12162,7 +12164,8 @@ Vue.directive('resize', {
 			showFeedback: Function,
 			feedbackVisible: Boolean,
 			singlePage: String,
-			changePassword: Function
+			changePassword: Function,
+			navBarMode: String
 		},
 		computed: {
 			isSinglePage() {
@@ -12183,6 +12186,9 @@ Vue.directive('resize', {
 			},
 			profileItems() {
 				return this.appData ? this.appData.profileMenu : null;
+			},
+			isNavBarMenu() {
+				return this.navBarMode === 'Menu';
 			}
 		},
 		methods: {
@@ -12205,6 +12211,10 @@ Vue.directive('resize', {
 			},
 			doProfileMenu(itm) {
 				store.commit('navigate', { url: itm.url });
+			},
+			clickMenu() {
+				if (this.isNavBarMenu)
+					eventBus.$emit('clickNavMenu', true);
 			}
 		}
 	};
@@ -12212,6 +12222,7 @@ Vue.directive('resize', {
 	const a2NavBar = {
 		template: `
 <ul class="nav-bar">
+	<li v-if=isNavbarMenu @click.stop.prevent=closeNavMenu><i class="ico ico-grid"></i></li>
 	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
 		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
 	</li>
@@ -12225,7 +12236,8 @@ Vue.directive('resize', {
 `,
 		props: {
 			menu: Array,
-			period: period.constructor
+			period: period.constructor,
+			isNavbarMenu: Boolean
 		},
 		computed: {
 			seg0: () => store.getters.seg0,
@@ -12245,6 +12257,7 @@ Vue.directive('resize', {
 			navigate(item) {
 				if (this.isActive(item))
 					return;
+				this.closeNavMenu();
 				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
 				let savedUrl = localStorage.getItem(storageKey) || '';
 				if (savedUrl && !findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
@@ -12283,6 +12296,9 @@ Vue.directive('resize', {
 					.catch((err) => {
 						alert(err);
 					});
+			},
+			closeNavMenu() {
+				eventBus.$emit('clickNavMenu', false);
 			}
 		}
 	};
@@ -12465,14 +12481,14 @@ Vue.directive('resize', {
 	const a2MainView = {
 		store,
 		template: `
-<div :class="cssClass" class="main-view">
-	<a2-nav-bar :menu="menu" v-show="navBarVisible" :period="period"></a2-nav-bar>
-	<a2-side-bar :menu="menu" v-show="sideBarVisible" :compact='isSideBarCompact'></a2-side-bar>
+<div :class=cssClass class=main-view>
+	<a2-nav-bar :menu=menu v-show=navBarVisible :period=period :is-navbar-menu=isNavBarMenu></a2-nav-bar>
+	<a2-side-bar :menu=menu v-show=sideBarVisible :compact=isSideBarCompact></a2-side-bar>
 	<a2-content-view :pages="pages"></a2-content-view>
 	<div class="load-indicator" v-show="pendingRequest"></div>
 	<div class="modal-stack" v-if="hasModals">
 		<div class="modal-wrapper modal-animation-frame" v-for="dlg in modals" :class="{show: dlg.wrap}">
-			<a2-modal :dialog="dlg"></a2-modal>
+			<a2-modal :dialog=dlg></a2-modal>
 		</div>
 	</div>
 	<a2-toastr></a2-toastr>
@@ -12487,12 +12503,14 @@ Vue.directive('resize', {
 		props: {
 			menu: Array,
 			sideBarMode: String,
+			navBarMode: String,
 			period: period.constructor,
 			pages: String
 		},
 		data() {
 			return {
 				sideBarCollapsed: false,
+				showNavBar: true,
 				requestsCount: 0,
 				modals: [],
 				modalRequeryUrl: ''
@@ -12515,6 +12533,7 @@ Vue.directive('resize', {
 				return false;
 			},
 			navBarVisible() {
+				if (!this.showNavBar) return false;
 				let route = this.route;
 				if (isSeparatePage(this.pages, route.seg0)) return false;
 				return route.seg0 !== 'app' && (route.len === 2 || route.len === 3);
@@ -12524,11 +12543,13 @@ Vue.directive('resize', {
 				return route.seg0 !== 'app' && route.len === 3;
 			},
 			cssClass() {
-				let clpscls = this.isSideBarCompact ? 'side-bar-compact-' : 'side-bar-';
-				return clpscls + (this.sideBarCollapsed ? 'collapsed' : 'expanded');
+				return this.isNavBarMenu ? 'nav-bar-menu ' : '' +
+					(this.isSideBarCompact ? 'side-bar-compact-' : 'side-bar-') +
+					(this.sideBarCollapsed ? 'collapsed' : 'expanded');
 			},
 			pendingRequest() { return !this.hasModals && this.requestsCount > 0; },
-			hasModals() { return this.modals.length > 0; }
+			hasModals() { return this.modals.length > 0; },
+			isNavBarMenu() {return this.navBarMode === 'Menu';}
 		},
 		methods: {
 			setupWrapper(dlg) {
@@ -12537,10 +12558,16 @@ Vue.directive('resize', {
 					dlg.wrap = true;
 					//console.dir("wrap:" + dlg.wrap);
 				}, 50); // same as modal
+			},
+			showNavMenu(bShow) {
+				console.dir(bShow);
+				this.showNavBar = bShow;
 			}
 		},
 		created() {
 			let me = this;
+			if (this.isNavBarMenu)
+				this.showNavBar = false;
 			eventBus.$on('beginRequest', function () {
 				//if (me.hasModals)
 					//return;
@@ -12562,6 +12589,9 @@ Vue.directive('resize', {
 				}
 				return null;
 			}
+
+			if (this.isNavBarMenu)
+				eventBus.$on('clickNavMenu', this.showNavMenu);
 
 			eventBus.$on('modal', function (modal, prms) {
 				let id = utils.getStringId(prms ? prms.data : null);

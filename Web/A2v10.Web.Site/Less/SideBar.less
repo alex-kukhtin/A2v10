@@ -1,4 +1,6 @@
-﻿.side-bar {
+﻿@import "Variables.less";
+
+.side-bar {
 	position: absolute;
 	left: 0;
 	top: @header-height + @navbar-height;
@@ -167,4 +169,11 @@
 			display: none;
 		}
 	}
+}
+
+.nav-bar-menu .side-bar {
+	top: @header-height;
+}
+.nav-bar-menu .side-bar-compact {
+	top: @header-height + 6px;
 }

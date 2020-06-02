@@ -155,6 +155,10 @@ header, .header {
 	//transition: left .1s ease-out; // если разрешить - некрасиво при переходах из full-page (без SideBar)
 }
 
+.nav-bar-menu .content-view.partial-page {
+	top:32px + 6px;
+}
+
 .side-bar-collapsed .content-view.partial-page {
 	left: @side-bar-collapsed-width + @side-bar-gap;
 }
@@ -168,7 +172,7 @@ header, .header {
 	top: 64px;
 }
 
-.content-view.full-view {
+.content-view.full-view, .nav-bar-menu .content-view.full-page {
 	top: 32px;
 }
 

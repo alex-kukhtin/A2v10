@@ -22,10 +22,10 @@
 		<a2-app-header :title="title" :subtitle="subtitle" :user-state="userState" :single-page="singlePage"
 				:menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
 				person-name="$(PersonName)" :user-is-admin="userIsAdmin" :show-feedback="showFeedback" 
-				:feedback-visible="feedbackVisible" :change-password="changePassword">
+				:feedback-visible="feedbackVisible" :change-password="changePassword" :nav-bar-mode=navBarMode>
 			$(CompanyButton)
 		</a2-app-header>
-		<a2-main-view :menu="menu" :side-bar-mode="sideBarMode" :period="globalPeriod" :pages="pages"></a2-main-view>
+		<a2-main-view :menu="menu" :side-bar-mode="sideBarMode" :nav-bar-mode=navBarMode :period="globalPeriod" :pages="pages"></a2-main-view>
 		<a2-debug :model-stack="modelStack" :model-visible="debugShowModel" v-if="isDebug"
 				  :trace-visible="debugShowTrace" :counter="dataCounter" :close="debugClose"></a2-debug>
 		<a2-feedback v-if="hasFeedback" :model-stack="modelStack" :visible="feedbackVisible" :close="feedbackClose" :source="feedback"></a2-feedback>

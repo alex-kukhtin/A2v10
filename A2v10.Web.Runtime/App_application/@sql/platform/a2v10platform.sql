@@ -1,6 +1,6 @@
 ﻿/*
-version: 10.0.7664
-generated: 01.06.2020 18:09:25
+version: 10.0.7669
+generated: 02.06.2020 16:46:21
 */
 
 set nocount on;
@@ -19,9 +19,9 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys
 go
 ----------------------------------------------
 if exists(select * from a2sys.Versions where [Module]=N'script:platform')
-	update a2sys.Versions set [Version]=7664, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
+	update a2sys.Versions set [Version]=7669, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
 else
-	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7664, N'a2v10platform.sql', null);
+	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7669, N'a2v10platform.sql', null);
 go
 
 
@@ -1484,10 +1484,10 @@ go
 
 
 /*
-Copyright © 2008-2019 Alex Kukhtin
+Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 21 dec 2019
-module version : 7550
+Last updated : 02 jun 2020
+module version : 7669
 */
 ------------------------------------------------
 begin
@@ -1635,9 +1635,9 @@ begin
 	order by RT.[Level], m.[Order], RT.[Id];
 
 	-- system parameters
-	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode], [Pages]
+	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode], [NavBarMode], [Pages]
 	from (select Name, Value=StringValue from a2sys.SysParams) as s
-		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle], [SideBarMode], [Pages])) as p;
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle], [SideBarMode], [NavBarMode], [Pages])) as p;
 end
 go
 ------------------------------------------------

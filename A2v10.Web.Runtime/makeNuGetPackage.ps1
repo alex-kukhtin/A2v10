@@ -13,7 +13,7 @@ Set-Location -Path $target;
 
 $SourceScripts = @("main.js", "d3.min.js", "vue.js", "vue.min.js", "locale-*.min.js");
 $SourceStyles = @("site.css", "site.min.css");
-$SourceSql = @("a2v10system.sql", "a2v10security.sql", "a2v10messaging.sql", "a2v10ui.sql", "a2v10workflow.sql", "a2v10api.sql", "a2v10platform.sql");
+$SourceSql = @("a2v10system.sql", "a2v10security.sql", "a2v10messaging.sql", "a2v10ui.sql", "a2v10workflow.sql", "a2v10api.sql");
 $i = 0;
 
 foreach ($elem in $SourceScripts) {
@@ -33,9 +33,12 @@ Copy-Item "..\Web\A2v10.Web.Site\localization\*.*" -Destination ".\localization"
 $i += 1;
 
 foreach ($elem in $SourceSql) {
-   Copy-Item "..\SqlScripts\$($elem)" -Destination ".\App_application\@sql\platform";
+   Copy-Item "..\SqlScripts\$($elem)" -Destination ".\App_application\@sql\platform\source";
    $i += 1;
 }
+
+Copy-Item "..\SqlScripts\a2v10platform.sql" -Destination ".\App_application\@sql\platform";
+$i += 1;
 
 
 Write-Host "Successfully copied client files.";

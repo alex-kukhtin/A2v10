@@ -1374,6 +1374,9 @@ header .dropdown.separate.show .btn.btn-success,
   left: 256px;
   top: 70px;
 }
+.nav-bar-menu .content-view.partial-page {
+  top: 38px;
+}
 .side-bar-collapsed .content-view.partial-page {
   left: 42px;
 }
@@ -1383,7 +1386,8 @@ header .dropdown.separate.show .btn.btn-success,
 .content-view.full-page {
   top: 64px;
 }
-.content-view.full-view {
+.content-view.full-view,
+.nav-bar-menu .content-view.full-page {
   top: 32px;
 }
 .include {
@@ -6462,6 +6466,12 @@ table > colgroup col.blue {
 }
 .side-bar-compact.collapsed .tv-folder {
   display: none;
+}
+.nav-bar-menu .side-bar {
+  top: 32px;
+}
+.nav-bar-menu .side-bar-compact {
+  top: 38px;
 }
 .a2-new-btn .btn {
   padding: 4px 7px;
