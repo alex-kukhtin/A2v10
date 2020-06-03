@@ -63,7 +63,9 @@
 		<file src="bin/System.Web.WebPages.Deployment.dll" target="lib/net461"/>
 		<file src="bin/Newtonsoft.Json.dll" target="lib/net461" />
 		<file src="bin/Owin.dll" target="lib/net461" />
-		<file src="../tools/BuildSql/bin/Release/BuildSql.exe" target="tools/net461" />
-		<file src="../tools/BuildSql/bin/Release/Newtonsoft.Json.dll" target="tools/net461" />
+
+		<file src="D:/Git/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
+		<file src="D:/Git/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>
+		<file src="D:/Git/A2v10.BuildSql/A2v10.BuildSql.targets" target="build/A2v10.Web.Runtime.targets" />
 	</files>
 </package>

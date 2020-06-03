@@ -1,5 +1,5 @@
 ﻿
-/*20200602-7669*/
+/*20200602-7670*/
 
 (function () {
 
@@ -9,7 +9,7 @@
 	const companies = $(Companies);
 	const initialPeriod = $(Period);
 
-	const sp = menu ? menu.SysParams : {};
+	const sp = menu.SysParams || {};
 
 	const shell = new Shell({
 		el: '#shell',
