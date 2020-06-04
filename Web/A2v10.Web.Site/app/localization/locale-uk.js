@@ -30,6 +30,7 @@
 		$ElementWasChanged: 'Елемент було змінено. Зберегти зміни?',
 		$Profiling: 'Профілювання',
 		$DataModel: 'Модель даних',
+		$Admin: 'адміністратор',
 		$Today: 'Сьогодні',
 		$Yesterday: 'Вчора',
 		$CreateLC: 'cтворити',

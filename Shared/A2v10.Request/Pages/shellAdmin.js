@@ -5,6 +5,7 @@
 (function () {
 
 	const Shell = component('std:shellController');
+	const locale = window.$$locale;
 
 	const menu = $(Menu);
 
@@ -12,7 +13,7 @@
 		el: '#shell',
 		data: {
 			title: menu.SysParams ? menu.SysParams.AppTitle : '',
-			subtitle: 'администратор',
+			subtitle: locale.$Admin,
 			version: '$(AppVersion)',
 			menu: menu.Menu[0].Menu
 		}

@@ -30,6 +30,7 @@
 		$ElementWasChanged: 'The element has been changed. Save changes?',
 		$Profiling: 'Profiling',
 		$DataModel: 'Data model',
+		$Admin: 'administrator',
 		$Today: 'Today',
 		$Yesterday: 'Yesterday',
 		$CreateLC: 'create',
