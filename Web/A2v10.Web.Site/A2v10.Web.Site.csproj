@@ -99,6 +99,8 @@
     <Content Include="app\components\companybutton.js" />
     <Content Include="app\components\waitcursor.js" />
     <Content Include="app\controllers\iframe.js" />
+    <Content Include="app\controllers\navmenu.js" />
+    <Content Include="app\controllers\navbar.js" />
     <Content Include="app\controllers\tests.js" />
     <Content Include="app\directives\pageorient.js" />
     <Content Include="app\localization\locale-de.js" />

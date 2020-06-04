@@ -1,19 +1,25 @@
 ﻿{
   "schema": "a2demo",
   "model": "Goods",
-  "actions": {
-	"index": {
-		"index": true,
-		"view": "index.view",
-		"template": "index.template"
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "index.view",
+			"template": "index.template"
+		},
+		"excel": {
+			"model": "Error",
+			"export": {
+				"format": "xlsx",
+				"template": "exporterror",
+				"fileName": "ERROR"
+			}
+		}
 	},
-	"excel": {
-		"model": "Error",
-		"export": {
-			"format": "xlsx",
-			"template": "exporterror",
-			"fileName": "ERROR"
+	"commands": {
+		"sendMail": {
+			"template": "",
+			"key": ""
 		}
 	}
-  }
 }

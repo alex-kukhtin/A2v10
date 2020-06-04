@@ -62,6 +62,8 @@
 			"app/components/iframetarget.js",
 			"app/directives/*.js",
 			"app/controllers/base.js",
+			"app/controllers/navmenu.js",
+			"app/controllers/navbar.js",
 			"app/controllers/shell.js",
 			"app/controllers/tests.js"
 		],
@@ -133,6 +135,8 @@
 			"app/components/iframetarget.js",
 			"app/directives/*.js",
 			"app/controllers/base.js",
+			"app/controllers/navmenu.js",
+			"app/controllers/navbar.js",
 			"app/mobile/shell.js",
 			"app/controllers/tests.js"
 		],
@@ -209,6 +213,8 @@
 			"app/components/toastr.js",
 			//"app/standalone/filters.js",
 			"app/standalone/controller.js",
+			"app/controllers/navmenu.js",
+			"app/controllers/navbar.js",
 			"app/standalone/shell.js"
 		],
 		"minify": {

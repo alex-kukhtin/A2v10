@@ -526,6 +526,9 @@
 .ico-grid:before {
   content: "\e99c";
 }
+.ico-grid2:before {
+  content: "\e99d";
+}
 .ico-help:before {
   content: "\ea06";
 }

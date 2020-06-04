@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200602-7669*/
+/*20200604-7671*/
 /* controllers/shell.js */
 
 (function () {
@@ -17,91 +17,21 @@
 	const locale = window.$$locale;
 	const platform = require('std:platform');
 	const htmlTools = require('std:html');
-	const http = require('std:http');
+	const navBar = component('std:navbar');
+	const menu = component('std:navmenu');
 
 	const UNKNOWN_TITLE = 'unknown title';
-
-	function findMenu(menu, func, parentMenu) {
-		if (!menu)
-			return null;
-		for (let i = 0; i < menu.length; i++) {
-			let itm = menu[i];
-			if (func(itm))
-				return itm;
-			if (itm.Menu) {
-				if (parentMenu)
-					parentMenu.Url = itm.Url;
-				let found = findMenu(itm.Menu, func);
-				if (found) {
-					platform.set(itm, '$expanded', true);
-					return found;
-				}
-			}
-		}
-		return null;
-	}
-
-	function isSeparatePage(pages, seg) {
-		if (!seg || !pages) return false;
-		return pages.indexOf(seg + ',') !== -1;
-	}
-
-	function makeMenuUrl(menu, url, opts) {
-		opts = opts || {};
-		url = urlTools.combine(url).toLowerCase();
-		let sUrl = url.split('/');
-		if (sUrl.length >= 4)
-			return url; // full qualified
-		let routeLen = sUrl.length;
-		let seg1 = sUrl[1];
-		if (seg1 === 'app')
-			return url; // app
-		if (opts && isSeparatePage(opts.pages, seg1))
-			return url; // separate page
-		let am = null;
-		if (seg1)
-			am = menu.find((mi) => mi.Url === seg1);
-		if (!am) {
-			// no segments - find first active menu
-			let parentMenu = { Url: '' };
-			am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
-			if (am) {
-				opts.title = am.Name;
-				return urlTools.combine(url, parentMenu.Url, am.Url);
-			}
-		} else if (am && !am.Menu) {
-			opts.title = am.Name;
-			return url; // no sub menu
-		}
-		url = urlTools.combine(seg1);
-		let seg2 = sUrl[2];
-		if (!seg2 && opts.seg2)
-			seg2 = opts.seg2; // may be
-		if (!seg2) {
-			// find first active menu in am.Menu
-			am = findMenu(am.Menu, (mi) => mi.Url && !mi.Menu);
-		} else {
-			// find current active menu in am.Menu
-			am = findMenu(am.Menu, (mi) => mi.Url === seg2);
-		}
-		if (am) {
-			opts.title = am.Name;
-			return urlTools.combine(url, am.Url);
-		}
-		return url; //TODO: ????
-	}
-
 
 	const a2AppHeader = {
 		template: `
 <header class="header">
-	<div class=h-menu v-if=isNavBarMenu @click.stop.prevent=clickMenu><i class="ico ico-grid"></i></div>
-	<div class=h-block>
+	<div class=h-menu v-if=isNavBarMenu @click.stop.prevent=clickMenu><i class="ico ico-grid2"></i></div>
+	<div class=h-block v-if='!isNavBarMenu'>
 		<!--<i class="ico-user"></i>-->
 		<a class=app-title href='/' @click.prevent="root" v-text="title" tabindex="-1"></a>
 		<span class=app-subtitle v-text="subtitle"></span>
 	</div>
-	<div class=h-menu-title v-if=isNavBarMenu>MENU TITLE</div>
+	<div v-if=isNavBarMenu class=h-menu-title v-text=seg0text></div>
 	<div class="aligner"></div>
 	<span class="title-notify" v-if="notifyText" v-text="notifyText" :title="notifyText" :class="notifyClass"></span>
 	<div class="aligner"></div>
@@ -163,6 +93,11 @@
 			},
 			isNavBarMenu() {
 				return this.navBarMode === 'Menu';
+			},
+			seg0text() {
+				let seg0 = this.$store.getters.seg0;
+				let mx = this.menu.find(x => x.Url === seg0);
+				return mx ? mx.Name : '';
 			}
 		},
 		methods: {
@@ -177,7 +112,7 @@
 			root() {
 				let opts = { title: null };
 				let currentUrl = this.$store.getters.url;
-				let menuUrl = this.isSinglePage ? ('/' + this.singlePage) : makeMenuUrl(this.menu, '/', opts);
+				let menuUrl = this.isSinglePage ? ('/' + this.singlePage) : menu.makeMenuUrl(this.menu, '/', opts);
 				if (currentUrl === menuUrl) {
 					return; // already in root
 				}
@@ -192,91 +127,6 @@
 			}
 		}
 	};
-
-	const a2NavBar = {
-		template: `
-<ul class="nav-bar">
-	<li v-if=isNavbarMenu @click.stop.prevent=closeNavMenu><i class="ico ico-grid"></i></li>
-	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
-		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
-	</li>
-	<li class="aligner"/>
-	<div class="nav-global-period" v-if="hasPeriod">
-		<a2-period-picker class="drop-bottom-right pp-hyperlink pp-navbar" 
-			display="namedate" :callback="periodChanged" prop="period" :item="that"/>
-	</div>
-	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" rel="help" aria-label="Help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
-</ul>
-`,
-		props: {
-			menu: Array,
-			period: period.constructor,
-			isNavbarMenu: Boolean
-		},
-		computed: {
-			seg0: () => store.getters.seg0,
-			seg1: () => store.getters.seg1,
-			locale() { return locale; },
-			hasPeriod() { return !!this.period; },
-			that() { return this; }
-		},
-		methods: {
-			isActive(item) {
-				return this.seg0 === item.Url;
-			},
-			isActive2(item) {
-				return this.seg1 === item.Url;
-			},
-			itemHref: (item) => '/' + item.Url,
-			navigate(item) {
-				if (this.isActive(item))
-					return;
-				this.closeNavMenu();
-				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
-				let savedUrl = localStorage.getItem(storageKey) || '';
-				if (savedUrl && !findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
-					// saved segment not found in current menu
-					savedUrl = '';
-				}
-				let opts = { title: null, seg2: savedUrl };
-				let url = makeMenuUrl(this.menu, item.Url, opts);
-				this.$store.commit('navigate', { url: url, title: opts.title });
-			},
-			showHelp() {
-				window.open(this.helpHref(), "_blank");
-			},
-			helpHref() {
-				let am = this.menu.find(x => this.isActive(x));
-				if (am && am.Menu) {
-					let am2 = am.Menu.find(x => this.isActive2(x));
-					if (am2 && am2.Help)
-						return urlTools.helpHref(am2.Help);
-				}
-				if (am && am.Help)
-					return urlTools.helpHref(am.Help);
-				return urlTools.helpHref('');
-			},
-			hasHelp() {
-				if (!this.menu) return false;
-				let am = this.menu.find(x => this.isActive(x));
-				return am && am.Help;
-			},
-			periodChanged(period) {
-				// post to shell
-				http.post('/_application/setperiod', period.toJson())
-					.then(() => {
-						eventBus.$emit('globalPeriodChanged', period);
-					})
-					.catch((err) => {
-						alert(err);
-					});
-			},
-			closeNavMenu() {
-				eventBus.$emit('clickNavMenu', false);
-			}
-		}
-	};
-
 
 	const sideBarBase = {
 		props: {
@@ -298,7 +148,7 @@
 			},
 			topMenu() {
 				let seg0 = this.seg0;
-				return findMenu(this.menu, (mi) => mi.Url === seg0);
+				return menu.findMenu(this.menu, (mi) => mi.Url === seg0);
 			}
 		},
 		methods: {
@@ -386,7 +236,7 @@
 				if (!sm)
 					return UNKNOWN_TITLE;
 				let seg1 = this.seg1;
-				let am = findMenu(sm, (mi) => mi.Url === seg1);
+				let am = menu.findMenu(sm, (mi) => mi.Url === seg1);
 				if (am)
 					return am.Name || UNKNOWN_TITLE;
 				return UNKNOWN_TITLE;
@@ -427,7 +277,7 @@
 				let route = this.$store.getters.route;
 				if (route.seg0 === 'app')
 					return 'full-view';
-				if (isSeparatePage(this.pages, route.seg0))
+				if (menu.isSeparatePage(this.pages, route.seg0))
 					return 'full-view';
 				return route.len === 3 ? 'partial-page' :
 					route.len === 2 ? 'full-page' : 'full-view';
@@ -456,11 +306,12 @@
 		store,
 		template: `
 <div :class=cssClass class=main-view>
-	<a2-nav-bar :menu=menu v-show=navBarVisible :period=period :is-navbar-menu=isNavBarMenu></a2-nav-bar>
+	<component :is=navBarComponent :title=title :menu=menu v-if=navBarVisible 
+		:period=period :is-navbar-menu=isNavBarMenu></component>
 	<a2-side-bar :menu=menu v-show=sideBarVisible :compact=isSideBarCompact></a2-side-bar>
-	<a2-content-view :pages="pages"></a2-content-view>
-	<div class="load-indicator" v-show="pendingRequest"></div>
-	<div class="modal-stack" v-if="hasModals">
+	<a2-content-view :pages=pages></a2-content-view>
+	<div class=load-indicator v-show=pendingRequest></div>
+	<div class=modal-stack v-if=hasModals>
 		<div class="modal-wrapper modal-animation-frame" v-for="dlg in modals" :class="{show: dlg.wrap}">
 			<a2-modal :dialog=dlg></a2-modal>
 		</div>
@@ -468,7 +319,8 @@
 	<a2-toastr></a2-toastr>
 </div>`,
 		components: {
-			'a2-nav-bar': a2NavBar,
+			'a2-nav-bar': navBar.standardNavBar,
+			'a2-nav-bar-page': navBar.pageNavBar,
 			'a2-side-bar': a2SideBar,
 			'a2-content-view': contentView,
 			'a2-modal': modal,
@@ -479,7 +331,8 @@
 			sideBarMode: String,
 			navBarMode: String,
 			period: period.constructor,
-			pages: String
+			pages: String,
+			title: String
 		},
 		data() {
 			return {
@@ -491,6 +344,9 @@
 			};
 		},
 		computed: {
+			navBarComponent() {
+				return this.isNavBarMenu ? 'a2-nav-bar-page' : 'a2-nav-bar';
+			},
 			route() {
 				return this.$store.getters.route;
 			},
@@ -509,7 +365,7 @@
 			navBarVisible() {
 				if (!this.showNavBar) return false;
 				let route = this.route;
-				if (isSeparatePage(this.pages, route.seg0)) return false;
+				if (menu.isSeparatePage(this.pages, route.seg0)) return false;
 				return route.seg0 !== 'app' && (route.len === 2 || route.len === 3);
 			},
 			sideBarVisible() {
@@ -517,8 +373,8 @@
 				return route.seg0 !== 'app' && route.len === 3;
 			},
 			cssClass() {
-				return this.isNavBarMenu ? 'nav-bar-menu ' : '' +
-					(this.isSideBarCompact ? 'side-bar-compact-' : 'side-bar-') +
+				let cls = this.isNavBarMenu ? 'nav-bar-menu ' : '';
+				return cls + (this.isSideBarCompact ? 'side-bar-compact-' : 'side-bar-') +
 					(this.sideBarCollapsed ? 'collapsed' : 'expanded');
 			},
 			pendingRequest() { return !this.hasModals && this.requestsCount > 0; },
@@ -534,7 +390,6 @@
 				}, 50); // same as modal
 			},
 			showNavMenu(bShow) {
-				console.dir(bShow);
 				this.showNavBar = bShow;
 			}
 		},
@@ -715,7 +570,7 @@
 			if (menuPath === '/home' && this.menu && !this.menu.find(v => v.Url.toLowerCase() === 'home')) {
 				menuPath = '/';
 			}
-			let newUrl = makeMenuUrl(this.menu, menuPath, opts);
+			let newUrl = menu.makeMenuUrl(this.menu, menuPath, opts);
 			newUrl = newUrl + window.location.search;
 			this.$store.commit('setstate', { url: newUrl, title: opts.title });
 
@@ -724,7 +579,7 @@
 				title: ''
 			};
 
-			firstUrl.url = makeMenuUrl(this.menu, '/', opts);
+			firstUrl.url = menu.makeMenuUrl(this.menu, '/', opts);
 
 			firstUrl.title = opts.title;
 			urlTools.firstUrl = firstUrl;
@@ -767,7 +622,7 @@
 			},
 			singlePage() {
 				let seg0 = this.$store.getters.seg0;
-				if (isSeparatePage(this.pages, seg0))
+				if (menu.isSeparatePage(this.pages, seg0))
 					return seg0;
 				return undefined;
 			}
@@ -915,4 +770,4 @@
 	});
 
 	app.components['std:shellController'] = shell;
-})();	
+})();

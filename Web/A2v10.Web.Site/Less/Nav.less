@@ -1,4 +1,6 @@
 ﻿
+@import "variables.less";
+
 .nav-bar {
 	position: absolute;
 	left: 0;
@@ -59,5 +61,123 @@
 			color:@label-color;
 			margin:0 .5rem 0 0;
 		}
+	}
+}
+
+.menu-navbar-overlay {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.2);
+	z-index: @menu-navbar-index;
+}
+
+.menu-navbar {
+	width: 320px;
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+	background-color: white;
+	box-shadow: rgba(0, 0, 0, 0.22) 0px 25.6px 57.6px 0px, rgba(0, 0, 0, 0.18) 0px 4.8px 14.4px 0px;
+	transform-origin: left top;
+	transform: scale(.8,.8);
+	opacity:0;
+	transition: transform .14s ease, opacity 0.1s ease;
+	padding-bottom:@footer-height;
+
+	&.show {
+		transform:scale(1, 1);
+		opacity:1;
+	}
+
+	.menu-navbar-back {
+		color: @text-color;
+		padding: 8px 10px;
+		display: block;
+		width: @header-height + 2px;
+
+		.ico {
+			font-size: 22px;
+		}
+
+		&:hover {
+			background-color: @hover-bg-color;
+		}
+	}
+
+	.menu-navbar-top {
+		display: flex;
+		align-items: center;
+		height: @header-height;
+		background-color: #f8f8f8;
+
+		h2 {
+			font-size: 18px;
+			font-weight: normal;
+			color: #777;
+			margin: 0 0 0 10px;
+		}
+	}
+
+	.menu-navbar-list {
+		margin: 1rem 0;
+		padding: 6px;
+		list-style: none;
+		overflow: auto;
+
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: #ccc;
+			border-radius: 2rem;
+		}
+	}
+
+	.menu-navbar-link {
+		padding: 8px 12px;
+		line-height: 20px;
+		text-decoration: none;
+		display: flex;
+		align-items: center;
+		color: @text-color;
+		font-size: 15px;
+		border: 1px solid transparent;
+
+		&.active {
+			background-color: @active-bg-color;
+		}
+
+		&:hover:not(.active) {
+			background-color: @hover-bg-color;
+			//border-color: red;
+			color: @link-color;
+		}
+
+		.ico {
+			font-size: 26px;
+			margin-right: 16px;
+			color: #999;
+		}
+	}
+}
+
+.powered-by-a2v10 {
+	display: none;
+	padding: 1rem 20px;
+	font-size: 15px;
+	color: #999;
+	border-top:1px solid #ddd;
+
+	&:hover {
+		color:#555;
+	}
+	.ico {
+		font-size: 18px;
+		color: #dd2c5e;
+		margin-right:4px;
 	}
 }

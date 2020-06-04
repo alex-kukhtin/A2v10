@@ -4748,6 +4748,268 @@ Vue.component('a2-pager', {
 
 	app.components['standaloneController'] = standalone;
 })();
+// Copyright © 2020 Alex Kukhtin. All rights reserved.
+
+/*20200604-7671*/
+/* controllers/navmenu.js */
+
+(function () {
+
+	const platform = require('std:platform');
+	const urlTools = require('std:url');
+
+
+	function isSeparatePage(pages, seg) {
+		if (!seg || !pages) return false;
+		return pages.indexOf(seg + ',') !== -1;
+	}
+
+	function findMenu(menu, func, parentMenu) {
+		if (!menu)
+			return null;
+		for (let i = 0; i < menu.length; i++) {
+			let itm = menu[i];
+			if (func(itm))
+				return itm;
+			if (itm.Menu) {
+				if (parentMenu)
+					parentMenu.Url = itm.Url;
+				let found = findMenu(itm.Menu, func);
+				if (found) {
+					platform.set(itm, '$expanded', true);
+					return found;
+				}
+			}
+		}
+		return null;
+	}
+
+	function makeMenuUrl(menu, url, opts) {
+		opts = opts || {};
+		url = urlTools.combine(url).toLowerCase();
+		let sUrl = url.split('/');
+		if (sUrl.length >= 4)
+			return url; // full qualified
+		let routeLen = sUrl.length;
+		let seg1 = sUrl[1];
+		if (seg1 === 'app')
+			return url; // app
+		if (opts && isSeparatePage(opts.pages, seg1))
+			return url; // separate page
+		let am = null;
+		if (seg1)
+			am = menu.find((mi) => mi.Url === seg1);
+		if (!am) {
+			// no segments - find first active menu
+			let parentMenu = { Url: '' };
+			am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
+			if (am) {
+				opts.title = am.Name;
+				return urlTools.combine(url, parentMenu.Url, am.Url);
+			}
+		} else if (am && !am.Menu) {
+			opts.title = am.Name;
+			return url; // no sub menu
+		}
+		url = urlTools.combine(seg1);
+		let seg2 = sUrl[2];
+		if (!seg2 && opts.seg2)
+			seg2 = opts.seg2; // may be
+		if (!seg2) {
+			// find first active menu in am.Menu
+			am = findMenu(am.Menu, (mi) => mi.Url && !mi.Menu);
+		} else {
+			// find current active menu in am.Menu
+			am = findMenu(am.Menu, (mi) => mi.Url === seg2);
+		}
+		if (am) {
+			opts.title = am.Name;
+			return urlTools.combine(url, am.Url);
+		}
+		return url; //TODO: ????
+	}
+
+
+
+	app.components['std:navmenu'] = {
+		findMenu,
+		makeMenuUrl,
+		isSeparatePage
+	};
+})();	
+// Copyright © 2020 Alex Kukhtin. All rights reserved.
+
+/*20200604-7671*/
+/* controllers/navbar.js */
+
+(function () {
+
+	const locale = window.$$locale;
+	const menu = component('std:navmenu');
+	const eventBus = require('std:eventBus');
+	const period = require('std:period');
+	const store = component('std:store');
+	const urlTools = require('std:url');
+
+	// a2-nav-bar
+	const a2NavBar = {
+		template: `
+<ul class="nav-bar">
+	<li v-for="(item, index) in menu" :key="index" :class="{active : isActive(item)}">
+		<a :href="itemHref(item)" tabindex="-1" v-text="item.Name" @click.prevent="navigate(item)"></a>
+	</li>
+	<li class="aligner"/>
+	<div class="nav-global-period" v-if="hasPeriod">
+		<a2-period-picker class="drop-bottom-right pp-hyperlink pp-navbar" 
+			display="namedate" :callback="periodChanged" prop="period" :item="that"/>
+	</div>
+	<li v-if="hasHelp()" :title="locale.$Help"><a :href="helpHref()" class="btn-help" rel="help" aria-label="Help" @click.prevent="showHelp()"><i class="ico ico-help"></i></a></li>
+</ul>
+`,
+		props: {
+			menu: Array,
+			period: period.constructor,
+			isNavbarMenu: Boolean
+		},
+		computed: {
+			seg0: () => store.getters.seg0,
+			seg1: () => store.getters.seg1,
+			locale() { return locale; },
+			hasPeriod() { return !!this.period; },
+			that() { return this; }
+		},
+		methods: {
+			isActive(item) {
+				return this.seg0 === item.Url;
+			},
+			isActive2(item) {
+				return this.seg1 === item.Url;
+			},
+			itemHref: (item) => '/' + item.Url,
+			navigate(item) {
+				if (this.isActive(item))
+					return;
+				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
+				let savedUrl = localStorage.getItem(storageKey) || '';
+				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+					// saved segment not found in current menu
+					savedUrl = '';
+				}
+				let opts = { title: null, seg2: savedUrl };
+				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				this.$store.commit('navigate', { url: url, title: opts.title });
+			},
+			showHelp() {
+				window.open(this.helpHref(), "_blank");
+			},
+			helpHref() {
+				let am = this.menu.find(x => this.isActive(x));
+				if (am && am.Menu) {
+					let am2 = am.Menu.find(x => this.isActive2(x));
+					if (am2 && am2.Help)
+						return urlTools.helpHref(am2.Help);
+				}
+				if (am && am.Help)
+					return urlTools.helpHref(am.Help);
+				return urlTools.helpHref('');
+			},
+			hasHelp() {
+				if (!this.menu) return false;
+				let am = this.menu.find(x => this.isActive(x));
+				return am && am.Help;
+			},
+			periodChanged(period) {
+				// post to shell
+				http.post('/_application/setperiod', period.toJson())
+					.then(() => {
+						eventBus.$emit('globalPeriodChanged', period);
+					})
+					.catch((err) => {
+						alert(err);
+					});
+			}
+		}
+	};
+
+	// a2-nav-bar-page
+	const a2NavBarPage = {
+		template: `
+<div class="menu-navbar-overlay" @click.stop=closeNavMenu>
+<div class="menu-navbar" :class="{show:visible}">
+<div class="menu-navbar-top">
+	<a href='' class=menu-navbar-back @click.stop.prevent=closeNavMenu><i class="ico ico-grid2"></i></a>
+	<h2 v-text=title></h2>
+</div>
+<ul class=menu-navbar-list>
+	<li v-for="(item, index) in menu" :key=index>
+		<a class="menu-navbar-link" :href="itemHref(item)" @click.prevent="navigate(item)" :class="{active : isActive(item)}">
+			<i class="ico" :class=icoClass(item)></i>
+			<span v-text="item.Name"></span>
+		</a>
+	</li>
+</ul>
+<div class="aligner"/>
+<a class=powered-by-a2v10 href="https://a2v10.com" rel=noopener target=_blank><i class="ico ico-a2logo"></i> Powered by A2v10</a>
+</div></div>
+`,
+		props: {
+			menu: Array,
+			isNavbarMenu: Boolean,
+			title:String
+		},
+		data() {
+			return {
+				visible: false
+			};
+		},
+		computed: {
+			seg0: () => store.getters.seg0,
+			seg1: () => store.getters.seg1,
+			locale() { return locale; },
+			that() { return this; }
+		},
+		methods: {
+			isActive(item) {
+				return this.seg0 === item.Url;
+			},
+			isActive2(item) {
+				return this.seg1 === item.Url;
+			},
+			itemHref: (item) => '/' + item.Url,
+			icoClass(item) {
+				return item.Icon ? 'ico-' + item.Icon : 'ico-empty';
+			},
+			navigate(item) {
+				if (this.isActive(item))
+					return;
+				this.closeNavMenu();
+				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
+				let savedUrl = localStorage.getItem(storageKey) || '';
+				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+					// saved segment not found in current menu
+					savedUrl = '';
+				}
+				let opts = { title: null, seg2: savedUrl };
+				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				this.$store.commit('navigate', { url: url, title: opts.title });
+			},
+			closeNavMenu() {
+				this.visible = false;
+				eventBus.$emit('clickNavMenu', false);
+			}
+		},
+		mounted() {
+			setTimeout(() => {
+				this.visible = true;
+			}, 5);
+		}
+	};
+
+	app.components['std:navbar'] = {
+		standardNavBar: a2NavBar,
+		pageNavBar: a2NavBarPage
+	};
+})();	
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 // 20181108-7350

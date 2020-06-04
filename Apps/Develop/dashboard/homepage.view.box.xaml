@@ -10,6 +10,13 @@
 		<Grid Grid.Row="3" Grid.Col="2">
 			<Button Grid.Row="1" Grid.Col="1" Icon="Gear" Style="{Bind Root.$style}" 
                     Content="{Bind Root.$text}" Command="{BindCmd Execute, CommandName='showAlert'}"></Button>
+			<Button Grid.Row="1" Grid.Col="2">
+				<Text>
+					Button Text
+					<Span>bind here</Span>
+					<Badge>77</Badge>
+				</Text>
+			</Button>
 			<Hyperlink Content="POS TERMINAL" Command="{BindCmd Navigate, Url='/pos'}"/>
 			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
 				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">

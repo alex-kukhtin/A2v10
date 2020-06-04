@@ -67,28 +67,20 @@
           </Assign.Value>
         </Assign>
         <FlowStep.Next>
-          <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_11">
-            <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
-              <Assign.To>
-                <OutArgument x:TypeArguments="x:Int64">
-                  <mca:CSharpReference x:TypeArguments="x:Int64">Id</mca:CSharpReference>
-                </OutArgument>
-              </Assign.To>
-              <Assign.Value>
-                <InArgument x:TypeArguments="x:Int64">
-                  <mca:CSharpValue x:TypeArguments="x:Int64">(Int64) DynamicHelpers.EvalObject(DataModel.Root, "Document.Id")</mca:CSharpValue>
+          <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_8">
+            <aw:Track sap2010:WorkflowViewState.IdRef="Track_1">
+              <aw:Track.Message>
+                <InArgument x:TypeArguments="x:String">
+                  <mca:CSharpValue x:TypeArguments="x:String">String.Format("ModelKind:{0}", Process.Model.Eval&lt;String&gt;("Document.Kind"))</mca:CSharpValue>
                 </InArgument>
-              </Assign.Value>
-            </Assign>
-          </FlowStep>
-        </FlowStep.Next>
-      </FlowStep>
-    </Flowchart.StartNode>
-    <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
-      <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
-        <aw:Request.Inbox>
-          <InArgument x:TypeArguments="aw:Inbox">
-            <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
+              </aw:Track.Message>
+            </aw:Track>
+            <FlowStep.Next>
+              <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_3">
+                <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_1">
+                  <aw:Request.Inbox>
+                    <InArgument x:TypeArguments="aw:Inbox">
+                      <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
 {
   Text = "Task number one",
   Bookmark = "ForOwner",
@@ -97,16 +89,16 @@
   ForId = Process.Owner,
   TargetId = 25566
 }</mca:CSharpValue>
-          </InArgument>
-        </aw:Request.Inbox>
-        <aw:Request.Result>
-          <OutArgument x:TypeArguments="aw:RequestResult">
-            <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
-          </OutArgument>
-        </aw:Request.Result>
-        <aw:Request.SendBefore>
-          <InArgument x:TypeArguments="aw:MessageInfo">
-            <mca:CSharpValue x:TypeArguments="aw:MessageInfo" xml:space="preserve">new MessageInfo() {
+                    </InArgument>
+                  </aw:Request.Inbox>
+                  <aw:Request.Result>
+                    <OutArgument x:TypeArguments="aw:RequestResult">
+                      <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
+                    </OutArgument>
+                  </aw:Request.Result>
+                  <aw:Request.SendBefore>
+                    <InArgument x:TypeArguments="aw:MessageInfo">
+                      <mca:CSharpValue x:TypeArguments="aw:MessageInfo" xml:space="preserve">new MessageInfo() {
   Immediately = true,
   Template = "Workflows/Messaging",
   Key = "First",
@@ -115,31 +107,31 @@
 	  new {To = "sss@www.com"}
   ),
 }</mca:CSharpValue>
-          </InArgument>
-        </aw:Request.SendBefore>
-        <aw:Request.TrackAfter>
-          <InArgument x:TypeArguments="aw:TrackRecord">
-            <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
+                    </InArgument>
+                  </aw:Request.SendBefore>
+                  <aw:Request.TrackAfter>
+                    <InArgument x:TypeArguments="aw:TrackRecord">
+                      <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
 {
    Message = "Answer is {{Answer}}"
 }</mca:CSharpValue>
-          </InArgument>
-        </aw:Request.TrackAfter>
-        <aw:Request.TrackBefore>
-          <InArgument x:TypeArguments="aw:TrackRecord">
-            <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
+                    </InArgument>
+                  </aw:Request.TrackAfter>
+                  <aw:Request.TrackBefore>
+                    <InArgument x:TypeArguments="aw:TrackRecord">
+                      <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
 		{
   Message = "I am the track for:" + Process.ModelName + ":" + Process.ModelId
 		}</mca:CSharpValue>
-          </InArgument>
-        </aw:Request.TrackBefore>
-      </aw:Request>
-      <FlowStep.Next>
-        <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_10">
-          <aw:StartProcess Mark="{x:Null}" StateAfter="{x:Null}" TrackAfter="{x:Null}" WaitComplete="{x:Null}" DisplayName="Start Child-Process" sap2010:WorkflowViewState.IdRef="StartProcess_1">
-            <aw:StartProcess.ProcessInfo>
-              <InArgument x:TypeArguments="aw:StartProcessInfo">
-                <mca:CSharpValue x:TypeArguments="aw:StartProcessInfo" xml:space="preserve">new StartProcessInfo
+                    </InArgument>
+                  </aw:Request.TrackBefore>
+                </aw:Request>
+                <FlowStep.Next>
+                  <FlowStep x:Name="__ReferenceID5" sap2010:WorkflowViewState.IdRef="FlowStep_10">
+                    <aw:StartProcess Mark="{x:Null}" StateAfter="{x:Null}" TrackAfter="{x:Null}" WaitComplete="{x:Null}" DisplayName="Start Child-Process" sap2010:WorkflowViewState.IdRef="StartProcess_1">
+                      <aw:StartProcess.ProcessInfo>
+                        <InArgument x:TypeArguments="aw:StartProcessInfo">
+                          <mca:CSharpValue x:TypeArguments="aw:StartProcessInfo" xml:space="preserve">new StartProcessInfo
 {
    Workflow = "file:Workflows/TestWorkflow_v1",
    ModelName = Process.ModelName,
@@ -147,32 +139,32 @@
    DataSource = Process.DataSource,
    Schema = Process.Schema
 }</mca:CSharpValue>
-              </InArgument>
-            </aw:StartProcess.ProcessInfo>
-            <aw:StartProcess.StateBefore>
-              <InArgument x:TypeArguments="aw:ModelStateInfo">
-                <mca:CSharpValue x:TypeArguments="aw:ModelStateInfo" xml:space="preserve">new ModelStateInfo
+                        </InArgument>
+                      </aw:StartProcess.ProcessInfo>
+                      <aw:StartProcess.StateBefore>
+                        <InArgument x:TypeArguments="aw:ModelStateInfo">
+                          <mca:CSharpValue x:TypeArguments="aw:ModelStateInfo" xml:space="preserve">new ModelStateInfo
 {
   State = "SSSS",
   Procedure = "a2demo.[Workflow.SetState]",
 }</mca:CSharpValue>
-              </InArgument>
-            </aw:StartProcess.StateBefore>
-            <aw:StartProcess.TrackBefore>
-              <InArgument x:TypeArguments="aw:TrackRecord">
-                <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
+                        </InArgument>
+                      </aw:StartProcess.StateBefore>
+                      <aw:StartProcess.TrackBefore>
+                        <InArgument x:TypeArguments="aw:TrackRecord">
+                          <mca:CSharpValue x:TypeArguments="aw:TrackRecord" xml:space="preserve">new TrackRecord()
 {
    Message = "Start sub process"
 }</mca:CSharpValue>
-              </InArgument>
-            </aw:StartProcess.TrackBefore>
-          </aw:StartProcess>
-          <FlowStep.Next>
-            <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_4">
-              <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" TrackAfter="{x:Null}" TrackBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_2">
-                <aw:Request.Inbox>
-                  <InArgument x:TypeArguments="aw:Inbox">
-                    <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
+                        </InArgument>
+                      </aw:StartProcess.TrackBefore>
+                    </aw:StartProcess>
+                    <FlowStep.Next>
+                      <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_4">
+                        <aw:Request InboxId="{x:Null}" SendAfter="{x:Null}" SendBefore="{x:Null}" StateAfter="{x:Null}" StateBefore="{x:Null}" TrackAfter="{x:Null}" TrackBefore="{x:Null}" sap2010:WorkflowViewState.IdRef="Request_2">
+                          <aw:Request.Inbox>
+                            <InArgument x:TypeArguments="aw:Inbox">
+                              <mca:CSharpValue x:TypeArguments="aw:Inbox" xml:space="preserve">new Inbox
 {
   Bookmark = "Logist",
   For = "Role",
@@ -180,47 +172,55 @@
   Action = "document/request/forOwner",
   Text = "Задача для менеджера"
 }</mca:CSharpValue>
-                  </InArgument>
-                </aw:Request.Inbox>
-                <aw:Request.Result>
-                  <OutArgument x:TypeArguments="aw:RequestResult">
-                    <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
-                  </OutArgument>
-                </aw:Request.Result>
-              </aw:Request>
-              <FlowStep.Next>
-                <FlowDecision x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
-                  <FlowDecision.Condition>
-                    <mca:CSharpValue x:TypeArguments="x:Boolean">Answer.Answer == "OK"</mca:CSharpValue>
-                  </FlowDecision.Condition>
-                  <FlowDecision.False>
-                    <x:Reference>__ReferenceID0</x:Reference>
-                  </FlowDecision.False>
-                </FlowDecision>
-              </FlowStep.Next>
-            </FlowStep>
-          </FlowStep.Next>
-        </FlowStep>
-      </FlowStep.Next>
-    </FlowStep>
+                            </InArgument>
+                          </aw:Request.Inbox>
+                          <aw:Request.Result>
+                            <OutArgument x:TypeArguments="aw:RequestResult">
+                              <mca:CSharpReference x:TypeArguments="aw:RequestResult">Answer</mca:CSharpReference>
+                            </OutArgument>
+                          </aw:Request.Result>
+                        </aw:Request>
+                        <FlowStep.Next>
+                          <FlowDecision x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
+                            <FlowDecision.Condition>
+                              <mca:CSharpValue x:TypeArguments="x:Boolean">Answer.Answer == "OK"</mca:CSharpValue>
+                            </FlowDecision.Condition>
+                            <FlowDecision.False>
+                              <x:Reference>__ReferenceID0</x:Reference>
+                            </FlowDecision.False>
+                          </FlowDecision>
+                        </FlowStep.Next>
+                      </FlowStep>
+                    </FlowStep.Next>
+                  </FlowStep>
+                </FlowStep.Next>
+              </FlowStep>
+            </FlowStep.Next>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID0</x:Reference>
     <x:Reference>__ReferenceID1</x:Reference>
     <x:Reference>__ReferenceID2</x:Reference>
     <x:Reference>__ReferenceID3</x:Reference>
-    <FlowStep sap2010:WorkflowViewState.IdRef="FlowStep_8">
-      <aw:Track sap2010:WorkflowViewState.IdRef="Track_1">
-        <aw:Track.Message>
-          <InArgument x:TypeArguments="x:String">
-            <mca:CSharpValue x:TypeArguments="x:String">String.Format("ModelKind:{0}", Process.Model.Eval&lt;String&gt;("Document.Kind"))</mca:CSharpValue>
-          </InArgument>
-        </aw:Track.Message>
-      </aw:Track>
-      <FlowStep.Next>
-        <x:Reference>__ReferenceID0</x:Reference>
-      </FlowStep.Next>
-    </FlowStep>
     <x:Reference>__ReferenceID4</x:Reference>
     <x:Reference>__ReferenceID5</x:Reference>
-    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbAcxA+ABDwIBATkJRBICARFHDVIWAgECQQ9BYAIBGTwPPGQCARJPE0+QAQIBCkoTSloCAQM=</sads:DebugSymbol.Symbol>
+    <FlowStep sap2010:WorkflowViewState.IdRef="FlowStep_11">
+      <Assign sap2010:WorkflowViewState.IdRef="Assign_2">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Int64">
+            <mca:CSharpReference x:TypeArguments="x:Int64">Id</mca:CSharpReference>
+          </OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Int64">
+            <mca:CSharpValue x:TypeArguments="x:Int64">(Int64) DynamicHelpers.EvalObject(DataModel.Root, "Document.Id")</mca:CSharpValue>
+          </InArgument>
+        </Assign.Value>
+      </Assign>
+    </FlowStep>
+    <sads:DebugSymbol.Symbol>dzhDOlxHaXRcQTJ2MTBcQXBwc1xEZXZlbG9wXFdvcmtmbG93c1xUZXN0V29ya2Zsb3dfdjEueGFtbBQxA+ABDwIBATkJRBICAVpHDU0YAgFSUBGAAR4CAS6DARWhAScCARikARm2ASYCAQm6AR+6AXMCAQJBD0FgAgFiPA88ZAIBW0oTSqIBAgFTUxdbFAIBS2AXYGsCAUR6F30WAgE9chd1FAIBNmUXbRQCAS+SARuWARQCASebARueARQCASCGARuNARQCARmnAR+uARQCARGzAR+zAXMCAQo=</sads:DebugSymbol.Symbol>
   </Flowchart>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
@@ -231,27 +231,10 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62">
+      <sap2010:ViewStateData Id="Track_1" sap:VirtualizedContainerService.HintSize="200,22">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_11">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">469,159</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="FlowStep_7">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <av:Point x:Key="ShapeLocation">79,119</av:Point>
-            <av:Size x:Key="ShapeSize">242,62</av:Size>
-            <av:PointCollection x:Key="ConnectorLocation">200,181 200,211 439,211 439,129 590,129 590,159</av:PointCollection>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
@@ -313,19 +296,36 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Track_1" sap:VirtualizedContainerService.HintSize="200,22">
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
-      </sap2010:ViewStateData>
       <sap2010:ViewStateData Id="FlowStep_8">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <av:Point x:Key="ShapeLocation">200,259</av:Point>
             <av:Size x:Key="ShapeSize">200,22</av:Size>
             <av:PointCollection x:Key="ConnectorLocation">300,281 300,299</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_7">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">79,119</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">200,181 200,211 300,211 300,259</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="242,62">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_11">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">469,159</av:Point>
+            <av:Size x:Key="ShapeSize">242,62</av:Size>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
