@@ -1,6 +1,5 @@
 ﻿
-
-export interface IDocumentModule {
+export interface IDocumentModule extends Template {
 	documentApply(this: IElement): IElement;
 	docTotalSum(): number;
 	rowSum(): number;

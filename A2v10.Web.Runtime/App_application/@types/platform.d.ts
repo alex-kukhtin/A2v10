@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7662 */
+/* Version 10.0.7672 */
 
 
 declare function require(url: string): any;
@@ -58,18 +58,23 @@ interface IModelInfo {
 
 interface IElementArray<T> extends Array<T> {
 
+	readonly $parent: IElement;
+	readonly $vm: IViewModel;
+	readonly $root: IRoot;
+	readonly $ctrl: IController;
+
 	readonly Count: number;
 	readonly $isEmpty: boolean;
 	readonly $hasSelected: boolean;
 	readonly $checked: IElementArray<T>;
 	readonly $selected: T;
 	readonly $selectedIndex: number;
-	readonly $parent: IElement;
 	readonly $cross: { [prop: string]: string[] };
 	readonly $ModelInfo: IModelInfo;
 
 	Selected(prop: string): IElementArray<T>;
 
+	$new(src?: object): T;
 	$append(src?: object): T;
 	$prepend(src?: object): T;
 	$insert(src: object, to: InsertTo, ref?: T): T;
@@ -251,6 +256,7 @@ interface IViewModel extends IController {
 	$getErrors(severity: Severity): IErrorInfo[] | null;
 	$dbRemove(elem: object, confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
 	$dbRemoveSelected(arr: object[], confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
+	$setCurrentUrl(url:string): void;
 }
 
 // utilities

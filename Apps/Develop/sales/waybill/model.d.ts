@@ -1,5 +1,4 @@
 ﻿
-
 export interface TAgent extends IElement {
 	Id: number;
 	Name: string;
