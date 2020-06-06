@@ -76,18 +76,18 @@
 				Sort="True" FixedHeader="True" TestId="MyDataGrid"
 				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
 				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="{Bind Parent.Grouping.GroupBy}">
-		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Wrap="NoWrap"
+		<DataGridColumn Header="Код" Content="{Bind Id}" Role="Number"
 			Command="{BindCmd Open, Url={StaticResource OpenUrl}}" Icon="{Bind $Icon}"/>
-		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Align="Center" Fit="True" Wrap="NoWrap"
+		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Role="Date"
 						Command="{BindCmd Execute, CommandName='clickDate', Permission=CanEdit, Confirm='Are you sure?'}"/>
-		<DataGridColumn Header="Номер" Content="{Bind No}" Fit="True" Align="Right" Wrap="NoWrap"/>
+		<DataGridColumn Header="Номер" Content="{Bind No}" Role="Number"/>
 		<DataGridColumn Header="Покупатель">
 			<Popover Placement="BottomRight" If="{Bind Agent.Id}"
 				Text="{Bind Agent.Name}" Url="{Bind $AgentPopoverUrl}"/>
 		</DataGridColumn>
 		<DataGridColumn Header="Склад" Content="{Bind DepFrom.Name}" />
-		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True, Format='# 000.00'}" Align="Right" Fit="True" Wrap="NoWrap"/>
-		<DataGridColumn Header="Created" Content="{Bind DateCreated, DataType=DateTime}" Wrap="NoWrap"/>
+		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True, Format='# 000.00'}" Role="Number"/>
+		<DataGridColumn Header="Created" Content="{Bind DateCreated, DataType=DateTime}" Role="Date"/>
 		<DataGridColumn Header="Примечание">
 			<Span Content="{Bind Memo}" MaxChars="32" Tip="{Bind Memo}"/>
 		</DataGridColumn>

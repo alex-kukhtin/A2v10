@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,14 @@ namespace A2v10.Xaml
 		Editor,
 		CheckBox,
 		Validator
+	}
+
+	public enum ColumnRole
+	{
+		Default,
+		Id,
+		Number,
+		Date
 	}
 
 	[ContentProperty("Content")]
@@ -37,12 +45,17 @@ namespace A2v10.Xaml
 
 		public Boolean? If { get; set; }
 
+		public ColumnRole Role { get; set; }
+
 		Boolean _noPadding;
 
 		internal void RenderColumn(RenderContext context, Int32 colIndex)
 		{
 			CheckValid();
 			var column = new TagBuilder("data-grid-column");
+
+			SetColumnRole(column);
+
 			MergeBindingAttribute(context, column, "header", nameof(Header), Header);
 
 			MergeBindingAttributeBool(column, context, "v-if", nameof(If), If);
@@ -72,7 +85,7 @@ namespace A2v10.Xaml
 			else if (Icon != Icon.NoIcon)
 				column.MergeAttribute("icon", Icon.ToString().ToKebabCase());
 			if (Wrap != WrapMode.Default)
-				column.MergeAttribute("wrap", Wrap.ToString().ToKebabCase());
+				column.MergeAttribute("wrap", Wrap.ToString().ToKebabCase(), true);
 
 			var markBind = GetBinding(nameof(Mark));
 			if (markBind != null)
@@ -110,9 +123,9 @@ namespace A2v10.Xaml
 
 			var alignProp = GetBinding(nameof(Align));
 			if (alignProp != null)
-				column.MergeAttribute(":align", alignProp.Path /*!without context!*/);
+				column.MergeAttribute(":align", alignProp.Path /*!without context!*/, true);
 			else if (Align != TextAlign.Default)
-				column.MergeAttribute("align", Align.ToString().ToLowerInvariant());
+				column.MergeAttribute("align", Align.ToString().ToLowerInvariant(), true);
 
 			if (isTemplate)
 			{
@@ -147,6 +160,27 @@ namespace A2v10.Xaml
 				tag.MergeAttribute(":" + attr, bindProp.GetPath(context));
 			else if (propValue != null)
 				tag.MergeAttribute(attr, context.Localize(propValue.ToString()));
+		}
+
+		void SetColumnRole(TagBuilder column)
+		{
+			if (Role == ColumnRole.Default)
+				return;
+			switch (Role)
+			{
+				case ColumnRole.Id:
+				case ColumnRole.Number:
+					// fit, nowrap, right
+					column.MergeAttribute("fit", "true", true);
+					column.MergeAttribute("wrap", "no-wrap", true);
+					column.MergeAttribute("align", "right", true);
+					break;
+				case ColumnRole.Date:
+					column.MergeAttribute("fit", "true", true);
+					column.MergeAttribute("wrap", "no-wrap", true);
+					column.MergeAttribute("align", "center", true);
+					break;
+			}
 		}
 
 		void CreateEditable()
@@ -207,5 +241,4 @@ namespace A2v10.Xaml
 
 		}
 	}
-
 }

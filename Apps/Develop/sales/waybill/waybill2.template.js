@@ -60,7 +60,8 @@ define(["require", "exports"], function (require, exports) {
             runServerScript,
             callApi,
             getWeather,
-            testPost
+            testPost,
+            sendMessage
         }
     };
     exports.default = template;
@@ -155,5 +156,11 @@ define(["require", "exports"], function (require, exports) {
             alert('1');
             alert(err);
         }
+    }
+    async function sendMessage() {
+        const ctrl = this.$ctrl;
+        const doc = this.Document;
+        let r = await ctrl.$invoke('sendMessage', { Id: doc.Id });
+        alert(JSON.stringify(r));
     }
 });

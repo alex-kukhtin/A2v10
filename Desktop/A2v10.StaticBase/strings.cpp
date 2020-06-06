@@ -34,3 +34,19 @@ const wchar_t* bool2string(bool v)
 {
 	return v ? L"true" : L"false";
 }
+
+
+_locale_t _enLocale = nullptr;
+_locale_t _uaLocale = nullptr;
+
+_locale_t _getLocaleUS() {
+	if (_enLocale == nullptr)
+		_enLocale = _create_locale(LC_ALL, "en-US");
+	return _enLocale;
+}
+
+_locale_t _getLocaleUA() {
+	if (_uaLocale == nullptr)
+		_uaLocale = _create_locale(LC_ALL, "uk-UA");
+	return _uaLocale;
+}

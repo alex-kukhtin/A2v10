@@ -28,6 +28,7 @@ PosCommand::COMMAND_BIND PosCommand::_binded_commands[] =
 	{L"zReportInfo",        &PosCommand::ZReportInfo,        nullptr},
 	{L"getStatus",          &PosCommand::GetStatus,          nullptr},
 	{L"copyReceipt",        &PosCommand::CopyReceipt,        nullptr},
+	{L"testReceipt",        &PosCommand::TestReceipt,        &PosCommand::PrintReceiptData},
 	{nullptr, nullptr}
 };
 
@@ -93,6 +94,7 @@ std::wstring PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data)
 	js.Add(L"model", pcd->_model.c_str());
 	js.Add(L"port", pcd->_port.c_str());
 	js.Add(L"terminal", pcd->_terminal.c_str());
+	js.Add(L"version", POS_MODULE_VERSION());
 	pPrinter->AddMessages(js);
 	return js.Value();
 }
@@ -236,5 +238,14 @@ std::wstring PosCommand::CopyReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 	JsonObject js;
 	js.Add(L"no", no);
 	pPrinter->AddMessages(js);
+	return js.Value();
+}
+
+std::wstring PosCommand::TestReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	PosPrintReceiptData* pprd = dynamic_cast<PosPrintReceiptData*>(data);
+	long no = pPrinter->TestReceipt(pprd);
+	JsonObject js;
+	js.Add(L"no", no);
 	return js.Value();
 }

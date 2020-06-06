@@ -65,3 +65,5 @@ const wchar_t* PosErrorMessage(pos_result_t res);
 const wchar_t* PosLastErrorMessage();
 
 void PosSetTraceTarget(ITraceTarget* target);
+
+const wchar_t* POS_MODULE_VERSION();

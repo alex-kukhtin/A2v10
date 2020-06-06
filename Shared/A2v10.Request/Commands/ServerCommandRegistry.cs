@@ -26,6 +26,8 @@ namespace A2v10.Request
 					return new ExecuteXmlCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IDbContext>());
 				case CommandType.callApi:
 					return new ExecuteCallApiCommand(ServiceLocator.Current.GetService<IApplicationHost>());
+				case CommandType.sendMessage:
+					return new ExecuteSendMessageCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IMessaging>());
 			}
 			throw new ArgumentOutOfRangeException("Server command for '{cmd}' not found");
 		}

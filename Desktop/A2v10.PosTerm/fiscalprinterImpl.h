@@ -73,7 +73,8 @@ public:
 	//virtual bool PostNullCheck(__int64 hid);
 	//virtual bool PostClose(__int64 hid);
 	//virtual bool ProgramOperator(const wchar_t* Name, const wchar_t* Password);
-	virtual void CancelReceipt() = 0;
+	virtual void CancelOrCloseReceipt() = 0;
+	virtual void CancelReceiptUnconditional() = 0;
 	virtual void OpenReceipt() = 0;
 	virtual void OpenReturnReceipt() = 0;
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) = 0;

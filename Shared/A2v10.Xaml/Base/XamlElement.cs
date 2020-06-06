@@ -94,9 +94,9 @@ namespace A2v10.Xaml
 			// bool attrs always with ':'
 			String attrName = $":{propName.ToLowerInvariant()}";
 			if (attrBind != null)
-				tag.MergeAttribute(attrName, attrBind.GetPath(context));
+				tag.MergeAttribute(attrName, attrBind.GetPath(context), true);
 			else if (value)
-				tag.MergeAttribute(attrName, value.ToString().ToLowerInvariant());
+				tag.MergeAttribute(attrName, value.ToString().ToLowerInvariant(), true);
 
 		}
 

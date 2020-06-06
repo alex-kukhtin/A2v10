@@ -106,9 +106,15 @@ void CFiscalPrinter_Null::OpenReturnReceipt()
 
 
 // virtual 
-void CFiscalPrinter_Null::CancelReceipt()
+void CFiscalPrinter_Null::CancelOrCloseReceipt()
 {
-	TraceINFO(L"TESTPRINTER [%s]. CancelReceipt()", _id.c_str());
+	TraceINFO(L"TESTPRINTER [%s]. CancelOrCloseReceipt()", _id.c_str());
+}
+
+// virtual 
+void CFiscalPrinter_Null::CancelReceiptUnconditional()
+{
+	TraceINFO(L"TESTPRINTER [%s]. CancelReceiptUnconditional()", _id.c_str());
 }
 
 // virtual 

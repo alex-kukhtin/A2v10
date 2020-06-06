@@ -13,11 +13,26 @@
 
 #pragma comment(lib,"../Lib/A2v10.StaticBase.lib")
 
+const wchar_t* _version = L"10.0.7672";
+
 std::wstring _lastErrorMessage;
 long _lastMsgId = -1;
 
+const wchar_t* POS_MODULE_VERSION()
+{
+	return _version;
+}
+
 void PosSetTraceTarget(ITraceTarget* target)
 {
+	/*
+	const wchar_t* locW = _wsetlocale(LC_ALL, L"ru-RU");
+	std::string xxx("готівка картка");
+	toUpperUA(xxx);
+	__int64 x = std::llround(_wtof_l(L"1122.33", _getLocaleUS()) * 10000.0);
+	double z = _wtof(L"1122.33");
+	*/
+
 	EquipmentBaseImpl::SetTraceTarget(target);
 }
 

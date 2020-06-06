@@ -11,5 +11,6 @@ namespace A2v10.Infrastructure
 
 		Int64 QueueMessage(IQueuedMessage message);
 		Task<Int64> QueueMessageAsync(IQueuedMessage message, Boolean immediately);
+		Task SendMessageAsync(Int64 msgId);
 	}
 }

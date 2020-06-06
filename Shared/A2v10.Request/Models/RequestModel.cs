@@ -373,7 +373,8 @@ namespace A2v10.Request
 		file,
 		startProcess,
 		resumeProcess,
-		callApi
+		callApi,
+		sendMessage
 	}
 
 	public class RequestCommand : RequestBase

@@ -295,7 +295,7 @@ namespace A2v10.Web.Identity
 				user.AccessFailedCount = 0;
 				user.SetModified(UserModifiedFlag.Lockout);
 			}
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public Task<Int32> GetAccessFailedCountAsync(AppUser user)
@@ -311,7 +311,7 @@ namespace A2v10.Web.Identity
 		public Task SetLockoutEnabledAsync(AppUser user, Boolean enabled)
 		{
 			user.LockoutEnabled = enabled;
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 		#endregion
 
@@ -320,7 +320,7 @@ namespace A2v10.Web.Identity
 		{
 			user.PasswordHash = passwordHash;
 			user.SetModified(UserModifiedFlag.Password);
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public Task<String> GetPasswordHashAsync(AppUser user)
@@ -339,7 +339,7 @@ namespace A2v10.Web.Identity
 		public Task SetTwoFactorEnabledAsync(AppUser user, Boolean enabled)
 		{
 			user.TwoFactorEnabled = enabled;
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public Task<Boolean> GetTwoFactorEnabledAsync(AppUser user)
@@ -352,7 +352,7 @@ namespace A2v10.Web.Identity
 		public Task SetEmailAsync(AppUser user, String email)
 		{
 			user.Email = email;
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public Task<String> GetEmailAsync(AppUser user)
@@ -372,7 +372,7 @@ namespace A2v10.Web.Identity
 		{
 			user.EmailConfirmed = confirmed;
 			user.SetModified(UserModifiedFlag.EmailConfirmed);
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public async Task<AppUser> FindByEmailAsync(String email)
@@ -407,7 +407,7 @@ namespace A2v10.Web.Identity
 				user.PhoneNumber = phoneNumber;
 				user.SetModified(UserModifiedFlag.PhoneNumber);
 			}
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public Task<String> GetPhoneNumberAsync(AppUser user)
@@ -427,7 +427,7 @@ namespace A2v10.Web.Identity
 				user.PhoneNumberConfirmed = confirmed;
 				user.SetModified(UserModifiedFlag.PhoneNumber);
 			}
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 		#endregion
 
@@ -439,7 +439,7 @@ namespace A2v10.Web.Identity
 				user.SecurityStamp = stamp;
 				user.SetModified(UserModifiedFlag.Password);
 			}
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public Task<String> GetSecurityStampAsync(AppUser user)

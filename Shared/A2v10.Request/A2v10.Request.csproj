@@ -44,6 +44,7 @@
     <Compile Include="Commands\ExecuteClrCommand.cs" />
     <Compile Include="Commands\ExecuteScriptCommand.cs" />
     <Compile Include="Commands\ExecuteSqlCommand.cs" />
+    <Compile Include="Commands\ExecuteSendMessageCommand.cs" />
     <Compile Include="Commands\ExecuteXmlCommand.cs" />
     <Compile Include="Commands\IServerCommand.cs" />
     <Compile Include="Commands\ServerCommandRegistry.cs" />

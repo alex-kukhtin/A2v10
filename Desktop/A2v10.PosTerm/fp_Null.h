@@ -43,7 +43,8 @@ public:
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To) override;
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) override;
 	//virtual bool GetCash(__int64 termId, COleCurrency& cy) override;
-	virtual void CancelReceipt() override;
+	virtual void CancelOrCloseReceipt() override;
+	virtual void CancelReceiptUnconditional() override;
 	virtual void DisplayDateTime() override;
 	virtual void DisplayClear()  override;
 	virtual void DisplayRow(int rowNo, const wchar_t* szString)  override;

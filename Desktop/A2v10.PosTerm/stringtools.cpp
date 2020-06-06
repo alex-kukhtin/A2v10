@@ -5,6 +5,14 @@
 
 #define MAX_FMT_LEN 1024
 
+int _toUpper(int c) {
+	return ::_toupper_l(c, _getLocaleUA());
+}
+
+void toUpperUA(std::string& s) {
+	std::transform(s.begin(), s.end(), s.begin(), _toUpper);
+}
+
 std::wstring A2W(const char* source, UINT acp /*= CP_THREAD_ACP*/) {
 	std::wstring result;
 	int need = MultiByteToWideChar(acp, 0, source, -1, nullptr, 0);

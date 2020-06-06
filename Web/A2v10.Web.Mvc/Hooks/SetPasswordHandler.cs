@@ -54,7 +54,7 @@ namespace A2v10.Web.Mvc.Hooks
 
 		public Task AfterSave(Int64 UserId, Object beforeData, Object afterData)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 	}

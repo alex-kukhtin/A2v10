@@ -28,7 +28,7 @@ namespace A2v10.Request
 
 			writer.Write(aboutHtml.ToString());
 
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		Task RenderAppPage(TextWriter writer, String page)
@@ -46,7 +46,7 @@ namespace A2v10.Request
 			appPageHtml.Replace("$(AppPageContent)", appPageConetent);
 
 			writer.Write(appPageHtml.ToString());
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		String GetAppData()

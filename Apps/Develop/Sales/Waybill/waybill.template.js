@@ -55,7 +55,8 @@ const template = {
 		setDate(doc) {
 			doc.Date = new Date();
 		},
-		saveTime
+		saveTime,
+		sendMessage
 	}
 };
 
@@ -120,4 +121,11 @@ async function saveTime() {
 
 function barCodeChange(el, val) {
 	console.dir(val);
+}
+
+async function sendMessage() {
+	const ctrl = this.$ctrl;
+	const doc = this.Document;
+	let r = await ctrl.$invoke('sendMessage', { Id: doc.Id });// //, To: 'xxxx@ffff.com' });
+	alert(JSON.stringify(r));
 }

@@ -114,6 +114,13 @@
 				"method": "get"
 			}
 		},
+		"sendMessage": {
+			"type": "sendMessage",
+			"parameters": {
+				"template": "workflows/messaging",
+				"key": "FromServer"
+			}
+		},
 		"testPost": {
 			"type": "callApi",
 			"parameters": {

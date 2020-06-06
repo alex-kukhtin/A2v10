@@ -51,6 +51,7 @@ protected:
 	std::wstring ZReportInfo(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring GetStatus(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring CopyReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring TestReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
 
 	JsonTarget* NullReceiptData();
 	JsonTarget* PrintReceiptData();

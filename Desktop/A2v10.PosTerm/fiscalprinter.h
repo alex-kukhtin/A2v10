@@ -70,6 +70,7 @@ public:
 
 	long PrintReceipt(const PosPrintReceiptData* pData);
 	long PrintReturnReceipt(const PosPrintReceiptData* pData);
+	long TestReceipt(const PosPrintReceiptData* pData);
 
 private:
 	void PrintItem(const PosReceiptItemData* pData);

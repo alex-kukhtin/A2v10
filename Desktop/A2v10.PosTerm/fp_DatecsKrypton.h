@@ -70,7 +70,8 @@ public:
 	virtual void DisplayDateTime() override;
 	virtual void DisplayClear() override;
 	virtual void DisplayRow(int rowNo, LPCTSTR szString) override;
-	virtual void CancelReceipt() override;
+	virtual void CancelOrCloseReceipt() override;
+	virtual void CancelReceiptUnconditional() override;
 
 	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
 	virtual void AddArticle(const RECEIPT_ITEM& item) override;

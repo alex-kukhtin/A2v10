@@ -75,12 +75,6 @@ enum {
 #define EMPTY_PARAM L"000000;"
 
 
-void _toUpper(std::string& s) {
-
-	setlocale(LC_ALL, "uk-UA");
-	std::transform(s.begin(), s.end(), s.begin(), ::toupper);
-}
-
 __int64 makeCode(__int64 art, __currency price) {
 	return (art % 10000000) * 10000000 + price.units();
 }
@@ -227,7 +221,7 @@ void CFiscalPrinter_DatecsKrypton::Beep()
 // virtual 
 long CFiscalPrinter_DatecsKrypton::NullReceipt(bool bOpenCashDrawer)
 {
-	CancelReceipt();
+	CancelOrCloseReceipt();
 
 	TraceINFO(L"DATECS [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	int tno = 1;
@@ -316,7 +310,9 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 		auto items = _split(info, ';');
 		if (items.size() > 2) {
 			std::string payName = items[2];
-			_toUpper(payName);
+			toUpperUA(payName);
+			std::string xxx("готівка картка");
+			toUpperUA(xxx);
 			if (payName == "ГОТІВКА" || payName == "НАЛИЧНЫЕ" || payName == "ГРОШІ") {
 				_payModeCash = L'0' + i;
 				bCashSet = true;
@@ -445,7 +441,7 @@ void CFiscalPrinter_DatecsKrypton::Init()
 		return;
 	}
 
-	CancelReceipt();
+	CancelOrCloseReceipt();
 	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // again
 	// CheckPrinterSession(); 24 часа Z-отчета?
 	//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
@@ -543,7 +539,13 @@ bool CFiscalPrinter_DatecsKrypton::CancelReceiptCommand()
 }
 */
 
-void CFiscalPrinter_DatecsKrypton::CancelReceipt()
+void CFiscalPrinter_DatecsKrypton::CancelReceiptUnconditional()
+{
+	CreateCommand(L"CANCELRECEIPT", FPCMD_CANCELRECEIPT, L"000000;0;");
+	SendCommand();
+}
+
+void CFiscalPrinter_DatecsKrypton::CancelOrCloseReceipt()
 {
 	RECEIPT_STATUS cs = GetReceiptStatus();
 	if (cs == CHS_NORMAL)
@@ -580,7 +582,7 @@ void CFiscalPrinter_DatecsKrypton::OpenReceipt()
 {
 	int tno = 1;
 
-	CancelReceipt();
+	CancelOrCloseReceipt();
 	OpenFiscal(_op, L"", tno);
 }
 
@@ -589,7 +591,7 @@ void CFiscalPrinter_DatecsKrypton::OpenReturnReceipt()
 {
 	int tno = 1;
 
-	CancelReceipt();
+	CancelOrCloseReceipt();
 	OpenFiscalReturn(_op, L"", tno);
 }
 
@@ -1288,4 +1290,5 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterInfo(JsonObject& json)
 	json.Add(L"model", _model.c_str());
 	json.Add(L"port", _port.c_str());
 	json.Add(L"zno", m_nLastZReportNo);
+	json.Add(L"version", POS_MODULE_VERSION());
 }

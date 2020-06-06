@@ -3,11 +3,11 @@
 #include "pch.h"
 #include "types.h"
 #include "jsonparser.h"
+#include "strings.h"
 
 
 #define MAX_PROP_LENGTH 64
 #define NULL_CHR L'\0'
-
 
 long _string2Long(const wchar_t* szString)
 {
@@ -28,8 +28,7 @@ __currency _string2Currency(const wchar_t* szString)
 	__currency cur;
 	if (!szString || !*szString)
 		return cur;
-	_wsetlocale(LC_ALL, L"en_US");
-	cur.int64 = std::llround(_wtof(szString) * 10000.0);
+	cur.int64 = std::llround(_wtof_l(szString, _getLocaleUS()) * 10000.0);
 	return cur;
 }
 

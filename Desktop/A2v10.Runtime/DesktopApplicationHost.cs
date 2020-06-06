@@ -137,7 +137,7 @@ namespace A2v10.Runtime
 
 		public Task SetTenantIdAsync(SqlConnection cnn, String source)
 		{
-			return Task.FromResult(0);
+			return Task.CompletedTask;
 		}
 
 		public void SetTenantId(SqlConnection cnn, String source)

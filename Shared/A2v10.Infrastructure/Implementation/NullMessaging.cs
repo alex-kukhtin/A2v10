@@ -21,5 +21,11 @@ namespace A2v10.Infrastructure
 		{
 			return Task.FromResult(0L);
 		}
+
+		public Task SendMessageAsync(Int64 msgId)
+		{
+			return Task.CompletedTask;
+		}
+
 	}
 }

@@ -174,7 +174,7 @@ void FiscalPrinter::PrintItem(const PosReceiptItemData* pItem)
 long FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 {
 	_impl->TraceCommand(L"PrintReceipt()");
-	_impl->CancelReceipt(); // discard previous, if needed
+	_impl->CancelOrCloseReceipt(); // discard previous, if needed
 
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
 		AddArticle(it->get());
@@ -205,11 +205,37 @@ long FiscalPrinter::PrintReceipt(const PosPrintReceiptData* pData)
 	return _impl->CloseReceipt(true);
 }
 
+long FiscalPrinter::TestReceipt(const PosPrintReceiptData* pData)
+{
+	_impl->TraceCommand(L"TestReceipt()");
+	_impl->CancelOrCloseReceipt(); // discard previous, if needed
+
+	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
+		AddArticle(it->get());
+	}
+
+	_impl->OpenReceipt();
+	if (!pData->_topText.empty())
+		_impl->PrintFiscalText(pData->_topText.c_str());
+
+
+	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
+		auto pItem = it->get();
+		PrintItem(pItem);
+	}
+
+	_impl->PrintTotal();
+
+	// Cancel RECEIPT !!!!
+	_impl->CancelReceiptUnconditional();
+	return 775523;
+}
+
 
 long FiscalPrinter::PrintReturnReceipt(const PosPrintReceiptData* pData)
 {
 	_impl->TraceCommand(L"PrintReturnReceipt()");
-	_impl->CancelReceipt(); // discard previous, if needed
+	_impl->CancelOrCloseReceipt(); // discard previous, if needed
 
 	for (auto it = pData->_items.begin(); it != pData->_items.end(); ++it) {
 		AddArticle(it->get());

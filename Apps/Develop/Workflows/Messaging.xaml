@@ -11,4 +11,8 @@
 				Model="MessageForSend" Schema="a2demo"
 				BodyTemplate="Workflows/first-mail.html" To=" {{Message.To}};[[To]]">
 	</EmailMessage>
+	<EmailMessage x:Key="FromServer" Subject="SUBJ FROM SERVER"
+			Model="MessageForSend" Schema="a2demo"
+			BodyTemplate="Workflows/second-mail.html" To=" {{Message.To}}">
+	</EmailMessage>
 </Template>
