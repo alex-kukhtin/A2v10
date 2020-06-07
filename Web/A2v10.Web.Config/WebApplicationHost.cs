@@ -65,7 +65,7 @@ namespace A2v10.Web.Config
 			{
 				String path = ConfigurationManager.AppSettings["appPath"];
 				if (path == null)
-					throw new ConfigurationErrorsException("Configuration parameter 'appSettings/appPath' not defined");
+					path = "~/App_application";
 				if (path.StartsWith("~"))
 					path = HostingEnvironment.MapPath(path);
 				return path;
