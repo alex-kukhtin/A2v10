@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7672 */
+/* Version 10.0.7673 */
 
 
 declare function require(url: string): any;
@@ -121,6 +121,8 @@ interface templateCommandObj {
 	canExec?: (this: IRoot, arg?: any) => boolean;
 	confirm?: string | IConfirm;
 	saveRequired?: boolean;
+	validRequired?: boolean;
+	checkReadOnly?: boolean;
 }
 
 declare type templateCommand = templateCommandFunc | templateCommandObj;

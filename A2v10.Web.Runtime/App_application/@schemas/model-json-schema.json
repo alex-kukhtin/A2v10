@@ -115,7 +115,7 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"enum": [ "sql", "clr", "script", "xml", "startProcess", "resumeProcess", "callApi", "file" ]
+							"enum": [ "sql", "clr", "script", "xml", "startProcess", "resumeProcess", "callApi", "file", "sendMessage" ]
 						},
 						"schema": { "type": "string" },
 						"source": { "type": "string" },
