@@ -137,6 +137,20 @@ namespace A2v10.Request
 				}
 			}
 
+			/*
+			if (_host.IsMultiCompany)
+			{
+				var comp = await _dbContext.LoadModelAsync(dataSource, "a2security.[User.Companies]", loadPrms);
+				var menu = comp.Root.Get<List<ExpandoObject>>("Companies");
+				var menuJson = JsonConvert.SerializeObject(menu);
+
+				macros.Set("Companies", $"{{menu:{menuJson}, links:null}}");
+
+				var currentCompanyId = comp.Eval<Int64>("Current.Id");
+				_userStateManager.SetUserCompanyId(currentCompanyId);
+			}
+			*/
+
 			if (_host.Mobile)
 				loadPrms.Set("Mobile", true);
 

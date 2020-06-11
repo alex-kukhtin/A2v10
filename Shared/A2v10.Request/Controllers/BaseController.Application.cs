@@ -40,19 +40,31 @@ namespace A2v10.Request
 				throw new InvalidOperationException(nameof(SwitchToCompany));
 			Int64 CompanyId = data.Get<Int64>("company");
 			Int64 UserId = data.Get<Int64>("UserId");
-			Int32 TenantId = 1;
-			if (_host.IsMultiTenant)
-				TenantId = data.Get<Int32>("TenantId");
-			var saveModel = new SwitchToCompanySaveModel()
-			{
-				UserId = UserId,
-				TenantId = TenantId,
-				CompanyId = CompanyId
-			};
 			if (CompanyId == 0)
 				throw new InvalidOperationException("Unable to switch to company with id='0'");
-			await _dbContext.ExecuteAsync<SwitchToCompanySaveModel>(null, "a2security_tenant.SwitchToCompany", saveModel);
-			_userStateManager.SetUserCompanyId(saveModel.CompanyId);
+			if (_host.IsMultiTenant)
+			{
+				Int32 TenantId = 1;
+				if (_host.IsMultiTenant)
+					TenantId = data.Get<Int32>("TenantId");
+				var saveModel = new SwitchToCompanySaveModel()
+				{
+					UserId = UserId,
+					TenantId = TenantId,
+					CompanyId = CompanyId
+				};
+				await _dbContext.ExecuteAsync<SwitchToCompanySaveModel>(null, "a2security_tenant.SwitchToCompany", saveModel);
+			}
+			else
+			{
+				var saveModel = new SwitchToCompanySaveModel()
+				{
+					UserId = UserId,
+					CompanyId = CompanyId
+				};
+				await _dbContext.ExecuteAsync<SwitchToCompanySaveModel>(null, "a2security.[User.SwitchToCompany]", saveModel);
+			}
+			_userStateManager.SetUserCompanyId(CompanyId);
 		}
 
 	}

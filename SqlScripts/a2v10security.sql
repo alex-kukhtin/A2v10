@@ -1,17 +1,17 @@
 ﻿/*
 ------------------------------------------------
-Copyright © 2008-2019 Alex Kukhtin
+Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 23 dec 2019
-module version : 7598
+Last updated : 11 jun 2020
+module version : 7672
 */
 ------------------------------------------------
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:security')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7598);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7672);
 	else
-		update a2sys.Versions set [Version] = 7598 where Module = N'std:security';
+		update a2sys.Versions set [Version] = 7672 where Module = N'std:security';
 end
 go
 ------------------------------------------------
@@ -484,6 +484,7 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+
 	insert into a2security.[Log] (UserId, Severity, [Code] , [Message]) 
 		values (isnull(@UserId, 0 /*system user*/), @SeverityChar, @Code, @Message);
 end
@@ -595,6 +596,7 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+
 	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp where Id=@Id;
 	exec a2security.[WriteLog] @Id, N'I', 15; /*PasswordUpdated*/
 end
@@ -942,7 +944,7 @@ create procedure a2security.DeleteUser
 as
 begin
 	set nocount on;
-	set transaction isolation level serializable;
+	set transaction isolation level read committed;
 	set xact_abort on;
 	declare @TenantAdmin bigint;
 	select @TenantAdmin = [Admin] from a2security.Tenants where Id = @Tenant;
@@ -1039,6 +1041,70 @@ begin
 		update a2security.License set [Text]=@License, DateModified = a2sys.fn_getCurrentDate();
 	else
 		insert into a2security.License ([Text]) values (@License);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2security' and SEQUENCE_NAME=N'SQ_Companies')
+	create sequence a2security.SQ_Companies as bigint start with 100 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Companies')
+begin
+	create table a2security.Companies
+	(
+		Id	int not null constraint PK_Companies primary key
+			constraint DF_Companies_PK default(next value for a2security.SQ_Companies),
+		[Name] nvarchar(255) null,
+		Memo nvarchar(255) null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserCompanies')
+begin
+	create table a2security.UserCompanies
+	(
+		[User] bigint not null,
+		[Company] bigint not null,
+		[Enabled] bit,
+		[Current] bit,
+		constraint PK_UserCompanies primary key([User], [Company])
+	);
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Companies')
+	drop procedure a2security.[User.Companies]
+go
+------------------------------------------------
+create procedure a2security.[User.Companies]
+@UserId bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+
+	-- all companies for current user
+	select [Companies!TCompany!Array] = null, Id, [Name], [Current] = 0
+	from a2security.Companies 
+	order by Id;
+
+	select [Current!TCurrent!Object] = null, Id = cast(156 as bigint);
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SwitchToCompany')
+	drop procedure a2security.[User.SwitchToCompany]
+go
+------------------------------------------------
+create procedure a2security.[User.SwitchToCompany]
+@UserId bigint,
+@CompanyId bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
 end
 go
 ------------------------------------------------

@@ -4839,7 +4839,7 @@ Vue.component('a2-pager', {
 })();	
 // Copyright © 2020 Alex Kukhtin. All rights reserved.
 
-/*20200604-7671*/
+/*20200611-7672*/
 /* controllers/navbar.js */
 
 (function () {
@@ -4850,6 +4850,7 @@ Vue.component('a2-pager', {
 	const period = require('std:period');
 	const store = component('std:store');
 	const urlTools = require('std:url');
+	const http = require('std:http');
 
 	// a2-nav-bar
 	const a2NavBar = {
