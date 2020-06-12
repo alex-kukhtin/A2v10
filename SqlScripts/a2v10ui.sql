@@ -1,16 +1,16 @@
 /*
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 11 jun 2020
-module version : 7672
+Last updated : 12 jun 2020
+module version : 7673
 */
 ------------------------------------------------
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:ui')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7672);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7673);
 	else
-		update a2sys.Versions set [Version] = 7672 where Module = N'std:ui';
+		update a2sys.Versions set [Version] = 7673 where Module = N'std:ui';
 	end
 go
 ------------------------------------------------
@@ -150,9 +150,7 @@ begin
 	order by RT.[Level], m.[Order], RT.[Id];
 
 	-- companies
-	select [Companies!TCompany!Array] = null, c.[Id], c.[Name], [Current] = 1
-	from a2security.Companies c inner join a2security.UserCompanies uc on c.Id = uc.Company
-	where uc.[User] = @UserId;%%%
+	exec a2security.[User.Companies] @UserId = @UserId;
 
 	-- system parameters
 	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode], [NavBarMode], [Pages]

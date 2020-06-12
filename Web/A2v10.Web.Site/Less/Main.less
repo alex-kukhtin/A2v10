@@ -176,21 +176,38 @@ header, .header {
 	top:@header-height + 6px;
 }
 
-.side-bar-collapsed .content-view.partial-page {
-	left: @side-bar-collapsed-width + @side-bar-gap;
-}
-
-.side-bar-compact-collapsed .content-view.partial-page {
-	left: @side-bar-compact-collapsed-width + @side-bar-gap;
-	//transition: left .1s ease-out; // если разрешить - некрасиво при переходах из full-page (без SideBar)
-}
-
 .content-view.full-page {
 	top: @header-height + @navbar-height;
 }
 
 .content-view.full-view, .nav-bar-menu .content-view.full-page {
 	top: @header-height;
+}
+
+.side-bar-position-left {
+	&.expanded {
+	}
+
+	&.collapsed {
+		.content-view.partial-page {
+			left: @side-bar-compact-collapsed-width + @side-bar-gap;
+		}
+	}
+}
+
+.side-bar-position-top {
+
+	.content-view.partial-page, .content-view.full-page {
+		top: @header-height+ @sidebar-tab-height;
+		left: 0;
+	}
+
+
+	&.side-bar-hidden {
+		.content-view.partial-page, .content-view.full-page {
+			top: @header-height;
+		}
+	}
 }
 
 .include {

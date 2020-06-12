@@ -35,6 +35,8 @@ namespace A2v10.Request
 			sb.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("shell"));
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
+			sb.Replace("$(LayoutManifest)", _host.CustomManifest());
+
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 			sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");
 			writer.Write(sb.ToString());
@@ -124,6 +126,7 @@ namespace A2v10.Request
 				{ "Period", "null" },
 			});
 
+			Boolean setCompany = false;
 			if (_host.IsMultiTenant || _host.IsUsePeriodAndCompanies)
 			{
 				// for all users (include features)
@@ -136,20 +139,10 @@ namespace A2v10.Request
 						macros.Set("Period", res.Period);
 				}
 			}
-
-			/*
-			if (_host.IsMultiCompany)
+			else if (_host.IsMultiCompany)
 			{
-				var comp = await _dbContext.LoadModelAsync(dataSource, "a2security.[User.Companies]", loadPrms);
-				var menu = comp.Root.Get<List<ExpandoObject>>("Companies");
-				var menuJson = JsonConvert.SerializeObject(menu);
-
-				macros.Set("Companies", $"{{menu:{menuJson}, links:null}}");
-
-				var currentCompanyId = comp.Eval<Int64>("Current.Id");
-				_userStateManager.SetUserCompanyId(currentCompanyId);
+				setCompany = true;
 			}
-			*/
 
 			if (_host.Mobile)
 				loadPrms.Set("Mobile", true);
@@ -163,6 +156,23 @@ namespace A2v10.Request
 
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.StandardSerializerSettings);
 			macros.Set("Menu", jsonMenu);
+
+			if (setCompany)
+			{
+				var comps = dm.Root.Get<List<ExpandoObject>>("Companies");
+				var currComp = comps.Find(c => c.Get<Boolean>("Current"));
+
+				if (currComp == null)
+				{
+					throw new InvalidDataException("There is no current company");
+				}
+
+				var menuJson = JsonConvert.SerializeObject(comps);
+				macros.Set("Companies", $"{{menu:{menuJson}, links:null}}");
+
+				_userStateManager.SetUserCompanyId(currComp.Get<Int64>("Id"));
+
+			}
 
 			writer.Write(shell.ResolveMacros(macros));
 		}

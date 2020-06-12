@@ -2,16 +2,16 @@
 ------------------------------------------------
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 11 jun 2020
-module version : 7672
+Last updated : 12 jun 2020
+module version : 7673
 */
 ------------------------------------------------
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:security')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7672);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7673);
 	else
-		update a2sys.Versions set [Version] = 7672 where Module = N'std:security';
+		update a2sys.Versions set [Version] = 7673 where Module = N'std:security';
 end
 go
 ------------------------------------------------
@@ -1052,7 +1052,7 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sec
 begin
 	create table a2security.Companies
 	(
-		Id	int not null constraint PK_Companies primary key
+		Id	bigint not null constraint PK_Companies primary key
 			constraint DF_Companies_PK default(next value for a2security.SQ_Companies),
 		[Name] nvarchar(255) null,
 		Memo nvarchar(255) null
@@ -1062,10 +1062,12 @@ go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserCompanies')
 begin
-	create table a2security.UserCompanies
+	create table a2security.[UserCompanies]
 	(
-		[User] bigint not null,
-		[Company] bigint not null,
+		[User] bigint not null
+			constraint FK_UserCompanies_User_Users foreign key references a2security.Users(Id),
+		[Company] bigint not null
+			constraint FK_UserCompanies_Company_Companies foreign key references a2security.Companies(Id),
 		[Enabled] bit,
 		[Current] bit,
 		constraint PK_UserCompanies primary key([User], [Company])
@@ -1082,14 +1084,14 @@ create procedure a2security.[User.Companies]
 as
 begin
 	set nocount on;
-	set transaction isolation level read committed;
+	set transaction isolation level read uncommitted;
 
-	-- all companies for current user
-	select [Companies!TCompany!Array] = null, Id, [Name], [Current] = 0
-	from a2security.Companies 
+	-- all companies for the current user
+	select [Companies!TCompany!Array] = null, Id, [Name], [Current]
+	from a2security.Companies c
+		inner join a2security.UserCompanies uc on uc.Company = c.Id
+	where uc.[User] = @UserId and uc.[Enabled] = 1
 	order by Id;
-
-	select [Current!TCurrent!Object] = null, Id = cast(156 as bigint);
 end
 go
 ------------------------------------------------
@@ -1105,6 +1107,9 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+	update a2security.UserCompanies set 
+		[Current] = case when Company = @CompanyId then 1 else 0 end
+	where [User] = @UserId;
 end
 go
 ------------------------------------------------

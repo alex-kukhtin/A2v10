@@ -139,7 +139,7 @@
 			</Block>
 		</Alert>
 	</Block>
-	<InlineDialog Id="Service" Title="Inline dialog title">
+	<InlineDialog Id="Service" Title="Inline dialog title" NoClose="False">
 		<Grid Columns="140,100" Rows="Auto,Auto,Auto">
 			<Button Block="True" Command="{BindCmd Execute, CommandName='dlgCommand', Argument=1}">Button 1</Button>
 			<Button Block="True" Command="{BindCmd Execute, CommandName='dlgCommand', Argument=2}">Button 2</Button>

@@ -32,6 +32,8 @@ namespace A2v10.Xaml
 		public UIElementBase Taskpad { get; set; }
 		public Boolean ShowWaitCursor { get; set; }
 		public BackgroundStyle Background { get; set; }
+		public Boolean Maximize { get; set; }
+		public Boolean ButtonOnTop { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -49,7 +51,7 @@ namespace A2v10.Xaml
 			if (!String.IsNullOrEmpty(CanCloseDelegate))
 				opts.Append($"'canClose': '{CanCloseDelegate}',");
 			if (AlwaysOk)
-				opts.Append("'alwaysOk': true");
+				opts.Append("'alwaysOk': true,");
 			opts.RemoveTailComma();
 			opts.Append("}");
 			return opts.ToString();
@@ -62,12 +64,16 @@ namespace A2v10.Xaml
 			dialog.MergeAttribute("v-cloak", String.Empty);
 			dialog.AddCssClassBoolNo(UserSelect, "user-select");
 			dialog.MergeAttribute("data-controller-attr", GetControllerAttributes());
+			dialog.AddCssClassBool(Maximize, "maximize");
+			dialog.AddCssClassBool(ButtonOnTop, "button-on-top");
 
 			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
 				dialog.MergeAttribute("test-id", TestId);
 
 
 			SetSize(dialog);
+			if (Maximize)
+				dialog.MergeAttribute("v-maximize", "true");
 
 			dialog.RenderStart(context);
 
@@ -145,7 +151,8 @@ namespace A2v10.Xaml
 		void RenderHeader(RenderContext context)
 		{
 			var header = new TagBuilder("div", "modal-header");
-			header.MergeAttribute("v-drag-window", String.Empty);
+			if (!Maximize)
+				header.MergeAttribute("v-drag-window", String.Empty);
 			header.RenderStart(context);
 			var hdr = GetBinding(nameof(Title));
 			if ((hdr != null) || (Title != null))

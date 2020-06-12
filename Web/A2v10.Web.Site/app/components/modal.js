@@ -53,6 +53,14 @@
 		}
 	};
 
+	const maximizeComponent = {
+		inserted(el, binding) {
+			let mw = el.closest('.modal-window');
+			if (mw && binding.value)
+				mw.setAttribute('maximize', 'true');
+		}
+	}
+
 	const dragDialogDirective = {
 		inserted(el, binding) {
 
@@ -110,6 +118,8 @@
 	Vue.directive('drag-window', dragDialogDirective);
 
 	Vue.directive('modal-width', setWidthComponent);
+
+	Vue.directive('maximize', maximizeComponent);
 
 	const modalComponent = {
 		template: modalTemplate,
@@ -190,7 +200,7 @@
 				return !!this.dialog.url;
 			},
 			mwClass() {
-				return this.modalCreated ? 'loaded' : null;
+				return this.modalCreated ? 'loaded' : '';
 			},
 			hasIcon() {
 				return !!this.dialog.style;

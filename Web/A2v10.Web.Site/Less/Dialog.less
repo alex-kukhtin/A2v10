@@ -1,11 +1,11 @@
-﻿
+﻿@import "Variables.less";
 
 @modal-padding: .75rem;
 @modal-header-height: 34px;
 
 @modal-footer-bg-color: @whitesmoke-gray-bg-color;
 @modal-width-medium: 500px;
-@ani-time: 0.25s;
+@ani-time: 0.1s;
 
 .modal-stack {
 	position: fixed;
@@ -38,6 +38,39 @@
 				list-style-position: inside;
 				list-style-type: disc;
 				font-size: 0.95rem;
+			}
+
+			&[maximize] {
+				width: 98vw;
+				margin: 10px auto;
+				height: ~"calc(100vh - 42px)"; // @footer-height + 10px * 2
+				.modal-header {
+					cursor: default;
+				}
+
+				.tab-content {
+					overflow: hidden;
+
+					.tab-item {
+						height: 100%;
+					}
+				}
+
+				.dialog-grid-content {
+					overflow: hidden;
+				}
+
+				.taskpad {
+					overflow: hidden;
+					padding: 0;
+					
+					.taskpad-body {
+					}
+
+					.taskpad-collapse-handle {
+						display:none; //TODO:??
+					}
+				}
 			}
 		}
 
@@ -113,10 +146,16 @@
 		color: #aaa;
 		line-height: 1.6rem;
 
-		&:hover, &:active, &:focus {
-			color: #555;
-			background-color: lighten(@dialog-header-bg-color, 10%);
-			border-color: @tb-hover-brd-color;
+		&:not([disabled]) {
+			&:hover, &:active, &:focus {
+				color: #555;
+				background-color: lighten(@dialog-header-bg-color, 10%);
+				border-color: @tb-hover-brd-color;
+			}
+		}
+		&[disabled] {
+			cursor:not-allowed;
+			opacity:.5;
 		}
 	}
 
@@ -192,6 +231,9 @@
 
 .modal-content {
 	flex-grow: 2;
+	overflow:auto;
+	position:relative;
+
 
 	.dialog-grid {
 		display: grid;
@@ -202,24 +244,53 @@
 	}
 }
 
+.button-on-top {
+	.modal-content {
+		order:2;
+	}
+	.modal-footer {
+		order:1;
+		border-bottom:1px solid #ddd;
+		border-top:none;
+	}
+}
+
 .modal-animation-frame {
 	background-color: transparent;
 
 	&.show {
-		transition: background-color linear .25s, backdrop-filter step-end .25s;
-		background-color: rgba(0, 0, 0, .3);
+		transition: background-color linear @ani-time, backdrop-filter step-end @ani-time;
+		background-color: rgba(0, 0, 0, .2);
 		backdrop-filter: saturate(75%) blur(10px);
+		//backdrop-filter: saturate(75%);
 	}
 }
 
-.modal-animation-window {
+.modal-animation-window:not([maximize]) {
 	box-shadow: none;
 	backface-visibility: hidden;
 	transform: translate(0, -33%);
+	opacity:0;
 
 	&.loaded {
-		transition: transform ease-out .25s, box-shadow ease-out .25s;
+		transition: transform ease @ani-time, box-shadow ease @ani-time, opacity ease @ani-time;
 		transform: translate(0, 0);
+		opacity:1;
 		box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+	}
+}
+
+.modal-animation-window[maximize] {
+	box-shadow: none;
+	backface-visibility: hidden;
+	transform: scale(.8, .8);
+	transform-origin: center top;
+	opacity: 0;
+
+	&.loaded {
+		transition: transform ease @ani-time, box-shadow ease @ani-time, opacity @ani-time ease;
+		transform: scale(1, 1);
+		box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+		opacity: 1;
 	}
 }

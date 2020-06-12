@@ -16,11 +16,9 @@
 	const utils = require('std:utils');
 	const locale = window.$$locale;
 	const platform = require('std:platform');
-	const htmlTools = require('std:html');
 	const navBar = component('std:navbar');
+	const sideBar = component('std:sidebar');
 	const menu = component('std:navmenu');
-
-	const UNKNOWN_TITLE = 'unknown title';
 
 	const a2AppHeader = {
 		template: `
@@ -128,127 +126,6 @@
 		}
 	};
 
-	const sideBarBase = {
-		props: {
-			menu: Array,
-			compact: Boolean
-		},
-		computed: {
-			seg0: () => store.getters.seg0,
-			seg1: () => store.getters.seg1,
-			cssClass() {
-				let cls = 'side-bar';
-				if (this.compact)
-					cls += '-compact';
-				return cls + (this.$parent.sideBarCollapsed ? ' collapsed' : ' expanded');
-			},
-			sideMenu() {
-				let top = this.topMenu;
-				return top ? top.Menu : null;
-			},
-			topMenu() {
-				let seg0 = this.seg0;
-				return menu.findMenu(this.menu, (mi) => mi.Url === seg0);
-			}
-		},
-		methods: {
-			isActive(item) {
-				let isActive = this.seg1 === item.Url;
-				if (isActive)
-					htmlTools.updateDocTitle(item.Name);
-				return isActive;
-			},
-			isGroup(item) {
-				if (!item.Params) return false;
-				try {
-					return JSON.parse(item.Params).group || false;
-				} catch (err) {
-					return false;
-				}
-			},
-			navigate(item) {
-				if (this.isActive(item))
-					return;
-				let top = this.topMenu;
-				if (top) {
-					let url = urlTools.combine(top.Url, item.Url);
-					if (item.Url.indexOf('/') === -1) {
-						// save only simple path
-						try {
-							// avoid EDGE error QuotaExceeded
-							localStorage.setItem('menu:' + urlTools.combine(window.$$rootUrl, top.Url), item.Url);
-						}
-						catch (e) {
-							// do nothing
-						}
-					}
-					this.$store.commit('navigate', { url: url, title: item.Name });
-				}
-				else
-					console.error('no top menu found');
-			},
-			itemHref(item) {
-				let top = this.topMenu;
-				if (top) {
-					return urlTools.combine(top.Url, item.Url);
-				}
-				return undefined;
-			},
-			toggle() {
-				this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
-				try {
-					// avoid EDGE error QuotaExceeded
-					localStorage.setItem('sideBarCollapsed', this.$parent.sideBarCollapsed);
-				}
-				catch (e) {
-					// do nothing
-				}
-			}
-		}
-	};
-
-	const a2SideBar = {
-		//TODO: 
-		// 1. various menu variants
-		// 2. folderSelect as function 
-		template: `
-<div :class="cssClass">
-	<a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
-	<div class="side-bar-body" v-if="bodyIsVisible">
-		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
-			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
-			subitems: 'Menu', expandAll:true,
-			icon:'Icon', wrapLabel: true, hasIcon: true}">
-		</tree-view>
-	</div>
-	<div v-else class="side-bar-title" @click.prevent="toggle">
-		<span class="side-bar-label" v-text="title"></span>
-	</div>
-</div>
-`,
-		mixins: [sideBarBase],
-		computed: {
-			bodyIsVisible() {
-				return !this.$parent.sideBarCollapsed || this.compact;
-			},
-			title() {
-				let sm = this.sideMenu;
-				if (!sm)
-					return UNKNOWN_TITLE;
-				let seg1 = this.seg1;
-				let am = menu.findMenu(sm, (mi) => mi.Url === seg1);
-				if (am)
-					return am.Name || UNKNOWN_TITLE;
-				return UNKNOWN_TITLE;
-			}
-		},
-		methods: {
-			folderSelect(item) {
-				return !!item.Url;
-			}
-		}
-	};
-
 	const contentView = {
 		render(h) {
 			return h('div', {
@@ -306,9 +183,9 @@
 		store,
 		template: `
 <div :class=cssClass class=main-view>
-	<component :is=navBarComponent :title=title :menu=menu v-if=navBarVisible 
+	<component :is=navBarComponent :title=title :menu=menu v-if=showNavBar 
 		:period=period :is-navbar-menu=isNavBarMenu></component>
-	<a2-side-bar :menu=menu v-show=sideBarVisible :compact=isSideBarCompact></a2-side-bar>
+	<component :is=sideBarComponent v-if=sideBarVisible :menu=menu :mode=sideBarMode></component>
 	<a2-content-view :pages=pages></a2-content-view>
 	<div class=load-indicator v-show=pendingRequest></div>
 	<div class=modal-stack v-if=hasModals>
@@ -321,7 +198,9 @@
 		components: {
 			'a2-nav-bar': navBar.standardNavBar,
 			'a2-nav-bar-page': navBar.pageNavBar,
-			'a2-side-bar': a2SideBar,
+			'a2-side-bar': sideBar.standardSideBar,
+			'a2-side-bar-compact': sideBar.compactSideBar,
+			'a2-side-bar-tab': sideBar.tabSideBar,
 			'a2-content-view': contentView,
 			'a2-modal': modal,
 			'a2-toastr': toastr
@@ -347,11 +226,18 @@
 			navBarComponent() {
 				return this.isNavBarMenu ? 'a2-nav-bar-page' : 'a2-nav-bar';
 			},
-			route() {
-				return this.$store.getters.route;
+			sideBarComponent() {
+				if (this.sideBarMode === 'Compact')
+					return 'a2-side-bar-compact';
+				else if (this.sideBarMode === 'TabBar')
+					return 'a2-side-bar-tab';
+				return 'a2-side-bar';
 			},
 			isSideBarCompact() {
 				return this.sideBarMode === 'Compact';
+			},
+			route() {
+				return this.$store.getters.route;
 			},
 			sideBarInitialCollapsed() {
 				let sb = localStorage.getItem('sideBarCollapsed');
@@ -372,10 +258,17 @@
 				let route = this.route;
 				return route.seg0 !== 'app' && route.len === 3;
 			},
+			isSideBarTop() {
+				return this.sideBarMode === 'TabBar';
+			},
 			cssClass() {
-				let cls = this.isNavBarMenu ? 'nav-bar-menu ' : '';
-				return cls + (this.isSideBarCompact ? 'side-bar-compact-' : 'side-bar-') +
-					(this.sideBarCollapsed ? 'collapsed' : 'expanded');
+				let cls = (this.isNavBarMenu ? 'nav-bar-menu ' : '') +
+					'side-bar-position-' + (this.isSideBarTop ? 'top ' : 'left ');
+				if (this.isSideBarTop)
+					cls += !this.sideBarVisible ? 'side-bar-hidden' : '';
+				else
+					cls += this.sideBarCollapsed ? 'collapsed' : 'expanded';
+				return cls;
 			},
 			pendingRequest() { return !this.hasModals && this.requestsCount > 0; },
 			hasModals() { return this.modals.length > 0; },

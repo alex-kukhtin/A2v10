@@ -16,7 +16,8 @@
 		props: {
 			dialogId: String,
 			dialogTitle: String,
-			width: String
+			width: String,
+			noClose: Boolean
 		},
 		data() {
 			return {
@@ -33,6 +34,7 @@
 		},
 		methods: {
 			__keyUp(event) {
+				if (this.noClose) return;
 				if (event.which === 27) {
 					eventBus.$emit('inlineDialog', { cmd: 'close', id: this.dialogId });
 					event.stopPropagation();

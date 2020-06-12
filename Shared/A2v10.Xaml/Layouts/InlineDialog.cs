@@ -10,6 +10,7 @@ namespace A2v10.Xaml
 
 		public String Title { get; set; }
 		public Length Width { get; set; }
+		public Boolean NoClose { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -22,6 +23,8 @@ namespace A2v10.Xaml
 			onRender?.Invoke(dlg);
 			dlg.AddCssClassBoolNo(UserSelect, "user-select");
 			dlg.MergeAttribute("dialog-id", Id);
+			if (NoClose)
+				dlg.MergeAttribute(":no-close", "true");
 			MergeBindingAttributeString(dlg, context, "dialog-title", nameof(Title), Title);
 			if (Width != null)
 				dlg.MergeAttribute("width", Width.Value);
@@ -57,7 +60,10 @@ namespace A2v10.Xaml
 				span.Render(context);
 			}
 			var close = new TagBuilder("button", "btnclose");
-			close.MergeAttribute("@click.prevent", $"$inlineClose('{Id}', false)");
+			if (NoClose)
+				close.MergeAttribute("disabled", "true");
+			else
+				close.MergeAttribute("@click.prevent", $"$inlineClose('{Id}', false)");
 			close.SetInnerText("&#x2715;");
 			close.Render(context);
 			header.RenderEnd(context);

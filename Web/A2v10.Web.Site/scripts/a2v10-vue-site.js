@@ -4725,7 +4725,7 @@ template: `
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200129-7624*/
+/*20200612-7673*/
 // controllers/base.js
 
 (function () {

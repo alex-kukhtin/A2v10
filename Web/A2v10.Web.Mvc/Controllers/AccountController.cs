@@ -81,7 +81,8 @@ namespace A2v10.Web.Mvc.Controllers
 				layout.Replace("$(HelpUrl)", _host.HelpUrl);
 				layout.Replace("$(Description)", _host.AppDescription);
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
-				layout.Replace("@(SiteMeta)", Request.GetSiteMetaTags(_host));
+				layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
+				layout.Replace("$(LayoutManifest)", _host.CustomManifest());
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
 				String regMode = _host.IsRegistrationEnabled.ToString().ToLowerInvariant();

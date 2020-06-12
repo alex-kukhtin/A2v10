@@ -64,6 +64,7 @@
 			"app/controllers/base.js",
 			"app/controllers/navmenu.js",
 			"app/controllers/navbar.js",
+			"app/controllers/sidebar.js",
 			"app/controllers/shell.js",
 			"app/controllers/tests.js"
 		],
@@ -137,6 +138,7 @@
 			"app/controllers/base.js",
 			"app/controllers/navmenu.js",
 			"app/controllers/navbar.js",
+			"app/controllers/sidebar.js",
 			"app/mobile/shell.js",
 			"app/controllers/tests.js"
 		],
@@ -215,6 +217,7 @@
 			"app/standalone/controller.js",
 			"app/controllers/navmenu.js",
 			"app/controllers/navbar.js",
+			"app/controllers/sidebar.js",
 			"app/standalone/shell.js"
 		],
 		"minify": {

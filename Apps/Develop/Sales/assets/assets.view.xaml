@@ -1,7 +1,7 @@
 <!-- assets dashboard -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
 	xmlns:d="clr-namespace:A2v10.Xaml.Drawing;assembly=A2v10.Xaml" 
-	Background="WhiteSmoke" Margin="-10" Absolute="-6,0,0,-6">
+	Background="WhiteSmoke">
 	<Grid AutoFlow="RowDense" Columns="Repeat(MinMax(230.34px;1*))" AlignItems="Stretch">
 		<Panel Grid.ColSpan="4" Header="Необоротні активи" Background="LightYellow"
 			 DropShadow="Shadow1">

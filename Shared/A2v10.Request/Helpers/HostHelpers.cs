@@ -48,5 +48,11 @@ namespace A2v10.Request
 			String scripts = host.ApplicationReader.ReadTextFile("_layout", "_scripts.html");
 			return scripts != null ?  host.GetAppSettings(scripts) : String.Empty;
 		}
+
+		public static String CustomManifest(this IApplicationHost host)
+		{
+			var manifestPath = Path.Combine(host.HostingPath, "manifest.json");
+			return File.Exists(manifestPath) ? "<link rel=\"manifest\" href=\"/manifest.json\">" : null;
+		}
 	}
 }

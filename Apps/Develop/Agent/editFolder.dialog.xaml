@@ -1,16 +1,35 @@
 <!-- Edit Folder -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
-        Title="Свойства папки">
+        Title="Свойства папки" Maximize="True" ButtonOnTop="True">
     <Dialog.Buttons>
         <Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}"/>
         <Button Content="Отмена" Command="{BindCmd Close}"/>
     </Dialog.Buttons>
+	<Dialog.Taskpad>
+		<Taskpad Width="300px" Collapsible="True">
+			<Grid Rows="Auto,Auto,1*" Height="100%" Padding="12px,0" Gap="20">
+			<Panel Style="Info" Collapsible="True" Header="INFORMATOIN" DropShadow="Shadow2">
+				<Block Background="LightYellow" Height="200px"></Block>
+			</Panel>
+			<Panel Style="Info" Collapsible="True" Header="INFORMATOIN" DropShadow="Shadow3">
+				<Block Background="LightYellow" Height="200px"></Block>
+			</Panel>
+			<Block Scroll="True" Height="100%" DropShadow="Shadow1">
+				<Block Background="LightYellow" Height="300px"></Block>
+			</Block>
+			</Grid>
+		</Taskpad>
+	</Dialog.Taskpad>
     <TabPanel>
         <Tab Header="Общие">
-            <Grid Columns="1*, 1*">
+            <Grid Columns="1*, 1*" Rows="Auto, 1*, Auto" Height="100%">
                 <TextBox Grid.Row="1" Grid.ColSpan="2" Label="Наименование" TabIndex="1"
                          Value="{Bind Agent.Name}"/>
-                <TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Agent.Memo}" Rows="3" Multiline="True" TabIndex="2"/>
+				<Block Scroll="True" Grid.Row="2" Background="LightYellow" Height="100%" DropShadow="Shadow2">
+					<Block Height="700px"></Block>
+				</Block>
+				<TextBox Grid.Row="3" Grid.ColSpan="2" Label="Примечание" AutoSize="True"
+						 Value="{Bind Agent.Memo}" Rows="3" Multiline="True" TabIndex="2"/>
             </Grid>
         </Tab>    
     </TabPanel>

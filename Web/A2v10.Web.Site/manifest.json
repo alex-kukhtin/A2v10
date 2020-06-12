@@ -1,0 +1,21 @@
+{
+	"dir": "ltr",
+	"lang": "Ukrainian",
+	"name": "Test Application",
+	"scope": "/",
+	"display": "fullscreen",
+	"start_url": "https://localhost:44301/",
+	"short_name": "TestApplication",
+	"theme_color": "#dd2c5e",
+	"description": "",
+	"orientation": "landscape",
+	"background_color": "#dd2c5e",
+	"generated": "false",
+	"icons": [
+		{
+			"src": "https://localhost:44301/favicon.ico",
+			"sizes": "16x16 32x32 48x48 64x64"
+		}
+	]
+}
+	
