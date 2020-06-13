@@ -6,6 +6,13 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+	public enum PropertyGridStyle
+	{
+		Default,
+		Compact, 
+		Small
+	}
+
 	[ContentProperty("Children")]
 	public class PropertyGrid : UIElement, ITableControl
 	{
@@ -17,6 +24,7 @@ namespace A2v10.Xaml
 		public Boolean Compact { get; set; }
 		public Boolean Striped { get; set; }
 		public String TestId { get; set; }
+		public PropertyGridStyle Style { get; set; }
 
 		public PropertyGridItems Children { get; set; } = new PropertyGridItems();
 		public GridLinesVisibility GridLines { get; set; }
@@ -28,6 +36,7 @@ namespace A2v10.Xaml
 			var table = new TagBuilder("table", "prop-grid", IsInGrid);
 			onRender?.Invoke(table);
 			table.AddCssClassBool(Compact, "compact");
+			SetStyle(table);
 			table.AddCssClassBool(Striped, "striped");
 			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
 				table.MergeAttribute("test-id", TestId);
@@ -72,6 +81,19 @@ namespace A2v10.Xaml
 				Children.Render(context);
 			}
 			tbody.RenderEnd(context);
+		}
+
+		void SetStyle(TagBuilder tag)
+		{
+			switch (Style)
+			{
+				case PropertyGridStyle.Compact:
+					tag.AddCssClass("compact");
+					break;
+				case PropertyGridStyle.Small:
+					tag.AddCssClass("small");
+					break;
+			}
 		}
 	}
 }

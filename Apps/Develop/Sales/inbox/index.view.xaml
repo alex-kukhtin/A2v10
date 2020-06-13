@@ -1,10 +1,11 @@
 <!-- Invoice index -->
-<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" UserSelect="True">
 	<Page.Toolbar>
 		<Toolbar>
 			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url='/sales/inbox/open', Argument={Bind Inbox}, NewWindow=False}">Открыть</Button>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
+			<TextBox Label="@[Filter]" Placeholder="@[Placeholder.Search]"></TextBox>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>
@@ -29,6 +30,14 @@
 		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Open, Url='/sales/inbox/open'}"  Icon="Workflow1" Wrap="NoWrap"/>
 		<DataGridColumn Header="Text" Content="{Bind Text}" />
 		<DataGridColumn Header="Bookmark" Content="{Bind Bookmark}" />
+		<DataGridColumn Header="Коды">
+			<PropertyGrid GridLines="Horizontal" Style="Small">
+				<PropertyGridItem Name="Bookmark" Content="{Bind Bookmark}"/>
+				<PropertyGridItem Name="Text" Content="{Bind Text}" Bold="True" Wrap="NoWrap"/>
+				<PropertyGridItem Name="Id" Content="{Bind Id}" />
+				<PropertyGridItem Name="TestNull" Content="{Bind $TestNull}" HideEmpty="True"/>
+			</PropertyGrid>
+		</DataGridColumn>
 		<DataGridColumn Header="Action" Content="{Bind Action}" />
 		<DataGridColumn Header="For" Content="{Bind For}" />
 		<DataGridColumn Header="ForId" Content="{Bind ForId}" />

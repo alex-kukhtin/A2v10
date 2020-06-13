@@ -4937,6 +4937,9 @@ table.prop-grid.compact {
 table.prop-grid.compact td {
   padding: 2px 4px;
 }
+table.prop-grid.small td {
+  padding: 0 2px;
+}
 label.checkbox,
 label.radio {
   cursor: pointer;

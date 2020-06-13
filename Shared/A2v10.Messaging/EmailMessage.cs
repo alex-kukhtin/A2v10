@@ -18,6 +18,7 @@ namespace A2v10.Messaging
 
 		public MessageAddress From { get; set; }
 		public MessageAddressCollection To { get; set; } = new MessageAddressCollection();
+		public MessageAddressCollection CC { get; set; } = new MessageAddressCollection();
 		public MessageAddressCollection Bcc { get; set; } = new MessageAddressCollection();
 
 		public async override Task<IMessageForSend> ResolveAndSendAsync(MessageResolver resolver)
@@ -30,7 +31,8 @@ namespace A2v10.Messaging
 			};
 			await nm.LoadBodyTemplate(this, resolver);
 			nm.To = await ResolveCollectionAsync(To, resolver);
-			nm.Bcc = await  ResolveCollectionAsync(Bcc, resolver);
+			nm.Bcc = await ResolveCollectionAsync(Bcc, resolver);
+			nm.CC = await ResolveCollectionAsync(CC, resolver);
 			if (From != null)
 				nm.From = new MessageAddress(await resolver.ResolveAsync(this, From.Address), await resolver.ResolveAsync(this, From.DisplayName));
 			return nm;
@@ -49,9 +51,16 @@ namespace A2v10.Messaging
 
 		public async Task SendAsync(IMessageService emailService)
 		{
-			if (To.Count != 1)
-				throw new MessagingException($"Invalid TO for message. Count = {To.Count}");
-			await emailService.SendAsync(To[0].Address, Subject, Body);
+			var info = emailService.CreateSendInfo();
+			info.Subject = Subject;
+			info.Body = Body;
+			foreach (var t in To)
+				info.AddTo(t.Address, t.DisplayName);
+			foreach (var c in CC)
+				info.AddCC(c.Address, c.DisplayName);
+			foreach (var b in Bcc)
+				info.AddBcc(b.Address, b.DisplayName);
+			await emailService.SendAsync(info);
 		}
 
 		async Task LoadBodyTemplate(EmailMessage msg, MessageResolver resolver)

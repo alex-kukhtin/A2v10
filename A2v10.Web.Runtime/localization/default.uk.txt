@@ -62,6 +62,7 @@
 @NewElement=Новий елемент
 @Cancel=Скасувати
 @Select=Обрати
+@Filter=Фільтр
 ;
 @Code=Код
 @Date=Дата
@@ -85,4 +86,5 @@
 @Error.FileFormatException=Некоректний формат файлу
 @Error.DataReadOnly=База даних тільки для читання
 @UIError.AccessDenied=UI:Доступ заборонено
-
+;
+@Placeholder.Search=Введіть текст для пошуку

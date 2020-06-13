@@ -6,6 +6,8 @@
 @h-padding: 6px;
 @v-pading-compact: 2px;
 @h-padding-compact: 4px;
+@v-pading-small:0;
+@h-padding-small:2px;
 
 table.prop-grid {
 	width: 100%;
@@ -22,7 +24,7 @@ table.prop-grid {
 	}
 
 	td.prop-name {
-		color: #999;
+		color: @label-color;
 	}
 
 	td.prop-value {
@@ -33,10 +35,11 @@ table.prop-grid {
 
 	&.grid-horizontal {
 		td.prop-name {
-			padding-left:0;
+			padding-left: 0;
 		}
+
 		td.prop-value {
-			padding-right:0;
+			padding-right: 0;
 		}
 	}
 
@@ -60,5 +63,13 @@ table.prop-grid.compact {
 	font-size: .95rem;
 	td {
 		padding: @v-pading-compact @h-padding-compact;
+	}
+}
+
+table.prop-grid.small {
+	//font-size: .9rem;
+
+	td {
+		padding: @v-pading-small @h-padding-small;
 	}
 }

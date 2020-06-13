@@ -386,7 +386,11 @@ namespace A2v10.Request
 			if (String.IsNullOrEmpty(to))
 				return;
 			String subject = "Feedback from service";
-			await _messageService.SendAsync(to, subject, body);
+			var msginfo = _messageService.CreateSendInfo();
+			msginfo.Subject = subject;
+			msginfo.Body = body;
+			msginfo.AddTo(to);
+			await _messageService.SendAsync(msginfo);
 		}
 
 		void RenderErrorDialog(TextWriter writer, String message)

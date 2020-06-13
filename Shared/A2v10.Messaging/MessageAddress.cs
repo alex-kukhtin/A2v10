@@ -1,22 +1,25 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using A2v10.Infrastructure;
 
 namespace A2v10.Messaging
 {
 
 	[TypeConverter(typeof(MessageAddressConverter))]
-	public class MessageAddress
+	public class MessageAddress : IMessageAddress
 	{
 		public String Address { get; set; }
 		public String DisplayName { get; set; }
 
+		public String Phone { get; set; }
+		public AddressKind Kind { get; }
+
 		public MessageAddress()
 		{
-
 		}
 
 		public MessageAddress(String addr, String displayName = null)

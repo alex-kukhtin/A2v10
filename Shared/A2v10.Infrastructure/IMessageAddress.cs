@@ -15,9 +15,10 @@ namespace A2v10.Infrastructure
 
 	public interface IMessageAddress
 	{
-		AddressKind Kind { get; }
 		String Address { get; }
 		String DisplayName { get; }
+
+		AddressKind Kind { get; }
 		String Phone { get; }
 	}
 }

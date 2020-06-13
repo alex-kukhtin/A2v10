@@ -1,6 +1,8 @@
 ﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -22,6 +24,11 @@ namespace A2v10.Messaging
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
 			_host = host ?? throw new ArgumentNullException(nameof(host));
+		}
+
+		public IMessageSendInfo CreateSendInfo()
+		{
+			return new MessageSendInfo();
 		}
 
 		void HackSubjectEncoding(MailMessage mm, String subject)
@@ -59,8 +66,29 @@ namespace A2v10.Messaging
 			client.Credentials = new NetworkCredential(config.userName, config.password);
 		}
 
-		public async Task SendAsync(String to, String subject, String body)
+		void SetAddress(IEnumerable<IMessageAddress> to, MailAddressCollection coll)
 		{
+			if (to == null)
+				return;
+			foreach (var ma in to)
+			{
+				var abs = ma.Address.Trim();
+				if (!String.IsNullOrEmpty(abs))
+				{
+					if (abs.Contains(';'))
+					{
+						foreach (var x in abs.Split(';'))
+							coll.Add(new MailAddress(x.Trim()));
+					}
+					else
+						coll.Add(new MailAddress(abs, ma.DisplayName));
+				}
+			}
+		}
+
+		public async Task SendAsync(IMessageSendInfo info)
+		{
+			String toAsString = String.Join(";", info.To.Select(x => x.Address));
 			try
 			{
 				using (var client = new SmtpClient())
@@ -72,17 +100,21 @@ namespace A2v10.Messaging
 					{
 						if (config != null && !String.IsNullOrEmpty(config.from))
 							mm.From = new MailAddress(config.from);
-						foreach (var addr in to.Split(';'))
-							mm.To.Add(new MailAddress(addr.Trim()));
+
+						SetAddress(info.To, mm.To);
+						SetAddress(info.CC, mm.CC);
+						SetAddress(info.Bcc, mm.Bcc);
+
 						mm.BodyTransferEncoding = TransferEncoding.Base64;
 						mm.SubjectEncoding = Encoding.Unicode;
 						mm.HeadersEncoding = Encoding.UTF8;
 						mm.BodyEncoding = Encoding.UTF8;
 
-						mm.Subject = subject;
-						HackSubjectEncoding(mm, subject);
+						mm.Subject = info.Subject;
+						HackSubjectEncoding(mm, info.Subject);
 
-						mm.Body = body;
+
+						mm.Body = info.Body;
 
 						mm.IsBodyHtml = true;
 
@@ -91,17 +123,17 @@ namespace A2v10.Messaging
 						//mm.AlternateViews.Add(av);
 
 						// sync variant. avoid exception loss
-						_logger.LogMessaging(GetJsonResult("send", to));
+						_logger.LogMessaging(GetJsonResult("send", toAsString));
 						// avoid SmtpClient deadlock 
 						await Task.Run(() => client.Send(mm));
 						//await client.SendMailAsync(mm);
-						_logger.LogMessaging(GetJsonResult("result", to, "success"));
+						_logger.LogMessaging(GetJsonResult("result", toAsString, "success"));
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				LogException(to, ex);
+				LogException(toAsString, ex);
 				throw; // rethrow
 			}
 		}

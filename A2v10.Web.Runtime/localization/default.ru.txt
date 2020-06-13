@@ -62,6 +62,7 @@
 @NewElement=Новый элемент
 @Cancel=Отмена
 @Select=Выбрать
+@Filter=Фильтр
 ;
 @Code=Код
 @Date=Дата
@@ -85,3 +86,5 @@
 @Error.FileFormatException=Некорректный формат файла
 @Error.DataReadOnly=База данных только для чтения
 @UIError.AccessDenied=UI:Доступ запрещен
+;
+@Placeholder.Search=Введите текст для поиска

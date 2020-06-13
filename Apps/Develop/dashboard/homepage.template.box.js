@@ -22,6 +22,9 @@ const template = {
 			this.$ctrl.$inlineOpen('Service');
 
 		},
+		showNested() {
+			this.$ctrl.$inlineOpen('Nested');
+		},
 		dlgCommand(arg) {
 			alert('dlgCommand:' + arg);
 		}

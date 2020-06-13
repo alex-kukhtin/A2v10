@@ -148,6 +148,16 @@
 		</Grid>
 		<InlineDialog.Buttons>
 			<Button Content="Close" Command="{BindCmd Close}"/>
+			<Button Content="Nested" Command="{BindCmd Execute, CommandName=showNested}"/>
+		</InlineDialog.Buttons>
+	</InlineDialog>
+	<InlineDialog Id="Nested">
+		<Grid>
+			<Button Block="True">Button 3</Button>
+			<TextBox></TextBox>
+		</Grid>
+		<InlineDialog.Buttons>
+			<Button Content="Close" Command="{BindCmd Close}"/>
 		</InlineDialog.Buttons>
 	</InlineDialog>
 </Page>

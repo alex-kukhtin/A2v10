@@ -63,6 +63,7 @@
 @NewElement=New item
 @Cancel=Cancel
 @Select=Select
+@Filter=Filter
 ;
 @Code=Code
 @Date=Date
@@ -86,5 +87,7 @@
 @Error.FileFormatException=File contains corrupted data
 @Error.DataReadOnly=The database is read-only
 @UIError.AccessDenied=UI:Access denied
+;
+@Placeholder.Search=Type text to search
 
 

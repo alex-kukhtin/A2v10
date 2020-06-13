@@ -23,13 +23,24 @@ namespace A2v10.Xaml
 
 		public Boolean? Bold { get; set; }
 
+		public Boolean HideEmpty { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
+
+			var contBind = GetBinding(nameof(Content));
+
 			var tr = new TagBuilder("tr");
 			onRender?.Invoke(tr);
 			MergeAttributes(tr, context);
+
+			if (HideEmpty && GetBinding(nameof(If)) == null &&  contBind != null)
+			{
+				tr.MergeAttribute("v-if", contBind.GetPathFormat(context));
+			}
+
 			tr.RenderStart(context);
 
 			var nameCell = new TagBuilder("td", "prop-name");
@@ -43,7 +54,6 @@ namespace A2v10.Xaml
 
 			var valCell = new TagBuilder("td", "prop-value");
 			valCell.AddCssClassBoolNo(Bold, "bold");
-			var contBind = GetBinding(nameof(Content));
 			if (contBind != null)
 			{
 				valCell.MergeAttribute("v-text", contBind.GetPathFormat(context));

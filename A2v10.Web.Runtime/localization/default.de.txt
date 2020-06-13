@@ -62,6 +62,7 @@
 @NewElement=Neues Element
 @Cancel=Abbrechen
 @Select=Auswählen
+@Filter=Filter
 ;
 @Code=Code
 @Date=Datum
@@ -84,3 +85,6 @@
 @Error.Exception=Etwas ist unerwartet schief gelaufen :-(
 @Error.FileFormatException=Falsches Dateiformat
 @Error.DataReadOnly=Datenbank ist schreibgeschützt
+;
+@Placeholder.Search=Geben Sie Ihren Suchtext ein
+

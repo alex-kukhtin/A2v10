@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System.Threading.Tasks;
 
@@ -18,7 +18,11 @@ namespace A2v10.Web.Identity
 
 		public Task SendAsync(IdentityMessage message)
 		{
-			return SendAsync(message.Destination, message.Subject, message.Body);
+			var si = this.CreateSendInfo();
+			si.Subject = message.Subject;
+			si.Body = message.Body;
+			si.AddTo(message.Destination);
+			return SendAsync(si);
 		}
 	}
 }
