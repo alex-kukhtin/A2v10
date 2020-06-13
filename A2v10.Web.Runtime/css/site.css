@@ -3464,6 +3464,23 @@ table.data-grid > tbody > tr.bold > td {
   background: white;
   border: 1px dotted #ccc;
 }
+.toolbar.light {
+  background-color: transparent;
+  padding: 2px;
+}
+.toolbar.light .btn-tb {
+  color: #208cf8;
+  padding: 2px 0;
+}
+.toolbar.light > .divider {
+  flex-grow: 0;
+  border-right-color: #dbdbdb;
+  background-color: #ebebeb;
+}
+.toolbar.light .dropdown.show .btn {
+  background: white;
+  border: 1px dotted #ccc;
+}
 .toolbar > .btn,
 .toolbar > .dropdown > .btn {
   padding: 4px 6px 5px 6px;

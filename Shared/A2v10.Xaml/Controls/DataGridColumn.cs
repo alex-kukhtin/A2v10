@@ -171,12 +171,12 @@ namespace A2v10.Xaml
 				case ColumnRole.Id:
 				case ColumnRole.Number:
 					// fit, nowrap, right
-					column.MergeAttribute("fit", "true", true);
+					column.MergeAttribute(":fit", "true", true);
 					column.MergeAttribute("wrap", "no-wrap", true);
 					column.MergeAttribute("align", "right", true);
 					break;
 				case ColumnRole.Date:
-					column.MergeAttribute("fit", "true", true);
+					column.MergeAttribute(":fit", "true", true);
 					column.MergeAttribute("wrap", "no-wrap", true);
 					column.MergeAttribute("align", "center", true);
 					break;

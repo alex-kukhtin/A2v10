@@ -41,7 +41,32 @@
 		.dropdown.show {
 			.btn {
 				background: white;
-				border:1px dotted #ccc;
+				border: 1px dotted #ccc;
+			}
+		}
+	}
+
+	&.light {
+		background-color: transparent;
+		padding: 5px 8px;
+		box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+		border:none!important;
+		z-index:1;
+
+		.btn-tb {
+			padding: 5px 6px 6px 6px;
+		}
+
+		> .divider {
+			flex-grow: 0;
+			border-right-color: lighten(#ddd, 6%);
+			background-color: lighten(#ddd, 12%);
+		}
+
+		.dropdown.show {
+			.btn {
+				background: white;
+				border: 1px dotted #ccc;
 			}
 		}
 	}
@@ -70,7 +95,7 @@
 		white-space: nowrap;
 		//background-color: @toolbar-bg-color;
 		background-color: transparent;
-		text-transform: lowercase;
+		//text-transform: lowercase;
 		color: @text-color;
 		min-width: 0;
 
@@ -122,13 +147,13 @@
 	> .control-group {
 		display: inline-flex;
 		margin: 1px 0;
-		align-self: stretch;
+		align-self: baseline;
 		background-color: transparent;
 
 		label {
 			align-self: center;
-			margin: 0 4px 0 0;
-			text-transform: lowercase;
+			margin: 0 6px 0 2px;
+			//text-transform: lowercase;
 			font-size: 100%;
 			white-space: nowrap;
 		}

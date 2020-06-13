@@ -11,7 +11,8 @@ namespace A2v10.Xaml
 	public enum ToolbarStyle
 	{
 		Default,
-		Transparent
+		Transparent,
+		Light
 	}
 
 	public class Toolbar : Container

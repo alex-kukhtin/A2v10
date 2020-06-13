@@ -1,6 +1,6 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Title="Реестр счетов" Padding="2rem">
 	<Page.Toolbar>
-		<Toolbar>
+		<Toolbar Style="Light">
 			<PeriodPicker Value="{Bind Query.Period}" Label="Период" Width="15rem"/>
 			<Selector Value="{Bind Query.Agent}" DisplayProperty="Name" Delegate="fetchCustomers">
 				<Selector.AddOns>

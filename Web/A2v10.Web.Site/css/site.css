@@ -3464,6 +3464,25 @@ table.data-grid > tbody > tr.bold > td {
   background: white;
   border: 1px dotted #ccc;
 }
+.toolbar.light {
+  background-color: transparent;
+  padding: 5px 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  border: none!important;
+  z-index: 1;
+}
+.toolbar.light .btn-tb {
+  padding: 5px 6px 6px 6px;
+}
+.toolbar.light > .divider {
+  flex-grow: 0;
+  border-right-color: #ececec;
+  background-color: #fcfcfc;
+}
+.toolbar.light .dropdown.show .btn {
+  background: white;
+  border: 1px dotted #ccc;
+}
 .toolbar > .btn,
 .toolbar > .dropdown > .btn {
   padding: 4px 6px 5px 6px;
@@ -3483,7 +3502,6 @@ table.data-grid > tbody > tr.bold > td {
   padding: 4px 6px 5px 6px;
   white-space: nowrap;
   background-color: transparent;
-  text-transform: lowercase;
   color: #222;
   min-width: 0;
 }
@@ -3524,13 +3542,12 @@ table.data-grid > tbody > tr.bold > td {
 .toolbar > .control-group {
   display: inline-flex;
   margin: 1px 0;
-  align-self: stretch;
+  align-self: baseline;
   background-color: transparent;
 }
 .toolbar > .control-group label {
   align-self: center;
-  margin: 0 4px 0 0;
-  text-transform: lowercase;
+  margin: 0 6px 0 2px;
   font-size: 100%;
   white-space: nowrap;
 }

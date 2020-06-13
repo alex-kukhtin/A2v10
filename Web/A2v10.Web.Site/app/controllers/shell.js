@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200604-7671*/
+/*20200613-7673*/
 /* controllers/shell.js */
 
 (function () {
@@ -183,7 +183,7 @@
 		store,
 		template: `
 <div :class=cssClass class=main-view>
-	<component :is=navBarComponent :title=title :menu=menu v-if=showNavBar 
+	<component :is=navBarComponent :title=title :menu=menu v-if=isNavBarVisible 
 		:period=period :is-navbar-menu=isNavBarMenu></component>
 	<component :is=sideBarComponent v-if=sideBarVisible :menu=menu :mode=sideBarMode></component>
 	<a2-content-view :pages=pages></a2-content-view>
@@ -248,10 +248,12 @@
 					return true;
 				return false;
 			},
-			navBarVisible() {
+			isNavBarVisible() {
 				if (!this.showNavBar) return false;
+				if (this.isNavBarMenu) return true;
 				let route = this.route;
 				if (menu.isSeparatePage(this.pages, route.seg0)) return false;
+				console.dir(route.len);
 				return route.seg0 !== 'app' && (route.len === 2 || route.len === 3);
 			},
 			sideBarVisible() {

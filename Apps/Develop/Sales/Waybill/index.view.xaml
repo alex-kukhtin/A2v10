@@ -7,7 +7,7 @@
 		<sys:String x:Key="OpenUrl">/Sales/Waybill/Edit</sys:String>
 	</Page.Resources>
 	<Page.Toolbar>
-		<Toolbar>
+		<Toolbar Style="Light">
 			<Button Icon="Add" Tip="Создать накладную" Command="{BindCmd Create, Url={StaticResource OpenUrl}}">Создать</Button>
 			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">Открыть</Button>
 			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?', Permission=CanEdit}">Удалить</Button>
