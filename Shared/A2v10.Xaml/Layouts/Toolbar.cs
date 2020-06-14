@@ -15,6 +15,13 @@ namespace A2v10.Xaml
 		Light
 	}
 
+	public enum ToolbarBorderStyle
+	{
+		None,
+		Bottom,
+		BottomShadow
+	}
+
 	public class Toolbar : Container
 	{
 
@@ -48,6 +55,7 @@ namespace A2v10.Xaml
 		#endregion
 
 		public ToolbarStyle Style { get; set; }
+		public ToolbarBorderStyle Border { get; set; }
 		public AlignItems AlignItems { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -61,6 +69,8 @@ namespace A2v10.Xaml
 			if (AlignItems != AlignItems.Default)
 				tb.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
 			MergeAttributes(tb, context);
+			if (Border != ToolbarBorderStyle.None)
+				tb.AddCssClass("tb-border-" + Border.ToString().ToKebabCase());
 			tb.RenderStart(context);
 			RenderChildren(context);
 			tb.RenderEnd(context);

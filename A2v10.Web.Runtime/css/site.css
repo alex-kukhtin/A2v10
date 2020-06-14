@@ -1196,7 +1196,7 @@ td.vert > .vcell {
   margin: 70px auto;
   color: #ccc;
 }
-.empty-panel .ico {
+.empty-panel > .ico {
   font-size: 4rem;
   display: block;
   margin: 12px;
@@ -2537,7 +2537,7 @@ pre.a2-code {
   outline-width: 1px;
 }
 .btn:disabled {
-  opacity: 0.65;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 .btn > .ico {
@@ -3434,16 +3434,24 @@ table.data-grid > tbody > tr.bold > td {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding: 2px;
+  padding: 2px 4px;
   overflow: visible;
   background-color: #cfd6e5;
   color: #555;
+  z-index: 1;
 }
 .toolbar .checkbox {
   margin: 0 6px;
 }
 .toolbar.no-wrap {
   flex-wrap: nowrap;
+}
+.toolbar.tb-border-bottom {
+  border-bottom: 1px solid #ddd;
+}
+.toolbar.tb-border-bottom-shadow {
+  border-bottom: none!important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 .toolbar > .control-group.first-elem label {
   margin-left: 6px;
@@ -3456,7 +3464,6 @@ table.data-grid > tbody > tr.bold > td {
   color: #208cf8;
 }
 .toolbar.transparent > .divider {
-  flex-grow: 0;
   border-right-color: #e3e7f0;
   background-color: #f7f8fb;
 }
@@ -3465,17 +3472,11 @@ table.data-grid > tbody > tr.bold > td {
   border: 1px dotted #ccc;
 }
 .toolbar.light {
-  background-color: transparent;
-  padding: 2px;
-}
-.toolbar.light .btn-tb {
-  color: #208cf8;
-  padding: 2px 0;
+  background-color: white;
 }
 .toolbar.light > .divider {
-  flex-grow: 0;
-  border-right-color: #dbdbdb;
-  background-color: #ebebeb;
+  border-right-color: #ececec;
+  background-color: #fcfcfc;
 }
 .toolbar.light .dropdown.show .btn {
   background: white;
@@ -3496,38 +3497,9 @@ table.data-grid > tbody > tr.bold > td {
   border-color: #e5c365;
   outline: none;
 }
-.toolbar .btn-tb {
-  padding: 4px 6px 5px 6px;
-  white-space: nowrap;
-  background-color: transparent;
-  text-transform: lowercase;
-  color: #222;
-  min-width: 0;
-}
-.toolbar .btn-tb:focus {
-  outline: 1px dotted #9dacca;
-  outline-offset: -2px;
-}
-.toolbar .btn-tb:hover {
-  background-color: #fdf4bf;
-  border-color: #e5c365;
-  outline: none;
-}
-.toolbar .btn-tb:active {
-  background-color: #fff29d;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
-  border-color: #e5c365;
-  outline: none;
-}
-.toolbar .btn-tb:disabled {
-  color: #777;
-}
-.toolbar .btn-tb:disabled:hover {
-  background-color: transparent;
-  border-color: transparent;
-}
 .toolbar .a2-header {
   margin: 0;
+  align-self: baseline;
 }
 .toolbar > .divider {
   flex-grow: 0;
@@ -3536,23 +3508,57 @@ table.data-grid > tbody > tr.bold > td {
   border-right: 1px solid #e0e4ee;
   align-self: stretch;
   background-color: #9dacca;
-  margin: 1px 4px;
+  margin: 2px 4px;
 }
 .toolbar > .control-group {
   display: inline-flex;
-  margin: 1px 0;
-  align-self: stretch;
+  margin: 2px 0;
+  align-self: baseline;
   background-color: transparent;
+}
+.toolbar > .control-group .input-group {
+  min-height: 28px;
 }
 .toolbar > .control-group label {
   align-self: center;
-  margin: 0 4px 0 0;
-  text-transform: lowercase;
+  margin: 0 6px 0 2px;
   font-size: 100%;
   white-space: nowrap;
+  line-height: 1;
 }
 .toolbar .control-group + .control-group {
   margin-left: 6px;
+}
+.btn-tb {
+  padding: 5px 6px 6px 6px;
+  white-space: nowrap;
+  background-color: transparent;
+  color: #222;
+  min-width: 0;
+  min-height: 28px;
+  margin: 2px 0;
+}
+.btn-tb:focus {
+  outline: 1px dotted #9dacca;
+  outline-offset: -2px;
+}
+.btn-tb:hover {
+  background-color: #fdf4bf;
+  border-color: #e5c365;
+  outline: none;
+}
+.btn-tb:active {
+  background-color: #fff29d;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+  border-color: #e5c365;
+  outline: none;
+}
+.btn-tb:disabled {
+  color: #999;
+}
+.btn-tb:disabled:hover {
+  background-color: transparent;
+  border-color: transparent;
 }
 .btn-tb > i.ico {
   display: inline-block;
