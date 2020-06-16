@@ -23,6 +23,7 @@ namespace A2v10.Web.Config
 	{
 		private readonly IProfiler _profiler;
 		private readonly Boolean _emulateBox = false;
+		private Boolean _admin;
 
 		public WebApplicationHost(IProfiler profiler)
 		{
@@ -35,6 +36,7 @@ namespace A2v10.Web.Config
 
 		public Boolean Mobile { get; set; }
 		public Boolean Embedded => false;
+		public Boolean IsAdminMode => _admin;
 
 		#region IDataConfiguration
 
@@ -146,7 +148,7 @@ namespace A2v10.Web.Config
 		}
 
 		public Boolean IsMultiTenant => IsAppSettingsIsTrue("multiTenant");
-		public Boolean IsMultiCompany => IsAppSettingsIsTrue("multiCompany");
+		public Boolean IsMultiCompany => !_admin && IsAppSettingsIsTrue("multiCompany");
 		public Boolean IsRegistrationEnabled => IsAppSettingsIsTrue("registration");
 		public Boolean IsDTCEnabled => IsAppSettingsIsTrue("enableDTC");
 		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
@@ -211,6 +213,11 @@ namespace A2v10.Web.Config
 					throw new InvalidProgramException("ApplicationReader is not configured");
 				return _reader;
 			}
+		}
+
+		public void SetAdmin(bool bAdmin)
+		{
+			_admin = bAdmin;
 		}
 
 		public void StartApplication(Boolean bAdmin)

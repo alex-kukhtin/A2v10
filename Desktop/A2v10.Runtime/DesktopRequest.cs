@@ -66,8 +66,9 @@ namespace A2v10.Runtime
 			if (url.StartsWith("admin/"))
 			{
 				url = url.Substring(6);
-				_controller.Admin = true;
+				_controller.Host.SetAdmin(true);
 			}
+
 			_controller.Host.StartApplication(_controller.Admin);
 			try
 			{
@@ -374,7 +375,7 @@ namespace A2v10.Runtime
 			try
 			{
 				var fileColl = new SimpleHttpFileCollection(files);
-				var list = _controller.SaveAttachments(TenantId, url, fileColl, UserId).Result;
+				var list = _controller.SaveAttachments(TenantId, url, fileColl, UserId, CompanyId).Result;
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
 				rval.Set("ids", list);

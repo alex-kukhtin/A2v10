@@ -204,6 +204,10 @@
 			<Radio Label="Option 1" Style="CheckBox" CheckedValue="1"/>
 			<Radio Label="Option 2" Style="CheckBox" CheckedValue="2"/>
 			<Radio Label="Option 3" Style="CheckBox" CheckedValue="3"/>
+			<Grid Columns="Auto,Auto">
+				<Radio Label="Option 1" CheckedValue="1"/>
+				<Radio Label="Option 2" CheckedValue="2"/>
+			</Grid>
 		</FieldSet>
 		<Text>CheckedValue: <Span>Option 1</Span></Text>
 	</Grid>

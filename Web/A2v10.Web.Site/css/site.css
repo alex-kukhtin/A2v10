@@ -5764,7 +5764,7 @@ TODO:
   font-size: 3.6rem;
 }
 .grid {
-  display: grid;
+  display: grid!important;
   padding: 0.75rem;
   grid-gap: 0.75rem;
   align-items: flex-end;

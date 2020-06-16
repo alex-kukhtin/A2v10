@@ -23,6 +23,7 @@ namespace BackgroundProcessor
 		#region IApplicationHost
 		public IProfiler Profiler => _profiler;
 		public Boolean Mobile { get; set; }
+		public Boolean IsAdminMode => false;
 		public Boolean Embedded => false;
 
 		public String AppPath => ConfigurationManager.AppSettings["appPath"];
@@ -78,6 +79,12 @@ namespace BackgroundProcessor
 		}
 
 		IApplicationReader _reader;
+
+		public void SetAdmin(bool bAdmin)
+		{
+
+		}
+
 		public void StartApplication(Boolean bAdminMode)
 		{
 

@@ -73,7 +73,7 @@ namespace A2v10.Request
 
 		public Boolean Mobile => _host.Mobile;
 
-		public Boolean Admin { get; set; }
+		public Boolean Admin => _host.IsAdminMode;
 
 		public String CurrentLang
 		{

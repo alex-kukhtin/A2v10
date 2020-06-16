@@ -21,6 +21,7 @@ namespace A2v10.Request
 	public class AttachmentUpdateInfo
 	{
 		public Int32? TenantId { get; set; }
+		public Int64? CompanyId { get; set; }
 		public Int64 UserId { get; set; }
 		public String Key { get; set; }
 		public Object Id { get; set; }
@@ -86,7 +87,7 @@ namespace A2v10.Request
 			return await _dbContext.LoadAsync<ReturnSignatureInfo>(rm.CurrentSource, procedure, prms);
 		}
 
-		public async Task<IList<Object>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId)
+		public async Task<IList<Object>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
@@ -100,6 +101,8 @@ namespace A2v10.Request
 			};
 			if (_host.IsMultiTenant)
 				ii.TenantId = tenantId;
+			if (_host.IsMultiCompany)
+				ii.CompanyId = companyId;
 			var retList = new List<Object>();
 			for (Int32 i = 0; i < files.Count; i++)
 			{

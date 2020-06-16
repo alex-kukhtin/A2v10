@@ -94,7 +94,7 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				pathInfo = pathInfo.Substring(6);
 				// ADMIN mode
-				_baseController.Admin = true;
+				_baseController.Host.SetAdmin(true);
 			}
 
 			_baseController.Host.StartApplication(_baseController.Admin);
@@ -109,7 +109,7 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				Boolean adminShell = pathInfo.Contains("admin");
 				if (adminShell)
-					_baseController.Admin = true;
+					_baseController.Host.SetAdmin(true);
 				await Shell(pathInfo, adminShell);
 			}
 			else if (pathInfo.StartsWith("_page/"))
@@ -578,7 +578,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var files = Request.Files;
-				var list = await _baseController.SaveAttachments(TenantId, url, files, UserId);
+				var list = await _baseController.SaveAttachments(TenantId, url, files, UserId, CompanyId);
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
 				rval.Set("ids", list);

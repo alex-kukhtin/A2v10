@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 		Small = 1,
 		Medium = Default,
 		Large = 2,
+		Max = 3
 	}
 
 
@@ -71,9 +72,10 @@ namespace A2v10.Xaml
 				dialog.MergeAttribute("test-id", TestId);
 
 
-			SetSize(dialog);
 			if (Maximize)
 				dialog.MergeAttribute("v-maximize", "true");
+			else
+				SetSize(dialog);
 
 			dialog.RenderStart(context);
 
@@ -237,6 +239,13 @@ namespace A2v10.Xaml
 			if (!(Children[0] is EUSignFrame eusignFrame))
 				throw new XamlException("Invalid dialog for two-phase rendering");
 			eusignFrame.RenderTwoPhaseContent(context);
+		}
+
+		protected override void OnEndInit()
+		{
+			base.OnEndInit();
+			if (Size == DialogSize.Max)
+				Maximize = true;
 		}
 	}
 }

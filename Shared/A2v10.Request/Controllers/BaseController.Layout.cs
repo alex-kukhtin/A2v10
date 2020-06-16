@@ -139,7 +139,7 @@ namespace A2v10.Request
 						macros.Set("Period", res.Period);
 				}
 			}
-			else if (_host.IsMultiCompany)
+			else if (_host.IsMultiCompany && !bAdmin)
 			{
 				setCompany = true;
 			}
@@ -160,7 +160,7 @@ namespace A2v10.Request
 			if (setCompany)
 			{
 				var comps = dm.Root.Get<List<ExpandoObject>>("Companies");
-				var currComp = comps.Find(c => c.Get<Boolean>("Current"));
+				var currComp = comps?.Find(c => c.Get<Boolean>("Current"));
 
 				if (currComp == null)
 				{

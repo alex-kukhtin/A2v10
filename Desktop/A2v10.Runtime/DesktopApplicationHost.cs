@@ -22,6 +22,7 @@ namespace A2v10.Runtime
 	public class DesktopApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration, ISupportUserInfo
 	{
 		readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
+		private Boolean _admin;
 
 		public DesktopApplicationHost(IProfiler profiler)
 		{
@@ -32,6 +33,7 @@ namespace A2v10.Runtime
 		public Boolean Embedded => true;
 		public IProfiler Profiler { get; }
 		public Boolean Mobile { get; set; }
+		public Boolean IsAdminMode => _admin;
 
 		private static String CurrentAppPath { get; set; }
 		private static String CurrentAppKey { get; set; }
@@ -77,6 +79,12 @@ namespace A2v10.Runtime
 		}
 
 		private static IApplicationReader _reader = null;
+
+
+		public void SetAdmin(bool bAdmin)
+		{
+			_admin = bAdmin;
+		}
 
 		public void StartApplication(Boolean bAdmin)
 		{

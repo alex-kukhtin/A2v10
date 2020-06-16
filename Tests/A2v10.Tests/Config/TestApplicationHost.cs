@@ -32,6 +32,7 @@ namespace A2v10.Tests.Config
 
 		public Boolean Mobile { get; set; }
 		public Boolean Embedded => false;
+		public Boolean IsAdminMode => false;
 
 
 		public String AppPath
@@ -53,6 +54,11 @@ namespace A2v10.Tests.Config
 		}
 
 		IApplicationReader _appReader;
+
+		public void SetAdmin(bool bAdmin)
+		{
+		}
+
 		public void StartApplication(Boolean bAdmin)
 		{
 			_appReader = new FileApplicationReader(AppPath, AppKey);

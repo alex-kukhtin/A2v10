@@ -53,25 +53,27 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <None Include="Develop\Agent\model.json" />
-    <None Include="Develop\Common\Entity\model.json" />
+    <None Include="Develop\agent\model.json" />
+    <None Include="Develop\common\Entity\model.json" />
     <None Include="Develop\dashboard\model.json" />
+    <None Include="Develop\entity\model.json" />
     <None Include="Develop\links.json" />
-    <None Include="Develop\Catalog\Buildings\model.json" />
-    <None Include="Develop\Catalog\Inbox\model.json" />
-    <None Include="Develop\Catalog\MyClients\model.json" />
-    <None Include="Develop\Catalog\Upload\model.json" />
-    <None Include="Develop\Common\Agent\model.json" />
+    <None Include="Develop\catalog\Buildings\model.json" />
+    <None Include="Develop\catalog\Inbox\model.json" />
+    <None Include="Develop\catalog\MyClients\model.json" />
+    <None Include="Develop\catalog\Upload\model.json" />
+    <None Include="Develop\common\Agent\model.json" />
     <None Include="Develop\document\Reports\model.json" />
     <None Include="Develop\document\Request\index.view.xaml">
       <SubType>Designer</SubType>
     </None>
     <None Include="Develop\pos\model.json" />
-    <Content Include="Develop\Purchase\Supplier\index.view.html">
+    <Content Include="Develop\entity\editGoods.template.js" />
+    <Content Include="Develop\purchase\Supplier\index.view.html">
       <Generator>XamlIntelliSenseFileGenerator</Generator>
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Develop\Reports\model.json" />
+    <None Include="Develop\reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <None Include="Develop\sales\document\model.json" />
     <None Include="Develop\sales\invoice\define.json" />
@@ -99,15 +101,15 @@
     <None Include="VueSite\blog\model.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\Customers\model.json" />
-    <None Include="Develop\Catalog\Suppliers\model.json" />
+    <None Include="Develop\catalog\Customers\model.json" />
+    <None Include="Develop\catalog\Suppliers\model.json" />
     <None Include="Develop\document\Quotations\model.json" />
     <None Include="Develop\document\Request\model.json" />
-    <None Include="Develop\Home\model.json" />
-    <None Include="Develop\Purchase\Goods\model.json" />
-    <None Include="Develop\Purchase\Supplier\model.json" />
-    <None Include="Develop\Purchase\WaybillIn\model.json" />
-    <None Include="Develop\Purchase\WaybillIn\waybillin.mrt" />
+    <None Include="Develop\home\model.json" />
+    <None Include="Develop\purchase\Goods\model.json" />
+    <None Include="Develop\purchase\Supplier\model.json" />
+    <None Include="Develop\purchase\WaybillIn\model.json" />
+    <None Include="Develop\purchase\WaybillIn\waybillin.mrt" />
     <None Include="Develop\redirect.json" />
     <None Include="Develop\sales\catalog\model.json" />
     <None Include="Develop\sales\customer\model.json" />
@@ -129,11 +131,11 @@
     <Content Include="Admin\Identity\User\create.template.js" />
     <Content Include="Admin\Identity\User\edit.template.js" />
     <Content Include="Admin\Identity\User\index.template.js" />
-    <Content Include="Develop\Agent\editCustomer.template.js" />
-    <Content Include="Develop\Agent\editFolder.template.js" />
-    <Content Include="Develop\Agent\editSupplier.template.js" />
-    <Content Include="Develop\Purchase\Supplier\index.template.js" />
-    <Content Include="Develop\Reports\report.template.js" />
+    <Content Include="Develop\agent\editCustomer.template.js" />
+    <Content Include="Develop\agent\editFolder.template.js" />
+    <Content Include="Develop\agent\editSupplier.template.js" />
+    <Content Include="Develop\purchase\Supplier\index.template.js" />
+    <Content Include="Develop\reports\report.template.js" />
     <Content Include="Develop\sales\assets\assets.template.js" />
     <Content Include="Develop\sales\assets\diagram.html" />
     <Content Include="Develop\_assets\diagram.css" />
@@ -144,21 +146,21 @@
     <Content Include="VueSite\blog\blog.js" />
     <Content Include="VueSite\index\index.view.html" />
     <Content Include="VueSite\layout.html" />
-    <Content Include="Develop\Catalog\Buildings\index.view.html" />
-    <Content Include="Develop\Catalog\Customers\edit.template.js" />
-    <Content Include="Develop\Catalog\Customers\index.template.js" />
-    <Content Include="Develop\Catalog\Inbox\index.template.js" />
-    <Content Include="Develop\Catalog\MyClients\index.template.js" />
-    <Content Include="Develop\Catalog\Suppliers\edit.view.html" />
-    <Content Include="Develop\Catalog\Suppliers\element.template.js" />
-    <Content Include="Develop\Catalog\Suppliers\index.template.js" />
-    <Content Include="Develop\Catalog\Suppliers\edit.dialog.html" />
-    <Content Include="Develop\Catalog\Suppliers\browse.dialog.html" />
-    <Content Include="Develop\Catalog\Suppliers\index.view_old.html" />
-    <Content Include="Develop\Catalog\Suppliers\index.view.html" />
-    <Content Include="Develop\Common\Agent\index.template.js" />
-    <Content Include="Develop\Common\another.js" />
-    <Content Include="Develop\Common\module1.js" />
+    <Content Include="Develop\catalog\Buildings\index.view.html" />
+    <Content Include="Develop\catalog\Customers\edit.template.js" />
+    <Content Include="Develop\catalog\Customers\index.template.js" />
+    <Content Include="Develop\catalog\Inbox\index.template.js" />
+    <Content Include="Develop\catalog\MyClients\index.template.js" />
+    <Content Include="Develop\catalog\Suppliers\edit.view.html" />
+    <Content Include="Develop\catalog\Suppliers\element.template.js" />
+    <Content Include="Develop\catalog\Suppliers\index.template.js" />
+    <Content Include="Develop\catalog\Suppliers\edit.dialog.html" />
+    <Content Include="Develop\catalog\Suppliers\browse.dialog.html" />
+    <Content Include="Develop\catalog\Suppliers\index.view_old.html" />
+    <Content Include="Develop\catalog\Suppliers\index.view.html" />
+    <Content Include="Develop\common\Agent\index.template.js" />
+    <Content Include="Develop\common\another.js" />
+    <Content Include="Develop\common\module1.js" />
     <Content Include="Develop\dashboard\homepage.template.js" />
     <Content Include="Develop\document\common.js" />
     <Content Include="Develop\document\Quotations\element.template.js" />
@@ -171,9 +173,9 @@
     <Content Include="Develop\document\Request\entityChoice.template.js" />
     <Content Include="Develop\document\Request\index.template.js" />
     <Content Include="Develop\demo_test.js" />
-    <Content Include="Develop\Purchase\Goods\index.template.js" />
-    <Content Include="Develop\Purchase\WaybillIn\index.template.js" />
-    <Content Include="Develop\Purchase\WaybillIn\waybillin.template.js" />
+    <Content Include="Develop\purchase\Goods\index.template.js" />
+    <Content Include="Develop\purchase\WaybillIn\index.template.js" />
+    <Content Include="Develop\purchase\WaybillIn\waybillin.template.js" />
     <Content Include="Develop\sales\customer\index.template.js" />
     <Content Include="Develop\sales\inbox\index.template.js" />
     <Content Include="Develop\sales\invoice\empty.template.js" />
@@ -197,7 +199,7 @@
     <Content Include="Develop\_pages\contacts.uk.html" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\Customers\Index.view.xaml">
+    <None Include="Develop\catalog\Customers\Index.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -224,7 +226,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Home\HomePage.view.xaml">
+    <None Include="Develop\home\HomePage.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
@@ -245,22 +247,22 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\Suppliers\browse2.dialog.xaml">
+    <None Include="Develop\catalog\Suppliers\browse2.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Common\Agent\browse.dialog.xaml">
+    <None Include="Develop\common\Agent\browse.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\Customers\demo.popup.xaml">
+    <None Include="Develop\catalog\Customers\demo.popup.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\Buildings\Index.view.xaml">
+    <None Include="Develop\catalog\Buildings\Index.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -270,7 +272,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\Suppliers\edit.dialog.xaml">
+    <None Include="Develop\catalog\Suppliers\edit.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -326,7 +328,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\Inbox\Index.view.xaml">
+    <None Include="Develop\catalog\Inbox\Index.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -336,7 +338,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\MyClients\Index.view.xaml">
+    <None Include="Develop\catalog\MyClients\Index.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -361,12 +363,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\MyClients\Report1.view.xaml">
+    <None Include="Develop\catalog\MyClients\Report1.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Catalog\MyClients\Report2.view.xaml">
+    <None Include="Develop\catalog\MyClients\Report2.view.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -376,7 +378,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Develop\Localization\" />
     <Folder Include="Develop\_files\" />
     <Folder Include="Develop\_interfaces\" />
     <Folder Include="Develop\_localization\" />
@@ -386,43 +387,43 @@
     <Folder Include="_declarations\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\Agent\browseCustomer.dialog.xaml">
+    <None Include="Develop\agent\browseCustomer.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Agent\browseSupplier.dialog.xaml">
+    <None Include="Develop\agent\browseSupplier.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Agent\editCustomer.dialog.xaml">
+    <None Include="Develop\agent\editCustomer.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Agent\editFolder.dialog.xaml">
+    <None Include="Develop\agent\editFolder.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Agent\editSupplier.dialog.xaml">
+    <None Include="Develop\agent\editSupplier.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Agent\state.popup.xaml">
+    <None Include="Develop\agent\state.popup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Purchase\Goods\index.view.xaml">
+    <None Include="Develop\purchase\Goods\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Purchase\Supplier\index.view.xaml_">
+    <None Include="Develop\purchase\Supplier\index.view.xaml_">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Purchase\WaybillIn\index.view.xaml">
+    <None Include="Develop\purchase\WaybillIn\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\Purchase\WaybillIn\waybillIn.view.xaml">
+    <None Include="Develop\purchase\WaybillIn\waybillIn.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
@@ -522,7 +523,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Develop\Reports\invoice.registry.view.xaml">
+    <Content Include="Develop\reports\invoice.registry.view.xaml">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
@@ -573,6 +574,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Develop\entity\browseGoods.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Develop\entity\editGoods.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

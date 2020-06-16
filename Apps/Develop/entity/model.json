@@ -1,0 +1,25 @@
+﻿{
+	"schema": "a2demo",
+	"model": "Entity",
+  "dialogs": {
+    "browseGoods": {
+      "index": true,
+      "model": "Goods",
+      "view": "browseGoods.dialog"
+    },
+    "editGoods": {
+      "view": "editGoods.dialog",
+      "template": "editGoods.template"
+    }
+  },
+  "commands": {
+    "findArticle": {
+      "type": "sql",
+      "procedure": "Entity.FindArticle"
+    },
+    "duplicateArticle": {
+      "type": "sql",
+      "procedure": "Entity.Article.CheckDuplicate"
+    }
+  }
+}

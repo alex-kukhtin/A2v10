@@ -26,6 +26,7 @@ namespace A2v10.Infrastructure
 		String SmtpConfig { get; }
 		Boolean Mobile { get; set; }
 		Boolean Embedded { get; }
+		Boolean IsAdminMode { get; }
 		String ScriptEngine { get; }
 	
 		Boolean IsDebugConfiguration { get; }
@@ -50,6 +51,7 @@ namespace A2v10.Infrastructure
 		String CatalogDataSource { get; }
 		String TenantDataSource { get; }
 
+		void SetAdmin(bool bAdmin);
 		void StartApplication(Boolean bAdmin);
 
 		String MakeRelativePath(String path, String fileName);
