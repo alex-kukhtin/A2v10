@@ -1,12 +1,10 @@
 ﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
 
 using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
 
 namespace A2v10.Messaging
 {

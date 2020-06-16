@@ -28,7 +28,7 @@
 							</Popover>
 						</TextBox.Hint>
 					</TextBox>
-					<ComboBox Label="Style" Value="{Bind Root.$style}">
+					<ComboBox Label="Style" Value="{Bind Root.$style}" Size="Large">
 						<ComboBoxItem Content="Default" Value=""/>
 						<ComboBoxItem Content="Red" Value="red"/>
 						<ComboBoxItem Content="Primary" Value="primary"/>

@@ -3,7 +3,6 @@
 @control-border: @default-brd-color;
 @control-bg-color: white;
 
-
 @validator-arrow-size: 8px;
 
 // shadow
@@ -347,9 +346,50 @@
 		}
 
 		.input-group > a {
-			line-height:2.4rem;
+			line-height: 2.4rem;
+
 			> i.ico {
-				font-size:17px;
+				font-size: 17px;
+			}
+		}
+	}
+
+	&.sel-large {
+		.input-group {
+			input {
+				font-size: 1.3rem;
+				height: 2.45rem;
+				padding: 0 8px;
+			}
+
+			> a {
+				line-height: 2.4rem;
+				width: 28px; // for all !!!!
+				> i.ico {
+					font-size: 17px;
+				}
+			}
+		}
+	}
+
+	&.cb-large {
+		.input-group {
+			select {
+				font-size: 1.3rem;
+				height: 2.45rem;
+				padding: 0 8px;
+			}
+
+			.select-wrapper {
+				font-size: 1.3rem;
+
+				.select-text {
+					line-height: 2.45rem;
+				}
+
+				.caret {
+					margin-top: 1.2rem;
+				}
 			}
 		}
 	}

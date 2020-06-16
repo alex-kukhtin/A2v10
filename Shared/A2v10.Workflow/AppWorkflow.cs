@@ -191,7 +191,7 @@ namespace A2v10.Workflow
 
 		public static void AutoStart(Int64 processId, ILogger logger)
 		{
-			throw new NotImplementedException("AppWorkflow.AutoStart");
+			throw new NotImplementedException("AppWorkflow.AutoStart yet not implemented");
 		}
 
 		internal void Track(TrackingRecord record)
