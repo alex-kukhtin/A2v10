@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200108-7609
+// 20200617-7674
 // components/upload.js
 
 (function () {
@@ -27,7 +27,8 @@
 			tip: String,
 			readOnly: Boolean,
 			accept: String,
-			limit: Number
+			limit: Number,
+			icon: String
 		},
 		data: function () {
 			return {
@@ -45,6 +46,8 @@
 				return !this.readOnly;
 			},
 			icoClass() {
+				if (this.icon)
+					return `ico-${this.icon}`;
 				return this.accept === 'image/*' ? 'ico-image' : 'ico-upload';
 			}
 		},

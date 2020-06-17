@@ -7917,7 +7917,7 @@ TODO:
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200108-7609
+// 20200617-7674
 // components/upload.js
 
 (function () {
@@ -7944,7 +7944,8 @@ TODO:
 			tip: String,
 			readOnly: Boolean,
 			accept: String,
-			limit: Number
+			limit: Number,
+			icon: String
 		},
 		data: function () {
 			return {
@@ -7962,6 +7963,8 @@ TODO:
 				return !this.readOnly;
 			},
 			icoClass() {
+				if (this.icon)
+					return `ico-${this.icon}`;
 				return this.accept === 'image/*' ? 'ico-image' : 'ico-upload';
 			}
 		},
@@ -9093,7 +9096,7 @@ TODO:
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200108-7609
+// 20200617-7674
 // components/image.js
 
 (function () {
@@ -9116,8 +9119,8 @@ TODO:
 <div class="a2-image">
 	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
 	<a class="remove-image" v-if="hasRemove" @click.prevent="removeImage">&#x2715;</a>
-	<a2-upload v-if="isUploadVisible" :style="uploadStyle" accept="image/*"
-		:item="itemForUpload" :base="base" :prop="prop" :new-item="newItem" :tip="tip" :read-only='readOnly' :limit="limit"/>
+	<a2-upload v-if=isUploadVisible :style=uploadStyle accept="image/*"
+		:item=itemForUpload :base=base :prop=prop :new-item=newItem :tip=tip :read-only=readOnly :limit=limit :icon=icon></a2-upload>
 </div>
 `,
 		props: {
@@ -9130,7 +9133,9 @@ TODO:
 			width: String,
 			height: String,
 			readOnly: Boolean,
-			limit: Number
+			limit: Number,
+			placeholder: String,
+			icon: String
 		},
 		data() {
 			return {
@@ -9148,7 +9153,7 @@ TODO:
 			},
 			tip() {
 				if (this.readOnly) return '';
-				return locale.$ClickToDownloadPicture;
+				return this.placeholder ? this.placeholder : locale.$ClickToDownloadPicture;
 			},
 			cssStyle() {
 				return { maxWidth: this.width, maxHeight: this.height };

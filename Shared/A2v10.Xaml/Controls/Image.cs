@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
@@ -16,6 +17,10 @@ namespace A2v10.Xaml
 
 		public Int32 Limit { get; set; }
 
+		public String Placeholder { get; set; }
+
+		public Icon Icon { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -30,7 +35,13 @@ namespace A2v10.Xaml
 				tag.MergeAttribute("width", Width.Value);
 			if (Height != null)
 				tag.MergeAttribute("height", Height.Value);
+			if (Placeholder != null)
+				MergeBindingAttributeString(tag, context, "placeholder", nameof(Placeholder), Placeholder);
 			tag.MergeAttribute(":limit", Limit.ToString());
+
+			if (Icon != Icon.NoIcon)
+				tag.MergeAttribute("icon", Icon.ToString().ToKebabCase());
+
 			MergeBindingAttributeBool(tag, context, ":read-only", nameof(ReadOnly), ReadOnly);
 			MergeValueItemProp(tag, context, nameof(Source));
 			MergeBindingAttributeString(tag, context, "base", nameof(Base), Base);

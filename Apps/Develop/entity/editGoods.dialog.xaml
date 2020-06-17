@@ -15,7 +15,7 @@
 			</Grid>
 		</Tab>
 		<Tab Header="Картинка">
-			<Image Source="{Bind Entity.Image}" Base="/entity" Height="200" Margin="20"/>
+			<Image Source="{Bind Entity.Image}" Base="/entity" Height="200" Margin="20" Placeholder="Клацніть для фото!" Icon="UserImage"/>
 		</Tab>
 	</TabPanel>
 </Dialog>

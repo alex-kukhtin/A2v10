@@ -4,7 +4,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7562') format('woff'), url('/css/fonts/A2v10.ttf?v=7662') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7574') format('woff'), url('/css/fonts/A2v10.ttf?v=7674') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -151,6 +151,9 @@
 }
 .ico-call:before {
   content: "\ea19";
+}
+.ico-camera:before {
+  content: "\e9a1";
 }
 .ico-chart-area:before {
   content: "\e922";
@@ -631,6 +634,9 @@
 }
 .ico-user-minus:before {
   content: "\e99b";
+}
+.ico-user-image:before {
+  content: "\e9a0";
 }
 .ico-eye:before {
   content: "\e99e";
