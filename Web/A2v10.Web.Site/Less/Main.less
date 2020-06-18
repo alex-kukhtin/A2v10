@@ -383,6 +383,7 @@ pre.a2-code {
 		padding: 15px 10px;
 		white-space: pre-line;
 		font-weight: bold;
+		font-size:1.2rem;
 	}
 
 	.stack-trace {
@@ -392,6 +393,19 @@ pre.a2-code {
 		padding: 10px;
 		max-height: 200px;
 		font-size: 92%;
+	}
+
+	.link {
+		padding:0.5rem 1rem;
+		display:inline-block;
+		border:1px solid @danger-txt-color;
+		font-weight:bold;
+		color:@danger-txt-color;
+		margin-bottom:1rem;
+		&:hover {
+			background-color:@danger-btn-color;
+			color:white;
+		}
 	}
 }
 

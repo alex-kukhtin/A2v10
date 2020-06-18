@@ -2598,6 +2598,7 @@ app.modules['std:validators'] = function () {
 
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
+				if (!this.$vm) return;
 				if (this.$loaded) { resolve(this); return; }
 				if (!this.$parent) { resolve(this); return; }
 				const meta = this.$parent._meta_;
@@ -4822,9 +4823,9 @@ Vue.component('validator-control', {
 	});
 
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20191115-7578*/
+/*20200618-7674*/
 /*components/combobox.js*/
 
 (function () {
@@ -4836,7 +4837,7 @@ Vue.component('validator-control', {
 `<div :class="cssClass()" v-lazy="itemsSource" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<div class="select-wrapper">
+		<div class="select-wrapper" :disabled="disabled" >
 			<div v-text="getWrapText()" class="select-text" ref="wrap" :class="wrapClass"/>
 			<span class="caret"/>
 		</div>

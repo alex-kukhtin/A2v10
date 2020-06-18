@@ -376,7 +376,7 @@
 		.input-group {
 			select {
 				font-size: 1.3rem;
-				height: 2.45rem;
+				height: 2.3rem;
 				padding: 0 8px;
 			}
 
@@ -466,15 +466,21 @@
 		.select-wrapper {
 			right: auto;
 			padding: 0;
+			color: @link-color;
 
 			.select-text {
-				color: @link-color;
-				border-bottom: 1px dotted @link-color;
+				color:inherit;
+				border-bottom: 1px dotted currentColor;
 			}
 
 			.caret {
 				display: none;
 			}
+		}
+
+		.select-wrapper[disabled] {
+			color:#999;
+			opacity:.5;
 		}
 	}
 

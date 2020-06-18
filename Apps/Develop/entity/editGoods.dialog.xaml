@@ -17,5 +17,13 @@
 		<Tab Header="Картинка">
 			<Image Source="{Bind Entity.Image}" Base="/entity" Height="200" Margin="20" Placeholder="Клацніть для фото!" Icon="UserImage"/>
 		</Tab>
+		<!--
+		<Tab Header="Partial">
+			<DataGrid ItemsSource="{Bind Entity.PartialRoot}">
+				<DataGridColumn Content="{Bind Id}"/>
+				<DataGridColumn Content="{Bind Name}"/>
+			</DataGrid>
+		</Tab>
+		-->
 	</TabPanel>
 </Dialog>

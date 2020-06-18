@@ -83,6 +83,7 @@
 @Error.EnterName=Введите наименование элемента
 @Error.DuplicateCode=Элемент с таким кодом уже существует
 @Error.Exception=Что-то пошло не так, как ожидалось :-(
+@Error.Link=Перейти на начальную страницу
 @Error.FileFormatException=Некорректный формат файла
 @Error.DataReadOnly=База данных только для чтения
 @UIError.AccessDenied=UI:Доступ запрещен

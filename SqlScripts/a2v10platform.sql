@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 16.06.2020 20:36:02
+generated: 18.06.2020 10:07:11
 */
 
 set nocount on;
@@ -217,16 +217,16 @@ go
 ------------------------------------------------
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 12 jun 2020
-module version : 7673
+Last updated : 17 jun 2020
+module version : 7674
 */
 ------------------------------------------------
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:security')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7673);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:security', 7674);
 	else
-		update a2sys.Versions set [Version] = 7673 where Module = N'std:security';
+		update a2sys.Versions set [Version] = 7674 where Module = N'std:security';
 end
 go
 ------------------------------------------------
@@ -1325,6 +1325,22 @@ begin
 	update a2security.UserCompanies set 
 		[Current] = case when Company = @CompanyId then 1 else 0 end
 	where [User] = @UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Company.Load')
+	drop procedure a2security.[User.Company.Load]
+go
+------------------------------------------------
+create procedure a2security.[User.Company.Load]
+@UserId bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	select [UserCompany!TCompany!Object] = null, Company from a2security.UserCompanies 
+	where [User]=@UserId and [Current]=1
 end
 go
 ------------------------------------------------

@@ -2863,6 +2863,7 @@ Vue.component('a2-pager', {
 
 		arr.$loadLazy = function () {
 			return new Promise((resolve, reject) => {
+				if (!this.$vm) return;
 				if (this.$loaded) { resolve(this); return; }
 				if (!this.$parent) { resolve(this); return; }
 				const meta = this.$parent._meta_;

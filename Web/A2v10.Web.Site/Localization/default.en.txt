@@ -84,6 +84,7 @@
 @Error.EnterName=Enter item name
 @Error.DuplicateCode=Duplicate code
 @Error.Exception=Something went wrong as expected :-(
+@Error.Link=Go to homepage
 @Error.FileFormatException=File contains corrupted data
 @Error.DataReadOnly=The database is read-only
 @UIError.AccessDenied=UI:Access denied

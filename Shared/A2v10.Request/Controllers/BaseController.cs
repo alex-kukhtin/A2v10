@@ -359,7 +359,8 @@ namespace A2v10.Request
 			else
 			{
 				msg = Localize("@[Error.Exception]");
-				writer.Write($"<div class=\"app-exception\"><div class=\"message\">{msg}</div></div>");
+				var link = Localize("@[Error.Link]");
+				writer.Write($"<div class=\"app-exception\"><div class=message>{msg}</div><a class=link href=\"/\">{@link}</a></div>");
 			}
 		}
 

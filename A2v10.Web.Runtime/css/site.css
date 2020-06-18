@@ -20,7 +20,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7562') format('woff'), url('/css/fonts/A2v10.ttf?v=7662') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7574') format('woff'), url('/css/fonts/A2v10.ttf?v=7674') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -167,6 +167,9 @@
 }
 .ico-call:before {
   content: "\ea19";
+}
+.ico-camera:before {
+  content: "\e9a1";
 }
 .ico-chart-area:before {
   content: "\e922";
@@ -647,6 +650,9 @@
 }
 .ico-user-minus:before {
   content: "\e99b";
+}
+.ico-user-image:before {
+  content: "\e9a0";
 }
 .ico-eye:before {
   content: "\e99e";
@@ -2275,7 +2281,7 @@ pre.a2-code {
 }
 .control-group.cb-large .input-group select {
   font-size: 1.3rem;
-  height: 2.45rem;
+  height: 2.3rem;
   padding: 0 8px;
 }
 .control-group.cb-large .input-group .select-wrapper {
@@ -2334,13 +2340,18 @@ pre.a2-code {
 .control-group.combo-hyperlink .input-group .select-wrapper {
   right: auto;
   padding: 0;
+  color: #208cf8;
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .select-text {
-  color: #208cf8;
-  border-bottom: 1px dotted #208cf8;
+  color: inherit;
+  border-bottom: 1px dotted currentColor;
 }
 .control-group.combo-hyperlink .input-group .select-wrapper .caret {
   display: none;
+}
+.control-group.combo-hyperlink .input-group .select-wrapper[disabled] {
+  color: #999;
+  opacity: 0.5;
 }
 .control-group.combo-hyperlink .input-group.focus {
   box-shadow: none;
@@ -5764,7 +5775,7 @@ TODO:
   font-size: 3.6rem;
 }
 .grid {
-  display: grid;
+  display: grid!important;
   padding: 0.75rem;
   grid-gap: 0.75rem;
   align-items: flex-end;
@@ -6403,6 +6414,7 @@ table > colgroup col.blue {
   padding: 15px 10px;
   white-space: pre-line;
   font-weight: bold;
+  font-size: 1.2rem;
 }
 .app-exception .stack-trace {
   border-top: 1px solid #a94442;
@@ -6411,6 +6423,18 @@ table > colgroup col.blue {
   padding: 10px;
   max-height: 200px;
   font-size: 92%;
+}
+.app-exception .link {
+  padding: 0.5rem 1rem;
+  display: inline-block;
+  border: 1px solid #a94442;
+  font-weight: bold;
+  color: #a94442;
+  margin-bottom: 1rem;
+}
+.app-exception .link:hover {
+  background-color: #b94e4c;
+  color: white;
 }
 .load-indicator {
   position: absolute;

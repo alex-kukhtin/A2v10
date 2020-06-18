@@ -83,6 +83,7 @@
 @Error.EnterName=Geben Sie den Namen des Elements ein
 @Error.DuplicateCode=Ein Element mit diesem Code ist bereits vorhanden
 @Error.Exception=Etwas ist unerwartet schief gelaufen :-(
+@Error.Link=Zur Homepage gehen
 @Error.FileFormatException=Falsches Dateiformat
 @Error.DataReadOnly=Datenbank ist schreibgeschützt
 ;
