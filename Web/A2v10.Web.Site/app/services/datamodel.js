@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200510-7655*/
+/*20200618-7675*/
 // services/datamodel.js
 
 (function () {
@@ -353,6 +353,29 @@
 			};
 		}
 
+		function setDefaults(root) {
+			if (!root.$template || !root.$template.defaults)
+				return;
+			for (let p in root.$template.defaults) {
+				let px = p.lastIndexOf('.');
+				if (px === -1)
+					continue;
+				let path = p.substring(0, px);
+				let prop = p.substring(px + 1);
+				if (prop.endsWith('[]'))
+					continue;
+				let def = root.$template.defaults[p];
+				let obj = utils.simpleEval(root, path);
+				if (obj.$isNew) {
+					console.dir('set default');
+					if (utils.isFunction(def))
+						obj[prop] = def(obj);
+					else
+						obj[prop] = def;
+				}
+			}
+		}
+
 		let constructEvent = ctorname + '.construct';
 		let _lastCaller = null;
 		let propForConstruct = path ? propFromPath(path) : '';
@@ -378,6 +401,7 @@
 			elem._needValidate_ = false;
 			elem._modelLoad_ = (caller) => {
 				_lastCaller = caller;
+				setDefaults(elem);
 				elem._fireLoad_();
 				__initialized__ = true;
 			};

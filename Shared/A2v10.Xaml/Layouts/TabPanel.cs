@@ -98,10 +98,10 @@ namespace A2v10.Xaml
 				ht.MergeAttribute("slot", "title");
 				ht.RenderStart(context);
 				var tag = new TagBuilder("div", "pane-header");
-				tag.RenderStart(context);
 				if (hBind != null)
 					tag.MergeAttribute("v-text", hBind.GetPath(context));
-				else if (Header != null)
+				tag.RenderStart(context);
+				if (Header != null)
 					RenderContent(context, Header);
 				tag.RenderEnd(context);
 				ht.RenderEnd(context);

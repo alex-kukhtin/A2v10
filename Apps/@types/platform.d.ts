@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7533 */
+/* Version 10.0.7674 */
 
 /*TODO:
  * ????
@@ -122,6 +122,12 @@ interface templateEventUnload { (this: IElement, elem?: IElement): void; }
 
 declare type templateEvent = templateEventChange | templateEventAdd | templateEventUnload;
 
+
+/* template defaults */
+interface templateDefaultFunc { (this: IRoot, elem: IElement, prop:string): any; }
+declare type templateDefault = templateDefaultFunc | string | number | boolean;
+
+
 declare const enum StdValidator {
 	notBlank = 'notBlank',
 	email = 'email',
@@ -163,6 +169,9 @@ interface Template {
 	events?: {
 		[prop: string]: templateEvent
 	};
+	defaults?: {
+		[prop:string]: templateDefault
+	},
 	commands?: {
 		[prop: string]: templateCommand
 	};

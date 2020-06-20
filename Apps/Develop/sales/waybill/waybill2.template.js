@@ -26,6 +26,13 @@ define(["require", "exports"], function (require, exports) {
                 }
             }
         },
+        defaults: {
+            'Document.Date': du.today,
+            'Document.Agent.Name': 'default agent name',
+            'Document.No': 150,
+            'Document.Rows[]'(e) { console.dir('call defaults for row'); return 1; },
+            "xxx": (row, prop) => 1
+        },
         validators: {
             'Document.Agent': 'Выберите покупателя',
             'Document.DepFrom': 'Выберите склад',
@@ -36,13 +43,11 @@ define(["require", "exports"], function (require, exports) {
             }
         },
         events: {
-            'Model.load': modelLoad,
             'Model.saved'(root) {
                 console.dir(root);
             },
-            'Document.Rows[].add': (arr, row) => row.Qty = 1,
             'Document.Rows[].Entity.Article.change': cmn.findArticle,
-            "Document.Rows[].adding"(arr, row) {
+            "Document.Rows2[].adding"(arr, row) {
                 console.dir(row);
             },
             'Root.$BarCode.change': barcodeChange

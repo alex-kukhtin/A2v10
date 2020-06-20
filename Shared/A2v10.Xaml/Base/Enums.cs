@@ -20,6 +20,17 @@ namespace A2v10.Xaml
 		End
 	}
 
+	public enum JustifyItems
+	{
+		Default,
+		Start,
+		End,
+		Center,
+		SpaceAround,
+		SpaceEvenly,
+		SpaceBetween
+	}
+
 	public enum TextColor
 	{
 		Default = 0,
@@ -281,6 +292,7 @@ namespace A2v10.Xaml
 		Cut,
 		Delete,
 		DeleteBox,
+		DeleteRed,
 		Dashboard,
 		DashboardOutline,
 		Database,

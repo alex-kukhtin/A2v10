@@ -18,6 +18,7 @@ namespace A2v10.Xaml
 		public String TestId { get; set; }
 		public Popover Hint { get; set; }
 		public UIElement Link { get; set; }
+		public ControlSize Size { get; set; }
 
 		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
@@ -79,6 +80,21 @@ namespace A2v10.Xaml
 			tag.RenderStart(context);
 			Popover.RenderElement(context);
 			tag.RenderEnd(context);
+		}
+
+		protected void SetSize(TagBuilder input, String controlName )
+		{
+			switch (Size)
+			{
+				case ControlSize.Default:
+				case ControlSize.Normal:
+					return;
+				case ControlSize.Large:
+					input.AddCssClass($"lg");
+					break;
+				default:
+					throw new XamlException($"Only ControlSize.Normal or ControlSize.Large are supported for the {controlName}");
+			}
 		}
 
 		internal void RenderHint(RenderContext context)

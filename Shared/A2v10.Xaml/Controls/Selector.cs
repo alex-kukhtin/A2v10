@@ -36,7 +36,6 @@ namespace A2v10.Xaml
 		public Boolean ShowClear { get; set; }
 
 		public SelectorStyle Style { get; set; }
-		public ControlSize Size { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -53,8 +52,7 @@ namespace A2v10.Xaml
 				input.MergeAttribute("placement", PanelPlacement.ToString().ToKebabCase());
 			if (Style != SelectorStyle.Default)
 				input.MergeAttribute("mode", Style.ToString().ToKebabCase());
-			if (Size != ControlSize.Default)
-				input.AddCssClass($"sel-{Size.ToString().ToLowerInvariant()}");
+			SetSize(input, nameof(Selector));
 			if (ListSize != null)
 			{
 				if (!ListSize.Width.IsEmpty)

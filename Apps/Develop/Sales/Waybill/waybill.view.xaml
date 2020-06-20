@@ -66,7 +66,7 @@
 	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">
 		Документ проведено в обліку. Редагування неможливе.
 	</Alert>
-	<TabPanel>
+	<TabPanel Header="Document.Date">
 		<Tab Header="Документ">
 			<Grid Columns="150, 150, 150, 150, 150, 120, 1*">
 
@@ -171,7 +171,119 @@
 			</Grid>
 		</Tab>
 		<Tab Header="Протокол">
+			<Grid Columns="Auto,Auto,Auto,Auto">
+				<TextBox Label="Simple" Grid.Row="1" Grid.Col="1">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Save"/>
+						<Hyperlink Icon="Search"/>
+					</TextBox.AddOns>
+				</TextBox>
+				<TextBox Label="Large Bold" Grid.Row="1" Grid.Col="2" Size="Large" Bold="True">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Save"/>
+						<Hyperlink Icon="Search"/>
+					</TextBox.AddOns>
+				</TextBox>
+				<TextBox Label="Simple Drop down" Grid.Row="1" Grid.Col="3">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search">
+							<Hyperlink.DropDown>
+								<DropDownMenu Background="White" Direction="DownLeft">
+									<MenuItem Icon="SaveAs" Content="Save as"/>
+								</DropDownMenu>
+							</Hyperlink.DropDown>
+						</Hyperlink>
+					</TextBox.AddOns>
+				</TextBox>
+				<TextBox Label="Simple" Grid.Row="1" Grid.Col="4">
+				</TextBox>
+				<Selector Label="Simple selector" Grid.Row="2" Grid.Col="1">
+					<Selector.AddOns>
+						<Hyperlink Icon="Search"/>
+					</Selector.AddOns>
+				</Selector>
+				<Selector Value="{Bind Document.Agent}"
+					Label="Large selector" Grid.Row="2" Grid.Col="2" Size="Large" ShowCaret="True" ShowClear="True"
+						  PanelPlacement="TopLeft">
+					<Selector.AddOns>
+						<Hyperlink Icon="FileContent"/>
+					</Selector.AddOns>
+				</Selector>
+				<TextBox Label="Large Drop down" Grid.Row="2" Grid.Col="3" Size="Large">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search">
+							<Hyperlink.DropDown>
+								<DropDownMenu Background="White" Direction="DownLeft">
+									<MenuItem Icon="SaveAs" Content="Save as"/>
+								</DropDownMenu>
+							</Hyperlink.DropDown>
+						</Hyperlink>
+					</TextBox.AddOns>
+				</TextBox>
+				<ComboBox Label="Combo Simple" Grid.Row="3" Grid.Col="1" Value="{Bind Document.No}">
+					<ComboBoxItem Content="First Elem" Value="1"/>
+				</ComboBox>
+				<ComboBox Label="Combo Large" Grid.Row="3" Grid.Col="2" Size="Large"  Value="{Bind Document.No}">
+					<ComboBoxItem Content="First Elem" Value="1"/>
+					<ComboBoxItem Content="Second Number" Value="2"/>
+				</ComboBox>
+				<DatePicker Label="Date Picker Simple" Grid.Row="4" Grid.Col="1" Value="{Bind Document.Date}">
 
+				</DatePicker>
+				<TimePicker Label="Time Picker Simple" Grid.Row="4" Grid.Col="2" Value="{Bind Document.Date}">
+
+				</TimePicker>
+				<DatePicker Label="Date Picker Large" Grid.Row="4" Grid.Col="3" Value="{Bind Document.Date}" Size="Large">
+				</DatePicker>
+
+				<TimePicker Label="Time Picker Large" Grid.Row="4" Grid.Col="4" Value="{Bind Document.Date}" Size="Large">
+
+				</TimePicker>
+
+				<Static Label="Static Simple" Grid.Row="5" Grid.Col="1"></Static>
+				<Static Label="Static Large" Grid.Row="5" Grid.Col="2" Size="Large"></Static>
+			</Grid>
+		</Tab>
+		<Tab Header="FieldSet">
+			<FieldSet Orientation="Vertical">
+				<TextBox>
+				</TextBox>
+				<StackPanel Orientation="Horizontal" JustifyItems="SpaceBetween">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</StackPanel>
+				<FlexList Orientation="Horizontal" JustifyItems="SpaceAround">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="SpaceEvenly">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="SpaceBetween">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="Center">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="Start">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="End">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+			</FieldSet>
 		</Tab>
 	</TabPanel>
 </Page>

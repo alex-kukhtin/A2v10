@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -30,6 +30,7 @@ namespace A2v10.Xaml
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);
+			SetSize(input, nameof(DatePicker));
 			if (Placement  != DropDownPlacement.BottomLeft)
 				input.AddCssClass("drop-" + Placement.ToString().ToKebabCase());
 			MergeValue(input, context);

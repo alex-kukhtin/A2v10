@@ -72,7 +72,7 @@ namespace A2v10.Workflow
 						if (wfAuto)
 						{
 							manager.Logger.LogBackground($"Autostarting process. ProcessId = {pId}");
-							AppWorkflow.AutoStart(pId, manager.Logger);
+							AppWorkflow.AutoStart(pId, manager.Host, manager.DbContext, manager.Messaging, manager.Logger);
 						}
 						else
 						{

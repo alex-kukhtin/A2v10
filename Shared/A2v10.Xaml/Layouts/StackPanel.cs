@@ -1,6 +1,7 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
@@ -9,6 +10,7 @@ namespace A2v10.Xaml
 	{
 		public Orientation Orientation { get; set; }
 		public AlignItems AlignItems { get; set; }
+		public JustifyItems JustifyItems { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -20,6 +22,8 @@ namespace A2v10.Xaml
 			div.AddCssClass(Orientation.ToString().ToLowerInvariant());
 			if (AlignItems != AlignItems.Default)
 				div.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
+			if (JustifyItems != JustifyItems.Default)
+				div.AddCssClass("justify-" + JustifyItems.ToString().ToKebabCase());
 			div.RenderStart(context);
 			RenderChildren(context);
 			div.RenderEnd(context);

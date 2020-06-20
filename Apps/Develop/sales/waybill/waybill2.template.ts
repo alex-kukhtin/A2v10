@@ -33,6 +33,14 @@ const template: Template = {
 			}
 		}
 	},
+	defaults: {
+		//'Document.Date'(this: TRoot, e: TDocument) { console.dir('call defaults'); return du.today(); },
+		'Document.Date': du.today,
+		'Document.Agent.Name': 'default agent name',
+		'Document.No': 150,
+		'Document.Rows[]'(this: TRoot, e: TRow) { console.dir('call defaults for row'); return 1; },
+		"xxx": (row: TRow, prop:string) => 1
+	},
 	validators: {
 		'Document.Agent': 'Выберите покупателя',
 		'Document.DepFrom': 'Выберите склад',
@@ -43,13 +51,13 @@ const template: Template = {
 		}
 	},
 	events: {
-		'Model.load': modelLoad,
+		//'Model.load': modelLoad,
 		'Model.saved'(root: TRoot) {
 			console.dir(root);
 		},
-		'Document.Rows[].add': (arr: TRows, row: TRow) => row.Qty = 1,
+		//'Document.Rows[].add': (arr: TRows, row: TRow) => row.Qty = 1,
 		'Document.Rows[].Entity.Article.change': cmn.findArticle,
-		"Document.Rows[].adding"(arr: TRows, row: TRow) {
+		"Document.Rows2[].adding"(arr: TRows, row: TRow) {
 			console.dir(row);
 		},
 		'Root.$BarCode.change': barcodeChange

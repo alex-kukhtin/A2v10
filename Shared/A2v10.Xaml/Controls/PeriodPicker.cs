@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -26,7 +26,6 @@ namespace A2v10.Xaml
 
 		public DropDownPlacement Placement { get; set; }
 		public PeriodPickerStyle Style { get; set; }
-		public ControlSize Size { get; set; }
 		public Boolean? ShowAllData { get; set; }
 		public DisplayMode Display { get; set; }
 

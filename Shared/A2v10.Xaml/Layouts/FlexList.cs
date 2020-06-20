@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 
 		public BorderStyle BorderStyle { get; set; }
 		public AlignItems AlignItems { get; set; }
+		public JustifyItems JustifyItems { get; set; }
 		public Length MinWidth { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -29,6 +30,8 @@ namespace A2v10.Xaml
 			MergeAttributes(list, context);
 			if (AlignItems != AlignItems.Default)
 				list.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
+			if (JustifyItems != JustifyItems.Default)
+				list.AddCssClass("justify-" + JustifyItems.ToString().ToKebabCase());
 			list.AddCssClass(Orientation.ToString().ToLowerInvariant());
 			if (BorderStyle != BorderStyle.None)
 				list.AddCssClass($"border-{BorderStyle.ToString().ToKebabCase()}");

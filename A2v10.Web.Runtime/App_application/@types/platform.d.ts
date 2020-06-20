@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7673 */
+/* Version 10.0.7674 */
 
 
 declare function require(url: string): any;
@@ -170,6 +170,10 @@ declare const enum MessageStyle {
 	info = 'info'
 }
 
+/* template defaults */
+interface templateDefaultFunc { (this: IRoot, elem: IElement, prop: string): any; }
+declare type templateDefault = templateDefaultFunc | string | number | boolean;
+
 /* template validators */
 
 interface tempateValidatorFunc { (elem: IElement, value?: any): boolean | string | Promise<any>; }
@@ -193,6 +197,9 @@ interface Template {
 	properties?: {
 		[prop: string]: templateProperty
 	};
+	defaults?: {
+		[prop: string]: templateDefault
+	},
 	validators?: {
 		[prop: string]: templateValidator | templateValidator[]
 	};

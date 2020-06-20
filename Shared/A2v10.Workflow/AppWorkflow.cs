@@ -60,7 +60,7 @@ namespace A2v10.Workflow
 				using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Load '{info.Source}'"))
 				{
 					def = WorkflowDefinition.Create(info.Source);
-					root = def.LoadFromSource(host);
+					root = def.LoadFromSource(host, dbContext);
 					process = Process.Create(def, info);
 				}
 				// workflow arguments
@@ -146,7 +146,7 @@ namespace A2v10.Workflow
 				{
 					result.ProcessId = inbox.ProcessId;
 					var def = WorkflowDefinition.Load(inbox);
-					Activity root = def.LoadFromSource(host);
+					Activity root = def.LoadFromSource(host, dbContext);
 					aw = Create(dbContext, root, null, def.Identity);
 					aw._application.Extensions.Add(result);
 					aw._application.Extensions.Add(dbContext);
@@ -189,8 +189,32 @@ namespace A2v10.Workflow
 			return result;
 		}
 
-		public static void AutoStart(Int64 processId, ILogger logger)
+		public static void AutoStart(Int64 processId, IApplicationHost host, IDbContext dbContext, IMessaging messaging, ILogger logger)
 		{
+			/*
+		public Int64 UserId { get; set; }
+		public String ActionBase { get; set; }
+		public String Source { get; set; }
+		public String DataSource { get; set; }
+		public String Schema { get; set; }
+		public String Model { get; set; }
+		public Int64 ModelId { get; set; }
+		public String Comment { get; set; }
+		public Int64 Parent { get; set; }
+			*/
+			var p = new Process();
+			p.Id = processId;
+			StartWorkflowInfo info = new StartWorkflowInfo()
+			{
+				UserId = 0, // System
+				ActionBase = "from record",
+				Source = "FileName from record",
+				DataSource = "from record",
+				Schema = "from record",
+				Model = "from record",
+				ModelId = 0 // from record
+			};
+			var r = StartWorkflow(host, dbContext, messaging, info).Result;
 			throw new NotImplementedException("AppWorkflow.AutoStart yet not implemented");
 		}
 

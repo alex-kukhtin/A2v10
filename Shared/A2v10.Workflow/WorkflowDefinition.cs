@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Activities;
@@ -6,7 +6,7 @@ using System.Activities.XamlIntegration;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Workflow
@@ -16,7 +16,8 @@ namespace A2v10.Workflow
 		Unknown,
 		ClrType,
 		File,
-		Definition
+		Definition,
+		Db
 	}
 
 	internal class WorkflowDefinition
@@ -131,7 +132,7 @@ namespace A2v10.Workflow
 			}
 		}
 
-		public Activity LoadFromSource(IApplicationHost host)
+		public Activity LoadFromSource(IApplicationHost host, IDbContext dbContext)
 		{
 			if (Type == WorkflowType.File)
 			{
@@ -146,6 +147,17 @@ namespace A2v10.Workflow
 						RuntimeActivity.Compile(GetHashedName(), root);
 						return root;
 					}
+				}
+			}
+			else if  (Type ==WorkflowType.Db)
+			{
+				//dbContext.Load(this.Path)
+				var defText = "TODO: GetDefinition from database";
+				using (var sr = new StringReader(defText))
+				{
+					Activity root = ActivityXamlServices.Load(sr) as Activity;
+					Cached = RuntimeActivity.Compile(GetHashedName(), root);
+					return root;
 				}
 			}
 			else if (Type == WorkflowType.ClrType)

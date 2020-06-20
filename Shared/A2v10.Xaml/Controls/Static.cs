@@ -8,8 +8,6 @@ namespace A2v10.Xaml
 	{
 		public TextAlign Align { get; set; }
 
-		public ControlSize Size { get; set; }
-
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -19,7 +17,7 @@ namespace A2v10.Xaml
 			MergeAttributes(input, context);
 			MergeValue(input, context); // item, prop for validator
 			MergeAlign(input, context, Align);
-			AddSize(input);
+			SetSize(input, nameof(Static));
 			var valBind = GetBinding(nameof(Value));
 			if (valBind != null)
 			{
@@ -31,21 +29,5 @@ namespace A2v10.Xaml
 			RenderAddOns(context);
 			input.RenderEnd(context);
 		}
-
-		void AddSize(TagBuilder tag)
-		{
-			switch (Size)
-			{
-				case ControlSize.Large:
-					tag.AddCssClass("lg");
-					break;
-				case ControlSize.Default:
-				case ControlSize.Normal:
-					break;
-				default:
-					throw new XamlException("Only ControlSize.Normal or ControlSize.Large are supported for the Static");
-			}
-		}
-
 	}
 }

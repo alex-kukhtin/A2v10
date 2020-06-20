@@ -39,12 +39,16 @@
 
 .control-group {
 	display: block;
-	//background-color: aliceblue;
+	font-size: 1em;
 	margin-bottom: .5rem;
 	position: relative;
 
+	.ico {
+		font-size: 1em;
+	}
+
 	label {
-		font-size: 0.95rem;
+		font-size: 0.95em;
 		color: @label-color;
 		margin-bottom: .15em;
 		display: block;
@@ -57,7 +61,7 @@
 
 	.descr {
 		display: inline-block;
-		font-size: 95%;
+		font-size: .95em;
 		margin-bottom: 0.25em;
 		color: @label-color;
 	}
@@ -89,8 +93,7 @@
 			position: absolute;
 			bottom: 0;
 		}
-		/*
-		*/
+
 		&:before {
 			left: 7.5px;
 			bottom: auto;
@@ -224,29 +227,31 @@
 		}
 	}
 
+
+	input, select, textarea {
+		font-size: inherit;
+		font-weight: inherit;
+		font-style: inherit;
+		width: 100%;
+		background-color: transparent;
+		min-width: 32px; // for EDGE
+	}
+
+	select {
+		opacity: 0;
+		cursor: pointer;
+	}
+
 	.input-group {
 		border: 1px solid @control-border;
 		display: flex;
-		align-items: baseline;
+		align-items: center;
 		background-color: @control-bg-color;
 		position: relative;
 		width: auto;
 		position: relative;
 
-		input, select {
-			height: @control-height;
-			font-weight: inherit;
-			font-style: inherit;
-			min-width: 32px; // for EDGE
-		}
-
-		select {
-			opacity: 0;
-			cursor: pointer;
-		}
-
 		.selector-combo {
-			line-height: @control-height;
 			width: 100%;
 			cursor: pointer;
 			display: flex;
@@ -272,7 +277,7 @@
 
 			.caret {
 				display: block;
-				margin-top: 0.8em;
+				margin: .9em .2em 0 .5em;
 			}
 		}
 
@@ -293,16 +298,6 @@
 				outline-style: none;
 			}
 		}
-
-		> a, > .popover-wrapper {
-			align-self: stretch;
-			line-height: 1.8rem;
-
-			.ico:before {
-				color: inherit;
-			}
-		}
-
 		> .popover-wrapper {
 			display: inline-block;
 			margin-right: 3px;
@@ -310,11 +305,14 @@
 
 		> a, > .dropdown > a {
 			color: @label-color;
-			padding: 1px 4px 0 2px;
+			padding: 0 .4em;
 			display: inline-block; // fix EDGE
+			line-height: 2em;
+
 			&:hover {
 				text-decoration: none;
 				color: @control-focus-color;
+				background-color: #f8f8f8;
 			}
 		}
 
@@ -335,63 +333,8 @@
 	}
 
 	&.lg {
-		.input-group input, .input-group .static-input {
-			font-size: 1.3rem;
-			height: 2.45rem;
-			padding: 0 8px;
-		}
+		font-size: 1.3rem;
 
-		label {
-			font-size: 1rem;
-		}
-
-		.input-group > a {
-			line-height: 2.4rem;
-
-			> i.ico {
-				font-size: 17px;
-			}
-		}
-	}
-
-	&.sel-large {
-		.input-group {
-			input {
-				font-size: 1.3rem;
-				height: 2.45rem;
-				padding: 0 8px;
-			}
-
-			> a {
-				line-height: 2.4rem;
-				width: 28px; // for all !!!!
-				> i.ico {
-					font-size: 17px;
-				}
-			}
-		}
-	}
-
-	&.cb-large {
-		.input-group {
-			select {
-				font-size: 1.3rem;
-				height: 2.3rem;
-				padding: 0 8px;
-			}
-
-			.select-wrapper {
-				font-size: 1.3rem;
-
-				.select-text {
-					line-height: 2.45rem;
-				}
-
-				.caret {
-					margin-top: 1.2rem;
-				}
-			}
-		}
 	}
 
 	&.with-width {
@@ -431,15 +374,6 @@
 	&:hover .input-group {
 		// нельзя, иначе "всплывает" поверх выделенной ошибки
 		z-index: @hover-index;
-	}
-
-	input, select, textarea {
-		width: 100%;
-		background-color: transparent;
-	}
-
-	select {
-		padding: 0 2px;
 	}
 
 	.control {
@@ -590,15 +524,15 @@
 }
 
 .small {
-	font-size: .86rem;
+	font-size: .86em;
 }
 
 .large {
-	font-size: 1.15rem;
+	font-size: 1.15em;
 }
 
 .normal {
-	font-size: 1rem;
+	font-size: 1em;
 }
 
 .a2-hyperlink.highlight {

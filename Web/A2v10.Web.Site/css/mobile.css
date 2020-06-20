@@ -11,7 +11,7 @@
 .ico {
   font-family: 'A2v10';
   speak: none;
-  font-size: 14px;
+  font-size: 1.077rem;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -587,7 +587,6 @@
 }
 .ico-trash:before {
   content: "\e992";
-  color: #a94442;
 }
 .ico-table:before {
   content: "\eab0";
@@ -649,6 +648,9 @@
   color: #a94442;
 }
 .ico-delete:before {
+  content: "\e94f";
+}
+.ico-delete-red:before {
   content: "\e94f";
   color: #a94442;
 }
@@ -792,7 +794,7 @@ input[type=button] {
   background-color: #ddd;
 }
 button {
-  font-size: 13px;
+  font-size: 1rem;
   border: 1px solid transparent;
   cursor: pointer;
 }
@@ -820,7 +822,7 @@ input,
 select,
 textarea {
   border-style: none;
-  font-size: 13px;
+  font-size: 1em;
   color: #222;
 }
 input:focus,
@@ -833,7 +835,7 @@ textarea {
 }
 input,
 select {
-  height: 1.95rem;
+  height: 2em;
   padding: 0 5px;
 }
 /* hide for focused */
@@ -1973,7 +1975,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .control-group .input-group input,
 .control-group .input-group select {
-  height: 1.95rem;
+  height: 2em;
   font-weight: inherit;
   font-style: inherit;
   min-width: 32px;
@@ -1983,7 +1985,7 @@ table.data-grid > tbody > tr.bold > td {
   cursor: pointer;
 }
 .control-group .input-group .selector-combo {
-  line-height: 1.95rem;
+  line-height: 2em;
   width: 100%;
   cursor: pointer;
   display: flex;
@@ -1999,7 +2001,7 @@ table.data-grid > tbody > tr.bold > td {
   padding: 0 5px;
 }
 .control-group .input-group .select-wrapper .select-text {
-  line-height: 1.95rem;
+  line-height: 2em;
   flex-grow: 2;
   overflow: hidden;
   white-space: nowrap;
@@ -2019,7 +2021,7 @@ table.data-grid > tbody > tr.bold > td {
   display: inline-grid;
   align-items: center;
   width: 100%;
-  min-height: 1.95rem;
+  min-height: 2em;
 }
 .control-group .input-group.static > span:focus {
   outline-style: none;

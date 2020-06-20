@@ -603,7 +603,6 @@
 }
 .ico-trash:before {
   content: "\e992";
-  color: #a94442;
 }
 .ico-table:before {
   content: "\eab0";
@@ -665,6 +664,9 @@
   color: #a94442;
 }
 .ico-delete:before {
+  content: "\e94f";
+}
+.ico-delete-red:before {
   content: "\e94f";
   color: #a94442;
 }
@@ -4393,12 +4395,12 @@ ul.news-list > li {
 }
 .modal-header {
   background-color: #fff29d;
-  padding: 8px 0.75rem;
+  padding: 0.5rem 0.75rem;
   cursor: move;
   font-weight: 500;
   border-bottom: 1px solid #ddd;
-  min-height: 34px;
-  line-height: 1.6rem;
+  min-height: 39px;
+  line-height: 1.8rem;
 }
 .modal-header .modal-title-info {
   margin-left: 1rem;
@@ -4406,7 +4408,8 @@ ul.news-list > li {
 .modal-header .btnclose {
   float: right;
   color: #aaa;
-  line-height: 1.6rem;
+  width: 25px;
+  height: 25px;
 }
 .modal-header .btnclose:not([disabled]):hover,
 .modal-header .btnclose:not([disabled]):active,
@@ -4422,7 +4425,7 @@ ul.news-list > li {
 .modal-header .btn-help {
   float: right;
   color: #999;
-  line-height: 1.6rem;
+  line-height: 1.8rem;
   /* ? */
   padding: 0 4px;
   margin-right: 0.2rem;

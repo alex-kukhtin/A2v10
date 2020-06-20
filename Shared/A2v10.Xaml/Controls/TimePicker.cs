@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);
+			SetSize(input, nameof(TimePicker));
 			if (Placement != DropDownPlacement.BottomLeft)
 				input.AddCssClass("drop-" + Placement.ToString().ToKebabCase());
 			MergeValue(input, context);
