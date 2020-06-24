@@ -75,6 +75,7 @@ namespace A2v10.Workflow
 		{
 			var p = new Process
 			{
+				Id = info.ProcessId,
 				Kind = def.Name,
 				Definition = def.Definition,
 				ActionBase = info.ActionBase,
@@ -101,7 +102,10 @@ namespace A2v10.Workflow
 
 		internal async Task Start(IDbContext dbContext)
 		{
-			await dbContext.ExecuteAsync(null, "a2workflow.[Process.Create]", this);
+			if (this.Id != 0)
+				await dbContext.ExecuteAsync(null, "a2workflow.[Process.Start]", this);
+			else
+				await dbContext.ExecuteAsync(null, "a2workflow.[Process.Create]", this);
 			if (this.Id == 0)
 				throw new WorkflowException("Failed to start process");
 		}

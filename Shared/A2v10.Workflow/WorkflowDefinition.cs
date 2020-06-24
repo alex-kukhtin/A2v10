@@ -72,6 +72,12 @@ namespace A2v10.Workflow
 				Path = Source.Substring(5).Trim();
 				Name = System.IO.Path.GetFileNameWithoutExtension(Path);
 			}
+			else if (Source.StartsWith("db:"))
+			{
+				Type = WorkflowType.Db;
+				Path = Source.Substring(3).Trim();
+				Name = System.IO.Path.GetFileNameWithoutExtension(Path);
+			}
 			else
 			{
 				throw new WorkflowException($"Invalid workflow source ('{Source}')");
@@ -151,9 +157,13 @@ namespace A2v10.Workflow
 			}
 			else if  (Type ==WorkflowType.Db)
 			{
-				//dbContext.Load(this.Path)
-				var defText = "TODO: GetDefinition from database";
-				using (var sr = new StringReader(defText))
+				var fullPath = Path.Replace('\\', '/').ToLowerInvariant();
+				fullPath = System.IO.Path.ChangeExtension(fullPath, ".xaml");
+				var appStream = dbContext.Load<AppStream>(null, "a2sys.LoadApplicationFile", new { Path = fullPath });
+				if (appStream.Stream == null)
+					throw new WorkflowException($"There is no definition for '{fullPath}'");
+				Definition = appStream.Stream;
+				using (var sr = new StringReader(appStream.Stream))
 				{
 					Activity root = ActivityXamlServices.Load(sr) as Activity;
 					Cached = RuntimeActivity.Compile(GetHashedName(), root);

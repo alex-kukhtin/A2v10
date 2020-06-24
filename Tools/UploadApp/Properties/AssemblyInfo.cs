@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("A2v10.Web.Script")]
+[assembly: AssemblyTitle("UploadApp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("A2v10.Web.Script")]
-[assembly: AssemblyCopyright("Copyright © 2018 Alex Kukhtin. All rights reserved.")]
+[assembly: AssemblyProduct("UploadApp")]
+[assembly: AssemblyCopyright("Copyright © 2015-2020 Alex Kukhtin. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0b570ad7-c466-4434-a610-f0cac2813676")]
+[assembly: Guid("cb5ffc30-8e26-491b-84be-eee216765ad1")]
 
 // Version information for an assembly consists of the following four values:
 //

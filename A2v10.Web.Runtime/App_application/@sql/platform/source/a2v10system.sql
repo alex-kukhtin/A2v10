@@ -1,8 +1,8 @@
 ﻿/*
-Copyright © 2008-2019 Alex Kukhtin
+Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 21 dec 2019
-module version : 7052
+Last updated : 24 jun 2020
+module version : 7053
 */
 ------------------------------------------------
 set nocount on;
@@ -32,9 +32,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7052);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7053);
 else
-	update a2sys.Versions set [Version] = 7052 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7053 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -152,6 +152,16 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'AppFiles')
+begin
+create table a2sys.AppFiles (
+	[Path] nvarchar(255) not null constraint PK_AppFiles primary key,
+	Stream nvarchar(max) null,
+	DateModified datetime constraint DF_AppFiles_DateModified default(a2sys.fn_getCurrentDate())
+)	
+end
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'Id.TableType' and DATA_TYPE=N'table type')
 begin
 	create type a2sys.[Id.TableType]
@@ -171,6 +181,39 @@ begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
 	select [Module], [Version], [File], [Title] from a2sys.Versions;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'LoadApplicationFile')
+	drop procedure [a2sys].[LoadApplicationFile]
+go
+------------------------------------------------
+create procedure [a2sys].[LoadApplicationFile]
+	@Path nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select [Path], Stream from a2sys.AppFiles where [Path] = @Path;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'UploadApplicationFile')
+	drop procedure [a2sys].[UploadApplicationFile]
+go
+------------------------------------------------
+create procedure [a2sys].[UploadApplicationFile]
+	@Path nvarchar(255),
+	@Stream nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	update a2sys.AppFiles set Stream = @Stream, DateModified = a2sys.fn_getCurrentDate() where [Path] = @Path;
+
+	if @@rowcount = 0
+		insert into a2sys.AppFiles([Path], Stream)
+		values (@Path, @Stream);
 end
 go
 ------------------------------------------------

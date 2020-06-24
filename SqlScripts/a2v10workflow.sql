@@ -2,8 +2,8 @@
 ------------------------------------------------
 Copyright © 2008-2020 A. Kukhtin
 
-Last updated : 13 feb 2019
-module version : 7054
+Last updated : 24 jun 2020
+module version : 7055
 */
 
 /*
@@ -19,9 +19,9 @@ Depends on Windows Workflow Foundation scripts.
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7054);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7055);
 	else
-		update a2sys.Versions set [Version] = 7054 where Module = N'std:workflow';
+		update a2sys.Versions set [Version] = 7055 where Module = N'std:workflow';
 	end
 go
 ------------------------------------------------
@@ -268,6 +268,24 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Process.Start')
+	drop procedure [a2workflow].[Process.Start]
+go
+------------------------------------------------
+create procedure a2workflow.[Process.Start]
+@Id bigint,
+@WorkflowId uniqueidentifier,
+@Definition nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	update a2workflow.Processes set AutoStart = 0, WorkflowId = @WorkflowId, [Definition] =@Definition where Id=@Id;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'Inbox.Create')
 	drop procedure [a2workflow].[Inbox.Create]
 go
@@ -345,6 +363,21 @@ begin
 	select p.Id, p.Kind, p.WorkflowId, p.[Definition]
 	from a2workflow.Processes p 
 	where p.Id = @Id;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'ProcessStart.Load')
+	drop procedure a2workflow.[ProcessStart.Load]
+go
+------------------------------------------------
+create procedure a2workflow.[ProcessStart.Load]
+@Id bigint
+as
+begin
+	set nocount on;
+	select p.Id, p.Kind, p.Source, p.ActionBase, p.DataSource, p.[Schema], ModelName = p.Model, p.ModelId
+	from a2workflow.Processes p 
+	where p.Id = @Id and WorkflowId is null;
 end
 go
 ------------------------------------------------

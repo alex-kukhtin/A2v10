@@ -23,8 +23,15 @@ table.prop-grid {
 		width: 1px;
 	}
 
+
 	td.prop-name {
 		color: @label-color;
+	}
+
+	&.no-wrap-name {
+		td.prop-name {
+			white-space:nowrap;
+		}
 	}
 
 	td.prop-value {

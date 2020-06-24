@@ -59,6 +59,8 @@ namespace A2v10.Xaml
 				page.MergeAttribute("id", context.RootId);
 				addGridAction(page);
 				AddAttributes(page);
+				if (!isGridPage)
+					MergeAttributes(page, context, MergeAttrMode.Margin);
 				page.RenderStart(context);
 			}
 

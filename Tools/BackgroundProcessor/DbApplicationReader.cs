@@ -11,13 +11,6 @@ using A2v10.Infrastructure;
 
 namespace BackgroundProcessor
 {
-
-	public class AppStream
-	{
-		public String Path { get; set; }
-		public String Stream { get; set; }
-	}
-
 	public class DbApplicationReader : IApplicationReader
 	{
 		private readonly IDbContext _dbContext;
@@ -72,7 +65,7 @@ namespace BackgroundProcessor
 		public Stream FileStreamFullPathRO(String fullPath)
 		{
 			fullPath = fullPath.Replace('\\', '/').ToLowerInvariant();
-			var appStream = _dbContext.Load<AppStream>(_source, "a2sys.LoadApplicationFile", new { Path = fullPath });
+			var appStream = _dbContext.Load<AppStream>(_source, "a2sys.[LoadApplicationFile]", new { Path = fullPath });
 			if (appStream == null)
 				throw new FileNotFoundException($"file not found: {fullPath}");
 			return new MemoryStream(Encoding.UTF8.GetBytes(appStream.Stream), writable:false);

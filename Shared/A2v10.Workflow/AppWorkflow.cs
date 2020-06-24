@@ -189,33 +189,21 @@ namespace A2v10.Workflow
 			return result;
 		}
 
-		public static void AutoStart(Int64 processId, IApplicationHost host, IDbContext dbContext, IMessaging messaging, ILogger logger)
+		public static WorkflowResult AutoStart(Int64 processId, IApplicationHost host, IDbContext dbContext, IMessaging messaging, ILogger logger)
 		{
-			/*
-		public Int64 UserId { get; set; }
-		public String ActionBase { get; set; }
-		public String Source { get; set; }
-		public String DataSource { get; set; }
-		public String Schema { get; set; }
-		public String Model { get; set; }
-		public Int64 ModelId { get; set; }
-		public String Comment { get; set; }
-		public Int64 Parent { get; set; }
-			*/
-			var p = new Process();
-			p.Id = processId;
+			var p = dbContext.Load<Process>(null, "a2workflow.[ProcessStart.Load]", new { Id = processId });
 			StartWorkflowInfo info = new StartWorkflowInfo()
 			{
+				ProcessId = p.Id,
 				UserId = 0, // System
-				ActionBase = "from record",
-				Source = "FileName from record",
-				DataSource = "from record",
-				Schema = "from record",
-				Model = "from record",
-				ModelId = 0 // from record
+				ActionBase = p.ActionBase,
+				Source = p.Source,
+				DataSource = p.DataSource,
+				Schema = p.Schema,
+				Model = p.ModelName,
+				ModelId = p.ModelId
 			};
-			var r = StartWorkflow(host, dbContext, messaging, info).Result;
-			throw new NotImplementedException("AppWorkflow.AutoStart yet not implemented");
+			return StartWorkflow(host, dbContext, messaging, info).Result;
 		}
 
 		internal void Track(TrackingRecord record)

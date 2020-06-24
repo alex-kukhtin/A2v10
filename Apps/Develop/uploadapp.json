@@ -1,0 +1,6 @@
+﻿{
+	"files": [
+		"workflows/*.*",
+		"sales/waybill/links.template.js"
+	]
+}

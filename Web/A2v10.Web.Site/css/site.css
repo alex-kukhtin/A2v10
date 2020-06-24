@@ -2880,7 +2880,7 @@ pre.a2-code {
   border-top: 1px solid #ddd;
 }
 .period-picker .period-footer .btn {
-  padding: 4px 6px;
+  padding: 0.3em 0.5em;
 }
 .period-picker .period-footer .btn + .btn {
   margin-left: 0.8em;
@@ -2911,7 +2911,7 @@ pre.a2-code {
   background-color: transparent;
 }
 .period-picker.pp-navbar .input-group .period-text {
-  font-size: 15px;
+  font-size: 1.2rem;
 }
 .period-picker.pp-small {
   font-size: 0.95rem;
@@ -4921,6 +4921,9 @@ table.prop-grid col.prop-name {
 }
 table.prop-grid td.prop-name {
   color: #999;
+}
+table.prop-grid.no-wrap-name td.prop-name {
+  white-space: nowrap;
 }
 table.prop-grid td.prop-value .control-group {
   margin: 0;

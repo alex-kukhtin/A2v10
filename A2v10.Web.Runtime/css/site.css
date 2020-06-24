@@ -27,7 +27,7 @@
 .ico {
   font-family: 'A2v10';
   speak: none;
-  font-size: 14px;
+  font-size: 1.077rem;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
@@ -810,7 +810,7 @@ input[type=button] {
   background-color: #ddd;
 }
 button {
-  font-size: 13px;
+  font-size: 1rem;
   border: 1px solid transparent;
   cursor: pointer;
 }
@@ -838,7 +838,7 @@ input,
 select,
 textarea {
   border-style: none;
-  font-size: 13px;
+  font-size: 1em;
   color: #222;
 }
 input:focus,
@@ -851,7 +851,7 @@ textarea {
 }
 input,
 select {
-  height: 1.95rem;
+  height: 2em;
   padding: 0 5px;
 }
 /* hide for focused */
@@ -1897,7 +1897,7 @@ footer .debug-btn,
 footer .menu,
 .footer .menu {
   margin-bottom: -2px;
-  font-size: 13px;
+  font-size: 1rem;
   text-transform: none;
 }
 footer .version-info,
@@ -1991,12 +1991,16 @@ pre.a2-code {
 }
 .control-group {
   display: block;
+  font-size: 1em;
   margin-bottom: 0.5rem;
   position: relative;
   /* можно запретить :hover */
 }
+.control-group .ico {
+  font-size: 1em;
+}
 .control-group label {
-  font-size: 0.95rem;
+  font-size: 0.95em;
   color: #999;
   margin-bottom: 0.15em;
   display: block;
@@ -2007,7 +2011,7 @@ pre.a2-code {
 }
 .control-group .descr {
   display: inline-block;
-  font-size: 95%;
+  font-size: 0.95em;
   margin-bottom: 0.25em;
   color: #999;
 }
@@ -2032,8 +2036,6 @@ pre.a2-code {
   line-height: 1.2em;
   font-weight: normal;
   font-style: normal;
-  /*
-		*/
 }
 .control-group .validator:before,
 .control-group .validator:after {
@@ -2156,27 +2158,29 @@ pre.a2-code {
   right: 9px;
   left: auto;
 }
+.control-group input,
+.control-group select,
+.control-group textarea {
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  width: 100%;
+  background-color: transparent;
+  min-width: 32px;
+}
+.control-group select {
+  opacity: 0;
+  cursor: pointer;
+}
 .control-group .input-group {
   border: 1px solid #ddd;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   background-color: white;
   width: auto;
   position: relative;
 }
-.control-group .input-group input,
-.control-group .input-group select {
-  height: 1.95rem;
-  font-weight: inherit;
-  font-style: inherit;
-  min-width: 32px;
-}
-.control-group .input-group select {
-  opacity: 0;
-  cursor: pointer;
-}
 .control-group .input-group .selector-combo {
-  line-height: 1.95rem;
   width: 100%;
   cursor: pointer;
   display: flex;
@@ -2192,7 +2196,7 @@ pre.a2-code {
   padding: 0 5px;
 }
 .control-group .input-group .select-wrapper .select-text {
-  line-height: 1.95rem;
+  line-height: 2em;
   flex-grow: 2;
   overflow: hidden;
   white-space: nowrap;
@@ -2200,7 +2204,7 @@ pre.a2-code {
 }
 .control-group .input-group .select-wrapper .caret {
   display: block;
-  margin-top: 0.8em;
+  margin: 0.9em 0.2em 0 0.5em;
 }
 .control-group .input-group.static {
   background-color: #f9f9f9;
@@ -2212,19 +2216,10 @@ pre.a2-code {
   display: inline-grid;
   align-items: center;
   width: 100%;
-  min-height: 1.95rem;
+  min-height: 2em;
 }
 .control-group .input-group.static > span:focus {
   outline-style: none;
-}
-.control-group .input-group > a,
-.control-group .input-group > .popover-wrapper {
-  align-self: stretch;
-  line-height: 1.8rem;
-}
-.control-group .input-group > a .ico:before,
-.control-group .input-group > .popover-wrapper .ico:before {
-  color: inherit;
 }
 .control-group .input-group > .popover-wrapper {
   display: inline-block;
@@ -2233,13 +2228,15 @@ pre.a2-code {
 .control-group .input-group > a,
 .control-group .input-group > .dropdown > a {
   color: #999;
-  padding: 1px 4px 0 2px;
+  padding: 0 0.4em;
   display: inline-block;
+  line-height: 2em;
 }
 .control-group .input-group > a:hover,
 .control-group .input-group > .dropdown > a:hover {
   text-decoration: none;
   color: #208cf8;
+  background-color: #f8f8f8;
 }
 .control-group .input-group .a2-inline {
   margin-left: 0 !important;
@@ -2254,46 +2251,8 @@ pre.a2-code {
   font-size: 1px;
   z-index: -10;
 }
-.control-group.lg .input-group input,
-.control-group.lg .input-group .static-input {
+.control-group.lg {
   font-size: 1.3rem;
-  height: 2.45rem;
-  padding: 0 8px;
-}
-.control-group.lg label {
-  font-size: 1rem;
-}
-.control-group.lg .input-group > a {
-  line-height: 2.4rem;
-}
-.control-group.lg .input-group > a > i.ico {
-  font-size: 17px;
-}
-.control-group.sel-large .input-group input {
-  font-size: 1.3rem;
-  height: 2.45rem;
-  padding: 0 8px;
-}
-.control-group.sel-large .input-group > a {
-  line-height: 2.4rem;
-  width: 28px;
-}
-.control-group.sel-large .input-group > a > i.ico {
-  font-size: 17px;
-}
-.control-group.cb-large .input-group select {
-  font-size: 1.3rem;
-  height: 2.3rem;
-  padding: 0 8px;
-}
-.control-group.cb-large .input-group .select-wrapper {
-  font-size: 1.3rem;
-}
-.control-group.cb-large .input-group .select-wrapper .select-text {
-  line-height: 2.45rem;
-}
-.control-group.cb-large .input-group .select-wrapper .caret {
-  margin-top: 1.2rem;
 }
 .control-group.with-width .input-group {
   width: 100%;
@@ -2317,15 +2276,6 @@ pre.a2-code {
 }
 .control-group:hover .input-group {
   z-index: auto;
-}
-.control-group input,
-.control-group select,
-.control-group textarea {
-  width: 100%;
-  background-color: transparent;
-}
-.control-group select {
-  padding: 0 2px;
 }
 .control-group .control {
   border-style: none;
@@ -2430,13 +2380,13 @@ pre.a2-code {
   display: none;
 }
 .small {
-  font-size: 0.86rem;
+  font-size: 0.86em;
 }
 .large {
-  font-size: 1.15rem;
+  font-size: 1.15em;
 }
 .normal {
-  font-size: 1rem;
+  font-size: 1em;
 }
 .a2-hyperlink.highlight {
   /*special behaviour for icon 'send' */
@@ -2630,7 +2580,7 @@ pre.a2-code {
 }
 .caret {
   display: inline-block;
-  margin: 4px 0 0 4px;
+  margin: 0 0 0 0.5em;
   border: 4px solid transparent;
   vertical-align: middle;
   border-top-color: currentColor;
@@ -2756,6 +2706,7 @@ pre.a2-code {
 }
 .input-group > .calendar {
   display: flex;
+  font-size: 1rem;
   flex-direction: row;
   border: 1px solid #ddd;
   position: absolute;
@@ -2765,7 +2716,7 @@ pre.a2-code {
   z-index: 1070 !important;
   margin-top: 0;
   margin-left: -1px;
-  padding: 10px;
+  padding: 0.8em;
   box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
   color: #222;
 }
@@ -2875,10 +2826,10 @@ pre.a2-code {
 }
 .period-picker .period-text {
   padding: 0 0 0 5px;
-  line-height: 1.95rem;
+  line-height: 2em;
   display: block;
   width: 100%;
-  min-height: 1.95rem;
+  min-height: 2em;
   white-space: nowrap;
 }
 .period-picker.open:not(.pp-navbar):not(.pp-hyperlink) .period-text {
@@ -2896,7 +2847,7 @@ pre.a2-code {
 }
 .period-picker .period-menu li > a {
   display: block;
-  padding: 0 10px;
+  padding: 0 0.8em;
   line-height: 1.9rem;
   cursor: pointer;
   white-space: nowrap;
@@ -2910,7 +2861,7 @@ pre.a2-code {
 }
 .period-picker .period-pane {
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 0.8em;
   font-size: 1rem;
   font-weight: normal;
   font-style: normal;
@@ -2925,14 +2876,14 @@ pre.a2-code {
 .period-picker .period-footer {
   display: flex;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 0.8em;
   border-top: 1px solid #ddd;
 }
 .period-picker .period-footer .btn {
-  padding: 4px 6px;
+  padding: 0.3em 0.5em;
 }
 .period-picker .period-footer .btn + .btn {
-  margin-left: 10px;
+  margin-left: 0.8em;
 }
 .period-picker.pp-hyperlink .input-group {
   border-style: none;
@@ -2948,7 +2899,7 @@ pre.a2-code {
   display: none;
 }
 .period-picker.pp-hyperlink.pp-large {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 .period-picker.pp-hyperlink.pp-large .input-group .period-text {
   line-height: 2.3rem;
@@ -2960,7 +2911,7 @@ pre.a2-code {
   background-color: transparent;
 }
 .period-picker.pp-navbar .input-group .period-text {
-  font-size: 15px;
+  font-size: 1.2rem;
 }
 .period-picker.pp-small {
   font-size: 0.95rem;
@@ -2983,10 +2934,6 @@ pre.a2-code {
   right: -1px;
   bottom: 100%;
   margin-bottom: 1px;
-}
-.input-group a.selector-open {
-  padding-right: 8px;
-  padding-top: 0 !important;
 }
 .input-group a.selector-clear {
   padding-right: 8px;
@@ -3030,6 +2977,7 @@ pre.a2-code {
   max-height: 250px;
   min-height: 23px;
   overflow: auto;
+  font-size: 1rem;
 }
 .input-group > .selector-pane ul.selector-ul {
   margin: 0;
@@ -3070,7 +3018,7 @@ pre.a2-code {
   line-height: 2.3rem;
 }
 .control-group.selector-combobox .input-group .selector-combo {
-  line-height: 1.95rem;
+  line-height: 2em;
   width: 100%;
   cursor: pointer;
   display: flex;
@@ -4461,7 +4409,7 @@ ul.news-list > li {
   text-decoration: none;
 }
 .modal-footer .btn + .btn-caret {
-  min-width: auto;
+  min-width: 0;
   margin-left: 0;
 }
 .modal-body.confirm,
@@ -4974,6 +4922,9 @@ table.prop-grid col.prop-name {
 table.prop-grid td.prop-name {
   color: #999;
 }
+table.prop-grid.no-wrap-name td.prop-name {
+  white-space: nowrap;
+}
 table.prop-grid td.prop-value .control-group {
   margin: 0;
 }
@@ -5203,7 +5154,7 @@ TODO:
     1. shadow into variables
 */
 .menu {
-  padding: 6px;
+  padding: 0.25em 0;
   margin: 3px 0;
   top: 100%;
   min-width: 160px;
@@ -5213,7 +5164,7 @@ TODO:
 .menu .dropdown-item {
   display: flex;
   cursor: pointer;
-  padding: 4px 6px;
+  padding: 0.5em 1em;
   white-space: nowrap;
   color: #222;
   align-items: baseline;
@@ -5227,9 +5178,10 @@ TODO:
 }
 .menu .dropdown-item > .ico {
   display: inline-block;
-  margin-right: 4px;
+  margin-right: 0.5em;
   color: inherit;
-  min-width: 16px;
+  min-width: 1.25em;
+  font-size: 1.077em;
 }
 .menu .dropdown-item > .ico:before {
   color: #333;
@@ -5802,7 +5754,7 @@ TODO:
   align-self: stretch;
 }
 .stack-panel {
-  display: flex;
+  display: flex!important;
   flex-direction: column;
 }
 .stack-panel.horizontal {
@@ -5826,6 +5778,24 @@ TODO:
 }
 .align-end {
   align-items: flex-end !important;
+}
+.justify-center {
+  justify-content: center !important;
+}
+.justify-start {
+  justify-content: flex-start !important;
+}
+.justify-end {
+  justify-content: flex-end !important;
+}
+.justify-space-around {
+  justify-content: space-around !important;
+}
+.justify-space-between {
+  justify-content: space-between !important;
+}
+.justify-space-evenly {
+  justify-content: space-evenly !important;
 }
 .panel {
   margin-bottom: 12px;
@@ -6129,7 +6099,7 @@ iframe.eusign-iframe {
   flex-direction: row;
 }
 .flex-list {
-  display: flex;
+  display: flex!important;
   margin: 0;
   padding: 0;
   list-style: none;

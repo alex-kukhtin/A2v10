@@ -26,6 +26,8 @@ namespace A2v10.Xaml
 		public String TestId { get; set; }
 		public PropertyGridStyle Style { get; set; }
 
+		public Boolean NoWrapName { get; set; }
+
 		public PropertyGridItems Children { get; set; } = new PropertyGridItems();
 		public GridLinesVisibility GridLines { get; set; }
 
@@ -38,6 +40,7 @@ namespace A2v10.Xaml
 			table.AddCssClassBool(Compact, "compact");
 			SetStyle(table);
 			table.AddCssClassBool(Striped, "striped");
+			table.AddCssClassBool(NoWrapName, "no-wrap-name");
 			if (!String.IsNullOrEmpty(TestId) && context.IsDebugConfiguration)
 				table.MergeAttribute("test-id", TestId);
 			MergeAttributes(table, context);

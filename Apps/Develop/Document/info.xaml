@@ -7,7 +7,7 @@
 			Это информация о документе (странная)
 		</Popover>
 	</Panel.Hint>
-	<PropertyGrid GridLines="Horizontal" Compact="True" >
+	<PropertyGrid GridLines="Horizontal" Compact="True" NoWrapName="True" >
 		<PropertyGridItem Name="Код" Content="{Bind Document.Id}"/>
 		<PropertyGridItem Name="Создан">
 			<Text>
