@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200613-7673*/
+/*20200624-7676*/
 /* controllers/shell.js */
 
 (function () {
@@ -253,7 +253,6 @@
 				if (this.isNavBarMenu) return true;
 				let route = this.route;
 				if (menu.isSeparatePage(this.pages, route.seg0)) return false;
-				console.dir(route.len);
 				return route.seg0 !== 'app' && (route.len === 2 || route.len === 3);
 			},
 			sideBarVisible() {
