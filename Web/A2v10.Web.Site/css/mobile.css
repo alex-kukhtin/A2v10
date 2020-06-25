@@ -3124,7 +3124,8 @@ tr:hover .commandbar.visible-hover {
   min-width: 100%;
 }
 .dropdown-menu > .checkbox {
-  margin-left: 4px;
+  margin-left: 1rem;
+  padding: 0.5em;
 }
 .dropdown-menu > .checkbox > span {
   padding-left: 26px;

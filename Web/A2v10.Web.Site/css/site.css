@@ -1396,7 +1396,7 @@ header .dropdown.separate.show .btn.btn-success,
   left: 0;
   right: 0;
   top: 0;
-  bottom: 22px;
+  bottom: 2em;
 }
 .content-view.partial-page {
   left: 256px;
@@ -1522,7 +1522,7 @@ header .dropdown.separate.show .btn.btn-success,
   transform: scale(0.8, 0.8);
   opacity: 0;
   transition: transform 0.14s ease, opacity 0.1s ease;
-  padding-bottom: 22px;
+  padding-bottom: 2em;
 }
 .menu-navbar.show {
   transform: scale(1, 1);
@@ -1883,7 +1883,7 @@ footer,
   left: 0;
   bottom: 0;
   right: 0;
-  height: 22px;
+  height: 2em;
   background-color: #f2f3f9;
   border-top: 1px solid #cfd6e5;
   padding: 0 2px 0 8px;
@@ -4317,7 +4317,7 @@ ul.news-list > li {
   width: 498px;
 }
 .debug .modal-animation-frame {
-  bottom: 22px;
+  bottom: 2em;
 }
 .inline-modal-wrapper {
   position: fixed;
@@ -5199,7 +5199,7 @@ TODO:
 .menu .divider {
   flex-grow: 0;
   height: 1px;
-  margin: 4px 6px;
+  margin: 0.5em;
   background-color: #ddd;
 }
 .menu .group-title {
@@ -5224,7 +5224,9 @@ TODO:
   min-width: 100%;
 }
 .dropdown-menu > .checkbox {
-  margin-left: 4px;
+  float: left;
+  margin-left: 1rem;
+  padding: 0.5em 0;
 }
 .dropdown-menu > .checkbox > span {
   padding-left: 26px;
@@ -6570,7 +6572,7 @@ table > colgroup col.blue {
   left: 0;
   top: 72px;
   margin: 0;
-  bottom: 22px;
+  bottom: 2em;
   width: 250px;
   padding: 16px 0 0 0;
   border-right: 1px solid #cfd6e5;
@@ -6628,7 +6630,7 @@ table > colgroup col.blue {
   top: 78px;
   margin: 0;
   padding: 0;
-  bottom: 22px;
+  bottom: 2em;
   width: 250px;
   background-color: #9ab3e0;
   transition: width 0.1s ease-out;
@@ -6757,16 +6759,19 @@ table > colgroup col.blue {
 .debug-panel {
   position: absolute;
   top: 40px;
-  bottom: 22px;
+  bottom: 2em;
   right: 0;
   z-index: 110;
   background-color: #f9f9f9;
   border-left: 1px solid #ddd;
-  width: 350px;
+  width: 390px;
   box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+.debug-panel .a2-code {
+  font-size: 12px;
 }
 .debug-panel.left {
   left: 0;
@@ -6795,8 +6800,8 @@ table > colgroup col.blue {
   border-color: #e5c365;
 }
 .debug-panel .toolbar {
-  min-height: 32px;
-  height: 32px;
+  min-height: 2.5rem;
+  height: 2.5rem;
 }
 .debug-panel .debug-body {
   overflow: auto;
@@ -6809,7 +6814,7 @@ table > colgroup col.blue {
 .debug-panel .debug-trace {
   padding: 6px, 0;
   font-family: Consolas, 'Courier New', Courier, monospace;
-  font-size: 0.9rem;
+  font-size: 12px;
 }
 .debug-panel .debug-trace .rq-title {
   display: flex;
@@ -6851,12 +6856,12 @@ table > colgroup col.blue {
 .feedback-panel {
   position: absolute;
   top: 40px;
-  bottom: 22px;
+  bottom: 2em;
   right: 0;
   z-index: 110;
   background-color: #f9f9f9;
   border-left: 1px solid #ddd;
-  width: 350px;
+  width: 390px;
   box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
   display: flex;

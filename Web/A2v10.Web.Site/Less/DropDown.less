@@ -61,7 +61,7 @@ TODO:
 	.divider {
 		flex-grow: 0;
 		height: 1px;
-		margin: 4px 6px;
+		margin: .5em;
 		background-color: @divider-color;
 	}
 
@@ -86,11 +86,13 @@ TODO:
 	right: auto;
 	top: 100%;
 	bottom: auto;
-	text-align:left;
-	min-width:100%;
+	text-align: left;
+	min-width: 100%;
 
 	> .checkbox {
-		margin-left: 4px;
+		float:left; // prevent padding collapse
+		margin-left: 1rem;
+		padding: .5em 0;
 
 		> span {
 			padding-left: 26px;

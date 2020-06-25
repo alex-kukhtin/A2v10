@@ -2,7 +2,7 @@
 
 @import "Utlis.less";
 
-@debug-pane-width: 350px;
+@debug-pane-width: 390px;
 @debug-pane-bg-color: @whitesmoke-gray-bg-color;
 
 @debug-info-color: #478fb1;
@@ -21,6 +21,10 @@
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
+
+	.a2-code {
+		font-size:12px;
+	}
 
 	&.left {
 		left: 0;
@@ -54,8 +58,8 @@
 	}
 
 	.toolbar {
-		min-height: 32px;
-		height: 32px;
+		min-height: 2.5rem;
+		height: 2.5rem;
 	}
 
 	.debug-body {
@@ -73,7 +77,7 @@
 	.debug-trace {
 		padding: 6px, 0;
 		font-family: @monospace-font;
-		font-size: .9rem;
+		font-size: 12px;
 
 		.rq-title {
 			display: flex;

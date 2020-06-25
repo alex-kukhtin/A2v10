@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200511-7656
+// 20200625-7676
 /*components/pager.js*/
 
 
@@ -116,6 +116,8 @@ template: `
 			// middle
 			let ms = 2;
 			let me = this.pages - 1;
+			if (this.pages == 2)
+				me = 2;
 			let sd = false, ed = false, cp = this.currentPage;
 			let len = me - ms;
 			if (len > 4) {
