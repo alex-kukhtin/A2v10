@@ -21,6 +21,7 @@ namespace A2v10.Xaml
 		public TextColor Color { get; set; }
 		public BackgroundStyle Background { get; set; }
 		public ShadowStyle DropShadow { get; set; }
+		public Length MaxWidth { get; set; }
 
 		internal virtual void RenderChildren(RenderContext context)
 		{
@@ -70,6 +71,10 @@ namespace A2v10.Xaml
 			if (Color != TextColor.Default)
 				div.AddCssClass("text-color-" + Color.ToString().ToKebabCase());
 			MergeAlign(div, context, Align);
+
+			if (MaxWidth != null)
+				div.MergeStyle("max-width", MaxWidth.Value);
+
 			div.RenderStart(context);
 			RenderChildren(context);
 			div.RenderEnd(context);

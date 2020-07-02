@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace UploadApp
 {
@@ -43,7 +42,7 @@ namespace UploadApp
 					cmd.CommandText = "a2sys.[UploadApplicationFile]";
 					cmd.CommandType = CommandType.StoredProcedure;
 					cmd.Parameters.Add("Path", SqlDbType.NVarChar);
-					cmd.Parameters.Add("Stream", SqlDbType.NVarChar).Size = 65535;
+					cmd.Parameters.Add("Stream", SqlDbType.NVarChar).Size = 10485760;
 
 					WriteAllFiles(files.files, cmd);
 				}

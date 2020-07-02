@@ -26,7 +26,13 @@ namespace A2v10.Request
 			var prms = cmd.parameters;
 			qm.Key = prms.Get<String>("key");
 			qm.Template = prms.Get<String>("template");
-			qm.TargetId = Int64.Parse(cmd.Id);
+			qm.TargetId = dataToExec.Eval<Int64>("Id", 0);
+			if (qm.TargetId == 0)
+			{
+				// try get id from cmd.Id
+				if (cmd?.Id != null)
+					qm.TargetId = Int64.Parse(cmd.Id);
+			}
 			qm.Source = "ServerCommand";
 			qm.Parameters.Append(dataToExec);
 			bool immediately = true;

@@ -117,7 +117,7 @@
 		"sendMessage": {
 			"type": "sendMessage",
 			"parameters": {
-				"template": "workflows/messaging",
+				"template2": "workflows/messaging",
 				"key": "FromServer"
 			}
 		},

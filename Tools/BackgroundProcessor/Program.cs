@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Configuration;
 using System.Globalization;
@@ -46,9 +47,7 @@ namespace BackgroundProcessor
 			}
 			catch (Exception ex)
 			{
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				Console.WriteLine(ex.Message);
+				Console.WriteLine(ex.ToString());
 				_manager?.Stop();
 			}
 		}
