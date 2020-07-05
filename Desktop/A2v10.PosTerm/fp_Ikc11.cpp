@@ -1,10 +1,14 @@
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-
-#include "stdafx.h"
-#include "..\include\fiscalprinter.h"
-#include "fiscalprinterImpl.h"
+#include "pch.h"
+#include "posterm.h"
+#include "equipmentbase.h"
+#include "fiscalprinter.h"
+#include "fiscalprinterimpl.h"
 #include "fp_IkcBase.h"
 #include "fp_Ikc11.h"
+#include "stringtools.h"
+#include "errors.h"
 
 
 #ifdef _DEBUG
@@ -13,13 +17,6 @@
 
 CFiscalPrinter_Ikc11::CFiscalPrinter_Ikc11()
 {
-}
-
-// virtual 
-bool CFiscalPrinter_Ikc11::Init(DB_ID termId)
-{
-	// %%%%
-	return true;
 }
 
 // virtual
@@ -154,9 +151,9 @@ read:
 	IncSeq();
 	if (rcvBytes < 6)
 	{
-		CString msg;
-		msg.Format(L"Invalid receive count (%d)", rcvBytes);
-		ThrowInternalError(msg);
+		//CString msg;
+		//msg.Format(L"Invalid receive count (%d)", rcvBytes);
+		//ThrowInternalError(msg);
 	}
 	ParseStatus();
 }
@@ -179,19 +176,19 @@ struct DAYREPORT_INFO
 	BYTE sale2[16];
 	BYTE sale3[16];
 
-	BYTE x1[4];  // дневная наценка по продажам
-	BYTE x2[4];  // дневная скидка по продажам
+	BYTE x1[4];  // day sales margin
+	BYTE x2[4];  // day sales discount
 	BYTE cashin[4];  // дневная сумма служебного вноса
 
-	WORD rchecks; //  счетчик чеков возвратов
+	WORD retrcpcount; //  return receipt counter
 	/* 5 * счетчики возвратов по налоговым группам и формам оплат*/
 	BYTE rsale0[16];
 	BYTE rsale1[16];
 	BYTE rsale2[16];
 	BYTE rsale3[16];
 
-	BYTE y1[4]; // дневная наценка по выплатам
-	BYTE y2[4]; // дневная скидка по выплатам
+	BYTE y1[4]; // day payout margin
+	BYTE y2[4]; // day payout discount
 	BYTE cashout[4]; // дневная сумма служебной выдачи
 
 	LONG GetCashIn()
@@ -216,33 +213,34 @@ void CFiscalPrinter_Ikc11::DayReport_(void* Info)
 }
 
 // virtual 
-int CFiscalPrinter_Ikc11::GetLastCheckNo(DB_ID termId, bool bFromPrinter /*= false*/)
+int CFiscalPrinter_Ikc11::GetLastCheckNo(bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
 	{
 		DAYREPORT_INFO info = {0};
-		try {
+		try 
+		{
 			DayReport_(&info);
 		} 
-		catch (CFPException ex)
+		catch (EQUIPException ex)
 		{
-			ex.ReportError2();
+			//ex.ReportError2();
 			return false;
 		}
 		WORD ch = info.schecks; // bin
 		if (m_bReturnCheck)
-			ch = info.rchecks;
-		m_nLastCheckNo = ch;
+			ch = info.retrcpcount;
+		m_nLastReceiptNo = ch;
 	}
-	return m_nLastCheckNo;
+	return m_nLastReceiptNo;
 }
 
 // virtual
-CString CFiscalPrinter_Ikc11::FPGetLastError()
+std::wstring CFiscalPrinter_Ikc11::FPGetLastError()
 {
 	// s=0, err=0
 	if ((m_dwStatus == 0) && (m_dwError == 0))
-		return EMPTYSTR; // OK
+		return L""; // OK
 	if (m_dwStatus != 0)
 	{
 		if (m_dwError == 0)
@@ -312,21 +310,17 @@ CString CFiscalPrinter_Ikc11::FPGetLastError()
 }
 
 // virtual 
-bool CFiscalPrinter_Ikc11::FillZReportInfo(ZREPORT_INFO& zri)
+JsonObject CFiscalPrinter_Ikc11::FillZReportInfo()
 {
-	try 
-	{
-		DAYREPORT_INFO info = {0};
-		DayReport_(&info);
-		int s = info.GetCashIn();
-		zri.m_cash_in = CCyT::MakeCurrency(s / 100, s % 100);
-		s = info.GetCashOut();
-		zri.m_cash_out = CCyT::MakeCurrency(s / 100, s % 100);
-	} 
-	catch (CFPException ex)
-	{
-		ex.ReportError2();
-		return false;
-	}
-	return true;
+	JsonObject result;
+
+	TraceINFO(L"DATECS [%s]. FillZReportInfo()", _id.c_str());
+	DAYREPORT_INFO info = {0};
+	DayReport_(&info);
+	int s = info.GetCashIn();
+	//zri.m_cash_in = CCyT::MakeCurrency(s / 100, s % 100);
+	//s = info.GetCashOut();
+	//zri.m_cash_out = CCyT::MakeCurrency(s / 100, s % 100);
+
+	return result;
 }

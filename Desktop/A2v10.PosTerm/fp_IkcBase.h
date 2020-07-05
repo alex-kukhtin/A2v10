@@ -1,7 +1,5 @@
 #pragma once
 
-#undef AFX_DATA
-#define AFX_DATA AFX_OMEXT_DATA
 
 #define DLE 0x10
 #define STX 0x02
@@ -58,41 +56,66 @@ public:
 	{
 		return m_hCom != INVALID_HANDLE_VALUE;
 	}
-	virtual bool Open(const wchar_t* Port, const wchar_t* InitInfo);
+	virtual void SetParams(const PosConnectParams& prms) override;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
 	virtual void Close();
+
+	virtual void GetStatusMessages(std::vector<std::wstring>& msgs) override;
+	virtual void GetPrinterInfo(JsonObject& json) override;
+	virtual void GetErrorCode() override;
 
 	static int ConvertText(const wchar_t* szText, char* text, int bufSize, int maxSize);
 
 protected:
+
+	std::wstring _port;
+
 	virtual void CreateCommand(FP_COMMAND cmd, BYTE* pData = NULL, int DataLen = 0);
 	virtual void SendCommand();
 	virtual void RecalcCrcSum();
 	virtual BYTE CalcCheckSum(BYTE* pBytes, int dataLen);
 
+	virtual void Init() override;
+	virtual void AddArticle(const RECEIPT_ITEM& item) override;
 	virtual bool CancelCheck(bool& bClosed);
 	virtual bool CancelCheckCommand();
-	virtual bool ServiceInOut(__int64 sum);
+	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) override;
 	//virtual bool GetCash(DB_ID termId, COleCurrency& cy);
-	virtual bool NullCheck(bool bOpenCashDrawer);
-	virtual bool CopyCheck();
-	virtual void Comment(const wchar_t* szComment, int maxSize);
-	virtual bool PrintDiagnostic();
+	virtual long NullReceipt(bool bOpenCashDrawer) override;
+	virtual long CopyReceipt() override;
 	//virtual bool PrintCheckItem(const CFPCheckItemInfo& info);
+
+	virtual void CancelOrCloseReceipt() override;
+	virtual void CancelReceiptUnconditional() override;
 	virtual void OpenReceipt() override;
+	virtual void OpenReturnReceipt() override;
+	virtual void Payment(PAYMENT_MODE mode, long sum) override;
+	virtual void PrintTotal() override;
+	virtual void PrintReceiptItem(const RECEIPT_ITEM& item) override;
+	virtual long CloseReceipt(bool bDisplay) override;
 	//virtual bool CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, const wchar_t* szText = NULL);
-	virtual bool OpenReturnCheck(const wchar_t* szDepartmentName, long checkNo);
 	virtual long XReport() override;
-	//virtual bool ZReport();
+	virtual ZREPORT_RESULT ZReport() override;
 	virtual void OpenCashDrawer() override;
+	virtual bool PrintDiagnostic();
 	//virtual bool PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To);
-	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To);
+	virtual long PeriodReport(const wchar_t* report, bool bShort, const wchar_t* from, const wchar_t* to) override;
+	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) override;
 	virtual bool ReportByArticles();
+	virtual bool ReportModemState() override;
 	//virtual CString FPGetLastError();
+
 	virtual bool IsEndOfTape();
 	virtual bool PrintDiscount(LONG Type, LONG Sum, const wchar_t* szDescr);
-	virtual void PrintNonFiscalText(const wchar_t* szText) override;
 	virtual void DisplayRow(int nRow, const wchar_t* szString);
+	virtual void Comment(const wchar_t* szComment, int maxSize);
+
+	virtual void PrintFiscalText(const wchar_t* szText) override;
+	virtual void PrintNonFiscalText(const wchar_t* szText) override;
+	virtual void SetCurrentTime() override;
+	virtual void TraceCommand(const wchar_t* command) override;
+	virtual void DisplayDateTime() override;
+	virtual void DisplayClear() override;
 
 protected:
 	bool OpenComPort(const wchar_t* strPort, int nBaud);
@@ -109,6 +132,7 @@ protected:
 	void CheckPaperStatus();
 	void Payment(LONG Sum, PAY_TYPE pt, bool bAutoClose);
 	void PrintItem(const wchar_t* szName, long code, int iQty, double fQty, int price, int dscPrc, int dscSum, __int64 vtid, int nTax);
+
 
 protected:
 	HANDLE m_hCom;
@@ -127,10 +151,9 @@ protected:
 	int m_LastDataLen;
 	BYTE m_nSeq;
 	int  m_lastArt;
-	int m_nLastReceiptNo;
+	long m_nLastReceiptNo;
+	long m_nLastZReportNo;
+
 	bool m_bReturnCheck;
 	bool m_bEndOfTape;
 };
-
-#undef AFX_DATA
-#define AFX_DATA

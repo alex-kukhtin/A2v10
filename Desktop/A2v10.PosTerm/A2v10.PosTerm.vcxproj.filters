@@ -81,6 +81,9 @@
     <ClInclude Include="fp_IkcBase.h">
       <Filter>Header Files\fiscalprinters</Filter>
     </ClInclude>
+    <ClInclude Include="fp_Ikc11.h">
+      <Filter>Header Files\fiscalprinters</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -129,6 +132,9 @@
       <Filter>Source Files\fiscalprinters</Filter>
     </ClCompile>
     <ClCompile Include="fp_IkcBase.cpp">
+      <Filter>Source Files\fiscalprinters</Filter>
+    </ClCompile>
+    <ClCompile Include="fp_Ikc11.cpp">
       <Filter>Source Files\fiscalprinters</Filter>
     </ClCompile>
   </ItemGroup>

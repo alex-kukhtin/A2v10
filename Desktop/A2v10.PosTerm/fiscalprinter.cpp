@@ -9,6 +9,8 @@
 #include "fp_Null.h"
 #include "fp_DatecsBase.h"
 #include "fp_DatecsKrypton.h"
+#include "fp_IkcBase.h"
+#include "fp_Ikc11.h"
 
 #include "commanddata.h"
 #include "errors.h"
@@ -18,6 +20,7 @@ const wchar_t* TEST_PRINTER   = L"TESTPRINTER";
 const wchar_t* NO_PRINTER     = L"NOPRINTER";
 const wchar_t* DATECS_KRYPTON = L"DATECS-Krypton";
 const wchar_t* FP_DATECST260  = L"DATECS-T260";
+const wchar_t* FP_IKS_V11     = L"IKC-V11";
 
 // static 
 std::vector<std::unique_ptr<FiscalPrinter> > FiscalPrinter::_printers;
@@ -41,6 +44,8 @@ bool FiscalPrinter::Create(const wchar_t* model) {
 		_impl.reset(new CFiscalPrinter_DatecsKrypton(model));
 	else if (wcsncmp(model, FP_DATECST260, PRINTER_NAME_LEN) == 0)
 		_impl.reset(new CFiscalPrinter_DatecsKrypton(model));
+	else if (wcsncmp(model, FP_IKS_V11, PRINTER_NAME_LEN) == 0)
+		_impl.reset(new CFiscalPrinter_Ikc11());
 	return _impl.get() != nullptr;
 }
 

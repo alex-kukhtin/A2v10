@@ -173,6 +173,7 @@
     <ClInclude Include="fiscalprinterImpl.h" />
     <ClInclude Include="fp_DatecsKrypton.h" />
     <ClInclude Include="fp_DatecsBase.h" />
+    <ClInclude Include="fp_Ikc11.h" />
     <ClInclude Include="fp_IkcBase.h" />
     <ClInclude Include="fp_Null.h" />
     <ClInclude Include="framework.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="fiscalprinterimpl.cpp" />
     <ClCompile Include="fp_DatecsKrypton.cpp" />
     <ClCompile Include="fp_DatecsBase.cpp" />
+    <ClCompile Include="fp_Ikc11.cpp" />
     <ClCompile Include="fp_IkcBase.cpp" />
     <ClCompile Include="fp_Null.cpp" />
     <ClCompile Include="monitor.cpp" />
