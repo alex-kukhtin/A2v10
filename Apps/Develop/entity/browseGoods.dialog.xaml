@@ -2,7 +2,7 @@
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Выбор товара" Width="600" Padding="6">
+        Title="Выбор товара" Width="600" Padding="6" Maximize="True">
 	<Dialog.Buttons>
 		<Button Content="Выбрать" Command="{BindCmd Select, Argument={Bind Entities}}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>

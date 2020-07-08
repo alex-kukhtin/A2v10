@@ -43,7 +43,7 @@
 			&[maximize] {
 				width: 98vw;
 				margin: 10px auto;
-				height: ~"calc(100vh - 42px)"; // @footer-height + 10px * 2
+				height: ~"calc(100vh - 1.8rem - 20px)"; // @footer-height + 10px * 2
 				.modal-header {
 					cursor: default;
 				}
@@ -63,12 +63,12 @@
 				.taskpad {
 					overflow: hidden;
 					padding: 0;
-					
+
 					.taskpad-body {
 					}
 
 					.taskpad-collapse-handle {
-						display:none; //TODO:??
+						display: none; //TODO:??
 					}
 				}
 			}
@@ -83,8 +83,8 @@
 		}
 
 		.load-indicator {
-			top: @header-height;
-			margin-top:-4px;
+			top: @modal-header-height;
+			margin-top: -4px;
 			background-color: @default-brd-color;
 		}
 

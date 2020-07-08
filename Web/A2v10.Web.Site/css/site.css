@@ -1396,7 +1396,7 @@ header .dropdown.separate.show .btn.btn-success,
   left: 0;
   right: 0;
   top: 0;
-  bottom: 2em;
+  bottom: 1.8rem;
 }
 .content-view.partial-page {
   left: 256px;
@@ -1522,7 +1522,7 @@ header .dropdown.separate.show .btn.btn-success,
   transform: scale(0.8, 0.8);
   opacity: 0;
   transition: transform 0.14s ease, opacity 0.1s ease;
-  padding-bottom: 2em;
+  padding-bottom: 1.8rem;
 }
 .menu-navbar.show {
   transform: scale(1, 1);
@@ -1883,7 +1883,7 @@ footer,
   left: 0;
   bottom: 0;
   right: 0;
-  height: 2em;
+  height: 1.8rem;
   background-color: #f2f3f9;
   border-top: 1px solid #cfd6e5;
   padding: 0 2px 0 8px;
@@ -4279,7 +4279,7 @@ ul.news-list > li {
 .modal-stack .modal-wrapper .modal-window[maximize] {
   width: 98vw;
   margin: 10px auto;
-  height: calc(100vh - 42px);
+  height: calc(100vh - 1.8rem - 20px);
 }
 .modal-stack .modal-wrapper .modal-window[maximize] .modal-header {
   cursor: default;
@@ -4307,7 +4307,7 @@ ul.news-list > li {
   width: 800px;
 }
 .modal-stack .modal-wrapper .load-indicator {
-  top: 40px;
+  top: 3rem;
   margin-top: -4px;
   background-color: #ddd;
 }
@@ -4318,7 +4318,7 @@ ul.news-list > li {
   width: 498px;
 }
 .debug .modal-animation-frame {
-  bottom: 2em;
+  bottom: 1.8rem;
 }
 .inline-modal-wrapper {
   position: fixed;
@@ -6573,7 +6573,7 @@ table > colgroup col.blue {
   left: 0;
   top: 72px;
   margin: 0;
-  bottom: 2em;
+  bottom: 1.8rem;
   width: 250px;
   padding: 16px 0 0 0;
   border-right: 1px solid #cfd6e5;
@@ -6631,7 +6631,7 @@ table > colgroup col.blue {
   top: 78px;
   margin: 0;
   padding: 0;
-  bottom: 2em;
+  bottom: 1.8rem;
   width: 250px;
   background-color: #9ab3e0;
   transition: width 0.1s ease-out;
@@ -6760,7 +6760,7 @@ table > colgroup col.blue {
 .debug-panel {
   position: absolute;
   top: 40px;
-  bottom: 2em;
+  bottom: 1.8rem;
   right: 0;
   z-index: 110;
   background-color: #f9f9f9;
@@ -6857,7 +6857,7 @@ table > colgroup col.blue {
 .feedback-panel {
   position: absolute;
   top: 40px;
-  bottom: 2em;
+  bottom: 1.8rem;
   right: 0;
   z-index: 110;
   background-color: #f9f9f9;
