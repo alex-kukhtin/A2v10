@@ -159,7 +159,7 @@ namespace A2v10.Xaml
 			var hdr = GetBinding(nameof(Title));
 			if ((hdr != null) || (Title != null))
 			{
-				var span = new TagBuilder("span");
+				var span = new TagBuilder("span", "modal-title");
 				if (hdr != null)
 					span.MergeAttribute("v-text", hdr.GetPathFormat(context));
 				else if (Title != null)

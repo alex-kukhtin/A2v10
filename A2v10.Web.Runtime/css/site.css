@@ -2580,7 +2580,7 @@ pre.a2-code {
 }
 .caret {
   display: inline-block;
-  margin: 0 0 0 0.5em;
+  margin: 0 0.25em;
   border: 4px solid transparent;
   vertical-align: middle;
   border-top-color: currentColor;
@@ -4307,7 +4307,8 @@ ul.news-list > li {
   width: 800px;
 }
 .modal-stack .modal-wrapper .load-indicator {
-  top: 35px;
+  top: 40px;
+  margin-top: -4px;
   background-color: #ddd;
 }
 .modal-stack .modal-wrapper:not(:last-child) .load-indicator {
@@ -4347,8 +4348,8 @@ ul.news-list > li {
   cursor: move;
   font-weight: 500;
   border-bottom: 1px solid #ddd;
-  min-height: 39px;
-  line-height: 1.8rem;
+  min-height: 3rem;
+  line-height: 1.9rem;
 }
 .modal-header .modal-title-info {
   margin-left: 1rem;
@@ -4356,8 +4357,8 @@ ul.news-list > li {
 .modal-header .btnclose {
   float: right;
   color: #aaa;
-  width: 25px;
-  height: 25px;
+  width: 1.9rem;
+  height: 1.9rem;
 }
 .modal-header .btnclose:not([disabled]):hover,
 .modal-header .btnclose:not([disabled]):active,
@@ -6415,7 +6416,7 @@ table > colgroup col.blue {
   position: absolute;
   left: 0;
   right: 0;
-  top: 38px;
+  top: 36px;
   height: 4px;
   width: 100%;
   overflow: hidden;

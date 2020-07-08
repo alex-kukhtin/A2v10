@@ -1,7 +1,7 @@
 ﻿@import "Variables.less";
 
 @modal-padding: .75rem;
-@modal-header-height: 39px;
+@modal-header-height: 3rem;
 
 @modal-footer-bg-color: @whitesmoke-gray-bg-color;
 @modal-width-medium: 500px;
@@ -83,7 +83,8 @@
 		}
 
 		.load-indicator {
-			top: 35px;
+			top: @header-height;
+			margin-top:-4px;
 			background-color: @default-brd-color;
 		}
 
@@ -135,7 +136,7 @@
 	font-weight: 500;
 	border-bottom: 1px solid @light-gray-color;
 	min-height: @modal-header-height;
-	line-height: 1.8rem;
+	line-height: 1.9rem;
 
 	.modal-title-info {
 		margin-left: 1rem;
@@ -144,8 +145,8 @@
 	.btnclose {
 		float: right;
 		color: #aaa;
-		width:25px;
-		height:25px;
+		width:1.9rem;
+		height:1.9rem;
 
 		&:not([disabled]) {
 			&:hover, &:active, &:focus {

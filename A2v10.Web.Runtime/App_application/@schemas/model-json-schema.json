@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7646",
+	"$version": "10.0.7677",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -34,6 +34,19 @@
 								"schema": { "type": "string" }
 							},
 							"additionalProperties": false
+						},
+						"events": {
+							"type": "object",
+							"properties": {
+								"afterSave": {
+									"type": "object",
+									"properties": {
+										"source": { "type": "string" },
+										"schema": { "type": "string" },
+										"model": { "type": "string" }
+									}
+								}
+							}
 						},
 						"export": {
 							"type": "object",

@@ -65,6 +65,34 @@ namespace A2v10.Request
 		public String schema;
 	}
 
+	public class RequestEvent
+	{
+		public String model;
+		public String source;
+		public String schema;
+
+		public String CurrentSource(RequestBase br)
+		{
+			return String.IsNullOrEmpty(source) ? br.CurrentSource : source;
+		}
+
+		public String UpdateProcedure(RequestBase br)
+		{
+			var cm = model;
+			var sch = schema;
+			if (String.IsNullOrEmpty(cm))
+				cm = br.CurrentModel;
+			if (String.IsNullOrEmpty(sch))
+				sch = br.CurrentSchema;
+			return $"[{sch}].[{cm}.Update]";
+		}
+	}
+
+	public class RequestEvents
+	{
+		public RequestEvent afterSave;
+	}
+
 	public class RequestBase
 	{
 		public String model; // or parent
@@ -76,6 +104,7 @@ namespace A2v10.Request
 		public String script;
 		public ExpandoObject parameters;
 		public RequestMerge merge;
+		public RequestEvents events;
 		public String invoke;
 
 		[JsonIgnore]
