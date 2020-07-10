@@ -108,6 +108,7 @@ namespace A2v10.Request
 					var fm = ru.FindModel(null, cols);
 					if (fm == null)
 						throw new RequestModelException($"There is no model for columns='{cols}'");
+					prms.Append(fm.parameters);
 					var dm = await _dbContext.SaveModelAsync(fm.CurrentSource(ru), fm.UpdateProcedure(ru), epr.Data, prms);
 					return dm?.Root;
 				}

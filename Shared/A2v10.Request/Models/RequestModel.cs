@@ -563,6 +563,7 @@ namespace A2v10.Request
 		public String schema;
 		public String model;
 		public String source;
+		public ExpandoObject parameters;
 
 		public Boolean Match(String fileName, String cols)
 		{
