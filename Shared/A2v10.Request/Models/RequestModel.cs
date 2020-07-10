@@ -556,16 +556,49 @@ namespace A2v10.Request
 	}
 
 
+	public class RequestFileAvaliModel
+	{
+		public String columns;
+
+		public String schema;
+		public String model;
+		public String source;
+
+		public Boolean Match(String fileName, String cols)
+		{
+			var bCols = columns == null || columns == cols;
+			var bFile = true;
+			return bCols && bFile;
+		}
+
+		public String CurrentSource(RequestFile file)
+		{
+			return String.IsNullOrEmpty(source) ? file.CurrentSource : source;
+		}
+
+		public String UpdateProcedure(RequestFile file)
+		{
+			var sch = String.IsNullOrEmpty(schema) ? file.CurrentSchema : schema;
+			return $"[{sch}].[{model}.Update]";
+		}
+	}
+
 	public class RequestFile : RequestBase
 	{
 		public RequestFileType type;
 		public RequestFileParseType parse;
 		public String clrType;
 		public Boolean async;
+		public List<RequestFileAvaliModel> availableModels;
 		[JsonIgnore]
 		public String FileProcedureUpdate => $"[{CurrentSchema}].[{CurrentModel}.Update]";
 		[JsonIgnore]
 		public String FileProcedureLoad => $"[{CurrentSchema}].[{CurrentModel}.Load]";
+
+		public RequestFileAvaliModel FindModel(String fileName, String columns)
+		{
+			return availableModels?.Find(m => m.Match(fileName, columns));
+		}
 	}
 
 	public class RequestImage : RequestBase

@@ -44,6 +44,7 @@ namespace A2v10.Request
 					{
 						savePrms.Set("Id", ru.Id);
 						ExpandoObject dm = null;
+						var fileName = Path.GetFileName(files[0].FileName);
 						switch (ru.parse)
 						{
 							case RequestFileParseType.auto:
@@ -51,7 +52,7 @@ namespace A2v10.Request
 								switch (ext)
 								{
 									case ".xlsx":
-										dm = await SaveExcel(ru, files[0].InputStream, savePrms);
+										dm = await SaveExcel(ru, files[0].InputStream, savePrms, fileName);
 										break;
 									case ".csv":
 										dm = await SaveFlat("csv", ru, files[0].InputStream, savePrms);
@@ -68,7 +69,7 @@ namespace A2v10.Request
 								break;
 							case RequestFileParseType.excel:
 							case RequestFileParseType.xlsx:
-								dm = await SaveExcel(ru, files[0].InputStream, savePrms);
+								dm = await SaveExcel(ru, files[0].InputStream, savePrms, fileName);
 								break;
 							case RequestFileParseType.csv:
 								dm = await SaveFlat("csv", ru, files[0].InputStream, savePrms);
@@ -94,13 +95,29 @@ namespace A2v10.Request
 			}
 		}
 
-		async Task<ExpandoObject> SaveExcel(RequestFile ru, Stream stream, ExpandoObject prms)
+		async Task<ExpandoObject> SaveExcel(RequestFile ru, Stream stream, ExpandoObject prms, String fileName)
 		{
-			if (String.IsNullOrEmpty(ru.CurrentModel))
+			if (ru.availableModels != null)
 			{
 				using (var xp = new ExcelParser())
 				{
-					return xp.CreateDataModel(stream);
+					if (fileName != null)
+						prms.Set("FileName", fileName);
+					var epr = xp.CreateDataModel(stream);
+					String cols = String.Join("|", epr.Columns);
+					var fm = ru.FindModel(null, cols);
+					if (fm == null)
+						throw new RequestModelException($"There is no model for columns='{cols}'");
+					await _dbContext.SaveModelAsync(fm.CurrentSource(ru), fm.UpdateProcedure(ru), epr.Data, prms);
+					return epr.Data;
+				}
+			}
+			else if (String.IsNullOrEmpty(ru.CurrentModel))
+			{
+				using (var xp = new ExcelParser())
+				{
+					var epr = xp.CreateDataModel(stream);
+					return epr.Data;
 				}
 			}
 			else
@@ -110,7 +127,7 @@ namespace A2v10.Request
 					xp.ErrorMessage = "UI:@[Error.FileFormatException]";
 					IDataModel dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) =>
 					{
-						return xp.ParseFile(stream, table);
+						return xp.ParseFile(stream, table).Data;
 					});
 					return dm?.Root;
 				}

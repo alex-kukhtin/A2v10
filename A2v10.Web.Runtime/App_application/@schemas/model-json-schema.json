@@ -189,12 +189,24 @@
 						},
 						"parse": {
 							"type": "string",
-							"enum": [ "excel" ]
+							"enum": [ "excel", "xlsx", "csv", "dbf", "xml", "auto" ]
 						},
 						"async": { "type": "boolean" },
 						"clrType": {
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
+						},
+						"availableModels": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"columns": { "type": "string" },
+									"source": { "type": "string" },
+									"schema": { "type": "string" },
+									"model": { "type": "string" }
+								}
+							}
 						}
 					},
 					"additionalProperties": false

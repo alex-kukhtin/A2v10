@@ -13,6 +13,12 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Interop
 {
+	public class ExeclParseResult
+	{
+		public ExpandoObject Data { get; set; }
+		public List<String> Columns { get; set; }
+	}
+
 	public class ExcelParser : IDisposable
 	{
 
@@ -28,13 +34,13 @@ namespace A2v10.Interop
 
 		}
 
-		public ExpandoObject CreateDataModel(Stream stream)
+		public ExeclParseResult CreateDataModel(Stream stream)
 		{
 			var table = new FlatTableHandler();
 			return ParseFile(stream, table);
 		}
 
-		public ExpandoObject ParseFile(Stream stream, ITableDescription table)
+		public ExeclParseResult ParseFile(Stream stream, ITableDescription table)
 		{
 			try
 			{
@@ -49,12 +55,14 @@ namespace A2v10.Interop
 			}
 		}
 
-		ExpandoObject ParseFileImpl(Stream stream, ITableDescription table)
+		ExeclParseResult ParseFileImpl(Stream stream, ITableDescription table)
 		{
 			if (table == null)
 				throw new ArgumentNullException(nameof(table));
 
 			var rv = new List<ExpandoObject>();
+
+			List<String> columns = new List<String>();
 
 			using (var doc = SpreadsheetDocument.Open(stream, isEditable:false))
 			{
@@ -72,8 +80,6 @@ namespace A2v10.Interop
 					throw new InteropException($"The sheet does not have a rows");
 
 				var hdr = rows[0];
-
-				List<String> columns = new List<String>();
 
 				var hdrCells = hdr.Elements<Cell>().ToList();
 				for (var ci = 0; ci < hdrCells.Count; ci++)
@@ -114,7 +120,12 @@ namespace A2v10.Interop
 					}
 				}
 			}
-			return table.ToObject();
+
+			return new ExeclParseResult()
+			{
+				Data = table.ToObject(),
+				Columns = columns
+			};
 		}
 
 		Object GetCellValue(String text, CellFormat format)
