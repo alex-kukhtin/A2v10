@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7677",
+	"$version": "10.0.7681",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -201,11 +201,13 @@
 							"items": {
 								"type": "object",
 								"properties": {
+									"name": { "type": "string" },
 									"columns": { "type": "string" },
 									"source": { "type": "string" },
 									"schema": { "type": "string" },
 									"model": { "type": "string" }
-								}
+								},
+								"additionalProperties": false
 							}
 						}
 					},
