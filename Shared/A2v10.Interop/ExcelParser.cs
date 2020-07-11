@@ -75,6 +75,10 @@ namespace A2v10.Interop
 				var sharedStringPart = workBookPart.SharedStringTablePart;
 				var sharedStringTable = sharedStringPart.SharedStringTable;
 
+				var stylesPart = workBookPart.WorkbookStylesPart;
+				// This formats is NUMBER, not standard!
+				var numFormats = stylesPart.Stylesheet.Descendants<NumberingFormat>()?.ToDictionary(x => x.NumberFormatId.Value.ToString());
+
 				var rows = workSheetPart.Worksheet.Descendants<Row>().ToList();
 				if (rows == null)
 					throw new InteropException($"The sheet does not have a rows");
@@ -111,9 +115,21 @@ namespace A2v10.Interop
 						{
 							Int32 ix = Int32.Parse(c.StyleIndex);
 							var cellFormat = workBookPart.WorkbookStylesPart.Stylesheet.CellFormats.ChildElements[ix] as CellFormat;
-							Object cellVal = GetCellValue(c.CellValue.Text, cellFormat);
-							if (cellVal != null)
-								table.SetValue(dataRow, columns[colIndex], cellVal);
+							var fmtId = cellFormat?.NumberFormatId;
+							if (numFormats != null &&  numFormats.ContainsKey(fmtId))
+							{
+								// number
+								if (Double.TryParse(c.CellValue.Text, out Double dblVal))
+									table.SetValue(dataRow, columns[colIndex], dblVal);
+								else
+									throw new InteropException($"invalid cell value for format '{cellFormat.InnerText}'");
+							}
+							else
+							{
+								Object cellVal = GetCellValue(c.CellValue.Text, cellFormat);
+								if (cellVal != null)
+									table.SetValue(dataRow, columns[colIndex], cellVal);
+							}
 						}
 						else if (c.CellValue != null)
 							table.SetValue(dataRow, columns[colIndex], c.CellValue.Text);

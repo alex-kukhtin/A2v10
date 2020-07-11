@@ -2837,7 +2837,7 @@ pre.a2-code {
   background-color: white;
 }
 .period-picker .caret {
-  margin-right: 4px;
+  margin: 0.9em 0.6em 0.5em 0.5em;
 }
 .period-picker .period-menu {
   margin: 0;
