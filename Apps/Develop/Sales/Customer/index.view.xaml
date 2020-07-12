@@ -44,6 +44,9 @@
 							<MenuItem Content="Реестр счетов" Icon="Table"
 								Command="{BindCmd Open, Url='/Reports/InvoiceRegistry', 
 								Argument={Bind Root.$SelectedItem}, CheckArgument=True, NewWindow=True}"/>
+							<MenuItem Content="TestCross" Icon="Table"
+								Command="{BindCmd Open, Url='/Reports/TestCross', 
+								Argument=0, CheckArgument=True, NewWindow=True}"/>
 						</DropDownMenu>
 					</Button.DropDown>
 				</Button>

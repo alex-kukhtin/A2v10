@@ -10,6 +10,12 @@
 			"model": "Waybill.Registry",
 			"template": "report.template",
 			"view": "invoice.registry.view"
+		},
+		"testCross": {
+			"source": "bio",
+			"schema": "bi",
+			"model": "Report.RemsByDays.Cross",
+			"view": "testcross.view"
 		}
 	},
 	"commands": {

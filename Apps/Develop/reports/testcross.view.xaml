@@ -1,0 +1,3 @@
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Title="Реестр счетов" Padding="2rem">
+	<Code Content="{Bind Products}" Multiline="True"></Code>
+</Page>
