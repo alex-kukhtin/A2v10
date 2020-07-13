@@ -1,7 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -101,7 +100,7 @@ namespace A2v10.Xaml
 			var tr = new TagBuilder("tr");
 			tr.RenderStart(context);
 			foreach (var c in _columns)
-				context.Writer.Write("<td></td>");
+				c.RenderShadow(context);
 			tr.RenderEnd(context);
 			tb.RenderEnd(context);
 			cs.RenderEnd(context);

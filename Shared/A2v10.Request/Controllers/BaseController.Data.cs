@@ -150,6 +150,7 @@ namespace A2v10.Request
 				model.Merge(mergeModel);
 			}
 			rw = await LoadIndirect(rw, model, loadPrms);
+			model.AddRuntimeProperties();
 			WriteDataModel(model, writer);
 		}
 
@@ -285,7 +286,7 @@ namespace A2v10.Request
 		{
 			// Write data to output
 			if (model != null)
-				writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.StandardSerializerSettings));
+				writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration)));
 			else
 				writer.Write("{}");
 		}
@@ -294,7 +295,7 @@ namespace A2v10.Request
 		{
 			// Write data to output
 			if (model != null)
-				writer.Write(JsonConvert.SerializeObject(model, JsonHelpers.StandardSerializerSettings));
+				writer.Write(JsonConvert.SerializeObject(model, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration)));
 			else
 				writer.Write("{}");
 		}

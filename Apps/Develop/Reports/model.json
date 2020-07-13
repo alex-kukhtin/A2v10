@@ -14,6 +14,7 @@
 		"testCross": {
 			"source": "bio",
 			"schema": "bi",
+			"template": "cross.template",
 			"model": "Report.RemsByDays.Cross",
 			"view": "testcross.view"
 		}

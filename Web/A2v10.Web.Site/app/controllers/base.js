@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200612-7673*/
+/*20200713-7685*/
 // controllers/base.js
 
 (function () {
@@ -342,6 +342,7 @@
 						if (utils.isObject(data)) {
 							dat.$merge(data);
 							dat._setModelInfo_(undefined, data);
+							dat._setRuntimeInfo_(data.$runtime);
 							dat._fireLoad_();
 							dat._restoreSelections(saveSels);
 							resolve(dat);
@@ -764,7 +765,10 @@
 				let table = elem[0];
 				if (htmlTools) {
 					htmlTools.getColumnsWidth(table);
-					htmlTools.getRowHeight(table);
+					var tbl = table.getElementsByTagName('table');
+					// attention! from css!
+					let padding = tbl && tbl.length && tbl[0].classList.contains('compact') ? 4 : 12;
+					htmlTools.getRowHeight(table, padding);
 				}
 				let html = table.innerHTML;
 				let data = { format, html, fileName, zoom: +(window.devicePixelRatio).toFixed(2) };

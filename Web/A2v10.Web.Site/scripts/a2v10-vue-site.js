@@ -422,6 +422,19 @@ app.modules['std:utils'] = function () {
 		return formatFunc(num);
 	}
 
+	function formatDateWithFormat(date, format) {
+		if (!format)
+			return formatDate(date);
+		switch (format) {
+			case 'MMMM yyyy':
+				return capitalize(date.toLocaleDateString(locale.$Locale, { month: 'long', year: 'numeric' }));
+			default:
+				console.error('invalid date format: ' + format);
+		}
+		return formatDate(date);
+	}
+
+
 	function format(obj, dataType, opts) {
 		opts = opts || {};
 		if (!dataType)
@@ -446,6 +459,8 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
+				if (opts.format)
+					return formatDateWithFormat(obj, opts.format);
 				return formatDate(obj);
 			case 'DateUrl':
 				if (dateIsZero(obj))
@@ -1743,7 +1758,7 @@ app.modules['std:mask'] = function () {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200322-7643
+// 20200713-7685
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -1775,10 +1790,10 @@ app.modules['std:html'] = function () {
 		body.style.display = "none";
 	}
 
-	function getRowHeight(elem) {
+	function getRowHeight(elem, padding) {
 		let rows = elem.getElementsByTagName('tr');
 		for (let r = 0; r < rows.length; r++) {
-			let h = rows[r].offsetHeight - 12; /* padding !!!*/
+			let h = rows[r].offsetHeight - (padding || 12); /* padding from css */
 			rows[r].setAttribute('data-row-height', h);
 		}
 	}
@@ -2278,7 +2293,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200618-7675*/
+/*20200713-7685*/
 // services/datamodel.js
 
 (function () {
@@ -2672,6 +2687,7 @@ app.modules['std:validators'] = function () {
 				}
 			}
 			elem._setModelInfo_ = setRootModelInfo;
+			elem._setRuntimeInfo_ = setRootRuntimeInfo;
 			elem._findRootModelInfo = findRootModelInfo;
 			elem._saveSelections = saveSelections;
 			elem._restoreSelections = restoreSelections;
@@ -3709,6 +3725,29 @@ app.modules['std:validators'] = function () {
 			};
 
 			return; // first element only
+		}
+	}
+
+	function setRootRuntimeInfo(runtime) {
+		if (!runtime) return;
+		if (runtime.$cross) {
+			for (let p in this) {
+				if (p.startsWith("$") || p.startsWith('_')) continue;
+				let ta = this[p];
+				if (ta._elem_ && ta.$cross) {
+					for (let x in runtime.$cross) {
+						if (ta._elem_.name != x) continue;
+						let t = ta.$cross;
+						let s = runtime.$cross[x];
+						for (let p in t) {
+							let ta = t[p];
+							let sa = s[p];
+							if (ta && sa)
+								ta.splice(0, ta.length, ...sa);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -4752,7 +4791,7 @@ template: `
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200612-7673*/
+/*20200713-7685*/
 // controllers/base.js
 
 (function () {
@@ -5094,6 +5133,7 @@ template: `
 						if (utils.isObject(data)) {
 							dat.$merge(data);
 							dat._setModelInfo_(undefined, data);
+							dat._setRuntimeInfo_(data.$runtime);
 							dat._fireLoad_();
 							dat._restoreSelections(saveSels);
 							resolve(dat);
@@ -5516,7 +5556,10 @@ template: `
 				let table = elem[0];
 				if (htmlTools) {
 					htmlTools.getColumnsWidth(table);
-					htmlTools.getRowHeight(table);
+					var tbl = table.getElementsByTagName('table');
+					// attention! from css!
+					let padding = tbl && tbl.length && tbl[0].classList.contains('compact') ? 4 : 12;
+					htmlTools.getRowHeight(table, padding);
 				}
 				let html = table.innerHTML;
 				let data = { format, html, fileName, zoom: +(window.devicePixelRatio).toFixed(2) };

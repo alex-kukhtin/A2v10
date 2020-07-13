@@ -96,7 +96,7 @@ namespace A2v10.Request
 			{
 				String jsonCompanies = JsonConvert.SerializeObject(new { menu = companies, links },
 					JsonHelpers.StandardSerializerSettings);
-				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.StandardSerializerSettings);
+				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 				return new MultiTenantParamJson()
 				{
 					Companies = jsonCompanies,
@@ -154,7 +154,7 @@ namespace A2v10.Request
 			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
 			SetUserStatePermission(dm);
 
-			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.StandardSerializerSettings);
+			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 			macros.Set("Menu", jsonMenu);
 
 			if (setCompany)

@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -18,16 +18,12 @@ namespace A2v10.Request
 		internal const String HEADER =
 		@"
 <script type=""text/javascript"">
-
 'use strict';
-
 (function() {
 	const DataModelController = component('baseController');
 	const eventBus = require('std:eventBus');
-
 	const utils = require('std:utils');
 	const uPeriod = require('std:period');
-
 	const currentModule = $(CurrentModule);
 ";
 
@@ -123,7 +119,6 @@ const vm = new DataModelController({
 		{
 			_host = host;
 			_localizer = localizer;
-
 		}
 
 		public String CreateDataModelScript(IDataModel model)
@@ -345,14 +340,14 @@ const vm = new DataModelController({
 
 			const String tmlHeader =
 @"(function() {
-    let module = { exports: undefined };
-    (function(module, exports) {
+	let module = { exports: undefined };
+	(function(module, exports) {
 ";
 
 			const String tmlFooter =
-	@"
-    })(module, module.exports);
-    return module.exports;
+@"
+	})(module, module.exports);
+	return module.exports;
 })()";
 
 			var sb = new StringBuilder();
@@ -368,15 +363,15 @@ const vm = new DataModelController({
 		{
 			const String tmlHeader =
 @"
-    app.modules['$(Module)'] = function() {
-    let module = { exports: undefined };
-    (function(module, exports) {
+	app.modules['$(Module)'] = function() {
+	let module = { exports: undefined };
+	(function(module, exports) {
 ";
 
 			const String tmlFooter =
 @"
-    })(module, module.exports);
-    return module.exports;
+	})(module, module.exports);
+	return module.exports;
 };";
 
 			if (String.IsNullOrEmpty(clientScript))
@@ -514,7 +509,6 @@ const vm = new DataModelController({
 			String fileTemplateText = null;
 			if (msi.Template != null)
 			{
-				//fileTemplateText = await _host.ReadTextFileAsync(msi.Admin, msi.Path, msi.Template + ".js");
 				fileTemplateText = await _host.ApplicationReader.ReadTextFileAsync(msi.Path, msi.Template + ".js");
 				if (fileTemplateText == null)
 					throw new FileNotFoundException($"Template file '{Path.Combine(msi.Path, msi.Template + ".js").Replace('\\', '/')}' not found.");
@@ -523,7 +517,7 @@ const vm = new DataModelController({
 			}
 			if (msi.DataModel != null)
 			{
-				dataModelText = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.StandardSerializerSettings);
+				dataModelText = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 			}
 
 			var header = new StringBuilder(SCRIPT_PARTS.HEADER);
@@ -567,7 +561,7 @@ const vm = new DataModelController({
 			sb.Replace("$(TemplateText)", templateText);
 			sb.Replace("$(RequiredModules)", sbRequired?.ToString());
 			String modelScript = msi.DataModel.CreateScript(this);
-			String rawData = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.StandardSerializerSettings);
+			String rawData = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 			sb.Replace("$(DataModelText)", rawData);
 			sb.Replace("$(RawDataText)", msi.RawData ?? "{}");
 			sb.Replace("$(ModelScript)", modelScript);

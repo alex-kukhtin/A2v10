@@ -90,6 +90,7 @@
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="Develop\dashboard\homepage.template.box.js" />
     <Content Include="Develop\pos\pos.template.js" />
+    <Content Include="Develop\reports\cross.template.js" />
     <Content Include="Develop\sales\customer\testcross2.template.js" />
     <Content Include="Develop\sales\customer\testcross.template.js" />
     <Content Include="Develop\sales\invoice\invoice2.template.js" />

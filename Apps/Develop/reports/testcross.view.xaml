@@ -1,3 +1,60 @@
-<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Title="Реестр счетов" Padding="2rem">
-	<Code Content="{Bind Products}" Multiline="True"></Code>
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" UserSelect="True">
+	<Page.Toolbar>
+		<Toolbar Style="Light" Border="BottomShadow">
+			<Button Icon="Reload" Content="@[Reload]" Command="{BindCmd Reload}"/>
+			<Button Icon="ExportExcel" Content="Експортувати в Excel" Command="{BindCmd ExportTo, Format=Excel, FileName='Залишки по днях'}"/>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.Taskpad>
+		<Taskpad Width="20rem" Background="WhiteSmoke" Overflow="True" Collapsible="False" Padding="2rem,0">
+			<DatePicker Label="Місяць" Placement="BottomRight" Value="{Bind Query.Date}" View="Month"/>
+			<ComboBox Label="Дистрибутор" ItemsSource="{Bind Distributors}" Value="{Bind Query.Distributor}" />
+		</Taskpad>
+	</Page.Taskpad>
+	<SheetPage Orientation="Landscape" PageSize="340mm,210mm">
+		<Sheet GridLines="Both" Compact="True" Striped="True" Hover="True">
+			<Sheet.Columns>
+				<SheetColumn Fit="True"/>
+				<SheetColumn Width="1"/>
+				<SheetColumn />
+				<SheetColumnGroup ItemsSource="{Bind Products.$cross.Rems}">
+					<SheetColumn Width="24"/>
+				</SheetColumnGroup>
+			</Sheet.Columns>
+			<Sheet.Header>
+				<SheetRow Style="Title">
+					<SheetCell ColSpan="10">Залишки по днях місяця</SheetCell>
+				</SheetRow>
+				<SheetRow Style="Parameter">
+					<SheetCell ColSpan="2">Дистрибутор:</SheetCell>
+					<SheetCell Bold="True" Content="{Bind Query.Distributor.Name}" ColSpan="3"/>
+				</SheetRow>
+				<SheetRow Style="LastParameter">
+					<SheetCell ColSpan="2">Дата:</SheetCell>
+					<SheetCell Bold="True" Content="{Bind Query.Date, DataType=Date, Format='MMMM yyyy'}" ColSpan="3"/>
+				</SheetRow>
+				<SheetRow Style="Header">
+					<SheetCell Content="Препарат" ColSpan="3"/>
+					<SheetCell Content="Залишки по днях місяця" ColSpan="{Bind Products.$cross.Rems.length}"/>
+				</SheetRow>
+				<SheetRow Style="Header" Align="Center">
+					<SheetCell>Моріон</SheetCell>
+					<SheetCell ColSpan="2">Назва</SheetCell>
+					<SheetCellGroup ItemsSource="{Bind Products.$cross.Rems}">
+						<SheetCell Content="{Bind}" Align="Center"/>
+					</SheetCellGroup>
+				</SheetRow>
+			</Sheet.Header>
+
+			<SheetSection ItemsSource="{Bind Products}">
+				<SheetRow Align="Right">
+					<SheetCell Content="{Bind Morion}" Align="Center"/>
+					<SheetCell Content="{Bind Name}" Align="Left" ColSpan="2"/>
+					<SheetCellGroup ItemsSource="{Bind Rems}">
+						<SheetCell Content="{Bind Qty, DataType=Number, HideZeros=True}"  Fill="{Bind $BkColor}"/>
+					</SheetCellGroup>
+				</SheetRow>
+			</SheetSection>
+		</Sheet>
+	</SheetPage>
 </Page>

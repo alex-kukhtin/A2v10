@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -51,6 +51,11 @@ namespace A2v10.Xaml
 				col.AddCssClass(Background.ToString().ToKebabCase());
 
 			col.Render(context, TagRenderMode.SelfClosing);
+		}
+
+		public virtual void RenderShadow(RenderContext context)
+		{
+			context.Writer.Write("<td></td>");
 		}
 	}
 

@@ -18,6 +18,8 @@ namespace A2v10.Xaml
 
 		public Boolean GroupIndent { get; set; } // ???
 
+		public String Fill { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -48,6 +50,8 @@ namespace A2v10.Xaml
 				td.AddCssClass("underline");
 			td.AddCssClassBoolNo(Bold, "bold");
 			td.AddCssClassBoolNo(Italic, "italic");
+
+			RenderFill(td, context);
 			if (Vertical)
 			{
 				td.AddCssClass("vert");
@@ -109,6 +113,20 @@ namespace A2v10.Xaml
 				return false;
 			}
 		}
+
+		void RenderFill(TagBuilder td, RenderContext context)
+		{
+			var bf = GetBinding(nameof(Fill));
+			if (bf != null)
+			{
+				td.MergeAttribute(":style", $"{{'background-color': {bf.GetPathFormat(context)}}}");
+			}
+			else if (Fill != null)
+			{
+				td.MergeStyle("background-color", Fill);
+			}
+		}
+
 	}
 
 	public class SheetCells : List<ISheetCell>
