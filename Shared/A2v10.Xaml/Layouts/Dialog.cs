@@ -35,6 +35,7 @@ namespace A2v10.Xaml
 		public BackgroundStyle Background { get; set; }
 		public Boolean Maximize { get; set; }
 		public Boolean ButtonOnTop { get; set; }
+		public Boolean Overflow { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -98,6 +99,7 @@ namespace A2v10.Xaml
 			content.AddCssClassBool(IsContentIsIFrame, "content-iframe"); // bug fix (3px height)
 			if (Background != BackgroundStyle.Default)
 				content.AddCssClass("background-" + Background.ToString().ToKebabCase());
+			content.AddCssClassBool(Overflow, "overflow");
 			content.RenderStart(context);
 			if (Taskpad != null)
 			{

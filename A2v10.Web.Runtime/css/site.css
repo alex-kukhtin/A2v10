@@ -4439,6 +4439,12 @@ ul.news-list > li {
   overflow: auto;
   position: relative;
 }
+.modal-content.overflow {
+  overflow: visible;
+}
+.modal-content.overflow .tab-panel {
+  overflow: visible;
+}
 .modal-content .dialog-grid {
   display: grid;
   grid-template-columns: 1fr auto;

@@ -3,3 +3,7 @@
 .app-title {
 	color:gold!important;
 }
+
+.w300 {
+	min-width:300px;
+}

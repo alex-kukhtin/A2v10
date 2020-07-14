@@ -176,7 +176,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200505-7564
+// 20200714-7688
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -449,6 +449,8 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
+				if (opts.format)
+					return formatDateWithFormat(obj, opts.format);
 				return formatDate(obj) + ' ' + formatTime(obj);
 			case "Date":
 				if (isString(obj))
@@ -4791,7 +4793,7 @@ template: `
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200713-7685*/
+/*20200714-7688*/
 // controllers/base.js
 
 (function () {
@@ -5750,6 +5752,8 @@ template: `
 					return utils.format(value, opts.dataType, { hideZeros: opts.hideZeros, format: opts.format });
 				if (opts.format && opts.format.indexOf('{0}') !== -1)
 					return opts.format.replace('{0}', value);
+				if (utils.isDate(value) && opts.format)
+					return utils.format(value, 'DateTime', { format: opts.format });
 				return value;
 			},
 

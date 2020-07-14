@@ -6,19 +6,19 @@
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.Taskpad>
-		<Taskpad Width="20rem" Background="WhiteSmoke" Overflow="True" Collapsible="False" Padding="2rem,0">
+		<Taskpad Width="18rem" Background="WhiteSmoke" Overflow="True" Collapsible="False" Padding="2rem,0">
 			<DatePicker Label="Місяць" Placement="BottomRight" Value="{Bind Query.Date}" View="Month"/>
 			<ComboBox Label="Дистрибутор" ItemsSource="{Bind Distributors}" Value="{Bind Query.Distributor}" />
 		</Taskpad>
 	</Page.Taskpad>
-	<SheetPage Orientation="Landscape" PageSize="340mm,210mm">
+	<SheetPage Orientation="Landscape" PageSize="410mm,210mm">
 		<Sheet GridLines="Both" Compact="True" Striped="True" Hover="True">
 			<Sheet.Columns>
 				<SheetColumn Fit="True"/>
 				<SheetColumn Width="1"/>
 				<SheetColumn />
 				<SheetColumnGroup ItemsSource="{Bind Products.$cross.Rems}">
-					<SheetColumn Width="24"/>
+					<SheetColumn Width="35"/>
 				</SheetColumnGroup>
 			</Sheet.Columns>
 			<Sheet.Header>
@@ -31,7 +31,7 @@
 				</SheetRow>
 				<SheetRow Style="LastParameter">
 					<SheetCell ColSpan="2">Дата:</SheetCell>
-					<SheetCell Bold="True" Content="{Bind Query.Date, DataType=Date, Format='MMMM yyyy'}" ColSpan="3"/>
+					<SheetCell Bold="True" Content="{Bind Query.Date, Format='MMMM yyyy'}" ColSpan="3"/>
 				</SheetRow>
 				<SheetRow Style="Header">
 					<SheetCell Content="Препарат" ColSpan="3"/>
@@ -49,7 +49,7 @@
 			<SheetSection ItemsSource="{Bind Products}">
 				<SheetRow Align="Right">
 					<SheetCell Content="{Bind Morion}" Align="Center"/>
-					<SheetCell Content="{Bind Name}" Align="Left" ColSpan="2"/>
+					<SheetCell Content="{Bind Name}" Align="Left" ColSpan="2" MinWidth="290"/>
 					<SheetCellGroup ItemsSource="{Bind Rems}">
 						<SheetCell Content="{Bind Qty, DataType=Number, HideZeros=True}"  Fill="{Bind $BkColor}"/>
 					</SheetCellGroup>

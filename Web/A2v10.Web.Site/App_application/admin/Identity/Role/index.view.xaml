@@ -1,0 +1,57 @@
+<!-- Roles Index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      >
+	<Page.Resources>
+		<sys:String x:Key="EditUrl">/Identity/Role/Edit</sys:String>
+		<Confirm x:Key="SureDelete">Вы действительно хотите удалить роль?</Confirm>
+	</Page.Resources>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Roles}" RunAt="ServerUrl">
+			<CollectionView.Filter>
+				<FilterDescription>
+					<FilterItem Property="Fragment" />
+				</FilterDescription>
+			</CollectionView.Filter>
+
+		</CollectionView>
+	</Page.CollectionView>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Add" Command="{BindCmd Dialog, Action=Append, Url={StaticResource EditUrl}, Argument={Bind Roles}}">Создать</Button>
+			<Button Icon="Edit" Content="Изменить"
+                    Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Roles}}" />
+			<Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Roles}, Confirm={StaticResource SureDelete}}"/>
+			<Separator />
+			<TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска"/>
+			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+			<!--
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+            -->
+			<Button Icon="HelpBlue" Toolbar.Align="Right">Справка</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
+				Striped="True" Sort="True" GridLines="Vertical"
+              DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap" Icon="Users" />
+		<DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True" Wrap="NoWrap"/>
+		<DataGridColumn Header="Назва" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}}"/>
+		<DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
+		<DataGridColumn Header="Елементів" Content="{Bind ElemCount}" Fit="True" Align="Right"/>
+		<DataGridColumn Fit="True" Wrap="NoWrap">
+			<Group>
+				<Hyperlink Icon="Edit" Tip="Свойства роли" 
+                           Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+				<Hyperlink Icon="Delete" Tip="Видалити" 
+                           Command="{BindCmd Command=DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
+			</Group>
+		</DataGridColumn>
+	</DataGrid>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}"></Pager>
+	</Page.Pager>
+</Page>
+
+    

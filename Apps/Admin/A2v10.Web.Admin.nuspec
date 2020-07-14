@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>A2v10.Web.Admin</id>
+		<version>10.0.7687</version>
+		<title>A2v10.Web Admin Part</title>
+		<authors>AlexKukhtin</authors>
+		<owners>AlexKukhtin</owners>
+		<projectUrl>https://a2v10.com</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>A2v10 Platform Runtime</description>
+		<releaseNotes>Current NUGET release</releaseNotes>
+		<copyright>Copyright © 2015-2020 Alex Kukhtin.</copyright>
+		<tags>A2v10 Platform Business WebApp Admin</tags>
+		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
+		<contentFiles>
+		</contentFiles>
+		<dependencies>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="identity/user/model.json" target="content/App_application/admin/identity/user" />
+		<file src="identity/user/index.view.xaml" target="content/App_application/admin/identity/user" />
+	</files>
+</package>

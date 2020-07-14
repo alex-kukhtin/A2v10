@@ -1,0 +1,56 @@
+<!-- User Groups Index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      >
+    <Page.Resources>
+        <sys:String x:Key="EditUrl">/Identity/Group/Edit</sys:String>
+        <Confirm x:Key="SureDelete">Вы действительно хотите удалить группу?</Confirm>
+    </Page.Resources>
+    <Page.CollectionView>
+        <CollectionView ItemsSource="{Bind Groups}" RunAt="ServerUrl">
+            <CollectionView.Filter>
+                <FilterDescription>
+                    <FilterItem Property="Fragment" />
+                </FilterDescription>
+            </CollectionView.Filter>
+
+        </CollectionView>
+    </Page.CollectionView>
+    <Page.Toolbar>
+        <Toolbar>
+            <Button Icon="Add" Tip="Создать новую группу" Command="{BindCmd Dialog, Action=Append, Url={StaticResource EditUrl}, Argument={Bind Groups}}">Создать</Button>
+            <Button Icon="Edit" Tip="Изменить свойства группы" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Groups}}">Изменить</Button>
+            <Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Groups}, Confirm={StaticResource SureDelete}}"/>
+            <Separator />
+            <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска"/>
+            <Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+            <!--
+            <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+            -->
+            <Button Icon="HelpBlue" Toolbar.Align="Right">Справка</Button>
+        </Toolbar>
+    </Page.Toolbar>
+    <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
+            DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}"  
+			Striped="True" Sort="True" GridLines="Vertical">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Wrap="NoWrap" Icon="Users"/>
+        <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
+        <DataGridColumn Header="Наименование" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}}"/>
+        <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+        <DataGridColumn Header="Пользователей" Content="{Bind UserCount}" Fit="True" />
+        <DataGridColumn Fit="True" Wrap="NoWrap">
+            <Group>
+                <Hyperlink Icon="Edit" Tip="Свойства группы" 
+                           Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+                <Hyperlink Icon="Delete" Tip="Удалить" 
+                           Command="{BindCmd Command=DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
+            </Group>
+        </DataGridColumn>
+    </DataGrid>
+    <Page.Pager>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
+    </Page.Pager>
+</Page>
+
+    

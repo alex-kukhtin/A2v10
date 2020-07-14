@@ -1,0 +1,38 @@
+﻿/*identity/user*/
+{
+  "schema": "a2admin",
+  "model": "User",
+  "actions": {
+    "index": {
+      "index": true,
+      "template": "index.template",
+      "view": "index.view"
+    }
+  },
+  "dialogs": {
+    "edit": {
+      "view": "edit.dialog",
+      "template": "edit.template"
+    },
+    "create": {
+      "view": "create.dialog",
+      "template": "create.template",
+      "hook": "clr-type:A2v10.Web.Mvc.Hooks.CreateUserHandler;assembly=A2v10.Web.Mvc"
+    },
+    "browse": {
+      "index": true,
+      "view": "browse.dialog"
+    },
+    "password": {
+      "view": "password.dialog",
+      "template": "password.template",
+      "hook": "clr-type:A2v10.Web.Mvc.Hooks.SetPasswordHandler;assembly=A2v10.Web.Mvc"
+    }
+  },
+  "commands": {
+    "duplicateLogin": {
+      "type": "sql",
+      "procedure": "User.Login.CheckDuplicate"
+    }
+  }
+}

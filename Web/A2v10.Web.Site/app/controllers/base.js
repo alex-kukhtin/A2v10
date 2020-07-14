@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200713-7685*/
+/*20200714-7688*/
 // controllers/base.js
 
 (function () {
@@ -959,6 +959,8 @@
 					return utils.format(value, opts.dataType, { hideZeros: opts.hideZeros, format: opts.format });
 				if (opts.format && opts.format.indexOf('{0}') !== -1)
 					return opts.format.replace('{0}', value);
+				if (utils.isDate(value) && opts.format)
+					return utils.format(value, 'DateTime', { format: opts.format });
 				return value;
 			},
 

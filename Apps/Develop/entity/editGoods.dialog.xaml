@@ -1,6 +1,6 @@
 <!-- Edit Goods -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
-        Title="Свойства товара">
+        Title="Свойства товара" Overflow="True">
 	<Dialog.Buttons>
 		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
@@ -12,6 +12,8 @@
 				<TextBox Grid.Row="2" Label="Артикул" Value="{Bind Entity.Article}"/>
 				<ComboBox Grid.Row="2" Grid.Col="2" Label="Ед. изм." Value="{Bind Entity.Unit}" ItemsSource="{Bind Units}"/>
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Entity.Memo}" Rows="3" Multiline="True"/>
+				<PeriodPicker Grid.Row="6" Grid.Col="1"/>
+				<TextBox Grid.Row="7" />
 			</Grid>
 		</Tab>
 		<Tab Header="Картинка">
@@ -26,4 +28,5 @@
 		</Tab>
 		-->
 	</TabPanel>
+	<PeriodPicker Grid.Row="6" Grid.Col="1"/>
 </Dialog>

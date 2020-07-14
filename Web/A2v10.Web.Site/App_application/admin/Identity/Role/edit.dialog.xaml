@@ -1,0 +1,64 @@
+<!-- Role properties -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="{Bind Role.$IdOrNew, Format='Свойства роли [{0}]'}">
+    <Dialog.Resources>
+        <Confirm x:Key="SureDelete" >Вы действительно хотите исключить пользователя или группу из роли?</Confirm>
+    </Dialog.Resources>
+    <Dialog.Buttons>
+        <Button Command="{BindCmd SaveAndClose, ValidRequired=True}">OK</Button>
+        <Button Command="{BindCmd Close}">Отмена</Button>
+    </Dialog.Buttons>
+    <TabPanel>
+        <Tab Header="Общие">
+            <Grid Columns="1*, Auto, 1*" Rows="Auto, Auto, 88, Auto">
+                <TextBox Grid.Row="1" Label="Наименование" Required="True"
+                         Value="{Bind Role.Name}" TabIndex="1">
+                </TextBox>
+                <TextBox Grid.Row="2" Grid.Col="1" Label="Ключ" 
+                         Value="{Bind Role.Key}" TabIndex="2" />
+                <Popover Grid.Row="2" Grid.Col="2" Icon="InfoBlue" Placement="RightBottom" Margin="0, 0, 5, -5">
+                    <Popup Width="200">
+                        <Text>
+                            <Span Bold="True">Внимание!</Span>
+                            Ключ используется как идентификатор для программного доступа к роли.
+                            (чаще всего в обработчиках бизнес процессов).
+                            <Break />
+                            Будьте особенно внимательны при его редактировании.
+                        </Text>
+                    </Popup>
+                </Popover>
+                <TextBox Grid.Row="4" Grid.ColSpan="3" Label="Примечание" Value="{Bind Role.Memo}" TabIndex="3" 
+                         Multiline="True" Rows="3"/>
+            </Grid>
+        </Tab>
+        <Tab Header="Пользователи и группы" Padding="5, 10" Badge="{Bind Role.UsersGroups.Count}">
+            <Toolbar Style="Transparent">
+                <Button Icon="Add" Content="Добавить">
+                    <Button.DropDown>
+                        <DropDownMenu>
+                            <MenuItem Icon="User" Content="Пользователя" Command="{BindCmd Execute, CommandName=addUser, Argument={Bind Role.UsersGroups}}"/>
+                            <MenuItem Icon="Users" Content="Группу" Command="{BindCmd Execute, CommandName=addGroup, Argument={Bind Role.UsersGroups}}"/>
+                        </DropDownMenu>
+                    </Button.DropDown>
+                </Button>
+                <Button Icon="Delete" Content="Удалить" 
+                        Command="{BindCmd Command=RemoveSelected, Argument={Bind Role.UsersGroups}, Confirm={StaticResource SureDelete}}"/>
+                <Text Size="Small"  Toolbar.Align="Right">всего элементов:
+                    <Span Bold="True" Content="{Bind Role.UsersGroups.Count}"/>
+                </Text>
+            </Toolbar>
+            <DataGrid GridLines="Vertical" Hover="True" Height="270" FixedHeader="True"
+                      ItemsSource="{Bind Role.UsersGroups}" Striped="True" Border="True">
+                <DataGridColumn Header="Код" Fit="True" Content="{Bind $Id}" Align="Right" Icon="{Bind $Icon}"/>
+                <DataGridColumn Header="Наименование" Content="{Bind $Name}"/>
+                <DataGridColumn Header="Пользователь/группа" Content="{Bind $UGName}" Wrap="NoWrap" Width="150"/>
+                <DataGridColumn Fit="True">
+                    <Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Confirm={StaticResource SureDelete}}"/>
+                </DataGridColumn>
+            </DataGrid>
+        </Tab>
+    </TabPanel>
+</Dialog>
+
+    

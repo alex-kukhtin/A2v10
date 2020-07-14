@@ -146,7 +146,7 @@
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200505-7564
+// 20200714-7688
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -419,6 +419,8 @@ app.modules['std:utils'] = function () {
 				}
 				if (dateIsZero(obj))
 					return '';
+				if (opts.format)
+					return formatDateWithFormat(obj, opts.format);
 				return formatDate(obj) + ' ' + formatTime(obj);
 			case "Date":
 				if (isString(obj))

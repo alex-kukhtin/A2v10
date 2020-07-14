@@ -1,0 +1,53 @@
+<!-- Browse users dialog -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Padding="10"
+        Title="Выбор пользователя">
+    <Dialog.Buttons>
+        <Button Command="{BindCmd SelectChecked, Argument={Bind Users}}">Выбрать</Button>
+        <Button Command="{BindCmd Close}">Отмена</Button>
+    </Dialog.Buttons>
+    <CollectionView ItemsSource="{Bind Users}" RunAt="Server">
+        <CollectionView.Filter>
+            <FilterDescription>
+                <FilterItem Property="Fragment" />
+            </FilterDescription>
+        </CollectionView.Filter>
+        <Toolbar Style="Transparent" Padding="0,0,10,0">
+            <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска" TabIndex="1">
+                <TextBox.AddOns>
+                    <Hyperlink Icon="Search" Command="{BindCmd Reload}" Tip="Найти"/>
+                </TextBox.AddOns>
+            </TextBox>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Content="Обновить"/>
+            <!--
+        <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+        -->
+        </Toolbar>
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" Height="270"
+				Striped="True" Border="True" Sort="True" GridLines="Vertical" 
+                FixedHeader="True" DoubleClick="{BindCmd Select, Argument={Bind Users}}">
+            <DataGridColumn Content="{Bind $checked}" Align="Center" ControlType="CheckBox" Editable="True"/>
+            <DataGridColumn Header="Код" Content="{Bind Id}" Icon="User" Align="Right" Fit="True" Wrap="NoWrap"/>
+            <DataGridColumn Header="Логин" Content="{Bind Name}" />
+            <!--
+		<DataGridColumn Header="Имя" Content="{Bind Name}" Command="{BindCmd Dialog, Action=Edit, Url='/Identity/User/Edit', Argument={Bind}}"/>
+        -->
+            <DataGridColumn Header="Имя" Content="{Bind PersonName}"/>
+            <DataGridColumn Header="е-mail/Телефон">
+                <StackPanel Orientation="Vertical">
+                    <Text If="{Bind Email}" Wrap="NoWrap">
+                        <SpanIcon Icon="MessageOutline"/>
+                        <Span Content="{Bind Email}"/>
+                    </Text>
+                    <Text If="{Bind Phone}" Wrap="NoWrap">
+                        <SpanIcon Icon="Eye"/>
+                        <Span Content="{Bind Phone}"/>
+                    </Text>
+                </StackPanel>
+            </DataGridColumn>
+            <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+        </DataGrid>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
+    </CollectionView>
+</Dialog>
+
+    

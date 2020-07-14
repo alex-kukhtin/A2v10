@@ -1,0 +1,43 @@
+<!-- Browse groups dialog -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Padding="10"
+        Title="Выбор группы">
+    <Dialog.Buttons>
+        <Button Command="{BindCmd SelectChecked, Argument={Bind Groups}}">Выбрать</Button>
+        <Button Command="{BindCmd Close}">Отмена</Button>
+    </Dialog.Buttons>
+    <CollectionView ItemsSource="{Bind Groups}" RunAt="Server">
+        <CollectionView.Filter>
+            <FilterDescription>
+                <FilterItem Property="Fragment" />
+            </FilterDescription>
+        </CollectionView.Filter>
+        <Toolbar Style="Transparent" Padding="0,0,10,0">
+            <TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска" TabIndex="1">
+                <TextBox.AddOns>
+                    <Hyperlink Icon="Search" Command="{BindCmd Reload}" Tip="Найти"/>
+                </TextBox.AddOns>
+            </TextBox>
+            <Button Icon="Reload" Command="{BindCmd Reload}" Content="Обновить"/>
+            <!--
+        <Button Icon="Requery" Command="{BindCmd Requery}" Tip="Перезагружает страницу">Перезагрузить</Button>
+        -->
+        </Toolbar>
+        <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" Height="270"
+				Striped="True" Border="True" Sort="True" GridLines="Vertical" 
+                FixedHeader="True" DoubleClick="{BindCmd Select, Argument={Bind Groups}}">
+            <!--
+            -->
+            <DataGridColumn Content="{Bind $checked}" Align="Center"  Editable="True" ControlType="CheckBox" Fit="True"/>
+            <DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"/>
+            <DataGridColumn Header="Наименование" Content="{Bind Name}" />
+            <DataGridColumn Header="Ключ" Content="{Bind Key}" Fit="True"/>
+            <DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+        </DataGrid>
+        <Pager Source="{Bind Parent.Pager}"></Pager>
+    </CollectionView>
+    <!--
+    <Code Multiline="True" Content="{Bind Groups.$checked}"/>
+    -->
+</Dialog>
+
+    

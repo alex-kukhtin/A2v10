@@ -161,6 +161,12 @@
     <Content Include="app\directives\focus.js" />
     <Content Include="app\directives\lazy.js" />
     <Content Include="app\standalone\shell.js" />
+    <Content Include="App_application\admin\Identity\Group\edit.template.js" />
+    <Content Include="App_application\admin\Identity\Role\edit.template.js" />
+    <Content Include="App_application\admin\Identity\User\create.template.js" />
+    <Content Include="App_application\admin\Identity\User\edit.template.js" />
+    <Content Include="App_application\admin\Identity\User\index.template.js" />
+    <Content Include="App_application\admin\Identity\User\password.template.js" />
     <Content Include="App_application\Home\controller.js" />
     <Content Include="App_application\Home\index.view.cshtml" />
     <Content Include="css\mobile.css" />
@@ -227,6 +233,12 @@
     <Content Include="Less\WaitCursor.less" />
     <Content Include="Less.Mobile\MobilePage.less" />
     <Content Include="Less.Mobile\Pager.less" />
+    <Content Include="App_application\A2v10.Web.Admin.nuspec">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_application\admin\Identity\Group\model.json" />
+    <Content Include="App_application\admin\Identity\Role\model.json" />
+    <Content Include="App_application\admin\Identity\User\model.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -439,6 +451,61 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\Group\browse.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\Group\edit.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\Group\index.view.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\Role\browse.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\Role\edit.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\Role\index.view.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\User\browse.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\User\create.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\User\edit.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\User\index.view.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_application\admin\Identity\User\password.dialog.xaml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

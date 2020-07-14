@@ -1,0 +1,84 @@
+<!-- Demo page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	>
+	<Page.Resources>
+		<sys:String x:Key="EditUrl">/Identity/User/Edit</sys:String>
+		<Confirm x:Key="SureDelete">Вы действительно хотите удалить пользователя?</Confirm>
+		<sys:String x:Key="PasswordUrl">/Identity/User/Password</sys:String>
+	</Page.Resources>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Users}" RunAt="ServerUrl">
+			<CollectionView.Filter>
+				<FilterDescription>
+					<FilterItem Property="Fragment" />
+				</FilterDescription>
+			</CollectionView.Filter>
+		</CollectionView>
+	</Page.CollectionView>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Add" Tip="Создать пользователя" Command="{BindCmd Dialog, Action=Append, Url='/Identity/User/Create', Argument={Bind Users}}">Создать</Button>
+			<Button Icon="Edit" Tip="Свойства пользователя" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Users}}">Свойства</Button>
+			<Button Icon="Delete" Content="Удалить" Command="{BindCmd DbRemoveSelected, Argument={Bind Users}, Confirm={StaticResource SureDelete}}"/>
+			<Separator />
+			<TextBox Label="Фильтр:" Value="{Bind Parent.Filter.Fragment}" Placeholder="текст для поиска"/>
+			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+			<Button Icon="EllipsisVertical" Toolbar.Align="Right" Tip="Дополнительные действия">
+				<Button.DropDown>
+					<DropDownMenu Direction="DownRight">
+						<MenuItem Icon="Lock" Content="Изменить пароль" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource PasswordUrl}, Argument={Bind Users}}"/>
+					</DropDownMenu>
+				</Button.DropDown>
+			</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}"></Pager>
+	</Page.Pager>
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" FixedHeader="True"
+            DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Parent.ItemsSource}}"  
+			Striped="True" Sort="True" GridLines="Vertical">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True" Icon="{Bind $Icon}" Wrap="NoWrap"/>
+		<DataGridColumn Header="Логин" Content="{Bind Name}" Wrap="NoWrap" Fit="True"
+                        Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+		<DataGridColumn Header="Имя" Content="{Bind PersonName}"/>
+		<DataGridColumn Header="е-mail/Телефон">
+			<StackPanel Orientation="Vertical">
+				<Text If="{Bind Email}" Wrap="NoWrap" Size="Small">
+					<SpanIcon Icon="MessageOutline"/>
+					<Span Content="{Bind Email}"/>
+				</Text>
+				<Text If="{Bind Phone}" Wrap="NoWrap" Size="Small">
+					<SpanIcon Icon="Eye"/>
+					<Span Content="{Bind Phone, Mask='+38 (0##) ###-##-##'}"/>
+				</Text>
+			</StackPanel>
+		</DataGridColumn>
+		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+		<DataGridColumn Header="Вход">
+			<StackPanel Orientation="Vertical" If="{Bind LastLoginHost}">
+				<Text Wrap="NoWrap" Size="Small">
+					<SpanIcon Icon="Calendar"/>
+					<Span Content="{Bind LastLoginDate, DataType=DateTime}"/>
+				</Text>
+				<Text Wrap="NoWrap" Size="Small">
+					<SpanIcon Icon="Devices"/>
+					<Span Content="{Bind LastLoginHost}"/>
+				</Text>
+			</StackPanel>
+		</DataGridColumn>
+		<DataGridColumn Fit="True" Wrap="NoWrap">
+			<Group>
+				<Hyperlink Icon="Edit" Tip="Свойства пользователя" 
+					Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+				<Hyperlink Icon="Delete" Tip="Удалить" 
+					Command="{BindCmd Command=DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
+				<Hyperlink Icon="Lock" Tip="Изменить пароль" Command="{BindCmd Dialog, Action=Edit, Url={StaticResource PasswordUrl}, Argument={Bind}}"/>
+			</Group>
+		</DataGridColumn>
+	</DataGrid>
+</Page>
+
+    

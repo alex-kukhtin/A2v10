@@ -16,6 +16,10 @@ namespace A2v10.Xaml
 		public Boolean Underline { get; set; }
 		public Boolean Vertical { get; set; }
 
+		public String CssClass { get; set; }
+		public String CssStyle { get; set; }
+		public Length MinWidth { get; set; }
+
 		public Boolean GroupIndent { get; set; } // ???
 
 		public String Fill { get; set; }
@@ -26,7 +30,7 @@ namespace A2v10.Xaml
 				return;
 			var td = new TagBuilder("td");
 			MergeAttributes(td, context);
-
+			td.AddCssClass(CssClass);
 			var colSpanBind = GetBinding(nameof(ColSpan));
 			if (colSpanBind != null)
 				td.MergeAttribute(":colspan", colSpanBind.GetPath(context));
@@ -52,6 +56,10 @@ namespace A2v10.Xaml
 			td.AddCssClassBoolNo(Italic, "italic");
 
 			RenderFill(td, context);
+			RenderCssStyle(td, context);
+			if (MinWidth != null)
+				td.MergeStyleUnit("min-width", MinWidth.Value);
+
 			if (Vertical)
 			{
 				td.AddCssClass("vert");
@@ -125,6 +133,15 @@ namespace A2v10.Xaml
 			{
 				td.MergeStyle("background-color", Fill);
 			}
+		}
+
+		void RenderCssStyle(TagBuilder td, RenderContext context)
+		{
+			var bs = GetBinding(nameof(CssStyle));
+			if (bs != null)
+				td.MergeAttribute(":style", bs.GetPathFormat(context));
+			else if (CssStyle != null)
+				throw new XamlException("The CssStyle property must be a binding");
 		}
 
 	}
