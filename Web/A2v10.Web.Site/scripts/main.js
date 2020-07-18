@@ -126,9 +126,9 @@ app.modules['std:locale'] = function () {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20181204-7382*/
+/*20200718-7690*/
 /* platform/webvue.js */
 
 (function () {
@@ -141,10 +141,15 @@ app.modules['std:locale'] = function () {
 		Vue.nextTick(func);
 	}
 
+	function print() {
+		window.print();
+	}
+
 
 	app.modules['std:platform'] = {
 		set: set,
 		defer: defer,
+		print: print,
 		File: File, /*file ctor*/
 		performance: performance
 	};
@@ -10826,7 +10831,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200714-7688*/
+/*20200718-7690*/
 // controllers/base.js
 
 (function () {
@@ -11880,6 +11885,7 @@ Vue.directive('resize', {
 			},
 
 			$defer: platform.defer,
+			$print: platform.print,
 
 			$hasError(path) {
 				let ps = utils.text.splitPath(path);

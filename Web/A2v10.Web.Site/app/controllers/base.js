@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200714-7688*/
+/*20200718-7690*/
 // controllers/base.js
 
 (function () {
@@ -1054,6 +1054,7 @@
 			},
 
 			$defer: platform.defer,
+			$print: platform.print,
 
 			$hasError(path) {
 				let ps = utils.text.splitPath(path);

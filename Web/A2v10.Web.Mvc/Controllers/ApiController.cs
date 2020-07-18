@@ -101,7 +101,10 @@ namespace A2v10.Web.Mvc.Controllers
 			Guid apiGuid = Guid.NewGuid();
 			try
 			{
-				_logger.LogApi($"get: {pathInfo}", Request.UserHostAddress, apiGuid);
+				var qs = Request.QueryString?.ToString();
+				if (!String.IsNullOrEmpty(qs))
+					qs = $" query:{qs}";
+				_logger.LogApi($"get: {pathInfo}{qs}", Request.UserHostAddress, apiGuid);
 				var rm = await RequestModel.CreateFromApiUrl(_baseController.Host, "_api/" + pathInfo);
 				var ac = rm.CurrentCommand;
 

@@ -103,7 +103,7 @@
 										<CheckBox Label="Check 3" />
 									</StackPanel>
 									<StackPanel Orientation="Horizontal">
-										<Button Style="Green" Size="Mini">Застосувати</Button>
+										<Button Style="Green" Size="Mini" Command="{BindCmd Print}">Застосувати</Button>
 										<Button Style="Danger" Size="Mini">Скасувати</Button>
 									</StackPanel>
 								</DropDownMenu>
@@ -113,7 +113,7 @@
 				</d:Card>
 			</d:Diagram>
 		</Panel>
-		<Panel Grid.ColSpan="2" DropShadow="Shadow1" Header="Бухгалтерський облік НМА">
+		<Panel Grid.ColSpan="2" DropShadow="Shadow1" Header="Бухгалтерський облік НМА" Print="False">
 			<Sheet Striped="True" Wrap="NoWrap">
 				<SheetSection>
 					<SheetRow Style="LightHeader">
@@ -154,7 +154,7 @@
 				<Hyperlink Icon="Table" Size="Normal">I ще один звіт</Hyperlink>
 			</FlexList>
 		</Panel>
-		<Panel Header="Задачі" Padding="6" DropShadow="Shadow1" Grid.ColSpan="2">
+		<Panel Header="Задачі" Padding="6" DropShadow="Shadow1" Grid.ColSpan="2" Print="False">
 			<PropertyGrid Wrap="NoWrap" GridLines="Horizontal">
 				<PropertyGridItem Name="На складі">2233</PropertyGridItem>
 				<PropertyGridItem Name="В експлуатації">2233</PropertyGridItem>

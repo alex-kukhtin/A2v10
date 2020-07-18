@@ -48,7 +48,8 @@ namespace A2v10.Xaml
 		Help,
 		EUSign,
 		ExportTo,
-		File
+		File,
+		Print
 	}
 
 	public enum DialogAction
@@ -240,6 +241,9 @@ namespace A2v10.Xaml
 
 				case CommandType.Help:
 					return $"$showHelp({CommandUrl(context)})";
+
+				case CommandType.Print:
+					return $"$print()";
 
 				case CommandType.Open:
 					if (indirect)
@@ -624,6 +628,7 @@ namespace A2v10.Xaml
 				case CommandType.Requery:
 				case CommandType.MailTo:
 				case CommandType.Help:
+				case CommandType.Print:
 				case CommandType.Execute:
 				case CommandType.ExecuteSelected:
 					return true;
