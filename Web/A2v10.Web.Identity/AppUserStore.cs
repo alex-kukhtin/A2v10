@@ -466,7 +466,7 @@ namespace A2v10.Web.Identity
 		async Task AddGroupsToClaims(AppUser user, List<Claim> claims)
 		{
 			var groups = await _dbContext.LoadListAsync<AppRole>(DataSource, $"[{DbSchema}].[GetUserGroups]", new { UserId = user.Id });
-			var glist = groups.Where(role => role.Key != null && role.Key != "Users").Select(role => role.Key.ToLowerInvariant());
+			var glist = groups.Where(role => !String.IsNullOrEmpty(role.Key) && role.Key != "Users").Select(role => role.Key.ToLowerInvariant());
 			String gstr = String.Join(",", glist);
 			claims.Add(new Claim("groups", gstr));
 		}
