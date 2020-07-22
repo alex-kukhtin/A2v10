@@ -1,6 +1,7 @@
 ﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -262,9 +263,16 @@ const vm = new DataModelController({
 			foreach (var c in meta.Cross)
 			{
 				sb.Append($"{c.Key}: [");
-				foreach (var s in c.Value)
-					sb.Append($"'{s}',");
-				sb.RemoveTailComma();
+				if (c.Value != null)
+					sb.Append(String.Join(",", c.Value.Select(s =>  $"'{s}'")));
+				/*
+				if (c.Value != null)
+				{
+					foreach (var s in c.Value)
+						sb.Append($"'{s}',");
+					sb.RemoveTailComma();
+				}
+				*/
 				sb.Append("]");
 			}
 			sb.AppendLine("}");

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200718-7690*/
+/*20200722-7691*/
 /* platform/webvue.js */
 
 (function () {

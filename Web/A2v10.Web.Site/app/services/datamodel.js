@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200713-7685*/
+/*20200722-7691*/
 // services/datamodel.js
 
 (function () {
@@ -1451,6 +1451,8 @@
 							let sa = s[p];
 							if (ta && sa)
 								ta.splice(0, ta.length, ...sa);
+							else if (ta && !sa)
+								ta.splice(0, ta.length);
 						}
 					}
 				}

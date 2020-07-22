@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -56,6 +56,16 @@ namespace A2v10.Xaml
 				tag.MergeStyle(styleProp, $"{Top.Value} {Left.Value}");
 			else
 				tag.MergeStyle(styleProp, $"{Top.Value} {Right.Value} {Bottom.Value} {Left.Value}");
+		}
+
+		public override string ToString()
+		{
+			if (Left == Right && Left == Top && Left == Bottom)
+				return Left.Value;
+			else if (Left == Right && Top == Bottom)
+				return $"{Top.Value} {Left.Value}";
+			else
+				return $"{Top.Value} {Right.Value} {Bottom.Value} {Left.Value}";
 		}
 
 		internal void MergeAbsolute(TagBuilder tag)

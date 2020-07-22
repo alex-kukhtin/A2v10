@@ -3,6 +3,7 @@
 		<Toolbar Style="Light" Border="BottomShadow">
 			<Button Icon="Reload" Content="@[Reload]" Command="{BindCmd Reload}"/>
 			<Button Icon="ExportExcel" Content="Експортувати в Excel" Command="{BindCmd ExportTo, Format=Excel, FileName='Залишки по днях'}"/>
+			<Button Icon="Print" Content="Надрукувати" Command="{BindCmd Print}"/>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.Taskpad>
@@ -11,8 +12,11 @@
 			<ComboBox Label="Дистрибутор" ItemsSource="{Bind Distributors}" Value="{Bind Query.Distributor}" />
 		</Taskpad>
 	</Page.Taskpad>
-	<SheetPage Orientation="Landscape" PageSize="410mm,210mm">
-		<Sheet GridLines="Both" Compact="True" Striped="True" Hover="True">
+	<SheetPage PageSize="Fit,Auto">
+		<SheetPage.PrintPage>
+			<PrintPage Orientation="Landscape" Margin="10mm" Zoom="Auto"/>
+		</SheetPage.PrintPage>
+		<Sheet GridLines="Both" Compact="True" Striped="True" Hover="True" FitWidth="True">
 			<Sheet.Columns>
 				<SheetColumn Fit="True"/>
 				<SheetColumn Width="1"/>
@@ -41,7 +45,7 @@
 					<SheetCell>Моріон</SheetCell>
 					<SheetCell ColSpan="2">Назва</SheetCell>
 					<SheetCellGroup ItemsSource="{Bind Products.$cross.Rems}">
-						<SheetCell Content="{Bind}" Align="Center"/>
+						<SheetCell Content="{Bind}" Align="Center" MinWidth="24"/>
 					</SheetCellGroup>
 				</SheetRow>
 			</Sheet.Header>

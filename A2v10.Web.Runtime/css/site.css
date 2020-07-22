@@ -1043,6 +1043,14 @@ td.vert > .vcell {
     color: currentColor;
   }
 }
+.mm-100-100 {
+  width: 100mm;
+  height: 100mm;
+  position: absolute;
+  background-color: transparent;
+  left: -200mm;
+  top: -200mm;
+}
 .tag-label {
   background-color: #8f94b0;
   color: white;
@@ -6305,6 +6313,9 @@ table.sheet.compact td,
 table.sheet.compact th {
   padding: 2px 4px;
 }
+table.sheet.fit-width {
+  width: 1px;
+}
 table > colgroup col.yellow {
   background-color: rgba(255, 255, 164, 0.25);
 }
@@ -6906,6 +6917,9 @@ table > colgroup col.blue {
   margin: 0.5rem 0 1rem 0;
 }
 @media print {
+  .no-print {
+    display: none!important;
+  }
   .header,
   .footer,
   .nav-bar {

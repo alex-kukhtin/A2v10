@@ -62,6 +62,7 @@ namespace A2v10.Xaml
 		public Boolean? Border { get; set; }
 		public Length Width { get; set; }
 		public Boolean Compact { get; set; }
+		public Boolean FitWidth { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -76,6 +77,7 @@ namespace A2v10.Xaml
 			sheet.AddCssClassBool(Striped, "striped");
 			sheet.AddCssClassBoolNo(Border, "border");
 			sheet.AddCssClassBool(Compact, "compact");
+			sheet.AddCssClassBool(FitWidth, "fit-width");
 			if (Width != null)
 				sheet.MergeStyle("width", Width.Value);
 			sheet.RenderStart(context);
