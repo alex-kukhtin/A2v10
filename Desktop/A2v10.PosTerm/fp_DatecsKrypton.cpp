@@ -1071,7 +1071,10 @@ long CFiscalPrinter_DatecsKrypton::GetPrinterLastZReportNo()
 	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 
 	if (IS_EMULATION()) {
-		return 1122;
+		time_t now = time(0);
+		tm  tm;
+		localtime_s(&tm, &now);
+		return (tm.tm_year + 1900) * 1000 + tm.tm_yday;
 	}
 
 	auto sinfo = _split(info, ';');

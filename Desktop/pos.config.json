@@ -4,8 +4,8 @@
 	"fiscalPrinters": [
 		{
 			"model3": "TESTPRINTER",
-			"model2": "DATECS-Krypton",
-			"model": "IKC-V11",
+			"model": "DATECS-Krypton",
+			"model2": "IKC-V11",
 			"port": "COM5",
 			"baud": 9600,
 			"terminal2": "MAIN",
