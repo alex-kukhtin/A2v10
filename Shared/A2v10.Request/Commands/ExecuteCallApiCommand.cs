@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using Newtonsoft.Json;
 
@@ -18,14 +19,25 @@ namespace A2v10.Request
 		private static HttpClient _httpClient = new HttpClient();
 
 		private readonly IApplicationHost _host;
+		private readonly IDbContext _dbContext;
 
-		public ExecuteCallApiCommand(IApplicationHost host)
+		IDataModel _dataModel;
+
+		public ExecuteCallApiCommand(IApplicationHost host, IDbContext dbContext)
 		{
 			_host = host ?? throw new ArgumentNullException(nameof(host));
+			_dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+			_dataModel = null;
 		}
 
 		public async Task<ServerCommandResult> Execute(RequestCommand cmd, ExpandoObject dataToExec)
 		{
+			if (!String.IsNullOrEmpty(cmd.model))
+			{
+				var dmParams = dataToExec.Clone( new String[] { "url", "method", "headers", "body" });
+				_dataModel = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.LoadProcedure, dmParams);
+			}
+
 			String url = Resolve(dataToExec.Get<String>("url"), dataToExec)?.ToString();
 			String method = dataToExec.Get<String>("method")?.ToString()?.ToLowerInvariant();
 			var headers = dataToExec.Get<ExpandoObject>("headers");
@@ -36,7 +48,7 @@ namespace A2v10.Request
 			if (method == "post")
 			{
 				mtd = HttpMethod.Post;
-				bodyStr = ResolveBody(body, dataToExec);
+				bodyStr = Resolve(body, dataToExec);
 			}
 
 			using (var msg = new HttpRequestMessage(mtd, url))
@@ -60,20 +72,57 @@ namespace A2v10.Request
 		}
 
 
-		Object Resolve(Object source, ExpandoObject data)
+		String Resolve(Object source, ExpandoObject data)
 		{
 			if (source == null)
 				return null;
-			source = ResolveEnvironment(source);
-			return ResolveParameters(source, data);
+			if (source is String strSource)
+				return ResolveString(strSource, data);
+			else if (source is ExpandoObject eoSource)
+				return ResolveObject(eoSource, data);
+			else
+				throw new InvalidOperationException($"Invalid object type for CallApi ({source.GetType().Name})");
 		}
+
+		String ResolveString(String source, ExpandoObject data)
+		{
+			var r = ResolveEnvironment(source);
+			r = ResolveParameters(r, data);
+			return ResolveDataModel(r);
+		}
+
+		String ResolveObject(ExpandoObject src, ExpandoObject data)
+		{
+			if (src == null)
+				return null;
+			var resolvedObj = ResolveObjectImpl(src, data);
+			if (resolvedObj == null)
+				return null;
+			return JsonConvert.SerializeObject(resolvedObj);
+		}
+
+		ExpandoObject ResolveObjectImpl(ExpandoObject obj, ExpandoObject data)
+		{
+			var retVal = new ExpandoObject();
+			foreach (var d in obj as IDictionary<String, Object>)
+			{
+				if (d.Value is String strVal)
+					retVal.Set(d.Key, Resolve(strVal, data));
+				else if (d.Value is ExpandoObject eoVal)
+					retVal.Set(d.Key, ResolveObjectImpl(eoVal, data));
+				else
+					retVal.Set(d.Key, d.Value);
+			}
+			return retVal;
+		}
+
 
 		static Regex _envRegEx;
 		static Regex _prmRegEx;
+		static Regex _datRegEx;
 
-		Object ResolveEnvironment(Object src)
+		String ResolveEnvironment(String source)
 		{
-			var source = src.ToString();
 			if (source.IndexOf("((") == -1)
 				return source;
 			if (_envRegEx == null)
@@ -92,9 +141,8 @@ namespace A2v10.Request
 			return sb.ToString();
 		}
 
-		Object ResolveParameters(Object src, ExpandoObject data)
+		String ResolveParameters(String source, ExpandoObject data)
 		{
-			var source = src.ToString();
 			if (source.IndexOf("[[") == -1)
 				return source;
 			if (_prmRegEx == null)
@@ -108,7 +156,36 @@ namespace A2v10.Request
 				String key = m.Groups[1].Value;
 				var valObj = data.Eval<Object>(key, null, throwIfError:true);
 				if (ms.Count == 1 && m.Groups[0].Value == source)
-					return valObj; // single element
+					return valObj?.ToString(); // single element
+				if (valObj is String valStr)
+					sb.Replace(m.Value, valStr);
+				else if (valObj is ExpandoObject valEo)
+					sb.Replace(m.Value, JsonConvert.SerializeObject(valEo));
+				else
+					sb.Replace(m.Value, valObj.ToString());
+
+			}
+			return sb.ToString();
+		}
+
+		String ResolveDataModel(String source)
+		{
+			if (_dataModel == null)
+				return source;
+			if (source.IndexOf("{{") == -1)
+				return source;
+			if (_datRegEx == null)
+				_datRegEx = new Regex("\\{\\{(.+?)\\}\\}", RegexOptions.Compiled);
+			var ms = _datRegEx.Matches(source);
+			if (ms.Count == 0)
+				return source;
+			var sb = new StringBuilder(source);
+			foreach (Match m in ms)
+			{
+				String key = m.Groups[1].Value;
+				var valObj = _dataModel.Eval<Object>(key);
+				if (ms.Count == 1 && m.Groups[0].Value == source)
+					return valObj?.ToString(); // single element
 				if (valObj is String valStr)
 					sb.Replace(m.Value, valStr);
 				else if (valObj is ExpandoObject valEo)
@@ -127,32 +204,6 @@ namespace A2v10.Request
 			var d = headers as IDictionary<String, Object>;
 			foreach (var hp in d)
 				msg.Headers.Add(hp.Key, Resolve(hp.Value.ToString(), data)?.ToString());
-		}
-
-		ExpandoObject ResolveBodyObject(ExpandoObject obj, ExpandoObject data)
-		{
-			var retVal = new ExpandoObject();
-			foreach (var d in obj as IDictionary<String, Object>)
-			{
-				if (d.Value is String strVal)
-					retVal.Set(d.Key, Resolve(strVal, data));
-				else if (d.Value is ExpandoObject eoVal)
-					retVal.Set(d.Key, ResolveBodyObject(eoVal, data));
-				else
-					retVal.Set(d.Key, d.Value);
-			}
-			return retVal;
-		}
-
-		String ResolveBody(Object body, ExpandoObject data)
-		{
-			if (body is String strBody)
-				return Resolve(strBody, data)?.ToString();
-			else if (body is ExpandoObject eoBody) {
-				var resolvedBody = ResolveBodyObject(eoBody, data);
-				return JsonConvert.SerializeObject(resolvedBody);
-			}
-			throw new InvalidOperationException($"Invalid body type for CallApi ({body.GetType().Name})");
 		}
 
 

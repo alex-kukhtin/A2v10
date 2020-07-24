@@ -95,4 +95,6 @@
 		</Sheet>
 	</SheetPage>
 	<Code Content="{Bind Query}" Multiline="True" If="False"></Code>
+
+	<Sheet AutoGenerate="ReportData"/>
 </Page>

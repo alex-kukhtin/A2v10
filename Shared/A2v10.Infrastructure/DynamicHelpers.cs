@@ -207,6 +207,18 @@ namespace A2v10.Infrastructure
 			return root.Eval<Object>(expression, null, true);
 		}
 
+		public static ExpandoObject Clone(this ExpandoObject elem, String[] exclude)
+		{
+			var eo = new ExpandoObject();
+			foreach (var v in elem as IDictionary<String, Object>)
+			{
+				if (exclude.Contains(v.Key))
+					continue;
+				eo.Set(v.Key, v.Value);
+			}
+			return eo;
+		}
+
 		public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default(T), Boolean throwIfError = false)
 		{
 			if (expression == null)

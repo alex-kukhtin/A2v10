@@ -25,7 +25,7 @@ namespace A2v10.Request
 				case CommandType.xml:
 					return new ExecuteXmlCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IDbContext>());
 				case CommandType.callApi:
-					return new ExecuteCallApiCommand(ServiceLocator.Current.GetService<IApplicationHost>());
+					return new ExecuteCallApiCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IDbContext>());
 				case CommandType.sendMessage:
 					return new ExecuteSendMessageCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IMessaging>());
 			}

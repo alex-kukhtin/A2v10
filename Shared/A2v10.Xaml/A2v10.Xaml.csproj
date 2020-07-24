@@ -130,6 +130,7 @@
     <Compile Include="Sheets\PrintPage.cs" />
     <Compile Include="Sheets\SheetCellGroup.cs" />
     <Compile Include="Sheets\SheetColumnGroup.cs" />
+    <Compile Include="Sheets\SheetGenerator.cs" />
     <Compile Include="Sheets\SheetPage.cs" />
     <Compile Include="Text\SpanSum.cs" />
     <Compile Include="Text\StaticImage.cs" />

@@ -107,18 +107,28 @@
 		},
 		"callApi": {
 			"type": "callApi",
+			"model": "GetWeather",
 			"parameters": {
 				"url": "((MyApi.url))/companyInfo/[[Code]]",
-				"method": "get",
+				"method": "post",
 				"headers": {
 					"Authorization": "bearer ((MyApi.apiKey))"
+				},
+				"body": {
+					"weather": {
+						"url": "{{Weather.Url}}",
+						"key": "((openweathermap.appid))"
+					},
+					"prm": "[[Code]]"
 				}
 			}
 		},
 		"getWeather": {
 			"type": "callApi",
+			"model": "GetWeather",
+			"url2": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
 			"parameters": {
-				"url": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
+				"url": "{{Weather.Url}}?q=[[City]]&appid=((openweathermap.appid))",
 				"method": "get"
 			}
 		},

@@ -141,6 +141,9 @@ namespace A2v10.Xaml
 		public Boolean IsDialog => _root is Dialog;
 		public Boolean IsWizard => _root is Wizard;
 
+
+		public IDataModel DataModel => _dataModel;
+
 		public Boolean IsDataModelIsReadOnly
 		{
 			get

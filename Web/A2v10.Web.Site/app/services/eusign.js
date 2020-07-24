@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200211-7690*/
+/*20200723-7692*/
 /* services/eusign.js */
 
 app.modules['std:eusign'] = function () {
@@ -54,7 +54,9 @@ app.modules['std:eusign'] = function () {
 			subject: ownerInfo.GetSubject(),
 			EDRPOUCode: ownerInfo.GetSubjEDRPOUCode(),
 			DRFOCode: ownerInfo.GetSubjDRFOCode(),
-			time: null
+			time: null,
+			ownerInfo: Object.assign({}, ownerInfo),
+			timeInfo: timeInfo ? Object.assign({}, timeInfo) : null
 		};
 		if (timeInfo && timeInfo.IsTimeAvail)
 			rw.time = timeInfo.GetTime();

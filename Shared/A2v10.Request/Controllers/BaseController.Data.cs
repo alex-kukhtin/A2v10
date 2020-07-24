@@ -102,7 +102,10 @@ namespace A2v10.Request
 			}
 			var eh = rw?.events?.afterSave;
 			if (eh != null)
-				await _dbContext.SaveModelAsync(eh.CurrentSource(rw), eh.UpdateProcedure(rw), data, prms);
+			{
+				// new model data
+				await _dbContext.SaveModelAsync(eh.CurrentSource(rw), eh.UpdateProcedure(rw), model.Root, prms);
+			}
 			WriteDataModel(model, writer);
 		}
 

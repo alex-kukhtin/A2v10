@@ -64,10 +64,17 @@ namespace A2v10.Xaml
 		public Boolean Compact { get; set; }
 		public Boolean FitWidth { get; set; }
 
+		public String AutoGenerate { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
+			if (!String.IsNullOrEmpty(AutoGenerate))
+			{
+				new SheetGenerator(context).Build(AutoGenerate);
+				return;
+			}
 			var sheet = new TagBuilder("a2-sheet", null, IsInGrid);
 			onRender?.Invoke(sheet);
 			MergeAttributes(sheet, context);
