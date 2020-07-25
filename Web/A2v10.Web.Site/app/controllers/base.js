@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200718-7690*/
+/*20200725-7693*/
 // controllers/base.js
 
 (function () {
@@ -341,6 +341,11 @@
 						if (self.__destroyed__) return;
 						if (utils.isObject(data)) {
 							dat.$merge(data);
+							if (data.$ModelInfo) {
+								for (let pn in data.$ModelInfo) {
+									modelInfo.reconcile(data.$ModelInfo[pn]);
+								}
+							}
 							dat._setModelInfo_(undefined, data);
 							dat._setRuntimeInfo_(data.$runtime);
 							dat._fireLoad_();

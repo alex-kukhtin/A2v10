@@ -21,6 +21,9 @@
                     Command="{BindCmd Close}">Закрыть</Button>
 		</Toolbar>
 	</Page.Toolbar>
+	<Page.PrintPage>
+		<PrintPage Orientation="Landscape" Zoom="1"/>
+	</Page.PrintPage>
 	<Page.Taskpad>
 		<Taskpad Width="290" Collapsible="True" Collapsed="{Bind Root.$Collapsed}">
 			<TextBox Accel="Ctrl+F7" Label="Штрих-код" Value="{Bind Root.$BarCode}"/>
@@ -135,7 +138,7 @@
 							<TextBox Value="{Bind Entity.Article}"/>
 							<TextBox Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}">
 								<TextBox.AddOns>
-									<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods'}"/>
+									<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods', Data={Bind $BrowseParams}}"/>
 								</TextBox.AddOns>
 							</TextBox>
 							<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>

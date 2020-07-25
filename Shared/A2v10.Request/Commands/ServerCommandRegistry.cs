@@ -10,24 +10,44 @@ namespace A2v10.Request
 	{
 		public static IServerCommand GetCommand(CommandType cmd)
 		{
+			var loc = ServiceLocator.Current;
 			switch (cmd)
 			{
 				case CommandType.sql:
-					return new ExecuteSqlCommand(ServiceLocator.Current.GetService<IDbContext>());
+					return new ExecuteSqlCommand(
+						loc.GetService<IDbContext>()
+					);
 				case CommandType.startProcess:
-					return new StartProcessCommand(ServiceLocator.Current.GetService<IWorkflowEngine>());
+					return new StartProcessCommand(
+						loc.GetService<IWorkflowEngine>()
+					);
 				case CommandType.resumeProcess:
-					return new ResumeProcessCommand(ServiceLocator.Current.GetService<IWorkflowEngine>());
+					return new ResumeProcessCommand(
+						loc.GetService<IWorkflowEngine>()
+					);
 				case CommandType.script:
-					return new ExecuteScriptCommand(ServiceLocator.Current.GetService<IDbContext>(), ServiceLocator.Current.GetService<IScriptProcessor>());
+					return new ExecuteScriptCommand(
+						loc.GetService<IDbContext>(), 
+						loc.GetService<IScriptProcessor>()
+					);
 				case CommandType.clr:
 					return new ExecuteClrCommand();
 				case CommandType.xml:
-					return new ExecuteXmlCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IDbContext>());
+					return new ExecuteXmlCommand(
+						loc.GetService<IApplicationHost>(), 
+						loc.GetService<IDbContext>()
+					);
 				case CommandType.callApi:
-					return new ExecuteCallApiCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IDbContext>());
+					return new ExecuteCallApiCommand(
+						loc.GetService<IApplicationHost>(), 
+						loc.GetService<IDbContext>(),
+						loc.GetService<IHttpService>()
+					);
 				case CommandType.sendMessage:
-					return new ExecuteSendMessageCommand(ServiceLocator.Current.GetService<IApplicationHost>(), ServiceLocator.Current.GetService<IMessaging>());
+					return new ExecuteSendMessageCommand(
+						loc.GetService<IApplicationHost>(), 
+						loc.GetService<IMessaging>()
+					);
 			}
 			throw new ArgumentOutOfRangeException("Server command for '{cmd}' not found");
 		}

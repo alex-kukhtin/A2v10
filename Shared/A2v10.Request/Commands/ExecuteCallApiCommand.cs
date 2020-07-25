@@ -15,18 +15,17 @@ namespace A2v10.Request
 {
 	public class ExecuteCallApiCommand : IServerCommand
 	{
-		// TODO: make service!!!!
-		private static HttpClient _httpClient = new HttpClient();
-
 		private readonly IApplicationHost _host;
 		private readonly IDbContext _dbContext;
+		private readonly IHttpService _httpService;
 
 		IDataModel _dataModel;
 
-		public ExecuteCallApiCommand(IApplicationHost host, IDbContext dbContext)
+		public ExecuteCallApiCommand(IApplicationHost host, IDbContext dbContext, IHttpService httpService)
 		{
 			_host = host ?? throw new ArgumentNullException(nameof(host));
 			_dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+			_httpService = httpService ?? throw new ArgumentNullException(nameof(httpService));
 			_dataModel = null;
 		}
 
@@ -56,7 +55,7 @@ namespace A2v10.Request
 				SetHeaders(msg, headers, dataToExec);
 				if (bodyStr != null && mtd == HttpMethod.Post)
 					msg.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
-				var result = await _httpClient.SendAsync(msg);
+				var result = await _httpService.HttpClient.SendAsync(msg);
 				if (result.IsSuccessStatusCode)
 				{
 					return new ServerCommandResult(await result.Content.ReadAsStringAsync())

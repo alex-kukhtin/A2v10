@@ -1,6 +1,6 @@
 ﻿// Copyright © 2018-2020 Alex Kukhtin. All rights reserved.
 
-/*20200722-7691/
+/*20200725-7693/
 /* directives/pageorient.js */
 
 
@@ -42,7 +42,7 @@
 		let stv = `@media print {@page {size: ${bindVal.pageSize || 'A4'} ${bindVal.orientation}; margin:${bindVal.margin};}`;
 		zoom = zoom || bindVal.zoom;
 		if (zoom)
-			stv += `.sheet-page > .sheet { zoom: ${zoom}; width: 1px;}`;
+			stv += `.sheet-page > .sheet { zoom: ${zoom}; width: 1px;} .print-target {zoom: ${zoom}}`;
 		stv += '}';
 		return stv;
 	}

@@ -1,7 +1,7 @@
-﻿
+﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Configuration;
-using System.IO;
 
 namespace A2v10.Web.Base
 {

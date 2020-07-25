@@ -10,6 +10,7 @@ export interface TRow extends IArrayElement {
 	Price: number;
 	// computed
 	Sum: number;
+	$root: TRoot;
 }
 
 export interface TParentDoc extends IElement {

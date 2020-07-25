@@ -15,6 +15,7 @@ using A2v10.Web.Identity;
 using A2v10.Workflow;
 using A2v10.Xaml;
 using A2v10.Web.Script;
+using A2v10.Web.Base;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -44,6 +45,7 @@ namespace A2v10.Web.Mvc.Start
 				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
 				IExternalDataProvider dataProvider = new ExternalDataContext();
 				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
+				IHttpService httpService = new HttpService();
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -60,6 +62,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IUserStateManager>(userStateManager);
 				locator.RegisterService<IExternalDataProvider>(dataProvider);
 				locator.RegisterService<IScriptProcessor>(scriptProcessor);
+				locator.RegisterService<IHttpService>(httpService);
 
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};

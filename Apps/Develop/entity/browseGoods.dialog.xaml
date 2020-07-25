@@ -11,7 +11,13 @@
 		<sys:String x:Key="OpenUrl">/Entity/EditGoods</sys:String>
 		<Confirm x:Key="SureDelete">Действительно удалить товар?</Confirm>
 	</Dialog.Resources>
-	<CollectionView ItemsSource="{Bind Entities}" RunAt="Server" Filter="Fragment">
+	<CollectionView ItemsSource="{Bind Entities}" RunAt="Server">
+		<CollectionView.Filter>
+			<FilterDescription>
+				<FilterItem Property="Fragment"/>
+				<FilterItem Property="Date" DataType="Date"/>
+			</FilterDescription>
+		</CollectionView.Filter>
 		<Toolbar Style="Transparent">
 			<TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" 
                      Placeholder="фрагмент имени или артикула" Width="260">
@@ -19,6 +25,7 @@
 					<Hyperlink Icon="Search" />
 				</TextBox.AddOns>
 			</TextBox>
+			<DatePicker Label="Date" Value="{Bind Parent.Filter.Date}"/>
 
 			<Button Icon="Add" Toolbar.Align="Right" Tip="Создать покупателя" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Создать</Button>
 			<Button Icon="Edit" Toolbar.Align="Right" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Изменить</Button>
@@ -37,5 +44,6 @@
 			</DataGridColumn>
 		</DataGrid>
 		<Pager Source="{Bind Parent.Pager}" />
+		<Code Content="{Bind Parent.Filter}" Multiline="True"></Code>
 	</CollectionView>
 </Dialog>

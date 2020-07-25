@@ -17,6 +17,8 @@ namespace A2v10.Xaml
 		public String Title { get; set; }
 		//public Double Zoom { get; set; }
 
+		public PrintPage PrintPage { get; set; }
+
 		public BackgroundStyle Background { get; set; }
 		public CollectionView CollectionView { get; set; }
 
@@ -61,6 +63,14 @@ namespace A2v10.Xaml
 				AddAttributes(page);
 				if (!isGridPage)
 					MergeAttributes(page, context, MergeAttrMode.Margin);
+
+				if (PrintPage != null)
+				{
+					page.AddCssClass("print-target");
+					page.AddCssClass(PrintPage.Orientation.ToString().ToLowerInvariant());
+					page.MergeAttribute("v-print-page", PrintPage.ToJson());
+				}
+
 				page.RenderStart(context);
 			}
 

@@ -4,7 +4,6 @@ using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Text;
-using System.Xaml;
 using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
@@ -58,12 +57,20 @@ namespace A2v10.Xaml
 				return null;
 			if (value is String)
 			{
-				String strVal = value.ToString();
+				String strVal = value.ToString().Trim();
 				var z = new ZoomValue();
 				if (strVal == "Auto")
 				{
 					z.Auto = true;
 					return z;
+				}
+				else if (strVal.EndsWith("%"))
+				{
+					if (Double.TryParse(strVal.Substring(0, strVal.Length-1), NumberStyles.Any, CultureInfo.InvariantCulture, out Double dblVal))
+					{
+						z.Value = dblVal / 100.0;
+						return z;
+					}
 				}
 				else
 				{

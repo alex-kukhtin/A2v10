@@ -12,6 +12,10 @@ define(["require", "exports"], function (require, exports) {
             'TRoot.$BarCode': String,
             'TRoot.$Collapsed'() { return !window.matchMedia('(min-width:1025px)').matches; },
             'TRow.Sum': cmn.rowSum,
+            'TRow.$BrowseParams'() {
+                let doc = this.$root.Document;
+                return { Date: doc.Date };
+            },
             'TDocument.Sum': cmn.docTotalSum,
             'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
             'TDocParent.$Name': docParentName,

@@ -19,6 +19,10 @@ const template: Template = {
 		'TRoot.$BarCode' : String,
 		'TRoot.$Collapsed'() { return !window.matchMedia('(min-width:1025px)').matches;},
 		'TRow.Sum': cmn.rowSum,
+		'TRow.$BrowseParams'(this: TRow) {
+			let doc = this.$root.Document;
+			return { Date: doc.Date };
+		},
 		'TDocument.Sum': cmn.docTotalSum,
 		'TDocument.$HasParent'(this: TDocument) { return this.ParentDoc.Id !== 0; },
 		'TDocParent.$Name': docParentName,
