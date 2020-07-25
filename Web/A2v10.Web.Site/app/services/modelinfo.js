@@ -1,7 +1,7 @@
 ﻿
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200509-7655
+// 20200725-7693
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -9,7 +9,8 @@ app.modules['std:modelInfo'] = function () {
 	return {
 		copyfromQuery: copyFromQuery,
 		get: getPagerInfo,
-		reconcile: reconcile
+		reconcile,
+		reconcileAll
 	};
 
 	function copyFromQuery(mi, q) {
@@ -46,6 +47,13 @@ app.modules['std:modelInfo'] = function () {
 				mi.Filter[p] = dx;
 				//console.dir(mi.Filter[p]);
 			}
+		}
+	}
+
+	function reconcileAll(m) {
+		if (!m) return;
+		for (let p in m) {
+			reconcile(m[p]);
 		}
 	}
 };

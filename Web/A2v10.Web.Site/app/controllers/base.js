@@ -341,11 +341,7 @@
 						if (self.__destroyed__) return;
 						if (utils.isObject(data)) {
 							dat.$merge(data);
-							if (data.$ModelInfo) {
-								for (let pn in data.$ModelInfo) {
-									modelInfo.reconcile(data.$ModelInfo[pn]);
-								}
-							}
+							modelInfo.reconcileAll(data.$ModelInfo);
 							dat._setModelInfo_(undefined, data);
 							dat._setRuntimeInfo_(data.$runtime);
 							dat._fireLoad_();

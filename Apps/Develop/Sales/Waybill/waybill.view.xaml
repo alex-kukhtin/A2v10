@@ -64,6 +64,7 @@
 					Текст карточки внутри с чем-то еще.
 				</CardBody>
 			</Card>
+			<ValidatorLabel Grid.Row="5" Grid.Col="4"  Value="{Bind Document.Agent}"/>
 		</Taskpad>
 	</Page.Taskpad>
 	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">
@@ -131,6 +132,9 @@
 								<TableCell ColSpan="6">Итого</TableCell>
 								<TableCell Content="{Bind Document.Sum, DataType=Currency}" Align="Right" Bold="True"/>
 								<TableCell />
+								<TableCell ColSpan="3">
+									<ValidatorLabel Grid.Row="5" Grid.Col="4"  Value="{Bind Document.Agent}"/>
+								</TableCell>
 							</TableRow>
 						</Table.Footer>
 						<TableRow>
@@ -146,6 +150,7 @@
 							<TextBox Value="{Bind Price, DataType=Currency, HideZeros=True}" Align="Right"/>
 							<TextBox Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
 							<Static Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right" Wrap="NoWrap"/>
+							<ValidatorLabel Value="{Bind Price}"></ValidatorLabel>
 							<TableCell Content="{Bind Sum, DataType=Number, HideZeros=True}"></TableCell>
 
 							<Group>

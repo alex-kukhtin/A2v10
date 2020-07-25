@@ -2,7 +2,7 @@
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Выбор товара" Width="600" Padding="6" Maximize="True">
+        Title="Выбор товара" Padding="1rem" Maximize="True">
 	<Dialog.Buttons>
 		<Button Content="Выбрать" Command="{BindCmd Select, Argument={Bind Entities}}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
@@ -18,32 +18,37 @@
 				<FilterItem Property="Date" DataType="Date"/>
 			</FilterDescription>
 		</CollectionView.Filter>
-		<Toolbar Style="Transparent">
-			<TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" 
+		<Grid Rows="Auto,1*,Auto" Height="100%">
+			<Toolbar Style="Transparent">
+				<TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" 
                      Placeholder="фрагмент имени или артикула" Width="260">
-				<TextBox.AddOns>
-					<Hyperlink Icon="Search" />
-				</TextBox.AddOns>
-			</TextBox>
-			<DatePicker Label="Date" Value="{Bind Parent.Filter.Date}"/>
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search" />
+					</TextBox.AddOns>
+				</TextBox>
+				<DatePicker Label="Date" Value="{Bind Parent.Filter.Date}"/>
+				<Button Icon="Reload" Command="{BindCmd Reload}"/>
 
-			<Button Icon="Add" Toolbar.Align="Right" Tip="Создать покупателя" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Создать</Button>
-			<Button Icon="Edit" Toolbar.Align="Right" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Изменить</Button>
-			<Button Icon="Delete" Toolbar.Align="Right" Command="{BindCmd DbRemoveSelected, Argument={Bind Entities}, Confirm={StaticResource SureDelete}}">Удалить</Button>
-		</Toolbar>
-		<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
+				<Button Icon="Add" Toolbar.Align="Right" Tip="Создать покупателя" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Создать</Button>
+				<Button Icon="Edit" Toolbar.Align="Right" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">Изменить</Button>
+				<Button Icon="Delete" Toolbar.Align="Right" Command="{BindCmd DbRemoveSelected, Argument={Bind Entities}, Confirm={StaticResource SureDelete}}">Удалить</Button>
+			</Toolbar>
+			<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
 				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
-                DoubleClick="{BindCmd Select, Argument={Bind Entities}}" Height="300">
-			<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
-			<DataGridColumn Header="Артикул" Content="{Bind Article}" Fit="True" Align="Right"/>
-			<DataGridColumn Header="Наименование" Content="{Bind Name}"/>
-			<DataGridColumn Header="Ед.изм" Content="{Bind Unit.Short}" Fit="True" Align="Center"/>
-			<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
-			<DataGridColumn Fit="True">
-				<Hyperlink Icon="Delete" Size="Small" Command="{BindCmd DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
-			</DataGridColumn>
-		</DataGrid>
-		<Pager Source="{Bind Parent.Pager}" />
-		<Code Content="{Bind Parent.Filter}" Multiline="True"></Code>
+                DoubleClick="{BindCmd Select, Argument={Bind Entities}}">
+				<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
+				<DataGridColumn Header="Артикул" Content="{Bind Article}" Fit="True" Align="Right"/>
+				<DataGridColumn Header="Наименование" Content="{Bind Name}"/>
+				<DataGridColumn Header="Ед.изм" Content="{Bind Unit.Short}" Fit="True" Align="Center"/>
+				<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+				<DataGridColumn Fit="True">
+					<CommandBar Visibility="Hover">
+						<Button Icon="Edit" Toolbar.Align="Right" Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}" Tip="@[Edit]"/>
+						<Button Icon="Delete" Command="{BindCmd DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
+					</CommandBar>
+				</DataGridColumn>
+			</DataGrid>
+			<Pager Source="{Bind Parent.Pager}" />
+		</Grid>
 	</CollectionView>
 </Dialog>

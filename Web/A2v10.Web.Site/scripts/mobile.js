@@ -1352,7 +1352,7 @@ app.modules['std:period'] = function () {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200509-7655
+// 20200725-7693
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -1360,7 +1360,8 @@ app.modules['std:modelInfo'] = function () {
 	return {
 		copyfromQuery: copyFromQuery,
 		get: getPagerInfo,
-		reconcile: reconcile
+		reconcile,
+		reconcileAll
 	};
 
 	function copyFromQuery(mi, q) {
@@ -1397,6 +1398,13 @@ app.modules['std:modelInfo'] = function () {
 				mi.Filter[p] = dx;
 				//console.dir(mi.Filter[p]);
 			}
+		}
+	}
+
+	function reconcileAll(m) {
+		if (!m) return;
+		for (let p in m) {
+			reconcile(m[p]);
 		}
 	}
 };
@@ -2050,6 +2058,7 @@ app.modules['std:validators'] = function () {
 	const utils = require('std:utils');
 	const log = require('std:log', true);
 	const period = require('std:period');
+	const modelInfoTool = require('std:modelInfo');
 
 	let __initialized__ = false;
 
@@ -3488,6 +3497,7 @@ app.modules['std:validators'] = function () {
 		};
 		let mi = rawData.$ModelInfo;
 		if (!mi) return;
+		modelInfoTool.reconcileAll(mi);
 		for (let p in mi) {
 			root[p].$ModelInfo = checkPeriod(mi[p]);
 		}
@@ -11255,11 +11265,7 @@ Vue.directive('resize', {
 						if (self.__destroyed__) return;
 						if (utils.isObject(data)) {
 							dat.$merge(data);
-							if (data.$ModelInfo) {
-								for (let pn in data.$ModelInfo) {
-									modelInfo.reconcile(data.$ModelInfo[pn]);
-								}
-							}
+							modelInfo.reconcileAll(data.$ModelInfo);
 							dat._setModelInfo_(undefined, data);
 							dat._setRuntimeInfo_(data.$runtime);
 							dat._fireLoad_();
