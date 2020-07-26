@@ -52,3 +52,15 @@ std::wstring Format(const wchar_t* fmt, ...)
 }
 
 
+std::wstring _Byte2String(BYTE* pData, int len)
+{
+	std::wstring str(L"0x");
+	if (len == 0)
+		return L"";
+	wchar_t buff[5];
+	for (int i = 0; i < len; i++) {
+		wsprintf(buff, L"%02X", pData[i]);
+		str.append(buff);
+	}
+	return str;
+}

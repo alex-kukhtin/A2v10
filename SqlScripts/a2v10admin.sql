@@ -154,7 +154,7 @@ begin
 
 	select [User!TUser!Object]=null, 
 		[Id!!Id]=u.Id, [Name!!Name]=u.UserName, [Phone!!Phone]=u.PhoneNumber, [Email]=u.Email,
-		[PersonName] = u.PersonName, Memo = u.Memo,
+		[PersonName] = u.PersonName, Memo = u.Memo, IsAdmin,
 		[Groups!TGroup!Array] = null,
 		[Roles!TRole!Array] = null
 	from a2security.ViewUsers u

@@ -14,8 +14,6 @@
 #define new DEBUG_NEW
 #endif
 
-#define IDP_FP_ERROR L"Ошибка фискального регистратора"
-
 
 #define MESSAGE_LENGTH 20
 
@@ -60,6 +58,12 @@ void CFiscalPrinter_IkcBase::Init()
 {
 	TraceINFO(L"IKCBASE [%s]. Init()", _id.c_str());
 
+	CreateCommand(L"FP_RESET_ORDER", FP_RESET_ORDER);
+	SendCommand();
+
+	GetPrinterPayModes();
+	GetPrinterTaxRates();
+
 	// Get status (with buffer print)
 
 	DisplayDateTime(); // customer display
@@ -67,7 +71,7 @@ void CFiscalPrinter_IkcBase::Init()
 	// TODO:
 	m_nLastZReportNo = 0;  // GetPrinterLastZReportNo();
 	m_nLastReceiptNo = 0; // GetPrinterLastReceiptNo(); // for status processing
-	if (m_nLastZReportNo) {
+	if (!m_nLastZReportNo) {
 		time_t time = std::time(0);
 		tm tm;
 		localtime_s(&tm, &time);
@@ -76,6 +80,10 @@ void CFiscalPrinter_IkcBase::Init()
 
 }
 
+void CFiscalPrinter_IkcBase::GetPrinterPayModes()
+{
+
+}
 
 bool CFiscalPrinter_IkcBase::OpenComPort(const wchar_t* strPort, int nBaud)
 {
@@ -166,7 +174,7 @@ void CFiscalPrinter_IkcBase::Close()
 }
 
 
-void CFiscalPrinter_IkcBase::CreateCommand(FP_COMMAND cmd, BYTE* pData /*= NULL*/, int DataLen /*= 0*/)
+void CFiscalPrinter_IkcBase::CreateCommand(const wchar_t* name, FP_COMMAND cmd, BYTE* pData /*= NULL*/, int DataLen /*= 0*/)
 {
 	_ASSERT(false);
 }
@@ -243,10 +251,11 @@ void CFiscalPrinter_IkcBase::RecalcCrcSum()
 
 int CFiscalPrinter_IkcBase::GetCash_()
 {
-	CreateCommand(FP_GET_CASH);
+	CreateCommand(L"GET_CASH", FP_GET_CASH);
 	SendCommand();
 	BYTE Data[5] = { 0 }; // сумма в копейках
 	GetData(Data, 5);
+	TraceINFO(L"  DAT:%s", _Byte2String(Data, 5).c_str());
 	_ASSERT(Data[4] == 0);  // no data
 	_ASSERT(Data[3] < 128); // less then
 	int x = Data[3] * 16777216 + Data[2] * 65536 + Data[1] * 256 + Data[0];
@@ -256,7 +265,7 @@ int CFiscalPrinter_IkcBase::GetCash_()
 void CFiscalPrinter_IkcBase::GetData(BYTE* pData, int DataLen)
 {
 	if (DataLen > m_RcvDataLen)
-		ThrowCommonError();
+		DataLen = m_RcvDataLen;
 	for (int i = 0; i < DataLen; i++)
 		pData[i] = m_rcvBuffer[8 + i];
 }
@@ -294,7 +303,7 @@ SERVICE_SUM_INFO CFiscalPrinter_IkcBase::ServiceInOut(bool bOut, __currency asum
 		sum[2] = LOBYTE(HIWORD(val));
 		sum[3] = HIBYTE(HIWORD(val));
 		FP_COMMAND cmd = bOut ? FP_SVC_OUT : FP_SVC_IN;
-		CreateCommand(cmd, (BYTE*)sum, 4);
+		CreateCommand(L"SVC_IN_OUT", cmd, (BYTE*)sum, 4);
 		SendCommand();
 	}
 	int coins = GetCash_();
@@ -360,8 +369,9 @@ struct SALE_INFO
 	SALE_INFO()
 	{
 		memset(this, 0, sizeof(SALE_INFO));
+		tax = 0x85; // E - predefinde
 	}
-	void SetName(LPCTSTR szText, long art, __int64 vtId)
+	void SetName(LPCTSTR szText, long art)
 	{
 		len = CFiscalPrinter_IkcBase::ConvertText(szText, (LPSTR)name, 76, 75);
 		code[0] = LOBYTE(LOWORD(art));
@@ -370,17 +380,19 @@ struct SALE_INFO
 		code[3] = HIBYTE(HIWORD(art));
 		code[4] = 0;
 		code[5] = 0;
-		// перенесем код в наименование
+		// move code to name
 		for (int i = 0; i < 6; i++)
 			name[i + len] = code[i];
-		tax = 0x80; // A
-		if (vtId != 2)
-			tax = 0x81;
 	}
-	void SetTax(int nTax)
+	void SetTax(long vat, long excise)
 	{
-		if (nTax != -1)
-			tax = 0x80 + nTax;
+		// 0x80 = VAT
+		// 0x81 = 0%
+		// 0x82 == VAT+EXCISE
+		if (vat && !excise)
+			tax = 0x80;
+		else if (vat && excise)
+			tax = 0x82;
 	}
 	int GetLength()
 	{
@@ -389,7 +401,7 @@ struct SALE_INFO
 
 	void SetQtyPrice(int sqty, int sprice)
 	{
-		status = 0x3; // 3 цифры после точки
+		status = 0x3; // precision = 3
 		price[0] = LOBYTE(LOWORD(sprice));
 		price[1] = HIBYTE(LOWORD(sprice));
 		price[2] = LOBYTE(HIWORD(sprice));
@@ -398,10 +410,6 @@ struct SALE_INFO
 		qty[0] = LOBYTE(LOWORD(sqty));
 		qty[1] = HIBYTE(LOWORD(sqty));
 		qty[2] = LOBYTE(HIWORD(sqty));
-
-		//CString str;
-		//str.Format(L"%02x%02x%02x%02x", status, qty[0], qty[1], qty[2], qty[3]);
-		//CAppData::TraceINFO(TRACE_CAT_GNR, NULL, (const wchar_t*)str);
 	}
 };
 
@@ -487,29 +495,53 @@ struct REPDATE_INFO
 		pwd[0] = 0;
 		pwd[1] = 0;
 	}
-	/*
-	void SetDateFrom(const COleDateTime dt)
+	void SetDateFrom(const tm& tm)
 	{
-		int y = dt.GetYear() - 2000;
-		int m = dt.GetMonth();
-		int d = dt.GetDay();
+		int y = tm.tm_year - 100;
+		int m = tm.tm_mon + 1;
+		int d = tm.tm_mday;
 		from[0] = ((d / 10) << 4) + (d % 10);  // day
 		from[1] = ((m / 10) << 4) + (m % 10);
 		from[2] = ((y / 10) << 4) + (y % 10);
 	}
-	void SetDateTo(const COleDateTime dt)
+	void SetDateTo(const tm& tm)
 	{
-		int y = dt.GetYear() - 2000;
-		int m = dt.GetMonth();
-		int d = dt.GetDay();
+		int y = tm.tm_year - 100;
+		int m = tm.tm_mon + 1;
+		int d = tm.tm_mday;
 		to[0] = ((d / 10) << 4) + (d % 10);  // day
 		to[1] = ((m / 10) << 4) + (m % 10);
 		to[2] = ((y / 10) << 4) + (y % 10);
 	}
-	*/
+};
+
+struct GET_TAX_RATES {
+	BYTE taxnums;
+	BYTE taxdate[3];
+	BYTE taxrates[10];
+	BYTE tail[128];
+
+	BYTE getStatus() {
+		BYTE* pX = taxrates + taxnums * 2;
+		return *pX;
+	}
+
+	int Precision() {
+		BYTE stat = getStatus();
+		return stat & 0x03;
+	}
 };
 
 #pragma pack(pop)
+
+
+void CFiscalPrinter_IkcBase::GetPrinterTaxRates()
+{
+	CreateCommand(L"GETTAXRATES", FP_GETTAXRATES);
+	SendCommand();
+	GET_TAX_RATES taxRates;
+	GetData((BYTE*)&taxRates, sizeof(GET_TAX_RATES));
+}
 
 // virtual 
 void CFiscalPrinter_IkcBase::SetParams(const PosConnectParams& prms)
@@ -517,25 +549,16 @@ void CFiscalPrinter_IkcBase::SetParams(const PosConnectParams& prms)
 }
 
 // static 
-int CFiscalPrinter_IkcBase::ConvertText(const wchar_t* szText, char* text, int bufSize, int maxSize)
+int CFiscalPrinter_IkcBase::ConvertText(const wchar_t* szText, char* text, int bufSize, size_t maxSize)
 {
-	/*
-	CString strText(szText);
-	if (strText.GetLength() > maxSize)
-	{
-		CString x = strText.Left(maxSize);
-		strText = x;
-	}
-
-	strText.Replace(L"І", L"I");
-	strText.Replace(L"і", L"i");
-	return ::WideCharToMultiByte(866 /* UA * /,
-		0,
-		(const wchar_t*)strText, strText.GetLength(),
-		text, bufSize,
-		nullptr, nullptr);
-		*/
-			return 0;
+	UINT acp = 866;
+	std::wstring wstr(szText);
+	std::replace(wstr.begin(), wstr.end(), L'І', L'I');
+	std::replace(wstr.begin(), wstr.end(), L'і', L'i');
+	if (wstr.length() > maxSize)
+		wstr.resize(maxSize);
+	// without '\0'!!!
+	return ::WideCharToMultiByte(866 /* UA */, 0, wstr.c_str(), -1, text, bufSize, nullptr, nullptr) - 1;
 }
 
 
@@ -544,7 +567,7 @@ void CFiscalPrinter_IkcBase::Comment(const wchar_t* szComment, int maxSize)
 {
 	COMMENT_INFO ci = { 0 };
 	ci.len = ConvertText(szComment, ci.Text, 255, maxSize);
-	CreateCommand(FP_COMMENT, (BYTE*)&ci, ci.len + 1);
+	CreateCommand(L"FP_COMMENT", FP_COMMENT, (BYTE*)&ci, ci.len + 1);
 	SendCommand();
 }
 
@@ -563,7 +586,37 @@ void CFiscalPrinter_IkcBase::CancelReceiptUnconditional()
 // virtual 
 void CFiscalPrinter_IkcBase::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
+	/*
+	code*8 = normal
+	code*8+1 = return;
+	*/
+	long code = (long) item.article * 2;
+	FP_COMMAND fpcmd = FP_SALE_ITEM;
+	if (m_bReturnCheck) {
+		fpcmd = FP_RETURN_ITEM;
+		code++;
+	}
+	SALE_INFO si;
+	si.SetName(item.name, code);
 
+	if (item.qty) 
+	{
+		si.SetQtyPrice(item.qty * 1000, item.price.units());
+	}
+	else if (item.weight.units()) 
+	{
+		si.SetQtyPrice(item.weight.units(), item.price.units());
+	}
+	si.SetTax(item.vat, item.excise);
+	CreateCommand(L"SALE_OR_RETURN", fpcmd, (BYTE*)&si, si.GetLength());
+	SendCommand();
+
+	/*use discount here*/
+	/*
+	if ((dscPrc != 0) || (dscSum != 0))
+	{
+	}
+	*/
 }
 
 // virtual 
@@ -575,6 +628,15 @@ void CFiscalPrinter_IkcBase::AddArticle(const RECEIPT_ITEM& item)
 // virtual 
 void CFiscalPrinter_IkcBase::Payment(PAYMENT_MODE mode, long sum)
 {
+	switch (mode)
+	{
+	case _pay_cash:
+		Payment(sum, PAY_TYPE::FP_PAYTYPE_CASH, true);
+		break;
+	case _pay_card:
+		Payment(sum, PAY_TYPE::FP_PAYTYPE_CARD, true);
+		break;
+	}
 }
 
 //
@@ -584,22 +646,22 @@ void CFiscalPrinter_IkcBase::Payment(LONG Sum, PAY_TYPE pt, bool bAutoClose)
 	pi.Payment = Sum;
 	pi.SetPaymentType(pt);
 	pi.SetAutoClose(bAutoClose);
-	CreateCommand(FP_PAYMENT, (BYTE*) &pi, 7);
+	CreateCommand(L"PAYMENT", FP_PAYMENT, (BYTE*) &pi, 7);
 	SendCommand();
 }
 
 // virtual 
 void CFiscalPrinter_IkcBase::OpenCashDrawer()
 {
-	CreateCommand(FP_CASH_DRAWER);
+	CreateCommand(L"CASH_DRAWER", FP_CASH_DRAWER);
 	SendCommand();
 }
 
 // virtual 
 long CFiscalPrinter_IkcBase::NullReceipt(bool bOpenCashDrawer)
 {
-	TraceINFO(L"IKSBASE [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
-	CreateCommand(FP_RESET_ORDER);
+	TraceINFO(L"IKSBASE [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bool2string(bOpenCashDrawer));
+	CreateCommand(L"FP_RESET_ORDER", FP_RESET_ORDER);
 	SendCommand();
 	Comment(L"НУЛЬОВИЙ ЧЕК", 27);
 	Payment(0, FP_PAYTYPE_CASH, true);
@@ -617,7 +679,7 @@ void CFiscalPrinter_IkcBase::CheckPaperStatus()
 // virtual
 long CFiscalPrinter_IkcBase::CopyReceipt()
 {
-	CreateCommand(FP_PRINTCOPY);
+	CreateCommand(L"FP_PRINTCOPY", FP_PRINTCOPY);
 	SendCommand();
 	return m_nLastReceiptNo;
 }
@@ -626,7 +688,7 @@ long CFiscalPrinter_IkcBase::CopyReceipt()
 bool CFiscalPrinter_IkcBase::PrintDiagnostic()
 {
 	try {
-		CreateCommand(FP_PRINTVER);
+		CreateCommand(L"FP_PRINTVER", FP_PRINTVER);
 		SendCommand();
 	}
 	catch (EQUIPException e) {
@@ -661,7 +723,6 @@ void CFiscalPrinter_IkcBase::PrintItem(const wchar_t* szName, long code, int /*i
 	/*
 	code*8 = normal
 	code*8+1 = return;
-	*/
 	code = code * 8;
 	FP_COMMAND fpcmd = FP_SALE_ITEM;
 	if (m_bReturnCheck) {
@@ -669,7 +730,7 @@ void CFiscalPrinter_IkcBase::PrintItem(const wchar_t* szName, long code, int /*i
 		code++;
 	}
 	SALE_INFO si;
-	si.SetName(szName, code, vtid);
+	si.SetName(szName, code);
 	//LONG lQty = (LONG)(CDoubleT::Round(fQty, 3) * 1000.0);
 
 	//CString msg;
@@ -677,14 +738,15 @@ void CFiscalPrinter_IkcBase::PrintItem(const wchar_t* szName, long code, int /*i
 
 	//CAppData::TraceINFO(TRACE_CAT_GNR, NULL, msg);
 
-	//si.SetQtyPrice(lQty, price);
+	si.SetQtyPrice(1, price);
 	si.SetTax(nTax);
-	CreateCommand(fpcmd, (BYTE*)&si, si.GetLength());
+	CreateCommand(L"SALE_OR_RETURN", fpcmd, (BYTE*)&si, si.GetLength());
 	SendCommand();
-	/*use discount here*/
+	/*use discount here* /
 	if ((dscPrc != 0) || (dscSum != 0))
 	{
 	}
+	*/
 }
 
 // virtual 
@@ -700,7 +762,7 @@ bool CFiscalPrinter_IkcBase::CancelCheck(bool& bClosed)
 	try
 	{
 		bClosed = false;
-		CreateCommand(FP_RESET_ORDER);
+		CreateCommand(L"FP_RESET_ORDER", FP_RESET_ORDER);
 		SendCommand();
 	}
 	catch (EQUIPException e)
@@ -721,7 +783,7 @@ void CFiscalPrinter_IkcBase::DisplayRow(int nRow, LPCTSTR szString)
 		if (nRow != 0)
 			di.row = 1;
 		di.SetName(szString);
-		CreateCommand(FP_DISPLAY_ROW, (BYTE*)&di, di.GetLength());
+		CreateCommand(L"FP_DISPLAY_ROW", FP_DISPLAY_ROW, (BYTE*)&di, di.GetLength());
 		SendCommand();
 	}
 	catch (EQUIPException /*e*/)
@@ -734,7 +796,7 @@ void CFiscalPrinter_IkcBase::DisplayRow(int nRow, LPCTSTR szString)
 void CFiscalPrinter_IkcBase::OpenReceipt()
 {
 	m_bReturnCheck = false;
-	CreateCommand(FP_RESET_ORDER);
+	CreateCommand(L"FP_RESET_ORDER", FP_RESET_ORDER);
 	SendCommand();
 }
 
@@ -788,12 +850,12 @@ CString CFiscalPrinter_IkcBase::FPGetLastError()
 // virtual 
 void CFiscalPrinter_IkcBase::OpenReturnReceipt()
 {
-	CreateCommand(FP_RESET_ORDER);
+	CreateCommand(L"FP_RESET_ORDER", FP_RESET_ORDER);
 	SendCommand();
 	COMMENT_INFO ci = { 0 };
 	ci.len = ConvertText(L"ВИДАТКОВИЙ ЧЕК", ci.Text, 255, 27);
 	ci.len |= 0x80; // high bit - return receipt
-	CreateCommand(FP_COMMENT, (BYTE*)&ci, ci.len + 1);
+	CreateCommand(L"FP_COMMENT", FP_COMMENT, (BYTE*)&ci, ci.len + 1);
 	SendCommand();
 	m_bReturnCheck = true;
 }
@@ -802,7 +864,7 @@ void CFiscalPrinter_IkcBase::OpenReturnReceipt()
 long CFiscalPrinter_IkcBase::XReport()
 {
 	REPPWD_INFO pi;
-	CreateCommand(FP_XREPORT, (BYTE*)&pi, 2);
+	CreateCommand(L"FP_XREPORT", FP_XREPORT, (BYTE*)&pi, 2);
 	SendCommand();
 	// last receipt no
 	//GetLastCheckNo();
@@ -813,7 +875,7 @@ long CFiscalPrinter_IkcBase::XReport()
 ZREPORT_RESULT CFiscalPrinter_IkcBase::ZReport()
 {
 	REPPWD_INFO pi;
-	CreateCommand(FP_ZREPORT, (BYTE*)&pi, 2);
+	CreateCommand(L"FP_ZREPORT", FP_ZREPORT, (BYTE*)&pi, 2);
 	SendCommand();
 	ZREPORT_RESULT result;
 	throw EQUIPException(L"yet not implemented");
@@ -858,7 +920,7 @@ bool CFiscalPrinter_IkcBase::PeriodicalByNo(BOOL Short, LONG From, LONG To)
 		REPNO_INFO rni;
 		rni.from = (WORD)From;
 		rni.to = (WORD)To;
-		CreateCommand(FP_PREP_NO_F, (BYTE*)&rni, sizeof(REPNO_INFO));
+		CreateCommand(L"FP_PREP_NO_F", FP_PREP_NO_F, (BYTE*)&rni, sizeof(REPNO_INFO));
 		SendCommand();
 	}
 	catch (EQUIPException ex)
@@ -882,7 +944,7 @@ bool CFiscalPrinter_IkcBase::ReportByArticles()
 	try
 	{
 		REPPWD_INFO rpi;
-		CreateCommand(FP_REP_ART, (BYTE*)&rpi, sizeof(REPPWD_INFO));
+		CreateCommand(L"FP_REP_ART", FP_REP_ART, (BYTE*)&rpi, sizeof(REPPWD_INFO));
 		SendCommand();
 	}
 	catch (EQUIPException ex)
@@ -923,7 +985,7 @@ bool CFiscalPrinter_IkcBase::PrintDiscount(LONG Type, LONG Value, const wchar_t*
 			di.SetSum(Value, 3);
 			break;
 		}
-		CreateCommand(FP_DISCOUNT, (BYTE*)&di, 6 + di.len);
+		CreateCommand(L"FP_DISCOUNT", FP_DISCOUNT, (BYTE*)&di, 6 + di.len);
 		SendCommand();
 	}
 	catch (EQUIPException ex) {

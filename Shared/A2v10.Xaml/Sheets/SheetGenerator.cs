@@ -36,6 +36,7 @@ namespace A2v10.Xaml
 			var header = new SheetRow() { Style = RowStyle.Header };
 			var dataRow = new SheetRow();
 			Header.Add(header);
+
 			var dataSect = new SheetSection();
 			dataSect.SetBinding(nameof(dataSect.ItemsSource), new Bind(propertyName));
 			dataSect.Children.Add(dataRow);
@@ -54,28 +55,34 @@ namespace A2v10.Xaml
 				{
 					case SqlDataType.DateTime:
 						cellBind.DataType = DataType.DateTime;
+						cell.Wrap = WrapMode.NoWrap;
 						cell.Align = TextAlign.Center;
 						break;
 					case SqlDataType.Date:
 						cellBind.DataType = DataType.Date;
+						cell.Wrap = WrapMode.NoWrap;
 						cell.Align = TextAlign.Center;
 						break;
 					case SqlDataType.Time:
 						cellBind.DataType = DataType.Time;
+						cell.Wrap = WrapMode.NoWrap;
 						cell.Align = TextAlign.Center;
 						break;
 					case SqlDataType.Currency:
 						cellBind.DataType = DataType.Currency;
+						cell.Wrap = WrapMode.NoWrap;
 						cell.Align = TextAlign.Right;
 						break;
 					case SqlDataType.Float:
 					case SqlDataType.Decimal:
 						cellBind.DataType = DataType.Number;
+						cell.Wrap = WrapMode.NoWrap;
 						cell.Align = TextAlign.Right;
 						break;
 					case SqlDataType.Int:
 					case SqlDataType.Bigint:
 						cell.Align = TextAlign.Right;
+						cell.Wrap = WrapMode.NoWrap;
 						break;
 				}
 				dataRow.Cells.Add(cell);

@@ -20,8 +20,10 @@ CFiscalPrinter_Ikc11::CFiscalPrinter_Ikc11()
 }
 
 // virtual
-void CFiscalPrinter_Ikc11::CreateCommand(FP_COMMAND cmd, BYTE* pData /*= NULL*/, int DataLen /*= 0*/)
+void CFiscalPrinter_Ikc11::CreateCommand(const wchar_t* name, FP_COMMAND cmd, BYTE* pData /*= NULL*/, int DataLen /*= 0*/)
 {
+	TraceINFO(L"%s\r\n  SND:0x%02X %s", name, (int)cmd, _Byte2String(pData, DataLen).c_str());
+
 	ClearBuffers();
 	m_sndBuffer[0] = DLE;
 	m_sndBuffer[1] = STX;
@@ -42,7 +44,7 @@ void CFiscalPrinter_Ikc11::CreateCommand(FP_COMMAND cmd, BYTE* pData /*= NULL*/,
 // virtual
 void CFiscalPrinter_Ikc11::SendCommand()
 {
-	ReadAll(); // все, что было раньше
+	ReadAll(); // everything received before
 	int nCount = 0;
 start:
 	int rcvBytes = 0;
@@ -102,7 +104,7 @@ read:
 			::Sleep(20);
 	}
 	
-	// МОЖЕТ БЫТЬ ДВА НАБОРА ДАННЫХ
+	// there can be TWO datasets
 	while (ReadFile(m_hCom, &buff, 1, &dwRead, NULL) && (dwRead == 1)) 
 	{
 		if (true) // (buff != SYN)
@@ -144,10 +146,12 @@ read:
 	}
 
 
-	BYTE rcvSeq = m_rcvBuffer[3]; // последовательность
-	BYTE rcvCmd = m_rcvBuffer[4]; // команда
+	BYTE rcvSeq = m_rcvBuffer[3]; // sequence
+	BYTE rcvCmd = m_rcvBuffer[4]; // command
 
 	m_RcvDataLen = rcvBytes - 11;
+	// CRC - 2 bytes
+	TraceINFO(L"  RCV:%s", _Byte2String(m_rcvBuffer + 8, m_RcvDataLen - 2).c_str());
 	IncSeq();
 	if (rcvBytes < 6)
 	{
@@ -165,40 +169,114 @@ void CFiscalPrinter_Ikc11::RecalcCrcSum()
 	m_sndBuffer[2] = m_nSeq; // number
 	m_sndBuffer[4 + m_LastDataLen] = CalcCheckSum(m_sndBuffer, m_LastDataLen);
 }
-#pragma pack(push, 1)
 
-struct DAYREPORT_INFO
+
+#pragma pack(push, 1)
+struct DAYREPORT_INFO_0
 {
 	WORD schecks;
-	/* 5 * счетчики продаж по налоговым группам и формам оплат*/
-	BYTE sale0[16];
-	BYTE sale1[16];
-	BYTE sale2[16];
-	BYTE sale3[16];
+	/* 6 tax groups and 10 payment modes */
+	BYTE sale_t_0[4];
+	BYTE sale_t_1[4];
+	BYTE sale_t_2[4];
+	BYTE sale_t_3[4];
+	BYTE sale_t_4[4];
+	BYTE sale_t_5[4];
+	BYTE sum_p_0[4];
+	BYTE sum_p_1[4];
+	BYTE sum_p_2[4];
+	BYTE sum_p_3[4];
+	BYTE sum_p_4[4];
+	BYTE sum_p_5[4];
+	BYTE sum_p_6[4];
+	BYTE sum_p_7[4];
+	BYTE sum_p_8[4];
+	BYTE sum_p_9[4];
 
 	BYTE x1[4];  // day sales margin
 	BYTE x2[4];  // day sales discount
-	BYTE cashin[4];  // дневная сумма служебного вноса
+	BYTE cashin[4];  // day service-in sum
 
 	WORD retrcpcount; //  return receipt counter
-	/* 5 * счетчики возвратов по налоговым группам и формам оплат*/
-	BYTE rsale0[16];
-	BYTE rsale1[16];
-	BYTE rsale2[16];
-	BYTE rsale3[16];
+	/* 4 * returns counter by payment modes */
+	BYTE ret_t_0[4];
+	BYTE ret_t_1[4];
+	BYTE ret_t_2[4];
+	BYTE ret_t_3[4];
+	BYTE ret_t_4[4];
+	BYTE ret_t_5[4];
+	BYTE ret_p_0[4];
+	BYTE ret_p_1[4];
+	BYTE ret_p_2[4];
+	BYTE ret_p_3[4];
+	BYTE ret_p_4[4];
+	BYTE ret_p_5[4];
+	BYTE ret_p_6[4];
+	BYTE ret_p_7[4];
+	BYTE ret_p_8[4];
+	BYTE ret_p_9[4];
 
 	BYTE y1[4]; // day payout margin
 	BYTE y2[4]; // day payout discount
-	BYTE cashout[4]; // дневная сумма служебной выдачи
+	BYTE cashout[4]; // day service-out sum
 
 	LONG GetCashIn()
 	{
-			return cashin[3] * 16777216 + cashin[2] * 65536 + cashin[1] * 256 + cashin[0];
+		return cashin[3] * 16777216 + cashin[2] * 65536 + cashin[1] * 256 + cashin[0];
 	}
 	LONG GetCashOut()
 	{
-			return cashout[3] * 16777216 + cashout[2] * 65536 + cashout[1] * 256 + cashout[0];
+		return cashout[3] * 16777216 + cashout[2] * 65536 + cashout[1] * 256 + cashout[0];
 	}
+
+	LONG SaleTax(int no) {
+		if (no > 5)
+			return 0;
+		BYTE* p = sale_t_0 + (no * 4);
+		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
+	}
+
+	LONG SalePayment(int no) {
+		if (no > 9)
+			return 0;
+		BYTE* p = sum_p_0 + (no * 4);
+		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
+	}
+
+	LONG RetTax(int no) {
+		if (no > 5)
+			return 0;
+		BYTE* p = ret_t_0 + (no * 4);
+		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
+	}
+
+	LONG RetPayment(int no) {
+		if (no > 9)
+			return 0;
+		BYTE* p = ret_p_0 + (no * 4);
+		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
+	}
+};
+
+struct DAYREPORT_INFO_TAG_0 {
+	WORD zrepno;
+	WORD salercpcnt;
+	WORD retrcpcnt;
+	BYTE dateendsession[3];
+	BYTE timeendsession[2];
+	BYTE datelastzrep[3];
+	WORD artcnt;
+};
+
+struct DAYREPORT_INFO_TAG_1 {
+	BYTE group1_0[6];
+	BYTE group1_1[6];
+	BYTE group2_0[6];
+	BYTE group2_1[6];
+	BYTE group3_0[6];
+	BYTE group3_1[6];
+	BYTE group4_0[6];
+	BYTE group4_1[6];
 };
 
 #pragma pack(pop)
@@ -206,10 +284,18 @@ struct DAYREPORT_INFO
 
 void CFiscalPrinter_Ikc11::DayReport_(void* Info)
 {
-	DAYREPORT_INFO* pInfo = reinterpret_cast<DAYREPORT_INFO*>(Info);
-	CreateCommand(FP_GETDAYINFO);
+	DAYREPORT_INFO_0* pInfo = reinterpret_cast<DAYREPORT_INFO_0*>(Info);
+	CreateCommand(L"GETDAYINFO", FP_GETDAYINFO);
 	SendCommand();
-	GetData((BYTE*)pInfo, sizeof(DAYREPORT_INFO));
+	GetData((BYTE*)pInfo, sizeof(DAYREPORT_INFO_0));
+}
+
+void CFiscalPrinter_Ikc11::DayReport_Tag(void* pInfo, BYTE tag, size_t infoSize)
+{
+	BYTE xTag = tag;
+	CreateCommand(L"GETDAYINFO", FP_GETDAYINFO, &xTag, 1);
+	SendCommand();
+	GetData((BYTE*) pInfo, infoSize);
 }
 
 // virtual 
@@ -217,7 +303,7 @@ int CFiscalPrinter_Ikc11::GetLastCheckNo(bool bFromPrinter /*= false*/)
 {
 	if (bFromPrinter)
 	{
-		DAYREPORT_INFO info = {0};
+		DAYREPORT_INFO_0 info = {0};
 		try 
 		{
 			DayReport_(&info);
@@ -315,12 +401,31 @@ JsonObject CFiscalPrinter_Ikc11::FillZReportInfo()
 	JsonObject result;
 
 	TraceINFO(L"DATECS [%s]. FillZReportInfo()", _id.c_str());
-	DAYREPORT_INFO info = {0};
+	DAYREPORT_INFO_0 info = {0};
 	DayReport_(&info);
-	int s = info.GetCashIn();
+	long cashin = info.GetCashIn();
+	long cashout = info.GetCashOut();
+	long saleTax0 = info.SaleTax(0);
+	long saleTax1 = info.SaleTax(1);
+	long saleTax2 = info.SaleTax(2);
+	long saleTax3 = info.SaleTax(3);
+	long sumCard = info.SalePayment(0);
+	long sumCash = info.SalePayment(2);
+	long retTax0 = info.RetTax(0);
+	long retTax1 = info.RetTax(1);
+	long retCard = info.RetPayment(0);
+	long retCash = info.RetPayment(2);
+
+
 	//zri.m_cash_in = CCyT::MakeCurrency(s / 100, s % 100);
 	//s = info.GetCashOut();
 	//zri.m_cash_out = CCyT::MakeCurrency(s / 100, s % 100);
+
+	DAYREPORT_INFO_TAG_1 info_1 = { 0 };
+	DayReport_Tag(&info_1, 1, sizeof(DAYREPORT_INFO_TAG_1));
+
+	DAYREPORT_INFO_TAG_0 info_0 = { 0 };
+	DayReport_Tag(&info_0, 0, sizeof(DAYREPORT_INFO_TAG_0));
 
 	return result;
 }

@@ -40,10 +40,11 @@ enum FP_COMMAND
 	FP_CASH_DRAWER = 29, /*OpenBox*/
 	FP_PRINTCOPY = 30, /*PrintCopy*/
 	FP_PREP_NO_F = 31, /*PeriodicReport2*/
-	FP_PRINTVER = 32, /*PrintVer */
-	FP_GET_CASH = 33, /* GetBox  */
-	FP_DISCOUNT = 35, /* Discount */
-	FP_GETDAYINFO = 42, /* GetDayReport*/
+	FP_PRINTVER = 32, /*PrintVer*/
+	FP_GET_CASH = 33, /*GetBox*/
+	FP_DISCOUNT = 35, /*Discount*/
+	FP_GETDAYINFO = 42, /*GetDayReport*/
+	FP_GETTAXRATES = 44, /*GetTaxRates*/
 };
 
 class CFiscalPrinter_IkcBase : public FiscalPrinterImpl
@@ -64,13 +65,13 @@ public:
 	virtual void GetPrinterInfo(JsonObject& json) override;
 	virtual void GetErrorCode() override;
 
-	static int ConvertText(const wchar_t* szText, char* text, int bufSize, int maxSize);
+	static int ConvertText(const wchar_t* szText, char* text, int bufSize, size_t maxSize);
 
 protected:
 
 	std::wstring _port;
 
-	virtual void CreateCommand(FP_COMMAND cmd, BYTE* pData = NULL, int DataLen = 0);
+	virtual void CreateCommand(const wchar_t* name, FP_COMMAND cmd, BYTE* pData = NULL, int DataLen = 0);
 	virtual void SendCommand();
 	virtual void RecalcCrcSum();
 	virtual BYTE CalcCheckSum(BYTE* pBytes, int dataLen);
@@ -132,6 +133,8 @@ protected:
 	void CheckPaperStatus();
 	void Payment(LONG Sum, PAY_TYPE pt, bool bAutoClose);
 	void PrintItem(const wchar_t* szName, long code, int iQty, double fQty, int price, int dscPrc, int dscSum, __int64 vtid, int nTax);
+	void GetPrinterPayModes();
+	void GetPrinterTaxRates();
 
 
 protected:

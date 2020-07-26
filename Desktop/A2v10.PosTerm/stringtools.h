@@ -10,3 +10,5 @@ _locale_t _getLocaleUS();
 _locale_t _getLocaleUA();
 
 void toUpperUA(std::string& s);
+
+std::wstring _Byte2String(BYTE* pData, int len);
