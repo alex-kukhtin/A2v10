@@ -127,3 +127,19 @@ protected:
 		STRING_PROP(to, _to)
 	END_JSON_PROPS()
 };
+
+class PosDisplayMessageData : public JsonTarget
+{
+public:
+	std::wstring _topText;
+	std::wstring _bottomText;
+	std::wstring _align;
+
+	PosDisplayMessageData() {}
+protected:
+	BEGIN_JSON_PROPS(3)
+		STRING_PROP(topText, _topText)
+		STRING_PROP(bottomText, _bottomText)
+		STRING_PROP(align, _align)
+	END_JSON_PROPS()
+};

@@ -33,6 +33,14 @@ enum PAYMENT_MODE {
 	_pay_card
 };
 
+union TAX_KEY {
+	struct {
+		__int32 tax;
+		__int32 nested;
+	};
+	__int64 key;
+};
+
 class FiscalPrinterImpl : public EquipmentBaseImpl
 {
 public:
@@ -104,7 +112,7 @@ public:
 	virtual void SetCurrentTime() = 0;
 	virtual void DisplayDateTime() = 0;
 	virtual void DisplayClear() = 0;
-	virtual void DisplayRow(int rowNo, const wchar_t* szString) = 0;
+	virtual void DisplayRow(int rowNo, const wchar_t* szString, TEXT_ALIGN align) = 0;
 	virtual bool IsEndOfTape();
 	virtual void TraceCommand(const wchar_t* command) = 0;
 	virtual const std::wstring& GetError() const;

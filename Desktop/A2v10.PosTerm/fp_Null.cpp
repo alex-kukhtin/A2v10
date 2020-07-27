@@ -335,12 +335,12 @@ void CFiscalPrinter_Null::DisplayDateTime()
 // virtual 
 void CFiscalPrinter_Null::DisplayClear()
 {
-	DisplayRow(0, L"");
-	DisplayRow(1, L"");
+	DisplayRow(0, L"", TEXT_ALIGN::_left);
+	DisplayRow(1, L"", TEXT_ALIGN::_left);
 }
 
 // virtual 
-void CFiscalPrinter_Null::DisplayRow(int nRow, const wchar_t* szString)
+void CFiscalPrinter_Null::DisplayRow(int nRow, const wchar_t* szString, TEXT_ALIGN align)
 {
 	throw EQUIPException(L"Yet not implemented");
 }

@@ -20,6 +20,7 @@ enum PAY_TYPE
 
 enum FP_COMMAND
 {
+	FP_SEND_STATUS = 0,
 	FP_GET_DATE = 1, /*GetDate*/
 	FP_SET_DATE = 2,
 	FP_GET_TIME = 3, /*GetTime*/
@@ -43,14 +44,21 @@ enum FP_COMMAND
 	FP_PRINTVER = 32, /*PrintVer*/
 	FP_GET_CASH = 33, /*GetBox*/
 	FP_DISCOUNT = 35, /*Discount*/
+	FP_GETARTICLE = 41, /*GetArticle*/
 	FP_GETDAYINFO = 42, /*GetDayReport*/
 	FP_GETTAXRATES = 44, /*GetTaxRates*/
+};
+
+struct RCP_NO {
+	long saleno;
+	long retno;
+	long zno;
 };
 
 class CFiscalPrinter_IkcBase : public FiscalPrinterImpl
 {
 public:
-	CFiscalPrinter_IkcBase();
+	CFiscalPrinter_IkcBase(const wchar_t* model);
 	virtual ~CFiscalPrinter_IkcBase();
 
 	virtual bool IsOpen() const
@@ -70,6 +78,9 @@ public:
 protected:
 
 	std::wstring _port;
+	std::wstring _model;
+	bool _skipErrors;
+	std::unordered_map <__int64, int> _taxChars;
 
 	virtual void CreateCommand(const wchar_t* name, FP_COMMAND cmd, BYTE* pData = NULL, int DataLen = 0);
 	virtual void SendCommand();
@@ -79,7 +90,7 @@ protected:
 	virtual void Init() override;
 	virtual void AddArticle(const RECEIPT_ITEM& item) override;
 	virtual bool CancelCheck(bool& bClosed);
-	virtual bool CancelCheckCommand();
+	//virtual bool CancelCheckCommand();
 	virtual SERVICE_SUM_INFO ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer) override;
 	//virtual bool GetCash(DB_ID termId, COleCurrency& cy);
 	virtual long NullReceipt(bool bOpenCashDrawer) override;
@@ -104,11 +115,11 @@ protected:
 	virtual bool PeriodicalByNo(BOOL Short, LONG From, LONG To) override;
 	virtual bool ReportByArticles();
 	virtual bool ReportModemState() override;
-	//virtual CString FPGetLastError();
+	virtual std::wstring FPGetLastError() = 0;
 
 	virtual bool IsEndOfTape();
 	virtual bool PrintDiscount(LONG Type, LONG Sum, const wchar_t* szDescr);
-	virtual void DisplayRow(int nRow, const wchar_t* szString);
+	virtual void DisplayRow(int nRow, const wchar_t* szString, TEXT_ALIGN align) override;
 	virtual void Comment(const wchar_t* szComment, int maxSize);
 
 	virtual void PrintFiscalText(const wchar_t* szText) override;
@@ -132,10 +143,14 @@ protected:
 	int GetCash_();
 	void CheckPaperStatus();
 	void Payment(LONG Sum, PAY_TYPE pt, bool bAutoClose);
-	void PrintItem(const wchar_t* szName, long code, int iQty, double fQty, int price, int dscPrc, int dscSum, __int64 vtid, int nTax);
 	void GetPrinterPayModes();
 	void GetPrinterTaxRates();
-
+	int FindTaxCode(long tax, long excise);
+	long GetPrinterLastZReportNo();
+	void GetPrinterLastReceiptNo(RCP_NO& no);
+	void DayReport_(void* Info);
+	void DayReport_Tag(void* pInfo, BYTE tag, size_t infoSize);
+	JsonObject FillZReportInfo();
 
 protected:
 	HANDLE m_hCom;
@@ -153,7 +168,6 @@ protected:
 	int m_RcvDataLen;
 	int m_LastDataLen;
 	BYTE m_nSeq;
-	int  m_lastArt;
 	long m_nLastReceiptNo;
 	long m_nLastZReportNo;
 

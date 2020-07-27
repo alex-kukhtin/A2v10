@@ -16,14 +16,6 @@ enum RECEIPT_STATUS
 	CHS_CANCELED = 9,
 };
 
-union TAX_KEY {
-	struct {
-		__int32 tax;
-		__int32 nested;
-	};
-	__int64 key;
-};
-
 struct DAY_SUM {
 	__currency value1;
 	__currency value2;
@@ -69,7 +61,7 @@ public:
 	virtual void SetCurrentTime() override;
 	virtual void DisplayDateTime() override;
 	virtual void DisplayClear() override;
-	virtual void DisplayRow(int rowNo, LPCTSTR szString) override;
+	virtual void DisplayRow(int rowNo, LPCTSTR szString, TEXT_ALIGN align) override;
 	virtual void CancelOrCloseReceipt() override;
 	virtual void CancelReceiptUnconditional() override;
 

@@ -15,7 +15,8 @@
 #define new DEBUG_NEW
 #endif
 
-CFiscalPrinter_Ikc11::CFiscalPrinter_Ikc11()
+CFiscalPrinter_Ikc11::CFiscalPrinter_Ikc11(const wchar_t* model)
+	: CFiscalPrinter_IkcBase(model)
 {
 }
 
@@ -62,7 +63,7 @@ start:
 		}
 		if ((b == DLE) && (i >= 2) && (i < (m_bytesToSend - 4)))
 		{
-			// повторяем отправку
+			// repeat sending
 			if (!WriteFile(m_hCom, &b, 1, &dwByte, NULL)) {
 				CloseComPort();
 				m_dwOsError = ::GetLastError();
@@ -97,7 +98,7 @@ read:
 			if ((!bStx) && (buff == ENQ))
 				continue;
 			if ((rcvBytes > 0) && (buff == DLE) && (m_rcvBuffer[rcvBytes-1] == DLE))
-				continue; // двойные DLE пропускаем
+				continue; // skip double DLE
 			m_rcvBuffer[rcvBytes++] = buff;
 		}
 		else
@@ -116,7 +117,7 @@ read:
 			if ((!bStx) && (buff == ENQ))
 				continue;
 			if ((rcvBytes > 0) && (buff == DLE) && (m_rcvBuffer[rcvBytes-1] == DLE))
-				continue; // двойные DLE пропускаем
+				continue; // skip double DLE
 			m_rcvBuffer[rcvBytes++] = buff;
 
 		}
@@ -126,10 +127,10 @@ read:
 
 	if ((rcvBytes == 0) || ((rcvBytes > 0) && (m_rcvBuffer[0] == NAK)))
 	{
-		// повторим отправку команды с другим SEQUENCE
+		// repeat sending the command with next SEQUENCE
 		if (nCount > RETRY_COUNT)
 			ThrowInternalError(L"Invalid retry count");
-		IncSeq(); // чтобы это была другая команда
+		IncSeq();
 		RecalcCrcSum();
 		nCount++;
 		goto start;
@@ -171,159 +172,10 @@ void CFiscalPrinter_Ikc11::RecalcCrcSum()
 }
 
 
-#pragma pack(push, 1)
-struct DAYREPORT_INFO_0
-{
-	WORD schecks;
-	/* 6 tax groups and 10 payment modes */
-	BYTE sale_t_0[4];
-	BYTE sale_t_1[4];
-	BYTE sale_t_2[4];
-	BYTE sale_t_3[4];
-	BYTE sale_t_4[4];
-	BYTE sale_t_5[4];
-	BYTE sum_p_0[4];
-	BYTE sum_p_1[4];
-	BYTE sum_p_2[4];
-	BYTE sum_p_3[4];
-	BYTE sum_p_4[4];
-	BYTE sum_p_5[4];
-	BYTE sum_p_6[4];
-	BYTE sum_p_7[4];
-	BYTE sum_p_8[4];
-	BYTE sum_p_9[4];
-
-	BYTE x1[4];  // day sales margin
-	BYTE x2[4];  // day sales discount
-	BYTE cashin[4];  // day service-in sum
-
-	WORD retrcpcount; //  return receipt counter
-	/* 4 * returns counter by payment modes */
-	BYTE ret_t_0[4];
-	BYTE ret_t_1[4];
-	BYTE ret_t_2[4];
-	BYTE ret_t_3[4];
-	BYTE ret_t_4[4];
-	BYTE ret_t_5[4];
-	BYTE ret_p_0[4];
-	BYTE ret_p_1[4];
-	BYTE ret_p_2[4];
-	BYTE ret_p_3[4];
-	BYTE ret_p_4[4];
-	BYTE ret_p_5[4];
-	BYTE ret_p_6[4];
-	BYTE ret_p_7[4];
-	BYTE ret_p_8[4];
-	BYTE ret_p_9[4];
-
-	BYTE y1[4]; // day payout margin
-	BYTE y2[4]; // day payout discount
-	BYTE cashout[4]; // day service-out sum
-
-	LONG GetCashIn()
-	{
-		return cashin[3] * 16777216 + cashin[2] * 65536 + cashin[1] * 256 + cashin[0];
-	}
-	LONG GetCashOut()
-	{
-		return cashout[3] * 16777216 + cashout[2] * 65536 + cashout[1] * 256 + cashout[0];
-	}
-
-	LONG SaleTax(int no) {
-		if (no > 5)
-			return 0;
-		BYTE* p = sale_t_0 + (no * 4);
-		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
-	}
-
-	LONG SalePayment(int no) {
-		if (no > 9)
-			return 0;
-		BYTE* p = sum_p_0 + (no * 4);
-		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
-	}
-
-	LONG RetTax(int no) {
-		if (no > 5)
-			return 0;
-		BYTE* p = ret_t_0 + (no * 4);
-		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
-	}
-
-	LONG RetPayment(int no) {
-		if (no > 9)
-			return 0;
-		BYTE* p = ret_p_0 + (no * 4);
-		return p[3] * 16777216 + p[2] * 65536 + p[1] * 256 + p[0];
-	}
-};
-
-struct DAYREPORT_INFO_TAG_0 {
-	WORD zrepno;
-	WORD salercpcnt;
-	WORD retrcpcnt;
-	BYTE dateendsession[3];
-	BYTE timeendsession[2];
-	BYTE datelastzrep[3];
-	WORD artcnt;
-};
-
-struct DAYREPORT_INFO_TAG_1 {
-	BYTE group1_0[6];
-	BYTE group1_1[6];
-	BYTE group2_0[6];
-	BYTE group2_1[6];
-	BYTE group3_0[6];
-	BYTE group3_1[6];
-	BYTE group4_0[6];
-	BYTE group4_1[6];
-};
-
-#pragma pack(pop)
-
-
-void CFiscalPrinter_Ikc11::DayReport_(void* Info)
-{
-	DAYREPORT_INFO_0* pInfo = reinterpret_cast<DAYREPORT_INFO_0*>(Info);
-	CreateCommand(L"GETDAYINFO", FP_GETDAYINFO);
-	SendCommand();
-	GetData((BYTE*)pInfo, sizeof(DAYREPORT_INFO_0));
-}
-
-void CFiscalPrinter_Ikc11::DayReport_Tag(void* pInfo, BYTE tag, size_t infoSize)
-{
-	BYTE xTag = tag;
-	CreateCommand(L"GETDAYINFO", FP_GETDAYINFO, &xTag, 1);
-	SendCommand();
-	GetData((BYTE*) pInfo, infoSize);
-}
-
-// virtual 
-int CFiscalPrinter_Ikc11::GetLastCheckNo(bool bFromPrinter /*= false*/)
-{
-	if (bFromPrinter)
-	{
-		DAYREPORT_INFO_0 info = {0};
-		try 
-		{
-			DayReport_(&info);
-		} 
-		catch (EQUIPException ex)
-		{
-			//ex.ReportError2();
-			return false;
-		}
-		WORD ch = info.schecks; // bin
-		if (m_bReturnCheck)
-			ch = info.retrcpcount;
-		m_nLastReceiptNo = ch;
-	}
-	return m_nLastReceiptNo;
-}
-
 // virtual
 std::wstring CFiscalPrinter_Ikc11::FPGetLastError()
 {
+	// TODO: errors
 	// s=0, err=0
 	if ((m_dwStatus == 0) && (m_dwError == 0))
 		return L""; // OK
@@ -334,11 +186,11 @@ std::wstring CFiscalPrinter_Ikc11::FPGetLastError()
 			if (m_dwStatus & 0x1) // bit 0
 			{
 				if (m_dwReserved & 0x4) // bit2
-					return L"В принтере закончилась бумага";
+					return FP_E_RECEIPT_TAPE_OVER;
 				return L"Принтер не готов";
 			}
 			else if (m_dwStatus & 0x2) // bit1
-				return L"Превышение продолжительности хранения данных в КЛЕФ";
+				return FP_E_MODEM_ERROR;
 			else if (m_dwStatus & 0x4) // bit2
 				return L"Ошибка или переполнение фискальной памяти";
 			else if (m_dwStatus & 0x8) // bit3
@@ -346,20 +198,20 @@ std::wstring CFiscalPrinter_Ikc11::FPGetLastError()
 			else if (m_dwStatus & 0x10) // bit4
 				return L"Ошибка индикатора";
 			else if (m_dwStatus & 0x20) // bit5
-				return L"Превышение продолжительности смены";
+				return FP_E_SHIFTEXPIRED;
 			else if (m_dwStatus & 0x40) // bit6
 				return L"Снижение рабочего напряжения питания";
 			else if (m_dwStatus & 0x80) // bit7
-				return L"Команда не существует или запрещена в данном режиме";
+				return FP_E_INVALID_COMMAND;
 		}
 	}
 	switch (m_dwError) 
 	{
-		case 1: return L"Ошибка принтера";
-		case 2: return L"Закончилась бумага";
-		case 4: return L"Сбой фискальной памяти";
-		case 6: return L"снижение напряжения питания";
-		case 8: return L"фискальная память переполнена"; 
+		case 1: return FP_E_GENERIC_ERROR;
+		case 2: return FP_E_RECEIPT_TAPE_OVER;
+		case 4: return L"Збій фіскальної пам'яті";
+		case 6: return L"Cнижение напряжения питания";
+		case 8: return L"Фіскальна пам'ять переповнена"; 
 		case 10: return L"Не было персонализации";
 		case 16: return L"Команда запрещена в данном режиме";
 		case 19: return L"Ошибка программирования логотипа";
@@ -383,7 +235,7 @@ std::wstring CFiscalPrinter_Ikc11::FPGetLastError()
 		case 38: return L"Открыт чек продаж, выплаты запрещены";
 		case 39: return L"Команда запрещена, чек не открыт";
 		case 41: return L"Команда запрещена до Z-отчета";
-		case 42: return L"Команда запрещена, не было чеков";
+		case 42: return FP_E_NORECEIPTS;
 		case 43: return L"Сдача с этой оплаты запрещена";
 		case 44: return L"Команда запрещена, чек открыт";
 		case 45: return L"Скидки/наценки запрещены, не было продаж";
@@ -392,40 +244,5 @@ std::wstring CFiscalPrinter_Ikc11::FPGetLastError()
 		case 48: return L"Неправильный номер данных КЛЕФ";
 		case 50: return L"Команда запрещена, КЛЕФ не пустой";
 	}
-	return L"Общая ошибка принтера";
-}
-
-// virtual 
-JsonObject CFiscalPrinter_Ikc11::FillZReportInfo()
-{
-	JsonObject result;
-
-	TraceINFO(L"DATECS [%s]. FillZReportInfo()", _id.c_str());
-	DAYREPORT_INFO_0 info = {0};
-	DayReport_(&info);
-	long cashin = info.GetCashIn();
-	long cashout = info.GetCashOut();
-	long saleTax0 = info.SaleTax(0);
-	long saleTax1 = info.SaleTax(1);
-	long saleTax2 = info.SaleTax(2);
-	long saleTax3 = info.SaleTax(3);
-	long sumCard = info.SalePayment(0);
-	long sumCash = info.SalePayment(2);
-	long retTax0 = info.RetTax(0);
-	long retTax1 = info.RetTax(1);
-	long retCard = info.RetPayment(0);
-	long retCash = info.RetPayment(2);
-
-
-	//zri.m_cash_in = CCyT::MakeCurrency(s / 100, s % 100);
-	//s = info.GetCashOut();
-	//zri.m_cash_out = CCyT::MakeCurrency(s / 100, s % 100);
-
-	DAYREPORT_INFO_TAG_1 info_1 = { 0 };
-	DayReport_Tag(&info_1, 1, sizeof(DAYREPORT_INFO_TAG_1));
-
-	DAYREPORT_INFO_TAG_0 info_0 = { 0 };
-	DayReport_Tag(&info_0, 0, sizeof(DAYREPORT_INFO_TAG_0));
-
-	return result;
+	return FP_E_GENERIC_ERROR;
 }

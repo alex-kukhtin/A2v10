@@ -45,7 +45,7 @@ bool FiscalPrinter::Create(const wchar_t* model) {
 	else if (wcsncmp(model, FP_DATECST260, PRINTER_NAME_LEN) == 0)
 		_impl.reset(new CFiscalPrinter_DatecsKrypton(model));
 	else if (wcsncmp(model, FP_IKS_V11, PRINTER_NAME_LEN) == 0)
-		_impl.reset(new CFiscalPrinter_Ikc11());
+		_impl.reset(new CFiscalPrinter_Ikc11(model));
 	return _impl.get() != nullptr;
 }
 
@@ -313,4 +313,9 @@ void FiscalPrinter::GetInfo(JsonObject& json)
 long FiscalPrinter::CopyReceipt()
 {
 	return _impl->CopyReceipt();
+}
+
+void FiscalPrinter::DisplayRow(int rowNo, const wchar_t* szString, TEXT_ALIGN align)
+{
+	_impl->DisplayRow(rowNo, szString, align);
 }

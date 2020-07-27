@@ -7,7 +7,8 @@
 			"model2": "DATECS-Krypton",
 			"model": "IKC-V11",
 			"port": "COM5",
-			"baud": 9600,
+			"baud2": 9600,
+			"baud": 38400,
 			"terminal2": "MAIN",
 			"terminal": "IKC"
 		}

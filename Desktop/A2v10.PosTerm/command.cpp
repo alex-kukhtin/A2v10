@@ -29,6 +29,7 @@ PosCommand::COMMAND_BIND PosCommand::_binded_commands[] =
 	{L"getStatus",          &PosCommand::GetStatus,          nullptr},
 	{L"copyReceipt",        &PosCommand::CopyReceipt,        nullptr},
 	{L"testReceipt",        &PosCommand::TestReceipt,        &PosCommand::PrintReceiptData},
+	{L"displayMessage",     &PosCommand::DisplayMessage,     &PosCommand::DisplayMessageData},
 	{nullptr, nullptr}
 };
 
@@ -127,6 +128,11 @@ JsonTarget* PosCommand::ServiceInOutData()
 JsonTarget* PosCommand::PeriodReportData()
 {
 	return new PosPeriodReportData();
+}
+
+JsonTarget* PosCommand::DisplayMessageData()
+{
+	return new PosDisplayMessageData();
 }
 
 std::wstring PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data)
@@ -247,5 +253,19 @@ std::wstring PosCommand::TestReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 	long no = pPrinter->TestReceipt(pprd);
 	JsonObject js;
 	js.Add(L"no", no);
+	return js.Value();
+}
+
+std::wstring PosCommand::DisplayMessage(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	PosDisplayMessageData* pdmd = dynamic_cast<PosDisplayMessageData*>(data);
+	TEXT_ALIGN ta = TEXT_ALIGN::_left;
+	if (pdmd->_align.compare(L"center") == 0)
+		ta = TEXT_ALIGN::_center;
+	else if (pdmd->_align.compare(L"right") == 0)
+		ta = TEXT_ALIGN::_right;
+	pPrinter->DisplayRow(0, pdmd->_topText.c_str(), ta);
+	pPrinter->DisplayRow(1, pdmd->_bottomText.c_str(), ta);
+	JsonObject js;
 	return js.Value();
 }

@@ -15,6 +15,10 @@
 #define FP_E_INVALID_CODE      L"FP1013: Invalid instruction code"
 #define FP_E_DATA_ERROR        L"FP1014: Data error"
 #define FP_E_NO_DISPLAY        L"FP1015: Display not connected"
+#define FP_E_INVALID_COMMAND   L"FP1016: Command does not exist or is disabled"
+#define FP_E_MODEM_ERROR       L"FP1017: Modem error"
+#define FP_E_SHIFTEXPIRED      L"FP1018: Working shift expired"
+#define FP_E_NORECEIPTS        L"FP1019: There are no receipts. Command disabled"
 
 #define FP_W_CONTROL_TAPE_ENDS L"FPW2010: Ñontrol tape ends"
 #define FP_W_RECEIPT_TAPE_ENDS L"FPW2011: Receipt tape ends"

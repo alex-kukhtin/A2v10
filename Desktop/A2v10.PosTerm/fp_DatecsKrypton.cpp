@@ -627,12 +627,12 @@ void CFiscalPrinter_DatecsKrypton::DisplayDateTime()
 // virtual 
 void CFiscalPrinter_DatecsKrypton::DisplayClear()
 {
-	DisplayRow(0, L"");
-	DisplayRow(1, L"");
+	DisplayRow(0, L"", TEXT_ALIGN::_left);
+	DisplayRow(1, L"", TEXT_ALIGN::_left);
 }
 
 // virtual 
-void CFiscalPrinter_DatecsKrypton::DisplayRow(int nRow, LPCTSTR szString)
+void CFiscalPrinter_DatecsKrypton::DisplayRow(int nRow, LPCTSTR szString, TEXT_ALIGN align)
 {
 	/*
 	CString txt(szString ? szString : EMPTYSTR);

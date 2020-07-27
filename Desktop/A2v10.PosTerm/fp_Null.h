@@ -47,7 +47,7 @@ public:
 	virtual void CancelReceiptUnconditional() override;
 	virtual void DisplayDateTime() override;
 	virtual void DisplayClear()  override;
-	virtual void DisplayRow(int rowNo, const wchar_t* szString)  override;
+	virtual void DisplayRow(int rowNo, const wchar_t* szString, TEXT_ALIGN align)  override;
 	virtual void SetCurrentTime() override;
 
 	virtual bool ReportByArticles() override;

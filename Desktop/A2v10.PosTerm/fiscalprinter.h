@@ -20,6 +20,12 @@ struct ZREPORT_RESULT {
 		: no(0), zno(0) {}
 };
 
+enum TEXT_ALIGN {
+	_left,
+	_center,
+	_right
+};
+
 class FiscalPrinter
 {
 	std::wstring _id;
@@ -66,7 +72,7 @@ public:
 	// customer display
 	void DisplayDateTime();
 	void DisplayClear();
-	void DisplayRow(int rowNo, const wchar_t* szString);
+	void DisplayRow(int rowNo, const wchar_t* szString, TEXT_ALIGN align);
 
 	long PrintReceipt(const PosPrintReceiptData* pData);
 	long PrintReturnReceipt(const PosPrintReceiptData* pData);
