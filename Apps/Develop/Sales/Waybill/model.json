@@ -109,6 +109,7 @@
 			"type": "callApi",
 			"model": "GetWeather",
 			"parameters": {
+				"City": "NewYork",
 				"url": "((MyApi.url))/companyInfo/[[Code]]",
 				"method": "post",
 				"headers": {
@@ -129,7 +130,8 @@
 			"url2": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
 			"parameters": {
 				"url": "{{Weather.Url}}?q=[[City]]&appid=((openweathermap.appid))",
-				"method": "get"
+				"method": "get",
+				"City": "NewYork"
 			}
 		},
 		"sendMessage": {
