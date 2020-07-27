@@ -1216,6 +1216,9 @@ void CFiscalPrinter_IkcBase::DisplayDateTime()
 // virtual 
 void CFiscalPrinter_IkcBase::GetStatusMessages(std::vector<std::wstring>& msgs)
 {
+	if (m_dwStatus & 0x20) { // bit5
+		msgs.push_back(FP_W_SHIFT_EXPIRED);
+	}
 }
 
 // virtual 
@@ -1267,6 +1270,19 @@ void CFiscalPrinter_IkcBase::DayReport_Tag(void* pInfo, BYTE tag, size_t infoSiz
 	GetData((BYTE*)pInfo, infoSize);
 }
 
+static long _calcTax(long sum, long taxval) {
+	if (sum == 0)
+		return 0;
+	__int64 val = sum * taxval * 2;
+	val = val / (10000 + taxval);
+	__int64 tax = (val + 1) / 2;
+	return (long) tax;
+}
+
+static long _subtractTax(long sum, long taxval) {
+	return sum - _calcTax(sum, taxval);
+}
+
 // virtual 
 JsonObject CFiscalPrinter_IkcBase::FillZReportInfo()
 {
@@ -1305,15 +1321,39 @@ JsonObject CFiscalPrinter_IkcBase::FillZReportInfo()
 
 		if (sum || ret) {
 			JsonObject taxObj;
-			taxObj.Add(L"sum", __currency::from_units(sum));
-			taxObj.Add(L"return", __currency::from_units(ret));
+
+			// calc vat from sum and return values
+
 			//taxObj.Add(L"taxSum", tax.value1);
 			//taxObj.Add(L"taxReturn", tax.value2);
-			taxObj.Add(L"tax", (long)it->first);
+			taxObj.Add(L"tax", taxKey.tax);
 			if (taxKey.nested) {
 				//auto nestedKey = FindTaxKey(taxKey.nested + L'0');
 				taxObj.Add(L"nested", taxKey.nested);
+				JsonObject nestedObj;
+				nestedObj.Add(L"tax", taxKey.nested);
+				nestedObj.Add(L"sum", __currency::from_units(sum));
+				nestedObj.Add(L"return", __currency::from_units(ret));
+				nestedObj.Add(L"taxSum", __currency::from_units(_calcTax(sum, taxKey.nested)));
+				nestedObj.Add(L"taxReturn", __currency::from_units(_calcTax(ret, taxKey.nested)));
+				payments.AddArray(&nestedObj);
+
+				long restSum = _subtractTax(sum, taxKey.nested);
+				long restRet = _subtractTax(ret, taxKey.nested);
+
+				taxObj.Add(L"sum", __currency::from_units(restSum));
+				taxObj.Add(L"return", __currency::from_units(restRet));
+
+				taxObj.Add(L"taxSum", __currency::from_units(_calcTax(restSum, taxKey.tax)));
+				taxObj.Add(L"taxReturn", __currency::from_units(_calcTax(restRet, taxKey.tax)));
 			}
+			else if (taxKey.tax) {
+				taxObj.Add(L"sum", __currency::from_units(sum));
+				taxObj.Add(L"return", __currency::from_units(ret));
+				taxObj.Add(L"taxSum", __currency::from_units(_calcTax(sum, taxKey.tax)));
+				taxObj.Add(L"taxReturn", __currency::from_units(_calcTax(ret, taxKey.tax)));
+			}
+
 			payments.AddArray(&taxObj);
 		}
 	}
@@ -1330,10 +1370,6 @@ JsonObject CFiscalPrinter_IkcBase::FillZReportInfo()
 	card.Add(L"return", __currency::from_units(retCard));
 	result.Add(L"card", &card);
 
-	//zri.m_cash_in = CCyT::MakeCurrency(s / 100, s % 100);
-	//s = info.GetCashOut();
-	//zri.m_cash_out = CCyT::MakeCurrency(s / 100, s % 100);
-
 	DAYREPORT_INFO_TAG_0 info_0 = { 0 };
 	DayReport_Tag(&info_0, 0, sizeof(DAYREPORT_INFO_TAG_0));
 
@@ -1344,11 +1380,6 @@ JsonObject CFiscalPrinter_IkcBase::FillZReportInfo()
 
 	result.Add(L"zno", info_0.zrepno);
 	result.Add(L"cashOnHand", __currency::from_units(coins));
-
-	/*
-	DAYREPORT_INFO_TAG_1 info_4 = { 0 };
-	DayReport_Tag(&info_4, 11, sizeof(DAYREPORT_INFO_TAG_1));
-	*/
 
 	return result;
 }

@@ -22,5 +22,6 @@
 
 #define FP_W_CONTROL_TAPE_ENDS L"FPW2010: Ñontrol tape ends"
 #define FP_W_RECEIPT_TAPE_ENDS L"FPW2011: Receipt tape ends"
+#define FP_W_SHIFT_EXPIRED     L"FPW2012: Working shift expired"
 
 

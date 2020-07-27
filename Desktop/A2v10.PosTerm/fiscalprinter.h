@@ -29,6 +29,7 @@ enum TEXT_ALIGN {
 class FiscalPrinter
 {
 	std::wstring _id;
+	std::wstring _connectError;
 	std::unique_ptr<FiscalPrinterImpl> _impl;
 	static std::vector<std::unique_ptr<FiscalPrinter> > _printers;
 

@@ -198,7 +198,7 @@ std::wstring CFiscalPrinter_Ikc11::FPGetLastError()
 			else if (m_dwStatus & 0x10) // bit4
 				return L"Ошибка индикатора";
 			else if (m_dwStatus & 0x20) // bit5
-				return FP_E_SHIFTEXPIRED;
+				return L""; // WARNING! FP_E_SHIFTEXPIRED;
 			else if (m_dwStatus & 0x40) // bit6
 				return L"Снижение рабочего напряжения питания";
 			else if (m_dwStatus & 0x80) // bit7

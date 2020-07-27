@@ -60,7 +60,8 @@ FiscalPrinter* FiscalPrinter::Connect(const PosConnectParams& prms)
 			_printers.push_back(std::unique_ptr<FiscalPrinter>(pPrinter));
 			return pPrinter;
 		}
-		throw EQUIPException(FP_E_UNABLE_TO_CONNECT);
+		auto err = printer->_connectError;
+		throw EQUIPException(err.length() ? err.c_str() : FP_E_UNABLE_TO_CONNECT);
 	}
 	throw EQUIPException(FP_E_INVALID_FP_MODEL);
 }
@@ -91,6 +92,7 @@ bool FiscalPrinter::Open(const wchar_t* port, int baud)
 	}
 	catch (EQUIPException ex) 
 	{
+		_connectError = ex.GetError();
 		_impl->TraceERROR(L"Error: %s", ex.GetError());
 	}
 	return false;
