@@ -3895,6 +3895,9 @@ tr:hover .commandbar.visible-hover {
   overflow: visible;
   max-height: -webkit-fill-available;
 }
+.tab-panel .tab-content .tab-item {
+  overflow: auto;
+}
 .tab-panel .tab-content.yellow {
   background-color: lightyellow;
 }
