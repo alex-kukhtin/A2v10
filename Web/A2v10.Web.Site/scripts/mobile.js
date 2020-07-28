@@ -2029,7 +2029,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200722-7691*/
+/*20200728-7694*/
 // services/datamodel.js
 
 (function () {
@@ -2653,6 +2653,8 @@ app.modules['std:validators'] = function () {
 		};
 
 		arr.$loadLazy = function () {
+			if (!this.$isLazy())
+				return;
 			return new Promise((resolve, reject) => {
 				if (!this.$vm) return;
 				if (this.$loaded) { resolve(this); return; }
@@ -2660,7 +2662,7 @@ app.modules['std:validators'] = function () {
 				const meta = this.$parent._meta_;
 				if (!meta.$lazy) { resolve(this); return; }
 				let prop = propFromPath(this._path_);
-				if (!meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+				if (meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
 				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
 			});
 		};
