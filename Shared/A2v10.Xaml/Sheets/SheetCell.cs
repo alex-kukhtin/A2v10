@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,8 @@ namespace A2v10.Xaml
 		public String CssClass { get; set; }
 		public String CssStyle { get; set; }
 		public Length MinWidth { get; set; }
+
+		public DataType? DataType { get; set; }
 
 		public Boolean GroupIndent { get; set; } // ???
 
@@ -105,10 +107,14 @@ namespace A2v10.Xaml
 			if (contBind != null)
 			{
 				tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
-				if (contBind.DataType != DataType.String)
+				if (contBind.DataType != A2v10.Xaml.DataType.String)
 					tag.MergeAttribute("data-type", contBind.DataType.ToString().ToLowerInvariant());
 				if (contBind.NegativeRed)
 					tag.MergeAttribute(":class", $"$getNegativeRedClass({contBind.GetPath(context)})");
+			}
+			else if (DataType.HasValue && DataType != A2v10.Xaml.DataType.String)
+			{
+				tag.MergeAttribute("data-type", DataType.Value.ToString().ToLowerInvariant());
 			}
 		}
 

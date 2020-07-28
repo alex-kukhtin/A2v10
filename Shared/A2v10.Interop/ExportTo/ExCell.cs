@@ -72,6 +72,8 @@ namespace A2v10.Interop.ExportTo
 
 		public void SetValue(String text, String dataType)
 		{
+			if (text.Contains("\n"))
+				dataType = "string";
 			switch (dataType)
 			{
 				case null:

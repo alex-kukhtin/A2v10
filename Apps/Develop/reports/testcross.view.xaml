@@ -55,8 +55,11 @@
 					<SheetCell Content="{Bind Morion}" Align="Center"/>
 					<SheetCell Content="{Bind Name}" Align="Left" ColSpan="2" MinWidth="290"/>
 					<SheetCellGroup ItemsSource="{Bind Rems}">
-						<SheetCell Content="{Bind Qty, DataType=Number, HideZeros=True}"  Fill="{Bind $BkColor}"/>
+						<SheetCell Fill="{Bind $BkColor}" DataType="Number" Wrap="NoWrap">
+							<Html Content="{Bind $Html}"/>
+						</SheetCell>
 					</SheetCellGroup>
+					<!--Content="{Bind Qty, DataType=Number, HideZeros=True}"  -->
 				</SheetRow>
 			</SheetSection>
 		</Sheet>
