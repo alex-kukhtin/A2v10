@@ -398,6 +398,7 @@ namespace A2v10.Request
 		sql,
 		clr,
 		script,
+		javascript,
 		xml,
 		file,
 		startProcess,
