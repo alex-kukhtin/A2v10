@@ -49,6 +49,7 @@ namespace A2v10.Xaml
 					Content = field.Key
 				});
 				var cellBind = new Bind(field.Key);
+				cellBind.SetWrapped();
 				var cell = new SheetCell();
 				cell.SetBinding(nameof(cell.Content), cellBind);
 				switch (field.Value.SqlDataType)

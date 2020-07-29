@@ -19,6 +19,8 @@ namespace A2v10.Xaml
 		public String Mask { get; set; }
 		public Boolean NegativeRed { get; set; }
 
+		private Boolean _wrapped;
+
 		public Bind()
 		{
 
@@ -33,13 +35,18 @@ namespace A2v10.Xaml
 			return context.GetNormalizedPath(Path);
 		}
 
+		internal void SetWrapped()
+		{
+			_wrapped = true;
+		}
+
 
 		// for text bindings only
 		internal String GetPathFormat(RenderContext context)
 		{
 			if (Path == null)
 				return context.GetEmptyPath(); // may be scoped
-			String realPath = context.GetNormalizedPath(Path);
+			String realPath = context.GetNormalizedPath(Path, _wrapped);
 			var maskBind = GetBinding(nameof(Mask));
 			if (String.IsNullOrEmpty(Format) && 
 				DataType == DataType.String && 

@@ -207,17 +207,17 @@ namespace A2v10.Xaml
 			return rowCol.GetGridAttributes();
 		}
 
-		internal String GetNormalizedPath(String path)
+		internal String GetNormalizedPath(String path, Boolean isWrapped = false)
 		{
 			// check for invert
 			if (path == null)
 				path = String.Empty;
 			if (path.StartsWith("!"))
 				return "!" + GetNormalizedPathInternal(path.Substring(1));
-			return GetNormalizedPathInternal(path);
+			return GetNormalizedPathInternal(path, isWrapped);
 		}
 
-		private String GetNormalizedPathInternal(String path)
+		private String GetNormalizedPathInternal(String path, Boolean isWrapped = false)
 		{
 			if (path == null)
 				throw new ArgumentNullException(nameof(path));
@@ -235,7 +235,12 @@ namespace A2v10.Xaml
 			ScopeElem scope = _stackScope.Peek();
 			String result = scope.Scope;
 			if (!String.IsNullOrEmpty(path))
-				result += "." + path;
+			{
+				if (isWrapped)
+					result += $"['{path.Replace("'", "\\'")}']";
+				else
+					result += "." + path;
+			}
 			if (scope.Replace != null)
 				return scope.Replace(result);
 			return result;

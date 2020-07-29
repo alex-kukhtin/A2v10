@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
 using A2v10.Data.Interfaces;
+using System.Globalization;
 
 namespace A2v10.Interop
 {
@@ -119,10 +120,10 @@ namespace A2v10.Interop
 							if (numFormats != null &&  numFormats.ContainsKey(fmtId))
 							{
 								// number
-								if (Double.TryParse(c.CellValue.Text, out Double dblVal))
+								if (Double.TryParse(c.CellValue.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out Double dblVal))
 									table.SetValue(dataRow, columns[colIndex], dblVal);
 								else
-									throw new InteropException($"invalid cell value for format '{cellFormat.InnerText}'");
+									throw new InteropException($"invalid cell value '{c.CellValue.Text}' for format '{cellFormat.InnerText}'");
 							}
 							else
 							{
@@ -152,7 +153,7 @@ namespace A2v10.Interop
 			var strFormat = ExcelFormats.GetDateTimeFormat(formatId);
 			if (!String.IsNullOrEmpty(strFormat))
 			{
-				if (Double.TryParse(text, out Double dblDate))
+				if (Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out Double dblDate))
 				{
 					return DateTime.FromOADate(dblDate);
 				}
