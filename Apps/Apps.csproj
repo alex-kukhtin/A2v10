@@ -71,6 +71,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Develop\pos\model.json" />
+    <Content Include="Develop\dashboard\server.module.js" />
     <Content Include="Develop\entity\editGoods.template.js" />
     <Content Include="Develop\purchase\Supplier\index.view.html">
       <Generator>XamlIntelliSenseFileGenerator</Generator>

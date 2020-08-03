@@ -12,6 +12,8 @@ https://chrome.google.com/webstore/detail/a2v10-equipment-host/knopcophdgepmijgk
 2. Добавить шаблоны solutions 
 
 
+This extension provides access to trade equip, clipboard, and 1C:Enterprise add-ins.
+
 == Application 
 
 14. Сменить пароль

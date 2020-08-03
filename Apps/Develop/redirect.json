@@ -10,6 +10,7 @@
 	"purchase2/waybill": "purchase/waybillin",
 	"purchase2/customer": "sales/customer",
 	"purchase2/catalog": "sales/catalog",
-	"catalog/groups": "catalog/units"
+	"catalog/groups": "catalog/units",
+	"sales/invoice234": "common/notimplemented"
 }
 

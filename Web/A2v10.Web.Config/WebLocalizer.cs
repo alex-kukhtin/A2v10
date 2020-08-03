@@ -34,32 +34,24 @@ namespace A2v10.Web.Config
 
 	}
 
-
-	public class WebLocalizer : BaseLocalizer, IDataLocalizer
+	internal class WebDictionary
 	{
-		private IApplicationHost _host;
+		ConcurrentDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
+		FileSystemWatcher _watcher_system = null;
+		FileSystemWatcher _watcher_app = null;
 
-		public WebLocalizer(IApplicationHost host)
-		{
-			_host = host;
-		}
-
-		static ConcurrentDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
-		static FileSystemWatcher _watcher_system;
-		static FileSystemWatcher _watcher_app;
-
-		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
+		public IDictionary<String, String> GetLocalizerDictionary(IApplicationHost host, String locale)
 		{
 			var map = GetCurrentMap(locale);
 			if (map.Loaded)
 				return map.Map;
 			map.Loaded = true;
 
-			foreach (var localePath  in GetLocalizerFilePath(locale))
+			foreach (var localePath in GetLocalizerFilePath(host, locale))
 			{
 				IEnumerable<String> lines = localePath.IsFileSystem ?
 					File.ReadAllLines(localePath.Path) :
-					_host.ApplicationReader.FileReadAllLines(localePath.Path);
+					host.ApplicationReader.FileReadAllLines(localePath.Path);
 
 				foreach (var line in lines)
 				{
@@ -81,48 +73,11 @@ namespace A2v10.Web.Config
 			return map.Map;
 		}
 
-		LocaleMapItem GetCurrentMap(String locale)
-		{
-			return _maps.GetOrAdd(locale, (key) => new LocaleMapItem());
-		}
-
-		void CreateWatchers(String dirPath, String appPath)
-		{
-			if (_watcher_system != null)
-				return;
-			if (!_host.IsDebugConfiguration)
-				return;
-			if (!String.IsNullOrEmpty(dirPath))
-			{
-				_watcher_system = new FileSystemWatcher(dirPath, "*.txt")
-				{
-					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess
-				};
-				_watcher_system.Changed += _watcher_Changed;
-				_watcher_system.EnableRaisingEvents = true;
-			}
-
-			if (!String.IsNullOrEmpty(appPath))
-			{
-				_watcher_app = new FileSystemWatcher(appPath, "*.txt")
-				{
-					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess
-				};
-				_watcher_app.Changed += _watcher_Changed;
-				_watcher_app.EnableRaisingEvents = true;
-			}
-		}
-
-		private void _watcher_Changed(Object sender, FileSystemEventArgs e)
-		{
-			_maps.Clear();
-		}
-
-		IEnumerable<LocalePath> GetLocalizerFilePath(String locale)
+		IEnumerable<LocalePath> GetLocalizerFilePath(IApplicationHost host, String locale)
 		{
 			// locale may be "uk_UA"
 			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
-			var appReader = _host.ApplicationReader;
+			var appReader = host.ApplicationReader;
 			///var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, "_localization"));
 			var appPath = appReader.MakeFullPath("_localization", String.Empty);
 			if (!Directory.Exists(dirPath))
@@ -131,7 +86,7 @@ namespace A2v10.Web.Config
 			if (!appReader.DirectoryExists(appPath))
 				appPath = null;
 
-			CreateWatchers(dirPath, appReader.IsFileSystem ? appPath : null);
+			CreateWatchers(host, dirPath, appReader.IsFileSystem ? appPath : null);
 			if (dirPath != null)
 			{
 				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
@@ -159,6 +114,69 @@ namespace A2v10.Web.Config
 						yield return new LocalePath(s, false);
 				}
 			}
+		}
+
+
+		LocaleMapItem GetCurrentMap(String locale)
+		{
+			return _maps.GetOrAdd(locale, (key) => new LocaleMapItem());
+		}
+
+
+		void CreateWatchers(IApplicationHost host, String dirPath, String appPath)
+		{
+			if (_watcher_system != null)
+				return;
+			if (!host.IsDebugConfiguration)
+				return;
+			if (!String.IsNullOrEmpty(dirPath))
+			{
+				// FileName can be in 8.3 format!
+				_watcher_system = new FileSystemWatcher(dirPath, "*.*")
+				{
+					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes
+				};
+				_watcher_system.Changed += _watcher_Changed;
+				_watcher_system.Created += _watcher_Changed;
+				_watcher_system.Deleted += _watcher_Changed;
+				_watcher_system.EnableRaisingEvents = true;
+			}
+
+			if (!String.IsNullOrEmpty(appPath))
+			{
+				// FileName can be in 8.3 format!
+				_watcher_app = new FileSystemWatcher(appPath, "*.*")
+				{
+					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes
+				};
+				_watcher_app.Changed += _watcher_Changed;
+				_watcher_app.Created += _watcher_Changed;
+				_watcher_app.Deleted += _watcher_Changed;
+				_watcher_app.EnableRaisingEvents = true;
+			}
+		}
+
+		private void _watcher_Changed(Object sender, FileSystemEventArgs e)
+		{
+			_maps.Clear();
+		}
+	}
+
+
+	public class WebLocalizer : BaseLocalizer, IDataLocalizer
+	{
+		private readonly IApplicationHost _host;
+
+		private static readonly Lazy<WebDictionary> _webDictionary = new Lazy<WebDictionary>(()=>new WebDictionary(), isThreadSafe:true);
+
+		public WebLocalizer(IApplicationHost host)
+		{
+			_host = host;
+		}
+
+		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
+		{
+			return _webDictionary.Value.GetLocalizerDictionary(_host, locale);
 		}
 
 		String IDataLocalizer.Localize(String content)

@@ -16,6 +16,7 @@ using A2v10.Workflow;
 using A2v10.Xaml;
 using A2v10.Web.Script;
 using A2v10.Web.Base;
+using A2v10.Javascript;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -46,6 +47,7 @@ namespace A2v10.Web.Mvc.Start
 				IExternalDataProvider dataProvider = new ExternalDataContext();
 				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();
+				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, httpService);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -63,6 +65,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IExternalDataProvider>(dataProvider);
 				locator.RegisterService<IScriptProcessor>(scriptProcessor);
 				locator.RegisterService<IHttpService>(httpService);
+				locator.RegisterService<IJavaScriptEngine>(javaScriptEngine);
 
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};

@@ -884,48 +884,12 @@ namespace A2v10.Request
 			return mi;
 		}
 
-		static async Task<String> Redirect(IApplicationHost host, Boolean bAdmin, String path)
-		{
-			await StartWatcher(host, bAdmin);
-			if (_redirect == null)
-				return path;
-			if (_redirect.TryGetValue(path, out String outPath))
-				return outPath;
-			return path;
-		}
-
-		static Boolean _redirectLoaded;
-		static FileSystemWatcher _redirectWatcher;
-		static IDictionary<String, String> _redirect;
-
-		static async Task StartWatcher(IApplicationHost host, Boolean bAdmin)
-		{
-			if (_redirectLoaded)
-				return;
-			String redJson = await host.ApplicationReader.ReadTextFileAsync(String.Empty, "redirect.json");
-			if (redJson != null)
-				_redirect = JsonConvert.DeserializeObject<Dictionary<String, String>>(redJson);
-			if (host.IsDebugConfiguration && _redirectWatcher == null && host.ApplicationReader.IsFileSystem)
-			{
-				String redFilePath = host.ApplicationReader.MakeFullPath(String.Empty, "redirect.json");
-				_redirectWatcher = new FileSystemWatcher(Path.GetDirectoryName(redFilePath), "*.json")
-				{
-					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes | NotifyFilters.LastAccess
-				};
-				_redirectWatcher.Changed += (sender, e) =>
-				{
-					_redirectLoaded = false;
-				};
-				_redirectWatcher.EnableRaisingEvents = true;
-			}
-			_redirectLoaded = true;
-		}
+		static Lazy<RedirectModule> _redirect = new Lazy<RedirectModule>(() => new RedirectModule(), isThreadSafe: true);
 
 		public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, Boolean bAdmin, RequestUrlKind kind, String normalizedUrl)
 		{
 			var mi = GetModelInfo(kind, normalizedUrl);
-			String pathForLoad = await Redirect(host, bAdmin, mi.path);
-			//KILL String jsonText = await host.ReadTextFileAsync(bAdmin, pathForLoad, "model.json");
+			String pathForLoad = _redirect.Value.Redirect(mi.path);
 			String jsonText = await host.ApplicationReader.ReadTextFileAsync(pathForLoad, "model.json");
 			if (jsonText == null)
 				throw new FileNotFoundException($"File not found '{pathForLoad}/model.json'");

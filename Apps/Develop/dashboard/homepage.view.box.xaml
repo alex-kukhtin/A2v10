@@ -18,6 +18,7 @@
 				</Text>
 			</Button>
 			<Hyperlink Content="POS TERMINAL" Command="{BindCmd Navigate, Url='/pos'}"/>
+			<Button Style="Red" Size="Large" Command="{BindCmd Execute, CommandName=javascript}">JAVASCRIPT</Button>
 			<UploadFile Url="/dashboard/upload" Delegate="uploadFile" Argument="0"/>
 			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
 				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">

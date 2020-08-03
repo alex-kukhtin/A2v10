@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7690",
+	"$version": "10.0.7696",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -128,7 +128,7 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"enum": [ "sql", "clr", "script", "xml", "startProcess", "resumeProcess", "callApi", "file", "sendMessage" ]
+							"enum": [ "sql", "clr", "script", "xml", "startProcess", "resumeProcess", "callApi", "file", "sendMessage", "javascript" ]
 						},
 						"schema": { "type": "string" },
 						"source": { "type": "string" },

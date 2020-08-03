@@ -48,6 +48,11 @@ namespace A2v10.Request
 						loc.GetService<IApplicationHost>(), 
 						loc.GetService<IMessaging>()
 					);
+				case CommandType.javascript:
+					return new ExecuteJavaScriptCommand(
+						loc.GetService<IJavaScriptEngine>(),
+						loc.GetService<IApplicationHost>().ApplicationReader
+					);
 			}
 			throw new ArgumentOutOfRangeException("Server command for '{cmd}' not found");
 		}

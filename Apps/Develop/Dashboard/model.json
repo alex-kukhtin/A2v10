@@ -32,5 +32,11 @@
 				}
 			]
 		}
+	},
+	"commands": {
+		"javascript": {
+			"type": "javascript",
+			"file": "server.module"
+		}
 	}
 }

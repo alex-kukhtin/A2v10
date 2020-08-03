@@ -50,9 +50,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="JavaScriptEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
+      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
+      <Name>A2v10.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+      <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
+      <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

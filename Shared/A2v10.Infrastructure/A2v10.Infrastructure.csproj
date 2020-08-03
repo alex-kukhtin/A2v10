@@ -51,6 +51,7 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="IApplicationReader.cs" />
     <Compile Include="IHttpService.cs" />
+    <Compile Include="IJavaScriptEngine.cs" />
     <Compile Include="ILicenseManager.cs" />
     <Compile Include="Implementation\NullMessaging.cs" />
     <Compile Include="IQueuedMessage.cs" />
