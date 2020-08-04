@@ -55,17 +55,19 @@ namespace A2v10.Request
 				SetHeaders(msg, headers, dataToExec);
 				if (bodyStr != null && mtd == HttpMethod.Post)
 					msg.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
-				var result = await _httpService.HttpClient.SendAsync(msg);
-				if (result.IsSuccessStatusCode)
+				using (var result = await _httpService.HttpClient.SendAsync(msg))
 				{
-					return new ServerCommandResult(await result.Content.ReadAsStringAsync())
+					if (result.IsSuccessStatusCode)
 					{
-						ConentType = result.Content.Headers.ContentType.MediaType
-					};
-				}
-				else
-				{
-					throw new RequestModelException($"CallApi Failed. statusCode:{result.StatusCode}, content:{await result.Content.ReadAsStringAsync()}");
+						return new ServerCommandResult(await result.Content.ReadAsStringAsync())
+						{
+							ConentType = result.Content.Headers.ContentType.MediaType
+						};
+					}
+					else
+					{
+						throw new RequestModelException($"CallApi Failed. statusCode:{result.StatusCode}, content:{await result.Content.ReadAsStringAsync()}");
+					}
 				}
 			}
 		}
