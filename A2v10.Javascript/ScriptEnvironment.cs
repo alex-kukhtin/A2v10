@@ -15,14 +15,12 @@ namespace A2v10.Javascript
 	{
 		private readonly IDbContext _dbContext;
 		private readonly Engine _engine;
-		private readonly IHttpService _httpService;
 		private readonly ScriptConfig _config;
 
-		public ScriptEnvironment(Engine engine, IDbContext dbContext, IHttpService httpService, IApplicationHost host)
+		public ScriptEnvironment(Engine engine, IDbContext dbContext, IApplicationHost host)
 		{
 			_engine = engine;
 			_dbContext = dbContext;
-			_httpService = httpService;
 			_config = new ScriptConfig(host);
 		}
 
@@ -64,7 +62,7 @@ namespace A2v10.Javascript
 		{
 			try
 			{
-				return new FetchCommand(_httpService).Execute(url, prms);
+				return new FetchCommand().Execute(url, prms);
 			}
 			catch (Exception ex)
 			{

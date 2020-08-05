@@ -47,7 +47,7 @@ namespace A2v10.Web.Mvc.Start
 				IExternalDataProvider dataProvider = new ExternalDataContext();
 				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();
-				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, httpService, host);
+				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, host);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
