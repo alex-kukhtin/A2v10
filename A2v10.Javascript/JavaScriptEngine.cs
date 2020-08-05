@@ -17,11 +17,13 @@ namespace A2v10.Javascript
 
 		private readonly IDbContext _dbContext;
 		private readonly IHttpService _httpService;
+		private readonly IApplicationHost _host;
 
-		public JavaScriptEngine(IDbContext dbContext, IHttpService httpService)
+		public JavaScriptEngine(IDbContext dbContext, IHttpService httpService, IApplicationHost host)
 		{
 			_dbContext = dbContext;
 			_httpService = httpService;
+			_host = host;
 		}
 
 		public static Engine CreateEngine()
@@ -37,7 +39,7 @@ namespace A2v10.Javascript
 		public ScriptEnvironment Environment()
 		{
 			if (_env == null)
-				_env = new ScriptEnvironment(_engine.Value, _dbContext, _httpService);
+				_env = new ScriptEnvironment(_engine.Value, _dbContext, _httpService, _host);
 			return _env;
 		}
 

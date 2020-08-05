@@ -98,6 +98,7 @@
 							},
 							"additionalProperties": false
 						},
+						"twoPhase": { "type": "boolean" },
 						"parameters": { "type": "object" }
 					},
 					"additionalProperties": false

@@ -16,24 +16,23 @@ namespace A2v10.Javascript
 		private readonly IDbContext _dbContext;
 		private readonly Engine _engine;
 		private readonly IHttpService _httpService;
+		private readonly ScriptConfig _config;
 
-		public ScriptEnvironment(Engine engine, IDbContext dbContext, IHttpService httpService)
+		public ScriptEnvironment(Engine engine, IDbContext dbContext, IHttpService httpService, IApplicationHost host)
 		{
 			_engine = engine;
 			_dbContext = dbContext;
 			_httpService = httpService;
+			_config = new ScriptConfig(host);
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
-		public ExpandoObject config
-		{
-			get
-			{
-				return null;
-			}
-		}
+		public ScriptConfig config => _config;
+#pragma warning restore IDE1006 // Naming Styles
 
+#pragma warning disable IDE1006 // Naming Styles
 		public ExpandoObject loadModel(ExpandoObject prms)
+#pragma warning restore IDE1006 // Naming Styles
 		{
 			try
 			{
@@ -52,11 +51,20 @@ namespace A2v10.Javascript
 			}
 		}
 
-		public ExpandoObject fetch(ExpandoObject prms)
+#pragma warning disable IDE1006 // Naming Styles
+		public ExpandoObject fetch(String url)
+#pragma warning restore IDE1006 // Naming Styles
+		{
+			return fetch(url, null);
+		}
+
+#pragma warning disable IDE1006 // Naming Styles
+		public ExpandoObject fetch(String url, ExpandoObject prms)
+#pragma warning restore IDE1006 // Naming Styles
 		{
 			try
 			{
-				return new FetchCommand(_httpService).Execute(prms).Result;
+				return new FetchCommand(_httpService).Execute(url, prms);
 			}
 			catch (Exception ex)
 			{
@@ -66,6 +74,5 @@ namespace A2v10.Javascript
 				throw new JavaScriptException(js);
 			}
 		}
-#pragma warning restore IDE1006 // Naming Styles
 	}
 }

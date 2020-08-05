@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Net.Http;
+using System.IO;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 using A2v10.Infrastructure;
 using Newtonsoft.Json;
@@ -14,33 +14,85 @@ namespace A2v10.Javascript
 {
 	public class FetchCommand
 	{
-		private readonly IHttpService _httpService;
 
-		public FetchCommand(IHttpService httpService)
-		{
-			_httpService = httpService;
-		}
-
-
-		void SetHeaders(HttpRequestMessage msg, ExpandoObject headers)
+		void SetHeaders(HttpWebRequest wr, ExpandoObject headers)
 		{
 			if (headers == null)
 				return;
 			var d = headers as IDictionary<String, Object>;
 			foreach (var hp in d)
-				msg.Headers.Add(hp.Key, hp.Value.ToString());
+				wr.Headers.Add(hp.Key, hp.Value.ToString());
 		}
 
-		public async Task<ExpandoObject> Execute(ExpandoObject prms)
+		public ExpandoObject Execute(String url, ExpandoObject prms)
 		{
-			var client = _httpService.HttpClient;
-			HttpMethod mtd = new HttpMethod(prms.Get<String>("method")?.ToLowerInvariant());
-			String url = prms.Get<String>("url");
+			try
+			{
+				var httpWebRequest = WebRequest.CreateHttp(url);
+
+				String mtd = prms?.Get<String>("method")?.ToUpperInvariant() ?? "GET";
+				SetHeaders(httpWebRequest, prms?.Get<ExpandoObject>("headers"));
+
+				if (mtd == "POST") {
+					httpWebRequest.Method = mtd;
+					var bodyObj = prms?.Get<Object>("body");
+					String bodyStr = null;
+
+					switch (bodyObj)
+					{
+						case String strObj:
+							bodyStr = strObj;
+							break;
+						case ExpandoObject eoObj:
+							bodyStr = JsonConvert.SerializeObject(eoObj);
+							httpWebRequest.ContentType = "application/json;charset=utf8";
+							break;
+					}
+
+					if (bodyStr != null)
+					{
+						var bytes = Encoding.GetEncoding("UTF-8").GetBytes(bodyStr);
+						using (var rqs = httpWebRequest.GetRequestStream())
+						{
+							rqs.Write(bytes, 0, bytes.Length);
+						}
+					}
+				}
+
+				using (var resp = httpWebRequest.GetResponse())
+				{
+					var contentType = resp.ContentType;
+					var headers = resp.Headers;
+					using (var rs = resp.GetResponseStream())
+					{
+						using (var ms = new StreamReader(rs))
+						{
+							String strResult = ms.ReadToEnd();
+							return JsonConvert.DeserializeObject<ExpandoObject>(strResult);
+						}
+					}
+				}
+			}
+			catch (WebException wex)
+			{
+				if (wex.Response != null)
+				{
+					using (var rs = new StreamReader(wex.Response.GetResponseStream()))
+					{
+						String strError = rs.ReadToEnd();
+					}
+				}
+			}
+			return null;
+
+			/*
+			HttpMethod mtd = new HttpMethod(prms?.Get<String>("method")?.ToLowerInvariant() ?? "GET");
 			using (var request = new HttpRequestMessage(mtd, url))
 			{
-				String bodyStr = "";
-				var body = prms.Get<Object>("body");
-				switch (body) {
+				String bodyStr = null;
+				var body = prms?.Get<Object>("body");
+				switch (body)
+				{
 					case String strBody:
 						bodyStr = strBody;
 						break;
@@ -48,12 +100,15 @@ namespace A2v10.Javascript
 						bodyStr = JsonConvert.SerializeObject(eoBody);
 						break;
 					default:
-						bodyStr = body.ToString();
+						bodyStr = body?.ToString();
 						break;
 				}
-				request.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
 
-				SetHeaders(request, prms.Get<ExpandoObject>("headers"));
+				if (bodyStr != null) { 
+					request.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
+				}
+
+				SetHeaders(request, prms?.Get<ExpandoObject>("headers"));
 
 				using (var response = await client.SendAsync(request))
 				{
@@ -75,6 +130,7 @@ namespace A2v10.Javascript
 					}
 				}
 			}
+				*/
 		}
 	}
 }
