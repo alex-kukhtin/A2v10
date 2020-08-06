@@ -34,10 +34,15 @@ module.exports = function (prms) {
 	//rv.WarehouseName = dm.Warehouses[0].Name;
 
 
-	let url = dm.Weather.Url + '?q=London&appid=' + this.config.appSettings('openweathermap').appid;
-	//return url;
+	try {
+		let url = "2222" + dm.Weather.Url + 'q=London&appid=' + this.config.appSettings('openweathermap').appid;
+		//return url;
 
-	let resp = this.fetch(url);
+		let resp = this.fetch(url);
 
-	return resp.coord;
+		return JSON.stringify({ status: resp.status, statusText: resp.statusText, contentType: resp.contentType, ok: resp.ok, isJson: resp.isJson });
+		return resp.json();
+	} catch (err) {
+		return { catch: true, error: err };
+	}
 };

@@ -50,14 +50,14 @@ namespace A2v10.Javascript
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
-		public ExpandoObject fetch(String url)
+		public FetchResponse fetch(String url)
 #pragma warning restore IDE1006 // Naming Styles
 		{
 			return fetch(url, null);
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
-		public ExpandoObject fetch(String url, ExpandoObject prms)
+		public FetchResponse fetch(String url, ExpandoObject prms)
 #pragma warning restore IDE1006 // Naming Styles
 		{
 			try

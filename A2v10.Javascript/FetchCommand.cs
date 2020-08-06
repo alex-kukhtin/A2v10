@@ -24,7 +24,7 @@ namespace A2v10.Javascript
 				wr.Headers.Add(hp.Key, hp.Value.ToString());
 		}
 
-		public ExpandoObject Execute(String url, ExpandoObject prms)
+		public FetchResponse Execute(String url, ExpandoObject prms)
 		{
 			try
 			{
@@ -59,7 +59,7 @@ namespace A2v10.Javascript
 					}
 				}
 
-				using (var resp = httpWebRequest.GetResponse())
+				using (var resp = httpWebRequest.GetResponse() as HttpWebResponse)
 				{
 					var contentType = resp.ContentType;
 					var headers = resp.Headers;
@@ -68,69 +68,26 @@ namespace A2v10.Javascript
 						using (var ms = new StreamReader(rs))
 						{
 							String strResult = ms.ReadToEnd();
-							return JsonConvert.DeserializeObject<ExpandoObject>(strResult);
+							var r = new FetchResponse(resp.StatusCode, contentType, strResult, resp.StatusDescription);
+							// set headers
+							return r;
 						}
 					}
 				}
 			}
 			catch (WebException wex)
 			{
-				if (wex.Response != null)
+				if (wex.Response != null && wex.Response is HttpWebResponse webResp)
 				{
 					using (var rs = new StreamReader(wex.Response.GetResponseStream()))
 					{
 						String strError = rs.ReadToEnd();
+						// set headers
+						return new FetchResponse(webResp.StatusCode, wex.Response.ContentType, strError, webResp.StatusDescription);
 					}
 				}
 			}
-			return null;
-
-			/*
-			HttpMethod mtd = new HttpMethod(prms?.Get<String>("method")?.ToLowerInvariant() ?? "GET");
-			using (var request = new HttpRequestMessage(mtd, url))
-			{
-				String bodyStr = null;
-				var body = prms?.Get<Object>("body");
-				switch (body)
-				{
-					case String strBody:
-						bodyStr = strBody;
-						break;
-					case ExpandoObject eoBody:
-						bodyStr = JsonConvert.SerializeObject(eoBody);
-						break;
-					default:
-						bodyStr = body?.ToString();
-						break;
-				}
-
-				if (bodyStr != null) { 
-					request.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
-				}
-
-				SetHeaders(request, prms?.Get<ExpandoObject>("headers"));
-
-				using (var response = await client.SendAsync(request))
-				{
-					if (response.IsSuccessStatusCode)
-					{
-						var mediaType = response.Content.Headers.ContentType.MediaType;
-						switch (mediaType)
-						{
-							case "application/json":
-								var result = await response.Content.ReadAsStringAsync();
-								return JsonConvert.DeserializeObject<ExpandoObject>(result);
-							default:
-								throw new HttpRequestException($"fetch failed. statusCode:{response.StatusCode}, content:invalid response media : '{mediaType}'");
-						}
-					}
-					else
-					{
-						throw new HttpRequestException($"fetch failed. statusCode:{response.StatusCode}, content:{response.Content.ReadAsStringAsync().Result}");
-					}
-				}
-			}
-				*/
+			throw new InvalidOperationException("Fetch command. Unknown error");
 		}
 	}
 }
