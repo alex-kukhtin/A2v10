@@ -28,6 +28,8 @@ namespace A2v10.Web.Script
 					return new A2v10.Script.JSRT.ScriptContext(true); // EDGE with debugging
 				case "ChakraCore":
 					return new A2v10.Script.ScriptContext();  // CHAKRA CORE
+				case "None":
+					return null;
 				default:
 					throw new InvalidProgramException("Invalid script engine. The possible values are 'ChakraCore', 'JSRT', 'JSRTDebug'");
 			}
@@ -38,9 +40,13 @@ namespace A2v10.Web.Script
 			using (var disp = CreateScript() as IDisposable)
 			{
 				var sc = disp as IScriptContext;
-				StartScript(sc);
-				return RunDataScript(sc, ssi, "validate");
+				if (sc != null)
+				{
+					StartScript(sc);
+					return RunDataScript(sc, ssi, "validate");
+				}
 			}
+			throw new InvalidProgramException("Script engine is off");
 		}
 
 		public Object RunScript(ServerScriptInfo ssi, String scriptName)
@@ -48,9 +54,13 @@ namespace A2v10.Web.Script
 			using (var disp = CreateScript() as IDisposable)
 			{
 				var sc = disp as IScriptContext;
-				StartScript(sc);
-				return RunDataScript(sc, ssi, scriptName);
+				if (sc != null)
+				{
+					StartScript(sc);
+					return RunDataScript(sc, ssi, scriptName);
+				}
 			}
+			throw new InvalidProgramException("Script engine is off");
 		}
 
 
