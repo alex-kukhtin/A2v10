@@ -3,9 +3,9 @@
 	"startUrl": "/pos",
 	"fiscalPrinters": [
 		{
-			"model3": "TESTPRINTER",
+			"model": "TESTPRINTER",
 			"model2": "DATECS-Krypton",
-			"model": "IKC-V11",
+			"model3": "IKC-V11",
 			"port": "COM5",
 			"baud2": 9600,
 			"baud": 38400,

@@ -168,6 +168,7 @@ std::wstring PosCommand::NullReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 std::wstring PosCommand::PrintReceipt(FiscalPrinter* pPrinter, JsonTarget* data)
 {
 	PosPrintReceiptData* pprd = dynamic_cast<PosPrintReceiptData*>(data);
+
 	long no = pPrinter->PrintReceipt(pprd);
 	JsonObject js;
 	js.Add(L"no", no);
@@ -268,4 +269,10 @@ std::wstring PosCommand::DisplayMessage(FiscalPrinter* pPrinter, JsonTarget* dat
 	pPrinter->DisplayRow(1, pdmd->_bottomText.c_str(), ta);
 	JsonObject js;
 	return js.Value();
+}
+
+//virtual 
+void PosReceiptItemData::PostProcess() {
+	std::replace(_name.begin(), _name.end(), L'«', L'"');
+	std::replace(_name.begin(), _name.end(), L'»', L'"');
 }

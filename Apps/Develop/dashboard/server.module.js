@@ -35,13 +35,25 @@ module.exports = function (prms) {
 
 
 	try {
-		let url = "2222" + dm.Weather.Url + 'q=London&appid=' + this.config.appSettings('openweathermap').appid;
+		let url = dm.Weather.Url + '?q=London&appid=' + this.config.appSettings('openweathermap').appid;
 		//return url;
 
-		let resp = this.fetch(url);
+		let resp = this.fetch(url, {
+			method: 'GET',
+			headers: {
+				ContentType:'application/json',
+			},
+			body: {
+				visitId: 500,
+				donorId: 50
+			}
+		});
 
-		return JSON.stringify({ status: resp.status, statusText: resp.statusText, contentType: resp.contentType, ok: resp.ok, isJson: resp.isJson });
-		return resp.json();
+		if (!resp.ok)
+			return JSON.stringify({ status: resp.status, statusText: resp.statusText, contentType: resp.contentType, ok: resp.ok, isJson: resp.isJson });
+		else
+			return resp.json();
+
 	} catch (err) {
 		return { catch: true, error: err };
 	}

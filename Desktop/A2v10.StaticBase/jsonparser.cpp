@@ -271,6 +271,8 @@ void JsonParser::ParseObject(JsonTarget* target)
 		switch (ct._tok) {
 		case TokenId::CloseCurly:
 			_scan->NextToken();
+			if (target != nullptr)
+				target->PostProcess();
 			return;
 		case TokenId::Comma:
 			_scan->NextToken();

@@ -47,6 +47,9 @@ public:
 	__currency _discount;
 	PosReceiptItemData()
 		: _article(0), _qty(0) {}
+
+	virtual void PostProcess() override;
+
 protected:
 	BEGIN_JSON_PROPS(10)
 		STRING_PROP(name, _name)

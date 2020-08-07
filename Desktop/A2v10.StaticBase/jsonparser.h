@@ -35,8 +35,12 @@ public:
 	virtual void SetStringValue(const wchar_t* szName, const wchar_t* szValue);
 	virtual void SetNumberValue(const wchar_t* szName, const wchar_t* szValue);
 	virtual void SetBoolValue(const wchar_t* szName, bool bValue);
+
+	virtual void PostProcess() {};
+
 protected:
 	virtual JsonTarget::PROP_ENTRY* __getPropsTable() { return nullptr; }
+
 };
 
 #define BEGIN_JSON_PROPS(cnt)\

@@ -41,6 +41,11 @@ namespace A2v10.Interop
 			return ParseFile(stream, table);
 		}
 
+		String ReplaceUnacceptableChars(String str)
+		{
+			return str.Replace('.', '_').Replace('!', '_');
+		}
+
 		public ExeclParseResult ParseFile(Stream stream, ITableDescription table)
 		{
 			try
@@ -94,7 +99,12 @@ namespace A2v10.Interop
 					{
 						Int32 ssid = Int32.Parse(c.CellValue.Text);
 						String str = sharedStringTable.ChildElements[ssid].InnerText;
+						str = ReplaceUnacceptableChars(str);
 						columns.Add(str);
+					}
+					else
+					{
+						columns.Add($"Empty-{ci}");
 					}
 				}
 				for (var ri=1 /*1!*/; ri<rows.Count; ri++)
