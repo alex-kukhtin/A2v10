@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -11,16 +11,14 @@ namespace A2v10.Infrastructure
 	{
 		protected abstract IDictionary<String, String> GetLocalizerDictionary(String locale);
 
-		static String _defaultLocale;
+		private readonly String _defaultLocale;
 
-		String DefaultLocale {
-			get
-			{
-				if (_defaultLocale == null)
-					_defaultLocale = Thread.CurrentThread.CurrentUICulture.Name;
-				return _defaultLocale;
-			}
+		public BaseLocalizer()
+		{
+			_defaultLocale = Thread.CurrentThread.CurrentUICulture.Name;
 		}
+
+		protected virtual String DefaultLocale => _defaultLocale;
 
 		String GetLocalizedValue(String locale, String key)
 		{
@@ -62,7 +60,7 @@ namespace A2v10.Infrastructure
 				sb.Append(value);
 				xpos = end + 1;
 			} while (true);
-			// не забыли хвост
+			// tail!
 			sb.Append(s.Substring(xpos));
 			return sb.ToString();
 		}

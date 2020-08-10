@@ -1,9 +1,10 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
@@ -170,6 +171,7 @@ namespace A2v10.Web.Config
 		private static readonly Lazy<WebDictionary> _webDictionary = new Lazy<WebDictionary>(()=>new WebDictionary(), isThreadSafe:true);
 
 		public WebLocalizer(IApplicationHost host)
+			:base()
 		{
 			_host = host;
 		}

@@ -164,9 +164,13 @@ namespace A2v10.Interop
 			if (!String.IsNullOrEmpty(strFormat))
 			{
 				if (Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out Double dblDate))
-				{
 					return DateTime.FromOADate(dblDate);
-				}
+			}
+			else if (formatId == 0 && text.Contains('.'))
+			{
+				// hack
+				if (Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out Double dblVal))
+					return dblVal.ToString(CultureInfo.InvariantCulture);
 			}
 			return text;
 		}
