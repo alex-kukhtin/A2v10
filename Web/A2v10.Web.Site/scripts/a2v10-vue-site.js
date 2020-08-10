@@ -978,7 +978,7 @@ app.modules['std:url'] = function () {
 	function parseUrlAndQuery(url, querySrc) {
 		let query = {};
 		for (let p in querySrc) {
-			if (p.startsWith('_')) continue;
+			if (p.startsWith('_') || p.startsWith('$')) continue;
 			query[p] = toUrl(querySrc[p]); // all values are string
 		}
 		let rv = { url: url, query: query };
