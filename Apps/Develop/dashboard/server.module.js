@@ -5,6 +5,14 @@
 
 module.exports = function (prms, args) {
 
+	let v = {};
+	for (let p in prms)
+		v[p] = prms[p];
+	for (let a in args)
+		v[a] = args[a];
+	v.FROM_SCRIPT = `aa2\\2\"33\'444`;
+
+	return Object.assign(prms, args, {'5':[1, 2, 3, 4, ...Object.keys(prms)]});
 
 	let r = this.fetch(this.config.appSettings('ProcS').url + '/api/process/start', {
 		method: 'post',
@@ -12,7 +20,7 @@ module.exports = function (prms, args) {
 			processId: "bioprocs/donorpaid",
 			parameters: {
 				visitId: 107,
-				donorId: 400
+				donorId: 400.56
 			}
 		}
 	});

@@ -75,7 +75,7 @@
 			"file": "server.module",
 			"args": {
 				"n": 1,
-				"s": "string",
+				"s": "stri\\ssng'with'ap\"os`trophe",
 				"d": 27.33,
 				"b": true
 			}

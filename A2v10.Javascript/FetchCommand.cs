@@ -100,15 +100,16 @@ namespace A2v10.Javascript
 						var headers = wex.Response.Headers;
 						// set headers
 						return new FetchResponse(
-							webResp.StatusCode, 
-							wex.Response.ContentType, 
-							strError, 
+							webResp.StatusCode,
+							wex.Response.ContentType,
+							strError,
 							GetResponseHeaders(headers),
 							webResp.StatusDescription);
 					}
 				}
+				else
+					throw;
 			}
-			throw new InvalidOperationException("Fetch command. Unknown error");
 		}
 	}
 }

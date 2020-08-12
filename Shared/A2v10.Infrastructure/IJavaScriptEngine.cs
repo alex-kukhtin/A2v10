@@ -2,12 +2,13 @@
 
 
 using System;
+using System.Dynamic;
 
 namespace A2v10.Infrastructure
 {
 	public interface IJavaScriptEngine
 	{
 		void SetCurrentDirectory(String dir);
-		Object Execute(String script, params Object[] prms);
+		Object Execute(String script, ExpandoObject prms, ExpandoObject args);
 	}
 }
