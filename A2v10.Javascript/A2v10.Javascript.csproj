@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="FetchCommand.cs" />
     <Compile Include="FetchResponse.cs" />
+    <Compile Include="JsonTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JavaScriptEngine.cs" />
     <Compile Include="ScriptConfig.cs" />

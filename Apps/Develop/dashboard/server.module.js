@@ -5,6 +5,19 @@
 
 module.exports = function (prms, args) {
 
+
+	let r = this.fetch(this.config.appSettings('ProcS').url + '/api/process/start', {
+		method: 'post',
+		body: {
+			processId: "bioprocs/donorpaid",
+			parameters: {
+				visitId: 107,
+				donorId: 400
+			}
+		}
+	});
+	return r;
+
 	let dm = this.executeSql({
 		procedure: "a2demo.[GetWeather.Load]",
 		parameters: {

@@ -10,12 +10,13 @@ namespace A2v10.Javascript
 
 	public class FetchResponse
 	{
-		internal FetchResponse(HttpStatusCode status, String contentType, String body, String statusText = "OK")
+		internal FetchResponse(HttpStatusCode status, String contentType, String body, ExpandoObject headers, String statusText = "OK")
 		{
 			this.status = status;
 			this.contentType = contentType;
 			this.body = body;
 			this.statusText = statusText;
+			this.headers = headers;
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -25,6 +26,7 @@ namespace A2v10.Javascript
 		public String contentType { get; }
 		public String body { get; }
 		public Boolean isJson => contentType.StartsWith("application/json");
+		public ExpandoObject headers { get; }
 #pragma warning restore IDE1006 // Naming Styles
 
 #pragma warning disable IDE1006 // Naming Styles

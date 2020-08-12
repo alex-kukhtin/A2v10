@@ -24,6 +24,18 @@ namespace A2v10.Javascript
 				wr.Headers.Add(hp.Key, hp.Value.ToString());
 		}
 
+		ExpandoObject GetResponseHeaders(WebHeaderCollection headers)
+		{
+			if (headers == null)
+				return null;
+			var eo = new ExpandoObject();
+			foreach (var key in headers.AllKeys)
+			{
+				eo.Set(key, headers[key]);
+			}
+			return eo;
+		}
+
 		public FetchResponse Execute(String url, ExpandoObject prms)
 		{
 			try
@@ -44,8 +56,8 @@ namespace A2v10.Javascript
 							bodyStr = strObj;
 							break;
 						case ExpandoObject eoObj:
-							bodyStr = JsonConvert.SerializeObject(eoObj);
-							httpWebRequest.ContentType = "application/json;charset=utf8";
+							bodyStr = JsonConvert.SerializeObject(eoObj, new JsonDoubleConverter());
+							httpWebRequest.ContentType = "application/json";
 							break;
 					}
 
@@ -68,9 +80,12 @@ namespace A2v10.Javascript
 						using (var ms = new StreamReader(rs))
 						{
 							String strResult = ms.ReadToEnd();
-							var r = new FetchResponse(resp.StatusCode, contentType, strResult, resp.StatusDescription);
-							// set headers
-							return r;
+							return new FetchResponse(
+								resp.StatusCode,
+								contentType,
+								strResult,
+								GetResponseHeaders(headers),
+								resp.StatusDescription);
 						}
 					}
 				}
@@ -82,8 +97,14 @@ namespace A2v10.Javascript
 					using (var rs = new StreamReader(wex.Response.GetResponseStream()))
 					{
 						String strError = rs.ReadToEnd();
+						var headers = wex.Response.Headers;
 						// set headers
-						return new FetchResponse(webResp.StatusCode, wex.Response.ContentType, strError, webResp.StatusDescription);
+						return new FetchResponse(
+							webResp.StatusCode, 
+							wex.Response.ContentType, 
+							strError, 
+							GetResponseHeaders(headers),
+							webResp.StatusDescription);
 					}
 				}
 			}
