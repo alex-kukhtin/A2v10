@@ -7,6 +7,7 @@ namespace A2v10.Infrastructure
 {
 	public interface IJavaScriptEngine
 	{
-		Object Execute(String script, Object prms);
+		void SetCurrentDirectory(String dir);
+		Object Execute(String script, params Object[] prms);
 	}
 }

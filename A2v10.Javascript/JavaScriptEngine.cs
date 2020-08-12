@@ -5,6 +5,9 @@ using Jint;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using System.IO;
+using Jint.Native;
+using Jint.Runtime;
 
 namespace A2v10.Javascript
 {
@@ -17,6 +20,8 @@ namespace A2v10.Javascript
 
 		private readonly IDbContext _dbContext;
 		private readonly IApplicationHost _host;
+
+		private String _currentDirectory;
 
 		public JavaScriptEngine(IDbContext dbContext, IApplicationHost host)
 		{
@@ -41,17 +46,21 @@ namespace A2v10.Javascript
 			return _env;
 		}
 
-		public Object Execute(String script, Object prms)
+		public void SetCurrentDirectory(String dirName)
+		{
+			_currentDirectory = dirName;
+		}
+
+		public Object Execute(String script, params Object[] prms)
 		{
 			var eng = _engine.Value;
 
-			var hdr = "var module = {exports:null }; (function() {";
+			var hdr = "const module = {exports:null }; (function() {";
 			var ftr = "})(); return module.exports";
 
 			var func = eng.Execute(hdr + script + ftr).GetCompletionValue();
 
-			var args = new Object[] { prms };
-			var result = eng.Invoke(func, Environment(), args);
+			var result = eng.Invoke(func, Environment(), prms);
 
 			return result.ToObject();
 		}

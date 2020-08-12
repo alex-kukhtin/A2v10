@@ -359,6 +359,7 @@ namespace A2v10.Interop
 					return String.Format(CultureInfo.InvariantCulture, "{0:0.000}", dVal3); ;
 				case "DGdecimal6":
 				case "Decimal6Column":
+				case "Decimal6Column_R":
 					var dVal6 = Convert.ToDecimal(val);
 					if (isNillable && dVal6 == 0)
 						return null;

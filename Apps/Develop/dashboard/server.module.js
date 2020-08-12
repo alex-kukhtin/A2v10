@@ -3,14 +3,15 @@
  * server module function
 */
 
-module.exports = function (prms) {
+module.exports = function (prms, args) {
 
-	let dm = this.loadModel({
+	let dm = this.executeSql({
 		procedure: "a2demo.[GetWeather.Load]",
 		parameters: {
 			UserId: prms.UserId
 		}
 	});
+	return dm;
 
 	/*
 	try {

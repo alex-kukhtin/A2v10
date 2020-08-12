@@ -166,11 +166,11 @@ namespace A2v10.Interop
 				if (Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out Double dblDate))
 					return DateTime.FromOADate(dblDate);
 			}
-			else if (formatId == 0 && text.Contains('.'))
+			else if (ExcelFormats.IsNumberFormat(formatId))
 			{
 				// hack
 				if (Double.TryParse(text, NumberStyles.Any, CultureInfo.InvariantCulture, out Double dblVal))
-					return dblVal.ToString(CultureInfo.InvariantCulture);
+					return dblVal;
 			}
 			return text;
 		}

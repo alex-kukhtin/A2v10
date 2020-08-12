@@ -1,7 +1,9 @@
 ﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
+
 using System;
 using System.Dynamic;
+using System.IO;
 using System.Threading.Tasks;
 using A2v10.Infrastructure;
 using Newtonsoft.Json;
@@ -26,7 +28,8 @@ namespace A2v10.Request
 			String code = await _reader.ReadTextFileAsync(cmd.Path, cmd.file.AddExtension("js"));
 			if (code == null)
 				throw new RequestModelException($"File not found '{cmd.file}'");
-			var retval = _engine.Execute(code, dataToExec);
+			_engine.SetCurrentDirectory(cmd.Path);
+			var retval = _engine.Execute(code, dataToExec, cmd.args);
 			return new ServerCommandResult() {
 				Data = JsonConvert.SerializeObject(retval, JsonHelpers.StandardSerializerSettings)
 			};

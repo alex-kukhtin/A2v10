@@ -50,6 +50,26 @@ namespace A2v10.Javascript
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
+		public ExpandoObject executeSql(ExpandoObject prms)
+#pragma warning restore IDE1006 // Naming Styles
+		{
+			try
+			{
+				String source = prms.Get<String>("source");
+				String command = prms.Get<String>("procedure");
+				ExpandoObject dmParams = prms.Get<ExpandoObject>("parameters");
+				return _dbContext.ExecuteAndLoadExpando(source, command, dmParams);
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				var js = new JsString(ex.Message);
+				throw new JavaScriptException(js);
+			}
+		}
+
+#pragma warning disable IDE1006 // Naming Styles
 		public FetchResponse fetch(String url)
 #pragma warning restore IDE1006 // Naming Styles
 		{

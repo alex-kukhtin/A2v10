@@ -39,9 +39,7 @@ namespace A2v10.Web.Script
 		{
 			using (var disp = CreateScript() as IDisposable)
 			{
-				var sc = disp as IScriptContext;
-				if (sc != null)
-				{
+				if (disp is IScriptContext sc) { 
 					StartScript(sc);
 					return RunDataScript(sc, ssi, "validate");
 				}
@@ -53,8 +51,7 @@ namespace A2v10.Web.Script
 		{
 			using (var disp = CreateScript() as IDisposable)
 			{
-				var sc = disp as IScriptContext;
-				if (sc != null)
+				if (disp is IScriptContext sc)
 				{
 					StartScript(sc);
 					return RunDataScript(sc, ssi, scriptName);

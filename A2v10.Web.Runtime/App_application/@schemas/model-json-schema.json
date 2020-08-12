@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7696",
+	"$version": "10.0.7699",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -153,6 +153,7 @@
 						"allowOrigin": { "type": "string" },
 						"errorCode": { "type": "number" },
 						"parameters": { "type": "object" },
+						"args": { "type": "object" },
 						"file": { "type": "string" }
 					},
 					"additionalProperties": false

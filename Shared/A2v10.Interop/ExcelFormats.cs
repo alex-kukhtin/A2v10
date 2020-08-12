@@ -56,9 +56,29 @@ namespace A2v10.Interop
 			[187] = "d-MMM-yyyy"
 		};
 
+		private static readonly Dictionary<UInt32, String> NumberFormatDictionary = new Dictionary<UInt32, String>()
+		{
+			[0] = "General",
+			[1] = "0",
+			[2] = "0.00",
+			[3] = "#,##0",
+			[4] = "#,##0.00",
+			[11] = "0.00E+00",
+			[37] = "#,##0 ;(#,##0)",
+			[38] =  "#,##0 ;[Red](#,##0)",
+			[39] = "#,##0.00;(#,##0.00)",
+			[40] = "#,##0.00;[Red](#,##0.00)",
+			[48] = "##0.0E+0"
+		};
+
 		public static String GetDateTimeFormat(UInt32 numberFormatId)
 		{
 			return DateFormatDictionary.ContainsKey(numberFormatId) ? DateFormatDictionary[numberFormatId] : null;
+		}
+
+		public static Boolean IsNumberFormat(UInt32 numberFormatId)
+		{
+			return NumberFormatDictionary.ContainsKey(numberFormatId);
 		}
 	}
 }

@@ -72,7 +72,13 @@
 	"commands": {
 		"javascript": {
 			"type": "javascript",
-			"file": "server.module"
+			"file": "server.module",
+			"args": {
+				"n": 1,
+				"s": "string",
+				"d": 27.33,
+				"b": true
+			}
 		}
 	}
 }

@@ -44,6 +44,9 @@ namespace A2v10.Request
 			if (_host.IsDebugConfiguration && _redirectWatcher == null && _host.ApplicationReader.IsFileSystem)
 			{
 				String redFilePath = _host.ApplicationReader.MakeFullPath(String.Empty, "redirect.json");
+				var dirName = Path.GetDirectoryName(redFilePath);
+				if (!Directory.Exists(dirName))
+					return;
 				// FileName can be in 8.3 format!
 				_redirectWatcher = new FileSystemWatcher(Path.GetDirectoryName(redFilePath), "*.*")
 				{

@@ -422,6 +422,7 @@ namespace A2v10.Request
 		public Boolean async;
 		public String wrapper;
 		public Int32 commandTimeout;
+		public ExpandoObject args;
 
 		public IList<String> xmlSchemas;
 		public Boolean validate;
