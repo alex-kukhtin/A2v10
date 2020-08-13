@@ -62,6 +62,7 @@ return (function() {{
 const __params__ = JSON.parse({strPrms});
 const __args__ = JSON.parse({strArgs});
 const module = {{exports:null }};
+
 {script};
 
 const __exp__ = module.exports;
