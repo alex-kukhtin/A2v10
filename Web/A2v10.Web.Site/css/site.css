@@ -4279,6 +4279,7 @@ ul.news-list > li {
 }
 .modal-stack .modal-wrapper .modal-window .modal-body-content {
   width: 100%;
+  user-select: text;
 }
 .modal-stack .modal-wrapper .modal-window .modal-error-list {
   padding: 0;
