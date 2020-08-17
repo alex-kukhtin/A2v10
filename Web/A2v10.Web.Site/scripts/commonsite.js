@@ -2294,7 +2294,7 @@ Vue.component('a2-pager', {
 
 /* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200728-7694*/
+/*20200817-7702*/
 // services/datamodel.js
 
 (function () {
@@ -3606,7 +3606,7 @@ Vue.component('a2-pager', {
 		}
 	}
 
-	function merge(src, afterSave, existsOnly) {
+	function merge(src, checkBindOnce, existsOnly) {
 		let oldId = this.$id__;
 		try {
 			if (src === null)
@@ -3615,7 +3615,7 @@ Vue.component('a2-pager', {
 			this._lockEvents_ += 1;
 			for (var prop in this._meta_.props) {
 				if (prop.startsWith('$$')) continue; // always skip
-				if (afterSave && isSkipMerge(this._root_, prop)) continue;
+				if (checkBindOnce && isSkipMerge(this._root_, prop)) continue;
 				let ctor = this._meta_.props[prop];
 				if (ctor.type) ctor = ctor.type;
 				let trg = this[prop];

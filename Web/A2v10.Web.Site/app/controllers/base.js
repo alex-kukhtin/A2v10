@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200725-7693*/
+/*20200817-7702*/
 // controllers/base.js
 
 (function () {
@@ -340,7 +340,7 @@
 					dataservice.post(url, jsonData).then(function (data) {
 						if (self.__destroyed__) return;
 						if (utils.isObject(data)) {
-							dat.$merge(data);
+							dat.$merge(data, true/*checkBindOnce*/);
 							modelInfo.reconcileAll(data.$ModelInfo);
 							dat._setModelInfo_(undefined, data);
 							dat._setRuntimeInfo_(data.$runtime);

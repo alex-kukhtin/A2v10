@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7674 */
+/* Version 10.0.7702 */
 
 
 declare function require(url: string): any;
@@ -192,7 +192,8 @@ interface Template {
 	options?: {
 		noDirty?: boolean,
 		persistSelect?: string[],
-		skipDirty?: string[]
+		skipDirty?: string[],
+		bindOnce?: string[]
 	};
 	properties?: {
 		[prop: string]: templateProperty

@@ -14,6 +14,9 @@ const cmn = require('document/common2') as IDocumentModule;
 console.dir(cmn);
 
 const template: Template = {
+	options: {
+		bindOnce: ['Warehouses']
+	},
 	properties: {
 		'TRoot.$Answer': String,
 		'TRoot.$BarCode' : String,

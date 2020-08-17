@@ -1,10 +1,7 @@
 ﻿
-/* Copyright © 2019 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7674 */
+/* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
+/* Version 10.0.7702 */
 
-/*TODO:
- * ????
-*/
 
 declare function require(url: string): any;
 
@@ -28,18 +25,20 @@ interface IElement {
 		readonly canUnapply: boolean;
 	}
 
-	readonly $vm: ViewModel;
+	readonly $vm: IViewModel;
 	readonly $ctrl: IController;
 
 	$merge(src: object): IElement;
 	$empty(): IElement;
+	$set(src: object): IElement;
 }
 
 interface IArrayElement extends IElement {
-	$remove(): void;
+	readonly $parent: IElementArray<IElement>;
 	$selected: boolean;
 	$checked: boolean;
-	readonly $parent: IElementArray<IElement>;
+	$remove(): void;
+	$select(): void;
 }
 
 interface ITreeElement extends IArrayElement {
@@ -53,25 +52,37 @@ declare const enum InsertTo {
 	below = 'below'
 }
 
+interface IModelInfo {
+	Filter: any;
+}
+
 interface IElementArray<T> extends Array<T> {
-	[index: number]: T;
+
+	readonly $parent: IElement;
+	readonly $vm: IViewModel;
+	readonly $root: IRoot;
+	readonly $ctrl: IController;
 
 	readonly Count: number;
 	readonly $isEmpty: boolean;
 	readonly $hasSelected: boolean;
 	readonly $checked: IElementArray<T>;
+	readonly $selected: T;
 	readonly $selectedIndex: number;
-	readonly $parent: IElement;
+	readonly $cross: { [prop: string]: string[] };
+	readonly $ModelInfo: IModelInfo;
 
 	Selected(prop: string): IElementArray<T>;
 
+	$new(src?: object): T;
 	$append(src?: object): T;
 	$prepend(src?: object): T;
 	$insert(src: object, to: InsertTo, ref?: T): T;
 
-	$clearSelected(): void;
+	$clearSelected(): IElementArray<T>;
 	$load(): void;
 	$loadLazy(): Promise<IElementArray<T>>;
+	$resetLazy(): IElementArray<T>;
 
 	$isLazy(): boolean;
 
@@ -79,13 +90,16 @@ interface IElementArray<T> extends Array<T> {
 	$empty(): IElementArray<T>;
 	$renumberRows(): IElementArray<T>;
 	$copy(src: any[]): IElementArray<T>;
+	$sum(fn: (item: T) => number): number;
 }
 
 interface IRoot extends IElement {
-	readonly $readOnly: boolean,
-	readonly $stateReadOnly: boolean,
-	readonly $isCopy: boolean
+	readonly $readOnly: boolean;
+	readonly $stateReadOnly: boolean;
+	readonly $isCopy: boolean;
+	readonly $ready: boolean;
 	readonly $template: Template;
+	readonly $dirty: boolean;
 
 	$defer(handler: () => any): void;
 	$emit(event: string, ...params: any[]): void;
@@ -95,13 +109,20 @@ interface IRoot extends IElement {
 
 
 /* template commands */
-interface templateCommandFunc { (this: IRoot, arg?: any): void; }
+
+declare const enum TemplateCommandResult {
+	save = 'save'
+}
+
+interface templateCommandFunc { (this: IRoot, arg?: any): void | TemplateCommandResult | Promise<any>; }
 
 interface templateCommandObj {
 	exec: templateCommandFunc,
 	canExec?: (this: IRoot, arg?: any) => boolean;
-	confirm?: string; // TODO: object
+	confirm?: string | IConfirm;
 	saveRequired?: boolean;
+	validRequired?: boolean;
+	checkReadOnly?: boolean;
 }
 
 declare type templateCommand = templateCommandFunc | templateCommandObj;
@@ -122,17 +143,12 @@ interface templateEventUnload { (this: IElement, elem?: IElement): void; }
 
 declare type templateEvent = templateEventChange | templateEventAdd | templateEventUnload;
 
-
-/* template defaults */
-interface templateDefaultFunc { (this: IRoot, elem: IElement, prop:string): any; }
-declare type templateDefault = templateDefaultFunc | string | number | boolean;
-
-
 declare const enum StdValidator {
 	notBlank = 'notBlank',
 	email = 'email',
 	url = 'url',
-	isTrue = 'isTrue'
+	isTrue = 'isTrue',
+	regExp = 'regExp'
 }
 
 declare const enum Severity {
@@ -140,6 +156,23 @@ declare const enum Severity {
 	warning = 'warning',
 	info = 'info'
 }
+
+declare const enum CommonStyle {
+	error = 'error',
+	warning = 'warning',
+	info = 'info',
+	success = 'success'
+}
+
+declare const enum MessageStyle {
+	confirm = 'confirm',
+	alert = 'alert',
+	info = 'info'
+}
+
+/* template defaults */
+interface templateDefaultFunc { (this: IRoot, elem: IElement, prop: string): any; }
+declare type templateDefault = templateDefaultFunc | string | number | boolean;
 
 /* template validators */
 
@@ -149,6 +182,7 @@ interface templateValidatorObj {
 	valid: tempateValidatorFunc | StdValidator,
 	async?: boolean,
 	msg?: string,
+	regExp?: RegExp,
 	severity?: Severity
 }
 
@@ -158,20 +192,21 @@ interface Template {
 	options?: {
 		noDirty?: boolean,
 		persistSelect?: string[],
-		skipDirty?: string[]
+		skipDirty?: string[],
+		bindOnce?: string[]
 	};
 	properties?: {
 		[prop: string]: templateProperty
 	};
+	defaults?: {
+		[prop: string]: templateDefault
+	},
 	validators?: {
 		[prop: string]: templateValidator | templateValidator[]
 	};
 	events?: {
 		[prop: string]: templateEvent
 	};
-	defaults?: {
-		[prop:string]: templateDefault
-	},
 	commands?: {
 		[prop: string]: templateCommand
 	};
@@ -183,27 +218,24 @@ interface Template {
 interface IController {
 	$save(): Promise<object>;
 	$requery(): void;
-	$reload(args?: any): void;
-	$invoke(command: string, arg: object, path?: string, opts?: { catchError: boolean }): Promise<object>;
+	$reload(args?: any): Promise<void>;
+	$invoke(command: string, arg: object, path?: string, opts?: { catchError: boolean }): Promise<any>;
 	$close(): void;
 	$modalClose(result?: any): any;
-	$msg(msg: string): Promise<boolean>;
+	$msg(msg: string, title?: string, style?: CommonStyle): Promise<boolean>;
 	$alert(msg: string | IMessage): Promise<boolean>;
-	$confirm(msg: string | IMessage): Promise<boolean>;
-	$showDialog(url: string, data?: object, query?: object): Promise<object>;
+	$confirm(msg: string | IConfirm): Promise<boolean>;
+	$showDialog(url: string, data?: object, query?: object): Promise<any>;
+	$inlineOpen(id: string): void;
+	$inlineClose(id: string, result?: any): void;
 	$saveModified(msg?: string, title?: string): boolean;
-	$asyncValid(cmd: string, arg: object): any; //TODO
-	$toast(): void; //TODO
-	$notifyOwner(): any; //TODO
+	$asyncValid(cmd: string, arg: object): any | Promise<any>;
+	$toast(text: string, style?: CommonStyle): void;
+	$toast(toast: { text: string, style?: CommonStyle }): void;
+	$notifyOwner(id: any, toast?: string | { text: string, style?: CommonStyle }): void;
 	$navigate(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
-	$defer(func: () => void): void;
-	$setFilter(): any; //TODO
-}
-
-declare const enum MessageStyle {
-	confirm = 'confirm',
-	alert = 'alert',
-	info = 'info'
+	$defer(handler: () => void): void;
+	$setFilter(target: object, prop: string, value: any): void;
 }
 
 interface IMessage {
@@ -212,8 +244,29 @@ interface IMessage {
 	list?: any;
 }
 
-interface ViewModel extends IController {
-	$getErrors(severity: string): any[]; // TODO result type
+interface IConfirm {
+	msg: string;
+	style?: MessageStyle;
+}
+
+interface IErrorInfo {
+	path: string;
+	msg: string;
+	severity: Severity;
+	index: number;
+}
+
+interface IViewModel extends IController {
+	readonly $isLoading: boolean;
+	readonly $isDirty: boolean;
+	readonly $isPristine: boolean;
+	readonly $canSave: boolean;
+	$errorMessage(path: string): string;
+	$hasError(path: string): boolean;
+	$getErrors(severity: Severity): IErrorInfo[] | null;
+	$dbRemove(elem: object, confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
+	$dbRemoveSelected(arr: object[], confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
+	$setCurrentUrl(url: string): void;
 }
 
 // utilities
@@ -223,7 +276,9 @@ declare const enum DataType {
 	Number = "Number",
 	DateTime = "DateTime",
 	Date = "Date",
-	Time = "Time"
+	DateUrl = "DateUrl",
+	Time = "Time",
+	Period = "Period"
 }
 
 declare const enum DateTimeUnit {
@@ -233,35 +288,51 @@ declare const enum DateTimeUnit {
 	hour = 'hour',
 	minute = 'minute',
 	second = 'second'
-
 }
 
+declare const enum DateUnit {
+	year = 'year',
+	month = 'month',
+	day = 'day'
+}
+
+
 interface UtilsDate {
-	formatDate(date: Date): string;
+	readonly minDate: Date;
+	readonly maxDate: Date;
+
 	today(): Date,
 	zero(): Date,
 	equal(d1: Date, d2: Date): boolean;
 	isZero(d: Date): boolean;
 	add(d: Date, nm: number, unit: DateTimeUnit);
+	create(year: number, month: number, day: number): Date;
+	fromDays(days: number): Date;
+	compare(d1: Date, d2: Date): number;
+	diff(unit: DateUnit, d1: Date, d2: Date): number;
+	endOfMonth(d: Date): Date;
 	format(d: number | Date): string;
 	formatDate(d: number | Date): string;
 	parse(str: string): Date;
-	create(year: number, month: number, day: number): Date;
-	compare(d1: Date, d2: Date): number;
-	endOfMonth(d: Date): Date;
-	diff(): number; // TODO
-	minDate: Date;
-	maxDate: Date;
+	tryParse(str: string): Date | string;
 }
 
 interface UtilsText {
 	contains(text: string, probe: string): boolean;
+	containsText(obj: object, props: string, probe: string): boolean;
 	capitalize(text: string): string;
+	equalNoCase(s1: string, s2: string): boolean;
+	maxChars(s1: string, len: number): string;
 }
 
 interface UtilsCurrency {
 	round(val: number, digits?: number): number;
 	format(val: any): string;
+}
+
+interface FormatOptions {
+	format?: string;
+	hideZeros?: boolean;
 }
 
 interface Utils {
@@ -285,10 +356,19 @@ interface Utils {
 
 	isEqual(o1: any, o2: any): boolean;
 
-	format(arg: any, dataType: DataType, opts?: { format?: string, hideZeros?: boolean });
-	date: UtilsDate;
-	text: UtilsText;
-	currency: UtilsCurrency;
+	format(arg: any, dataType: DataType, opts?: FormatOptions);
+
+	eval(obj: any, path: string, dataType: DataType, opts?: FormatOptions, skipFormat?: boolean): any;
+	simpleEval(obj: any, path: string): any;
+
+	readonly date: UtilsDate;
+	readonly text: UtilsText;
+	readonly currency: UtilsCurrency;
+}
+
+interface Blob {
+	readonly size: number;
+	readonly type: string;
 }
 
 interface Http {

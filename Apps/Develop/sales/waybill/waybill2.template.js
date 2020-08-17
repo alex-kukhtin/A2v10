@@ -7,6 +7,9 @@ define(["require", "exports"], function (require, exports) {
     const cmn = require('document/common2');
     console.dir(cmn);
     const template = {
+        options: {
+            bindOnce: ['Warehouses']
+        },
         properties: {
             'TRoot.$Answer': String,
             'TRoot.$BarCode': String,
