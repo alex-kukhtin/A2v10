@@ -109,9 +109,9 @@
 			"type": "callApi",
 			"model": "GetWeather",
 			"parameters": {
-				"City": "NewYork",
+				"City": "NewMyApirk",
 				"url": "((MyApi.url))/companyInfo/[[Code]]",
-				"method": "post",
+				"method": "get",
 				"headers": {
 					"Authorization": "bearer ((MyApi.apiKey))"
 				},

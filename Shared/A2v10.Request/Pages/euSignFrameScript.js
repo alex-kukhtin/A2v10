@@ -8,7 +8,7 @@ const eventBus = require('std:eventBus');
 
 function EUSignCPModuleInitialized(isInitialized) {
 	console.info('EUSign library initialized');
-	var URL_XML_HTTP_PROXY_SERVICE = "/Handlers/ProxyHandler.ashx";
+	var URL_XML_HTTP_PROXY_SERVICE = "/handlers/proxyhandler.ashx";
 
 	if (isInitialized) {
 		euSign.Initialize();
@@ -59,7 +59,7 @@ const euSignUtils = Utils(euSign);
 
 function getCerts()
 {
-	const CERTS_URL = '/scripts/eusign/CACertificates.p7b';
+	const CERTS_URL = '/scripts/eusign/cacertificates.p7b';
 	const SESSION_STORAGE_NAME = 'CACertificates';
 
 	function _onSuccess(certs) {

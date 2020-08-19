@@ -34,6 +34,9 @@ const template = {
 			let r = await this.$ctrl.$invoke('javascript', { Id: 77, StrVal: 'string value', DateVal: du.today(), NumVal: 55.32 });
 			console.dir(r);
 			alert(JSON.stringify(r));
+		},
+		async wait() {
+			let r = await this.$ctrl.$invoke('wait');
 		}
 	}
 };

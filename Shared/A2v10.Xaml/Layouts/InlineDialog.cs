@@ -11,6 +11,7 @@ namespace A2v10.Xaml
 		public String Title { get; set; }
 		public Length Width { get; set; }
 		public Boolean NoClose { get; set; }
+		public Boolean ShowWaitCursor { get; set; }
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
@@ -31,9 +32,18 @@ namespace A2v10.Xaml
 
 
 			dlg.RenderStart(context);
+
 			var m = new TagBuilder("div", "modal");
 			m.RenderStart(context);
+
+			if (ShowWaitCursor)
+				new TagBuilder("wait-cursor", "dialog")
+					.MergeAttribute(":ready", "$data.$ready")
+					.Render(context, TagRenderMode.Normal);
+
 			RenderHeader(context);
+			RenderLoadIndicator(context);
+
 			var mc = new TagBuilder("div", "modal-content");
 			mc.RenderStart(context);
 			RenderChildren(context);
@@ -42,6 +52,13 @@ namespace A2v10.Xaml
 			m.RenderEnd(context);
 			dlg.RenderEnd(context);
 
+		}
+
+		void RenderLoadIndicator(RenderContext context)
+		{
+			new TagBuilder("div", "load-indicator")
+				.MergeAttribute("v-show", "$isLoading")
+				.Render(context);
 		}
 
 		void RenderHeader(RenderContext context)

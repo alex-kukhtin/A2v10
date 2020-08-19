@@ -79,6 +79,10 @@
 				"d": 27.33,
 				"b": true
 			}
+		},
+		"wait": {
+			"type": "sql",
+			"procedure": "Wait"
 		}
 	}
 }
