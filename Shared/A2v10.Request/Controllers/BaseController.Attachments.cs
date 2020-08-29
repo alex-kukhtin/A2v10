@@ -115,5 +115,34 @@ namespace A2v10.Request
 			}
 			return retList;
 		}
+
+		public async Task<IList<Object>> SaveAttachmentsMime(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
+		{
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			ExpandoObject prms = new ExpandoObject();
+			String key = rm.ModelAction.ToPascalCase();
+			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
+			AttachmentUpdateInfo ii = new AttachmentUpdateInfo
+			{
+				UserId = userId,
+				Id = rm._id,
+				Key = key
+			};
+			if (_host.IsMultiTenant)
+				ii.TenantId = tenantId;
+			if (_host.IsMultiCompany)
+				ii.CompanyId = companyId;
+			var retList = new List<Object>();
+			for (Int32 i = 0; i < files.Count; i++)
+			{
+				HttpPostedFileBase file = files[i];
+				ii.Mime = file.ContentType;
+				ii.Name = Path.GetFileName(file.FileName);
+				ii.Stream = file.InputStream;
+				await _dbContext.ExecuteAsync(rm.CurrentSource, procedure, ii);
+				retList.Add(new { id = ii.Id, mime = file.ContentType });
+			}
+			return retList;
+		}
 	}
 }

@@ -22,7 +22,14 @@ namespace A2v10.Xaml
 
 			var boldBind = GetBinding(nameof(Bold));
 			var italicBind = GetBinding(nameof(Italic));
-			if (boldBind != null || italicBind != null)
+			var cssBind = GetBinding(nameof(CssClass));
+			if (cssBind != null)
+			{
+				tag.MergeAttribute(":class", cssBind.GetPath(context));
+				if (boldBind != null || italicBind != null)
+					throw new XamlException("CssClass binding is incompatible with Bold and Italic bindings");
+			}
+			else if (boldBind != null || italicBind != null)
 			{
 				var sb = new StringBuilder("{");
 				if (boldBind != null)
