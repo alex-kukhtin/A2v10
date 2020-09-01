@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -22,9 +22,14 @@ namespace A2v10.Xaml
 		internal override void MergeCheckBoxAttributes(TagBuilder tag, RenderContext context)
 		{
 			base.MergeCheckBoxAttributes(tag, context);
-			if (CheckedValue == null)
+			var chv = GetBinding(nameof(CheckedValue));
+			if (chv != null) {
+				tag.MergeAttribute(":value", chv.GetPathFormat(context));
+			}
+			else if (CheckedValue != null)
+				tag.MergeAttribute("value", CheckedValue.ToString());
+			else
 				throw new XamlException("The CheckedValue attribute is required for Radio");
-			tag.MergeAttribute("value", CheckedValue.ToString());
 		}
 	}
 }

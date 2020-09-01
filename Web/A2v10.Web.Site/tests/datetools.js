@@ -44,7 +44,7 @@ describe("Date tools", function () {
 	});
 
 	it('date add (month)', function () {
-		let d1 = new Date(2018, 1, 28); // 28 feb
+		let d1 = du.create(2018, 2, 28); // 28 feb
 		let d2 = du.add(d1, 1, 'month');
 		expect(du.equal(d1, d2)).toBe(false);
 		expect(d2.getMonth()).toBe(d1.getMonth() + 1);
@@ -208,5 +208,13 @@ describe("Date tools", function () {
 		expect(du.parse('01abc\.. 01 dsess# 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
 	});
 
+	it('try parse date', function () {
+		let today = du.today();
+		expect(du.tryParse(today).getTime()).toBe(today.getTime());
+		expect(du.tryParse('Mon May 05 1969 03:00:00 GMT+0300').getTime()).toBe(new Date('Mon May 05 1969 03:00:00 GMT+0300').getTime());
+		expect(du.tryParse('20190502').getTime()).toBe(du.create(2019, 5, 2).getTime());
+		expect(du.tryParse('2009-02-15T00:00:00Z').getTime()).toBe(du.create(2009, 2, 15).getTime());
+		expect(du.tryParse('"\\/\"2020-09-01T00:00:00Z"\\/"').getTime()).toBe(du.create(2020, 9, 1).getTime());
+	});
 });
 

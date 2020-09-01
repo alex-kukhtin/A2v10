@@ -11,6 +11,7 @@
 	"purchase2/customer": "sales/customer",
 	"purchase2/catalog": "sales/catalog",
 	"catalog/groups": "catalog/units",
-	"sales/invoice234": "common/notimplemented"
+	"sales/invoice234": "common/notimplemented",
+	"catalog/units": "catalog/suppliers"
 }
 

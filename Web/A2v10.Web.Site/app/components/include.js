@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190808-7508
+// 20200901-7704
 /*components/include.js*/
 
 (function () {
@@ -136,7 +136,8 @@
 		template: '<div class="a2-include"></div>',
 		props: {
 			source: String,
-			arg: undefined
+			arg: undefined,
+			dat: undefined
 		},
 		data() {
 			return {
@@ -152,7 +153,10 @@
 			},
 			makeUrl() {
 				let arg = this.arg || '0';
-				return urlTools.combine('_page', this.source, arg);
+				let url = urlTools.combine('_page', this.source, arg);
+				if (this.dat)
+					url += urlTools.makeQueryString(this.dat);
+				return url;
 			},
 			load() {
 				let url = this.makeUrl();
@@ -169,6 +173,10 @@
 			},
 			arg(newVal, oldVal) {
 				//console.warn(`arg changed ${newVal}, ${oldVal}`);
+				this.needLoad += 1;
+			},
+			dat(newVal, oldVal) {
+				//console.warn(`dat changed ${newVal}, ${oldVal}`);
 				this.needLoad += 1;
 			},
 			needLoad() {

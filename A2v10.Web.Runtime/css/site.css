@@ -2766,7 +2766,7 @@ pre.a2-code {
 }
 .calendar-pane tbody td.today > a {
   font-weight: 500;
-  background-color: #fff9d0;
+  background-color: #fff9d0 !important;
 }
 .calendar-pane tbody td.active > a {
   background-color: #cde6f7 !important;
@@ -4455,6 +4455,9 @@ ul.news-list > li {
   overflow: visible;
 }
 .modal-content.overflow .tab-panel {
+  overflow: visible;
+}
+.modal-content.overflow .tab-panel .tab-item {
   overflow: visible;
 }
 .modal-content .dialog-grid {

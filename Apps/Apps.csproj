@@ -79,6 +79,7 @@
     </Content>
     <None Include="Develop\reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
+    <Content Include="Develop\sales\catalog\index.template.js" />
     <None Include="Develop\sales\document\model.json" />
     <None Include="Develop\sales\invoice\define.json" />
     <None Include="..\..\A2v10.Data\A2v10.Data.Tests\TestFiles\_data.defs.json">

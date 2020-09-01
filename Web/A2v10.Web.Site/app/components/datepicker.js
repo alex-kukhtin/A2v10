@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
-// 20191220-7601
+// 20200831-7704
 // components/datepicker.js
 
 
@@ -38,7 +38,8 @@
 			propToValidate: String,
 			// override control.align (default value)
 			align: { type: String, default: 'center' },
-			view: String
+			view: String,
+			yearCutOff: String
 		},
 		data() {
 			return {
@@ -67,18 +68,14 @@
 				this.setDate(dt);
 			},
 			selectDay(day) {
-				var dt = new Date(day);
-				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+				var dt = new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0));
 				this.setDate(dt);
 				this.isOpen = false;
 			},
 			setDate(d) {
 				// save time
-				let od = new Date(this.modelDate);
-				let h = od.getUTCHours();
-				let m = od.getUTCMinutes();
-				var nd = new Date(d);
-				nd.setUTCHours(h, m);
+				let md = this.modelDate;
+				let nd = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), md.getUTCHours(), md.getUTCMinutes(), 0, 0));
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
@@ -119,7 +116,7 @@
 						return this.modelDate.toLocaleString(locale.$Locale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
-					let md = utils.date.parse(str);
+					let md = utils.date.parse(str, this.yearCutOff);
 					if (utils.date.isZero(md)) {
 						this.item[this.prop] = md;
 						this.isOpen = false;

@@ -181,7 +181,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200714-7688
+// 20200901-7704
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -542,14 +542,11 @@ app.modules['std:utils'] = function () {
 
 	function dateToday() {
 		let td = new Date();
-		td.setHours(0, 0, 0, 0);
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
-		return td;
+		return new Date(Date.UTC(td.getFullYear(), td.getMonth(), td.getDate(), 0, 0, 0, 0));
 	}
 
 	function dateZero() {
-		let td = new Date(0, 0, 1, 0, 0, 0, 0);
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
+		let td = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
 		return td;
 	}
 
@@ -565,9 +562,7 @@ app.modules['std:utils'] = function () {
 			dt = new Date(str);
 		}
 		if (!isNaN(dt.getTime())) {
-			dt.setHours(0, 0, 0, 0);
-			dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
-			return dt;
+			return new Date(Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate(), 0, 0, 0, 0));
 		}
 		return str;
 	}
@@ -575,7 +570,7 @@ app.modules['std:utils'] = function () {
 	function string2Date(str) {
 		try {
 			let dt = new Date(str);
-			dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+			dt.setUTCHours(0, 0, 0, 0);
 			return dt;
 		} catch (err) {
 			return str;
@@ -595,7 +590,7 @@ app.modules['std:utils'] = function () {
 		return td;
 	}
 
-	function dateParse(str) {
+	function dateParse(str, yearCutOff) {
 		str = str || '';
 		if (utcdatRegEx.test(str)) {
 			return new Date(str);
@@ -609,19 +604,26 @@ app.modules['std:utils'] = function () {
 		} else if (seg.length === 2) {
 			seg.push('' + today.getFullYear());
 		}
+
+		let cutOffYear = function (year) {
+			let yco = yearCutOff || '+10';
+			let th = (yco.startsWith('+') || yco.startsWith('-')) ? (today.getFullYear() % 100 + parseInt(yco, 10)) : (+yco % 100);
+			return year <= th ? '20' : '19';
+		}
+
 		let normalizeYear = function (y) {
 			y = '' + y;
 			switch (y.length) {
-				case 2: y = '20' + y; break;
+				case 1: y = cutOffYear(y) + '0' + y; break;
+				case 2: y = cutOffYear(y) + y; break;
 				case 4: break;
 				default: y = today.getFullYear(); break;
 			}
 			return +y;
 		};
-		let td = new Date(+normalizeYear(seg[2]), +((seg[1] ? seg[1] : 1) - 1), +seg[0], 0, 0, 0, 0);
+		let td = new Date(Date.UTC(+normalizeYear(seg[2]), +((seg[1] ? seg[1] : 1) - 1), +seg[0], 0, 0, 0, 0));
 		if (isNaN(td.getDate()))
 			return dateZero();
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return td;
 	}
 
@@ -642,14 +644,12 @@ app.modules['std:utils'] = function () {
 	}
 
 	function endOfMonth(dt) {
-		var dte = new Date(dt.getFullYear(), dt.getMonth() + 1, 0, 0, 0, 0);
-		dte.setHours(0, -dte.getTimezoneOffset(), 0, 0);
+		var dte = new Date(Date.UTC(dt.getFullYear(), dt.getMonth() + 1, 0, 0, 0, 0));
 		return dte;
 	}
 
 	function dateCreate(year, month, day) {
-		let dt = new Date(year, month - 1, day, 0, 0, 0, 0);
-		dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+		let dt = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
 		return dt;
 	}
 
@@ -690,9 +690,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function fromDays(days) {
-		let dt = new Date(1900, 0, days, 0, 0, 0, 0);
-		dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
-		return dt;
+		return new Date(Date.UTC(1900, 0, days, 0, 0, 0, 0));
 	}
 
 	function dateAdd(dt, nm, unit) {
@@ -707,11 +705,10 @@ app.modules['std:utils'] = function () {
 				// save day of month
 				let newMonth = dt.getMonth() + nm;
 				let day = dt.getDate();
-				var ldm = new Date(dt.getFullYear(), newMonth + 1, 0).getDate();
+				var ldm = new Date(Date.UTC(dt.getFullYear(), newMonth + 1, 0, 0, 0)).getDate();
 				if (day > ldm)
 					day = ldm;
-				var dtx = new Date(dt.getFullYear(), newMonth, day);
-				dtx.setHours(0, -dtx.getTimezoneOffset(), 0, 0);
+				var dtx = new Date(Date.UTC(dt.getFullYear(), newMonth, day, 0, 0, 0));
 				return dtx;
 			case 'day':
 				du = 1000 * 60 * 60 * 24;
@@ -4619,9 +4616,9 @@ template: `
 })();
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190808-7508
+// 20200901-7704
 /*components/include.js*/
 
 (function () {
@@ -4757,7 +4754,8 @@ template: `
 		template: '<div class="a2-include"></div>',
 		props: {
 			source: String,
-			arg: undefined
+			arg: undefined,
+			dat: undefined
 		},
 		data() {
 			return {
@@ -4773,7 +4771,10 @@ template: `
 			},
 			makeUrl() {
 				let arg = this.arg || '0';
-				return urlTools.combine('_page', this.source, arg);
+				let url = urlTools.combine('_page', this.source, arg);
+				if (this.dat)
+					url += urlTools.makeQueryString(this.dat);
+				return url;
 			},
 			load() {
 				let url = this.makeUrl();
@@ -4790,6 +4791,10 @@ template: `
 			},
 			arg(newVal, oldVal) {
 				//console.warn(`arg changed ${newVal}, ${oldVal}`);
+				this.needLoad += 1;
+			},
+			dat(newVal, oldVal) {
+				//console.warn(`dat changed ${newVal}, ${oldVal}`);
 				this.needLoad += 1;
 			},
 			needLoad() {

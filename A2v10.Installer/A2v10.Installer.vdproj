@@ -1605,6 +1605,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B6E355B03A6F4AE296D18EA785DB83C1"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -5219,6 +5225,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6C913DD10CE42408A44A2AE7F51250A"
+            {
+            "SourcePath" = "8:..\\images\\a2v10_header.png"
+            "TargetName" = "8:a2v10_header.png"
+            "Tag" = "8:"
+            "Folder" = "8:_4186743035494FAD857086536FDF5B40"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6E355B03A6F4AE296D18EA785DB83C1"
             {
             "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\Localization\\de.xml"
@@ -6420,15 +6446,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
-        "ProductCode" = "8:{616CAD16-FF1D-4A07-92C3-89C635A388CF}"
-        "PackageCode" = "8:{E051549B-BE13-45C3-8826-03E8DC9F4354}"
+        "ProductCode" = "8:{8A2EB0E7-5DE7-4733-89B8-987773FF0442}"
+        "PackageCode" = "8:{8D3930D7-098D-4E15-A341-9A67151AF58C}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:10.0.7703"
+        "ProductVersion" = "8:10.0.7704"
         "Manufacturer" = "8:Alex Kukhtin"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -6568,7 +6594,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -6612,7 +6639,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -6668,7 +6696,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -6690,7 +6719,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -6725,7 +6755,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -6782,7 +6813,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -6813,7 +6845,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -6857,7 +6890,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -6879,7 +6913,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -6927,7 +6962,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_B6C913DD10CE42408A44A2AE7F51250A"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }

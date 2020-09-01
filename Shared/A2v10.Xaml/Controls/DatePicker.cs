@@ -20,6 +20,7 @@ namespace A2v10.Xaml
 		public DropDownPlacement Placement { get; set; }
 		public DatePickerView View { get; set; }
 
+		public String YearCutOff { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -30,6 +31,7 @@ namespace A2v10.Xaml
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
 			MergeAlign(input, context, Align);
+			input.MergeAttribute("year-cut-off", YearCutOff);
 			SetSize(input, nameof(DatePicker));
 			if (Placement  != DropDownPlacement.BottomLeft)
 				input.AddCssClass("drop-" + Placement.ToString().ToKebabCase());

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191222-7601
+// 20200109-7704
 // components/calendar.js
 
 (function () {
@@ -102,6 +102,9 @@
 			},
 			todayText() {
 				return locale.$Today;
+			},
+			todayDate() {
+				return utils.date.today();
 			}
 		},
 		methods: {
@@ -127,7 +130,7 @@
 				return dt.toLocaleString(locale.$Locale, { weekday: "short" });
 			},
 			today() {
-				this.setDay(utils.date.today());
+				this.setDay(this.todayDate);
 			},
 			selectDay(d) {
 				this.setDay(d, this.pos);
@@ -141,7 +144,7 @@
 					return cls;
 				}
 				let tls = utils.date;
-				if (tls.equal(day, tls.today()))
+				if (tls.equal(day, this.todayDate))
 					cls += ' today';
 				if (tls.equal(day, this.model))
 					cls += ' active';

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -8,6 +8,7 @@ namespace A2v10.Xaml
 	{
 		public String Source { get; set; }
 		public Object Argument { get; set; }
+		public Object Data { get; set; }
 
 		public Boolean FullHeight { get; set; }
 
@@ -24,11 +25,14 @@ namespace A2v10.Xaml
 				div.MergeAttribute("source", Source);
 			else
 				throw new XamlException("Partial. Source must be specified");
-			var arg = GetBinding(nameof(Argument));
+			var arg =  GetBinding(nameof(Argument));
 			if (arg != null)
 				div.MergeAttribute(":arg", arg.GetPathFormat(context));
 			else if (Argument != null)
 				div.MergeAttribute("arg", Argument.ToString());
+			var dat = GetBinding(nameof(Data));
+			if (dat != null)
+				div.MergeAttribute(":dat", dat.GetPathFormat(context));
 			div.AddCssClassBool(FullHeight, "full-height");
 			div.RenderStart(context);
 			div.RenderEnd(context);

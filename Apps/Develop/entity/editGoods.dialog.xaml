@@ -13,20 +13,22 @@
 				<ComboBox Grid.Row="2" Grid.Col="2" Label="Ед. изм." Value="{Bind Entity.Unit}" ItemsSource="{Bind Units}"/>
 				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Entity.Memo}" Rows="3" Multiline="True"/>
 				<PeriodPicker Grid.Row="6" Grid.Col="1"/>
+				<DatePicker Grid.Row="6" Grid.Col="2" Value="{Bind Root.$Date}" YearCutOff="+0"/>
 				<TextBox Grid.Row="7" />
+				<Code Grid.Row="7" Grid.Col="2" Content="{Bind Root.$Date, DataType=DateTime}"/>
 			</Grid>
 		</Tab>
 		<Tab Header="Картинка">
 			<Image Source="{Bind Entity.Image}" Base="/entity" Height="200" Margin="20" Placeholder="Клацніть для фото!" Icon="UserImage"/>
 		</Tab>
-		<!--
-		<Tab Header="Partial">
-			<DataGrid ItemsSource="{Bind Entity.PartialRoot}">
-				<DataGridColumn Content="{Bind Id}"/>
-				<DataGridColumn Content="{Bind Name}"/>
-			</DataGrid>
+		<Tab Header="Radio bind">
+			<FieldSet Title="Radio" Orientation="Horizontal">
+				<Repeater ItemsSource="{Bind Root.$RadioSource}">
+					<Radio Label="{Bind Name}" CheckedValue="{Bind Value}" Value="{Bind Root.$RadioValue}"/>
+				</Repeater>
+			</FieldSet>
+			<Label Content="{Bind Root.$RadioValue}"/>
 		</Tab>
-		-->
 	</TabPanel>
 	<PeriodPicker Grid.Row="6" Grid.Col="1"/>
 </Dialog>

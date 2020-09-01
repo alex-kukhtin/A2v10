@@ -6,7 +6,11 @@
 			<ListItem Icon="{Bind Icon}" Header="{Bind Name}" Padding="8"
 				Content="{Bind Memo}"/>
 		</List>
-		<Include FullHeight="True"
-			Source="{Bind Catalogs.$selected.Url}" Argument="{Bind Catalogs.$selected.Id}"  If="{Bind Catalogs.$hasSelected}"/>
+		<Block>
+			<TextBox Value="{Bind Root.$QueryText}"/>
+			<Include FullHeight="True"
+			Source="{Bind Catalogs.$selected.Url}" Argument="{Bind Catalogs.$selected.Id}" Data="{Bind Root.$QueryString}"
+				 If="{Bind Catalogs.$hasSelected}"/>
+		</Block>
 	</Splitter>
 </Page>
