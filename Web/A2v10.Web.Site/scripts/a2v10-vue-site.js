@@ -181,7 +181,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200901-7704
+// 20200903-7705
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -294,8 +294,10 @@ app.modules['std:utils'] = function () {
 
 	function isEqual(o1, o2) {
 		if (o1 === o2) return true;
-		if (isDate(o1) && isDate(o2))
+		else if (isDate(o1) && isDate(o2))
 			return o1.getTime() === o2.getTime();
+		else if (isObjectExact(o1) && isObjectExact(o2))
+			return JSON.stringify(o1) === JSON.stringify(o2);
 		return false;
 	}
 
@@ -4618,7 +4620,7 @@ template: `
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200901-7704
+// 20200903-7705
 /*components/include.js*/
 
 (function () {
@@ -4626,6 +4628,7 @@ template: `
 	const http = require('std:http');
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
+	const utils = require('std:utils');
 
 	function _destroyElement(el) {
 		let fc = el.firstElementChild;
@@ -4786,19 +4789,18 @@ template: `
 		},
 		watch: {
 			source(newVal, oldVal) {
-				//console.warn(`source changed ${newVal}, ${oldVal}`);
+				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			arg(newVal, oldVal) {
-				//console.warn(`arg changed ${newVal}, ${oldVal}`);
+				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			dat(newVal, oldVal) {
-				//console.warn(`dat changed ${newVal}, ${oldVal}`);
+				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			needLoad() {
-				//console.warn(`load iteration: ${this.needLoad}`);
 				this.load();
 			}
 		},

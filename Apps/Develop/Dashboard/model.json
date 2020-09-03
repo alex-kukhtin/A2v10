@@ -8,6 +8,16 @@
 			"template": "homepage.template"
 		}
 	},
+	"dialogs": {
+		"infDialog": {
+			"model": "Process",
+			"source": "kv",
+			"schema": "pm",
+			"view": "editwizard.dialog",
+			"template": "editwizard.template"
+
+		}
+	},
 	"files": {
 		"upload": {
 			"type": "parse",

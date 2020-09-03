@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200901-7704
+// 20200903-7705
 /*components/include.js*/
 
 (function () {
@@ -8,6 +8,7 @@
 	const http = require('std:http');
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
+	const utils = require('std:utils');
 
 	function _destroyElement(el) {
 		let fc = el.firstElementChild;
@@ -168,19 +169,18 @@
 		},
 		watch: {
 			source(newVal, oldVal) {
-				//console.warn(`source changed ${newVal}, ${oldVal}`);
+				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			arg(newVal, oldVal) {
-				//console.warn(`arg changed ${newVal}, ${oldVal}`);
+				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			dat(newVal, oldVal) {
-				//console.warn(`dat changed ${newVal}, ${oldVal}`);
+				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			needLoad() {
-				//console.warn(`load iteration: ${this.needLoad}`);
 				this.load();
 			}
 		},

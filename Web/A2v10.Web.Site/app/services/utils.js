@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200901-7704
+// 20200903-7705
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -113,8 +113,10 @@ app.modules['std:utils'] = function () {
 
 	function isEqual(o1, o2) {
 		if (o1 === o2) return true;
-		if (isDate(o1) && isDate(o2))
+		else if (isDate(o1) && isDate(o2))
 			return o1.getTime() === o2.getTime();
+		else if (isObjectExact(o1) && isObjectExact(o2))
+			return JSON.stringify(o1) === JSON.stringify(o2);
 		return false;
 	}
 

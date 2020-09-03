@@ -8,7 +8,8 @@ const template = {
         'TRoot.$style': String,
 		'TRoot.$text'() {
 			return 'button text';
-		}
+		},
+		'TRoot.$Arg142'() { return { Id: 142 };}
 	},
 	methods: {
 	},
