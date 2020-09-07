@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200817-7702*/
+/*20200907-7706*/
 // services/datamodel.js
 
 (function () {
@@ -368,11 +368,10 @@
 				let def = root.$template.defaults[p];
 				let obj = utils.simpleEval(root, path);
 				if (obj.$isNew) {
-					console.dir('set default');
 					if (utils.isFunction(def))
-						obj[prop] = def(obj);
+						platform.set(obj, prop, def.call(root, obj, prop));
 					else
-						obj[prop] = def;
+						platform.set(obj, prop, def);
 				}
 			}
 		}

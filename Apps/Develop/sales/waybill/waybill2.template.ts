@@ -30,6 +30,8 @@ const template: Template = {
 		'TDocument.$HasParent'(this: TDocument) { return this.ParentDoc.Id !== 0; },
 		'TDocParent.$Name': docParentName,
 		'TRoot.$HasInbox'(this: TRoot) { return !!this.Inbox; },
+		'TDocument.$DateEnd': Date,
+		'TDocument.$Interval'() { return du.diff(DateUnit.minute, this.$DateEnd, this.Date); },
 		'TDocument.$Date': {
 			get(this: TDocument):Date { return this.Date; },
 			set: setDocumentDate
@@ -42,8 +44,10 @@ const template: Template = {
 	},
 	defaults: {
 		//'Document.Date'(this: TRoot, e: TDocument) { console.dir('call defaults'); return du.today(); },
-		'Document.Date': du.today,
-		'Document.Agent.Name': 'default agent name',
+		'Document.Date': du.now(),
+		'Document.Agent'(elem) {
+			console.dir(elem); return { Id: 555, Name: 'I am the name' };
+		},
 		'Document.No': 150,
 		'Document.Rows[]'(this: TRoot, e: TRow) { console.dir('call defaults for row'); return 1; },
 		"xxx": (row: TRow, prop:string) => 1

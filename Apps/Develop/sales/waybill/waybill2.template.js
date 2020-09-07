@@ -23,6 +23,8 @@ define(["require", "exports"], function (require, exports) {
             'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
             'TDocParent.$Name': docParentName,
             'TRoot.$HasInbox'() { return !!this.Inbox; },
+            'TDocument.$DateEnd': Date,
+            'TDocument.$Interval'() { return du.diff("minute", this.$DateEnd, this.Date); },
             'TDocument.$Date': {
                 get() { return this.Date; },
                 set: setDocumentDate
@@ -34,8 +36,11 @@ define(["require", "exports"], function (require, exports) {
             }
         },
         defaults: {
-            'Document.Date': du.today,
-            'Document.Agent.Name': 'default agent name',
+            'Document.Date': du.now(),
+            'Document.Agent'(elem) {
+                console.dir(elem);
+                return { Id: 555, Name: 'I am the name' };
+            },
             'Document.No': 150,
             'Document.Rows[]'(e) { console.dir('call defaults for row'); return 1; },
             "xxx": (row, prop) => 1

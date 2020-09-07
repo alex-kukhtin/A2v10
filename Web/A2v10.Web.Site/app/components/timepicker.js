@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20191017-7568
+// 20200907-7706
 // components/datepicker.js
 
 
@@ -55,7 +55,7 @@
 			}
 		},
 		computed: {
-			locale() { console.dir(locale); return locale; },
+			locale() { return locale; },
 			hours() {
 				let a = [];
 				for (let y = 0; y < 4; y++) {

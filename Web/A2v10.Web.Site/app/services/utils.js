@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200903-7705
+// 20200907-7706
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -53,6 +53,7 @@ app.modules['std:utils'] = function () {
 		isEqual: isEqual,
 		date: {
 			today: dateToday,
+			now: dateNow,
 			zero: dateZero,
 			parse: dateParse,
 			tryParse: dateTryParse,
@@ -366,6 +367,12 @@ app.modules['std:utils'] = function () {
 		return new Date(Date.UTC(td.getFullYear(), td.getMonth(), td.getDate(), 0, 0, 0, 0));
 	}
 
+	function dateNow(second) {
+		let td = new Date();
+		let sec = second ? td.getSeconds() : 0;
+		return new Date(Date.UTC(td.getFullYear(), td.getMonth(), td.getDate(), td.getHours(), td.getMinutes(), sec, 0));
+	}
+
 	function dateZero() {
 		let td = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
 		return td;
@@ -478,6 +485,10 @@ app.modules['std:utils'] = function () {
 		if (d1.getTime() > d2.getTime())
 			[d1, d2] = [d2, d1];
 		switch (unit) {
+			case "second":
+				return (d2 - d1) / 1000;
+			case "minute":
+				return +(((d2 - d1) / 1000) / 60).toFixed(0);
 			case "month":
 				let delta = 0;
 				if (d2.getDate() < d1.getDate())

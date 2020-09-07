@@ -70,7 +70,7 @@
 	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">
 		Документ проведено в обліку. Редагування неможливе.
 	</Alert>
-	<TabPanel Header="Document.Date">
+	<TabPanel Header="Document.Date"  Overflow="True">
 		<Tab Header="Документ">
 			<Grid Columns="150, 150, 150, 150, 150, 120, 1*">
 
@@ -238,15 +238,15 @@
 				<DatePicker Label="Date Picker Simple" Grid.Row="4" Grid.Col="1" Value="{Bind Document.Date}">
 
 				</DatePicker>
-				<TimePicker Label="Time Picker Simple" Grid.Row="4" Grid.Col="2" Value="{Bind Document.Date}">
+				<TimePicker Label="Time Picker Simple" Grid.Row="4" Grid.Col="2" Value="{Bind Document.Date}" />
+				<DatePicker Label="Date Picker Large" Grid.Row="4" Grid.Col="3" Value="{Bind Document.Date}" Size="Large" />
+				<TimePicker Label="Time Picker Large" Grid.Row="4" Grid.Col="4" Value="{Bind Document.Date}" Size="Large" />
 
-				</TimePicker>
-				<DatePicker Label="Date Picker Large" Grid.Row="4" Grid.Col="3" Value="{Bind Document.Date}" Size="Large">
-				</DatePicker>
+				<DatePicker Label="Date Picker End" Grid.Row="6" Grid.Col="3" Value="{Bind Document.$DateEnd}" Size="Large" />
+				<TimePicker Label="Time Picker End" Grid.Row="6" Grid.Col="4" Value="{Bind Document.$DateEnd}" Size="Large" 
+							Placement="BottomRight"/>
+				<Static Label="Interval" Grid.Row="6" Grid.Col="2" Value="{Bind Document.$Interval}"></Static>
 
-				<TimePicker Label="Time Picker Large" Grid.Row="4" Grid.Col="4" Value="{Bind Document.Date}" Size="Large">
-
-				</TimePicker>
 
 				<Static Label="Static Simple" Grid.Row="5" Grid.Col="1"></Static>
 				<Static Label="Static Large" Grid.Row="5" Grid.Col="2" Size="Large"></Static>

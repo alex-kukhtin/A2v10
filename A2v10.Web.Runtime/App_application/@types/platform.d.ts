@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7702 */
+/* Version 10.0.7706 */
 
 
 declare function require(url: string): any;
@@ -172,7 +172,7 @@ declare const enum MessageStyle {
 
 /* template defaults */
 interface templateDefaultFunc { (this: IRoot, elem: IElement, prop: string): any; }
-declare type templateDefault = templateDefaultFunc | string | number | boolean;
+declare type templateDefault = templateDefaultFunc | string | number | boolean | Date | object;
 
 /* template validators */
 
@@ -183,7 +183,8 @@ interface templateValidatorObj {
 	async?: boolean,
 	msg?: string,
 	regExp?: RegExp,
-	severity?: Severity
+	severity?: Severity,
+	applyIf?: (elem: IElement, value?: any) => boolean
 }
 
 declare type templateValidator = String | tempateValidatorFunc | templateValidatorObj;
@@ -247,6 +248,7 @@ interface IMessage {
 interface IConfirm {
 	msg: string;
 	style?: MessageStyle;
+	list?: string[];
 }
 
 interface IErrorInfo {
@@ -293,7 +295,9 @@ declare const enum DateTimeUnit {
 declare const enum DateUnit {
 	year = 'year',
 	month = 'month',
-	day = 'day'
+	day = 'day',
+	minute = 'minute',
+	second = 'second'
 }
 
 
@@ -302,6 +306,7 @@ interface UtilsDate {
 	readonly maxDate: Date;
 
 	today(): Date,
+	now(seconds?: boolean): Date,
 	zero(): Date,
 	equal(d1: Date, d2: Date): boolean;
 	isZero(d: Date): boolean;

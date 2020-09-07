@@ -3901,6 +3901,12 @@ tr:hover .commandbar.visible-hover {
 .tab-panel .tab-content.yellow {
   background-color: lightyellow;
 }
+.tab-panel.overflow {
+  overflow: visible;
+}
+.tab-panel.overflow .tab-item {
+  overflow: visible;
+}
 .tab-panel.bordered > .tab-header {
   padding-left: 0;
 }
