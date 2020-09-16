@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 07.09.2020 15:26:51
+generated: 16.09.2020 17:02:17
 */
 
 set nocount on;
@@ -31,8 +31,8 @@ go
 /*
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 24 jun 2020
-module version : 7053
+Last updated : 16 sep 2020
+module version : 7054
 */
 ------------------------------------------------
 set nocount on;
@@ -197,6 +197,15 @@ begin
 	create type a2sys.[Id.TableType]
 	as table(
 		Id bigint null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'GUID.TableType' and DATA_TYPE=N'table type')
+begin
+	create type a2sys.[GUID.TableType]
+	as table(
+		Id uniqueidentifier null
 	);
 end
 go
