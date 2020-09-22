@@ -21,5 +21,13 @@
 			"template": "",
 			"key": ""
 		}
+	},
+	"dialogs": {
+		"test": {
+			"model": "Donor",
+			"source": "Bio",
+			"schema": "bioprocs",
+			"view": "test.dialog"
+		}
 	}
 }

@@ -2,6 +2,9 @@
 /* index template */
 
 const template = {
+	properties: {
+		"TRoot.$Donor"() { return {Id: 7866}}
+	},
 	delegates: {
 		drawArrow
 	}

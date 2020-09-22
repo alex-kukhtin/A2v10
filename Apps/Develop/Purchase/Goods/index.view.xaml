@@ -19,6 +19,7 @@
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload, Argument={Bind Entities}}" Tip="Обновить данные">Обновить</Button>
 			<Button Icon="BrandExcel" Command="{BindCmd Export, Url='/purchase/goods/excel', Argument=0}" Content="Export Error"/>
+			<Button Icon="Waiting" Command="{BindCmd Dialog, Action=Show, Url='/purchase/goods/test', Argument={Bind Root.$Donor}}" Content="ModelError"/>
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.CollectionView>
@@ -28,7 +29,7 @@
 		<Pager Source="{Bind Parent.Pager}" />
 	</Page.Pager>
 	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
-				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True" 
 				DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
 		<DataGridColumn Header="Артикул" Content="{Bind Article}" Align="Right" Fit="True"/>

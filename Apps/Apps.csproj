@@ -595,6 +595,10 @@
     <Content Include="Develop\reports\testcross.view.xaml">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Develop\purchase\Goods\test.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

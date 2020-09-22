@@ -1,8 +1,8 @@
 ﻿/*
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 16 sep 2020
-module version : 7054
+Last updated : 22 sep 2020
+module version : 7055
 */
 ------------------------------------------------
 set nocount on;
@@ -32,9 +32,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7053);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7055);
 else
-	update a2sys.Versions set [Version] = 7053 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7055 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -52,6 +52,20 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams' and COLUMN_NAME=N'DateValue')
 begin
 	alter table a2sys.SysParams add DateValue datetime null;
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2sys.fn_toUtcDateTime') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2sys.fn_toUtcDateTime;
+go
+------------------------------------------------
+create function a2sys.fn_toUtcDateTime(@date datetime)
+returns datetime
+as
+begin
+	declare @mins int;
+	set @mins = datediff(minute,getdate(),getutcdate());
+	return dateadd(minute, @mins, @date);
 end
 go
 ------------------------------------------------
