@@ -12,6 +12,7 @@
 			"model": "Document",
 			"view": "waybill.view",
 			"template": "waybill2.template",
+			"checkTypes": "model.d.ts",
 			/*
 			"parameters": {
 				"Kind": "TEST"

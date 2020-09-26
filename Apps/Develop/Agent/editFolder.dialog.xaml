@@ -26,7 +26,7 @@
 				<TextBox Grid.Row="1" Grid.ColSpan="2" Label="Наименование" TabIndex="1"
                          Value="{Bind Agent.Name}"/>
 				<Block Scroll="True" Grid.Row="2" Background="LightYellow" Height="100%" DropShadow="Shadow2">
-					<Block Height="700px"></Block>
+					<Block Height="100%"></Block>
 				</Block>
 				<DataGrid Grid.Row="2" Grid.Col="2" Height="100%" FixedHeader="True">
 					<DataGridColumn Header="Id"/>

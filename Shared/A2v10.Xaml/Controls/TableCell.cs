@@ -39,7 +39,7 @@ namespace A2v10.Xaml
 			{
 				td.MergeAttribute("v-for", $"(cell, cellIndex) in {isBind.GetPath(context)}");
 				td.MergeAttribute(":key", "cellIndex");
-				using (var scope = new ScopeContext(context, "cell"))
+				using (var scope = new ScopeContext(context, "cell", isBind.Path))
 				{
 					RenderCell(td, context);
 				}

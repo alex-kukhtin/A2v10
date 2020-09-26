@@ -19,7 +19,7 @@ namespace A2v10.Xaml
 				var t = new TagBuilder("template");
 				t.MergeAttribute("v-for", $"(cell, cellIndex) in {isBind.GetPath(context)}");
 				t.RenderStart(context);
-				using (new ScopeContext(context, "cell"))
+				using (new ScopeContext(context, "cell", isBind.Path))
 				{
 					RenderChildren(context);
 				}

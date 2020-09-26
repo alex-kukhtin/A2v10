@@ -68,6 +68,7 @@
     <Compile Include="IRequestInfo.cs" />
     <Compile Include="IScriptProcessor.cs" />
     <Compile Include="ISmsService.cs" />
+    <Compile Include="ITypeChecker.cs" />
     <Compile Include="IUserId.cs" />
     <Compile Include="IUserStateManager.cs" />
     <Compile Include="IApplicationHost.cs" />

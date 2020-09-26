@@ -259,6 +259,8 @@ namespace A2v10.Request
 			if (_renderer == null)
 				throw new InvalidOperationException("Service 'IRenderer' not registered");
 
+			var typeChecker = CheckTypes(rw.Path, rw.checkTypes, model);
+
 			var msi = new ModelScriptInfo()
 			{
 				DataModel = model,
@@ -293,6 +295,7 @@ namespace A2v10.Request
 						Writer = strWriter,
 						DataModel = model,
 						Localizer = _localizer,
+						TypeChecker = typeChecker,
 						CurrentLocale = null,
 						IsDebugConfiguration = _host.IsDebugConfiguration,
 						SecondPhase = secondPhase
@@ -426,6 +429,20 @@ namespace A2v10.Request
 
 			response.ContentType = "text/javascript";
 			response.Write(ss.Script);
+		}
+
+		ITypeChecker CheckTypes(String path, String typesFile, IDataModel model)
+		{
+			if (!_host.IsDebugConfiguration)
+				return null;
+			if (String.IsNullOrEmpty(typesFile))
+				return null;
+			var tc = new TypeChecker();
+			using (var stream = _host.ApplicationReader.FileStream(path, typesFile))
+			{
+				tc.CreateChecker(stream, model);
+				return tc;
+			}
 		}
 	}
 }

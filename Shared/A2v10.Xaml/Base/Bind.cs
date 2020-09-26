@@ -35,6 +35,11 @@ namespace A2v10.Xaml
 			return context.GetNormalizedPath(Path);
 		}
 
+		internal String GetTypedPath(RenderContext context, TypeCheckerTypeCode typeCode)
+		{
+			return context.GetTypedNormalizedPath(Path, typeCode);
+		}
+
 		internal void SetWrapped()
 		{
 			_wrapped = true;

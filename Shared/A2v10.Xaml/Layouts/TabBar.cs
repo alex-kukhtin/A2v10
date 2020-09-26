@@ -68,7 +68,7 @@ namespace A2v10.Xaml
 				{
 					tag.MergeAttribute("v-for", $"(btn, btnIndex) in {isBind.GetPath(context)}");
 					tag.RenderStart(context);
-					using (new ScopeContext(context, "btn"))
+					using (new ScopeContext(context, "btn", isBind.Path))
 					{
 						b.RenderMe(context, valPath);
 					}

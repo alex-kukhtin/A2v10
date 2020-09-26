@@ -20,7 +20,7 @@ namespace A2v10.Xaml
 				var t = new TagBuilder("template");
 				t.MergeAttribute("v-for", $"(col, colIndex) in {isBind.GetPath(context)}");
 				t.RenderStart(context);
-				using (new ScopeContext(context, "col"))
+				using (new ScopeContext(context, "col", isBind.Path))
 				{
 					RenderChildren(context);
 				}
@@ -47,7 +47,7 @@ namespace A2v10.Xaml
 				var t = new TagBuilder("template");
 				t.MergeAttribute("v-for", $"(col, colIndex) in {isBind.GetPath(context)}");
 				t.RenderStart(context);
-				using (new ScopeContext(context, "col"))
+				using (new ScopeContext(context, "col", isBind.Path))
 				{
 					RenderShadowChildren(context);
 				}

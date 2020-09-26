@@ -106,6 +106,7 @@ namespace A2v10.Request
 		public RequestMerge merge;
 		public RequestEvents events;
 		public String invoke;
+		public String checkTypes;
 
 		[JsonIgnore]
 		protected RequestModel _parent;

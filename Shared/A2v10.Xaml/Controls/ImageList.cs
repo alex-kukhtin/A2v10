@@ -27,7 +27,7 @@ namespace A2v10.Xaml
 			TagBuilder itemTag = null;
 			if (ItemTemplate != null)
 			{
-				using (new ScopeContext(context, "img"))
+				using (new ScopeContext(context, "img", isBind.Path))
 				{
 					ItemTemplate.RenderElement(context, (tag) =>
 					{

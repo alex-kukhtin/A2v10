@@ -25,7 +25,7 @@ namespace A2v10.Xaml
 			div.RenderStart(context);
 			if (Content != null)
 			{
-				using (new ScopeContext(context, "elem"))
+				using (new ScopeContext(context, "elem", isBind.Path))
 				{
 					Content.RenderElement(context, (tag)=> 
 					{

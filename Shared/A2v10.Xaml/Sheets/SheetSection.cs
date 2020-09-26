@@ -26,7 +26,7 @@ namespace A2v10.Xaml
 			{
 				tml.MergeAttribute("v-for", $"(item, itemIndex) of {isBind.GetPath(context)}");
 				tml.RenderStart(context);
-				using (var scope = new ScopeContext(context, "item"))
+				using (var scope = new ScopeContext(context, "item", isBind.Path))
 				{
 					foreach (var r in Children)
 						r.RenderElement(context);

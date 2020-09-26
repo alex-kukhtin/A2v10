@@ -29,7 +29,7 @@ const template: Template = {
 		'TDocument.Sum': cmn.docTotalSum,
 		'TDocument.$HasParent'(this: TDocument) { return this.ParentDoc.Id !== 0; },
 		'TDocParent.$Name': docParentName,
-		'TRoot.$HasInbox'(this: TRoot) { return !!this.Inbox; },
+		//'TRoot.$HasInbox'(this: TRoot) { return !!this.Inbox; },
 		'TDocument.$DateEnd': Date,
 		'TDocument.$Interval'() { return du.diff(DateUnit.minute, this.$DateEnd, this.Date); },
 		'TDocument.$Date': {
@@ -109,8 +109,8 @@ async function resumeWorkflow(this: TRoot): Promise<any> {
 	const root = this;
 	const vm = this.$vm;
 	//alert(root.$Comment);
-	let result = await vm.$invoke('resumeWorkflow', { Id: root.Inbox.Id, Answer: root.$Answer }, '/sales/waybill');
-	console.dir(result);
+	//let result = await vm.$invoke('resumeWorkflow', { Id: root.Inbox.Id, Answer: root.$Answer }, '/sales/waybill');
+	//console.dir(result);
 	alert('ok');
 }
 

@@ -102,7 +102,7 @@ namespace A2v10.Xaml
 				tml.MergeAttribute("slot", "items");
 				tml.MergeAttribute("slot-scope", "listItem");
 				tml.RenderStart(context);
-				using (new ScopeContext(context, "listItem.item"))
+				using (new ScopeContext(context, "listItem.item", null))
 				{
 					foreach (var c in Content)
 						c.RenderElement(context);

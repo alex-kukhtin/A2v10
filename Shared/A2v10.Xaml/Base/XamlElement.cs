@@ -116,7 +116,7 @@ namespace A2v10.Xaml
 			String attrVal = null;
 			var attrBind = GetBinding(propName);
 			if (attrBind != null)
-				attrVal = attrBind.GetPath(context);
+				attrVal = attrBind.GetTypedPath(context, TypeCheckerTypeCode.Boolean);
 			else if (propValue != null)
 				attrVal = propValue.ToString().ToLowerInvariant();
 			if (attrVal == null)

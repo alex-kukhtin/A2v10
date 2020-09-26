@@ -77,6 +77,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TypeChecker\TypeChecker.cs" />
+    <Compile Include="TypeChecker\TypeCheckerException.cs" />
     <Compile Include="Utils\RedirectModule.cs" />
     <Compile Include="VueDataScripter.cs" />
   </ItemGroup>
@@ -92,6 +94,10 @@
     <ProjectReference Include="..\A2v10.Interop\A2v10.Interop.csproj">
       <Project>{39661034-47aa-4bdf-9b19-c835b614b545}</Project>
       <Name>A2v10.Interop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\A2v10.Lang\A2v10.Lang.csproj">
+      <Project>{4F4CEFEE-FDC7-44BC-A84B-96CE86C8D238}</Project>
+      <Name>A2v10.Lang</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

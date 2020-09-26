@@ -47,7 +47,7 @@ namespace A2v10.Xaml
 			tml.MergeAttribute("slot", "item");
 			tml.MergeAttribute("slot-scope", "slotItem");
 			tml.RenderStart(context);
-			using (new ScopeContext(context, "slotItem.menuItem"))
+			using (new ScopeContext(context, "slotItem.menuItem", itms.Path))
 			{
 				mi.RenderElement(context);
 			}

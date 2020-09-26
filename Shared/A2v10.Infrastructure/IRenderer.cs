@@ -16,6 +16,7 @@ namespace A2v10.Infrastructure
 		public TextWriter Writer;
 		public IDataModel DataModel;
 		public ILocalizer Localizer;
+		public ITypeChecker TypeChecker;
 		public String CurrentLocale;
 		public Boolean IsDebugConfiguration;
 		public Boolean SecondPhase;

@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7707",
+	"$version": "10.0.7708",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -26,6 +26,7 @@
 						"view": { "type": "string" },
 						"viewMobile": { "type": "string" },
 						"template": { "type": "string" },
+						"checkTypes": {"type": "string" },
 						"merge": {
 							"type": "object",
 							"properties": {

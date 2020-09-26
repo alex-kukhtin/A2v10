@@ -70,7 +70,7 @@ namespace A2v10.Xaml
 				if (Children.Count != 1)
 					throw new XamlException("For a table with an items source, only one child element is allowed");
 				String path = isBind.GetPath(context); // before scope!
-				using (new ScopeContext(context, "prop"))
+				using (new ScopeContext(context, "prop", isBind.Path))
 				{
 					Children[0].RenderElement(context, (tag) =>
 					{

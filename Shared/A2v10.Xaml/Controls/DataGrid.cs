@@ -175,7 +175,7 @@ namespace A2v10.Xaml
 			rdtag.MergeAttribute("slot", "row-details");
 			rdtag.MergeAttribute("slot-scope", "details");
 			rdtag.RenderStart(context);
-			using (var ctx = new ScopeContext(context, "details.row"))
+			using (var ctx = new ScopeContext(context, "details.row", null))
 			{
 				RowDetails.Content.RenderElement(context);
 			}

@@ -22,7 +22,7 @@ namespace A2v10.Xaml
 			{
 				tml.MergeAttribute("v-for", $"(xelem, xIndex) in {isBind.GetPath(context)}");
 				tml.RenderStart(context);
-				using (new ScopeContext(context, "xelem"))
+				using (new ScopeContext(context, "xelem", isBind.Path))
 				{
 					foreach (var c in Children)
 					{

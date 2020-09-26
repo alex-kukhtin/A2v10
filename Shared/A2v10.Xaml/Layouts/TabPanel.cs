@@ -51,7 +51,7 @@ namespace A2v10.Xaml
 				tml.MergeAttribute("slot", "items");
 				tml.MergeAttribute("slot-scope", "tabitem");
 				tml.RenderStart(context);
-				using (var cts = new ScopeContext(context, "tabitem.item", _replaceScope))
+				using (var cts = new ScopeContext(context, "tabitem.item", isBind.Path,_replaceScope))
 				{
 					Tabs[0].RenderTemplate(context);
 				}
@@ -77,7 +77,7 @@ namespace A2v10.Xaml
 			tml.MergeAttribute("slot", "header");
 			tml.MergeAttribute("slot-scope", "tabitem");
 			tml.RenderStart(context);
-			using (var cts = new ScopeContext(context, "tabitem.item", _replaceScope))
+			using (var cts = new ScopeContext(context, "tabitem.item", null, _replaceScope))
 			{
 				tabHeader.RenderElement(context);
 			}

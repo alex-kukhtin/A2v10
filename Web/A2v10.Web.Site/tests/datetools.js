@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 describe("Date tools", function () {
 
@@ -206,6 +206,8 @@ describe("Date tools", function () {
 		expect(du.parse('16.03').getTime()).toBe(du.create(today.getFullYear(), 3, 16).getTime());
 		expect(du.parse('16.').getTime()).toBe(du.create(today.getFullYear(), today.getMonth()+1, 16).getTime());
 		expect(du.parse('01abc\.. 01 dsess# 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
+		expect(du.parse('2020-09-25T09:51:29.250Z').getTime()).toBe(new Date('2020-09-25T09:51:29.250Z').getTime());
+		expect(du.parse('2020-09-25T09:51:29Z').getTime()).toBe(new Date('2020-09-25T09:51:29.000Z').getTime());
 	});
 
 	it('try parse date', function () {
@@ -215,6 +217,8 @@ describe("Date tools", function () {
 		expect(du.tryParse('20190502').getTime()).toBe(du.create(2019, 5, 2).getTime());
 		expect(du.tryParse('2009-02-15T00:00:00Z').getTime()).toBe(du.create(2009, 2, 15).getTime());
 		expect(du.tryParse('"\\/\"2020-09-01T00:00:00Z"\\/"').getTime()).toBe(du.create(2020, 9, 1).getTime());
+		expect(du.tryParse('2020-09-25T09:51:29.250Z').getTime()).toBe(new Date('2020-09-25T09:51:29.250Z').getTime());
+		expect(du.tryParse('2020-09-25T09:51:29Z').getTime()).toBe(new Date('2020-09-25T09:51:29.000Z').getTime());
 	});
 });
 

@@ -22,7 +22,6 @@ define(["require", "exports"], function (require, exports) {
             'TDocument.Sum': cmn.docTotalSum,
             'TDocument.$HasParent'() { return this.ParentDoc.Id !== 0; },
             'TDocParent.$Name': docParentName,
-            'TRoot.$HasInbox'() { return !!this.Inbox; },
             'TDocument.$DateEnd': Date,
             'TDocument.$Interval'() { return du.diff("minute", this.$DateEnd, this.Date); },
             'TDocument.$Date': {
@@ -95,8 +94,6 @@ define(["require", "exports"], function (require, exports) {
     async function resumeWorkflow() {
         const root = this;
         const vm = this.$vm;
-        let result = await vm.$invoke('resumeWorkflow', { Id: root.Inbox.Id, Answer: root.$Answer }, '/sales/waybill');
-        console.dir(result);
         alert('ok');
     }
     function setDocumentDate(newDate) {

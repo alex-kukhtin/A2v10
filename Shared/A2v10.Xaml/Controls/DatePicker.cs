@@ -35,6 +35,7 @@ namespace A2v10.Xaml
 			SetSize(input, nameof(DatePicker));
 			if (Placement  != DropDownPlacement.BottomLeft)
 				input.AddCssClass("drop-" + Placement.ToString().ToKebabCase());
+			CheckValueType(context, TypeCheckerTypeCode.Date);
 			MergeValue(input, context);
 			input.MergeAttribute("view", View.ToString().ToLowerInvariant());
 			input.RenderStart(context);

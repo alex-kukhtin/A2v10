@@ -145,7 +145,7 @@ namespace A2v10.Xaml
 			if (isBind != null)
 			{
 				var repeatAttr = $"(row, rowIndex) in {isBind.GetPath(context)}";
-				using (new ScopeContext(context, "row"))
+				using (new ScopeContext(context, "row", isBind.Path))
 				{
 					if (Rows.Count == 1)
 					{
@@ -159,7 +159,7 @@ namespace A2v10.Xaml
 						var tml = new TagBuilder("template");
 						tml.MergeAttribute("v-for", repeatAttr);
 						tml.RenderStart(context);
-						using (var cts = new ScopeContext(context, "row"))
+						using (var cts = new ScopeContext(context, "row", isBind.Path))
 						{
 							var rNo = 0;
 							foreach (var row in Rows)

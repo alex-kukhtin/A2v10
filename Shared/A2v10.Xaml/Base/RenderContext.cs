@@ -1,10 +1,11 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using A2v10.Data.Interfaces;
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
@@ -87,10 +88,10 @@ namespace A2v10.Xaml
 	internal class ScopeContext : IDisposable
 	{
 		RenderContext _renderContext;
-		public ScopeContext(RenderContext context, String scope, Func<String, String> replace = null)
+		public ScopeContext(RenderContext context, String scope, String path, Func<String, String> replace = null)
 		{
 			_renderContext = context;
-			_renderContext.PushScope(scope, replace);
+			_renderContext.PushScope(scope, path, replace);
 		}
 
 		public void Dispose()
@@ -101,11 +102,14 @@ namespace A2v10.Xaml
 
 	internal struct ScopeElem
 	{
-		public String Scope;
-		public Func<String, String> Replace;
-		public ScopeElem(String scope, Func<String, String> replace)
+		public readonly String Scope;
+		public readonly String Path;
+		public readonly Func<String, String> Replace;
+
+		public ScopeElem(String scope, String path, Func<String, String> replace)
 		{
 			Scope = scope;
+			Path = path;
 			Replace = replace;
 		}
 	}
@@ -123,8 +127,9 @@ namespace A2v10.Xaml
 		private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
 
 		readonly private UIElementBase _root;
-		private IDataModel _dataModel;
-		private ILocalizer _localizer;
+		private readonly IDataModel _dataModel;
+		private readonly ILocalizer _localizer;
+		private readonly ITypeChecker _typeChecker;
 
 		readonly private String _currentLocale;
 
@@ -135,6 +140,7 @@ namespace A2v10.Xaml
 			_dataModel = ri.DataModel;
 			_localizer = ri.Localizer;
 			_currentLocale = ri.CurrentLocale;
+			_typeChecker = ri.TypeChecker;
 			IsDebugConfiguration = ri.IsDebugConfiguration;
 		}
 
@@ -187,9 +193,9 @@ namespace A2v10.Xaml
 			_stackGrid.Pop();
 		}
 
-		internal void PushScope(String scope, Func<String, String> replace)
+		internal void PushScope(String scope, String path, Func<String, String> replace)
 		{
-			_stackScope.Push(new ScopeElem(scope, replace));
+			_stackScope.Push(new ScopeElem(scope, path, replace));
 		}
 
 		internal Int32 ScopeLevel => _stackScope.Count;
@@ -214,6 +220,24 @@ namespace A2v10.Xaml
 				path = String.Empty;
 			if (path.StartsWith("!"))
 				return "!" + GetNormalizedPathInternal(path.Substring(1));
+
+			if (_typeChecker != null)
+				_typeChecker.CheckXamlExpression(GetExpressionForChecker(path));
+
+			return GetNormalizedPathInternal(path, isWrapped);
+		}
+
+		internal String GetTypedNormalizedPath(String path, TypeCheckerTypeCode typeCode, Boolean isWrapped = false)
+		{
+			// check for invert
+			if (path == null)
+				path = String.Empty;
+			if (path.StartsWith("!"))
+				return "!" + GetNormalizedPathInternal(path.Substring(1));
+
+			if (_typeChecker != null)
+				_typeChecker.CheckTypedXamlExpression(GetExpressionForChecker(path), typeCode);
+
 			return GetNormalizedPathInternal(path, isWrapped);
 		}
 
@@ -221,6 +245,7 @@ namespace A2v10.Xaml
 		{
 			if (path == null)
 				throw new ArgumentNullException(nameof(path));
+
 			const String rootKey = "Root.";
 			if (_stackScope.Count == 0)
 			{
@@ -244,6 +269,16 @@ namespace A2v10.Xaml
 			if (scope.Replace != null)
 				return scope.Replace(result);
 			return result;
+		}
+
+		String GetExpressionForChecker(String path)
+		{
+			if (_stackScope.Count == 0)
+				return path;
+			var parent = String.Join(".", _stackScope.Select(x => x.Path).ToArray());
+			if (String.IsNullOrEmpty(path))
+				return parent;
+			return $"{parent}.{path}";
 		}
 
 		internal String GetEmptyPath()

@@ -144,7 +144,7 @@ namespace A2v10.Xaml
 				templ.MergeAttribute("slot", tmlId);
 				templ.MergeAttribute("slot-scope", "cell");
 				templ.RenderStart(context);
-				using (var ctx = new ScopeContext(context, "cell.row"))
+				using (var ctx = new ScopeContext(context, "cell.row", null))
 				{
 					(Content as UIElementBase).RenderElement(context);
 

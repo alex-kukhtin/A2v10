@@ -102,7 +102,7 @@ namespace A2v10.Xaml
 			npTag.MergeAttribute("slot", "new-pane");
 			npTag.MergeAttribute("slot-scope", "newNane");
 			npTag.RenderStart(context);
-			using (var ctx = new ScopeContext(context, "newPane.elem"))
+			using (var ctx = new ScopeContext(context, "newPane.elem", null))
 			{
 				NewPane.RenderElement(context);
 			}
@@ -120,7 +120,7 @@ namespace A2v10.Xaml
 			tml.MergeAttribute("slot", "pane");
 			tml.MergeAttribute("slot-scope", "root");
 			tml.RenderStart(context);
-			using (var ctx = new ScopeContext(context, "itm"))
+			using (var ctx = new ScopeContext(context, "itm", null))
 			{
 				ItemsPanel.RenderElement(context, (tag) =>
 				{

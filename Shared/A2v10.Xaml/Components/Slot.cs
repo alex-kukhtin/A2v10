@@ -29,7 +29,7 @@ namespace A2v10.Xaml
 			tag.MergeAttribute("v-for", $"{slotItem} in [{scopeBind.GetPath(context)}]");
 
 			tag.RenderStart(context);
-			using (var ctx = new ScopeContext(context, slotItem))
+			using (var ctx = new ScopeContext(context, slotItem, scopeBind.Path))
 			{
 				foreach (var c in Children)
 				{

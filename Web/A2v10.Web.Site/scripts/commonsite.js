@@ -151,7 +151,7 @@
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200907-7706
+// 20200925-7708
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -171,7 +171,7 @@ app.modules['std:utils'] = function () {
 	const currencyFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
 	const numberFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
-	const utcdatRegEx = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/;
+	const utcdatRegEx = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
 
 	let numFormatCache = {};
 
@@ -532,6 +532,11 @@ app.modules['std:utils'] = function () {
 	function dateTryParse(str) {
 		if (!str) return dateZero();
 		if (isDate(str)) return str;
+
+		if (utcdatRegEx.test(str)) {
+			return new Date(str);
+		}
+
 		let dt;
 		if (str.length === 8) {
 			dt = new Date(+str.substring(0, 4), +str.substring(4, 6) - 1, +str.substring(6, 8), 0, 0, 0, 0);

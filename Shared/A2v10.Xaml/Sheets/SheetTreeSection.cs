@@ -23,7 +23,7 @@ namespace A2v10.Xaml
 			var tml = new TagBuilder("template");
 			tml.MergeAttribute("slot-scope", "row");
 			tml.RenderStart(context);
-			using (var scope = new ScopeContext(context, "row.item"))
+			using (var scope = new ScopeContext(context, "row.item", isBind.Path))
 			{
 				foreach (var r in Children)
 					r.RenderElement(context, (tr) => tr.MergeAttribute(":class", "row.rowCssClass()"));
