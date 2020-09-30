@@ -15,7 +15,7 @@ namespace A2v10.Infrastructure
 
 	public interface ITypeChecker
 	{
-		void CreateChecker(Stream stream, IDataModel model);
+		void CreateChecker(String fileName, IDataModel model);
 		void CheckXamlExpression(String expression);
 		void CheckTypedXamlExpression(String expression, TypeCheckerTypeCode type);
 	}

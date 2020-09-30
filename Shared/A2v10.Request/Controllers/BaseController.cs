@@ -437,12 +437,9 @@ namespace A2v10.Request
 				return null;
 			if (String.IsNullOrEmpty(typesFile))
 				return null;
-			var tc = new TypeChecker();
-			using (var stream = _host.ApplicationReader.FileStream(path, typesFile))
-			{
-				tc.CreateChecker(stream, model);
-				return tc;
-			}
+			var tc = new TypeChecker(_host.ApplicationReader, path);
+			tc.CreateChecker(typesFile, model);
+			return tc;
 		}
 	}
 }

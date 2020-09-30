@@ -12,10 +12,19 @@ namespace A2v10.Request
 	public class TypeChecker : ITypeChecker
 	{
 		private ModelMetadata _mm;
+		private readonly IApplicationReader _reader;
+		private readonly String _path;
 
-		public void CreateChecker(Stream stream, IDataModel model)
+		public TypeChecker(IApplicationReader reader, String path)
 		{
-			_mm = TSParser.Parse(stream);
+			_reader = reader;
+			_path = path;
+		}
+
+		public void CreateChecker(String fileName, IDataModel model)
+		{
+			var parser = new TSDefParser(_reader, _path);
+			_mm = parser.Parse(fileName);
 			foreach (var kv in model.Metadata)
 			{
 				if (!_mm.ContainsKey(kv.Key))

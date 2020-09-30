@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 		public Thickness Absolute { get; set; }
 		public String HtmlId { get; set; }
 
-		public StyleDescriptor XamlStyle { get; set; }
+		public Object XamlStyle { get; set; }
 
 		public String Tip { get; set; }
 
@@ -254,7 +254,15 @@ namespace A2v10.Xaml
 
 		public override void OnSetStyles()
 		{
-			XamlStyle?.Set(this);
+			switch (XamlStyle)
+			{
+				case StyleDescriptor sd:
+					sd.Set(this);
+					break;
+				case Style st:
+					st.Set(this);
+					break;
+			}
 		}
 	}
 }

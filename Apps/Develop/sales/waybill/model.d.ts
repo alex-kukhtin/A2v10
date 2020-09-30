@@ -1,22 +1,8 @@
 ﻿
-import {TTest1, TTest2} from "../../document/common"
-
-export interface TAgent extends IElement {
-	Id: number
-	Name: string
-	Code: string;
-}
-
-export interface TEntity extends IElement {
-	Id: number;
-	Name: string;
-	Article: string;
-	Image: number;
-	Unit: TUnit;
-}
+import { TAgent, TEntity } from "elems.d";
 
 export interface TUnit extends IElement {
-	Id: number
+	Id: number;
 	Short: string;
 }
 

@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+
+using A2v10.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -26,37 +29,37 @@ namespace A2v10.Lang
 		public String RealType => GenericArg ?? TypeName;
 	}
 
-	public class TSParser
+	public class TSDefParser
 	{
-		private readonly Tokenizer _tok;
+		private Tokenizer _tok;
 		private readonly ModelMetadata _mm;
+		private readonly IApplicationReader _reader;
+		private readonly String _path;
 
-		private TSParser(StreamReader reader)
+		public TSDefParser(IApplicationReader reader, String path)
 		{
-			_tok= new Tokenizer(reader);
+			_reader = reader;
+			_path = path;
 			_mm = new ModelMetadata();
 		}
 
-		public static void Parse(String fileName)
+		public ModelMetadata Parse(String fileName)
 		{
-			using (var sr = new StreamReader(fileName, Encoding.UTF8))
+			using (var sr = new StreamReader(GetFileStream(fileName)))
 			{
-				Parse(sr);
+				_tok = new Tokenizer(sr);
+				return Parse();
 			}
 		}
 
-		public static ModelMetadata Parse(Stream stream)
+		Stream GetFileStream(String fileName)
 		{
-			using (var sr = new StreamReader(stream))
-			{
-				return Parse(sr);
-			}
-		}
-
-		public static ModelMetadata Parse(StreamReader reader)
-		{
-			var parser = new TSParser(reader);
-			return parser.Parse();
+			if (fileName.EndsWith(".d"))
+				fileName += ".ts";
+			else if (!fileName.EndsWith(".d.ts"))
+				fileName += ".d.ts";
+			var fullPath = _reader.MakeFullPath(_path, fileName);
+			return _reader.FileStreamFullPathRO(fullPath);
 		}
 
 		ModelMetadata Parse()
@@ -68,6 +71,11 @@ namespace A2v10.Lang
 					Next();
 					ReadExport();
 				}
+				else if (_tok.IsIderValue("import"))
+				{
+					Next();
+					ReadImport();
+				}
 			}
 			return _mm;
 		}
@@ -78,10 +86,6 @@ namespace A2v10.Lang
 			{
 				Next();
 				ReadInterface();
-			} else if (_tok.IsIderValue("import"))
-			{
-				Next();
-				ReadImport();
 			}
 		}
 
@@ -104,6 +108,7 @@ namespace A2v10.Lang
 			while (!_tok.IsRightCurly && !_tok.IsEOF)
 			{
 				types.Add(_tok.Value);
+				Next();
 				if (_tok.IsComma)
 					Next();
 			}
@@ -112,8 +117,23 @@ namespace A2v10.Lang
 			{
 				Next();
 			}
+			if (_tok.IsSemicolon)
+				Next();
 			var fileName = _tok.Value;
-			int z = 55;
+			// remove quotes
+			fileName = fileName.Substring(1, fileName.Length - 2);
+			ParseImport(fileName.ToLowerInvariant(), types);
+		}
+
+		void ParseImport(String fileName, IEnumerable<String> types)
+		{
+			var innerParser = new TSDefParser(_reader, _path);
+			var mm = innerParser.Parse(fileName);
+			foreach (var t in types)
+			{
+				if (mm.ContainsKey(t))
+					_mm.Add(t, mm[t]);
+			}
 		}
 
 		void ReadInterface()

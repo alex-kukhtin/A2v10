@@ -31,6 +31,8 @@ namespace A2v10.Lang
 	{
 		public TypeMetadata AddType(String name, TSType baseType)
 		{
+			if (ContainsKey(name))
+				throw new TSParserException($"Type '{name}' is already defined");
 			var tm = new TypeMetadata();
 			Add(name, tm);
 			return tm;

@@ -95,6 +95,7 @@ namespace A2v10.Lang
 		public Boolean IsComma => _tok.Type == Token.TokenType.Delim && _tok.Value == ",";
 		public Boolean IsLessThen => _tok.Type == Token.TokenType.Delim && _tok.Value == "<";
 		public Boolean IsGreaterThen => _tok.Type == Token.TokenType.Delim && _tok.Value == ">";
+		public Boolean IsEqual => _tok.Type == Token.TokenType.Delim && _tok.Value == "=";
 
 		public Boolean IsIderValue(String ider)
 		{

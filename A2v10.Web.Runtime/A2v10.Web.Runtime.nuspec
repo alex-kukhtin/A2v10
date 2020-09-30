@@ -46,6 +46,7 @@
 		<file src="bin/A2v10.Web.Mvc.dll" target="lib/net461" />
 		<file src="bin/A2v10.Workflow.dll" target="lib/net461" />
 		<file src="bin/A2v10.Xaml.dll" target="lib/net461" />
+		<file src="bin/A2v10.Lang.dll" target="lib/net461" />
 		<file src="bin/DocumentFormat.OpenXml.dll" target="lib/net461" />
 		<file src="bin/Microsoft.Activities.Extensions.dll" target="lib/net461" />
 		<file src="bin/Microsoft.AspNet.Identity.Core.dll" target="lib/net461" />

@@ -11,7 +11,8 @@ namespace A2v10.Tests.Lang
 		[TestMethod]
 		public void ParseFile()
 		{
-			TSParser.Parse("c:\\git\\a2v10\\apps\\Develop\\sales\\waybill\\model.d.ts");
+			var parser = new TSDefParser(null, null);
+			parser.Parse("c:\\git\\a2v10\\apps\\Develop\\sales\\waybill\\model.d.ts");
 		}
 	}
 }

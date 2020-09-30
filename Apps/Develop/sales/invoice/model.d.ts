@@ -3,7 +3,7 @@
 export interface TAgent extends IElement {
 	Id: number,
 	Name: string,
-	Memo: string
+	Memo2: string
 }
 
 export interface TRow extends IArrayElement {
