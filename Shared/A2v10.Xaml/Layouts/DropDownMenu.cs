@@ -5,7 +5,14 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
-	public class DropDownMenu : Container
+	public interface IDropDownPros
+	{
+		DropDownDirection Direction { get; }
+		Boolean Separate { get; }
+		Boolean IsDropUp { get; }
+	}
+
+	public class DropDownMenu : Container, IDropDownPros
 	{
 
 		public DropDownDirection Direction { get; set; }
@@ -13,7 +20,7 @@ namespace A2v10.Xaml
 		public Boolean Separate { get; set; }
 
 
-		internal Boolean IsDropUp => (Direction == DropDownDirection.UpLeft) || (Direction == DropDownDirection.UpRight);
+		public Boolean IsDropUp => (Direction == DropDownDirection.UpLeft) || (Direction == DropDownDirection.UpRight);
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{

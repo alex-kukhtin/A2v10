@@ -42,7 +42,7 @@ namespace A2v10.Xaml
 			Boolean bHasDropDown = DropDown != null;
 			if (bHasDropDown)
 			{
-				var ddm = (DropDown as DropDownMenu);
+				var ddm = DropDown as IDropDownPros;
 				DropDownDirection? dir = ddm?.Direction;
 				Boolean? separate = ddm?.Separate;
 				Boolean bDropUp = ddm != null && ddm.IsDropUp;

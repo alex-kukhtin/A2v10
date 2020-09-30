@@ -35,9 +35,9 @@
 			<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
 			<Button Icon="Plus" Command="{BindCmd Reload}" Content="Додати">
 				<Button.DropDown>
-					<DropDownMenu>
+					<DropDownMegaMenu ItemsSource="{Bind Documents}" Separate="True" Columns="2" GroupBy="Agent.Name">
 						<MenuItem Content="Drop down item" Icon="Package"></MenuItem>
-					</DropDownMenu>
+					</DropDownMegaMenu>
 				</Button.DropDown>
 			</Button>
 			<DatePicker Value="{Bind Parent.Filter.Period.From}"/>

@@ -1,11 +1,12 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20200930-7708
 // components/megamenu.js
 
 
 (function () {
 
+	const utils = require('std:utils');
 	const menuTemplate =
 `<div class="dropdown-menu menu" role="menu">
 	<div class="super-menu" :class="cssClass" :style="cssStyle">
@@ -48,7 +49,7 @@
 			topMenu() {
 				if (!this.itemsSource) return {};
 				return this.itemsSource.reduce((acc, itm) => {
-					let g = itm[this.groupBy] || '';
+					let g = utils.simpleEval(itm, this.groupBy) || '';
 					let ma = acc[g];
 					if (ma)
 						ma.menu.push(itm);
