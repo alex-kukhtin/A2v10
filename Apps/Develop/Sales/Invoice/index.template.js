@@ -9,6 +9,7 @@ const template = {
 		'TRoot.$ForCreate'() { return { AgentId: 11 }; },
 		'TRoot.$tabIndex': Number,
 		'TDocument.$Mark': mark,
+		'TAgent.$Mark': agentMark,
 		'TDocument.$Icon'() { return this.Done ? 'flag-green' : ''; },
 		'TDocument.$Color'() { return this.Sum > 100 ? 'red' : 'green'; },
 		'TDocument.$Shipment': getShipment,
@@ -32,6 +33,10 @@ function globalPeriodChange(root, period) {
 
 function mark() {
 	return this.Done ? "success" : 'warning';
+}
+
+function agentMark() {
+	return this.Id === 0 ? 'red' : undefined;
 }
 
 function getShipment() {

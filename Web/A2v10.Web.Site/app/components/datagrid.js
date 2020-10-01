@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200624-7675
+// 20201001-7708
 // components/datagrid.js*/
 
 (function () {
@@ -212,7 +212,7 @@
 				let cssClass = this.classAlign;
 
 				if (this.mark) {
-					let mark = row[this.mark];
+					let mark = utils.simpleEval(row, this.mark);
 					if (mark)
 						cssClass += ' ' + mark;
 				}
@@ -425,7 +425,7 @@
 				console.error('implement me');
 			},
 			markClass() {
-				return this.mark ? this.row[this.mark] : '';
+				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
 			}
 		},
 		methods: {
@@ -435,7 +435,7 @@
 				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
 				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {
-					cssClass += ' ' + this.row[this.mark];
+					cssClass += ' ' + utils.simpleEval(this.row, this.mark);
 				}
 				if ((this.index + 1) % 2)
 					cssClass += ' even';
@@ -484,7 +484,7 @@
 				return this.$parent.isMarkCell;
 			},
 			markClass() {
-				return this.mark ? this.row[this.mark] : '';
+				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
 			},
 			detailsMarker() {
 				return this.$parent.isRowDetailsCell;
