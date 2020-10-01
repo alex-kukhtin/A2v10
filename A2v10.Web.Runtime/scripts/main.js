@@ -6155,7 +6155,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200624-7675
+// 20201001-7708
 // components/datagrid.js*/
 
 (function () {
@@ -6367,7 +6367,7 @@ Vue.component('validator-control', {
 				let cssClass = this.classAlign;
 
 				if (this.mark) {
-					let mark = row[this.mark];
+					let mark = utils.simpleEval(row, this.mark);
 					if (mark)
 						cssClass += ' ' + mark;
 				}
@@ -6580,7 +6580,7 @@ Vue.component('validator-control', {
 				console.error('implement me');
 			},
 			markClass() {
-				return this.mark ? this.row[this.mark] : '';
+				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
 			}
 		},
 		methods: {
@@ -6590,7 +6590,7 @@ Vue.component('validator-control', {
 				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
 				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {
-					cssClass += ' ' + this.row[this.mark];
+					cssClass += ' ' + utils.simpleEval(this.row, this.mark);
 				}
 				if ((this.index + 1) % 2)
 					cssClass += ' even';
@@ -6639,7 +6639,7 @@ Vue.component('validator-control', {
 				return this.$parent.isMarkCell;
 			},
 			markClass() {
-				return this.mark ? this.row[this.mark] : '';
+				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
 			},
 			detailsMarker() {
 				return this.$parent.isRowDetailsCell;
@@ -9229,7 +9229,7 @@ TODO:
 <div class="a2-image">
 	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
 	<a class="remove-image" v-if="hasRemove" @click.prevent="removeImage">&#x2715;</a>
-	<a2-upload v-if=isUploadVisible :style=uploadStyle accept="image/*"
+	<a2-upload v-if="isUploadVisible" :style=uploadStyle accept="image/*"
 		:item=itemForUpload :base=base :prop=prop :new-item=newItem :tip=tip :read-only=readOnly :limit=limit :icon=icon></a2-upload>
 </div>
 `,
@@ -9262,7 +9262,7 @@ TODO:
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
 			tip() {
-				if (this.readOnly) return '';
+				if (this.readOnly) return this.placeholder;
 				return this.placeholder ? this.placeholder : locale.$ClickToDownloadPicture;
 			},
 			cssStyle() {
@@ -9283,7 +9283,8 @@ TODO:
 			},
 			isUploadVisible: function () {
 				if (this.newItem) return true;
-				if (this.readOnly) return false;
+				if (this.readOnly)
+					return !this.hasImage;
 				return !this.inArray && !this.item[this.prop];
 			},
 			itemForUpload() {
@@ -10361,14 +10362,15 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20180428-7171
+// 20200930-7708
 // components/megamenu.js
 
 
 (function () {
 
+	const utils = require('std:utils');
 	const menuTemplate =
 `<div class="dropdown-menu menu" role="menu">
 	<div class="super-menu" :class="cssClass" :style="cssStyle">
@@ -10411,7 +10413,7 @@ Vue.component('a2-panel', {
 			topMenu() {
 				if (!this.itemsSource) return {};
 				return this.itemsSource.reduce((acc, itm) => {
-					let g = itm[this.groupBy] || '';
+					let g = utils.simpleEval(itm, this.groupBy) || '';
 					let ma = acc[g];
 					if (ma)
 						ma.menu.push(itm);
@@ -11709,18 +11711,23 @@ Vue.directive('resize', {
 				const root = window.$$rootUrl;
 				let elem = this.$el.getElementsByClassName('sheet-page');
 				if (!elem.length) {
-					console.dir('element not found (.sheet-page)');
+					console.error('element not found (.sheet-page)');
 					return;
 				}
 				let table = elem[0];
-				if (htmlTools) {
-					htmlTools.getColumnsWidth(table);
-					var tbl = table.getElementsByTagName('table');
-					// attention! from css!
-					let padding = tbl && tbl.length && tbl[0].classList.contains('compact') ? 4 : 12;
-					htmlTools.getRowHeight(table, padding);
+				var tbl = table.getElementsByTagName('table');
+				if (tbl.length == 0) {
+					console.error('element not found (.sheet-page table)');
+					return;
 				}
-				let html = table.innerHTML;
+				tbl = tbl[0];
+				if (htmlTools) {
+					htmlTools.getColumnsWidth(tbl);
+					// attention! from css!
+					let padding = tbl.classList.contains('compact') ? 4 : 12;
+					htmlTools.getRowHeight(tbl, padding);
+				}
+				let html = '<table>' + tbl.innerHTML + '</table>';
 				let data = { format, html, fileName, zoom: +(window.devicePixelRatio).toFixed(2) };
 				const routing = require('std:routing');
 				let url = `${root}/${routing.dataUrl()}/exportTo`;
