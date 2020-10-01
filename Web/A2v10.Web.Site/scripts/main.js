@@ -9229,7 +9229,7 @@ TODO:
 <div class="a2-image">
 	<img v-if="hasImage" :src="href" :style="cssStyle" @click.prevent="clickOnImage"/>
 	<a class="remove-image" v-if="hasRemove" @click.prevent="removeImage">&#x2715;</a>
-	<a2-upload v-if=isUploadVisible :style=uploadStyle accept="image/*"
+	<a2-upload v-if="isUploadVisible" :style=uploadStyle accept="image/*"
 		:item=itemForUpload :base=base :prop=prop :new-item=newItem :tip=tip :read-only=readOnly :limit=limit :icon=icon></a2-upload>
 </div>
 `,
@@ -9262,7 +9262,7 @@ TODO:
 				return url.combine(root, '_image', this.base, this.prop, id);
 			},
 			tip() {
-				if (this.readOnly) return '';
+				if (this.readOnly) return this.placeholder;
 				return this.placeholder ? this.placeholder : locale.$ClickToDownloadPicture;
 			},
 			cssStyle() {
@@ -9283,7 +9283,8 @@ TODO:
 			},
 			isUploadVisible: function () {
 				if (this.newItem) return true;
-				if (this.readOnly) return false;
+				if (this.readOnly)
+					return !this.hasImage;
 				return !this.inArray && !this.item[this.prop];
 			},
 			itemForUpload() {

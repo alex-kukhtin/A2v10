@@ -19,7 +19,8 @@
 			</Grid>
 		</Tab>
 		<Tab Header="Картинка">
-			<Image Source="{Bind Entity.Image}" Base="/entity" Height="200" Margin="20" Placeholder="Клацніть для фото!" Icon="UserImage"/>
+			<Image Source="{Bind Entity.Image}" Base="/entity" Height="200" Margin="20" ReadOnly="False"
+				Placeholder="Клацніть для фото!" Icon="UserImage"/>
 		</Tab>
 		<Tab Header="Radio bind">
 			<FieldSet Title="Radio" Orientation="Horizontal">
