@@ -33,6 +33,7 @@
 		</Taskpad>
 	</Page.Taskpad>
 	<SheetPage Orientation="Landscape">
+		<EmptyPanel Icon="Account"/>
 		<Sheet GridLines="Both" Columns="Fit,60,Fit+A,Fit+B,300" Striped="True">
 			<SheetSection ItemsSource="{Bind ReportData}">
 				<SheetRow Mark="{Bind $Mark}">

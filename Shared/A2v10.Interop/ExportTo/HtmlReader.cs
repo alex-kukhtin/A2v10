@@ -17,7 +17,7 @@ namespace A2v10.Interop.ExportTo
 			var doc = GetXmlFromHtml(html);
 			var table = doc.FirstChild;
 			if (table.Name != "table")
-				throw new InteropException("Invalid element for Html2Excel");
+				throw new InteropException("Invalid element for Html2Excel. Expected '<table>'.");
 
 			var bodyRowNo = 0;
 			var headerRowNo = 0;

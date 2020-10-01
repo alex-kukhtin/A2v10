@@ -5594,18 +5594,23 @@ template: `
 				const root = window.$$rootUrl;
 				let elem = this.$el.getElementsByClassName('sheet-page');
 				if (!elem.length) {
-					console.dir('element not found (.sheet-page)');
+					console.error('element not found (.sheet-page)');
 					return;
 				}
 				let table = elem[0];
-				if (htmlTools) {
-					htmlTools.getColumnsWidth(table);
-					var tbl = table.getElementsByTagName('table');
-					// attention! from css!
-					let padding = tbl && tbl.length && tbl[0].classList.contains('compact') ? 4 : 12;
-					htmlTools.getRowHeight(table, padding);
+				var tbl = table.getElementsByTagName('table');
+				if (tbl.length == 0) {
+					console.error('element not found (.sheet-page table)');
+					return;
 				}
-				let html = table.innerHTML;
+				tbl = tbl[0];
+				if (htmlTools) {
+					htmlTools.getColumnsWidth(tbl);
+					// attention! from css!
+					let padding = tbl.classList.contains('compact') ? 4 : 12;
+					htmlTools.getRowHeight(tbl, padding);
+				}
+				let html = '<table>' + tbl.innerHTML + '</table>';
 				let data = { format, html, fileName, zoom: +(window.devicePixelRatio).toFixed(2) };
 				const routing = require('std:routing');
 				let url = `${root}/${routing.dataUrl()}/exportTo`;

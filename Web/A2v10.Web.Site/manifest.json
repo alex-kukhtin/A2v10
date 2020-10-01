@@ -4,7 +4,7 @@
 	"name": "Test Application",
 	"scope": "/",
 	"display": "fullscreen",
-	"start_url": "https://localhost:44301/",
+	"start_url": "http://localhost:56358/",
 	"short_name": "TestApplication",
 	"theme_color": "#dd2c5e",
 	"description": "",
@@ -13,7 +13,7 @@
 	"generated": "false",
 	"icons": [
 		{
-			"src": "https://localhost:44301/favicon.ico",
+			"src": "http://localhost:56358/favicon.ico",
 			"sizes": "16x16 32x32 48x48 64x64"
 		}
 	]
