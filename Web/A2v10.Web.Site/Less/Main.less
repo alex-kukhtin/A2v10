@@ -243,6 +243,12 @@ footer, .footer {
 	padding: 0 2px 0 8px;
 	font-size: .86rem;
 	text-transform: lowercase;
+	overflow:hidden;
+
+	span {
+		white-space:nowrap;
+		word-break:normal;
+	}
 
 	.debug-btn {
 		display: inline;
@@ -276,6 +282,7 @@ footer, .footer {
 		display: inline-block;
 		box-sizing: content-box;
 		width: 8px;
+		min-width:8px;
 		height: 8px;
 		margin-right: 2px;
 		background-color: transparent;

@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7708",
+	"$version": "10.0.7709",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -80,6 +80,7 @@
 						"view": { "type": "string" },
 						"template": { "type": "string" },
 						"copy": { "type": "boolean" },
+						"checkTypes": { "type": "string" },
 						"hook": {
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
@@ -116,7 +117,8 @@
 						"source": { "type": "string" },
 						"model": { "type": "string" },
 						"view": { "type": "string" },
-						"template": { "type": "string" }
+						"template": { "type": "string" },
+						"checkTypes": { "type": "string" }
 					},
 					"additionalProperties": false
 				}
@@ -137,6 +139,7 @@
 						"model": { "type": "string" },
 						"command": { "type": "string" },
 						"procedure": { "type": "string" },
+						"checkTypes": { "type": "string" },
 						"clrType": {
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
@@ -169,9 +172,10 @@
 					"properties": {
 						"schema": { "type": "string" },
 						"source": { "type": "string" },
-						"model": {"type": "string"},
+						"model": { "type": "string" },
 						"name": { "type": "string" },
 						"report": { "type": "string" },
+						"checkTypes": { "type": "string" },
 						"type": {
 							"type": "string",
 							"enum": [ "stimulsoft" ]
@@ -211,7 +215,8 @@
 									"source": { "type": "string" },
 									"schema": { "type": "string" },
 									"model": { "type": "string" },
-									"parameters": {"type": "object"}
+									"checkTypes": { "type": "string" },
+									"parameters": { "type": "object" }
 								},
 								"additionalProperties": false
 							}

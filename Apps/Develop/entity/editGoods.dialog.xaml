@@ -5,7 +5,7 @@
 		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
 	</Dialog.Buttons>
-	<TabPanel>
+	<TabPanel TabPosition="Top" Padding="1rem">
 		<Tab Header="Общие">
 			<Grid Columns="1*, 1*">
 				<TextBox Grid.Row="1" Grid.ColSpan="2" Label="Наименование" Value="{Bind Entity.Name}" TabIndex="1"/>

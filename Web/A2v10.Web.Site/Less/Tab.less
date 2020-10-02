@@ -16,15 +16,73 @@
 	background-color: @tab-bg-color;
 	grid-gap: 0;
 	align-items: stretch;
-	height:100%;
+	height: 100%;
+
+	&.tab-pos-top {
+		grid-template-rows: auto 1fr;
+
+		.tab-header {
+			grid-row: 1;
+			border-bottom: 1px solid @tab-brd-color;
+
+			> li {
+				margin-bottom: -1px;
+				border-top-width: 3px;
+
+				&.active {
+					border-top: 3px solid @tab-active-brd-color;
+				}
+
+				&:hover {
+					border-bottom-color: @tab-brd-color;
+				}
+
+				&.active:hover {
+					border-bottom-color: transparent;
+				}
+			}
+		}
+
+		.tab-content {
+			grid-row: 2;
+		}
+	}
+
+	&.tab-pos-bottom {
+		grid-template-rows: 1fr auto;
+
+		.tab-header {
+			grid-row: 2;
+			border-top: 1px solid @tab-brd-color;
+
+			> li {
+				margin-top: -1px;
+				border-bottom-width: 3px;
+
+				&.active {
+					border-bottom: 3px solid @tab-active-brd-color;
+				}
+
+				&:hover {
+					border-top-color: @tab-brd-color;
+				}
+
+				&.active:hover {
+					border-top-color: transparent;
+				}
+			}
+		}
+
+		.tab-content {
+			grid-row: 1;
+		}
+	}
 
 	.tab-header {
 		background-color: @tab-bg-color;
 		margin: 0;
 		padding: 0 6px 0;
-		grid-row: 1;
 		grid-column: 1;
-		border-bottom: 1px solid @tab-brd-color;
 
 		> li {
 			display: inline-block;
@@ -32,8 +90,6 @@
 			list-style: none;
 			cursor: pointer;
 			border: 1px solid transparent;
-			border-top-width: 3px;
-			margin-bottom: -1px;
 			color: @link-color;
 			vertical-align: bottom;
 			font-weight: 500;
@@ -49,13 +105,11 @@
 			&:hover {
 				background-color: @tab-hover-color;
 				color: @link-hover-color;
-				border-bottom-color: @tab-brd-color;
 			}
 
 			&.active {
 				background-color: white;
 				cursor: default;
-				border-top: 3px solid @tab-active-brd-color;
 				border-right: 1px solid @tab-brd-color;
 				border-left: 1px solid @tab-brd-color;
 				color: @text-color;
@@ -63,10 +117,6 @@
 
 			&.active.yellow {
 				background-color: #fefcf0;
-			}
-
-			&.active:hover {
-				border-bottom-color: transparent;
 			}
 
 			.noselect();
@@ -103,14 +153,14 @@
 	}
 
 	.tab-content {
-		grid-row: 2;
 		grid-column: 1 / span 2;
 		background-color: white;
 		overflow: visible; // ???: hidden for scroll
 		// hack!
 		max-height: -webkit-fill-available;
+
 		.tab-item {
-			overflow:auto;
+			overflow: auto;
 		}
 	}
 
@@ -119,9 +169,10 @@
 	}
 
 	&.overflow {
-		overflow:visible;
+		overflow: visible;
+
 		.tab-item {
-			overflow:visible;
+			overflow: visible;
 		}
 	}
 }

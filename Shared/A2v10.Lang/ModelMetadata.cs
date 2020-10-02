@@ -29,6 +29,8 @@ namespace A2v10.Lang
 
 	public class ModelMetadata : Dictionary<String, TypeMetadata>
 	{
+		private Dictionary<String, TSType> _declares;
+
 		public TypeMetadata AddType(String name, TSType baseType)
 		{
 			if (ContainsKey(name))
@@ -36,6 +38,20 @@ namespace A2v10.Lang
 			var tm = new TypeMetadata();
 			Add(name, tm);
 			return tm;
+		}
+
+		public void AddDeclare(String name, TSType type)
+		{
+			if (_declares == null)
+				_declares = new Dictionary<string, TSType>();
+			_declares.Add(name, type);
+		}
+
+		public TSType GetDeclare(String name)
+		{
+			if (_declares != null && _declares.ContainsKey(name))
+				return _declares[name];
+			return null;
 		}
 	}
 }

@@ -1,10 +1,17 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+
+	public enum TabPosition
+	{
+		Top,
+		Bottom
+	}
+
 	[ContentProperty("Tabs")]
 	public class TabPanel : UIElement
 	{
@@ -17,6 +24,8 @@ namespace A2v10.Xaml
 		public Boolean FullPage { get; set; }
 		public Length MinHeight { get; set; }
 		public Boolean Overflow { get; set; }
+
+		public TabPosition TabPosition { get; set; }
 
 		public TabCollection Tabs { get; set; } = new TabCollection();
 
@@ -36,6 +45,7 @@ namespace A2v10.Xaml
 			panel.AddCssClassBool(Border, "bordered");
 			panel.AddCssClassBool(FullPage, "full-page");
 			panel.AddCssClassBool(Overflow, "overflow");
+			panel.AddCssClass($"tab-pos-{TabPosition.ToString().ToLowerInvariant()}");
 
 			if (MinHeight != null)
 				panel.MergeStyleUnit("min-height", MinHeight.Value);

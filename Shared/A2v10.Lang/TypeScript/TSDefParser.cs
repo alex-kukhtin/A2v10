@@ -76,6 +76,12 @@ namespace A2v10.Lang
 					Next();
 					ReadImport();
 				}
+				else if (_tok.IsIderValue("declare"))
+				{
+					Next();
+					ReadDeclare();
+				}
+
 			}
 			return _mm;
 		}
@@ -86,6 +92,27 @@ namespace A2v10.Lang
 			{
 				Next();
 				ReadInterface();
+			}
+		}
+
+		void ReadDeclare()
+		{
+			if (_tok.IsIderValue("type"))
+			{
+				Next();
+				ReadDeclareType();
+			}
+		}
+
+		void ReadDeclareType()
+		{
+			var typeName = _tok.Value;
+			Next();
+			if (_tok.IsEqual)
+			{
+				Next();
+				var type = ReadType();
+				_mm.AddDeclare(typeName, type);
 			}
 		}
 

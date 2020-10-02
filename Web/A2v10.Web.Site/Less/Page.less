@@ -63,3 +63,43 @@
 	height:auto;
 	min-height:100%;
 }
+
+.center-page {
+	width:100%;
+	height:100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	//background-color: fade(@brand-bk-color,12%);
+	background-color: #f8f8f880;
+	overflow:auto;
+
+
+	.initial-form {
+		width: 28rem;
+		max-width: 90vw;
+		padding: 1.5em;
+		background-color: white;
+		box-shadow:0 2px 6px rgba(0,0,0,0.2);
+
+		.control-group {
+			margin: 1em 0;
+			display: block;
+		}
+
+		.checkbox {
+			display: block;
+		}
+
+		button, a {
+			display: block;
+			margin: .75em auto 0 auto;
+			text-align: center;
+		}
+
+		button {
+			width:60%;
+			margin-top:2em;
+		}
+	}
+}

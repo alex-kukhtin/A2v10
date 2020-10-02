@@ -1664,6 +1664,39 @@ header .dropdown.separate.show .btn.btn-success,
   height: auto;
   min-height: 100%;
 }
+.center-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f8f880;
+  overflow: auto;
+}
+.center-page .initial-form {
+  width: 28rem;
+  max-width: 90vw;
+  padding: 1.5em;
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+.center-page .initial-form .control-group {
+  margin: 1em 0;
+  display: block;
+}
+.center-page .initial-form .checkbox {
+  display: block;
+}
+.center-page .initial-form button,
+.center-page .initial-form a {
+  display: block;
+  margin: 0.75em auto 0 auto;
+  text-align: center;
+}
+.center-page .initial-form button {
+  width: 60%;
+  margin-top: 2em;
+}
 .splitter {
   display: grid;
   position: relative;
@@ -1897,6 +1930,12 @@ footer,
   padding: 0 2px 0 8px;
   font-size: 0.86rem;
   text-transform: lowercase;
+  overflow: hidden;
+}
+footer span,
+.footer span {
+  white-space: nowrap;
+  word-break: normal;
 }
 footer .debug-btn,
 .footer .debug-btn {
@@ -1931,6 +1970,7 @@ footer .spinner,
   display: inline-block;
   box-sizing: content-box;
   width: 8px;
+  min-width: 8px;
   height: 8px;
   margin-right: 2px;
   background-color: transparent;
@@ -3815,13 +3855,57 @@ tr:hover .commandbar.visible-hover {
   align-items: stretch;
   height: 100%;
 }
+.tab-panel.tab-pos-top {
+  grid-template-rows: auto 1fr;
+}
+.tab-panel.tab-pos-top .tab-header {
+  grid-row: 1;
+  border-bottom: 1px solid #ddd;
+}
+.tab-panel.tab-pos-top .tab-header > li {
+  margin-bottom: -1px;
+  border-top-width: 3px;
+}
+.tab-panel.tab-pos-top .tab-header > li.active {
+  border-top: 3px solid gold;
+}
+.tab-panel.tab-pos-top .tab-header > li:hover {
+  border-bottom-color: #ddd;
+}
+.tab-panel.tab-pos-top .tab-header > li.active:hover {
+  border-bottom-color: transparent;
+}
+.tab-panel.tab-pos-top .tab-content {
+  grid-row: 2;
+}
+.tab-panel.tab-pos-bottom {
+  grid-template-rows: 1fr auto;
+}
+.tab-panel.tab-pos-bottom .tab-header {
+  grid-row: 2;
+  border-top: 1px solid #ddd;
+}
+.tab-panel.tab-pos-bottom .tab-header > li {
+  margin-top: -1px;
+  border-bottom-width: 3px;
+}
+.tab-panel.tab-pos-bottom .tab-header > li.active {
+  border-bottom: 3px solid gold;
+}
+.tab-panel.tab-pos-bottom .tab-header > li:hover {
+  border-top-color: #ddd;
+}
+.tab-panel.tab-pos-bottom .tab-header > li.active:hover {
+  border-top-color: transparent;
+}
+.tab-panel.tab-pos-bottom .tab-content {
+  grid-row: 1;
+}
 .tab-panel .tab-header {
   background-color: #f9f9f9;
   margin: 0;
   padding: 0 6px 0;
-  grid-row: 1;
   grid-column: 1;
-  border-bottom: 1px solid #ddd;
 }
 .tab-panel .tab-header > li {
   display: inline-block;
@@ -3829,8 +3913,6 @@ tr:hover .commandbar.visible-hover {
   list-style: none;
   cursor: pointer;
   border: 1px solid transparent;
-  border-top-width: 3px;
-  margin-bottom: -1px;
   color: #208cf8;
   vertical-align: bottom;
   font-weight: 500;
@@ -3849,21 +3931,16 @@ tr:hover .commandbar.visible-hover {
 .tab-panel .tab-header > li:hover {
   background-color: #eee;
   color: #208cf8;
-  border-bottom-color: #ddd;
 }
 .tab-panel .tab-header > li.active {
   background-color: white;
   cursor: default;
-  border-top: 3px solid gold;
   border-right: 1px solid #ddd;
   border-left: 1px solid #ddd;
   color: #222;
 }
 .tab-panel .tab-header > li.active.yellow {
   background-color: #fefcf0;
-}
-.tab-panel .tab-header > li.active:hover {
-  border-bottom-color: transparent;
 }
 .tab-panel .tab-header > li .a2-header {
   display: inline;
@@ -3889,7 +3966,6 @@ tr:hover .commandbar.visible-hover {
   margin: 0;
 }
 .tab-panel .tab-content {
-  grid-row: 2;
   grid-column: 1 / span 2;
   background-color: white;
   overflow: visible;

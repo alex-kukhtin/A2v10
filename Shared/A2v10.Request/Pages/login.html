@@ -1,22 +1,22 @@
-﻿<div style="margin:8px;overflow:auto">
-	<h4 class="a2-header" v-text="locale.$LoginPrompt"></h4>
-	<hr style="margin-top:1rem" />
-	<div v-if="serverError" class="validation-summary" style="width:390px;margin-top:10px">
-		<span class="error" v-text="serverError"></span>
-	</div>
-	<form>
-		<div class="grid" style="grid-template-columns:auto 1fr; width:400px">
-			<label style="grid-row:1; grid-column:1" class="a2-label required text-right" v-text="locale.$Email"></label>
-			<div class="control-group" style="grid-row:1;grid-column:2" :class="{invalid: !validEmail}">
+﻿<div class="center-page">
+	<div class="initial-form">
+		<h3 class="a2-header text-center" v-text="locale.$LoginPrompt"></h3>
+		<hr style="margin-top:1rem" />
+		<div v-if="serverError" class="validation-summary" style="margin-top:10px">
+			<span class="error" v-text="serverError"></span>
+		</div>
+		<form>
+			<div class="control-group" :class="{invalid: !validEmail}">
+				<label style="grid-row:1; grid-column:1" class="a2-label required" v-text="locale.$Email"></label>
 				<div class="input-group">
-					<input v-focus class="control" id="login" name="email" type="text" v-model="email" tabindex="1" @keyup.enter="onLoginEnter" autocomplete="email" spellcheck="false"/>
+					<input v-focus class="control" id="login" name="email" type="text" v-model="email" tabindex="1" @keyup.enter="onLoginEnter" autocomplete="email" spellcheck="false" />
 					<div class="validator">
 						<span class="error" v-text="emailError"></span>
 					</div>
 				</div>
 			</div>
-			<label style="grid-row:2; grid-column:1" class="a2-label required text-right" v-text="locale.$Password"></label>
-			<div class="control-group" style="grid-row:2;grid-column:2" :class="{invalid: !validPassword}">
+			<div class="control-group" :class="{invalid: !validPassword}">
+				<label style="grid-row:2; grid-column:1" class="a2-label required" v-text="locale.$Password"></label>
 				<div class="input-group">
 					<input class="control" v-focus type="password" id="password" name="password" v-model="password" autocomplete="current-password" tabindex="2" @keydown.enter.stop.prevent="onPwdEnter" ref="pwd" />
 					<div class="validator">
@@ -24,15 +24,13 @@
 					</div>
 				</div>
 			</div>
-			<label class="checkbox" style="grid-row:3;grid-column:2">
+			<label class="checkbox">
 				<input type="checkbox" v-model="rememberMe" tabindex="3" />
 				<span v-text="locale.$RememberCredentials"></span>
 			</label>
-			<div style="grid-row:4;grid-column:2;white-space:nowrap">
-				<button @click.stop.prevent="submit" class="btn btn-default" id="submit" tabindex="4" style="width:110px;margin-right:5px" v-text="locale.$Login" ref="submit"></button>
-				<a v-if="info.multiTenant && info.registration" class="a2-hyperlink" :href="getReferUrl('/account/register')" tabindex="5" style="margin:0 5px" v-text="locale.$RegisterLink"></a>
-				<a class="a2-hyperlink" :href="getReferUrl('/account/forgotpassword')" tabindex="6" style="margin:0 5px" v-text="locale.$ForgotPassword"></a>
-			</div>
-		</div>
-	</form>
+			<button @click.stop.prevent="submit" class="btn btn-default" id="submit" tabindex="4" v-text="locale.$Login" ref="submit"></button>
+			<a class="a2-hyperlink" :href="getReferUrl('/account/forgotpassword')" tabindex="6" v-text="locale.$ForgotPassword"></a>
+			<a v-if="info.multiTenant && info.registration" class="a2-hyperlink" :href="getReferUrl('/account/register')" tabindex="5" v-text="locale.$RegisterLink"></a>
+		</form>
+	</div>
 </div>

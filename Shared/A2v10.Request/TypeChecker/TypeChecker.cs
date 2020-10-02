@@ -31,7 +31,7 @@ namespace A2v10.Request
 					throw new TypeCheckerException($"Type '{kv.Key}' is in the model but not found in the description file");
 				CheckFields(kv.Key, kv.Value, _mm[kv.Key]);
 			}
-			foreach (var kv in _mm)
+			foreach (var kv in _mm.Where(x => !x.Key.StartsWith("$")))
 			{
 				if (!model.Metadata.ContainsKey(kv.Key))
 					throw new TypeCheckerException($"Type '{kv.Key}' is in the description file but not found in data model");
@@ -57,8 +57,12 @@ namespace A2v10.Request
 		{
 			var fieldType = fileField.Type.TypeName;
 			var dataType = dataField.TypeScriptName;
-			if (fieldType != dataType)
+			if (fieldType != dataType) {
+				var tm = _mm.GetDeclare(fieldType);
+				if (tm != null && tm.TypeName == dataType)
+					return;
 				throw new TypeCheckerException($"Type '{typeName}'. Field '{fileField.Name}'. Incompatible types. (model: '{dataType}', description: '{fieldType}') ");
+			}
 		}
 
 		FieldMetadata CalcExpression(String expression)
