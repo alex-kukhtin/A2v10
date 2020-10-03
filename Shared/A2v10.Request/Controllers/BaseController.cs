@@ -234,6 +234,7 @@ namespace A2v10.Request
 				rw.view = model.Root.Resolve(rw.view);
 				rw.viewMobile = model.Root.Resolve(rw.viewMobile);
 				rw.template = model.Root.Resolve(rw.template);
+				rw.checkTypes = model.Root.Resolve(rw.checkTypes);
 			}
 
 			if (_userStateManager != null && model != null)
