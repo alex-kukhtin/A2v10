@@ -1294,7 +1294,7 @@ header,
   right: 0;
   height: 40px;
   padding: 0 0 0 8px;
-  background-color: var(--themePrimary);
+  background-color: var(--themeDark);
   color: white;
   display: flex;
   align-content: flex-start;
@@ -1339,7 +1339,7 @@ header .h-menu .ico,
 }
 header .h-menu:hover,
 .header .h-menu:hover {
-  background-color: var(--themeDark);
+  background-color: var(--themeDarker);
 }
 header > a.nav-admin,
 .header > a.nav-admin {
@@ -1348,11 +1348,11 @@ header > a.nav-admin,
 }
 header > a.nav-admin:hover,
 .header > a.nav-admin:hover {
-  background-color: var(--themeDark);
+  background-color: var(--themeDarker);
 }
 header > a.open,
 .header > a.open {
-  background-color: var(--themeDark);
+  background-color: var(--themeDarker);
 }
 header > .dropdown,
 .header > .dropdown {
@@ -1374,7 +1374,7 @@ header .btn,
 }
 header .btn:hover,
 .header .btn:hover {
-  background-color: var(--themeDark);
+  background-color: var(--themeDarker);
 }
 header .user-name .person-name,
 .header .user-name .person-name,
@@ -1395,7 +1395,7 @@ header .company-menu-name,
 }
 header .dropdown.separate.show .btn,
 .header .dropdown.separate.show .btn {
-  background-color: var(--themeDark);
+  background-color: var(--themeDarker);
 }
 header .dropdown.separate.show .btn.btn-success,
 .header .dropdown.separate.show .btn.btn-success {
