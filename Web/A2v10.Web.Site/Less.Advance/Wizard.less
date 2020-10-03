@@ -1,0 +1,122 @@
+﻿
+
+@wizard-header-height:38px;
+@wizard-heder-bg-color: @whitesmoke-gray-bg-color;
+@wizard-arrow-width:10px;
+@disabled-wiz-bg-color: #eee;
+@invalid-wiz-bg-color:#fff8f8;
+
+.wizard-panel {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	height: 100%;
+
+	.modal-footer {
+		grid-row: 3;
+		.btn {
+			//width:8rem;
+		}
+	}
+}
+
+.wizard-header {
+	padding: 6px 6px 6px 0;
+	margin: 0;
+	list-style: none;
+	display: flex;
+	grid-row: 1;
+	background-color: @wizard-heder-bg-color;
+
+	li {
+		padding: 0 .7rem;
+		background-color: white;
+		position: relative;
+		height: @wizard-header-height;
+		border-color: white;
+		margin-left: 16px;
+
+		> a {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			height: 100%;
+			border-color: white;
+			margin-right: 4px;
+			line-height: 1.2rem;
+			color: white;
+
+			.wizard-header-title {
+				color: @dark-bk-color;
+				font-weight: bold;
+			}
+
+			.wizard-header-descr {
+				color: @dark-bk-color;
+				font-size: 0.9rem;
+			}
+
+			&:before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: -@wizard-arrow-width;
+				border: @wizard-header-height / 2 solid transparent;
+				border-color: inherit;
+				border-right-width: 0;
+				border-left-color: transparent;
+				border-left-width: @wizard-arrow-width;
+			}
+
+			&:after {
+				content: "";
+				padding: 0;
+				position: absolute;
+				top: 0;
+				left: 100%;
+				border: @wizard-header-height / 2 solid transparent;
+				border-right-width: 0;
+				border-left-color: inherit;
+				border-left-width: @wizard-arrow-width;
+			}
+
+			> .ico {
+				position: absolute;
+				right: 0;
+				top: 4px;
+			}
+		}
+
+		&:first-child > a:before {
+			border-left-color: inherit;
+		}
+	}
+
+	li.active {
+		background-color: @active-bg-color;
+
+		> a {
+			border-color: @active-bg-color;
+		}
+	}
+
+	li.disabled {
+		background-color: @disabled-wiz-bg-color;
+
+		> a {
+			border-color: @disabled-wiz-bg-color;
+			cursor: not-allowed;
+		}
+	}
+
+	li.invalid {
+		background-color: @invalid-wiz-bg-color;
+
+		> a {
+			border-color: @invalid-wiz-bg-color;
+		}
+	}
+}
+
+.wizard-content {
+}
+

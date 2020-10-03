@@ -1,0 +1,132 @@
+﻿
+
+@al-height: 250px;
+
+// default placement: bottom-left
+
+.input-group a.selector-open {
+	//padding-right:8px;
+	//padding-top:0 !important;
+}
+
+.input-group a.selector-clear {
+	padding-right: 8px;
+}
+
+.input-group > .selector-pane {
+	//border: 1px solid @dropdown-brd-color;
+	border: 1px solid @link-hover-color;
+	position: absolute;
+	background-color: #fff;
+	left: 0;
+	top: 100%;
+	min-width: ~"calc(100% + 2px)";
+	width: auto;
+	height: auto;
+	min-height: 27px;
+	z-index: @popup-index !important;
+	margin-top: 0;
+	margin-left: -1px;
+	box-shadow: @dropdown-shadow;
+	padding: 0;
+	overflow: hidden;
+	display: block !important;
+	font-weight: normal;
+
+	&.panel-bottom-right {
+		left: auto;
+		right: -1px;
+	}
+
+	&.panel-top-right {
+		left: auto;
+		right: -1px;
+		bottom: 100%;
+		top: auto;
+		box-shadow: -3px -3px 10px 0 rgba(174, 174, 174, .5), 0 -5px 40px 0 rgba(0, 0, 0, .15);
+	}
+
+	&.panel-top-left {
+		bottom: 100%;
+		top: auto;
+		box-shadow: -3px -3px 10px 0 rgba(174, 174, 174, .5), 0 -5px 40px 0 rgba(0, 0, 0, .15);
+	}
+
+	.selector-body {
+		max-height: @al-height;
+		min-height: 23px;
+		overflow: auto;
+		font-size:1rem;
+	}
+
+	ul.selector-ul {
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		height: 100%;
+
+		li {
+			list-style: none;
+			padding: 4px 6px;
+			white-space: normal;
+			cursor: pointer;
+
+			&:hover {
+				background-color: @hover-bg-color;
+			}
+
+			&.active {
+				background-color: @active-bg-color;
+			}
+		}
+	}
+
+	a.create-elem {
+		padding: 4px;
+		display: block;
+		border-top: 1px solid @dropdown-brd-color;
+		background-color: @whitesmoke-gray-bg-color;
+	}
+}
+
+
+.control-group.selector-hyperlink {
+	.input-group {
+		border: none;
+
+		.select-text {
+			color: @link-color;
+			border-bottom: 1px dotted @link-color;
+
+			&:focus {
+				outline: none;
+			}
+		}
+	}
+
+	&.sel-large {
+		.select-text {
+			font-size: 1.2rem;
+			line-height: 2.3rem;
+		}
+	}
+}
+
+.control-group.selector-combobox {
+	.input-group {
+		.selector-combo {
+			line-height: @control-height;
+			width: 100%;
+			cursor: pointer;
+			display: flex;
+			min-height: 100%;
+
+			.select-text {
+				padding:0 4px;
+				&:focus {
+					outline: none;
+				}
+			}
+		}
+	}
+}

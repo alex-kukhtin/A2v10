@@ -26,6 +26,14 @@ namespace A2v10.Infrastructure
 			return This;
 		}
 
+		public static String RemoveEOL(this String This)
+		{
+			if (String.IsNullOrEmpty(This))
+				return This;
+			return This.Replace("\n", "").Replace("\r", "");
+		}
+
+
 		public static String CombineRelative(String path1, String path2)
 		{
 			var dirSep = new String(Path.DirectorySeparatorChar, 1);

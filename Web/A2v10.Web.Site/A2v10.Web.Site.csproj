@@ -174,6 +174,10 @@
       <DependentUpon>mobile.css</DependentUpon>
     </Content>
     <Content Include="404.html" />
+    <Content Include="css\site.advance.css" />
+    <Content Include="css\site.advance.min.css">
+      <DependentUpon>site.advance.css</DependentUpon>
+    </Content>
     <Content Include="Less\Upload.less" />
     <Content Include="App_application\Web.config">
       <SubType>Designer</SubType>
@@ -239,6 +243,57 @@
     <Content Include="App_application\admin\Identity\Group\model.json" />
     <Content Include="App_application\admin\Identity\Role\model.json" />
     <Content Include="App_application\admin\Identity\User\model.json" />
+    <Content Include="Less.Advance\Admin.less" />
+    <Content Include="Less.Advance\AppPages.less" />
+    <Content Include="Less.Advance\Button.less" />
+    <Content Include="Less.Advance\Card.less" />
+    <Content Include="Less.Advance\CheckBox.less" />
+    <Content Include="Less.Advance\CompanyButton.less" />
+    <Content Include="Less.Advance\Control.less" />
+    <Content Include="Less.Advance\D3.less" />
+    <Content Include="Less.Advance\Data_URI.less" />
+    <Content Include="Less.Advance\DataGrid.less" />
+    <Content Include="Less.Advance\DatePicker.less" />
+    <Content Include="Less.Advance\Debug.less" />
+    <Content Include="Less.Advance\Diagram.less" />
+    <Content Include="Less.Advance\Dialog.less" />
+    <Content Include="Less.Advance\DropDown.less" />
+    <Content Include="Less.Advance\Feedback.less" />
+    <Content Include="Less.Advance\Font.less" />
+    <Content Include="Less.Advance\Grid.less" />
+    <Content Include="Less.Advance\Image.less" />
+    <Content Include="Less.Advance\Layout.less" />
+    <Content Include="Less.Advance\List.less" />
+    <Content Include="Less.Advance\Main.less" />
+    <Content Include="Less.Advance\Mixins.less" />
+    <Content Include="Less.Advance\Nav.less" />
+    <Content Include="Less.Advance\Normalize.less" />
+    <Content Include="Less.Advance\Page.less" />
+    <Content Include="Less.Advance\Pager.less" />
+    <Content Include="Less.Advance\Popover.less" />
+    <Content Include="Less.Advance\Print.less" />
+    <Content Include="Less.Advance\PropertyGrid.less" />
+    <Content Include="Less.Advance\Selector.less" />
+    <Content Include="Less.Advance\Sheet.less" />
+    <Content Include="Less.Advance\SideBar.less" />
+    <Content Include="Less.Advance\site.less" />
+    <Content Include="Less.Advance\Splitter.less" />
+    <Content Include="Less.Advance\SuperMenu.less" />
+    <Content Include="Less.Advance\Tab.less" />
+    <Content Include="Less.Advance\TabBar.less" />
+    <Content Include="Less.Advance\Table.less" />
+    <Content Include="Less.Advance\TableNew.less" />
+    <Content Include="Less.Advance\Taskpad.less" />
+    <Content Include="Less.Advance\Text.less" />
+    <Content Include="Less.Advance\Toastr.less" />
+    <Content Include="Less.Advance\ToolBar.less" />
+    <Content Include="Less.Advance\TreeView.less" />
+    <Content Include="Less.Advance\Upload.less" />
+    <Content Include="Less.Advance\Utlis.less" />
+    <Content Include="Less.Advance\Variables.less" />
+    <Content Include="Less.Advance\WaitCursor.less" />
+    <Content Include="Less.Advance\Wizard.less" />
+    <Content Include="css\default.colorscheme" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

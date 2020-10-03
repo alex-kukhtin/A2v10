@@ -1,0 +1,317 @@
+﻿
+
+@elem-margin: .8em;
+
+.input-group > .calendar {
+	display: flex;
+	font-size:1rem;
+	flex-direction: row;
+	border: 1px solid @dropdown-brd-color;
+	position: absolute;
+	//background-color: #f5f5f5;
+	background-color: white;
+	left: 0;
+	top: 100%;
+	z-index: @popup-index !important;
+	margin-top: 0;
+	margin-left: -1px;
+	padding: @elem-margin;
+	box-shadow: @dropdown-shadow;
+	color: @text-color;
+}
+
+
+.calendar-pane {
+	td {
+		background-color: white;
+	}
+
+	td, th {
+		text-align: center;
+		vertical-align: central;
+	}
+
+	.h-btn {
+		width: 27px;
+	}
+
+	.calendar-footer {
+		text-align: center;
+	}
+
+	.month-title {
+		font-weight: 500;
+		line-height: 2rem;
+
+		a {
+			color: @text-color;
+		}
+	}
+
+	td.mcell {
+		padding: 6px 0;
+
+		> a {
+			padding: 4px;
+		}
+	}
+
+	a {
+		display: block;
+		padding: 1px 5px 3px 5px;
+		border: 1px solid transparent;
+		color: @text-color;
+
+		&:hover {
+			background-color: @hover-bg-color !important;
+		}
+	}
+
+	tbody td {
+		&.today > a {
+			//background-color: @tb-active-bg-color;
+			font-weight: 500;
+			background-color: lighten(@tb-active-bg-color, 10%)!important;
+		}
+
+		&.active > a {
+			background-color: @active-bg-color !important;
+		}
+
+		&.other > a {
+			//color: @light-gray-color;
+			opacity: 0.33;
+		}
+
+		&.period-start > a {
+			//border-left: 1px solid @primary-base-color;
+			background-color: darken(@active-bg-color, 7%);
+		}
+
+		&.period-end > a {
+			//border-right: 1px solid @primary-base-color;
+			background-color: darken(@active-bg-color, 7%);
+		}
+	}
+
+	tbody > tr:first-child > td {
+		padding-top: 6px;
+	}
+
+	tbody > tr:first-child > td.mcell {
+		padding-top: 12px;
+	}
+
+	thead th, tfoot td {
+		//background-color: #f5f5f5;
+		border-style: none;
+		color: #555;
+
+		> a {
+			padding: 2px 0;
+			color: @link-color;
+		}
+	}
+
+	a.today {
+		text-transform: lowercase;
+	}
+
+	tr.weekdays th {
+		border-bottom: 1px solid @light-gray-color;
+		padding: 2px 0;
+	}
+}
+
+.time-picker-pane {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: stretch;
+
+	.divider {
+		border-left: 1px solid #ddd;
+		padding-right: 8px;
+		margin-left: 8px;
+	}
+
+	th {
+		font-weight:500;
+		//line-height:1.5rem;
+		//text-align:center;
+		//border:none;
+		border-bottom:1px solid @light-gray-color!important;
+		color:#555;
+		padding:0 0 7px 0;
+	}
+}
+
+.drop-up .input-group > .calendar {
+	top: auto;
+	bottom: 100%;
+	box-shadow: 5px -5px 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+.date-picker {
+	&.open {
+		.input-group {
+			input, a {
+				background-color: white;
+				z-index: @popup-index + 1;
+			}
+		}
+	}
+}
+
+
+.period-picker {
+	cursor: pointer;
+
+	.period-text {
+		padding: 0 0 0 5px;
+		line-height: @control-height;
+		display: block;
+		width: 100%;
+		min-height: @control-height;
+		white-space: nowrap;
+	}
+
+	&.open:not(.pp-navbar):not(.pp-hyperlink) .period-text {
+		z-index: @popup-index + 1;
+		background-color: white;
+	}
+
+	.caret {
+		margin:.9em .6em .5em .5em;
+	}
+
+	.period-menu {
+		margin: 0;
+		padding: 0;
+		border-right: 1px solid @light-gray-color;
+		list-style: none;
+
+
+		li > a {
+			display: block;
+			padding: 0 @elem-margin;
+			line-height: 1.9rem;
+			cursor: pointer;
+			white-space: nowrap;
+			color: @text-color;
+		}
+
+		li:hover {
+			background-color: @hover-bg-color;
+		}
+
+		li.active {
+			background-color: @active-bg-color;
+		}
+	}
+
+	.period-pane {
+		display: grid;
+		grid-gap: @elem-margin;
+		font-size: 1rem;
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	.current-period {
+		font-weight: 500;
+		color: #555;
+
+		&.processing {
+			animation: blink .5s infinite alternate ease-in-out;
+		}
+	}
+
+	.period-footer {
+		display: flex;
+		align-items: center;
+		padding-top: @elem-margin;
+		border-top: 1px solid @light-gray-color;
+
+		.btn {
+			padding: .3em .5em;
+		}
+
+		.btn + .btn {
+			margin-left: @elem-margin;
+		}
+	}
+
+	&.pp-hyperlink {
+		.input-group {
+			border-style: none;
+
+			.period-text {
+				min-height: auto;
+				border-bottom: 1px dotted @link-color;
+				color: @link-color;
+				padding: 0;
+				line-height: normal;
+			}
+
+			.caret {
+				display: none;
+			}
+		}
+	}
+
+	&.pp-hyperlink.pp-large {
+		font-size: 1.3rem;
+
+		.input-group {
+			.period-text {
+				line-height: 2.3rem;
+			}
+		}
+	}
+
+	&.pp-navbar {
+		margin-bottom: 0;
+
+		.input-group {
+			background-color: transparent;
+
+			.period-text {
+				font-size: 1.2rem;
+			}
+		}
+	}
+
+	&.pp-small {
+		font-size: .95rem;
+	}
+
+	&.pp-mini {
+		font-size: .86rem;
+	}
+}
+
+.control-group.drop-bottom-right {
+	.input-group > .calendar {
+		left: auto;
+		right: -1px;
+	}
+}
+
+.control-group.drop-top-left {
+	.input-group > .calendar {
+		top: auto;
+		bottom: 100%;
+		margin-bottom: 1px;
+	}
+}
+
+.control-group.drop-top-right {
+	.input-group > .calendar {
+		top: auto;
+		left: auto;
+		right: -1px;
+		bottom: 100%;
+		margin-bottom: 1px;
+	}
+}

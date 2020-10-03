@@ -1,0 +1,252 @@
+﻿
+
+@tb-item-height:28px;
+
+.toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	padding: 2px 4px;
+	overflow: visible;
+	background-color: @toolbar-bg-color;
+	color: @toolbar-txt-color;
+	//min-height:34px;
+	z-index: 1;
+
+	.checkbox {
+		margin: 0 6px;
+	}
+
+	&.no-wrap {
+		flex-wrap: nowrap;
+	}
+
+	&.tb-border-bottom {
+		border-bottom: 1px solid #ddd;
+	}
+
+	&.tb-border-bottom-shadow {
+		border-bottom:none!important;
+		box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+	}
+
+	> .control-group.first-elem {
+		label {
+			margin-left: 6px;
+		}
+	}
+
+	&.transparent {
+		background-color: transparent;
+		padding: 2px 2px 2px 0;
+
+		.btn-tb {
+			color: @link-color;
+		}
+
+		> .divider {
+			//border-right-color: lighten(@toolbar-bg-color, 6%);
+			//background-color: lighten(@toolbar-bg-color, 12%);
+		}
+
+		.dropdown.show {
+			.btn {
+				background: white;
+				border: 1px dotted #ccc;
+			}
+		}
+	}
+
+	&.light {
+		background-color: white;
+
+		> .divider {
+			border-right-color: lighten(#ddd, 6%);
+			background-color: lighten(#ddd, 12%);
+		}
+
+		.dropdown.show {
+			.btn {
+				background: white;
+				border: 1px dotted #ccc;
+			}
+		}
+	}
+
+	> .btn,
+	> .dropdown > .btn {
+		padding: 4px 6px 5px 6px;
+	}
+
+	> .dropdown > .btn-caret {
+		border-left-color: #ccc; //darken(@toolbar-bg-color, 6%);
+	}
+
+	.btn-caret {
+		background-color: transparent;
+
+		&:hover {
+			background-color: @hover-bg-color;
+			border-color: @tb-hover-brd-color;
+			outline: none;
+		}
+	}
+
+	.a2-header {
+		margin: 0;
+		align-self:baseline;
+	}
+
+	> .divider {
+		flex-grow: 0;
+		display: inline-block;
+		width: 2px;
+		border-right: 1px solid #eee; //lighten(@toolbar-bg-color, 5%);
+		align-self: stretch;
+		background-color: #ccc; //darken(@toolbar-bg-color, 15%);
+		margin: 2px 4px;
+	}
+
+	> .control-group {
+		display: inline-flex;
+		margin: 2px 0;
+		align-self: baseline;
+		background-color: transparent;
+
+		.input-group {
+			min-height: @tb-item-height;
+		}
+
+		label {
+			align-self: center;
+			margin: 0 6px 0 2px;
+			//text-transform: lowercase;
+			font-size: 100%;
+			white-space: nowrap;
+			line-height: 1;
+		}
+	}
+
+	.control-group + .control-group {
+		margin-left: 6px;
+	}
+}
+
+.btn-tb {
+	padding: 5px 6px 6px 6px;
+	white-space: nowrap;
+	background-color: transparent;
+	//text-transform: lowercase;
+	color: @text-color;
+	min-width: 0;
+	min-height:@tb-item-height;
+	margin:2px 0;
+
+	&:focus {
+		outline: 1px dotted #ccc; //darken(@toolbar-bg-color, 15%);
+		outline-offset: -2px;
+	}
+
+	&:hover {
+		background-color: @hover-bg-color;
+		border-color: @tb-hover-brd-color;
+		outline: none;
+	}
+
+	&:active {
+		background-color: @tb-active-bg-color;
+		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+		border-color: @tb-hover-brd-color;
+		outline: none;
+	}
+
+	&:disabled {
+		color: #999;
+	}
+
+	&:disabled:hover {
+		background-color: transparent;
+		border-color: transparent;
+	}
+}
+
+.btn-tb > i.ico {
+	display: inline-block;
+	margin-right: 2px;
+	color: @icon-color;
+}
+
+.dropdown.show:not(.separate) {
+	> .btn {
+		background-color: @dropdown-bg-color;
+		border-color: @dropdown-brd-color;
+		color: @toolbar-txt-color;
+	}
+
+	> .btn-caret {
+		border-left-style: none;
+		padding-left:7px;
+	}
+}
+
+.commandbar {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	padding: 0;
+	overflow: visible;
+	background-color: transparent;
+	color: @link-color;
+
+	.btn-cb {
+		white-space: nowrap;
+		background-color: transparent;
+		text-transform: lowercase;
+		color: @text-color;
+		min-width: 0;
+		padding: 2px 4px 3px 4px;
+
+		&:focus {
+			outline: 1px dotted #ccc; //darken(@toolbar-bg-color, 15%);
+			outline-offset: -2px;
+		}
+
+		&:hover {
+			background-color: @hover-bg-color;
+			border-color: @tb-hover-brd-color;
+			outline: none;
+		}
+
+		&:active {
+			background-color: @tb-active-bg-color;
+			box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+			border-color: @tb-hover-brd-color;
+			outline: none;
+		}
+
+		&:disabled {
+			color: #777;
+		}
+
+		&:disabled:hover {
+			background-color: transparent;
+			border-color: transparent;
+		}
+	}
+}
+
+.commandbar.visible-active, .commandbar.visible-hover {
+	visibility: hidden;
+}
+
+.active .commandbar.visible-active, .active .commandbar.visible-hover {
+	visibility: visible;
+}
+
+tr:hover .commandbar.visible-hover {
+	visibility: visible;
+}
+
+.data-grid td > .commandbar {
+	margin:-3px;
+}

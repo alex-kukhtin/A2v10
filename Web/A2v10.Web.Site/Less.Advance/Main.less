@@ -1,0 +1,570 @@
+﻿
+
+html {
+	font-family: @font-family;
+	font-size: @font-size;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	color: @text-color;
+	box-sizing: border-box;
+	padding: 0;
+	height:100%;
+	width:100%;
+}
+
+input, textarea, select, button {
+	font-family: @font-family;
+}
+
+body {
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	background-color: white;
+	.noselect();
+}
+
+body.waiting * {
+	cursor:wait;
+}
+
+[v-cloak] {
+	display: none;
+}
+
+hr {
+	margin: .8rem 0;
+	border: 1px solid @light-gray-color;
+	border-bottom-style: none;
+}
+
+header, .header {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	height: @header-height;
+	padding: 0 0 0 8px;
+	background-color: @brand-bk-color;
+	color: white;
+	display: flex;
+	align-content: flex-start;
+	align-items: center;
+	user-select: none;
+
+	.h-menu-title {
+		font-size: 18px;
+	}
+
+	.h-block {
+		white-space: nowrap;
+
+		a.app-title {
+			color: inherit;
+			font-size: 18px;
+
+			.ico {
+				font-size: inherit;
+				margin-right: 6px;
+			}
+
+			&:hover {
+				text-decoration: none;
+				color: inherit;
+			}
+		}
+
+		.app-subtitle {
+			padding-left: 6px;
+		}
+	}
+
+	.h-menu {
+		.ico {
+			font-size: 22px;
+		}
+
+		margin: 0 8px 0 -8px;
+		padding: 8px 10px;
+
+		&:hover {
+			background-color: @brand-hover-color;
+		}
+	}
+
+	> a.nav-admin {
+		color: inherit;
+		padding: 6px 8px;
+
+		&:hover {
+			background-color: @brand-hover-color;
+		}
+	}
+
+	> a.middle {
+		//margin-right:10px;
+	}
+
+	> a.open {
+		background-color: @brand-hover-color;
+	}
+
+	> .dropdown {
+		display: inline-block;
+		height: 100%;
+
+		.menu {
+			margin-top: -1px;
+			min-width: 185px;
+		}
+	}
+
+	.btn {
+		background-color: transparent;
+		white-space: nowrap;
+		color: white;
+		padding: 4px;
+		height: @header-height - 4px;
+
+		&:hover {
+			background-color: @brand-hover-color;
+		}
+	}
+
+	.user-name .person-name,
+	.company-name {
+		display: inline-block;
+		vertical-align: bottom;
+		overflow: hidden;
+		max-width: 20rem;
+		text-overflow: ellipsis;
+		user-select: text;
+	}
+
+	.company-menu-name {
+		max-width: 20rem;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.dropdown.separate.show {
+		.btn {
+			background-color: @brand-hover-color;
+		}
+
+		.btn.btn-success {
+			background-color: darken(@success-base-color, 5%);
+		}
+	}
+}
+
+.content-view {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: @footer-height;
+}
+
+.content-view.partial-page {
+	left: @side-bar-width;
+	top:  @header-height + @navbar-height;
+	//background-color:aliceblue;
+	//transition: left .1s ease-out; // если разрешить - некрасиво при переходах из full-page (без SideBar)
+}
+
+.nav-bar-menu .content-view.partial-page {
+	top:@header-height;
+}
+
+.content-view.full-page {
+	top: @header-height + @navbar-height;
+}
+
+.content-view.full-view, .nav-bar-menu .content-view.full-page {
+	top: @header-height;
+}
+
+.side-bar-position-left {
+	&.expanded {
+	}
+
+	&.collapsed {
+		.content-view.partial-page {
+			left: @side-bar-compact-collapsed-width;
+		}
+	}
+}
+
+.side-bar-position-top {
+
+	.content-view.partial-page, .content-view.full-page {
+		top: @header-height+ @sidebar-tab-height;
+		left: 0;
+	}
+
+
+	&.side-bar-hidden {
+		.content-view.partial-page, .content-view.full-page {
+			top: @header-height;
+		}
+	}
+}
+
+.include {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	white-space: normal; // override
+}
+
+.include.loading {
+	> div {
+		display: none;
+	}
+}
+
+@import "Nav.less";
+@import "Page.less";
+@import "Splitter.less";
+@import "Taskpad.less";
+@import "Image.less";
+@import "Upload.less";
+
+footer, .footer {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: @footer-height;
+	background-color: @footer-bg-color;
+	border-top: 1px solid @light-brd-color;
+	padding: 0 2px 0 8px;
+	font-size: .86rem;
+	text-transform: lowercase;
+
+	span {
+		white-space:nowrap;
+		word-break:normal;
+	}
+
+	.debug-btn {
+		display: inline;
+	}
+
+	.menu {
+		margin-bottom: -2px;
+		font-size: 1rem;
+		text-transform: none;
+	}
+
+	.version-info {
+		margin-right: 6px;
+		white-space: nowrap;
+	}
+
+	button {
+		background-color: @danger-btn-color;
+		font-size: inherit;
+		padding: 0px 6px 2px 6px;
+		color: white;
+		text-transform: lowercase;
+		vertical-align: baseline;
+
+		&:focus {
+			outline-style: none;
+		}
+	}
+
+	.spinner {
+		display: inline-block;
+		box-sizing: content-box;
+		width: 8px;
+		min-width:8px;
+		height: 8px;
+		margin-right: 2px;
+		background-color: transparent;
+		border-radius: 50%;
+		border: 3px solid #ccc;
+		vertical-align: -2px;
+
+		&.active {
+			border-color: @link-hover-color;
+			border-top-color: #ccc;
+			animation: spin 1.5s linear infinite;
+		}
+	}
+
+	.app-links {
+		white-space: nowrap;
+
+		a {
+			display: inline-block;
+			margin: 0 10px;
+		}
+	}
+}
+
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+
+	to {
+		opacity: 0;
+	}
+}
+
+
+pre.a2-code {
+	overflow: auto;
+	max-height: 300px;
+	margin: 0;
+}
+
+
+@import "Control.less";
+@import "Button.less";
+@import "DatePicker.less";
+@import "Selector.less";
+@import "DataGrid.less";
+@import "ToolBar.less";
+@import "TreeView.less";
+@import "Tab.less";
+@import "TabBar.less";
+@import "List.less";
+@import "Dialog.less";
+@import "Wizard.less";
+@import "Toastr.less";
+@import "Table.less";
+@import "PropertyGrid.less";
+@import "CheckBox.less";
+@import "Pager.less";
+@import "DropDown.less";
+@import "Popover.less";
+@import "Card.less";
+@import "Grid.less";
+@import "Layout.less";
+@import "WaitCursor.less";
+
+@import "Sheet.less";
+
+.app-exception {
+	margin: 50px auto;
+	width: 600px;
+	height: auto;
+	text-align: center;
+	z-index: auto; //@exception-index;
+	position: relative;
+	padding: 0;
+	background-color: @danger-bg-color;
+	color: @danger-txt-color;
+	border: 1px solid @danger-brd-color;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	user-select:text;
+
+	.message {
+		padding: 15px 10px;
+		white-space: pre-line;
+		font-weight: bold;
+		font-size:1.2rem;
+	}
+
+	.stack-trace {
+		border-top: 1px solid @danger-txt-color;
+		background-color: lighten(@danger-bg-color, 5%);
+		overflow: auto;
+		padding: 10px;
+		max-height: 200px;
+		font-size: 92%;
+	}
+
+	.link {
+		padding:0.5rem 1rem;
+		display:inline-block;
+		border:1px solid @danger-txt-color;
+		font-weight:bold;
+		color:@danger-txt-color;
+		margin-bottom:1rem;
+		&:hover {
+			background-color:@danger-btn-color;
+			color:white;
+		}
+	}
+}
+
+.load-indicator {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: @header-height - 4px;
+	height: 4px;
+	width: 100%;
+	overflow: hidden;
+	background-color: darken(@navbar-bg-color, 10%);
+
+	&:before {
+		content: '';
+		display: block;
+		position: relative;
+		left: 0;
+		width: 50%;
+		height: 4px;
+		background-color: gold;
+		animation: loading 2s linear infinite;
+	}
+}
+
+@keyframes loading {
+	from {
+		left: 0;
+	}
+
+	to {
+		left: 100%;
+	}
+}
+
+.a2-header {
+	margin: 0 0 .8rem 0;
+	color: @header-text-color;
+	font-weight: bold;
+	font-family: inherit;
+	word-break: break-word;
+}
+
+
+.badge {
+	display: inline-block;
+	background-color: @dark-bk-color;
+	color: white;
+	padding: .15rem .4rem .2rem .4rem;
+	margin-left: 0.6rem;
+	font-size: 85%;
+	font-weight: @font-bold;
+	line-height: 1;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: baseline;
+	border-radius: .25rem;
+}
+
+.a2-badge {
+	background-color: @dark-bk-color;
+	color: white;
+	padding: 0 .2rem .1rem .2rem;
+	border-radius: .25rem;
+	white-space: nowrap;
+}
+
+.xaml-exception {
+	padding: 6px;
+	display: inline-block;
+	background-color: @danger-bg-color;
+	border: 1px solid @danger-brd-color;
+	color: @danger-txt-color;
+}
+
+.not-supported {
+	width: 400px;
+	margin: 0 auto;
+	padding: 20px;
+	text-align: center;
+	background-color: @danger-bg-color;
+	color: @danger-txt-color;
+	border: 1px solid @danger-brd-color;
+	position:absolute;
+	left:0;
+	top:20px;
+	right:0;
+}
+
+.a2-graphics {
+	display: block;
+	width: 100%;
+	svg {
+		// avoid 3 extra pixels. default alignment is baseline!
+		display:block;
+	}
+}
+
+.center-content {
+	display: flex;
+	width: auto;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.a2-changelog {
+	padding: 1rem;
+	margin-top: -2rem;
+
+	ol {
+		margin-top: 4px;
+	}
+
+	h4 {
+		font-size: 1em;
+		margin: 0.5rem 0;
+		color: #777;
+		font-weight: bold;
+		font-family: inherit;
+		margin-top: 2rem;
+	}
+}
+
+.tooltip {
+	position:absolute;
+	padding:6px;
+	background-color:white;
+	border:1px solid #ccc;
+}
+
+.title-notify {
+	animation: pulse 1s infinite ease-out;
+	display: none;
+	padding: 2px 12px;
+	border-radius: 1rem;
+	color: white;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+
+	&.warning {
+		background-color: @warning-base-color;
+		display: inline;
+	}
+
+	&.danger {
+		display: inline;
+		background-color: @danger-base-color;
+	}
+}
+
+@import "AppPages.less";

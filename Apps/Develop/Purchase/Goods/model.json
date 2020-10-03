@@ -5,7 +5,8 @@
 		"index": {
 			"index": true,
 			"view": "index.view",
-			"template": "index.template"
+			"template": "index.template",
+			"checkTypes": "index.d"
 		},
 		"excel": {
 			"model": "Error",

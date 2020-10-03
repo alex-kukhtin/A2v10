@@ -74,6 +74,7 @@
     <Content Include="Develop\dashboard\server.module.js" />
     <TypeScriptCompile Include="Develop\entity\edit.d.ts" />
     <Content Include="Develop\entity\editGoods.template.js" />
+    <TypeScriptCompile Include="Develop\purchase\Goods\index.d.ts" />
     <Content Include="Develop\purchase\Supplier\index.view.html">
       <Generator>XamlIntelliSenseFileGenerator</Generator>
       <SubType>Designer</SubType>

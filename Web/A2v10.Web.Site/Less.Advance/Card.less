@@ -1,0 +1,92 @@
+﻿
+@card-gap:1.46666rem;
+@card-margin:0.7rem;
+@card-margin-compact: 0.5rem;
+@card-gap-compact:1.2rem;
+@card-ghost-color: hsla(0,0%,100%,.25);
+
+.a2-state-card {
+	position: relative;
+	background-color: white;
+	color: #aaa;
+	// disble margin collapsing
+	display: inline-block;
+	margin-bottom:@card-margin;
+
+	.a2-state-card-header {
+		line-height: 1;
+		margin: @card-margin;
+	}
+
+	.a2-state-card-footer {
+		font-size: 95%;
+		margin: @card-margin;
+	}
+
+	.a2-state-card-text {
+		font-size: 32px;
+		line-height: 1.466666;
+		font-weight: 500;
+		margin: @card-margin;
+	}
+
+	.a2-card-icon {
+		position: absolute;
+		right: @card-gap;
+		top: @card-gap;
+		font-size: @card-gap * 3;
+		color: hsla(0,0%,70%,.25);
+
+		&:before {
+			color: inherit;
+		}
+	}
+
+	.a2-badge {
+		padding: 0 4px;
+		margin: 0 2px;
+		background-color: @card-ghost-color;
+		border: 1px solid @card-ghost-color;
+	}
+
+	&.a2-state-card-styled {
+		color: white;
+
+		.a2-card-icon {
+			color: @card-ghost-color;
+		}
+	}
+
+	&.a2-state-card-yellow {
+		background-color: @warning-base-color;
+	}
+
+	&.a2-state-card-green {
+		background-color: @success-base-color;
+	}
+
+	&.a2-state-card-cyan {
+		background-color: @info-base-color;
+	}
+
+	&.a2-state-card-red {
+		background-color: @danger-base-color;
+	}
+
+	&.a2-state-card-primary {
+		background-color: @primary-base-color;
+	}
+
+	&.compact {
+		.a2-state-card-text {
+			font-size: 1.6rem;
+		}
+
+		.a2-card-icon {
+			position: absolute;
+			right: @card-gap-compact;
+			top: @card-gap-compact;
+			font-size: @card-gap-compact * 3;
+		}
+	}
+}

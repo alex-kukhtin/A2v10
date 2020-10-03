@@ -8,6 +8,10 @@
 		"inputFile": "Less.Mobile/Site.Mobile.less"
 	},
 	{
+		"outputFile": "css/site.advance.css",
+		"inputFile": "Less.Advance/site.less"
+	},
+	{
 		"outputFile": "Scripts/locale-uk.min.js",
 		"inputFile": "app/localization/locale-uk.js"
 	},

@@ -1,0 +1,113 @@
+﻿@dark-gray: #999;
+
+.diagram {
+	display: flex;
+	justify-content: center;
+	text-align: left;
+
+	.path {
+		stroke: #000;
+		stroke-width: 1;
+		fill:none;
+	}
+
+	rect {
+		fill: white;
+		stroke: #000;
+	}
+
+	.d-blue {
+		stroke: #6c8ebf;
+		fill: #dae8fc;
+	}
+
+	.d-green {
+		stroke: #82b366;
+		fill: #d5e8d4;
+	}
+
+	.d-orange {
+		fill: #ffe6cc;
+		stroke: #d79b00;
+	}
+
+	.d-red {
+		fill: #f8cecc;
+		stroke: #b85450;
+	}
+
+	.d-magenta {
+		fill: #e1d5e7;
+		stroke: #9673a6;
+	}
+
+	.d-transparent-gray {
+		fill: rgba(224,224,224,.35);
+		stroke: #777;
+	}
+
+	.d-border-dashed {
+		stroke-dasharray: 3;
+	}
+
+	.action-button {
+		color: @dark-gray;
+		cursor: pointer;
+
+		rect {
+			fill: #f8f8f8;
+			stroke: @dark-gray;
+			stroke-width: 1;
+		}
+
+		&:hover {
+			rect {
+				fill: #fff2cc;
+				stroke: #d6b656;
+			}
+		}
+
+		.d-ab-body {
+			line-height: 1;
+			padding: 6px;
+			display: flex;
+			align-items: center;
+
+			.d-ab-ico {
+				font-size: 24px;
+				margin: 2px 4px 0 0;
+			}
+
+			.d-ab-text {
+				font-size: 12px;
+			}
+		}
+	}
+
+	.card {
+		.d-card-ico {
+			font-size: 30px;
+			position: absolute;
+			right: 6px;
+			top: 6px;
+			color: hsla(0,0%,100%,.35);
+		}
+
+		.d-card-header {
+			display: block;
+			color: #000;
+			margin: 4px 8px;
+		}
+
+		foreignObject {
+			overflow: visible;
+		}
+
+		.d-card-text {
+			display: block;
+			font-size: 24px;
+			margin: 4px 8px;
+			text-align: right;
+		}
+	}
+}

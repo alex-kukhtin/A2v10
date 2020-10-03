@@ -1,0 +1,157 @@
+﻿
+.block {
+	display: block!important;
+	width: 100%;
+}
+
+.bold {
+	font-weight: 500!important;
+}
+
+.no-bold {
+	font-weight: normal!important;
+}
+
+.no-wrap {
+	white-space: nowrap;
+}
+
+.wrap {
+	white-space: pre-line;
+}
+
+.pre-wrap {
+	white-space: pre-wrap;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.no-italic {
+	font-style: italic;
+}
+
+.text-left {
+	text-align: left;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-small {
+	font-size: .9rem;
+}
+
+.text-big {
+	font-size: 1.25rem;
+}
+
+.text-gray {
+	color: @gray-text-color;
+}
+
+.negative-red {
+	color: @danger-base-color !important;
+}
+
+.absolute {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	overflow: auto;
+}
+
+.aligner {
+	flex-grow: 1;
+}
+
+.valign-top, .valign-top td {
+	vertical-align: top !important;
+}
+
+.valign-middle, .valign-middle td {
+	vertical-align: middle !important;
+}
+
+.valign-bottom, .valign-bottom td {
+	vertical-align: bottom !important;
+}
+
+td.vert {
+	vertical-align: bottom !important;
+	text-align: center;
+	text-align: -webkit-center; // chrome bug fix
+
+	> .vcell {
+		writing-mode: vertical-rl;
+		white-space: pre-line;
+		text-orientation: mixed;
+		transform: rotate(180deg);
+		line-height: 1.2;
+		margin: 0;
+	}
+}
+
+.user-select {
+	user-select:text;
+}
+
+.no-user-select {
+	user-select: none;
+}
+
+.float-left {
+	float:left;
+}
+
+.float-right {
+	float:right;
+}
+
+.relative {
+	position:relative;
+}
+
+.divider {
+	flex-grow:2;
+}
+
+@keyframes blink {
+	from {
+		opacity: 1
+	}
+
+	to {
+		opacity: 0
+	}
+}
+
+@keyframes pulse {
+	40% {
+		color:currentColor;
+	}
+
+	50% {
+		color:transparent;
+	}
+
+	60% {
+		color: currentColor;
+	}
+}
+
+.mm-100-100 {
+	width:100mm;
+	height:100mm;
+	position:absolute;
+	background-color:transparent;
+	left:-200mm;
+	top:-200mm;
+}

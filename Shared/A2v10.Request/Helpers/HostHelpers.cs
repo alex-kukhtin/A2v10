@@ -54,5 +54,15 @@ namespace A2v10.Request
 			var manifestPath = Path.Combine(host.HostingPath, "manifest.json");
 			return File.Exists(manifestPath) ? "<link rel=\"manifest\" href=\"/manifest.json\">" : null;
 		}
+
+		public static String ColorScheme(this IApplicationHost host)
+		{
+			var schemePath = Path.Combine(host.HostingPath, "css", "default.colorscheme");
+			if (File.Exists(schemePath))
+			{
+				return $"style=\"{File.ReadAllText(schemePath).RemoveEOL()}\"";
+			}
+			return null;
+		}
 	}
 }

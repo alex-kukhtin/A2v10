@@ -1,0 +1,195 @@
+﻿
+@tab-brd-color: @light-gray-color;
+@tab-active-brd-color: gold;
+@tab-bg-color: @whitesmoke-gray-bg-color;
+@tab-hover-color: #eee;
+@tab-header-padding: .45rem 1rem .55rem 1rem;
+
+.tab-panel {
+	display: grid;
+	grid-template-rows: auto 1fr;
+	grid-template-columns: 1fr auto;
+	padding: 0;
+	padding-top: 6px;
+	align-self: stretch;
+	overflow: auto;
+	background-color: @tab-bg-color;
+	grid-gap: 0;
+	align-items: stretch;
+	height: 100%;
+
+	&.tab-pos-top {
+		grid-template-rows: auto 1fr;
+
+		.tab-header {
+			grid-row: 1;
+			border-bottom: 1px solid @tab-brd-color;
+
+			> li {
+				margin-bottom: -1px;
+				border-top-width: 3px;
+
+				&.active {
+					border-top: 3px solid @tab-active-brd-color;
+				}
+
+				&:hover {
+					border-bottom-color: @tab-brd-color;
+				}
+
+				&.active:hover {
+					border-bottom-color: transparent;
+				}
+			}
+		}
+
+		.tab-content {
+			grid-row: 2;
+		}
+	}
+
+	&.tab-pos-bottom {
+		grid-template-rows: 1fr auto;
+
+		.tab-header {
+			grid-row: 2;
+			border-top: 1px solid @tab-brd-color;
+
+			> li {
+				margin-top: -1px;
+				border-bottom-width: 3px;
+
+				&.active {
+					border-bottom: 3px solid @tab-active-brd-color;
+				}
+
+				&:hover {
+					border-top-color: @tab-brd-color;
+				}
+
+				&.active:hover {
+					border-top-color: transparent;
+				}
+			}
+		}
+
+		.tab-content {
+			grid-row: 1;
+		}
+	}
+
+	.tab-header {
+		background-color: @tab-bg-color;
+		margin: 0;
+		padding: 0 6px 0;
+		grid-column: 1;
+
+		> li {
+			display: inline-block;
+			padding: @tab-header-padding;
+			list-style: none;
+			cursor: pointer;
+			border: 1px solid transparent;
+			color: @link-color;
+			vertical-align: bottom;
+			font-weight: 500;
+
+			> .ico {
+				color: @icon-color;
+			}
+
+			.badge {
+				vertical-align: middle;
+			}
+
+			&:hover {
+				background-color: @tab-hover-color;
+				color: @link-hover-color;
+			}
+
+			&.active {
+				background-color: white;
+				cursor: default;
+				border-right: 1px solid @tab-brd-color;
+				border-left: 1px solid @tab-brd-color;
+				color: @text-color;
+			}
+
+			&.active.yellow {
+				background-color: #fefcf0;
+			}
+
+			.noselect();
+
+			.a2-header {
+				display: inline;
+				margin: 0;
+			}
+		}
+	}
+
+
+	.tab-item.full-height {
+		height: 100%;
+
+		> div {
+			height: 100%;
+		}
+	}
+
+	.pane-header {
+		grid-row: 1;
+		grid-column: 2;
+		align-self: stretch;
+		border-bottom: 1px solid @tab-brd-color;
+		padding-right: 6px;
+		color: #777;
+		display: inline-flex;
+		align-items: center;
+
+		.a2-header {
+			margin: 0;
+		}
+	}
+
+	.tab-content {
+		grid-column: 1 / span 2;
+		background-color: white;
+		overflow: visible; // ???: hidden for scroll
+		// hack!
+		max-height: -webkit-fill-available;
+
+		.tab-item {
+			overflow: auto;
+		}
+	}
+
+	.tab-content.yellow {
+		background-color: lightyellow;
+	}
+
+	&.overflow {
+		overflow: visible;
+
+		.tab-item {
+			overflow: visible;
+		}
+	}
+}
+
+.tab-panel.bordered {
+	> .tab-header {
+		padding-left: 0;
+	}
+
+	> .tab-content {
+		border: 1px solid @tab-brd-color;
+		border-top: none;
+	}
+}
+
+.tab-panel.full-page {
+	.tab-content {
+		overflow: auto;
+	}
+}

@@ -1,0 +1,329 @@
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+
+
+@table-hdr-bg-color: #f5f5f5;
+@a2-table-brd-color: #ddd;
+
+table {
+	border-spacing: 0;
+
+	td, th {
+		vertical-align: middle;
+	}
+
+
+	col.fit {
+		width: .1%;
+	}
+
+	tr.bold > td {
+		font-weight: @font-bold;
+	}
+
+	td.gray {
+		background-color: @table-cell-gray-color;
+	}
+
+	tr.overline > td {
+		border-top: 1px solid @a2-table-brd-color;
+	}
+}
+
+
+table.hover {
+	> tbody > tr:hover {
+		background-color: @hover-bg-color !important;
+	}
+
+	> tbody > tr.active:hover {
+		background-color: @active-bg-color !important;
+	}
+}
+
+.separate-grid {
+	border-collapse:separate;
+	&.grid-vertical, &.grid-both {
+		border-left: 1px solid @a2-table-brd-color;
+
+		> tbody > tr > td, > thead > tr > td, > thead > tr > th, > tfoot > tr > td {
+			border-right: 1px solid @a2-table-brd-color;
+		}
+	}
+
+	&.grid-horizontal, &.grid-both {
+		border-top: 1px solid @a2-table-brd-color;
+
+		> tbody > tr > td, > thead > tr > td, > tfoot > tr > td {
+			border-bottom: 1px solid @a2-table-brd-color;
+		}
+	}
+}
+
+.collapse-grid {
+	border-collapse:collapse;
+	&.grid-vertical, &.grid-both {
+
+		> tbody > tr > td, > thead > tr > td, > thead > tr > th, > tfoot > tr > td {
+			border-right: 1px solid @a2-table-brd-color;
+			border-left: 1px solid @a2-table-brd-color;
+		}
+	}
+
+	&.grid-horizontal, &.grid-both {
+
+		> tbody > tr > td, > thead > tr > td, > tfoot > tr > td {
+			border-bottom: 1px solid @a2-table-brd-color;
+			border-top: 1px solid @a2-table-brd-color;
+		}
+	}
+}
+
+
+.a2-table {
+	table-layout: auto;
+	border-collapse: separate;
+
+	&.striped > tbody > tr:nth-of-type(even) {
+		background-color: @alter-bg-color;
+	}
+
+	&.grid-horizontal, &.grid-both, &.grid-vertical {
+		.input-group {
+			border-color:transparent;
+		}
+	}
+
+	> tbody > tr > td {
+		padding: 4px 6px;
+		border-color: @a2-table-brd-color;
+
+		label {
+			display: inline-block;
+		}
+
+		.a2-table {
+			margin: -1px;
+		}
+	}
+
+	> thead > tr, > tfoot > tr {
+		vertical-align: middle;
+	}
+
+	> thead > tr > td, > tfoot > tr > td {
+		padding: @table-cell-padding;
+		background-color: @table-hdr-bg-color;
+		border-color: @a2-table-brd-color;
+	}
+
+	td.ctrl {
+		padding: 0;
+		vertical-align: top;
+		height:29px;
+		.control-group {
+			margin: 0; //0.1px; // chrome bug fix
+			.input-group {
+				min-height:28px;
+			}
+		}
+
+		.checkbox, .radio {
+			margin: 0 6px;
+		}
+
+		.stack-panel.horizontal {
+			align-items: baseline;
+
+			.control-group + .control-group {
+				border-left: 1px solid @a2-table-brd-color;
+			}
+		}
+	}
+
+	td.marker-cell {
+		padding: 0 !important;
+		width: 1px;
+		position: relative;
+
+		.marker {
+			// HACK!
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			background-color: @alter-bg-color;
+			border-left: 4px solid #ddd;
+			height: 20px;
+
+			&.success, &.green {
+				background-color: @dg-success-bg-color;
+				border-left-color: @dg-success-brd-color;
+			}
+
+			&.danger, &.red, &.error {
+				background-color: @dg-danger-bg-color;
+				border-left-color: @dg-danger-brd-color;
+			}
+
+			&.warning, &.orange {
+				background-color: @dg-warning-bg-color;
+				border-left-color: @dg-warning-brd-color;
+			}
+
+			&.info, &.cyan {
+				background-color: @dg-info-bg-color;
+				border-left-color: @dg-info-brd-color;
+			}
+		}
+	}
+
+	td.row-divider {
+		padding: 0;
+		height: 1px;
+		background-color: @a2-table-brd-color;
+	}
+
+	tr:last-child td.row-divider {
+		display: none;
+	}
+
+	tr.success, tr.green {
+		> td {
+			background-color: @dg-success-bg-color;
+		}
+	}
+
+	tr.info, tr.cyan {
+		> td {
+			background-color: @dg-info-bg-color;
+		}
+	}
+
+	tr.warning, tr.orange {
+		> td {
+			background-color: @dg-warning-bg-color;
+		}
+	}
+
+	tr.danger, tr.error, tr.red {
+		> td {
+			background-color: @dg-danger-bg-color;
+		}
+	}
+
+	tr.gray {
+		> td {
+			background-color: @alter-bg-color;
+		}
+	}
+}
+
+.a2-table.compact {
+	//TODO: may be .small-font ????
+	font-size: 0.95rem;
+	line-height: normal;
+
+	> tbody > tr > td, thead > tr > td, tfoot > tr > td {
+		padding: 2px 4px;
+		height: 23px;
+
+		.input-group {
+			padding: 0;
+		}
+
+		.input-group input {
+			//font-size: 97%;
+			height: 1.67em;
+		}
+
+		.input-group.static > span {
+			line-height: 1.67em;
+			min-height: 1.67em;
+		}
+
+		&.row-divider {
+			padding: 0;
+			height: 1px;
+		}
+
+		&.ctrl {
+			padding: 0;
+			vertical-align: baseline;
+
+			.checkbox, .radio {
+				margin: 0 6px 0 4px;
+
+				:before, :after {
+					width: 13px;
+					height: 13px;
+				}
+
+				> span {
+					padding-left: 18px;
+				}
+			}
+		}
+	}
+}
+
+table.a2-table.bk-paper {
+	background-color: #fcfaf6;
+}
+
+.a2-table.bk-yellow {
+	background-color: @light-yellow-bg-color;
+}
+
+.a2-table.bk-cyan {
+	background-color: #f8ffff;
+}
+
+.a2-table.bk-rose {
+	background-color: #fff8f8;
+}
+
+.a2-table.bk-white-smoke {
+	background-color: @whitesmoke-gray-bg-color;
+}
+
+.a2-table.bk-white {
+	background-color: white;
+}
+
+
+.app-link-table {
+	border-collapse: collapse;
+
+	td, th {
+		padding: 4px 6px;
+		border: 1px solid #ccc;
+	}
+
+	th {
+		font-weight: bold;
+		color: #777;
+	}
+}
+
+.child-border {
+	border-top: 1px solid @a2-table-brd-color;
+	border-bottom: 1px solid @a2-table-brd-color;
+
+	> .a2-table > thead > tr:first-child td {
+		border-top-style: none;
+	}
+}
+
+.table-cell-spacing-small {
+	border-spacing: 2px;
+}
+
+.table-cell-spacing-medium {
+	border-spacing: 6px;
+}
+
+.table-cell-spacing-large {
+	border-spacing: 10px;
+}

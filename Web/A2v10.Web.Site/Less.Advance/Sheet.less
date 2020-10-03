@@ -1,0 +1,300 @@
+﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+
+@import "Utlis.less";
+
+@cell-padding-v: 6px;
+@cell-padding-h: 6px;
+@cell-padding-compact-v: 2px;
+@cell-padding-compact-h: 4px;
+@sheet-bg-gray: rgba(231,231,231,.4);
+@sheet-bg-total: rgba(255,239,135, .4);
+@sheet-bg-group: rgba(221, 248, 236, .4);
+
+table.sheet {
+	.user-select();
+	width: auto;
+	border-collapse: collapse;
+	//margin: 0 1px 0 0; /*border-collapse bug*/
+	tr {
+		page-break-inside: avoid;
+	}
+
+	td, th {
+		padding: @cell-padding-v @cell-padding-h;
+		vertical-align: baseline;
+	}
+
+	td {
+		border-color: @table-brd-color;
+	}
+
+	td.indent.lev-2 {
+		padding-left: 6px + 1 * 12px;
+	}
+
+	td.indent.lev-3 {
+		padding-left: 6px + 2 * 12px;
+	}
+
+	td.indent.lev-4 {
+		padding-left: 6px + 3 * 12px;
+	}
+
+	.col-shadow {
+		visibility: collapse;
+		display: none; // FF bug. Popover does not work inside <td>.
+		td {
+			padding: 0 !important;
+			border-style: none !important;
+			display: table-cell;
+			margin: -10px;
+		}
+	}
+
+	tr.row-title {
+		font-size: 120%;
+
+		td {
+			border-style: none !important;
+			font-weight: @font-bold;
+			padding: 0 @table-cell-padding-h @cell-padding-v, @cell-padding-h;
+			background-color: white;
+		}
+
+		td:first-child {
+			padding-left: 0;
+		}
+
+		td:last-child {
+			padding-right: 0;
+		}
+	}
+
+	tr.row-no-border {
+		td {
+			border-style: none;
+			background-color: white;
+		}
+
+		td.underline {
+			border-bottom: 1px solid @table-brd-color;
+			height: 30px;
+		}
+	}
+
+	tr.row-page-header {
+		td {
+			font-size:.95rem;
+			color:#999;
+			height:3rem;
+			border-style:none;
+
+		}
+	}
+
+	tr.row-parameter, tr.row-last-parameter {
+		td {
+			border-style: none !important;
+			background-color: white;
+		}
+
+		td:first-child {
+			padding-left: 0;
+		}
+
+		td:last-child {
+			padding-right: 0;
+		}
+	}
+
+	tr.row-last-parameter {
+		td {
+			padding-bottom: @cell-padding-v * 3;
+		}
+	}
+
+	tr.row-header {
+		background-color: @sheet-bg-gray;
+	}
+
+	tr.row-light-header {
+		color: #ccc;
+	}
+
+	tr.row-footer {
+		background-color: @sheet-bg-gray;
+	}
+
+	tr.row-total {
+		background-color: @sheet-bg-total;
+
+		td {
+			font-weight: @font-bold;
+		}
+	}
+
+	tr.group {
+		background-color: @sheet-bg-group;
+		color: #208080;
+
+		td {
+			font-weight: @font-bold;
+		}
+	}
+
+	.group-cell {
+		padding: 4px 2px;
+
+		> div {
+			cursor: pointer;
+
+			.ico:before {
+				content: "\e9cb"; /*tree-expanded*/
+			}
+		}
+
+		&.collapsed {
+			> div {
+				.ico:before {
+					content: "\e9cd"; /*tree-collapsed*/
+				}
+			}
+		}
+	}
+
+	&.striped > tbody {
+		> tr:nth-child(even) {
+			background-color: rgba(240,240,240, 0.25);
+		}
+	}
+
+	tr.success, tr.green {
+		background-color: @dg-success-bg-color !important;
+	}
+
+	tr.danger, tr.red, tr.error {
+		background-color: @dg-danger-bg-color !important;
+		color: @danger-txt-color;
+	}
+
+	tr.warning, tr.orange {
+		background-color: @dg-warning-bg-color !important;
+	}
+
+	tr.info, tr.cyan {
+		background-color: @dg-info-bg-color !important;
+	}
+
+	tr.gray {
+		background-color: @alter-bg-color !important;
+	}
+
+	&.compact {
+		font-size: .95rem;
+
+		td, th {
+			padding: @cell-padding-compact-v @cell-padding-compact-h;
+		}
+	}
+
+	&.fit-width {
+		width:1px;
+	}
+}
+
+table > colgroup {
+	col.yellow {
+		background-color: rgba(255,255,164, 0.25);
+	}
+
+	col.green {
+		background-color: rgba(220,255,220, 0.25);
+	}
+
+	col.gray {
+		background-color: rgba(240,240,240, 0.25);
+	}
+
+	col.red {
+		background-color: rgba(255,220,237, 0.25);
+	}
+
+	col.blue {
+		background-color: rgba(196,237,255, 0.25);
+	}
+}
+
+
+@page-width-p: 21cm;
+@page-height-p: 29.7cm;
+@page-width-l: @page-height-p;
+@page-height-l: @page-width-p;
+@page-margin: 1cm;
+
+.sheet-page-wrapper {
+	background-color: @page-wrapper-bg-color;
+	padding: 30px 0;
+	min-height: 100%;
+	min-width:max-content;
+
+	.sheet-page {
+		margin: 0 auto;
+		background-color: white;
+		padding: @page-margin;
+		border: 1px solid #999;
+		box-shadow: 2px 2px 2px 0 rgba(0,0,0, 0.25);
+
+		&.portrait {
+			max-width: @page-width-p;
+			width: @page-width-p;
+			min-height: @page-height-p;
+		}
+
+		&.landscape {
+			max-width: @page-width-l;
+			width: @page-width-l;
+			min-height: @page-height-l;
+		}
+	}
+}
+
+@media print {
+	.sheet-page-wrapper {
+		background-color: white;
+		padding: 0 !important;
+		margin: 0;
+
+		.sheet-page {
+			padding: 0 !important;
+			box-shadow: none;
+			border-style: none;
+			margin: 0;
+			min-height: 1px;
+
+			&.portrait {
+				width: @page-width-p - @page-margin * 2;
+				max-width: @page-width-p - @page-margin * 2;
+				padding: 0 !important;
+				min-height: @page-height-p - @page-margin * 2;
+			}
+
+			&.landscape {
+				width: @page-width-l - @page-margin * 2;
+				max-width: @page-width-l - @page-margin * 2;
+				padding: 0 !important;
+				min-height: @page-height-l - @page-margin * 2;
+			}
+
+			.a2-hyperlink {
+				border-bottom:none!important;
+			}
+		}
+	}
+
+	/*
+	@page {
+		size: A4 portrait;
+		margin: @page-margin;
+	}
+	*/
+}

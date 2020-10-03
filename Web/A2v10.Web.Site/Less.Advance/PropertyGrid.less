@@ -1,0 +1,82 @@
+﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+
+@import "Utlis.less";
+
+@v-pading: 4px;
+@h-padding: 6px;
+@v-pading-compact: 2px;
+@h-padding-compact: 4px;
+@v-pading-small:0;
+@h-padding-small:2px;
+
+table.prop-grid {
+	width: 100%;
+
+	td {
+		border-color: @table-brd-color;
+		line-height: normal;
+		padding: @v-pading @h-padding;
+		vertical-align: baseline;
+	}
+
+	col.prop-name {
+		width: 1px;
+	}
+
+
+	td.prop-name {
+		color: @label-color;
+	}
+
+	&.no-wrap-name {
+		td.prop-name {
+			white-space:nowrap;
+		}
+	}
+
+	td.prop-value {
+		.control-group {
+			margin: 0;
+		}
+	}
+
+	&.grid-horizontal {
+		td.prop-name {
+			padding-left: 0;
+		}
+
+		td.prop-value {
+			padding-right: 0;
+		}
+	}
+
+	&.striped > tbody > tr:nth-of-type(even) {
+		background-color: @alter-bg-color;
+	}
+
+
+	&.grid-horizontal, &.grid-both {
+		tr:first-child > td {
+			border-top-style: none;
+		}
+
+		tr:last-child > td {
+			border-bottom-style: none;
+		}
+	}
+}
+
+table.prop-grid.compact {
+	font-size: .95rem;
+	td {
+		padding: @v-pading-compact @h-padding-compact;
+	}
+}
+
+table.prop-grid.small {
+	//font-size: .9rem;
+
+	td {
+		padding: @v-pading-small @h-padding-small;
+	}
+}

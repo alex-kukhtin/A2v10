@@ -36,6 +36,7 @@ namespace A2v10.Request
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
 			sb.Replace("$(LayoutManifest)", _host.CustomManifest());
+			sb.Replace("$(ColorScheme)", _host.ColorScheme());
 
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 			sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");

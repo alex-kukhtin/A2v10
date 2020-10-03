@@ -67,6 +67,10 @@ namespace A2v10.Request
 
 		FieldMetadata CalcExpression(String expression)
 		{
+			if (expression == null)
+				return null;
+			if (expression.StartsWith("Parent."))
+				return null;
 			var segments = expression.Split('.');
 			var currentType = _mm["TRoot"];
 			var len = segments.Length;
