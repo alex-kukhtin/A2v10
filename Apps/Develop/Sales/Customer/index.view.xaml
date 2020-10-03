@@ -11,7 +11,7 @@
 		<CollectionView ItemsSource="{Bind Agents}" RunAt="Server" Filter="Fragment"/>
 	</Page.CollectionView>
 	<Splitter>
-		<Block Splitter.Width="30%" Splitter.MinWidth="20%">
+		<Block Splitter.Width="25%" Splitter.MinWidth="20%">
 			<Toolbar>
 				<Button Icon="Add" Tip="Создать папку" Command="{BindCmd Execute, CommandName=AddTopFolder, Argument={Bind Agents}}" />
 				<Button Icon="Edit" Command="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}" />
@@ -19,8 +19,8 @@
 				<Button Icon="Disapprove" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross'}"/>
 				<Button Icon="Approve" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross2'}"/>
 			</Toolbar>
-			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True"
-					ItemsSource="{Bind Agents}" FolderSelect="False">
+			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True" Indent="False"
+					ItemsSource="{Bind Agents}" FolderSelect="True">
 				<TreeViewItem ItemsSource="{Bind SubItems}" Label="{Bind Name}" Icon="{Bind Icon}" IsGroup="{Bind Id}"/>
 			</TreeView>
 		</Block>

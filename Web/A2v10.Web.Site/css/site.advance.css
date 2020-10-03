@@ -1617,7 +1617,6 @@ header .dropdown.separate.show .btn.btn-success,
 .page.page-grid .page-pager {
   grid-row: 3;
   grid-column: 1;
-  padding: 0.5em;
 }
 .page.page-grid .page-content {
   position: relative;
@@ -3721,6 +3720,9 @@ tr:hover .commandbar.visible-hover {
   content: "\e9a4";
   /*chevron-down*/
 }
+.tree-view.no-indent li > ul {
+  padding-left: 0;
+}
 .tree-view.tree-view-side-bar-menu {
   background-color: #9ab3e0;
 }
@@ -5174,6 +5176,7 @@ label.checkbox.small span:after {
   display: flex;
   align-items: center;
   border-top: 1px solid var(--neutralLight);
+  padding: 0.5em;
 }
 .a2-pager button {
   padding: 3px;

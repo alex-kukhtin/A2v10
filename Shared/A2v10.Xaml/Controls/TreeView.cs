@@ -80,6 +80,7 @@ namespace A2v10.Xaml
 		public Length Height { get; set; }
 
 		public TreeViewStyle Style { get; set; }
+		public Boolean? Indent { get; set; }
 
 		public TreeViewItemCollection Children { get; set; } = new TreeViewItemCollection();
 
@@ -94,6 +95,8 @@ namespace A2v10.Xaml
 				cont.MergeStyle("height", Height.Value);
 			if (Style != TreeViewStyle.Normal)
 				cont.AddCssClass($"tree-view-{Style.ToString().ToKebabCase()}");
+			if (Indent != null && Indent.Value == false)
+				cont.AddCssClass("no-indent");
 
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)
