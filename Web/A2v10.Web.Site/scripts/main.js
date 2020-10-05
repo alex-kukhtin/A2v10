@@ -12675,7 +12675,7 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200624-7676*/
+/*20201005-7710*/
 /* controllers/shell.js */
 
 (function () {
@@ -12795,8 +12795,9 @@ Vue.directive('resize', {
 				store.commit('navigate', { url: itm.url });
 			},
 			clickMenu() {
-				if (this.isNavBarMenu)
+				if (this.isNavBarMenu) {
 					eventBus.$emit('clickNavMenu', true);
+				}
 			}
 		}
 	};
@@ -12959,6 +12960,8 @@ Vue.directive('resize', {
 				}, 50); // same as modal
 			},
 			showNavMenu(bShow) {
+				if (bShow)
+					eventBus.$emit('closeAllPopups');
 				this.showNavBar = bShow;
 			}
 		},

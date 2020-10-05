@@ -1,4 +1,4 @@
-﻿
+﻿@import "variables.less";
 
 /*
 TODO: 
@@ -9,12 +9,12 @@ TODO:
 @divider-color: @dropdown-brd-color;
 
 .menu {
-	padding: .25em 0;
-	margin: 3px 0;
+	margin: 2px 0;
 	top: 100%;
 	min-width: 160px; //TODO:
 	box-shadow: @dropdown-shadow;
 	border: 1px solid @dropdown-brd-color;
+	font-weight: normal;
 
 	.dropdown-item {
 		display: flex;
@@ -37,7 +37,7 @@ TODO:
 			margin-right: .5em;
 			color: inherit;
 			min-width: 1.25em;
-			font-size:1.077em;
+			font-size: 1.077em;
 
 			&:before {
 				color: @icon-color;
@@ -79,7 +79,7 @@ TODO:
 	display: none;
 	position: absolute;
 	z-index: @popup-index;
-	background-color: @dropdown-bg-color;
+	background-color: @background-color;
 	width: auto;
 	height: auto;
 	left: 0;
@@ -140,11 +140,10 @@ TODO:
 .dropdown {
 
 	.menu {
-		margin-top: @button-gap;
-		margin-bottom: @button-gap;
 		font-weight: normal;
 	}
 
+	/*
 	&.show:after {
 		content: '';
 		height: 3px;
@@ -154,15 +153,15 @@ TODO:
 		left: 1px;
 		right: 1px;
 	}
+	*/
 
 	&.separate {
 		.menu {
-			background-color: white;
-			margin: 2px 0;
+			//margin: 2px 0;
 		}
 
 		&:after {
-			display: none;
+			//display: none;
 		}
 	}
 
@@ -172,7 +171,7 @@ TODO:
 		}
 
 		.btn:hover {
-			box-shadow:none!important;
+			box-shadow: none !important;
 		}
 	}
 
@@ -198,27 +197,27 @@ TODO:
 		}
 
 		&.btn-green, &.btn-success {
-			border-left-color: white;
+			border-left-color: @background-color;
 			background-color: darken(@success-base-color, 8%);
 		}
 
 		&.btn-primary {
-			border-left-color: white;
+			border-left-color: @background-color;
 			background-color: darken(@primary-base-color, 8%);
 		}
 
 		&.btn-red, &.btn-danger {
-			border-left-color: white;
+			border-left-color: @background-color;
 			background-color: darken(@danger-base-color, 8%);
 		}
 
 		&.btn-info, &.btn-cyan {
-			border-left-color: white;
+			border-left-color: @background-color;
 			background-color: darken(@info-base-color, 8%);
 		}
 
 		&.btn-warning, &.btn-orange {
-			border-left-color: white;
+			border-left-color: @background-color;
 			background-color: darken(@warning-base-color, 8%);
 		}
 	}
@@ -229,13 +228,9 @@ TODO:
 			z-index: @popup-index + 1;
 		}
 
-		:not(.separate) > .btn:hover {
-			background-color: @dropdown-bg-color;
-		}
-
 		> .btn-caret {
-			//border-left-style: none;
-			//padding-left:7px;
+			border-left-style: none;
+			padding-left:7px;
 		}
 	}
 }

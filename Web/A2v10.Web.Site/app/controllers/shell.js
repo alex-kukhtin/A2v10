@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200624-7676*/
+/*20201005-7710*/
 /* controllers/shell.js */
 
 (function () {
@@ -120,8 +120,9 @@
 				store.commit('navigate', { url: itm.url });
 			},
 			clickMenu() {
-				if (this.isNavBarMenu)
+				if (this.isNavBarMenu) {
 					eventBus.$emit('clickNavMenu', true);
+				}
 			}
 		}
 	};
@@ -284,6 +285,8 @@
 				}, 50); // same as modal
 			},
 			showNavMenu(bShow) {
+				if (bShow)
+					eventBus.$emit('closeAllPopups');
 				this.showNavBar = bShow;
 			}
 		},

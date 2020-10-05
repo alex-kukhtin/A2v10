@@ -1,4 +1,6 @@
-﻿--themePrimary:#dd2c5e;
+﻿--backgroundColor:#ffff;
+--textColor:#131313;
+--themePrimary:#dd2c5e;
 --themeDark:#c5204f;
 --themeDarker:#af1d46;
 

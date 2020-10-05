@@ -4,12 +4,14 @@
 @monospace-font: Consolas, 'Courier New', Courier, monospace;
 @font-size:14px;
 
+@background-color:var(--backgroundColor);
+@text-color: var(--textColor);
+
 @font-size-small:0.925rem;
 
 
 @border-light: var(--neutralLight);
 
-@text-color:#222;
 @gray-text-color: #ccc;
 @dark-gray-text-color:#999;
 
@@ -39,10 +41,10 @@
 @active-bg-color: #cde6f7;
 @alter-bg-color: rgba(208, 208, 208, 0.15);
 
-@link-color: #208cf8; //#57a8fa;
+@link-color: var(--themeDark);//#208cf8; //#57a8fa;
 //@link-hover-color: darken(@link-color, 15%);
 @link-hover-color: @link-color;
-@link-hover-color-dark: darken(@link-color, 10%);
+@link-hover-color-dark: var(--themeDarker); //darken(@link-color, 10%);
 
 @warning-base-color: #ffb74d;
 @danger-base-color: #da533f;
