@@ -1,6 +1,11 @@
-﻿--themePrimary:#dd2c5e;
+﻿--backgroundColor:#ffff;
+--textColor:#131313;
+--themePrimary:#dd2c5e;
 --themeDark:#c5204f;
+--themeDarker:#af1d46;
+
 --neutralLight:#edebe9;
 --neutralLighterAlt:#faf9f8;
 --neutralLighter:#f3f2f1;
+
 --brandPrimary:#dd2c5e;

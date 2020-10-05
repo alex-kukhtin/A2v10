@@ -3750,6 +3750,9 @@ tr:hover .commandbar.visible-hover {
   left: 2px;
   top: 2px;
 }
+.tree-view.no-indent li > ul {
+  padding-left: 0;
+}
 .tree-view.tree-view-side-bar-menu {
   background-color: #9ab3e0;
 }
