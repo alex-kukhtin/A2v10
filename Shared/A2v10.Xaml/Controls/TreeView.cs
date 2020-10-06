@@ -30,24 +30,24 @@ namespace A2v10.Xaml
 		{
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)
-				sb.Append($"subitems: '{isBind.GetPath(context)}',");
+				sb.Append($"subitems: '{isBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var labelBind = GetBinding(nameof(Label));
 			if (labelBind != null)
-				sb.Append($"label: '{labelBind.GetPath(context)}',");
+				sb.Append($"label: '{labelBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var tipBind = GetBinding(nameof(Tip));
 			if (tipBind != null)
-				sb.Append($"title: '{tipBind.GetPath(context)}',");
+				sb.Append($"title: '{tipBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var iconBind = GetBinding(nameof(Icon));
 			if (iconBind != null)
-				sb.Append($"hasIcon: true, icon: '{iconBind.GetPath(context)}',");
+				sb.Append($"hasIcon: true, icon: '{iconBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var isFolderBind = GetBinding(nameof(IsFolder));
 			if (isFolderBind != null)
-				sb.Append($"isFolder: '{isFolderBind.GetPath(context)}',");
+				sb.Append($"isFolder: '{isFolderBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			else if (IsFolder != null)
 				throw new XamlException("The IsFolder property must be a binding");
 			var isGroupBind = GetBinding(nameof(IsGroup));
 			if (isGroupBind != null)
-				sb.Append($"isGroup: '{isGroupBind.GetPath(context)}',");
+				sb.Append($"isGroup: '{isGroupBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			else if (IsGroup != null)
 				throw new XamlException("The IsGroup property must be a binding");
 		}
@@ -141,6 +141,15 @@ namespace A2v10.Xaml
 			sb.RemoveTailComma(); // tail comma
 			sb.Append("}");
 			return sb.ToString();
+		}
+
+		protected override void OnEndInit()
+		{
+			base.OnEndInit();
+			if (IconFolder != Icon.NoIcon && IconItem == Icon.NoIcon)
+				IconItem = Icon.Empty;
+			else if (IconFolder == Icon.NoIcon && IconItem != Icon.NoIcon)
+				IconFolder = Icon.Empty;
 		}
 	}
 }

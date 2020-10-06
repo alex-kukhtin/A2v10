@@ -1238,7 +1238,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20200907-7706*/
+/*20201006-7712*/
 // services/datamodel.js
 
 (function () {
@@ -2176,10 +2176,10 @@ app.modules['std:validators'] = function () {
 				// expand all parent items
 				let p = this._parent_._parent_;
 				while (p) {
-					p.$expanded = true;
-					p = p._parent_._parent_;
 					if (!p || p === this.$root)
 						break;
+					p.$expanded = true;
+					p = p._parent_._parent_;
 				}
 			}
 		};

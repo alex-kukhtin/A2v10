@@ -235,7 +235,7 @@ namespace A2v10.Xaml
 			if (path.StartsWith("!"))
 				return "!" + GetNormalizedPathInternal(path.Substring(1));
 
-			if (_typeChecker != null)
+			if (_typeChecker != null && typeCode != TypeCheckerTypeCode.Skip)
 				_typeChecker.CheckTypedXamlExpression(GetExpressionForChecker(path), typeCode);
 
 			return GetNormalizedPathInternal(path, isWrapped);

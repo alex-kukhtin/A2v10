@@ -10,7 +10,8 @@ namespace A2v10.Infrastructure
 	{
 		String,
 		Date,
-		Boolean
+		Boolean,
+		Skip
 	}
 
 	public interface ITypeChecker

@@ -25,6 +25,10 @@ namespace A2v10.Request
 		{
 			var parser = new TSDefParser(_reader, _path);
 			_mm = parser.Parse(fileName);
+
+			if (model == null || model.Metadata == null)
+				throw new TypeCheckerException($"TypeChecker. Date model is empty");
+
 			foreach (var kv in model.Metadata)
 			{
 				if (!_mm.ContainsKey(kv.Key))
@@ -70,6 +74,8 @@ namespace A2v10.Request
 			if (expression == null)
 				return null;
 			if (expression.StartsWith("Parent."))
+				return null;
+			if (expression.Contains(".$selected"))
 				return null;
 			var segments = expression.Split('.');
 			var currentType = _mm["TRoot"];
