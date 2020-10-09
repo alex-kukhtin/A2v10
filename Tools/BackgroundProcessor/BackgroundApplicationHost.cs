@@ -33,7 +33,7 @@ namespace BackgroundProcessor
 		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
 		public String AppDescription => throw new NotImplementedException(nameof(AppDescription));
 		public String SupportEmail => throw new NotImplementedException(nameof(SupportEmail));
-		public String Theme => throw new NotImplementedException(nameof(Theme));
+		public ITheme Theme => throw new NotImplementedException(nameof(Theme));
 		public String HelpUrl => throw new NotImplementedException(nameof(HelpUrl));
 		public String HostingPath => throw new NotImplementedException(nameof(HostingPath));
 		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];

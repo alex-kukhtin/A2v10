@@ -19,6 +19,39 @@ using A2v10.Web.Base;
 
 namespace A2v10.Web.Config
 {
+	public class ThemeInfo : ITheme
+	{
+		public ThemeInfo(String text, String hostingPath)
+		{
+			Name = text ?? String.Empty;
+			FileName = "site";
+			String schemeName = null;
+			if (Name.Contains("."))
+			{
+				var tx = Name.Split('.');
+				Name = tx[0].Trim();
+				schemeName = tx[1].Trim();
+			}
+			if (Name == "advance" && String.IsNullOrEmpty(schemeName))
+				schemeName = "default";
+
+			if (!String.IsNullOrEmpty(Name))
+				FileName += $".{Name.ToLowerInvariant()}";
+
+			if (!String.IsNullOrEmpty(schemeName))
+			{
+				var schemePath = Path.Combine(hostingPath, "css", $"{schemeName}.colorscheme");
+				if (File.Exists(schemePath))
+				{
+					ColorScheme = $"style=\"{File.ReadAllText(schemePath).RemoveEOL()}\"";
+				}
+			}
+		}
+		public String Name { get; }
+		public String FileName { get; }
+		public String ColorScheme { get; }
+	}
+
 	public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
 	{
 		private readonly IProfiler _profiler;
@@ -107,16 +140,7 @@ namespace A2v10.Web.Config
 
 		public String HostingPath => HostingEnvironment.MapPath("~");
 
-		public String Theme
-		{
-			get
-			{
-				String theme = ConfigurationManager.AppSettings["theme"];
-				if (String.IsNullOrEmpty(theme))
-					return "site";
-				return $"site.{theme.ToLowerInvariant()}";
-			}
-		}
+		public ITheme Theme => new ThemeInfo(ConfigurationManager.AppSettings["theme"], HostingPath);
 
 		public Boolean IsAdminAppPresent {
 			get

@@ -10,6 +10,13 @@ namespace A2v10.Infrastructure
 		public const String customSecuritySchema = "customSecuritySchema";
 	}
 
+	public interface ITheme
+	{
+		String Name { get; }
+		String FileName { get; }
+		String ColorScheme { get; }
+	}
+
 	public interface IApplicationHost
 	{
 		IProfiler Profiler { get; }
@@ -20,7 +27,7 @@ namespace A2v10.Infrastructure
 		String AppHost { get; }
 		String UserAppHost { get; }
 		String SupportEmail { get; }
-		String Theme { get; }
+		ITheme Theme { get; }
 		String HelpUrl { get; }
 		String HostingPath { get; }
 		String SmtpConfig { get; }

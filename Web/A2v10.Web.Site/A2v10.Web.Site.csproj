@@ -294,6 +294,8 @@
     <Content Include="Less.Advance\WaitCursor.less" />
     <Content Include="Less.Advance\Wizard.less" />
     <Content Include="css\default.colorscheme" />
+    <Content Include="css\blue.colorscheme" />
+    <Content Include="Less.Advance\_ColorSchemes.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

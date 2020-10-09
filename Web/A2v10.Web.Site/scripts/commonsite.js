@@ -4071,7 +4071,7 @@ Vue.component('a2-pager', {
 						mw.style.width = '800px'; // from less
 						break;
 					case 'modal-small':
-						mw.style.width = '300px'; // from less
+						mw.style.width = '350px'; // from less
 						break;
 				}
 				if (binding.value.minWidth)

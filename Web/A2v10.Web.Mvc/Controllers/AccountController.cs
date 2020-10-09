@@ -83,8 +83,9 @@ namespace A2v10.Web.Mvc.Controllers
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
 				layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
 				layout.Replace("$(LayoutManifest)", _host.CustomManifest());
-				layout.Replace("$(ColorScheme)", _host.ColorScheme());
-				layout.Replace("$(Theme)", _host.Theme);
+				var theme = _host.Theme;
+				layout.Replace("$(ColorScheme)", theme?.ColorScheme);
+				layout.Replace("$(Theme)", theme?.FileName);
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
 				String regMode = _host.IsRegistrationEnabled.ToString().ToLowerInvariant();

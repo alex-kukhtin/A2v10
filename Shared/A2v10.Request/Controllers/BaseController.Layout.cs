@@ -30,14 +30,14 @@ namespace A2v10.Request
 			String layout = Admin ? Resources.layoutAdmin :
 							_host.Mobile ? Resources.layoutMobile : Resources.layout;
 			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
+
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
+
 			sb.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("shell"));
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
 			sb.Replace("$(LayoutManifest)", _host.CustomManifest());
-			sb.Replace("$(ColorScheme)", _host.ColorScheme());
-
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 			sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");
 			writer.Write(sb.ToString());

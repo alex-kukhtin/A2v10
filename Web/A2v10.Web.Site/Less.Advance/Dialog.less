@@ -1,11 +1,16 @@
 ﻿@import "variables.less";
 
-@modal-padding: .75rem;
+@modal-padding: @padding-default;
+
 @modal-header-height: 3rem;
 
 @modal-footer-bg-color: @whitesmoke-gray-bg-color;
-@modal-width-medium: 500px;
 @ani-time: 0.1s;
+
+// see modal.js
+@modal-width-small : 350px;
+@modal-width-medium: 500px;
+@modal-width-large:800px;
 
 .modal-stack {
 	position: fixed;
@@ -30,7 +35,7 @@
 
 			.modal-body-content {
 				width: 100%;
-				user-select:text;
+				user-select: text;
 			}
 
 			.modal-error-list {
@@ -76,11 +81,11 @@
 		}
 
 		.modal-window.modal-small {
-			width: 300px;
+			width: @modal-width-small;
 		}
 
 		.modal-window.modal-large {
-			width: 800px;
+			width: @modal-width-large;
 		}
 
 		.load-indicator {
@@ -132,9 +137,9 @@
 
 .modal-header {
 	background-color: @dialog-header-bg-color;
-	padding: .5rem @modal-padding;
+	padding: .5rem .5rem .5rem @modal-padding;
 	cursor: move;
-	font-weight: 500;
+	font-weight: @font-bold;
 	border-bottom: 1px solid @light-gray-color;
 	min-height: @modal-header-height;
 	line-height: 1.9rem;
@@ -146,8 +151,8 @@
 	.btnclose {
 		float: right;
 		color: #aaa;
-		width:1.9rem;
-		height:1.9rem;
+		width: 1.9rem;
+		height: 1.9rem;
 
 		&:not([disabled]) {
 			&:hover, &:active, &:focus {
@@ -156,9 +161,10 @@
 				border-color: @tb-hover-brd-color;
 			}
 		}
+
 		&[disabled] {
-			cursor:not-allowed;
-			opacity:.5;
+			cursor: not-allowed;
+			opacity: .5;
 		}
 	}
 

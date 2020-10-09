@@ -75,7 +75,7 @@ namespace A2v10.Tests.Config
 
 		public String HostingPath { get; set; }
 
-		public String Theme => null;
+		public ITheme Theme => null;
 		public String HelpUrl => null;
 
 		public Boolean IsMultiTenant => false;

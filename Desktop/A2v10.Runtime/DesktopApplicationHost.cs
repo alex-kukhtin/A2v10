@@ -67,7 +67,7 @@ namespace A2v10.Runtime
 		public String UserAppHost => null;
 		public String ScriptEngine => null;
 
-		public String Theme => null;
+		public ITheme Theme => null;
 		public String HelpUrl => CurrentHelpUrl;
 
 		public Boolean IsDebugConfiguration

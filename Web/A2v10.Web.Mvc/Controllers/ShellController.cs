@@ -192,13 +192,15 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				Response.ContentType = "text/html";
+				var theme = _baseController.Host.Theme;
 				var prms = new Dictionary<String, String>
 				{
 					{ "$(RootUrl)", RootUrl },
 					{ "$(HelpUrl)", _baseController.Host.HelpUrl },
 					{ "$(PersonName)", GetUserPersonName() },
 					{ "$(CompanyButton)", GetCompanyButton() },
-					{ "$(Theme)", _baseController.Host.Theme },
+					{ "$(Theme)", theme.FileName },
+					{ "$(ColorScheme)", theme.ColorScheme },
 					{ "$(Build)", _baseController.Host.AppBuild },
 					{ "$(Locale)", _baseController.CurrentLang },
 					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." },
