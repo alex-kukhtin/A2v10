@@ -37,7 +37,8 @@
 	"popups": {
 		"state": {
 			"model": "Agent.State",
-			"view": "state.popup"
+			"view": "state.popup",
+			"checkTypes": 'state.d'
 		}
 	},
 	"commands": {

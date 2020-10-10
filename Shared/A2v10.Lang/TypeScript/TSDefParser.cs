@@ -101,6 +101,14 @@ namespace A2v10.Lang
 			{
 				Next();
 				ReadDeclareType();
+			} else if (_tok.IsIderValue("const"))
+			{
+				Next();
+				if (_tok.IsIderValue("enum"))
+				{
+					Next();
+					ReadEnumType();
+				}
 			}
 		}
 
@@ -115,6 +123,19 @@ namespace A2v10.Lang
 				_mm.AddDeclare(typeName, type);
 			}
 		}
+
+		void ReadEnumType()
+		{
+			var typeName = _tok.Value;
+			Next();
+			if (_tok.IsLeftCurly)
+			{
+				while (!_tok.IsRightCurly && !_tok.IsEOF)
+					Next();
+			}
+			_mm.AddEnum(typeName);
+		}
+
 
 		Boolean Next()
 		{

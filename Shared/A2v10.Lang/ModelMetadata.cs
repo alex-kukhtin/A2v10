@@ -30,6 +30,7 @@ namespace A2v10.Lang
 	public class ModelMetadata : Dictionary<String, TypeMetadata>
 	{
 		private Dictionary<String, TSType> _declares;
+		private HashSet<String> _enums;
 
 		public TypeMetadata AddType(String name, TSType baseType)
 		{
@@ -43,8 +44,15 @@ namespace A2v10.Lang
 		public void AddDeclare(String name, TSType type)
 		{
 			if (_declares == null)
-				_declares = new Dictionary<string, TSType>();
+				_declares = new Dictionary<String, TSType>();
 			_declares.Add(name, type);
+		}
+
+		public void AddEnum(String name)
+		{
+			if (_enums == null)
+				_enums = new HashSet<String>();
+			_enums.Add(name);
 		}
 
 		public TSType GetDeclare(String name)
@@ -52,6 +60,11 @@ namespace A2v10.Lang
 			if (_declares != null && _declares.ContainsKey(name))
 				return _declares[name];
 			return null;
+		}
+
+		public Boolean IsEnum(String name)
+		{
+			return _enums != null && _enums.Contains(name);
 		}
 	}
 }

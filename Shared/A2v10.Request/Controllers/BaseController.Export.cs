@@ -11,6 +11,7 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Interop;
 using System.IO;
+using System.Text;
 
 namespace A2v10.Request
 {
@@ -30,6 +31,8 @@ namespace A2v10.Request
 			}
 			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms);
 
+			_host.CheckTypes(action.Path, action.checkTypes, dm);
+
 			Stream stream = null;
 			var templExpr = export.GetTemplateExpression();
 			if (!String.IsNullOrEmpty(templExpr))
@@ -39,7 +42,7 @@ namespace A2v10.Request
 					throw new RequestModelException($"Template stream not found or its format is invalid. ({templExpr})");
 				stream = new MemoryStream(dm.Eval<Byte[]>(templExpr));
 			}
-			else
+			else if (!String.IsNullOrEmpty(export.template))
 			{
 				var fileName = export.template.AddExtension(export.format.ToString());
 				var appReader = _host.ApplicationReader;
@@ -60,6 +63,17 @@ namespace A2v10.Request
 						SetResponseInfo(response, export);
 						response.BinaryWrite(bytes);
 						stream.Close();
+					}
+					break;
+				case RequestExportFormat.dbf:
+				case RequestExportFormat.csv:
+					{
+						var fmt = export.format.ToString().ToLowerInvariant();
+						var extDataProvider = _externalDataProvider.GetWriter(dm, fmt, export.GetEncoding());
+						if (extDataProvider == null)
+							throw new RequestModelException($"There is no data provider for '{fmt}' files");
+						extDataProvider.Write(response.OutputStream);
+						SetResponseInfo(response, export);
 					}
 					break;
 			}

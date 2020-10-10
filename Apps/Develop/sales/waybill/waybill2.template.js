@@ -77,7 +77,8 @@ define(["require", "exports"], function (require, exports) {
             callApi,
             getWeather,
             testPost,
-            sendMessage
+            sendMessage,
+            checkTypes
         }
     };
     exports.default = template;
@@ -175,6 +176,12 @@ define(["require", "exports"], function (require, exports) {
         const ctrl = this.$ctrl;
         const doc = this.Document;
         let r = await ctrl.$invoke('sendMessage', { Id: doc.Id });
+        alert(JSON.stringify(r));
+    }
+    async function checkTypes() {
+        const ctrl = this.$ctrl;
+        const doc = this.Document;
+        let r = await ctrl.$invoke('checkTypes', { Id: doc.Id });
         alert(JSON.stringify(r));
     }
 });

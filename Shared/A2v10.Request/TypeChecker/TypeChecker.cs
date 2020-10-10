@@ -62,6 +62,8 @@ namespace A2v10.Request
 			var fieldType = fileField.Type.TypeName;
 			var dataType = dataField.TypeScriptName;
 			if (fieldType != dataType) {
+				if (_mm.IsEnum(fieldType))
+					return;
 				var tm = _mm.GetDeclare(fieldType);
 				if (tm != null && tm.TypeName == dataType)
 					return;
@@ -77,6 +79,8 @@ namespace A2v10.Request
 				return null;
 			if (expression.Contains(".$selected"))
 				return null;
+			if (expression.StartsWith("-"))
+				expression = expression.Substring(1);
 			var segments = expression.Split('.');
 			var currentType = _mm["TRoot"];
 			var len = segments.Length;

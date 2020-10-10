@@ -1,9 +1,16 @@
 ﻿
 import { TAgent, TEntity } from "elems.d";
 
+declare const enum TestEnum {
+	start = 'start',
+	end = 'end',
+	above = 'above',
+	below = 'below'
+}
+
 export interface TUnit extends IElement {
 	Id: number;
-	Short: string;
+	Short: TestEnum;
 }
 
 export interface TMerge extends IElement {

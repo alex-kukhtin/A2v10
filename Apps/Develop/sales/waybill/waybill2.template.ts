@@ -87,7 +87,8 @@ const template: Template = {
 		callApi,
 		getWeather,
 		testPost,
-		sendMessage
+		sendMessage,
+		checkTypes
 	}
 };
 
@@ -200,5 +201,12 @@ async function sendMessage() {
 	const ctrl = this.$ctrl;
 	const doc = this.Document;
 	let r = await ctrl.$invoke('sendMessage', { Id: doc.Id });
+	alert(JSON.stringify(r));
+}
+
+async function checkTypes() {
+	const ctrl = this.$ctrl;
+	const doc = this.Document;
+	let r = await ctrl.$invoke('checkTypes', { Id: doc.Id });
 	alert(JSON.stringify(r));
 }

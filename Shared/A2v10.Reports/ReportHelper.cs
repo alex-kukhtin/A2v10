@@ -101,6 +101,8 @@ namespace A2v10.Reports
 
 			ri.DataModel = await _dbContext.LoadModelAsync(rep.CurrentSource, rep.ReportProcedure, prms);
 
+			CheckTypes(rep.Path, rep.checkTypes, ri.DataModel);
+
 			// after query
 			ExpandoObject vars = rep.variables;
 			if (vars == null)
@@ -217,5 +219,17 @@ namespace A2v10.Reports
 			if (!String.IsNullOrEmpty(lic))
 				Stimulsoft.Base.StiLicense.LoadFromString(lic);
 		}
+
+		ITypeChecker CheckTypes(String path, String typesFile, IDataModel model)
+		{
+			if (!_host.IsDebugConfiguration)
+				return null;
+			if (String.IsNullOrEmpty(typesFile))
+				return null;
+			var tc = new TypeChecker(_host.ApplicationReader, path);
+			tc.CreateChecker(typesFile, model);
+			return tc;
+		}
+
 	}
 }

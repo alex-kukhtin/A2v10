@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 using A2v10.Interop;
 using A2v10.Infrastructure;
+using System.Text;
 
 namespace A2v10.Request
 {
@@ -337,7 +338,7 @@ namespace A2v10.Request
 
 			var modelHandler = System.Activator.CreateInstance(assemblyName: assemblyName, typeName: typeName,
 				ignoreCase: false, bindingAttr: 0,
-				binder: null, 
+				binder: null,
 				args: null,
 				culture: null,
 				activationAttributes: null).Unwrap();
@@ -352,18 +353,37 @@ namespace A2v10.Request
 	public enum RequestExportFormat
 	{
 		unknown,
-		xlsx
+		xlsx,
+		dbf,
+		csv
 	}
+
 
 	public class RequestExport
 	{
 		public String fileName;
 		public String template;
 		public RequestExportFormat format;
+		public String encoding;
 
 		public String GetTemplateExpression()
 		{
 			return template.TemplateExpression();
+		}
+
+		public Encoding GetEncoding()
+		{
+			switch (encoding)
+			{
+				case "1251":
+					return Encoding.GetEncoding(1251);
+				case "866":
+					return Encoding.GetEncoding(866);
+				case "utf8":
+					return Encoding.UTF8;
+				default:
+					throw new RequestModelException($"Invalid encoding value '{encoding}'. Possible values are 'utf8', '1251', '866'");
+			}
 		}
 	}
 

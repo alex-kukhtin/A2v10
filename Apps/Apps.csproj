@@ -72,6 +72,7 @@
     </None>
     <None Include="Develop\pos\model.json" />
     <Content Include="Develop\dashboard\server.module.js" />
+    <TypeScriptCompile Include="Develop\agent\state.d.ts" />
     <TypeScriptCompile Include="Develop\entity\edit.d.ts" />
     <Content Include="Develop\entity\editGoods.template.js" />
     <TypeScriptCompile Include="Develop\purchase\Goods\index.d.ts" />
@@ -94,7 +95,9 @@
     <TypeScriptCompile Include="Develop\document\common2.ts" />
     <TypeScriptCompile Include="Develop\pos\posmodule.d.ts" />
     <TypeScriptCompile Include="Develop\pos\posterm.ts" />
+    <TypeScriptCompile Include="Develop\sales\waybill\export.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\elems.d.ts" />
+    <TypeScriptCompile Include="Develop\sales\waybill\print.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="Develop\dashboard\homepage.template.box.js" />
     <Content Include="Develop\pos\pos.template.js" />

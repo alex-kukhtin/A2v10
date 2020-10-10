@@ -15,6 +15,7 @@ namespace A2v10.Request
 			{
 				case CommandType.sql:
 					return new ExecuteSqlCommand(
+						loc.GetService<IApplicationHost>(),
 						loc.GetService<IDbContext>()
 					);
 				case CommandType.startProcess:

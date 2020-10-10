@@ -339,6 +339,7 @@ namespace A2v10.Xaml
 		Filter,
 		FilterOutline,
 		Folder,
+		FolderOutline,
 		FolderQuery,
 		Gear,
 		GearOutline,

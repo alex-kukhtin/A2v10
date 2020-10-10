@@ -17,6 +17,8 @@
 			<Button Icon="Cloud" Content="CallApi" Command="{BindCmd Execute, CommandName=getWeather}" />
 			<Button Icon="CloudOutline" Content="Test POST" Command="{BindCmd Execute, CommandName=testPost}" />
 			<Button Icon="SendOutline" Content="SendMessage" Command="{BindCmd Execute, CommandName=sendMessage}" />
+			<Button Icon="Export" Content="Export this" Command="{BindCmd Export, Url='/sales/waybill/export', Argument={Bind Document}, FileName='document.dbf'}"  />
+			<Button Icon="AddressBook" Content="CheckTypes" Command="{BindCmd Execute, CommandName=checkTypes}" />
 			<Button Icon="Close" Toolbar.Align="Right"
                     Command="{BindCmd Close}">Закрыть</Button>
 		</Toolbar>

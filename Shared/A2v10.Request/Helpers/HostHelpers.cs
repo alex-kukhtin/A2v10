@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.IO;
 
 using Newtonsoft.Json;
 
+using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
 namespace A2v10.Request
@@ -54,5 +55,17 @@ namespace A2v10.Request
 			var manifestPath = Path.Combine(host.HostingPath, "manifest.json");
 			return File.Exists(manifestPath) ? "<link rel=\"manifest\" href=\"/manifest.json\">" : null;
 		}
+
+		public static ITypeChecker CheckTypes(this IApplicationHost host, String path, String typesFile, IDataModel model)
+		{
+			if (!host.IsDebugConfiguration)
+				return null;
+			if (String.IsNullOrEmpty(typesFile))
+				return null;
+			var tc = new TypeChecker(host.ApplicationReader, path);
+			tc.CreateChecker(typesFile, model);
+			return tc;
+		}
+
 	}
 }

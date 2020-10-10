@@ -6,7 +6,10 @@
 		"index": {
 			"index": true,
 			"view": "index.view",
-			"template": "index.template"
+			"template": "index.template",
+			"export": {
+				"format": "xlsx"
+			}
 		},
 		"edit": {
 			"model": "Document",
@@ -28,6 +31,15 @@
 					"schema": "",
 					"model": "AfterDoc" /* {model}.Metadata, {model}.Update */
 				}
+			}
+		},
+		"export": {
+			"model": "ExportToDbf",
+			"checkTypes": "export.d",
+			"export": {
+				"fileName": "MyFile",
+				"format": "dbf",
+				"encoding": "866"
 			}
 		}
 	},
@@ -128,7 +140,7 @@
 		"getWeather": {
 			"type": "callApi",
 			"model": "GetWeather",
-			"url2": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
+			//"url": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
 			"parameters": {
 				"url": "{{Weather.Url}}?q=[[City]]&appid=((openweathermap.appid))",
 				"method": "get",
@@ -155,13 +167,19 @@
 					}
 				}
 			}
+		},
+		"checkTypes": {
+			"type": "sql",
+			"checkTypes": "print.d",
+			"procedure": "Document.Report"
 		}
 	},
 	"reports": {
 		"waybill": {
 			"report": "waybill",
 			"name": "Заголовок отчета",
-			"model": "Document"
+			"model": "Document",
+			"checkTypes": "print.d"
 		}
 	},
 	"files": {
