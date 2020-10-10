@@ -166,6 +166,12 @@
         "Entry"
         {
         "MsmKey" = "8:_150A314519853FCF8C483EAF7E7BF873"
+        "OwnerKey" = "8:_B7C7791B77A34819B23CF55A1A136B07"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_150A314519853FCF8C483EAF7E7BF873"
         "OwnerKey" = "8:_F1F0EEC026283B24209C2523DA109BED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -700,6 +706,12 @@
         "Entry"
         {
         "MsmKey" = "8:_505D255D4B7D46CC96A7AFC8ED61C75C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5474BEE6D0E245A08917EA37FA78C79C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1605,6 +1617,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B7C7791B77A34819B23CF55A1A136B07"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B7F08D0D8EE596CDA45D1D909FCE3841"
         "OwnerKey" = "8:_FAE16FC9460E45DE72192B166BB2ACEF"
         "MsmSig" = "8:_UNDEFINED"
@@ -1991,6 +2009,18 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_49BA5859A5E94C4F8A51B14D0DAD6BC2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_5474BEE6D0E245A08917EA37FA78C79C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B7C7791B77A34819B23CF55A1A136B07"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -3758,6 +3788,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5474BEE6D0E245A08917EA37FA78C79C"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:A2v10.Data.Interfaces, Version=10.0.7247.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_5474BEE6D0E245A08917EA37FA78C79C"
+                    {
+                    "Name" = "8:A2v10.Data.Interfaces.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Data.Interfaces.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5F073250C209473F8D20A96E8AF91309"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_55D963A73963A4A0B8317CADD9F61BDF"
             {
             "AssemblyRegister" = "3:1"
@@ -5290,6 +5351,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B7C7791B77A34819B23CF55A1A136B07"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:A2v10.Data.Providers, Version=10.0.7247.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_B7C7791B77A34819B23CF55A1A136B07"
+                    {
+                    "Name" = "8:A2v10.Data.Providers.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\Web\\A2v10.Web.Site\\bin\\A2v10.Data.Providers.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5F073250C209473F8D20A96E8AF91309"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B7F08D0D8EE596CDA45D1D909FCE3841"
             {
             "AssemblyRegister" = "3:1"
@@ -6483,7 +6575,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:A2v10"
         "ProductCode" = "8:{ABA85D03-6BB6-4478-B633-E1D5C86658B5}"
-        "PackageCode" = "8:{2D4D73EF-AEEA-4FC6-8629-C0C73F7CF053}"
+        "PackageCode" = "8:{4553306E-04F1-41FB-B3CB-F871F0EEC5D5}"
         "UpgradeCode" = "8:{D090570F-4DC5-41C8-B875-E4EACBDE870A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
