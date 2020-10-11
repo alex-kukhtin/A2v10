@@ -7268,7 +7268,7 @@ Vue.component('popover', {
 	const treeItemComponent = {
 		name: 'tree-item',
 		template: `
-<li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick"
+<li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick(item)"
 	:class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
 	<div :class="{overlay:true, 'no-icons': !options.hasIcon}">
 		<a class="toggle" v-if="isFolder" href @click.stop.prevent=toggle></a>
@@ -7279,7 +7279,8 @@ Vue.component('popover', {
 	</div>
 	<ul v-if=isFolder v-show=isExpanded>
 		<tree-item v-for="(itm, index) in item[options.subitems]" :options="options"
-			:key="index" :item="itm" :click="click" :doubleclick="doubleclick" :get-href="getHref" :is-active="isActive" :expand="expand" :root-items="rootItems"/>
+			:key="index" :item="itm" :click="click" :doubleclick="doubleclick" :get-href="getHref" :is-active="isActive" :expand="expand" :root-items="rootItems">
+		</tree-item>
 	</ul>
 </li>
 `,
@@ -7310,10 +7311,10 @@ Vue.component('popover', {
 					item.$select(this.rootItems);
 				}
 			},
-			doDblClick($event) {
+			doDblClick(item) {
 				eventBus.$emit('closeAllPopups');
-				$event.stopImmediatePropagation();
-				$event.preventDefault();
+				if (this.isFolder && !this.isFolderSelect(item))
+					return;
 				if (this.doubleclick)
 					this.doubleclick();
 			},

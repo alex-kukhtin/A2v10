@@ -19,8 +19,8 @@
 				<Button Icon="Disapprove" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross'}"/>
 				<Button Icon="Approve" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross2'}"/>
 			</Toolbar>
-			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True" Indent="False"
-					ItemsSource="{Bind Agents}" FolderSelect="True"
+			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True" Indent="True"
+					ItemsSource="{Bind Agents}" FolderSelect="False"
 					DoubleClick="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}">
 				<TreeViewItem ItemsSource="{Bind SubItems}" 
 							 Label="{Bind Name}" Icon="{Bind Icon}" IsGroup="{Bind Id}"/>
