@@ -7252,11 +7252,10 @@ Vue.component('popover', {
 	}
 });
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20190804-7511*/
+/*20201011-7713*/
 // components/treeview.js
-
 
 /*
 1. Check to delete isDynamic!
@@ -7268,25 +7267,24 @@ Vue.component('popover', {
 	const eventBus = require('std:eventBus');
 	const platform = require('std:platform');
 
-    /**
-     * .stop for toggle is required!
-     */
+//stop for toggle is required!
+
 	const treeItemComponent = {
 		name: 'tree-item',
 		template: `
-<li @click.stop.prevent="doClick(item)" :title="title"
-    :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
-    <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
-        <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
-        <span v-else class="toggle"/>
-        <i v-if="options.hasIcon" :class="iconClass"/>
-        <a v-if="hasLink(item)" :href="dataHref" tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
-        <span v-else v-text="item[options.label]" :class="{'tv-folder':true, 'no-wrap':!options.wrapLabel}"/>
-    </div>
-    <ul v-if="isFolder" v-show="isExpanded">
-        <tree-item v-for="(itm, index) in item[options.subitems]" :options="options"
-            :key="index" :item="itm" :click="click" :get-href="getHref" :is-active="isActive" :expand="expand" :root-items="rootItems"/>
-    </ul>   
+<li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick"
+	:class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
+	<div :class="{overlay:true, 'no-icons': !options.hasIcon}">
+		<a class="toggle" v-if="isFolder" href @click.stop.prevent=toggle></a>
+		<span v-else class="toggle"/>
+		<i v-if="options.hasIcon" :class="iconClass"/>
+		<a v-if="hasLink(item)" :href=dataHref tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
+		<span v-else v-text="item[options.label]" :class="{'tv-folder':true, 'no-wrap':!options.wrapLabel}"/>
+	</div>
+	<ul v-if=isFolder v-show=isExpanded>
+		<tree-item v-for="(itm, index) in item[options.subitems]" :options="options"
+			:key="index" :item="itm" :click="click" :get-href="getHref" :is-active="isActive" :expand="expand" :root-items="rootItems"/>
+	</ul>
 </li>
 `,
 		props: {
@@ -7318,6 +7316,12 @@ Vue.component('popover', {
 						this.click(item);
 					}
 				}
+			},
+			doDblClick($event) {
+				eventBus.$emit('closeAllPopups');
+				$event.stopImmediatePropagation();
+				if (this.options.doubleclick)
+					this.options.doubleclick();
 			},
 			hasLink(item) {
 				return !this.isFolder || this.isFolderSelect(item);
@@ -7425,6 +7429,7 @@ Vue.component('popover', {
         wrapLabel: Boolean,
         hasIcon: Boolean,
         isDynamic: Boolean        
+		doubleclick
     }
     */
 
@@ -7491,7 +7496,7 @@ Vue.component('popover', {
 			this.doExpandFirst();
 		},
 		updated() {
-			if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
+			if (this.isSelectFirstItem && !this.items.$selected) {
 				this.selectFirstItem();
 			}
 		}

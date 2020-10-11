@@ -1,12 +1,7 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20190804-7511*/
+/*20201011-7713*/
 // components/treeview.js
-
-
-/*
-1. Check to delete isDynamic!
-*/
 
 (function () {
 
@@ -14,25 +9,24 @@
 	const eventBus = require('std:eventBus');
 	const platform = require('std:platform');
 
-    /**
-     * .stop for toggle is required!
-     */
+//stop for toggle is required!
+
 	const treeItemComponent = {
 		name: 'tree-item',
 		template: `
-<li @click.stop.prevent="doClick(item)" :title="title"
-    :class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
-    <div :class="{overlay:true, 'no-icons': !options.hasIcon}">
-        <a class="toggle" v-if="isFolder" href @click.stop.prevent="toggle"></a>
-        <span v-else class="toggle"/>
-        <i v-if="options.hasIcon" :class="iconClass"/>
-        <a v-if="hasLink(item)" :href="dataHref" tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
-        <span v-else v-text="item[options.label]" :class="{'tv-folder':true, 'no-wrap':!options.wrapLabel}"/>
-    </div>
-    <ul v-if="isFolder" v-show="isExpanded">
-        <tree-item v-for="(itm, index) in item[options.subitems]" :options="options"
-            :key="index" :item="itm" :click="click" :get-href="getHref" :is-active="isActive" :expand="expand" :root-items="rootItems"/>
-    </ul>   
+<li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick"
+	:class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
+	<div :class="{overlay:true, 'no-icons': !options.hasIcon}">
+		<a class="toggle" v-if="isFolder" href @click.stop.prevent=toggle></a>
+		<span v-else class="toggle"/>
+		<i v-if="options.hasIcon" :class="iconClass"/>
+		<a v-if="hasLink(item)" :href=dataHref tabindex="-1" v-text="item[options.label]" :class="{'no-wrap':!options.wrapLabel }"/>
+		<span v-else v-text="item[options.label]" :class="{'tv-folder':true, 'no-wrap':!options.wrapLabel}"/>
+	</div>
+	<ul v-if=isFolder v-show=isExpanded>
+		<tree-item v-for="(itm, index) in item[options.subitems]" :options="options"
+			:key="index" :item="itm" :click="click" :doubleclick="doubleclick" :get-href="getHref" :is-active="isActive" :expand="expand" :root-items="rootItems"/>
+	</ul>
 </li>
 `,
 		props: {
@@ -44,7 +38,8 @@
 			expand: Function,
 			isActive: Function,
 			isGroup: Function,
-			getHref: Function
+			getHref: Function,
+			doubleclick: Function
 		},
 		methods: {
 			isFolderSelect(item) {
@@ -58,12 +53,15 @@
 				if (this.isFolder && !this.isFolderSelect(item))
 					this.toggle();
 				else {
-					if (this.options.isDynamic) {
-						item.$select(this.rootItems);
-					} else {
-						this.click(item);
-					}
+					item.$select(this.rootItems);
 				}
+			},
+			doDblClick($event) {
+				eventBus.$emit('closeAllPopups');
+				$event.stopImmediatePropagation();
+				$event.preventDefault();
+				if (this.doubleclick)
+					this.doubleclick();
 			},
 			hasLink(item) {
 				return !this.isFolder || this.isFolderSelect(item);
@@ -74,7 +72,7 @@
 				if (!this.isFolder)
 					return;
 				this.expandItem(!this.item.$expanded);
-				if (this.options.isDynamic && this.expand) {
+				if (this.expand) {
 					this.expand(this.item, this.options.subitems);
 				}
 			},
@@ -85,13 +83,11 @@
 				if (!this.isFolder)
 					return;
 				this.expandItem(true);
-				if (this.isDynamic && this.expand)
-					this.expand(this.item, this.options.subitems);
 			}
 		},
 		computed: {
 			isFolder: function () {
-				if (this.options.isDynamic && utils.isDefined(this.item.$hasChildren) && this.item.$hasChildren)
+				if (utils.isDefined(this.item.$hasChildren) && this.item.$hasChildren)
 					return true;
 				if (utils.isDefined(this.options.isFolder))
 					return this.item[this.options.isFolder];
@@ -111,11 +107,7 @@
 				return t;
 			},
 			isItemSelected: function () {
-				if (this.options.isDynamic)
-					return this.item.$selected; //$isSelected(this.rootItems);
-				if (!this.isActive)
-					return false;
-				return this.isActive && this.isActive(this.item);
+				return this.item.$selected;
 			},
 			isItemGroup() {
 				let gp = this.options ? this.options.isGroup : undefined;
@@ -147,7 +139,7 @@
 		},
 		updated(x) {
 			// close expanded when reloaded
-			if (this.options.isDynamic && this.item.$expanded) {
+			if (this.item.$expanded) {
 				if (this.item.$hasChildren) {
 					let arr = this.item[this.options.subitems];
 					if (!arr.$loaded) {
@@ -158,34 +150,17 @@
 		}
 	};
 
-    /*
-    options: {
-        // property names
-        title: String,
-        icon: String,
-        label: String,
-        subitems: String,
-        // options
-        staticIcons: [String, String], //[Folder, Item]
-        folderSelect: Boolean || Function,
-        wrapLabel: Boolean,
-        hasIcon: Boolean,
-        isDynamic: Boolean        
-    }
-    */
-
 	Vue.component('tree-view', {
 		components: {
 			'tree-item': treeItemComponent
 		},
 		template: `
 <ul class="tree-view">
-    <tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
-        :item="itm" :key="index"
-        :click="click" :is-active="isActive" :is-group="isGroup" :expand="expand" :root-items="items">
-    </tree-item>
-</ul>
-        `,
+	<tree-item v-for="(itm, index) in items" :options="options" :get-href="getHref"
+		:item="itm" :key="index"
+		:click="click" :doubleclick="doubleclick" :is-active="isActive" :is-group="isGroup" :expand="expand" :root-items="items">
+	</tree-item>
+</ul>`,
 		props: {
 			options: Object,
 			items: Array,
@@ -195,7 +170,8 @@
 			expand: Function,
 			autoSelect: String,
 			getHref: Function,
-			expandFirstItem: Boolean
+			expandFirstItem: Boolean,
+			doubleclick: Function
 		},
 		computed: {
 			isSelectFirstItem() {
@@ -237,7 +213,7 @@
 			this.doExpandFirst();
 		},
 		updated() {
-			if (this.options.isDynamic && this.isSelectFirstItem && !this.items.$selected) {
+			if (this.isSelectFirstItem && !this.items.$selected) {
 				this.selectFirstItem();
 			}
 		}

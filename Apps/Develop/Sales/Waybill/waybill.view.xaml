@@ -118,7 +118,7 @@
                     Columns="Fit,100,Auto,Fit,100,100,100,Fit,Fit,Fit,Fit">
 						<Table.Header>
 							<TableRow VAlign="Middle">
-								<TableCell Wrap="NoWrap">№ п.п.</TableCell>
+								<TableCell Wrap="NoWrap"></TableCell>
 								<TableCell>Артикул</TableCell>
 								<TableCell>Товар</TableCell>
 								<TableCell Wrap="NoWrap" VAlign="Top">Ед. изм.</TableCell>
@@ -140,7 +140,7 @@
 							</TableRow>
 						</Table.Footer>
 						<TableRow>
-							<TableCell Content="{Bind RowNo}" Align="Right"/>
+							<TableCell Content="P12\nHF8\nFX2" Align="Right" Wrap="PreWrap"/>
 							<TextBox Value="{Bind Entity.Article}"/>
 							<TextBox Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}">
 								<TextBox.AddOns>

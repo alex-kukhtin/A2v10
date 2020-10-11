@@ -20,8 +20,10 @@
 				<Button Icon="Approve" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross2'}"/>
 			</Toolbar>
 			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True" Indent="False"
-					ItemsSource="{Bind Agents}" FolderSelect="True">
-				<TreeViewItem ItemsSource="{Bind SubItems}" Label="{Bind Name}" Icon="{Bind Icon}" IsGroup="{Bind Id}"/>
+					ItemsSource="{Bind Agents}" FolderSelect="True"
+					DoubleClick="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}">
+				<TreeViewItem ItemsSource="{Bind SubItems}" 
+							 Label="{Bind Name}" Icon="{Bind Icon}" IsGroup="{Bind Id}"/>
 			</TreeView>
 		</Block>
 		<Block Splitter.MinWidth="20%">

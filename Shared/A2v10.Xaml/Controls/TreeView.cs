@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -6,12 +6,24 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Markup;
 
-/*
- 1. TODO: check and delete IsDynamic
-*/
-
 namespace A2v10.Xaml
 {
+
+	/*
+    treeview.js options: {
+        // property names
+        title: String,
+        icon: String,
+        label: String,
+        subitems: String,
+        // options
+        staticIcons: [String, String], //[Folder, Item]
+        folderSelect: Boolean || Function,
+        wrapLabel: Boolean,
+        hasIcon: Boolean
+    }
+    */
+
 	[ContentProperty("Label")]
 	public class TreeViewItem : UIElement
 	{
@@ -81,6 +93,7 @@ namespace A2v10.Xaml
 
 		public TreeViewStyle Style { get; set; }
 		public Boolean? Indent { get; set; }
+		public Command DoubleClick { get; set; }
 
 		public TreeViewItemCollection Children { get; set; } = new TreeViewItemCollection();
 
@@ -112,6 +125,14 @@ namespace A2v10.Xaml
 				cont.MergeAttribute("auto-select", AutoSelect.ToString().ToKebabCase());
 			if (ExpandFirstItem)
 				cont.MergeAttribute(":expand-first-item", "true");
+
+			var dblClickBind = GetBindingCommand(nameof(DoubleClick));
+			if (dblClickBind != null)
+			{
+				// Function!
+				cont.MergeAttribute(":doubleclick", "() => " + dblClickBind.GetCommand(context));
+			}
+
 			cont.RenderStart(context);
 			cont.RenderEnd(context);
 		}
@@ -119,7 +140,6 @@ namespace A2v10.Xaml
 		String GetOptions(RenderContext context, TreeViewItem childElem)
 		{
 			var sb = new StringBuilder("{");
-			sb.Append("isDynamic: true,");
 			var fsBind = GetBinding(nameof(FolderSelect));
 			if (fsBind != null)
 				sb.Append($"folderSelect: {fsBind.GetPath(context)},");

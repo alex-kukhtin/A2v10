@@ -1,4 +1,10 @@
 ﻿<!DOCTYPE html>
+<!--
+A2v10 platform.
+Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+Site: https://a2v10.com
+GitHub: https://github.com/alex-kukhtin/A2v10
+-->
 <html lang="$(Locale)" $(ColorScheme)>
 <head>
 	<meta charset="utf-8" />
@@ -21,9 +27,9 @@
 <body>
 	<div id="shell" class="shell $(Release)" v-cloak>
 		<a2-app-header :title="title" :subtitle="subtitle" :user-state="userState" :single-page="singlePage"
-				:menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
-				person-name="$(PersonName)" :user-is-admin="userIsAdmin" :show-feedback="showFeedback" 
-				:feedback-visible="feedbackVisible" :change-password="changePassword" :nav-bar-mode=navBarMode>
+					   :menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
+					   person-name="$(PersonName)" :user-is-admin="userIsAdmin" :show-feedback="showFeedback"
+					   :feedback-visible="feedbackVisible" :change-password="changePassword" :nav-bar-mode=navBarMode>
 			$(CompanyButton)
 		</a2-app-header>
 		<a2-main-view :menu="menu" :side-bar-mode="sideBarMode" :nav-bar-mode=navBarMode :period="globalPeriod" :pages="pages" :title="title"></a2-main-view>

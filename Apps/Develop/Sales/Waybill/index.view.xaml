@@ -91,7 +91,7 @@
 		<DataGridColumn Header="Склад" Content="{Bind DepFrom.Name}" />
 		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True, Format='# 000.00'}" Role="Number"/>
 		<DataGridColumn Header="Created" Content="{Bind DateCreated, DataType=DateTime}" Role="Date"/>
-		<DataGridColumn Header="Примечание">
+		<DataGridColumn Header="Примечание" Fit="True" Wrap="PreWrap">
 			<Span Content="{Bind Memo}" MaxChars="32" Tip="{Bind Memo}"/>
 		</DataGridColumn>
 		<DataGridColumn Header="Sparkline">

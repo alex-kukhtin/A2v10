@@ -2,9 +2,9 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
 	<Splitter>
 		<List Splitter.Width="300" Height="100%" Background="LightGray"
-			  ItemsSource="{Bind Catalogs}" AutoSelect="FirstItem">
-			<ListItem Icon="{Bind Icon}" Header="{Bind Name}" Padding="8"
-				Content="{Bind Memo}"/>
+			ItemsSource="{Bind Catalogs}" AutoSelect="FirstItem">
+			<ListItem Icon="{Bind Icon}" Header="{Bind Name}" Padding="5rem"
+				Content="{Bind Memo}" />
 		</List>
 		<Block>
 			<TextBox Value="{Bind Root.$QueryText}"/>

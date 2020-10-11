@@ -1,4 +1,10 @@
 ﻿<!DOCTYPE html>
+<!--
+A2v10 platform.
+Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+Site: https://a2v10.com
+GitHub: https://github.com/alex-kukhtin/A2v10
+-->
 <html lang="$(Locale)">
 <head>
 	<meta charset="utf-8" />
@@ -23,7 +29,7 @@
 			<div class="aligner"></div>
 			<a class="nav-admin" href="/" tabindex="-1" aria-label="Exit admin mode"><i class="ico ico-gear-outline"></i></a>
 			<div class="dropdown dir-down" v-dropdown>
-				<button class="btn user-name" toggle title="$(PersonName)"><i class="ico ico-user"></i> <span id ="layout-person-name"class="person-name">$(PersonName)</span><span class="caret"></span></button>
+				<button class="btn user-name" toggle title="$(PersonName)"><i class="ico ico-user"></i> <span id="layout-person-name" class="person-name">$(PersonName)</span><span class="caret"></span></button>
 				<div class="dropdown-menu menu down-left">
 					<a @click.prevent="profile" tabindex="-1" class="dropdown-item"><i class="ico ico-user"></i> @[Profile]</a>
 					<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-lock"></i> @[ChangePassword]</a>
@@ -58,8 +64,8 @@
 					<a @click.prevent="debugTrace" class="dropdown-item" tabindex="-1"><i class="ico ico-chart-stacked-line"></i> @[Profiling]</a>
 					<div class="divider"></div>
 					<!--
-			<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
-			-->
+					<a @click.prevent="debugOptions" class="dropdown-item"><i class="ico ico-wrench"></i> Настройка</a>
+					-->
 					<label class="checkbox">
 						<input type="checkbox" v-model="traceEnabled" />
 						<span>@[Tracing]</span>
