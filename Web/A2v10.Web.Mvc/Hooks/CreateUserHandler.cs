@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web;
@@ -17,6 +17,7 @@ namespace A2v10.Web.Mvc.Hooks
 {
 	public class CreateUserHandler : IModelHandler
 	{
+		private IApplicationConfig _config;
 		private IApplicationHost _host;
 		private IDbContext _dbContext;
 
@@ -29,8 +30,9 @@ namespace A2v10.Web.Mvc.Hooks
 			_userManager = _context.GetUserManager<AppUserManager>();
 		}
 
-		public void Inject(IApplicationHost host, IDbContext dbContext)
+		public void Inject(IApplicationConfig config, IApplicationHost host, IDbContext dbContext)
 		{
+			_config = config;
 			_host = host;
 			_dbContext = dbContext;
 		}
@@ -74,7 +76,7 @@ namespace A2v10.Web.Mvc.Hooks
 			if (_host.IsMultiTenant && _host.IsMultiCompany)
 			{
 				var update = new UpdateTenantCompanyHandler();
-				update.Inject(_host, _dbContext);
+				update.Inject(_config, _host, _dbContext);
 				update.EnableThrow();
 				update.DisableDtc();
 				update.Invoke(UserId, 0);

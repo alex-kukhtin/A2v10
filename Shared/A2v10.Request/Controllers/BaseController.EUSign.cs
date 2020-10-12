@@ -24,7 +24,7 @@ namespace A2v10.Request
 		public void RenderEUSignFrame(TextWriter writer, String Id, String Base)
 		{
 			var euSignFrameHtml = new StringBuilder(_localizer.Localize(null, Resources.euSignFrame));
-			euSignFrameHtml.Replace("$(Theme)", _host.Theme?.FileName ?? String.Empty);
+			euSignFrameHtml.Replace("$(Theme)", _config.Theme?.FileName ?? String.Empty);
 			euSignFrameHtml.Replace("$(Build)", _host.AppBuild);
 			euSignFrameHtml.Replace("$(Locale)", CurrentLang);
 			var frameScript = new StringBuilder(_localizer.Localize(null, Resources.euSignFrameScript));
@@ -41,7 +41,7 @@ namespace A2v10.Request
 			rm.Phase2 = true;
 			var dlg = rm.CurrentDialog;
 			var euSignFrameHtml = new StringBuilder(_localizer.Localize(null, Resources.euSignFrame));
-			euSignFrameHtml.Replace("$(Theme)", _host.Theme?.FileName ?? String.Empty);
+			euSignFrameHtml.Replace("$(Theme)", _config.Theme?.FileName ?? String.Empty);
 			euSignFrameHtml.Replace("$(Build)", _host.AppBuild);
 			euSignFrameHtml.Replace("$(Locale)", CurrentLang);
 

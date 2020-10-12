@@ -39,7 +39,7 @@ namespace A2v10.Request
 			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
 			sb.Replace("$(LayoutManifest)", _host.CustomManifest());
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
-			sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");
+			sb.Replace("$(Release)", _config.IsDebugConfiguration ? "debug" : "release");
 			writer.Write(sb.ToString());
 		}
 
@@ -97,7 +97,7 @@ namespace A2v10.Request
 			{
 				String jsonCompanies = JsonConvert.SerializeObject(new { menu = companies, links },
 					JsonHelpers.StandardSerializerSettings);
-				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
+				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.ConfigSerializerSettings(_config.IsDebugConfiguration));
 				return new MultiTenantParamJson()
 				{
 					Companies = jsonCompanies,
@@ -121,7 +121,7 @@ namespace A2v10.Request
 				{ "AppVersion", _host.AppVersion },
 				{ "Admin", isUserIsAdmin ? "true" : "false" },
 				{ "TenantAdmin", userInfo.IsTenantAdmin ? "true" : "false" },
-				{ "Debug", IsDebugConfiguration ? "true" : "false" },
+				{ "Debug", _config.IsDebugConfiguration ? "true" : "false" },
 				{ "AppData", GetAppData() },
 				{ "Companies", "null" },
 				{ "Period", "null" },
@@ -155,7 +155,7 @@ namespace A2v10.Request
 			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
 			SetUserStatePermission(dm);
 
-			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
+			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_config.IsDebugConfiguration));
 			macros.Set("Menu", jsonMenu);
 
 			if (setCompany)

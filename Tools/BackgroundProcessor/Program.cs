@@ -33,10 +33,11 @@ namespace BackgroundProcessor
 				var loc = ServiceLocator.Current;
 				ILogger logger = loc.GetService<ILogger>();
 				IDbContext dbContext = loc.GetService<IDbContext>();
+				IApplicationConfig config = loc.GetService<IApplicationConfig>();
 				IApplicationHost host = loc.GetService<IApplicationHost>();
 				IMessaging messaging = loc.GetService<IMessaging>();
 				Console.WriteLine("Service started");
-				_manager = new BackgroundTasksManager(host, dbContext, logger, messaging);
+				_manager = new BackgroundTasksManager(config, host, dbContext, logger, messaging);
 				logger.LogBackground($"CurrentCulutre: {Thread.CurrentThread.CurrentCulture}");
 				host.StartApplication(false);
 				_manager.Start();
@@ -60,11 +61,12 @@ namespace BackgroundProcessor
 			{
 				var profiler = new NullProfiler();
 				var localizer = new NullLocalizer();
-				var host = new BackgroundApplicationHost(profiler);
+				var config = new BackgroundApplicationConfig();
+				var host = new BackgroundApplicationHost(config, profiler);
 				var dbContext = new SqlDbContext(profiler, host, localizer);
 				var logger = new BackgroundLogger(dbContext);
-				var workflow = new WorkflowEngine(host, dbContext, null);
-				var emailService = new EmailService(logger, host);
+				var workflow = new WorkflowEngine(config, host, dbContext, null);
+				var emailService = new EmailService(logger, config);
 				var messaging = new MessageProcessor(host, dbContext, emailService, logger);
 
 				loc.RegisterService<IProfiler>(profiler);
@@ -72,6 +74,7 @@ namespace BackgroundProcessor
 				loc.RegisterService<IDbContext>(dbContext);
 				loc.RegisterService<ILogger>(logger);
 				loc.RegisterService<IApplicationHost>(host);
+				loc.RegisterService<IApplicationConfig>(config);
 				loc.RegisterService<IWorkflowEngine>(workflow);
 				loc.RegisterService<IMessaging>(messaging);
 			};

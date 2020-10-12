@@ -223,14 +223,14 @@ namespace A2v10.Runtime
 			var prms = new Dictionary<String, String>
 				{
 					{ "$(RootUrl)", String.Empty },
-					{ "$(HelpUrl)", _controller.Host.HelpUrl },
+					{ "$(HelpUrl)", _controller.Config.HelpUrl },
 					{ "$(PersonName)", userName },
 					{ "$(CompanyButton)", GetCompanyButton()},
 					{ "$(Theme)", theme },
 					{ "$(Build)", _controller.Host.AppBuild },
 					{ "$(Locale)", locale },
-					{ "$(Minify)", _controller.IsDebugConfiguration ? String.Empty : "min." },
-					{ "$(Description)", _controller.Host.AppDescription }
+					{ "$(Minify)", _controller.Config.IsDebugConfiguration ? String.Empty : "min." },
+					{ "$(Description)", _controller.Config.AppDescription }
 				};
 			_controller.Layout(writer, prms);
 		}

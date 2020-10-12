@@ -192,19 +192,19 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				Response.ContentType = "text/html";
-				var theme = _baseController.Host.Theme;
+				var theme = _baseController.Config.Theme;
 				var prms = new Dictionary<String, String>
 				{
 					{ "$(RootUrl)", RootUrl },
-					{ "$(HelpUrl)", _baseController.Host.HelpUrl },
+					{ "$(HelpUrl)", _baseController.Config.HelpUrl },
 					{ "$(PersonName)", GetUserPersonName() },
 					{ "$(CompanyButton)", GetCompanyButton() },
 					{ "$(Theme)", theme.FileName },
 					{ "$(ColorScheme)", theme.ColorScheme },
 					{ "$(Build)", _baseController.Host.AppBuild },
 					{ "$(Locale)", _baseController.CurrentLang },
-					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." },
-					{ "$(Description)", _baseController.Host.AppDescription }
+					{ "$(Minify)", _baseController.Config.IsDebugConfiguration ? String.Empty : "min." },
+					{ "$(Description)", _baseController.Config.AppDescription }
 				};
 				_baseController.Layout(Response.Output, prms);
 			}
@@ -371,7 +371,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (_baseController.Admin)
 				return; // no claims for admin application
-			String claims = _baseController.Host.UseClaims;
+			String claims = _baseController.Config.UseClaims;
 			if (String.IsNullOrEmpty(claims))
 				return;
 			foreach (var s in claims.Split(','))

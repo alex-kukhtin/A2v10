@@ -53,6 +53,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\TestApplicationConfig.cs" />
     <Compile Include="Config\TestConfig.cs" />
     <Compile Include="Config\TestApplicationHost.cs" />
     <Compile Include="DatabaseTest.cs" />

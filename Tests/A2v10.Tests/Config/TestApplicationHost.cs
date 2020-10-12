@@ -13,9 +13,12 @@ namespace A2v10.Tests.Config
 	{
 
 		readonly IProfiler _profiler;
-		public TestApplicationHost(IProfiler profiler)
+		private readonly IApplicationConfig _config;
+
+		public TestApplicationHost(IApplicationConfig config, IProfiler profiler)
 		{
 			_profiler = profiler;
+			_config = config;
 		}
 
 		public String ConnectionString(String source)
@@ -29,29 +32,12 @@ namespace A2v10.Tests.Config
 		}
 
 		public IProfiler Profiler => _profiler;
+		public IApplicationConfig Config => _config;
 
 		public Boolean Mobile { get; set; }
 		public Boolean Embedded => false;
 		public Boolean IsAdminMode => false;
 
-
-		public String AppPath
-		{
-			get
-			{
-				return ConfigurationManager.AppSettings["appPath"];
-			}
-		}
-
-		public String AppKey
-		{
-			get
-			{
-				// TODO: ???
-				return ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
-
-			}
-		}
 
 		IApplicationReader _appReader;
 
@@ -61,28 +47,17 @@ namespace A2v10.Tests.Config
 
 		public void StartApplication(Boolean bAdmin)
 		{
-			_appReader = new FileApplicationReader(AppPath, AppKey);
+			_appReader = new FileApplicationReader(Config.AppPath, Config.AppKey);
 		}
 
 		public IApplicationReader ApplicationReader => _appReader;
 
-		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
-		public String AppHost => ConfigurationManager.AppSettings["appHost"];
-		public String UserAppHost => ConfigurationManager.AppSettings["userAppHost"];
 
-		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
-		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
-
-		public String HostingPath { get; set; }
-
-		public ITheme Theme => null;
-		public String HelpUrl => null;
 
 		public Boolean IsMultiTenant => false;
 		public Boolean IsMultiCompany => false;
 		public Boolean IsUsePeriodAndCompanies => false;
 		public Boolean IsRegistrationEnabled => false;
-		public Boolean IsDebugConfiguration => true;
 		public Boolean IsDTCEnabled => false;
 		public Boolean IsAdminAppPresent => false;
 
@@ -91,11 +66,6 @@ namespace A2v10.Tests.Config
 		public String UserSegment { get; set; }
 		public String CatalogDataSource => null;
 		public String TenantDataSource => null;
-
-		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
-		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
-
-		public String ScriptEngine => "ChakraCore";
 
 		public String MakeRelativePath(String path, String fileName)
 		{

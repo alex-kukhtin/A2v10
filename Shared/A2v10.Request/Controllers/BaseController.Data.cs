@@ -289,7 +289,7 @@ namespace A2v10.Request
 		{
 			// Write data to output
 			if (model != null)
-				writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration)));
+				writer.Write(JsonConvert.SerializeObject(model.Root, JsonHelpers.ConfigSerializerSettings(_config.IsDebugConfiguration)));
 			else
 				writer.Write("{}");
 		}
@@ -298,7 +298,7 @@ namespace A2v10.Request
 		{
 			// Write data to output
 			if (model != null)
-				writer.Write(JsonConvert.SerializeObject(model, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration)));
+				writer.Write(JsonConvert.SerializeObject(model, JsonHelpers.ConfigSerializerSettings(_config.IsDebugConfiguration)));
 			else
 				writer.Write("{}");
 		}

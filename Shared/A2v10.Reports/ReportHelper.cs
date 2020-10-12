@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -53,19 +53,19 @@ namespace A2v10.Reports
 		}
 	}
 
-	public class ReportHelper
+	public sealed class ReportHelper
 	{
-		protected readonly IApplicationHost _host;
-		protected readonly IDbContext _dbContext;
-		protected readonly IRenderer _renderer;
-		protected readonly IWorkflowEngine _workflowEngine;
-		protected readonly ILocalizer _localizer;
+		private readonly IApplicationHost _host;
+		private readonly IApplicationConfig _config;
+		private readonly IDbContext _dbContext;
+		private readonly ILocalizer _localizer;
 
 		public ReportHelper()
 		{
 			// DI ready
 			IServiceLocator locator = ServiceLocator.Current;
 			_host = locator.GetService<IApplicationHost>();
+			_config = locator.GetService<IApplicationConfig>();
 			_dbContext = locator.GetService<IDbContext>();
 			_localizer = locator.GetService<ILocalizer>();
 		}
@@ -222,7 +222,7 @@ namespace A2v10.Reports
 
 		ITypeChecker CheckTypes(String path, String typesFile, IDataModel model)
 		{
-			if (!_host.IsDebugConfiguration)
+			if (!_config.IsDebugConfiguration)
 				return null;
 			if (String.IsNullOrEmpty(typesFile))
 				return null;

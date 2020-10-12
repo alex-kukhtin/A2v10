@@ -7,7 +7,6 @@ using System.IO;
 using System.Text;
 using System.Dynamic;
 using System.Data.SqlClient;
-using System.Web.Hosting;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -19,53 +18,22 @@ using A2v10.Web.Base;
 
 namespace A2v10.Web.Config
 {
-	public class ThemeInfo : ITheme
-	{
-		public ThemeInfo(String text, String hostingPath)
-		{
-			Name = text ?? String.Empty;
-			FileName = "site";
-			String schemeName = null;
-			if (Name.Contains("."))
-			{
-				var tx = Name.Split('.');
-				Name = tx[0].Trim();
-				schemeName = tx[1].Trim();
-			}
-			if (Name == "advance" && String.IsNullOrEmpty(schemeName))
-				schemeName = "default";
-
-			if (!String.IsNullOrEmpty(Name))
-				FileName += $".{Name.ToLowerInvariant()}";
-
-			if (!String.IsNullOrEmpty(schemeName))
-			{
-				var schemePath = Path.Combine(hostingPath, "css", $"{schemeName}.colorscheme");
-				if (File.Exists(schemePath))
-				{
-					ColorScheme = $"style=\"{File.ReadAllText(schemePath).RemoveEOL()}\"";
-				}
-			}
-		}
-		public String Name { get; }
-		public String FileName { get; }
-		public String ColorScheme { get; }
-	}
 
 	public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
 	{
-		private readonly IProfiler _profiler;
 		private readonly Boolean _emulateBox = false;
 		private Boolean _admin;
 
-		public WebApplicationHost(IProfiler profiler)
+		public WebApplicationHost(IApplicationConfig config, IProfiler profiler)
 		{
-			_profiler = profiler;
-			_profiler.Enabled = IsDebugConfiguration;
+			Profiler = profiler;
+			Config = config;
+			Profiler.Enabled = config.IsDebugConfiguration;
 			_emulateBox = IsAppSettingsIsTrue("emulateBox");
 		}
 
-		public IProfiler Profiler => _profiler;
+		public IProfiler Profiler { get; }
+		public IApplicationConfig Config { get; }
 
 		public Boolean Mobile { get; set; }
 		public Boolean Embedded => false;
@@ -94,26 +62,12 @@ namespace A2v10.Web.Config
 		}
 		#endregion
 
-		public String AppPath
-		{
-			get
-			{
-				String path = ConfigurationManager.AppSettings["appPath"];
-				if (path == null)
-					path = "~/App_application";
-				if (path.StartsWith("~"))
-					path = HostingEnvironment.MapPath(path);
-				return path;
-			}
-		}
-
-		public String ScriptEngine => ConfigurationManager.AppSettings["scriptEngine"];
 
 		public String ZipApplicationFile
 		{
 			get
 			{
-				var path = Path.Combine(AppPath, AppKey ?? String.Empty);
+				var path = Path.Combine(Config.AppPath, Config.AppKey ?? String.Empty);
 				path = Path.ChangeExtension(path, ".app");
 				if (File.Exists(path))
 				{
@@ -123,32 +77,13 @@ namespace A2v10.Web.Config
 			}
 		}
 
-		public String AppKey
-		{
-			get
-			{
-				return ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
-			}
-		}
-
-		public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"];
-		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
-		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
-		public String AppHost => ConfigurationManager.AppSettings["appHost"];
-		public String UserAppHost => ConfigurationManager.AppSettings["userAppHost"];
-		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
-
-		public String HostingPath => HostingEnvironment.MapPath("~");
-
-		public ITheme Theme => new ThemeInfo(ConfigurationManager.AppSettings["theme"], HostingPath);
-
 		public Boolean IsAdminAppPresent {
 			get
 			{
-				String dirName = Path.Combine(AppPath, "Admin").ToLowerInvariant();
+				String dirName = Path.Combine(Config.AppPath, "Admin").ToLowerInvariant();
 				if (Directory.Exists(dirName))
 					return true;
-				String appFile = Path.Combine(AppPath, "admin.app");
+				String appFile = Path.Combine(Config.AppPath, "admin.app");
 				if (File.Exists(appFile))
 					return true;
 				return false;
@@ -163,21 +98,11 @@ namespace A2v10.Web.Config
 			return mt.ToLowerInvariant() == "true";
 		}
 
-		public Boolean IsUsePeriodAndCompanies
-		{
-			get
-			{
-				return IsAppSettingsIsTrue("custom");
-			}
-		}
-
+		public Boolean IsUsePeriodAndCompanies => IsAppSettingsIsTrue("custom");
 		public Boolean IsMultiTenant => IsAppSettingsIsTrue("multiTenant");
 		public Boolean IsMultiCompany => !_admin && IsAppSettingsIsTrue("multiCompany");
 		public Boolean IsRegistrationEnabled => IsAppSettingsIsTrue("registration");
 		public Boolean IsDTCEnabled => IsAppSettingsIsTrue("enableDTC");
-		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
-
-		public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
 
 		Int32 _tenantId;
 
@@ -202,17 +127,6 @@ namespace A2v10.Web.Config
 
 		public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
 		public String TenantDataSource => String.IsNullOrEmpty(UserSegment) ? null : UserSegment;
-
-		public Boolean IsDebugConfiguration
-		{
-			get
-			{
-				var debug = ConfigurationManager.AppSettings["configuration"];
-				if (String.IsNullOrEmpty(debug))
-					return true; // default is 'debug'
-				return debug.ToLowerInvariant() == "debug";
-			}
-		}
 
 		public String MakeRelativePath(String path, String fileName)
 		{
@@ -247,13 +161,13 @@ namespace A2v10.Web.Config
 		public void StartApplication(Boolean bAdmin)
 		{
 			var file = ZipApplicationFile;
-			String key = bAdmin ? "admin" : AppKey;
+			String key = bAdmin ? "admin" : Config.AppKey;
 			if (file != null)
-				_reader = new ZipApplicationReader(AppPath, key);
-			else if (AppPath.StartsWith("db:"))
+				_reader = new ZipApplicationReader(Config.AppPath, key);
+			else if (Config.AppPath.StartsWith("db:"))
 				throw new NotImplementedException("DbApplicationReader");
 			else
-				_reader = new FileApplicationReader(AppPath, key)
+				_reader = new FileApplicationReader(Config.AppPath, key)
 				{
 					EmulateBox = _emulateBox
 				};

@@ -1,7 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Threading.Tasks;
 using System.Web;
 using System.Transactions;
 
@@ -33,6 +32,7 @@ namespace A2v10.Web.Mvc.Hooks
 	public class DeleteTenantUserHandler : IInvokeTarget
 	{
 		IApplicationHost _host;
+		IApplicationConfig _config;
 		IDbContext _dbContext;
 		readonly IOwinContext _context;
 		readonly AppUserManager _userManager;
@@ -41,12 +41,14 @@ namespace A2v10.Web.Mvc.Hooks
 		{
 			_host = null;
 			_context = HttpContext.Current.GetOwinContext();
+			_config = null;
 			_userManager = _context.GetUserManager<AppUserManager>();
 		}
 
-		public void Inject(IApplicationHost host, IDbContext dbContext)
+		public void Inject(IApplicationConfig config, IApplicationHost host, IDbContext dbContext)
 		{
 			_host = host;
+			_config = config;
 			_dbContext = dbContext;
 		}
 
@@ -76,7 +78,7 @@ namespace A2v10.Web.Mvc.Hooks
 				if (_host.IsMultiCompany && _host.IsMultiTenant)
 				{
 					var update = new UpdateTenantCompanyHandler();
-					update.Inject(_host, _dbContext);
+					update.Inject(_config, _host, _dbContext);
 					update.EnableThrow();
 					update.DisableDtc();
 					update.Invoke(UserId, 0);
@@ -103,7 +105,7 @@ namespace A2v10.Web.Mvc.Hooks
 			catch (Exception ex)
 			{
 				result.status = "error";
-				if (_host.IsDebugConfiguration)
+				if (_config.IsDebugConfiguration)
 					result.message = ex.Message;
 				else
 					result.message = "Unable to delete user";

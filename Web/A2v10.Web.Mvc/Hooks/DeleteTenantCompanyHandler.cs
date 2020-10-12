@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web;
@@ -21,6 +21,7 @@ namespace A2v10.Web.Mvc.Hooks
 
 	public class DeleteTenantCompanyHandler : IInvokeTarget
 	{
+		IApplicationConfig _config;
 		IApplicationHost _host;
 		IDbContext _dbContext;
 		readonly IOwinContext _context;
@@ -31,9 +32,10 @@ namespace A2v10.Web.Mvc.Hooks
 			_context = HttpContext.Current.GetOwinContext();
 		}
 
-		public void Inject(IApplicationHost host, IDbContext dbContext)
+		public void Inject(IApplicationConfig config, IApplicationHost host, IDbContext dbContext)
 		{
 			_host = host;
+			_config = config;
 			_dbContext = dbContext;
 		}
 
@@ -78,7 +80,7 @@ namespace A2v10.Web.Mvc.Hooks
 			catch (Exception ex)
 			{
 				result.status = "error";
-				if (_host.IsDebugConfiguration)
+				if (_config.IsDebugConfiguration)
 					result.message = ex.Message;
 				else
 					result.message = "Unable to delete company";

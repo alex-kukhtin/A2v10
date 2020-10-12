@@ -12,6 +12,7 @@ namespace A2v10.Request
 	public class RedirectModule
 	{
 		private readonly IApplicationHost _host;
+		private readonly IApplicationConfig _config;
 		private IDictionary<String, String> _redirect;
 		private FileSystemWatcher _redirectWatcher;
 		private Boolean _loaded;
@@ -20,6 +21,7 @@ namespace A2v10.Request
 		public RedirectModule()
 		{
 			_host = ServiceLocator.Current.GetService<IApplicationHost>();
+			_config = ServiceLocator.Current.GetService<IApplicationConfig>();
 			Start();
 		}
 
@@ -41,7 +43,7 @@ namespace A2v10.Request
 
 		public void CreateWatcher()
 		{ 
-			if (_host.IsDebugConfiguration && _redirectWatcher == null && _host.ApplicationReader.IsFileSystem)
+			if (_config.IsDebugConfiguration && _redirectWatcher == null && _host.ApplicationReader.IsFileSystem)
 			{
 				String redFilePath = _host.ApplicationReader.MakeFullPath(String.Empty, "redirect.json");
 				var dirName = Path.GetDirectoryName(redFilePath);

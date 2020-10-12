@@ -44,7 +44,7 @@ namespace A2v10.Workflow
 				ee.Dispose();
 		}
 
-		public static async Task<WorkflowResult> StartWorkflow(IApplicationHost host, IDbContext dbContext, IMessaging messaging, StartWorkflowInfo info)
+		public static async Task<WorkflowResult> StartWorkflow(IApplicationConfig config, IApplicationHost host, IDbContext dbContext, IMessaging messaging, StartWorkflowInfo info)
 		{
 			AppWorkflow aw = null;
 			var profiler = host.Profiler;
@@ -60,7 +60,7 @@ namespace A2v10.Workflow
 				using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Load '{info.Source}'"))
 				{
 					def = WorkflowDefinition.Create(info.Source);
-					root = def.LoadFromSource(host, dbContext);
+					root = def.LoadFromSource(config, dbContext);
 					process = Process.Create(def, info);
 				}
 				// workflow arguments
@@ -97,7 +97,7 @@ namespace A2v10.Workflow
 			}
 		}
 
-		public static void ResumeWorkflowTimer(IApplicationHost host, IDbContext dbContext, IMessaging messaging, Int64 processId)
+		public static void ResumeWorkflowTimer(IApplicationConfig config, IApplicationHost host, IDbContext dbContext, IMessaging messaging, Int64 processId)
 		{
 			AppWorkflow aw = null;
 			var result = new WorkflowResult
@@ -113,6 +113,7 @@ namespace A2v10.Workflow
 				aw._application.Extensions.Add(dbContext);
 				aw._application.Extensions.Add(messaging);
 				aw._application.Extensions.Add(host);
+				aw._application.Extensions.Add(config);
 				aw._application.Extensions.Add(result);
 				WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(pi.WorkflowId, aw._application.InstanceStore);
 				aw._application.Load(instance, _wfTimeSpan);
@@ -129,7 +130,7 @@ namespace A2v10.Workflow
 			}
 		}
 
-		public static async Task<WorkflowResult> ResumeWorkflow(IApplicationHost host, IDbContext dbContext, IMessaging messaging, ResumeWorkflowInfo info)
+		public static async Task<WorkflowResult> ResumeWorkflow(IApplicationConfig config, IApplicationHost host, IDbContext dbContext, IMessaging messaging, ResumeWorkflowInfo info)
 		{
 			AppWorkflow aw = null;
 			var profiler = host.Profiler;
@@ -146,12 +147,13 @@ namespace A2v10.Workflow
 				{
 					result.ProcessId = inbox.ProcessId;
 					var def = WorkflowDefinition.Load(inbox);
-					Activity root = def.LoadFromSource(host, dbContext);
+					Activity root = def.LoadFromSource(config, dbContext);
 					aw = Create(dbContext, root, null, def.Identity);
 					aw._application.Extensions.Add(result);
 					aw._application.Extensions.Add(dbContext);
 					aw._application.Extensions.Add(messaging);
 					aw._application.Extensions.Add(host);
+					aw._application.Extensions.Add(config);
 					WorkflowApplicationInstance instance = WorkflowApplication.GetInstance(inbox.WorkflowId, aw._application.InstanceStore);
 					aw._application.Load(instance, _wfTimeSpan);
 				}
@@ -189,7 +191,7 @@ namespace A2v10.Workflow
 			return result;
 		}
 
-		public static WorkflowResult AutoStart(Int64 processId, IApplicationHost host, IDbContext dbContext, IMessaging messaging, ILogger logger)
+		public static WorkflowResult AutoStart(Int64 processId, IApplicationConfig config, IApplicationHost host, IDbContext dbContext, IMessaging messaging, ILogger logger)
 		{
 			var p = dbContext.Load<Process>(null, "a2workflow.[ProcessStart.Load]", new { Id = processId });
 			StartWorkflowInfo info = new StartWorkflowInfo()
@@ -203,7 +205,7 @@ namespace A2v10.Workflow
 				Model = p.ModelName,
 				ModelId = p.ModelId
 			};
-			return StartWorkflow(host, dbContext, messaging, info).Result;
+			return StartWorkflow(config, host, dbContext, messaging, info).Result;
 		}
 
 		internal void Track(TrackingRecord record)

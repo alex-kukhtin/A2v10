@@ -38,6 +38,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BackgroundApplicationConfig.cs" />
     <Compile Include="BackgroundApplicationHost.cs" />
     <Compile Include="BackgroundLogger.cs" />
     <Compile Include="DbApplicationReader.cs" />

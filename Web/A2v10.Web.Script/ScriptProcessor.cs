@@ -11,16 +11,18 @@ namespace A2v10.Web.Script
 	{
 		private readonly IDataScripter _scripter;
 		private readonly IApplicationHost _host;
+		private readonly IApplicationConfig _config;
 
-		public ScriptProcessor(IDataScripter scripter, IApplicationHost host)
+		public ScriptProcessor(IDataScripter scripter, IApplicationConfig config, IApplicationHost host)
 		{
-			_scripter = scripter;
-			_host = host;
+			_scripter = scripter ?? throw new ArgumentNullException(nameof(scripter));
+			_host = host ?? throw new ArgumentNullException(nameof(host));
+			_config = config ?? throw new ArgumentNullException(nameof(config));
 		}
 
 		IScriptContext CreateScript()
 		{
-			switch (_host.ScriptEngine)
+			switch (_config.ScriptEngine)
 			{
 				case "JSRT":
 					return new A2v10.Script.JSRT.ScriptContext(false); // EDGE without debugging
@@ -69,7 +71,7 @@ namespace A2v10.Web.Script
 
 		String LoadFile(String file)
 		{
-			var hostPath = _host.HostingPath;
+			var hostPath = _config.HostingPath;
 			String path = Path.Combine(hostPath, $"scripts/server/{file}.js");
 			if (!File.Exists(path))
 				throw new FileNotFoundException(path);

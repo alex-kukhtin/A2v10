@@ -53,9 +53,10 @@
 				eventBus.$emit('closeAllPopups');
 				if (this.isFolder && !this.isFolderSelect(item))
 					this.toggle();
-				else {
+				else if ('$select' in item)
 					item.$select(this.rootItems);
-				}
+				else if (this.click !== undefined)
+					this.click(item);
 			},
 			doDblClick(item) {
 				eventBus.$emit('closeAllPopups');

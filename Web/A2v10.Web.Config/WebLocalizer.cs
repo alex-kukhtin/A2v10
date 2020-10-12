@@ -41,14 +41,14 @@ namespace A2v10.Web.Config
 		FileSystemWatcher _watcher_system = null;
 		FileSystemWatcher _watcher_app = null;
 
-		public IDictionary<String, String> GetLocalizerDictionary(IApplicationHost host, String locale)
+		public IDictionary<String, String> GetLocalizerDictionary(IApplicationConfig config, IApplicationHost host, String locale)
 		{
 			var map = GetCurrentMap(locale);
 			if (map.Loaded)
 				return map.Map;
 			map.Loaded = true;
 
-			foreach (var localePath in GetLocalizerFilePath(host, locale))
+			foreach (var localePath in GetLocalizerFilePath(config, host, locale))
 			{
 				IEnumerable<String> lines = localePath.IsFileSystem ?
 					File.ReadAllLines(localePath.Path) :
@@ -74,7 +74,7 @@ namespace A2v10.Web.Config
 			return map.Map;
 		}
 
-		IEnumerable<LocalePath> GetLocalizerFilePath(IApplicationHost host, String locale)
+		IEnumerable<LocalePath> GetLocalizerFilePath(IApplicationConfig config, IApplicationHost host, String locale)
 		{
 			// locale may be "uk_UA"
 			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
@@ -87,7 +87,7 @@ namespace A2v10.Web.Config
 			if (!appReader.DirectoryExists(appPath))
 				appPath = null;
 
-			CreateWatchers(host, dirPath, appReader.IsFileSystem ? appPath : null);
+			CreateWatchers(config, host, dirPath, appReader.IsFileSystem ? appPath : null);
 			if (dirPath != null)
 			{
 				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
@@ -124,11 +124,11 @@ namespace A2v10.Web.Config
 		}
 
 
-		void CreateWatchers(IApplicationHost host, String dirPath, String appPath)
+		void CreateWatchers(IApplicationConfig config, IApplicationHost host2, String dirPath, String appPath)
 		{
 			if (_watcher_system != null)
 				return;
-			if (!host.IsDebugConfiguration)
+			if (!config.IsDebugConfiguration)
 				return;
 			if (!String.IsNullOrEmpty(dirPath))
 			{
@@ -167,18 +167,20 @@ namespace A2v10.Web.Config
 	public class WebLocalizer : BaseLocalizer, IDataLocalizer
 	{
 		private readonly IApplicationHost _host;
+		private readonly IApplicationConfig _config;
 
 		private static readonly Lazy<WebDictionary> _webDictionary = new Lazy<WebDictionary>(()=>new WebDictionary(), isThreadSafe:true);
 
-		public WebLocalizer(IApplicationHost host)
+		public WebLocalizer(IApplicationConfig config, IApplicationHost host)
 			:base()
 		{
+			_config = config;
 			_host = host;
 		}
 
 		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
 		{
-			return _webDictionary.Value.GetLocalizerDictionary(_host, locale);
+			return _webDictionary.Value.GetLocalizerDictionary(_config, _host, locale);
 		}
 
 		String IDataLocalizer.Localize(String content)

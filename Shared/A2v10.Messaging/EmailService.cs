@@ -18,12 +18,12 @@ namespace A2v10.Messaging
 	public class EmailService : IMessageService
 	{
 		private readonly ILogger _logger;
-		private readonly IApplicationHost _host;
+		private readonly IApplicationConfig _config;
 
-		public EmailService(ILogger logger, IApplicationHost host)
+		public EmailService(ILogger logger, IApplicationConfig config)
 		{
 			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_host = host ?? throw new ArgumentNullException(nameof(host));
+			_config = config ?? throw new ArgumentNullException(nameof(config));
 		}
 
 		public IMessageSendInfo CreateSendInfo()
@@ -47,7 +47,7 @@ namespace A2v10.Messaging
 
 		SmtpConfig GetCurrentConfig()
 		{
-			var strConfig = _host.SmtpConfig;
+			var strConfig = _config.SmtpConfig;
 			if (String.IsNullOrEmpty(strConfig))
 				return null;
 			return SmtpConfig.FromJson(strConfig);

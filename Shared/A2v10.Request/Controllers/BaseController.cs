@@ -39,6 +39,7 @@ namespace A2v10.Request
 		protected readonly IMessageService _messageService;
 		protected readonly IUserStateManager _userStateManager;
 		protected readonly IExternalDataProvider _externalDataProvider;
+		protected readonly IApplicationConfig _config;
 
 		public class DataModelAndView
 		{
@@ -55,6 +56,7 @@ namespace A2v10.Request
 			// DI ready
 			IServiceLocator locator = ServiceLocator.Current;
 			_host = locator.GetService<IApplicationHost>();
+			_config = locator.GetService<IApplicationConfig>();
 			_dbContext = locator.GetService<IDbContext>();
 			_renderer = locator.GetServiceOrNull<IRenderer>();
 			_workflowEngine = locator.GetServiceOrNull<IWorkflowEngine>();
@@ -65,11 +67,11 @@ namespace A2v10.Request
 			_externalDataProvider = locator.GetServiceOrNull<IExternalDataProvider>();
 		}
 
-		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
 		public IDbContext DbContext => _dbContext;
 		public IApplicationHost Host => _host;
 		public IDataScripter Scripter => _scripter;
 		public IUserStateManager UserStateManager => _userStateManager;
+		public IApplicationConfig Config => _config;
 
 		public Boolean Mobile => _host.Mobile;
 
@@ -298,7 +300,7 @@ namespace A2v10.Request
 						Localizer = _localizer,
 						TypeChecker = typeChecker,
 						CurrentLocale = null,
-						IsDebugConfiguration = _host.IsDebugConfiguration,
+						IsDebugConfiguration = _config.IsDebugConfiguration,
 						SecondPhase = secondPhase
 					};
 					_renderer.Render(ri);
@@ -358,7 +360,7 @@ namespace A2v10.Request
 			ProfileException(ex);
 			var msg = WebUtility.HtmlEncode(ex.Message);
 			var stackTrace = WebUtility.HtmlEncode(ex.StackTrace);
-			if (IsDebugConfiguration)
+			if (_config.IsDebugConfiguration)
 				writer.Write($"<div class=\"app-exception\"><div class=\"message\">{msg}</div><div class=\"stack-trace\">{stackTrace}</div></div>");
 			else
 			{
@@ -387,7 +389,7 @@ namespace A2v10.Request
 		{
 			if (_messageService == null)
 				throw new InvalidOperationException($"Service 'IMessageService' not registered");
-			String to = Host.SupportEmail;
+			String to = Config.SupportEmail;
 			if (String.IsNullOrEmpty(to))
 				return;
 			String subject = "Feedback from service";

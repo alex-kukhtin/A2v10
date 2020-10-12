@@ -52,13 +52,13 @@ namespace A2v10.Request
 
 		public static String CustomManifest(this IApplicationHost host)
 		{
-			var manifestPath = Path.Combine(host.HostingPath, "manifest.json");
+			var manifestPath = Path.Combine(host.Config.HostingPath, "manifest.json");
 			return File.Exists(manifestPath) ? "<link rel=\"manifest\" href=\"/manifest.json\">" : null;
 		}
 
 		public static ITypeChecker CheckTypes(this IApplicationHost host, String path, String typesFile, IDataModel model)
 		{
-			if (!host.IsDebugConfiguration)
+			if (!host.Config.IsDebugConfiguration)
 				return null;
 			if (String.IsNullOrEmpty(typesFile))
 				return null;

@@ -20,6 +20,7 @@ namespace A2v10.Web.Mvc.Controllers
 	public class AppLinkController : Controller
 	{
 		private readonly IApplicationHost _host;
+		private readonly IApplicationConfig _config;
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
 		private readonly A2v10.Request.BaseController _baseController;
@@ -29,6 +30,7 @@ namespace A2v10.Web.Mvc.Controllers
 			// DI ready
 			var serviceLocator = ServiceLocator.Current;
 			_host = serviceLocator.GetService<IApplicationHost>();
+			_config = serviceLocator.GetService<IApplicationConfig>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
 			_baseController = new A2v10.Request.BaseController();
@@ -69,13 +71,13 @@ namespace A2v10.Web.Mvc.Controllers
 			layout.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("applink"));
 			layout.Replace("$(LayoutHead)", _host.CustomAppHead());
 			layout.Replace("$(LayoutScripts)", _host.CustomAppScripts());
-			layout.Replace("$(HelpUrl)", _host.HelpUrl);
+			layout.Replace("$(HelpUrl)", _config.HelpUrl);
 			layout.Replace("$(Partial)", pageContent);
 			layout.Replace("$(Title)", appTitle.AppTitle);
-			layout.Replace("$(Description)", _host.AppDescription);
+			layout.Replace("$(Description)", _config.AppDescription);
 			layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
 			layout.Replace("$(LayoutManifest)", _host.CustomManifest());
-			var theme = _host.Theme;
+			var theme = _config.Theme;
 			layout.Replace("$(ColorScheme)", theme.ColorScheme);
 			layout.Replace("$(Theme)", theme.FileName);
 

@@ -101,9 +101,9 @@ namespace A2v10.Workflow
 			return new WorkflowDefinition(info.Kind, info.Definition);
 		}
 
-		String GetWorkflowFullPath(IApplicationHost host)
+		String GetWorkflowFullPath(IApplicationConfig config)
 		{
-			String fullPath = System.IO.Path.Combine(host.AppPath, host.AppKey ?? String.Empty, Path);
+			String fullPath = System.IO.Path.Combine(config.AppPath, config.AppKey ?? String.Empty, Path);
 			fullPath = System.IO.Path.ChangeExtension(fullPath, "xaml");
 			fullPath = System.IO.Path.GetFullPath(fullPath);
 			return fullPath;
@@ -138,11 +138,11 @@ namespace A2v10.Workflow
 			}
 		}
 
-		public Activity LoadFromSource(IApplicationHost host, IDbContext dbContext)
+		public Activity LoadFromSource(IApplicationConfig config, IDbContext dbContext)
 		{
 			if (Type == WorkflowType.File)
 			{
-				String fullPath = GetWorkflowFullPath(host);
+				String fullPath = GetWorkflowFullPath(config);
 				using (var sr = new StreamReader(fullPath))
 				{
 					Definition = sr.ReadToEnd();

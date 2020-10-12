@@ -79,7 +79,7 @@ namespace A2v10.Request
 				changeScript.Replace("$(PageGuid)", pageGuid);
 
 				changeHtml.Replace("$(PageGuid)", pageGuid);
-				var scripter = new VueDataScripter(_host, _localizer);
+				var scripter = new VueDataScripter(_config, _host, _localizer);
 
 				String dataModelText = "{}";
 				if (dm != null)

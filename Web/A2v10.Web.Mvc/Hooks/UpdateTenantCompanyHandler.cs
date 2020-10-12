@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -11,6 +11,7 @@ namespace A2v10.Web.Mvc.Hooks
 	public class UpdateTenantCompanyHandler : IInvokeTarget
 	{
 		IApplicationHost _host;
+		IApplicationConfig _config;
 		IDbContext _dbContext;
 		Boolean _enableThrow;
 
@@ -34,9 +35,10 @@ namespace A2v10.Web.Mvc.Hooks
 			_enableDtc = false;
 		}
 
-		public void Inject(IApplicationHost host, IDbContext dbContext)
+		public void Inject(IApplicationConfig config, IApplicationHost host, IDbContext dbContext)
 		{
 			_host = host;
+			_config = config;
 			_dbContext = dbContext;
 		}
 
@@ -80,7 +82,7 @@ namespace A2v10.Web.Mvc.Hooks
 				if (_enableThrow)
 					throw ex;
 				result.status = "error";
-				if (_host.IsDebugConfiguration)
+				if (_config.IsDebugConfiguration)
 					result.message = ex.Message;
 				else
 					result.message = "Unable to update company";

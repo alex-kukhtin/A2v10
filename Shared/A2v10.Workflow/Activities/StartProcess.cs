@@ -32,6 +32,7 @@ namespace A2v10.Workflow
 			IDbContext dbContext = context.GetExtension<IDbContext>();
 			var messaging = context.GetExtension<IMessaging>();
 			IApplicationHost host = context.GetExtension<IApplicationHost>();
+			IApplicationConfig config = context.GetExtension<IApplicationConfig>();
 			context.DoTrack(dbContext, TrackBefore.Get<TrackRecord>(context));
 			context.DoModelState(dbContext, StateBefore.Get<ModelStateInfo>(context));
 
@@ -58,7 +59,7 @@ namespace A2v10.Workflow
 				Parent = process.Id
 			};
 
-			var task = AppWorkflow.StartWorkflow(host, dbContext, messaging, sfi);
+			var task = AppWorkflow.StartWorkflow(config, host, dbContext, messaging, sfi);
 			task.Wait();
 			WorkflowResult result = task.Result;
 

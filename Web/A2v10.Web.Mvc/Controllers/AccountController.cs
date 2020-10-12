@@ -34,6 +34,7 @@ namespace A2v10.Web.Mvc.Controllers
 	public class AccountController : IdentityController, IControllerTenant
 	{
 
+		private readonly IApplicationConfig _config;
 		private readonly IApplicationHost _host;
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
@@ -43,6 +44,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			// DI ready
 			var serviceLocator = ServiceLocator.Current;
+			_config = serviceLocator.GetService<IApplicationConfig>();
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
@@ -55,6 +57,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			// DI ready
 			var serviceLocator = ServiceLocator.Current;
+			_config = serviceLocator.GetService<IApplicationConfig>();
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
@@ -78,12 +81,12 @@ namespace A2v10.Web.Mvc.Controllers
 				StringBuilder html = new StringBuilder(rsrcHtml);
 				layout.Replace("$(Partial)", html.ToString());
 				layout.Replace("$(Title)", appTitle?.AppTitle);
-				layout.Replace("$(HelpUrl)", _host.HelpUrl);
-				layout.Replace("$(Description)", _host.AppDescription);
+				layout.Replace("$(HelpUrl)", _config.HelpUrl);
+				layout.Replace("$(Description)", _config.AppDescription);
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
 				layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
 				layout.Replace("$(LayoutManifest)", _host.CustomManifest());
-				var theme = _host.Theme;
+				var theme = _config.Theme;
 				layout.Replace("$(ColorScheme)", theme?.ColorScheme);
 				layout.Replace("$(Theme)", theme?.FileName);
 
@@ -518,7 +521,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
 				{
 					// Don't reveal that the user does not exist or is not confirmed
-					status = _host.IsDebugConfiguration ? "NotFound" : "Success";
+					status = _config.IsDebugConfiguration ? "NotFound" : "Success";
 				}
 				else if (!user.ChangePasswordEnabled)
 					status = "NotAllowed";
@@ -579,7 +582,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (user == null || String.IsNullOrEmpty(model.Code))
 				{
 					// Don't reveal that the user does not exist
-					status = _host.IsDebugConfiguration ? "Error" : "Success";
+					status = _config.IsDebugConfiguration ? "Error" : "Success";
 				}
 				else
 				{

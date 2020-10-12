@@ -14,47 +14,26 @@ namespace BackgroundProcessor
 	public class BackgroundApplicationHost : IApplicationHost, IDataConfiguration
 	{
 		private readonly IProfiler _profiler;
+		private readonly IApplicationConfig _config;
 
-		public BackgroundApplicationHost(IProfiler profiler)
+		public BackgroundApplicationHost(IApplicationConfig config, IProfiler profiler)
 		{
 			_profiler = profiler;
+			_config = config;
 		}
 
 		#region IApplicationHost
 		public IProfiler Profiler => _profiler;
+		public IApplicationConfig Config => _config;
+
 		public Boolean Mobile { get; set; }
 		public Boolean IsAdminMode => false;
 		public Boolean Embedded => false;
 
-		public String AppPath => ConfigurationManager.AppSettings["appPath"];
-		public String AppKey => ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
-		public String AppHost => ConfigurationManager.AppSettings["appHost"];
-		public String UserAppHost => ConfigurationManager.AppSettings["userAppHost"];
-		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
-		public String AppDescription => throw new NotImplementedException(nameof(AppDescription));
-		public String SupportEmail => throw new NotImplementedException(nameof(SupportEmail));
-		public ITheme Theme => throw new NotImplementedException(nameof(Theme));
-		public String HelpUrl => throw new NotImplementedException(nameof(HelpUrl));
-		public String HostingPath => throw new NotImplementedException(nameof(HostingPath));
-		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
-
-		public Boolean IsDebugConfiguration
-		{
-			get
-			{
-				var debug = ConfigurationManager.AppSettings["configuration"];
-				if (String.IsNullOrEmpty(debug))
-					return true; // default is 'debug'
-				return debug.ToLowerInvariant() == "debug";
-			}
-		}
-
-		public String ScriptEngine => ConfigurationManager.AppSettings["scriptEngine"];
 
 		public Boolean IsRegistrationEnabled => throw new NotImplementedException(nameof(IsRegistrationEnabled));
 		public Boolean IsDTCEnabled =>  throw new NotImplementedException(nameof(IsDTCEnabled));
 		public Boolean IsAdminAppPresent => throw new NotImplementedException(nameof(IsAdminAppPresent));
-		public String UseClaims => throw new NotImplementedException(nameof(UseClaims));
 		public Boolean IsMultiTenant => throw new NotImplementedException(nameof(IsMultiTenant));
 		public Boolean IsUsePeriodAndCompanies => throw new NotImplementedException(nameof(IsUsePeriodAndCompanies));
 		public Boolean IsMultiCompany => false;
@@ -88,12 +67,12 @@ namespace BackgroundProcessor
 		public void StartApplication(Boolean bAdminMode)
 		{
 
-			if (AppPath.StartsWith("db:"))
-				_reader = new DbApplicationReader(AppPath);
+			if (Config.AppPath.StartsWith("db:"))
+				_reader = new DbApplicationReader(Config.AppPath);
 			else
 			{
-				String key = bAdminMode ? "admin" : AppKey;
-				_reader = new FileApplicationReader(AppPath, key);
+				String key = bAdminMode ? "admin" : Config.AppKey;
+				_reader = new FileApplicationReader(Config.AppPath, key);
 			}
 		}
 
@@ -101,7 +80,7 @@ namespace BackgroundProcessor
 
 		public String MakeFullPath(Boolean bAdmin, String path, String fileName)
 		{
-			String appKey = AppKey;
+			String appKey = Config.AppKey;
 			if (fileName.StartsWith("/"))
 			{
 				path = String.Empty;
@@ -109,7 +88,7 @@ namespace BackgroundProcessor
 			}
 			if (appKey != null)
 				appKey = "/" + appKey;
-			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
+			String fullPath = Path.Combine($"{Config.AppPath}{appKey}", path, fileName);
 			return Path.GetFullPath(fullPath);
 		}
 

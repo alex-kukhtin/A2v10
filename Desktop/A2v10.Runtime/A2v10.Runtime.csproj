@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="AppConfiguration.cs" />
     <Compile Include="Desktop.cs" />
+    <Compile Include="DesktopApplicationConfig.cs" />
     <Compile Include="DesktopApplicationHost.cs" />
     <Compile Include="DesktopException.cs" />
     <Compile Include="DesktopLicenseManager.cs" />

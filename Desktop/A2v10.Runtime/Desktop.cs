@@ -152,7 +152,8 @@ namespace A2v10RuntimeNet
 			ServiceLocator.Start = (IServiceLocator service) =>
 			{
 				IProfiler profiler = new DesktopProfiler();
-				DesktopApplicationHost host = new DesktopApplicationHost(profiler);
+				DesktopApplicationConfig config = new DesktopApplicationConfig();
+				DesktopApplicationHost host = new DesktopApplicationHost(config, profiler);
 				ILocalizer localizer = new DesktopLocalizer(host);
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,
@@ -160,13 +161,14 @@ namespace A2v10RuntimeNet
 					localizer as IDataLocalizer,
 					tenantManager: null); /*host as ITenantManager*/
 				IRenderer renderer = new XamlRenderer(profiler, host);
-				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
-				IDataScripter scripter = new VueDataScripter(host, localizer);
+				IWorkflowEngine wfEngine = new WorkflowEngine(config, host, dbContext, null);
+				IDataScripter scripter = new VueDataScripter(config, host, localizer);
 				IUserStateManager userStateManager = new DesktopUserStateManager(host, dbContext);
 				ILicenseManager licManager = new DesktopLicenseManager(dbContext);
 				IExternalDataProvider dataProvider = new ExternalDataContext();
 				service.RegisterService<IProfiler>(profiler);
 				service.RegisterService<IApplicationHost>(host);
+				service.RegisterService<IApplicationConfig>(config);
 				service.RegisterService<IDbContext>(dbContext);
 				service.RegisterService<IRenderer>(renderer);
 				service.RegisterService<IWorkflowEngine>(wfEngine);

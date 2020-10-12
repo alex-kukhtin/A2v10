@@ -28,30 +28,32 @@ namespace A2v10.Web.Mvc.Start
 			ServiceLocator.Start = (IServiceLocator locator) =>
 			{
 				IProfiler profiler = new WebProfiler();
-				IApplicationHost host = new WebApplicationHost(profiler);
-				ILocalizer localizer = new WebLocalizer(host);
+				IApplicationConfig config = new WebApplicationConfig();
+				IApplicationHost host = new WebApplicationHost(config, profiler);
+				ILocalizer localizer = new WebLocalizer(config, host);
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,
 					host as IDataConfiguration,
 					localizer as IDataLocalizer,
 					host as ITenantManager);
 				ILogger logger = new WebLogger(host, dbContext);
-				IMessageService emailService = new IdentityEmailService(logger, host);
+				IMessageService emailService = new IdentityEmailService(logger, config);
 				IMessaging messaging = new MessageProcessor(host, dbContext, emailService, logger);
 				IRenderer renderer = new XamlRenderer(profiler, host);
-				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
-				IDataScripter scripter = new VueDataScripter(host, localizer);
+				IWorkflowEngine workflowEngine = new WorkflowEngine(config, host, dbContext, messaging);
+				IDataScripter scripter = new VueDataScripter(config, host, localizer);
 				ISmsService smsService = new SmsService(dbContext, logger);
 				IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
 				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
 				IExternalDataProvider dataProvider = new ExternalDataContext();
-				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
+				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, config, host);
 				IHttpService httpService = new HttpService();
 				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, host);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
 				locator.RegisterService<IApplicationHost>(host);
+				locator.RegisterService<IApplicationConfig>(config);
 				locator.RegisterService<IRenderer>(renderer);
 				locator.RegisterService<IWorkflowEngine>(workflowEngine);
 				locator.RegisterService<IMessaging>(messaging);

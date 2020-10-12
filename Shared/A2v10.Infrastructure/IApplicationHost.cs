@@ -10,42 +10,22 @@ namespace A2v10.Infrastructure
 		public const String customSecuritySchema = "customSecuritySchema";
 	}
 
-	public interface ITheme
-	{
-		String Name { get; }
-		String FileName { get; }
-		String ColorScheme { get; }
-	}
 
 	public interface IApplicationHost
 	{
 		IProfiler Profiler { get; }
+		IApplicationConfig Config { get; }
 
-		String AppPath { get; }
-		String AppKey { get; }
-		String AppDescription { get; }
-		String AppHost { get; }
-		String UserAppHost { get; }
-		String SupportEmail { get; }
-		ITheme Theme { get; }
-		String HelpUrl { get; }
-		String HostingPath { get; }
-		String SmtpConfig { get; }
 		Boolean Mobile { get; set; }
 		Boolean Embedded { get; }
 		Boolean IsAdminMode { get; }
-		String ScriptEngine { get; }
 	
-		Boolean IsDebugConfiguration { get; }
 		Boolean IsRegistrationEnabled { get; }
 		Boolean IsDTCEnabled { get; }
 		Boolean IsAdminAppPresent { get; }
 
-		String UseClaims { get; }
-
 		Boolean IsMultiTenant { get; }
 		Boolean IsMultiCompany { get; }
-		String CustomSecuritySchema { get; }
 		Boolean IsUsePeriodAndCompanies { get; }
 
 		Int32? TenantId { get; set; }

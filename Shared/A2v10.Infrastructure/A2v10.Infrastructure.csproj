@@ -49,6 +49,7 @@
     <Compile Include="CollectionHelpers.cs" />
     <Compile Include="DynamicHelpers.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="IApplicationConfig.cs" />
     <Compile Include="IApplicationReader.cs" />
     <Compile Include="IHttpService.cs" />
     <Compile Include="IJavaScriptEngine.cs" />

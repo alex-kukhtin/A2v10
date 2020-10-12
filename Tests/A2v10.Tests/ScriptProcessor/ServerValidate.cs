@@ -16,9 +16,10 @@ namespace A2v10.Tests.ServerScripts
 
 	public class ServerValidate
 	{
-		readonly IDbContext _dbContext;
-		readonly ILocalizer _localizer;
-		readonly IApplicationHost _host;
+		private readonly IDbContext _dbContext;
+		private readonly ILocalizer _localizer;
+		private readonly IApplicationHost _host;
+		private readonly IApplicationConfig _config;
 
 		public ServerValidate()
 		{
@@ -27,14 +28,15 @@ namespace A2v10.Tests.ServerScripts
 			_dbContext = loc.GetService<IDbContext>();
 			_localizer = loc.GetService<ILocalizer>();
 			_host = loc.GetService<IApplicationHost>();
+			_config = loc.GetService<IApplicationConfig>();
 			_host.StartApplication(false);
 		}
 
 		[TestMethod]
 		public void ServerScriptValidate()
 		{
-			IDataScripter scripter = new VueDataScripter(_host, _localizer);
-			var sp = new ScriptProcessor(scripter, _host);
+			IDataScripter scripter = new VueDataScripter(_config, _host, _localizer);
+			var sp = new ScriptProcessor(scripter, _config, _host);
 			var ssi = new ServerScriptInfo()
 			{
 				DataModel = _dbContext.LoadModel(null, "a2test.[Document.Load]"),

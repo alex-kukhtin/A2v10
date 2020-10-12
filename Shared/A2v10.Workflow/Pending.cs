@@ -72,13 +72,13 @@ namespace A2v10.Workflow
 						if (wfAuto)
 						{
 							manager.Logger.LogBackground($"Autostarting process. ProcessId = {pId}");
-							AppWorkflow.AutoStart(pId, manager.Host, manager.DbContext, manager.Messaging, manager.Logger);
+							AppWorkflow.AutoStart(pId, manager.Config, manager.Host, manager.DbContext, manager.Messaging, manager.Logger);
 						}
 						else
 						{
 							// resume timer
 							manager.Logger.LogBackground($"Resuming timer. ProcessId = {pId}");
-							AppWorkflow.ResumeWorkflowTimer(manager.Host, manager.DbContext, manager.Messaging, pId);
+							AppWorkflow.ResumeWorkflowTimer(manager.Config, manager.Host, manager.DbContext, manager.Messaging, pId);
 						}
 					});
 				}

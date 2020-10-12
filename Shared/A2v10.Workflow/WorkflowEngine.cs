@@ -10,12 +10,14 @@ namespace A2v10.Workflow
 {
 	public class WorkflowEngine : IWorkflowEngine
 	{
-		readonly IDbContext _dbContext;
-		readonly IApplicationHost _host;
+		private readonly IDbContext _dbContext;
+		private readonly IApplicationConfig _config;
+		private readonly IApplicationHost _host;
 		private readonly IMessaging _messaging;
 
-		public WorkflowEngine(IApplicationHost host, IDbContext context, IMessaging messaging)
+		public WorkflowEngine(IApplicationConfig config, IApplicationHost host, IDbContext context, IMessaging messaging)
 		{
+			_config = config;
 			_host = host;
 			_dbContext = context;
 			_messaging = messaging;
@@ -23,12 +25,12 @@ namespace A2v10.Workflow
 
 		public async Task<WorkflowResult> StartWorkflow(StartWorkflowInfo info)
 		{
-			return await AppWorkflow.StartWorkflow(_host, _dbContext, _messaging, info);
+			return await AppWorkflow.StartWorkflow(_config, _host, _dbContext, _messaging, info);
 		}
 
 		public async Task<WorkflowResult> ResumeWorkflow(ResumeWorkflowInfo info)
 		{
-			return await AppWorkflow.ResumeWorkflow(_host, _dbContext, _messaging, info);
+			return await AppWorkflow.ResumeWorkflow(_config, _host, _dbContext, _messaging, info);
 		}
 
 		public void ProcessPendingWorkflows()

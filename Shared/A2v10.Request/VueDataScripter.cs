@@ -115,10 +115,12 @@ const vm = new DataModelController({
 	public class VueDataScripter : IDataScripter
 	{
 		IApplicationHost _host;
+		IApplicationConfig _config;
 		ILocalizer _localizer;
-		public VueDataScripter(IApplicationHost host, ILocalizer localizer)
+		public VueDataScripter(IApplicationConfig config, IApplicationHost host, ILocalizer localizer)
 		{
 			_host = host;
+			_config = config;
 			_localizer = localizer;
 		}
 
@@ -525,7 +527,7 @@ const vm = new DataModelController({
 			}
 			if (msi.DataModel != null)
 			{
-				dataModelText = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
+				dataModelText = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.ConfigSerializerSettings(_config.IsDebugConfiguration));
 			}
 
 			var header = new StringBuilder(SCRIPT_PARTS.HEADER);
@@ -569,7 +571,7 @@ const vm = new DataModelController({
 			sb.Replace("$(TemplateText)", templateText);
 			sb.Replace("$(RequiredModules)", sbRequired?.ToString());
 			String modelScript = msi.DataModel.CreateScript(this);
-			String rawData = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
+			String rawData = JsonConvert.SerializeObject(msi.DataModel.Root, JsonHelpers.ConfigSerializerSettings(_config.IsDebugConfiguration));
 			sb.Replace("$(DataModelText)", rawData);
 			sb.Replace("$(RawDataText)", msi.RawData ?? "{}");
 			sb.Replace("$(ModelScript)", modelScript);

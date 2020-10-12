@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Reflection;
 using System.Data.SqlClient;
 using System.Text;
 using System.Configuration;
@@ -24,59 +23,29 @@ namespace A2v10.Runtime
 		readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
 		private Boolean _admin;
 
-		public DesktopApplicationHost(IProfiler profiler)
+		public DesktopApplicationHost(IApplicationConfig config, IProfiler profiler)
 		{
 			Profiler = profiler;
-			Profiler.Enabled = IsDebugConfiguration;
+			Config = config;
+			Profiler.Enabled = config.IsDebugConfiguration;
 		}
 
 		public Boolean Embedded => true;
 		public IProfiler Profiler { get; }
+		public IApplicationConfig Config { get; }
+
 		public Boolean Mobile { get; set; }
 		public Boolean IsAdminMode => _admin;
 
-		private static String CurrentAppPath { get; set; }
-		private static String CurrentAppKey { get; set; }
 		private static String CurrentAppConnectionString { get; set; }
-		private static String CurrentHelpUrl { get; set; }
 
 		private static String CurrentUserName { get; set; }
 		private static String CurrentPersonName { get; set; }
 		private static FullUserInfo CurrentUserInfo { get; set; }
 		private static Dictionary<Int64, String> CurrentCompanyMap { get; set; }
 
-		public String AppPath => CurrentAppPath;
-		public String AppKey => CurrentAppKey;
 
 		public FullUserInfo UserInfo => CurrentUserInfo;
-
-		public String SmtpConfig => throw new NotImplementedException(nameof(SmtpConfig));
-
-		public String HostingPath
-		{
-			get
-			{
-				var path = Assembly.GetExecutingAssembly().Location;
-				return Path.GetDirectoryName(path);
-			}
-		}
-
-		public String AppDescription => "A2v10.Desktop";
-		public String SupportEmail => null;
-		public String AppHost => null;
-		public String UserAppHost => null;
-		public String ScriptEngine => null;
-
-		public ITheme Theme => null;
-		public String HelpUrl => CurrentHelpUrl;
-
-		public Boolean IsDebugConfiguration
-		{
-			get
-			{
-				return true;
-			}
-		}
 
 		private static IApplicationReader _reader = null;
 
@@ -107,13 +76,11 @@ namespace A2v10.Runtime
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDTCEnabled => false;
 		public Boolean IsAdminAppPresent => false;
-		public String UseClaims => null;
 		public Int32? TenantId { get; set; } 
 		public Int64? UserId { get; set; }
 		public String UserSegment { get; set; }
 		public String CatalogDataSource => "Catalog";
 		public String TenantDataSource => null;
-		public String CustomSecuritySchema => null;
 
 		public String AppVersion => AppInfo.MainAssembly.Version;
 		public String AppBuild => AppInfo.MainAssembly.Build;
@@ -153,32 +120,32 @@ namespace A2v10.Runtime
 		}
 		#endregion
 
-		internal static void StartApplication(String cnnString)
+		internal static AppConfiguration StartApplication(String cnnString)
 		{
 			var appConfig = new AppConfiguration();
 			appConfig.Load(cnnString);
 
+			DesktopApplicationConfig.StartApplication(appConfig);
+
 			CurrentAppConnectionString = cnnString;
-			CurrentAppPath = appConfig.AppPath;
-			CurrentAppKey = appConfig.AppKey;
-			CurrentHelpUrl = appConfig.HelpUrl;
 			CurrentUserInfo = appConfig.UserInfo;
 			CurrentCompanyMap = appConfig.CompanyMap;
 			if (appConfig.UserInfo.UserId == 0)
 			{
 				throw new DesktopException(DesktopException.UserNotRegistered);
 			}
-			CreateReader();
+			CreateReader(appConfig);
+			return appConfig;
 		}
 
-		static void CreateReader()
+		static void CreateReader(AppConfiguration config)
 		{
-			var file = ZipApplicationFileName(CurrentAppPath, CurrentAppKey);
-			String key = CurrentAppKey;
+			var file = ZipApplicationFileName(config.AppPath, config.AppKey);
+			String key = config.AppKey;
 			if (file != null)
-				_reader = new ZipApplicationReader(CurrentAppPath, key);
+				_reader = new ZipApplicationReader(config.AppPath, key);
 			else
-				_reader = new FileApplicationReader(CurrentAppPath, key)
+				_reader = new FileApplicationReader(config.AppPath, key)
 				{
 					EmulateBox = true
 				};

@@ -117,8 +117,8 @@ namespace A2v10.Messaging
 			var fullPath = Path.ChangeExtension(templatePath, "xaml");
 
 			var env = dm.Eval<List<ExpandoObject>>("Message.Environment");
-			env.AddNameValue("Host", _host.AppHost);
-			env.AddNameValue("UserHost", _host.UserAppHost);
+			env.AddNameValue("Host", _host.Config.AppHost);
+			env.AddNameValue("UserHost", _host.Config.UserAppHost);
 
 			using (var stream = _host.ApplicationReader.FileStreamFullPathRO(fullPath)) {
 				var tml = XamlServices.Load(stream) as Template;
