@@ -1,14 +1,11 @@
 ﻿
+@import "colors.less";
 
 @font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
 @monospace-font: Consolas, 'Courier New', Courier, monospace;
 @font-size:14px;
 
-@background-color:var(--backgroundColor);
-@text-color: var(--textColor);
-
 @font-size-small:0.925rem;
-
 
 @border-light: var(--neutralLight);
 
@@ -31,6 +28,7 @@
 
 //@brand-bk-color: #4d6082;
 @brand-bk-color: var(--themeDark);
+
 @dark-bk-color: #8591a2;
 @menu-bk-color: #9ab3e0;
 @a2v10-brand-color:#dd2c5e;
@@ -41,7 +39,7 @@
 @active-bg-color: #cde6f7;
 @alter-bg-color: rgba(208, 208, 208, 0.15);
 
-@link-color: var(--themeDark);//#208cf8; //#57a8fa;
+//@link-color: #26a3c6; // var(--themeDark);//#208cf8; //#57a8fa;
 //@link-hover-color: darken(@link-color, 15%);
 @link-hover-color: @link-color;
 @link-hover-color-dark: var(--themeDarker); //darken(@link-color, 10%);
@@ -57,7 +55,6 @@
 
 @padding-default: 1rem;
 
-
 @cmn-danger-brd-color: #fc7c7c;
 @cmn-warning-brd-color: gold;
 @cmn-success-brd-color: #89e489;
@@ -70,7 +67,9 @@
 @select-padding: 2px;
 @placeholder-color: @gray-text-color;
 @label-color: @dark-gray-text-color;
-@control-focus-color: #208cf8; // TODO: variable?
+
+@control-focus-color:  @link-color; //#208cf8; // TODO: variable?
+
 @header-text-color: @dark-gray-text-color;
 
 @disabled-bg-color: #fafafa;

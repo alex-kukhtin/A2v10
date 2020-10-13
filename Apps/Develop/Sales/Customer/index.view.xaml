@@ -12,7 +12,7 @@
 	</Page.CollectionView>
 	<Splitter>
 		<Block Splitter.Width="25%" Splitter.MinWidth="20%">
-			<Toolbar>
+			<Toolbar Border="Bottom">
 				<Button Icon="Add" Tip="Создать папку" Command="{BindCmd Execute, CommandName=AddTopFolder, Argument={Bind Agents}}" />
 				<Button Icon="Edit" Command="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}" />
 				<Button Icon="Delete" Command="{BindCmd Execute, CommandName=DeleteFolder, Argument={Bind Agents.$selected}, Confirm='Удалить папку?'}"/>
@@ -27,7 +27,7 @@
 			</TreeView>
 		</Block>
 		<Block Splitter.MinWidth="20%">
-			<Toolbar>
+			<Toolbar Border="Bottom">
 				<TextBox Label="Метка:"></TextBox>
 				<Button Icon="Add" Content="@[Create]" Tip="Создать контрагента" 
 					Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Agents.Selected(Children)}}"/>
