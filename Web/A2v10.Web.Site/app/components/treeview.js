@@ -9,7 +9,7 @@
 	const eventBus = require('std:eventBus');
 	const platform = require('std:platform');
 
-//stop for toggle is required!
+	//stop for toggle is required!
 
 	const treeItemComponent = {
 		name: 'tree-item',
@@ -53,9 +53,10 @@
 				eventBus.$emit('closeAllPopups');
 				if (this.isFolder && !this.isFolderSelect(item))
 					this.toggle();
-				else {
+				else if ("$select" in item)
 					item.$select(this.rootItems);
-				}
+				else if (this.click)
+					this.click(item);
 			},
 			doDblClick(item) {
 				eventBus.$emit('closeAllPopups');
@@ -108,7 +109,9 @@
 				return t;
 			},
 			isItemSelected: function () {
-				return this.item.$selected;
+				if (this.item && "$selected" in this.item)
+					return this.item.$selected;
+				return this.isActive && this.isActive(this.item);
 			},
 			isItemGroup() {
 				let gp = this.options ? this.options.isGroup : undefined;
