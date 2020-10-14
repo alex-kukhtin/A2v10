@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -19,11 +19,11 @@ using Stimulsoft.Report.Web;
 using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Reports;
-using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Interop;
 using System.Web;
 using System.Net.Http.Headers;
+using A2v10.Web.Base;
 
 namespace A2v10.Web.Mvc.Controllers
 {

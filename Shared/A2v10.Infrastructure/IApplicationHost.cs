@@ -31,7 +31,7 @@ namespace A2v10.Infrastructure
 		String HelpUrl { get; }
 		String HostingPath { get; }
 		String SmtpConfig { get; }
-		Boolean Mobile { get; set; }
+		Boolean Mobile { get; }
 		Boolean Embedded { get; }
 		Boolean IsAdminMode { get; }
 		String ScriptEngine { get; }
@@ -69,5 +69,7 @@ namespace A2v10.Infrastructure
 
 		String GetAppSettings(String source);
 		ExpandoObject GetEnvironmentObject(String key);
+
+		void CheckIsMobile(String host);
 	}
 }

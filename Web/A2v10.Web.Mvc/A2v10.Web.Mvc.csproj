@@ -121,11 +121,6 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\RequestExtensions.cs" />
-    <Compile Include="Filters\AuthorizeFilterAttribute.cs" />
-    <Compile Include="Filters\CheckMobileFilterAttribute.cs" />
-    <Compile Include="Filters\ExecutingFilterAttribute.cs" />
-    <Compile Include="Filters\HttpOptionsAttribute.cs" />
-    <Compile Include="Filters\IsAjaxOnlyAttribute.cs" />
     <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
     <Compile Include="Hooks\CompanyModels.cs" />
     <Compile Include="Hooks\GetOAuthUrl.cs" />

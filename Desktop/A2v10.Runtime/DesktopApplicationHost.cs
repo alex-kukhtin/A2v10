@@ -32,7 +32,7 @@ namespace A2v10.Runtime
 
 		public Boolean Embedded => true;
 		public IProfiler Profiler { get; }
-		public Boolean Mobile { get; set; }
+		public Boolean Mobile => false;
 		public Boolean IsAdminMode => _admin;
 
 		private static String CurrentAppPath { get; set; }
@@ -226,6 +226,10 @@ namespace A2v10.Runtime
 		public ExpandoObject GetEnvironmentObject(String key)
 		{
 			throw new NotImplementedException(nameof(GetEnvironmentObject));
+		}
+
+		public void CheckIsMobile(String host)
+		{
 		}
 
 	}

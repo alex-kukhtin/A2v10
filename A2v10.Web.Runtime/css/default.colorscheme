@@ -1,5 +1,7 @@
-﻿--backgroundColor:#ffff;
---textColor:#131313;
+﻿--background:#ffff;
+--text:#020202;
+
+
 --themePrimary:#dd2c5e;
 --themeDark:#c5204f;
 --themeDarker:#af1d46;
@@ -9,3 +11,5 @@
 --neutralLighter:#f3f2f1;
 
 --brandPrimary:#dd2c5e;
+
+--link:#2c5edd;

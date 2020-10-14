@@ -26,6 +26,7 @@ using A2v10.Data.Interfaces;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using System.Configuration;
+using A2v10.Web.Base;
 
 namespace A2v10.Web.Mvc.Controllers
 {

@@ -101,6 +101,10 @@
     <Content Include="Web.config.sample" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
+      <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
+      <Name>A2v10.Workflow</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{e0577880-9b04-4a2a-b791-8fdb47caa3bc}</Project>
       <Name>A2v10.Xaml</Name>

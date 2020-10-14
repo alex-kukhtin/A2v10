@@ -22,7 +22,7 @@ namespace BackgroundProcessor
 
 		#region IApplicationHost
 		public IProfiler Profiler => _profiler;
-		public Boolean Mobile { get; set; }
+		public Boolean Mobile => false;
 		public Boolean IsAdminMode => false;
 		public Boolean Embedded => false;
 
@@ -141,6 +141,10 @@ namespace BackgroundProcessor
 		public ExpandoObject GetEnvironmentObject(String key)
 		{
 			throw new NotImplementedException(nameof(GetEnvironmentObject));
+		}
+
+		public void CheckIsMobile(String host)
+		{
 		}
 	}
 }

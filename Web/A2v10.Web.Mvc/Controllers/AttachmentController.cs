@@ -7,9 +7,9 @@ using System.Dynamic;
 
 using Microsoft.AspNet.Identity;
 
-using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Infrastructure;
+using A2v10.Web.Base;
 
 namespace A2v10.Web.Mvc.Controllers
 {

@@ -1,12 +1,13 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web.Mvc;
 using A2v10.Infrastructure;
 
-namespace A2v10.Web.Mvc.Filters
+namespace A2v10.Web.Base
 {
-	public class ExecutingFilterAttribute : ActionFilterAttribute
+	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	public sealed class ExecutingFilterAttribute : ActionFilterAttribute
 	{
 		IProfileRequest _request;
 		public override void OnActionExecuting(ActionExecutingContext filterContext)

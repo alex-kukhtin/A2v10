@@ -187,6 +187,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Javascript", "A2v10.J
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Lang", "Shared\A2v10.Lang\A2v10.Lang.csproj", "{4F4CEFEE-FDC7-44BC-A84B-96CE86C8D238}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Web.Mvc", "A2v10.Web.Mvc\A2v10.Web.Mvc.csproj", "{1C529C37-1732-4981-992A-5056471AA586}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -734,6 +736,18 @@ Global
 		{4F4CEFEE-FDC7-44BC-A84B-96CE86C8D238}.Release|x64.Build.0 = Release|Any CPU
 		{4F4CEFEE-FDC7-44BC-A84B-96CE86C8D238}.Release|x86.ActiveCfg = Release|Any CPU
 		{4F4CEFEE-FDC7-44BC-A84B-96CE86C8D238}.Release|x86.Build.0 = Release|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Debug|x64.Build.0 = Debug|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Debug|x86.Build.0 = Debug|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Release|x64.ActiveCfg = Release|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Release|x64.Build.0 = Release|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Release|x86.ActiveCfg = Release|Any CPU
+		{1C529C37-1732-4981-992A-5056471AA586}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

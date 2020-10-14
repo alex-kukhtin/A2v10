@@ -16,6 +16,8 @@ using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 
 using A2v10.Web.Base;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace A2v10.Web.Config
 {
@@ -67,7 +69,7 @@ namespace A2v10.Web.Config
 
 		public IProfiler Profiler => _profiler;
 
-		public Boolean Mobile { get; set; }
+		public Boolean Mobile { get; private set; }
 		public Boolean Embedded => false;
 		public Boolean IsAdminMode => _admin;
 
@@ -295,6 +297,24 @@ namespace A2v10.Web.Config
 			return JsonConvert.DeserializeObject<ExpandoObject>(val, new ExpandoObjectConverter());
 		}
 
+
+		private static Lazy<Regex> _checkMobileRegEx = new Lazy<Regex>(() =>
+		{
+			var checkMobile = ConfigurationManager.AppSettings["mobileRegEx"];
+			if (checkMobile != null)
+				return new Regex(checkMobile, RegexOptions.Compiled);
+			return null;
+		}, isThreadSafe:true);
+
+		public void CheckIsMobile(String host)
+		{
+			if (host == null)
+				return;
+			var re = _checkMobileRegEx.Value;
+			if (re == null)
+				return;
+			this.Mobile = re.IsMatch(host);
+		}
 
 		#region ITenantManager
 

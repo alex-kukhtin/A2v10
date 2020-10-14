@@ -21,10 +21,10 @@ using Newtonsoft.Json;
 using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Web.Identity;
-using A2v10.Web.Mvc.Filters;
 using A2v10.Request.Models;
 using System.Net.Http.Headers;
 using System.Linq;
+using A2v10.Web.Base;
 
 namespace A2v10.Web.Mvc.Controllers
 {

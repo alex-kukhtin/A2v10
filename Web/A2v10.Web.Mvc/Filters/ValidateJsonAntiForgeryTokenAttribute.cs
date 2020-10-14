@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace A2v10.Web.Mvc.Filters
 {
 	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-	public class ValidateJsonAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter
+	public sealed class ValidateJsonAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter
 	{
 		public void OnAuthorization(AuthorizationContext filterContext)
 		{

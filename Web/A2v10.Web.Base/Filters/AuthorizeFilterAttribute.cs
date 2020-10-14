@@ -1,11 +1,12 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web.Mvc;
 
-namespace A2v10.Web.Mvc.Filters
+namespace A2v10.Web.Base
 {
-	public class AuthorizeFilterAttribute : AuthorizeAttribute
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	public sealed class AuthorizeFilterAttribute : AuthorizeAttribute
 	{
 		protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
 		{
