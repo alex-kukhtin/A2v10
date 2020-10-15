@@ -301,7 +301,7 @@ namespace A2v10.Web.Config
 		private static Lazy<Regex> _checkMobileRegEx = new Lazy<Regex>(() =>
 		{
 			var checkMobile = ConfigurationManager.AppSettings["mobileRegEx"];
-			if (checkMobile != null)
+			if (!String.IsNullOrEmpty(checkMobile))
 				return new Regex(checkMobile, RegexOptions.Compiled);
 			return null;
 		}, isThreadSafe:true);

@@ -1,16 +1,16 @@
 /*
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 12 jun 2020
-module version : 7673
+Last updated : 15 oct 2020
+module version : 7674
 */
 ------------------------------------------------
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:ui')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7673);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7674);
 	else
-		update a2sys.Versions set [Version] = 7673 where Module = N'std:ui';
+		update a2sys.Versions set [Version] = 7674 where Module = N'std:ui';
 	end
 go
 ------------------------------------------------
@@ -360,6 +360,63 @@ begin
 		 insert into a2security.Acl ([Object], ObjectId, UserId, CanView) values (N'std:menu', @MenuId, @UserId, -1);
 	else if @Visible = 1
 		delete from a2security.Acl where [Object] = N'std:menu' and ObjectId = @MenuId and UserId = @UserId;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA = N'a2ui' and DOMAIN_NAME = N'Menu.TableType')
+exec sp_executesql N'
+create type a2ui.[Menu.TableType] as table
+(
+	Id bigint,
+	Parent bigint,
+	[Key] nchar(4),
+	[Feature] nchar(4),
+	[Name] nvarchar(255),
+	[Url] nvarchar(255),
+	Icon nvarchar(255),
+	[Model] nvarchar(255),
+	[Order] nvarchar(255),
+	[Description] nvarchar(255),
+	[Help] nvarchar(255),
+	Params nvarchar(255)
+)';
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ui' and ROUTINE_NAME=N'Menu.Merge')
+	drop procedure a2ui.[Menu.Merge]
+go
+------------------------------------------------
+create procedure a2ui.[Menu.Merge]
+@Menu a2ui.[Menu.TableType] readonly,
+@Start bigint,
+@End bigint
+as
+begin
+	with T as (
+		select * from a2ui.Menu where Id >=@Start and Id <= @End
+	)
+	merge T as t
+	using @Menu as s
+	on t.Id = s.Id 
+	when matched then
+		update set
+			t.Id = s.Id,
+			t.Parent = s.Parent,
+			t.[Key] = s.[Key],
+			t.[Name] = s.[Name],
+			t.[Url] = s.[Url],
+			t.[Icon] = s.Icon,
+			t.[Order] = s.[Order],
+			t.Feature = s.Feature,
+			t.Model = s.Model,
+			t.[Description] = s.[Description],
+			t.Help = s.Help,
+			t.Params = s.Params
+	when not matched by target then
+		insert(Id, Parent, [Key], [Name], [Url], Icon, [Order], Feature, Model, [Description], Help, Params) values 
+		(Id, Parent, [Key], [Name], [Url], Icon, [Order], Feature, Model, [Description], Help, Params)
+	when not matched by source and t.Id >= @Start and t.Id < @End then 
+		delete;
 end
 go
 ------------------------------------------------

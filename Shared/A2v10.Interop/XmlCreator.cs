@@ -329,6 +329,11 @@ namespace A2v10.Interop
 				return null;
 			if (isNillable && String.IsNullOrEmpty(val.ToString()))
 				return null;
+			if (val is Double || val is Int32 || val is Int64)
+			{
+				if (isNillable && val.ToString() == "0")
+					return null; // decimal values
+			}
 			switch (typeName)
 			{
 				case "integer":
@@ -347,6 +352,7 @@ namespace A2v10.Interop
 					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2); ;
 				case "DGdecimal2_P":
 				case "Decimal2Column_P":
+				case "Decimal12Column_R":
 					var dVal2p = Convert.ToDecimal(val);
 					if (isNillable && dVal2p == 0)
 						return null;
