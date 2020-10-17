@@ -3098,13 +3098,13 @@ Vue.component('a2-pager', {
 			return this.reduce((a, c) => a + fn(c), 0);
 		};
 
-		arr.$findId = function (id) {
+		arr.$find = function (fc, thisArg) {
 			for (let i = 0; i < this.length; i++) {
 				let el = this[i];
-				if (el.$id === id)
+				if (fc.call(thisArg, el, i, this))
 					return el;
 				if ('$items' in el) {
-					let x = el.$items.$findId(id)
+					let x = el.$items.$find(fc);
 					if (x)
 						return x;
 				}
@@ -3630,8 +3630,8 @@ Vue.component('a2-pager', {
 		for (let p in sels) {
 			let arr = utils.simpleEval(root, p);
 			let selId = sels[p];
-			if ('$findId' in arr) {
-				let se = arr.$findId(selId);
+			if ('$find' in arr) {
+				let se = arr.$find(x => x.$id === selId);
 				if (se)
 					se.$select();
 			}

@@ -86,7 +86,7 @@ interface IElementArray<T> extends Array<T> {
 
 	$isLazy(): boolean;
 
-	$findId(id: any): T;
+	$find(callback: (this: any, elem: T, index?: number, array?: IElementArray<T>) => boolean, thisArg?: any): T;
 	$remove(elem: T): IElementArray<T>;
 	$empty(): IElementArray<T>;
 	$renumberRows(): IElementArray<T>;
