@@ -97,14 +97,11 @@ namespace A2v10.Request
 				if (i != len - 1)
 				{
 					var typeName = currentType[seg];
-					if (!_mm.ContainsKey(typeName.Type.RealType))
-						throw new TypeCheckerException($"Xaml. Field not found '{expression}'");
-					currentType = _mm[typeName.Type.RealType];
+					var typeMeta = _mm.FindType(typeName.Type.RealType);
+					currentType = typeMeta ?? throw new TypeCheckerException($"Xaml. Field not found '{expression}'");
 				}
 				else
-				{
 					return currentType[seg];
-				}
 			}
 			return null;
 		}

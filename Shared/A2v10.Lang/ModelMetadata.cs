@@ -12,8 +12,8 @@ namespace A2v10.Lang
 
 		public FieldMetadata(String name, TSType type)
 		{
-			this.Name = name;
-			this.Type = type;
+			Name = name;
+			Type = type;
 		}
 	}
 
@@ -59,6 +59,16 @@ namespace A2v10.Lang
 		{
 			if (_declares != null && _declares.ContainsKey(name))
 				return _declares[name];
+			return null;
+		}
+
+		public TypeMetadata FindType(String name)
+		{
+			var dt = GetDeclare(name);
+			if (dt != null)
+				name = dt.RealType;
+			if (ContainsKey(name))
+				return this[name];
 			return null;
 		}
 

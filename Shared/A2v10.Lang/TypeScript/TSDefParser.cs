@@ -4,7 +4,6 @@ using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace A2v10.Lang
 {

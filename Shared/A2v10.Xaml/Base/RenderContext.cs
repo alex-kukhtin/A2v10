@@ -275,7 +275,7 @@ namespace A2v10.Xaml
 		{
 			if (_stackScope.Count == 0)
 				return path;
-			var parent = String.Join(".", _stackScope.Select(x => x.Path).ToArray());
+			var parent = String.Join(".", _stackScope.Select(x => x.Path).Reverse().ToArray());
 			if (String.IsNullOrEmpty(path))
 				return parent;
 			return $"{parent}.{path}";
