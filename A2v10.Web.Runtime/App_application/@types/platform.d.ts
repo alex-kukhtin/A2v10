@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7706 */
+/* Version 10.0.7715 */
 
 
 declare function require(url: string): any;
@@ -86,6 +86,7 @@ interface IElementArray<T> extends Array<T> {
 
 	$isLazy(): boolean;
 
+	$findId(id: any): T;
 	$remove(elem: T): IElementArray<T>;
 	$empty(): IElementArray<T>;
 	$renumberRows(): IElementArray<T>;

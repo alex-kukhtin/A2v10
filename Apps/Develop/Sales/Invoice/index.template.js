@@ -4,6 +4,9 @@ const utils = require('std:utils');
 const du = utils.date;
 
 const template = {
+	options: {
+		persistSelect: ['Documents'],
+	},
 	properties: {
 		'TRoot.$Combo': String,
 		'TRoot.$ForCreate'() { return { AgentId: 11 }; },

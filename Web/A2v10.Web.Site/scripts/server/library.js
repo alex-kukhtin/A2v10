@@ -1238,7 +1238,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
 
-/*20201006-7712*/
+/*20201017-7715*/
 // services/datamodel.js
 
 (function () {
@@ -2027,6 +2027,20 @@ app.modules['std:validators'] = function () {
 			return this.reduce((a, c) => a + fn(c), 0);
 		};
 
+		arr.$findId = function (id) {
+			for (let i = 0; i < this.length; i++) {
+				let el = this[i];
+				if (el.$id === id)
+					return el;
+				if ('$items' in el) {
+					let x = el.$items.$findId(id)
+					if (x)
+						return x;
+				}
+			}
+			return null;
+		}
+
 		arr.__fireChange__ = function (opts) {
 			let root = this.$root;
 			let itm = this;
@@ -2529,8 +2543,10 @@ app.modules['std:validators'] = function () {
 		let result = {};
 		for (let p of ps) {
 			let arr = utils.simpleEval(root, p);
-			if (utils.isArray(arr)) {
-				result[p] = arr.$selectedIndex;
+			if ('$selected' in arr) {
+				let sel = arr.$selected;
+				if (sel)
+					result[p] = sel.$id;
 			}
 		}
 		return result;
@@ -2542,9 +2558,11 @@ app.modules['std:validators'] = function () {
 		let root = this;
 		for (let p in sels) {
 			let arr = utils.simpleEval(root, p);
-			let si = sels[p];
-			if (utils.isArray(arr) && si >= 0 && si < arr.length) {
-				arr[si].$select();
+			let selId = sels[p];
+			if ('$findId' in arr) {
+				let se = arr.$findId(selId);
+				if (se)
+					se.$select();
 			}
 		}
 	}
