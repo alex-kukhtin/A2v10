@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -30,6 +30,7 @@ namespace A2v10.Request
 
 	public partial class BaseController
 	{
+		protected readonly IServiceLocator _locator;
 		protected readonly IApplicationHost _host;
 		protected readonly IDbContext _dbContext;
 		protected readonly IRenderer _renderer;
@@ -50,19 +51,19 @@ namespace A2v10.Request
 
 		public Func<String, String> NormalizeBaseUrl { get; set; }
 
-		public BaseController()
+		public BaseController(IServiceLocator currentLocator = null)
 		{
 			// DI ready
-			IServiceLocator locator = ServiceLocator.Current;
-			_host = locator.GetService<IApplicationHost>();
-			_dbContext = locator.GetService<IDbContext>();
-			_renderer = locator.GetServiceOrNull<IRenderer>();
-			_workflowEngine = locator.GetServiceOrNull<IWorkflowEngine>();
-			_localizer = locator.GetService<ILocalizer>();
-			_scripter = locator.GetService<IDataScripter>();
-			_messageService = locator.GetServiceOrNull<IMessageService>();
-			_userStateManager = locator.GetServiceOrNull<IUserStateManager>();
-			_externalDataProvider = locator.GetServiceOrNull<IExternalDataProvider>();
+			_locator = currentLocator ?? ServiceLocator.Current;
+			_host = _locator.GetService<IApplicationHost>();
+			_dbContext = _locator.GetService<IDbContext>();
+			_renderer = _locator.GetServiceOrNull<IRenderer>();
+			_workflowEngine = _locator.GetServiceOrNull<IWorkflowEngine>();
+			_localizer = _locator.GetService<ILocalizer>();
+			_scripter = _locator.GetService<IDataScripter>();
+			_messageService = _locator.GetServiceOrNull<IMessageService>();
+			_userStateManager = _locator.GetServiceOrNull<IUserStateManager>();
+			_externalDataProvider = _locator.GetServiceOrNull<IExternalDataProvider>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -331,9 +332,16 @@ namespace A2v10.Request
 			{
 				throw new RequestModelException($"The view '{rw.GetView(_host.Mobile)}' was not found. The following locations were searched:\n{rw.GetRelativePath(".xaml", _host.Mobile)}\n{rw.GetRelativePath(".html", _host.Mobile)}");
 			}
+			await ProcessDbEvents(rw);
 			writer.Write(modelScript);
 		}
 
+		Task ProcessDbEvents(RequestBase rb)
+		{
+			if (!rb.processDbEvents)
+				return Task.CompletedTask;
+			return _host.ProcessDbEvents(_dbContext);
+		}
 
 		public void ProfileException(Exception ex)
 		{

@@ -81,7 +81,7 @@ namespace A2v10.Web.Mvc.Start
 				return $"{key}.ASP.NET.ApplicationCookie";
 			}
 
-			if (ConfigurationManager.GetSection("oauth2") is Oauth2Section oauth2Config && oauth2Config.clients.Count > 0)
+			if (ConfigurationManager.GetSection("oauth2") is Oauth2Section oauth2Config)
 			{
 				var expTimeSpan = oauth2Config.expireTimeSpan;
 				if (expTimeSpan.TotalMilliseconds == 0)

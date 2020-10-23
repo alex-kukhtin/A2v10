@@ -59,9 +59,9 @@ namespace A2v10.Request
 				{
 					if (result.IsSuccessStatusCode)
 					{
-						return new ServerCommandResult(await result.Content.ReadAsStringAsync())
+						return new ServerCommandResult(await result.Content?.ReadAsStringAsync())
 						{
-							ConentType = result.Content.Headers.ContentType.MediaType
+							ConentType = result.Content?.Headers?.ContentType?.MediaType
 						};
 					}
 					else

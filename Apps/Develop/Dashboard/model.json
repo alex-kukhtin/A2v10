@@ -93,6 +93,9 @@
 		"wait": {
 			"type": "sql",
 			"procedure": "Wait"
+		},
+		"fetchDbEvents": {
+			"type": "processDbEvents"
 		}
 	}
 }

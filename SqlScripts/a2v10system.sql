@@ -1,8 +1,8 @@
 ﻿/*
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 22 sep 2020
-module version : 7055
+Last updated : 23 oct 2020
+module version : 7056
 */
 ------------------------------------------------
 set nocount on;
@@ -32,9 +32,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7055);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7056);
 else
-	update a2sys.Versions set [Version] = 7055 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7056 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -237,6 +237,81 @@ begin
 	if @@rowcount = 0
 		insert into a2sys.AppFiles([Path], Stream)
 		values (@Path, @Stream);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'DbEvents')
+begin
+create table a2sys.DbEvents 
+(
+	[Id] uniqueidentifier not null constraint PK_DbEvents primary key
+	constraint DF_DbEvents_Id default newid(),
+	ItemId bigint,
+	[Path] nvarchar(255),
+	[Command] nvarchar(255),
+	[State] nvarchar(32) constraint DF_DbEvents_State default N'Init',
+	DateCreated datetime constraint DF_DbEvents_DateCreated default(a2sys.fn_getCurrentDate()),
+	DateHold datetime,
+	DateComplete datetime,
+	[JsonParams] nvarchar(1024) sparse,
+	ErrorMessage nvarchar(1024) sparse
+)
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'DbEvent.Fetch')
+	drop procedure a2sys.[DbEvent.Fetch]
+go
+------------------------------------------------
+create procedure a2sys.[DbEvent.Fetch]
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+
+	declare @rtable table(Id uniqueidentifier, ItemId bigint, [Path] nvarchar(255),
+		[JsonParams] nvarchar(1024), Command nvarchar(255));
+
+	update a2sys.DbEvents set [State] = N'Hold', DateHold = a2sys.fn_getCurrentDate()
+	output inserted.Id, inserted.ItemId, inserted.[Path], inserted.Command, inserted.JsonParams
+	into @rtable(Id, ItemId, [Path], Command, JsonParams)
+	where [State] = N'Init';
+
+	select [Id], ItemId, [Path], Command, JsonParams from @rtable;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'DbEvent.Error')
+	drop procedure a2sys.[DbEvent.Error]
+go
+------------------------------------------------
+create procedure a2sys.[DbEvent.Error]
+@Id uniqueidentifier,
+@ErrorMessage nvarchar(1024) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2sys.[DbEvents] set [State]=N'Fail', 
+		ErrorMessage = @ErrorMessage, DateComplete = a2sys.fn_getCurrentDate()
+	where Id=@Id;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'DbEvent.Complete')
+	drop procedure a2sys.[DbEvent.Complete]
+go
+------------------------------------------------
+create procedure a2sys.[DbEvent.Complete]
+@Id uniqueidentifier
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2sys.[DbEvents] set [State]=N'Complete', DateComplete = a2sys.fn_getCurrentDate()
+	where Id=@Id;
 end
 go
 ------------------------------------------------

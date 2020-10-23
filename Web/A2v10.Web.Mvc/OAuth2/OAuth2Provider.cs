@@ -18,24 +18,49 @@ using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security;
 
 using A2v10.Infrastructure;
+using Microsoft.Owin;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.OAuth2
 {
 	public class OAuth2Provider : OAuthAuthorizationServerProvider
 	{
-		NameValueCollection ParseBody(Stream stream)
+		private readonly IApplicationHost _host;
+		private readonly IDbContext _dbContext;
+		private readonly Oauth2Section _config;
+
+		public OAuth2Provider()
 		{
+			_host = ServiceLocator.Current.GetService<IApplicationHost>();
+			_dbContext = ServiceLocator.Current.GetService<IDbContext>();
+			_config = ConfigurationManager.GetSection("oauth2") as Oauth2Section;
+		}
+
+		NameValueCollection ParseBody(IOwinRequest request)
+		{
+			var stream = request.Body;
 			using (var ms = new MemoryStream())
 			{
 				stream.Seek(0, SeekOrigin.Begin);
 				stream.CopyTo(ms);
 				var strBody = Encoding.UTF8.GetString(ms.ToArray());
-				return HttpUtility.ParseQueryString(strBody);
+
+				switch (request.ContentType?.ToLowerInvariant())
+				{
+					case "application/x-www-form-urlencoded":
+						return HttpUtility.ParseQueryString(strBody);
+					case "application/json":
+						return JsonConvert.DeserializeObject<NameValueCollection>(strBody);
+				}
+				return null;
 			}
 		}
 
 		ClientElement GetClientInfo(NameValueCollection body, BaseValidatingContext<OAuthAuthorizationServerOptions> context)
 		{
+			if (body == null)
+				return null;
+
 			var oauth2Config = ConfigurationManager.GetSection("oauth2") as Oauth2Section;
 
 			var clientId = body["client_id"];
@@ -64,28 +89,87 @@ namespace A2v10.Web.Mvc.OAuth2
 			return client;
 		}
 
+		public override Task MatchEndpoint(OAuthMatchEndpointContext context)
+		{
+			return base.MatchEndpoint(context);
+		}
+
+		public override Task TokenEndpoint(OAuthTokenEndpointContext context)
+		{
+			return base.TokenEndpoint(context);
+		}
+
+		public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
+		{
+			return base.GrantRefreshToken(context);
+		}
+
+		public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+		{
+			return base.GrantResourceOwnerCredentials(context);
+		}
+
 		public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
 		{
-			NameValueCollection body = ParseBody(context.Request.Body);
+			/* POST only. TODO: uncomment this
+			if (context.Request.Method?.ToUpperInvariant() != "POST")
+			{
+				context.Rejected();
+				context.SetError("Invalid http method", "Only the POST method is allowed");
+				return Task.CompletedTask;
+			}
+			*/
+
+			NameValueCollection body = ParseBody(context.Request);
 
 			var info = GetClientInfo(body, context);
 			if (info != null)
 			{
 				context.Validated();
-				context.Response.Headers.Add("Access-Control-Allow-Origin", new String[] { "*"});
+				context.Response.Headers.Add("Access-Control-Allow-Origin", new String[] { "*" });
 			}
+			else
+			{
+				context.Rejected();
+			}
+			context.TryGetFormCredentials(out String clientId, out String clientSecret);
+			context.Validated("clientId");
+			return Task.CompletedTask;
+		}
+
+		public override Task GrantAuthorizationCode(OAuthGrantAuthorizationCodeContext context)
+		{
+			ExpandoObject dataEO = new ExpandoObject();
+			dataEO.Set("UserId", 99);
+			dataEO.Set("TenantId", 123);
+
+			var claims = new List<Claim>();
+			foreach (var kv in dataEO.Enumerate())
+				claims.Add(new Claim(kv.Key, kv.Value.ToString()));
+
+			var oaClaim = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
+			var ticket = new AuthenticationTicket(oaClaim, new AuthenticationProperties());
+
+			context.Validated(ticket);
+
 			return Task.CompletedTask;
 		}
 
 		public override Task GrantClientCredentials(OAuthGrantClientCredentialsContext context)
 		{
-			NameValueCollection body = ParseBody(context.Request.Body);
+			NameValueCollection body = ParseBody(context.Request);
+
 			var client = GetClientInfo(body, context);
 
 			if (client == null)
+			{
+				context.Rejected();
 				return Task.CompletedTask;
+			}
 
-			ExpandoObject dataEO = null;
+			ExpandoObject dataEO = new ExpandoObject();
+			dataEO.Set("UserId", 99);
+			dataEO.Set("TenantId", 123);
 
 			var strData = body["data"];
 			if (strData != null)
@@ -96,19 +180,23 @@ namespace A2v10.Web.Mvc.OAuth2
 			var strSecret = body["client_secret"];
 			if (strSecret != null)
 			{
+				/*
 				if (strSecret == client.secret)
 				{
 					dataEO = new ExpandoObject();
 					dataEO.Set("client_id", body["client_id"]);
 					dataEO.Set("session_id", body["session_id"]);
 				}
+				*/
 			}
 
+			/*
 			if (dataEO == null || dataEO.Get<String>("client_id") != client.id)
 			{
 				context.Rejected();
 				return Task.CompletedTask;
 			}
+			*/
 
 			var claims = new List<Claim>();
 			foreach (var kv in dataEO.Enumerate())

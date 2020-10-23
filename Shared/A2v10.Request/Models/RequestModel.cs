@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -37,7 +37,8 @@ namespace A2v10.Request
 		File,
 		Report,
 		Export,
-		Api
+		Api,
+		Simple
 	}
 
 	public enum RequestDataAction
@@ -108,6 +109,7 @@ namespace A2v10.Request
 		public RequestEvents events;
 		public String invoke;
 		public String checkTypes;
+		public Boolean processDbEvents;
 
 		[JsonIgnore]
 		protected RequestModel _parent;
@@ -425,7 +427,8 @@ namespace A2v10.Request
 		startProcess,
 		resumeProcess,
 		callApi,
-		sendMessage
+		sendMessage,
+		processDbEvents
 	}
 
 	public class RequestCommand : RequestBase
@@ -510,9 +513,9 @@ namespace A2v10.Request
 			return String.IsNullOrEmpty(method) || method == "post";
 		}
 
-		public Task<ServerCommandResult> ExecuteCommand(ExpandoObject data)
+		public Task<ServerCommandResult> ExecuteCommand(IServiceLocator locator, ExpandoObject data)
 		{
-			var cmd = ServerCommandRegistry.GetCommand(type);
+			var cmd = ServerCommandRegistry.GetCommand(locator, type);
 			return cmd.Execute(this, data);
 		}
 	}
@@ -854,6 +857,12 @@ namespace A2v10.Request
 			// {pathInfo}/action/ - api
 
 			var mi = new RequestModelInfo();
+
+			if (kind == RequestUrlKind.Simple) {
+				mi.path = normalizedUrl;
+				return mi;
+			}
+
 			String[] urlParts = normalizedUrl.Split('/');
 			Int32 len = urlParts.Length;
 			if (len < 3)
@@ -982,6 +991,11 @@ namespace A2v10.Request
 			else if (baseUrl.StartsWith("/_export"))
 			{
 				kind = RequestUrlKind.Export;
+				baseUrl = baseUrl.Substring(9);
+			}
+			else if (baseUrl.StartsWith("/_simple"))
+			{
+				kind = RequestUrlKind.Simple;
 				baseUrl = baseUrl.Substring(9);
 			}
 			else

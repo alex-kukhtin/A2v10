@@ -38,6 +38,9 @@ const template = {
 		},
 		async wait() {
 			let r = await this.$ctrl.$invoke('wait');
+		},
+		fetchdbevents() {
+			this.$ctrl.$invoke('fetchDbEvents');
 		}
 	}
 };

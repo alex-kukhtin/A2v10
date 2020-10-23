@@ -48,6 +48,7 @@
     <Compile Include="Commands\ExecuteSendMessageCommand.cs" />
     <Compile Include="Commands\ExecuteXmlCommand.cs" />
     <Compile Include="Commands\IServerCommand.cs" />
+    <Compile Include="Commands\ProcessDbEventsCommand.cs" />
     <Compile Include="Commands\ServerCommandRegistry.cs" />
     <Compile Include="Commands\ProcessCommands.cs" />
     <Compile Include="Controllers\AttachmentController.cs" />

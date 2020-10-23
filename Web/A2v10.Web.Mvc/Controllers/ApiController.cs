@@ -1,6 +1,5 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-
 using System;
 using System.Web.Mvc;
 using System.Threading.Tasks;
@@ -50,8 +49,8 @@ namespace A2v10.Web.Mvc.Controllers
 	[AllowAnonymous]
 	public class ApiController : Controller, IControllerTenant
 	{
-		A2v10.Request.BaseController _baseController = new BaseController();
-		ILogger _logger;
+		private readonly A2v10.Request.BaseController _baseController = new BaseController();
+		private readonly ILogger _logger;
 
 		public ApiController()
 		{

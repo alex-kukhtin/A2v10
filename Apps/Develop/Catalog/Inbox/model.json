@@ -3,15 +3,34 @@
 	"schema": "a2v10demo",
 	"model": "Inbox",
 	"actions": {
-    "index": {
-      "index": true,
-      "template": "index.template",
-      "view": "index.view"
-    },
-    "open": {
-      "indirect": true,
-      "target": "{{Inbox.Action}}",
-      "targetId": "{{Inbox.ModelId}}"
-    }
+		"index": {
+			"index": true,
+			"template": "index.template",
+			"view": "index.view"
+		},
+		"open": {
+			"indirect": true,
+			"target": "{{Inbox.Action}}",
+			"targetId": "{{Inbox.ModelId}}"
+		}
+	},
+	"commands": {
+		"notifyPA": {
+			"type": "callApi",
+			"source": "Default",
+			"schema": "a2demo",
+			"model": "Automate.Payment",
+			"parameters": {
+				"url": "((PowerAutomate.url))",
+				"method": "post",
+				"body": {
+					"userName": "{{Data.Name}}",
+					"personName": "{{Data.PersonName}}",
+					"email": "{{Data.EMail}}",
+					"amount": "{{Data.Amount}}",
+					"balance": "{{Data.Balance}}"
+				}
+			}
+		}
 	}
 }

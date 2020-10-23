@@ -20,6 +20,7 @@
 			<Button Grid.Row="4" Grid.Col="3" Command="{BindCmd Dialog, Action=Show, Url='/dashboard/infdialog', Argument={Bind Root.$Arg142}}">InfinityDialog</Button>
 			<Hyperlink Content="POS TERMINAL" Command="{BindCmd Navigate, Url='/pos'}"/>
 			<Button Style="Red" Size="Large" Command="{BindCmd Execute, CommandName=javascript}">JAVASCRIPT</Button>
+			<Button Style="Cyan" Size="Large" Command="{BindCmd Execute, CommandName=fetchdbevents}">DB Events</Button>
 			<UploadFile Url="/dashboard/upload" Delegate="uploadFile" Argument="0"/>
 			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
 				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">

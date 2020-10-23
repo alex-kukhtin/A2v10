@@ -16,7 +16,7 @@ namespace A2v10.Request
 		public ExecuteSendMessageCommand(IApplicationHost host, IMessaging messaging)
 		{
 			_host = host ?? throw new ArgumentNullException(nameof(host));
-			_messaging = messaging ?? throw new ArgumentNullException(nameof(_messaging));
+			_messaging = messaging ?? throw new ArgumentNullException(nameof(messaging));
 
 		}
 		public async Task<ServerCommandResult> Execute(RequestCommand cmd, ExpandoObject dataToExec)

@@ -26,7 +26,8 @@
 						"view": { "type": "string" },
 						"viewMobile": { "type": "string" },
 						"template": { "type": "string" },
-						"checkTypes": {"type": "string" },
+						"checkTypes": { "type": "string" },
+						"processDbEvents": {"type": "boolean"},
 						"merge": {
 							"type": "object",
 							"properties": {
@@ -82,6 +83,7 @@
 						"template": { "type": "string" },
 						"copy": { "type": "boolean" },
 						"checkTypes": { "type": "string" },
+						"processDbEvents": { "type": "boolean" },
 						"hook": {
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
@@ -119,7 +121,8 @@
 						"model": { "type": "string" },
 						"view": { "type": "string" },
 						"template": { "type": "string" },
-						"checkTypes": { "type": "string" }
+						"checkTypes": { "type": "string" },
+						"processDbEvents": { "type": "boolean" }
 					},
 					"additionalProperties": false
 				}
@@ -141,6 +144,7 @@
 						"command": { "type": "string" },
 						"procedure": { "type": "string" },
 						"checkTypes": { "type": "string" },
+						"processDbEvents": { "type": "boolean" },
 						"clrType": {
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
@@ -160,7 +164,7 @@
 						"parameters": { "type": "object" },
 						"args": { "type": "object" },
 						"file": { "type": "string" },
-						"commandTimeout": {"type": "number"}
+						"commandTimeout": { "type": "number" }
 					},
 					"additionalProperties": false
 				}

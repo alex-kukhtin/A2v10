@@ -8,9 +8,8 @@ namespace A2v10.Request
 {
 	public static class ServerCommandRegistry
 	{
-		public static IServerCommand GetCommand(CommandType cmd)
+		public static IServerCommand GetCommand(IServiceLocator loc, CommandType cmd)
 		{
-			var loc = ServiceLocator.Current;
 			switch (cmd)
 			{
 				case CommandType.sql:
@@ -48,6 +47,11 @@ namespace A2v10.Request
 					return new ExecuteSendMessageCommand(
 						loc.GetService<IApplicationHost>(), 
 						loc.GetService<IMessaging>()
+					);
+				case CommandType.processDbEvents:
+					return new ProcessDbEventsCommand(
+						loc.GetService<IApplicationHost>(),
+						loc.GetService<IDbContext>()
 					);
 				case CommandType.javascript:
 					return new ExecuteJavaScriptCommand(

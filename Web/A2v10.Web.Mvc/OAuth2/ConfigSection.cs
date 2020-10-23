@@ -6,6 +6,12 @@ using System.Configuration;
 namespace A2v10.Web.Mvc.OAuth2
 {
 #pragma warning disable IDE1006 // Naming Styles
+	public enum Oauth2Mode
+	{
+		client,
+		user,
+	}
+
 	public class Oauth2Section : ConfigurationSection
 	{
 		[ConfigurationProperty(nameof(clients))]
@@ -30,6 +36,12 @@ namespace A2v10.Web.Mvc.OAuth2
 			set { this[nameof(expireTimeSpan)] = value; }
 		}
 
+		[ConfigurationProperty(nameof(mode))]
+		public Oauth2Mode mode
+		{
+			get { return (Oauth2Mode)this[nameof(mode)]; }
+			set { this[nameof(expireTimeSpan)] = value; }
+		}
 	}
 
 	[ConfigurationCollection(typeof(ClientElement), AddItemName = "client", CollectionType = ConfigurationElementCollectionType.BasicMap)]
@@ -95,7 +107,7 @@ namespace A2v10.Web.Mvc.OAuth2
 			set { this[nameof(allowOrigin)] = value; }
 		}
 
-		[ConfigurationProperty(nameof(url), IsRequired = true)]
+		[ConfigurationProperty(nameof(url), IsRequired = false)]
 		public String url
 		{
 			get { return (String)this[nameof(url)]; }

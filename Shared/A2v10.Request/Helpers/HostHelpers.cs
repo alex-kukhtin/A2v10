@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using System.Threading.Tasks;
 
 namespace A2v10.Request
 {
@@ -54,6 +55,11 @@ namespace A2v10.Request
 		{
 			var manifestPath = Path.Combine(host.HostingPath, "manifest.json");
 			return File.Exists(manifestPath) ? "<link rel=\"manifest\" href=\"/manifest.json\">" : null;
+		}
+
+		public static Task ProcessDbEvents(this IApplicationHost host, IDbContext dbContext)
+		{
+			return ProcessDbEventsCommand.ProcessDbEvents(dbContext, host.CatalogDataSource, host.IsAdminMode);
 		}
 
 		public static ITypeChecker CheckTypes(this IApplicationHost host, String path, String typesFile, IDataModel model)

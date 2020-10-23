@@ -67,7 +67,8 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IJavaScriptEngine>(javaScriptEngine);
 
-				HttpContext.Current.Items.Add("ServiceLocator", locator);
+				if (HttpContext.Current != null)
+					HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};
 
 			ServiceLocator.GetCurrentLocator = () =>

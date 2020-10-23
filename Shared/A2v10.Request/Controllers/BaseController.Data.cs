@@ -318,10 +318,15 @@ namespace A2v10.Request
 			var cmd = rm.GetCommand(command);
 			dataToExec.Append(cmd.parameters, replace:true);
 
-			var result = await cmd.ExecuteCommand(dataToExec);
-			response.ContentType = result.ConentType;
-			if (result.Data != null)
-				response.Output.Write(result.Data);
+			var result = await cmd.ExecuteCommand(_locator, dataToExec);
+			// may be null for background processing
+			if (response != null)
+			{
+				response.ContentType = result.ConentType;
+				if (result.Data != null)
+					response.Output.Write(result.Data);
+			}
+			await ProcessDbEvents(cmd);
 		}
 	}
 }
