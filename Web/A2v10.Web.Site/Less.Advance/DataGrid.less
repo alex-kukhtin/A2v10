@@ -30,7 +30,7 @@
 @group-txt-color: #777;
 @group-brd-color: @table-hdr-brd-color;
 
-@dg-header-height: calc(2rem + 1px); // 2rem + 1px
+@dg-header-height: 2.6rem;
 
 
 .data-grid-container {
@@ -56,7 +56,7 @@
 table.data-grid {
 	cursor: default;
 	width: 100%;
-	border-spacing:0;
+	border-spacing: 0;
 
 	col.fit {
 		width: .1%; //BUG?
@@ -69,7 +69,7 @@ table.data-grid {
 	}
 
 	td {
-		padding: 4px 6px;
+		padding: .5rem;
 		vertical-align: top;
 		//border-color: @table-brd-color;
 		> i.ico, > a > i.ico {
@@ -129,7 +129,7 @@ table.data-grid {
 
 		.h-holder {
 			position: relative;
-			padding: 4px 6px;
+			padding: .5rem;
 		}
 
 		&.sort {
@@ -143,7 +143,7 @@ table.data-grid {
 			.h-holder:after {
 				content: '';
 				border: 5px solid transparent;
-				margin-left: 2px;
+				margin-left: 5px;
 			}
 		}
 
@@ -154,19 +154,15 @@ table.data-grid {
 		&.sort.desc .h-holder:after {
 			content: '';
 			display: inline-block;
-			border: 5px solid transparent;
 			border-top-color: #999;
-			margin-left: 2px;
 			vertical-align: bottom;
 		}
 
 		&.sort.asc .h-holder:after {
 			content: '';
 			display: inline-block;
-			border: 5px solid transparent;
 			border-bottom-color: #999;
-			margin-left: 2px;
-			vertical-align: top;
+			vertical-align: 2px;
 		}
 	}
 
@@ -185,7 +181,7 @@ table.data-grid {
 		}
 
 		.details-wrapper {
-			padding: 4px 6px;
+			padding: .5rem;
 			//border-top: 1px solid @table-brd-color;
 			//border-bottom: 1px solid @table-brd-color;
 		}
@@ -404,11 +400,11 @@ table.data-grid > tbody {
 	min-height: @dg-header-height;
 
 	> .data-grid-body.fixed-header {
-		margin-top: 2rem;
+		margin-top: @dg-header-height;
 		overflow: hidden;
 		overflow-y: auto;
 		// 25px (header) + 27px(pager)
-		height: ~"calc(100% - 2rem)";
+		height: ~"calc(100% - 2.6rem)"; // @dg-header-height
 		//border-bottom: 1px solid @table-hdr-brd-color;
 		> table > thead {
 			height: 0;
@@ -442,7 +438,7 @@ table.data-grid > tbody {
 					top: 0;
 					background-color: inherit;
 					width: 100%;
-					min-height: 2rem;
+					min-height: @dg-header-height;
 					margin-left: -1px;
 					border-left: 1px solid @table-hdr-brd-color;
 					border-bottom: 1px solid @table-hdr-brd-color;
@@ -504,22 +500,14 @@ table.data-grid > tbody {
 		th {
 			color: @label-color;
 			border-style: none;
-
-			.h-holder {
-				padding: 6px;
-			}
 		}
 
-		> tbody > tr > td {
-			padding: 6px;
-		}
 		//tr.dg-row:last-child > td {
 		//border-bottom-style: none;
 		//}
 		tr.group td {
 			background-color: #f9f9f9;
 			color: @label-color;
-			//border-bottom-color: transparent;
 		}
 
 		&.grid-horizontal {

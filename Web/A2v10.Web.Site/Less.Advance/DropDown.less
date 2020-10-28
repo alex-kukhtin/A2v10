@@ -80,6 +80,7 @@ TODO:
 	position: absolute;
 	z-index: @popup-index;
 	background-color: @background-color;
+	border-radius:2px;
 	width: auto;
 	height: auto;
 	left: 0;
@@ -113,7 +114,7 @@ TODO:
 	.dropdown-menu.up-right {
 		bottom: 100%;
 		top: auto;
-		box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
+		box-shadow: 5px -5px 10px 0 rgba(174,174,174,.5), 0 5px 40px 0 rgba(0,0,0,.15);
 	}
 
 	.dropdown-menu.up-left {
@@ -121,7 +122,7 @@ TODO:
 		top: auto;
 		left: auto;
 		right: 0;
-		box-shadow: 5px -5px 10px rgba(0, 0, 0, 0.2);
+		box-shadow: -5px -5px 10px 0 rgba(174,174,174,.5), 0 -5px 40px 0 rgba(0,0,0,.15);
 	}
 
 	&.show {

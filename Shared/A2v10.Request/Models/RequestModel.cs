@@ -15,13 +15,19 @@ using System.Text;
 
 namespace A2v10.Request
 {
-	[Serializable]
-	public class RequestModelException : Exception
+	public sealed class RequestModelException : Exception
 	{
 		public RequestModelException(String message)
 			: base(message)
 		{
+		}
+		public RequestModelException()
+		{
+		}
 
+		public RequestModelException(String message, Exception innerException)
+			: base(message, innerException)
+		{
 		}
 	}
 
@@ -915,7 +921,7 @@ namespace A2v10.Request
 			return mi;
 		}
 
-		static Lazy<RedirectModule> _redirect = new Lazy<RedirectModule>(() => new RedirectModule(), isThreadSafe: true);
+		static readonly Lazy<RedirectModule> _redirect = new Lazy<RedirectModule>(() => new RedirectModule(), isThreadSafe: true);
 
 		public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, Boolean bAdmin, RequestUrlKind kind, String normalizedUrl)
 		{

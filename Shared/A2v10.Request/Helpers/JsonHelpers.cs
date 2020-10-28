@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace A2v10.Request
 {
-	public class JsonHelpers
+	public static class JsonHelpers
 	{
 		public static readonly JsonSerializerSettings StandardSerializerSettings =
 			new JsonSerializerSettings()

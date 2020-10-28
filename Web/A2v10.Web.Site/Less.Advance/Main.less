@@ -1,5 +1,4 @@
 ﻿
-
 html {
 	font-family: @font-family;
 	font-size: @font-size;
@@ -243,12 +242,12 @@ footer, .footer {
 	background-color: @footer-bg-color;
 	border-top: 1px solid @light-brd-color;
 	padding: 0 2px 0 8px;
-	font-size: .86rem;
+	font-size: @font-size-small;
 	text-transform: lowercase;
 
 	span {
-		white-space:nowrap;
-		word-break:normal;
+		white-space: nowrap;
+		word-break: normal;
 	}
 
 	.debug-btn {
@@ -256,7 +255,7 @@ footer, .footer {
 	}
 
 	.menu {
-		margin-bottom: -2px;
+		margin-bottom: 1px;
 		font-size: 1rem;
 		text-transform: none;
 	}
@@ -269,7 +268,8 @@ footer, .footer {
 	button {
 		background-color: @danger-btn-color;
 		font-size: inherit;
-		padding: 0px 6px 2px 6px;
+		padding: 0 .25rem 0 .75rem;
+		line-height: @footer-height - .2rem;
 		color: white;
 		text-transform: lowercase;
 		vertical-align: baseline;
@@ -280,16 +280,14 @@ footer, .footer {
 	}
 
 	.spinner {
-		display: inline-block;
 		box-sizing: content-box;
-		width: 8px;
-		min-width:8px;
-		height: 8px;
-		margin-right: 2px;
+		width: .8rem;
+		min-width: .8rem;
+		height: .8rem;
+		margin-right: .25rem;
 		background-color: transparent;
 		border-radius: 50%;
-		border: 3px solid #ccc;
-		vertical-align: -2px;
+		border: 4px solid #ccc;
 
 		&.active {
 			border-color: @link-hover-color;

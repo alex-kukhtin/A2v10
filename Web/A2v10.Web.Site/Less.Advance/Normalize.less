@@ -19,15 +19,15 @@ table {
 }
 
 tr {
-	page-break-inside:avoid;
+	page-break-inside: avoid;
 }
 
 td, th {
 	padding: 0;
 	font-weight: normal;
-	text-align:inherit;
-	page-break-inside:avoid;
-	vertical-align:middle;
+	text-align: inherit;
+	page-break-inside: avoid;
+	vertical-align: middle;
 }
 
 button, input[type=button] {
@@ -35,30 +35,31 @@ button, input[type=button] {
 }
 
 button {
-    font-size: 1rem;
-    border: 1px solid transparent;
-    cursor: pointer;
+	font-size: 1rem;
+	border: none;
+	cursor: pointer;
+	border-radius:2px;
 
-    &:focus {
-        outline-style: none;
-    }
+	&:focus {
+		outline-style: none;
+	}
 }
 
 span {
-	word-break:break-word;
+	word-break: break-word;
 }
 
 p {
-	margin:.5rem 0;
+	margin: .5rem 0;
 }
 
 b {
-	font-weight:500;
+	font-weight: 500;
 }
-// EDGE 
+// EDGE
 
 input[type=text]::-ms-clear {
-	display:none;
+	display: none;
 }
 
 // WEBKIT
@@ -69,95 +70,95 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 input, select, textarea {
-    border-style: none;
-    font-size: 1em;
-    color: @text-color;
+	border-style: none;
+	font-size: 1em;
+	color: @text-color;
 
-    &:focus {
-        outline-style: none;
-    }
+	&:focus {
+		outline-style: none;
+	}
 }
 
 textarea {
-    padding: 2px @input-padding;
+	padding: 2px @input-padding;
 }
 
 input, select {
-    height: @control-height;
-    padding: 0 @input-padding;
+	height: @control-height;
+	padding: 0 @input-padding;
 }
 
 /* hide for focused */
 input::-moz-placeholder, input:focus::-moz-placeholder, textarea::-moz-placeholder, textarea:focus::-moz-placeholder {
-    color: @placeholder-color;
+	color: @placeholder-color;
 }
 
 input:-ms-input-placeholder, textarea:-ms-input-placeholder, input:focus:-ms-input-placeholder, textarea:focus:-ms-input-placeholder {
-    color: @placeholder-color;
+	color: @placeholder-color;
 }
 
 
 input::-webkit-input-placeholder, input:focus::-webkit-input-placeholder, textarea::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder {
-    color: @placeholder-color;
+	color: @placeholder-color;
 }
 
 select {
-    padding: 0 @select-padding;
+	padding: 0 @select-padding;
 }
 
 textarea {
-    resize: none;
+	resize: none;
 }
 
 a {
-    color: @link-color;
-    text-decoration: none;
-    cursor: pointer;
+	color: @link-color;
+	text-decoration: none;
+	cursor: pointer;
 
-    &[disabled] {
-        opacity: 0.5;
-        cursor: not-allowed;
-        //pointer-events: none; // disable click
-    }
+	&[disabled] {
+		opacity: 0.5;
+		cursor: not-allowed;
+		//pointer-events: none; // disable click
+	}
 
-    &:hover {
-        color: @link-hover-color;
-        text-decoration: none;
-    }
+	&:hover {
+		color: @link-hover-color;
+		text-decoration: none;
+	}
 
-    &:focus {
-        color: @link-hover-color;
-        outline-style: none;
-    }
+	&:focus {
+		color: @link-hover-color;
+		outline-style: none;
+	}
 
-    &:active {
-        color: @link-hover-color;
-    }
+	&:active {
+		color: @link-hover-color;
+	}
 }
 
 pre {
-    font-family: @monospace-font;
-    font-size: 0.85em;
-    background-color: @whitesmoke-gray-bg-color;
-    padding: 6px;
-    white-space: pre-wrap;
-    word-break: break-all;
-    word-wrap: break-word;
-    user-select: text;
+	font-family: @monospace-font;
+	font-size: 0.85em;
+	background-color: @whitesmoke-gray-bg-color;
+	padding: 6px;
+	white-space: pre-wrap;
+	word-break: break-all;
+	word-wrap: break-word;
+	user-select: text;
 }
 
 h2, .h2 {
-    font-size: 1.6rem;
+	font-size: 1.6rem;
 }
 
 h3, .h3 {
-    font-size: 1.25rem;
+	font-size: 1.25rem;
 }
 
 h4, .h4 {
-    font-size: 1rem;
+	font-size: 1rem;
 }
 
 h5, .h5 {
-    font-size: 0.85rem;
+	font-size: 0.85rem;
 }
