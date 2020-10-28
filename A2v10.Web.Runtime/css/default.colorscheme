@@ -1,6 +1,6 @@
 ﻿--background:#ffff;
 --text:#020202;
-
+--fontSize:14px;
 
 --themePrimary:#dd2c5e;
 --themeDark:#c5204f;
@@ -9,7 +9,7 @@
 --neutralLight:#edebe9;
 --neutralLighterAlt:#faf9f8;
 --neutralLighter:#f3f2f1;
-
+--neutralSecondary:#605e5c;
 --brandPrimary:#dd2c5e;
 
 --link:#2c5edd;

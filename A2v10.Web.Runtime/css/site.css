@@ -5286,6 +5286,7 @@ TODO:
   background-color: transparent;
   width: 100%;
   text-align: left;
+  border: none;
 }
 .menu .dropdown-item:hover {
   text-decoration: none;
