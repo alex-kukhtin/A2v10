@@ -273,6 +273,8 @@ namespace A2v10.Web.Mvc.Controllers
 				}
 				SetIdentityParams(dataToInvoke, ac.authorize);
 				await ExecuteCommand(ac, dataToInvoke, apiGuid);
+
+				await _baseController.ProcessDbEvents(ac);
 			}
 			catch (Exception ex)
 			{
