@@ -131,7 +131,9 @@ namespace A2v10.Web.Mvc.Controllers
 					default:
 						throw new NotImplementedException(nameof(DefaultGET));
 				}
-			} catch (Exception ex)
+				await _baseController.ProcessDbEvents(ac);
+			}
+			catch (Exception ex)
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;

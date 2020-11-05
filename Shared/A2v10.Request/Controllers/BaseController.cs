@@ -336,7 +336,7 @@ namespace A2v10.Request
 			writer.Write(modelScript);
 		}
 
-		Task ProcessDbEvents(RequestBase rb)
+		public Task ProcessDbEvents(RequestBase rb)
 		{
 			if (!rb.processDbEvents)
 				return Task.CompletedTask;
