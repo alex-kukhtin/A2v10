@@ -1,9 +1,10 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 @import "Utlis.less";
+@import "Variables.less";
 
 @debug-pane-width: 390px;
-@debug-pane-bg-color: @whitesmoke-gray-bg-color;
+@debug-pane-bg-color: var(--neutralBkLight);
 
 @debug-info-color: #478fb1;
 
@@ -23,7 +24,7 @@
 	flex-direction: column;
 
 	.a2-code {
-		font-size:12px;
+		font-size: 12px;
 	}
 
 	&.left {
@@ -36,17 +37,18 @@
 
 	.debug-pane-header {
 		background-color: @dialog-header-bg-color;
-		padding: 2px 2px 2px 6px;
+		//padding: .4rem .4rem .4rem 1rem;
 		border-bottom: 1px solid @default-brd-color;
 
 		.debug-pane-title {
-			font-size: .95rem;
+			font-size: @font-size-small;
+			display:inline-block;
+			padding:0.5rem;
 		}
 		// TODO: JOIN WITH FEEDBACK
 		a.btn {
 			float: right;
-			padding: 0 2px;
-			color: #aaa;
+			padding: 0 .25rem;
 			border: 1px solid transparent;
 
 			&:hover {
@@ -58,8 +60,8 @@
 	}
 
 	.toolbar {
-		min-height: 2.5rem;
-		height: 2.5rem;
+		min-height: 3rem;
+		border-bottom: 1px solid @light-brd-color;
 	}
 
 	.debug-body {

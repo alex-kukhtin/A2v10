@@ -37,8 +37,6 @@
 			</Panel>
 			<Code Content="{Bind Root.$text}"></Code>
 		</Grid>
-
-
 		<StateCard DropShadow="Shadow1" Style="Yellow" Grid.Row="1" Grid.Col="1" Header="ТЕНАНТИ" Icon="Database" Text="14534">
 			<StateCard.Footer>
 				<Text>
@@ -48,14 +46,14 @@
 		</StateCard>
 
 		<StateCard DropShadow="Shadow1" Grid.Row="1" Grid.Col="2" Header="Тенанти" Icon="Database" Text="4455">
-			<Group>
-				<Graphics Delegate="drawChart"/>
-			</Group>
 			<StateCard.Footer>
 				<Text>
 					<Span Bold="True">245</Span> за сьогодні
 				</Text>
 			</StateCard.Footer>
+			<Group>
+				<Graphics Delegate="drawChart"/>
+			</Group>
 		</StateCard>
 
 		<StateCard DropShadow="Shadow1" Style="Cyan" Grid.Row="1" Grid.Col="3" Header="ТЕНАНТИ" Icon="Warehouse" Text="71233">
@@ -78,8 +76,7 @@
 		<StateCard DropShadow="Shadow1" Style="Primary" Grid.Row="2" Grid.Col="3" Header="PRIMARY" Icon="MessageOutline" Text="71233" Footer="Footer for primary card"/>
 
 	</Grid>
-
-	<Block Padding="5">
+<Block Padding="5">
 		<Block>
 			<Text>А am the text
 				<Badge>23</Badge>

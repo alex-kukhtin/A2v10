@@ -340,7 +340,7 @@ namespace A2v10.Request
 		{
 			if (!rb.processDbEvents)
 				return Task.CompletedTask;
-			return _host.ProcessDbEvents(_dbContext);
+			return _host.ProcessDbEvents(_dbContext, rb.CurrentSource);
 		}
 
 		public void ProfileException(Exception ex)

@@ -1137,6 +1137,7 @@ textarea,
 select,
 button {
   font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
+  color: var(--text);
 }
 body {
   overflow: hidden;
@@ -1531,7 +1532,7 @@ header .dropdown.separate.show .btn.btn-success,
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f8f8f880;
+  background-color: rgba(0, 0, 0, 0.4);
   overflow: auto;
 }
 .center-page .initial-form {
@@ -1786,7 +1787,7 @@ footer,
   bottom: 0;
   right: 0;
   height: 2rem;
-  background-color: var(--neutralLighter);
+  background-color: var(--neutralBk);
   border-top: 1px solid #e1dfdd;
   padding: 0 2px 0 8px;
   font-size: 0.925rem;
@@ -2433,7 +2434,7 @@ pre.a2-code {
   outline-width: 1px;
 }
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 .btn > .ico {
@@ -3318,10 +3319,9 @@ table.data-grid > tbody > tr.bold > td {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding: 2px 4px;
+  padding: 0 2px;
   overflow: visible;
-  background-color: var(--neutralLighter);
-  color: #555;
+  background-color: var(--neutralBk);
   z-index: 1;
 }
 .toolbar .checkbox {
@@ -3334,7 +3334,7 @@ table.data-grid > tbody > tr.bold > td {
   border-bottom: 1px solid #ddd;
 }
 .toolbar.tb-border-bottom-shadow {
-  border-bottom: none!important;
+  border-bottom: none !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 .toolbar > .control-group.first-elem label {
@@ -3370,7 +3370,6 @@ table.data-grid > tbody > tr.bold > td {
 }
 .toolbar .btn-caret:hover {
   background-color: #fdf4bf;
-  border-color: #e5c365;
   outline: none;
 }
 .toolbar .a2-header {
@@ -3384,22 +3383,21 @@ table.data-grid > tbody > tr.bold > td {
   border-right: 1px solid #eee;
   align-self: stretch;
   background-color: #ccc;
-  margin: 2px 4px;
+  margin: 0.5rem 0.25rem;
 }
 .toolbar > .control-group {
   display: inline-flex;
-  margin: 0;
   background-color: transparent;
+  margin: 4px 2px;
 }
 .toolbar > .control-group .input-group {
-  min-height: 28px;
+  min-height: 2.3575rem;
 }
 .toolbar > .control-group label {
   align-self: center;
-  margin: 0 6px 0 2px;
+  margin: 0 0.5rem;
   font-size: 100%;
   white-space: nowrap;
-  line-height: 1;
 }
 .toolbar .control-group + .control-group {
   margin-left: 6px;
@@ -3415,16 +3413,13 @@ table.data-grid > tbody > tr.bold > td {
   outline-offset: -2px;
 }
 .btn-tb:hover {
-  background-color: var(--neutralLight);
+  background-color: var(--neutralBkDark);
   outline: none;
 }
 .btn-tb:active {
-  background-color: #fff29d;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+  background-color: var(--neutralBkDarker);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2) inset;
   outline: none;
-}
-.btn-tb:disabled {
-  color: #999;
 }
 .btn-tb:disabled:hover {
   background-color: transparent;
@@ -4193,7 +4188,7 @@ ul.news-list > li {
 .modal-stack .modal-wrapper .modal-window[maximize] {
   width: 98vw;
   margin: 10px auto;
-  height: calc(100vh - 1.8rem - 20px);
+  height: calc(100vh - 2rem - 20px);
 }
 .modal-stack .modal-wrapper .modal-window[maximize] .modal-header {
   cursor: default;
@@ -6511,7 +6506,7 @@ table > colgroup col.blue {
   width: 278px;
   padding: 16px 0 0 0;
   border-right: 1px solid #e1dfdd;
-  background-color: var(--neutralLighter);
+  background-color: var(--neutralBk);
 }
 .side-bar .side-bar-body,
 .side-bar .tree-view {
@@ -6521,7 +6516,7 @@ table > colgroup col.blue {
   padding: 0;
 }
 .side-bar .side-bar-title {
-  background-color: #f2f3f9;
+  background-color: var(--neutralBk);
   white-space: nowrap;
   height: 100%;
   cursor: pointer;
@@ -6546,14 +6541,14 @@ table > colgroup col.blue {
 .side-bar .collapse-handle:hover {
   color: var(--link);
   text-decoration: none;
-  background-color: #f2f3f9;
+  background-color: var(--neutralBk);
 }
 .side-bar .collapse-handle:before {
   content: "\e9a3";
 }
 .side-bar.collapsed {
   width: 36px;
-  background-color: #f2f3f9;
+  background-color: var(--neutralBk);
 }
 .side-bar.collapsed .collapse-handle {
   width: 100%;
@@ -6823,7 +6818,7 @@ td.vert > .vcell {
   bottom: 2rem;
   right: 0;
   z-index: 110;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   border-left: 1px solid #ddd;
   width: 390px;
   box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);
@@ -6843,16 +6838,16 @@ td.vert > .vcell {
 }
 .debug-panel .debug-pane-header {
   background-color: #fff29d;
-  padding: 2px 2px 2px 6px;
   border-bottom: 1px solid #ddd;
 }
 .debug-panel .debug-pane-header .debug-pane-title {
-  font-size: 0.95rem;
+  font-size: 0.925rem;
+  display: inline-block;
+  padding: 0.5rem;
 }
 .debug-panel .debug-pane-header a.btn {
   float: right;
-  padding: 0 2px;
-  color: #aaa;
+  padding: 0 0.25rem;
   border: 1px solid transparent;
 }
 .debug-panel .debug-pane-header a.btn:hover {
@@ -6861,12 +6856,12 @@ td.vert > .vcell {
   border-color: #e5c365;
 }
 .debug-panel .toolbar {
-  min-height: 2.5rem;
-  height: 2.5rem;
+  min-height: 3rem;
+  border-bottom: 1px solid #e1dfdd;
 }
 .debug-panel .debug-body {
   overflow: auto;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   user-select: text;
 }
 .debug-panel .debug-model pre {

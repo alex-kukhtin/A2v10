@@ -1,15 +1,21 @@
-﻿
+﻿@import "Variables.less";
 
-@tb-item-height:28px;
+@toolbar-bg-color: var(--neutralBk);
+@toolbar-hover: var(--neutralBkDark);
+@toolbar-active: var(--neutralBkDarker);
+@toolbar-txt-color: @text-color;
+
+@tb-item-height: 2.3575rem;
+@tb-item-margin: 4px 2px;
 
 .toolbar {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	padding: 2px 4px;
+	padding: 0 2px;
 	overflow: visible;
 	background-color: @toolbar-bg-color;
-	color: @toolbar-txt-color;
+	// color: @toolbar-txt-color;
 	//min-height:34px;
 	z-index: 1;
 
@@ -26,7 +32,7 @@
 	}
 
 	&.tb-border-bottom-shadow {
-		border-bottom:none!important;
+		border-bottom: none !important;
 		box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
 	}
 
@@ -82,14 +88,13 @@
 
 		&:hover {
 			background-color: @hover-bg-color;
-			border-color: @tb-hover-brd-color;
 			outline: none;
 		}
 	}
 
 	.a2-header {
 		margin: 0;
-		align-self:baseline;
+		align-self: baseline;
 	}
 
 	> .divider {
@@ -99,13 +104,13 @@
 		border-right: 1px solid #eee; //lighten(@toolbar-bg-color, 5%);
 		align-self: stretch;
 		background-color: #ccc; //darken(@toolbar-bg-color, 15%);
-		margin: 2px 4px;
+		margin: .5rem .25rem;
 	}
 
 	> .control-group {
 		display: inline-flex;
-		margin: 0;
 		background-color: transparent;
+		margin: @tb-item-margin;
 
 		.input-group {
 			min-height: @tb-item-height;
@@ -113,11 +118,10 @@
 
 		label {
 			align-self: center;
-			margin: 0 6px 0 2px;
+			margin: 0 .5rem;
 			//text-transform: lowercase;
 			font-size: 100%;
 			white-space: nowrap;
-			line-height: 1;
 		}
 	}
 
@@ -131,7 +135,7 @@
 	background-color: transparent;
 	//text-transform: lowercase;
 	min-width: 0;
-	margin: 4px 2px;
+	margin: @tb-item-margin;
 
 	&:focus {
 		outline: 1px dotted #777; //darken(@toolbar-bg-color, 15%);
@@ -139,19 +143,15 @@
 	}
 
 	&:hover {
-		background-color: var(--neutralLight);
+		background-color: @toolbar-hover;
 		//background-color: @hover-bg-color;
 		outline: none;
 	}
 
 	&:active {
-		background-color: @tb-active-bg-color;
-		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
+		background-color: @toolbar-active;
+		box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2) inset;
 		outline: none;
-	}
-
-	&:disabled {
-		color: #999;
 	}
 
 	&:disabled:hover {

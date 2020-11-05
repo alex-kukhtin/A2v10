@@ -24,6 +24,7 @@ namespace A2v10.Request
 		public Int64 ItemId { get; set; }
 		public String Path { get; set; }
 		public String Command { get; set; }
+		public String Source { get; set; }
 	}
 
 	public class DbEventError : DbEventBase
@@ -61,7 +62,7 @@ namespace A2v10.Request
 				null
 			);
 			var evtBase = new DbEventBase() { Id = evt.Id };
-			ctrl.DbContext.Execute<DbEventBase>(ctrl.Host.CatalogDataSource, "a2sys.[DbEvent.Complete]", evtBase);
+			ctrl.DbContext.Execute<DbEventBase>(evt.Source, "a2sys.[DbEvent.Complete]", evtBase);
 		}
 
 
@@ -84,13 +85,13 @@ namespace A2v10.Request
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
 				var evtError = new DbEventError() { Id = evt.Id, ErrorMessage = ex.Message };
-				dbContext.Execute<DbEventError>(host.CatalogDataSource, "a2sys.[DbEvent.Error]", evtError);
+				dbContext.Execute<DbEventError>(evt.Source, "a2sys.[DbEvent.Error]", evtError);
 			}
 		}
 
 		public async Task<ServerCommandResult> Execute(RequestCommand cmd, ExpandoObject dataToExec)
 		{
-			await ProcessDbEvents(_dbContext, _host.CatalogDataSource, _host.IsAdminMode);
+			await ProcessDbEvents(_dbContext, cmd.CurrentSource, _host.IsAdminMode);
 			return new ServerCommandResult();
 		}
 

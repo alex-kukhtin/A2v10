@@ -8,7 +8,7 @@
 @font-size-small:0.925rem;
 
 @border-light: var(--neutralLight);
-
+@text-color:var(--text);
 @gray-text-color: #ccc;
 @dark-gray-text-color:#999;
 
@@ -76,15 +76,15 @@
 /* header-footer */
 @header-height: 42px;
 @footer-height: 2rem;
-@footer-bg-color: var(--neutralLighter);
+@footer-bg-color: var(--neutralBk);
 /* nav bar */
 @navbar-height: 32px;
 @navbar-bg-color: #f2f3f9;
 @navbar-highlight-color: darken(@navbar-bg-color, 3%);
 @sidebar-tab-height: 42px;
 /* side bar */
-@side-bar-bg-color: var(--neutralLighter);
-@side-bar-collapsed-bg-color: @navbar-bg-color;
+@side-bar-bg-color: var(--neutralBk);
+@side-bar-collapsed-bg-color: @side-bar-bg-color;
 @side-bar-margin: 0;
 @side-bar-brd-color: @light-brd-color;
 @side-bar-width: 278px;
@@ -98,8 +98,6 @@
 @data-grid-border-color:@default-brd-color;
 @sort-bg-color: rgba(238,238,238, 0.3);
 /* toolbar */
-@toolbar-bg-color: var(--neutralLighter);
-@toolbar-txt-color: #555;
 @tb-active-bg-color: #fff29d;
 @tb-hover-brd-color: #e5c365;
 /* table */

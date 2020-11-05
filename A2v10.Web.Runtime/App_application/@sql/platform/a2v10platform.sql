@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 29.10.2020 10:47:13
+generated: 05.11.2020 13:20:18
 */
 
 set nocount on;
@@ -31,8 +31,8 @@ go
 /*
 Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 23 oct 2020
-module version : 7056
+Last updated : 05 nov 2020
+module version : 7057
 */
 ------------------------------------------------
 set nocount on;
@@ -62,9 +62,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7056);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7057);
 else
-	update a2sys.Versions set [Version] = 7056 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7057 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -279,6 +279,7 @@ create table a2sys.DbEvents
 	ItemId bigint,
 	[Path] nvarchar(255),
 	[Command] nvarchar(255),
+	[Source] nvarchar(255),
 	[State] nvarchar(32) constraint DF_DbEvents_State default N'Init',
 	DateCreated datetime constraint DF_DbEvents_DateCreated default(a2sys.fn_getCurrentDate()),
 	DateHold datetime,
@@ -286,6 +287,12 @@ create table a2sys.DbEvents
 	[JsonParams] nvarchar(1024) sparse,
 	ErrorMessage nvarchar(1024) sparse
 )
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'DbEvents' and COLUMN_NAME=N'Source')
+begin
+	alter table a2sys.DbEvents add [Source] nvarchar(255);
 end
 go
 ------------------------------------------------
@@ -300,14 +307,14 @@ begin
 	set transaction isolation level read committed;
 
 	declare @rtable table(Id uniqueidentifier, ItemId bigint, [Path] nvarchar(255),
-		[JsonParams] nvarchar(1024), Command nvarchar(255));
+		[JsonParams] nvarchar(1024), Command nvarchar(255), [Source] nvarchar(255));
 
 	update a2sys.DbEvents set [State] = N'Hold', DateHold = a2sys.fn_getCurrentDate()
-	output inserted.Id, inserted.ItemId, inserted.[Path], inserted.Command, inserted.JsonParams
-	into @rtable(Id, ItemId, [Path], Command, JsonParams)
+	output inserted.Id, inserted.ItemId, inserted.[Path], inserted.Command, inserted.JsonParams, inserted.[Source]
+	into @rtable(Id, ItemId, [Path], Command, JsonParams, [Source])
 	where [State] = N'Init';
 
-	select [Id], ItemId, [Path], Command, JsonParams from @rtable;
+	select [Id], ItemId, [Path], Command, [Source], JsonParams from @rtable;
 end
 go
 ------------------------------------------------

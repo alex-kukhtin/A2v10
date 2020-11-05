@@ -57,9 +57,9 @@ namespace A2v10.Request
 			return File.Exists(manifestPath) ? "<link rel=\"manifest\" href=\"/manifest.json\">" : null;
 		}
 
-		public static Task ProcessDbEvents(this IApplicationHost host, IDbContext dbContext)
+		public static Task ProcessDbEvents(this IApplicationHost host, IDbContext dbContext, String source)
 		{
-			return ProcessDbEventsCommand.ProcessDbEvents(dbContext, host.CatalogDataSource, host.IsAdminMode);
+			return ProcessDbEventsCommand.ProcessDbEvents(dbContext, source, host.IsAdminMode);
 		}
 
 		public static ITypeChecker CheckTypes(this IApplicationHost host, String path, String typesFile, IDataModel model)
