@@ -30,11 +30,13 @@ namespace A2v10.Web.Mvc.Start
 				IProfiler profiler = new WebProfiler();
 				IApplicationHost host = new WebApplicationHost(profiler);
 				ILocalizer localizer = new WebLocalizer(host);
+				ITokenProvider tokenProvider = new WebTokenProvider();
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,
 					host as IDataConfiguration,
 					localizer as IDataLocalizer,
-					host as ITenantManager);
+					host as ITenantManager,
+					tokenProvider);
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger, host);
 				IMessaging messaging = new MessageProcessor(host, dbContext, emailService, logger);
@@ -66,6 +68,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IScriptProcessor>(scriptProcessor);
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IJavaScriptEngine>(javaScriptEngine);
+				locator.RegisterService<ITokenProvider>(tokenProvider);
 
 				if (HttpContext.Current != null)
 					HttpContext.Current.Items.Add("ServiceLocator", locator);

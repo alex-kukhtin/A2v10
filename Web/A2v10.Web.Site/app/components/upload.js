@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200617-7674
+// 20201106-7720
 // components/upload.js
 
 (function () {
@@ -80,17 +80,22 @@
 					fd.append('file', file, file.name);
 				}
 				http.upload(imgUrl, fd).then((result) => {
-					// result = {status: '', ids:[]}
+					// result = {status: '', elems:[Id:0, Token:'']}
 					ev.target.value = ''; // clear current selection
+					let token = undefined;
+					if (this.item._meta_)
+						token = this.item._meta_.$token;
 					if (result.status === 'OK') {
 						if (this.newItem) {
 							let p0 = this.item.$parent;
-							for (let id of result.ids) {
+							for (let elem of result.elems) {
 								let ni = p0.$append();
-								ni[this.prop] = id;
+								ni[this.prop] = elem.Id;
+								ni[token] = elem.Token;
 							}
 						} else {
-							this.item[this.prop] = result.ids[0];
+							this.item[this.prop] = result.elems[0].Id;
+							this.item[token] = result.elems[0].Token;
 						}
 					}
 				}).catch(msg => {

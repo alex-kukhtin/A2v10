@@ -9,6 +9,7 @@ using System.Web;
 using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Request
 {
@@ -20,17 +21,22 @@ namespace A2v10.Request
 		public IApplicationHost Host => _baseController.Host;
 		public IUserStateManager UserStateManager => _baseController.UserStateManager;
 
-		public Task Show(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams)
+		public AttachmentController()
 		{
-			return ShowImpl(Base, id, Response, setParams, "Load");
 		}
 
-		public Task ShowPrev(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams)
+		public Task Show(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams, String token)
 		{
-			return ShowImpl(Base, id, Response, setParams, "LoadPrev");
+			return ShowImpl(Base, id, Response, setParams, "Load", token);
 		}
 
-		public async Task ShowImpl(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams, String suffix)
+		public Task ShowPrev(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams, String token)
+		{
+			return ShowImpl(Base, id, Response, setParams, "LoadPrev", token);
+		}
+
+
+		public async Task ShowImpl(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams, String suffix, String token)
 		{
 			try
 			{
@@ -38,6 +44,8 @@ namespace A2v10.Request
 				var ai = await _baseController.DownloadAttachment(url, setParams, suffix);
 				if (ai == null)
 					throw new RequestModelException($"Attachment not found. (Id:{id})");
+				if (!_baseController.IsTokenValid(Response, ai.Token, token))
+					return;
 				Response.ContentType = ai.Mime;
 				Response.BinaryWrite(ai.Stream);
 			}
@@ -47,17 +55,17 @@ namespace A2v10.Request
 			}
 		}
 
-		public Task Download(String Base, String id, Boolean raw, HttpResponseBase Response, Action<ExpandoObject> setParams)
+		public Task Download(String Base, String id, Boolean raw, HttpResponseBase Response, Action<ExpandoObject> setParams, String token)
 		{
-			return DownloadImpl(Base, id, raw, Response, setParams, "Load");
+			return DownloadImpl(Base, id, raw, Response, setParams, "Load", token);
 		}
 
-		public Task DownloadPrev(String Base, String id, Boolean raw, HttpResponseBase Response, Action<ExpandoObject> setParams)
+		public Task DownloadPrev(String Base, String id, Boolean raw, HttpResponseBase Response, Action<ExpandoObject> setParams, String token)
 		{
-			return DownloadImpl(Base, id, raw, Response, setParams, "LoadPrev");
+			return DownloadImpl(Base, id, raw, Response, setParams, "LoadPrev", token);
 		}
 
-		async Task DownloadImpl(String Base, String id, Boolean raw, HttpResponseBase Response, Action<ExpandoObject> setParams, String suffix)
+		async Task DownloadImpl(String Base, String id, Boolean raw, HttpResponseBase Response, Action<ExpandoObject> setParams, String suffix, String token)
 		{ 
 			try
 			{
@@ -65,6 +73,9 @@ namespace A2v10.Request
 				var ai = await _baseController.DownloadAttachment(url, setParams, suffix);
 				if (ai == null)
 					throw new RequestModelException($"Attachment not found. (Id:{id})");
+
+				if (!_baseController.IsTokenValid(Response, ai.Token, token))
+					return;
 
 				if (raw)
 				{

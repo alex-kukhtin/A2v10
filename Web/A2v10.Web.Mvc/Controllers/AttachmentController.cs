@@ -33,33 +33,33 @@ namespace A2v10.Web.Mvc.Controllers
 		public Boolean SkipRequest(String Url) { return false; }
 
 		[HttpGet]
-		public Task Show(String Base, String id)
+		public Task Show(String @base, String id, String token)
 		{
-			return _baseController.Show(Base, id, Response, SetParams);
+			return _baseController.Show(@base, id, Response, SetParams, token);
 		}
 
 		[HttpGet]
-		public Task ShowPrev(String Base, String id)
+		public Task ShowPrev(String @base, String id, String token)
 		{
-			return _baseController.ShowPrev(Base, id, Response, SetParams);
+			return _baseController.ShowPrev(@base, id, Response, SetParams, token);
 		}
 
 		[HttpGet]
-		public Task Export(String Base, String id)
+		public Task Export(String @base, String id, String token)
 		{
-			return _baseController.Download(Base, id, false, Response, SetParams);
+			return _baseController.Download(@base, id, false, Response, SetParams, token);
 		}
 
 		[HttpPost]
-		public Task Raw(String Base, String id)
+		public Task Raw(String @base, String id, String token)
 		{
-			return _baseController.Download(Base, id, true, Response, SetParams);
+			return _baseController.Download(@base, id, true, Response, SetParams, token);
 		}
 
 		[HttpPost]
-		public Task Prev(String Base, String id)
+		public Task Prev(String @base, String id, String token)
 		{
-			return _baseController.DownloadPrev(Base, id, true, Response, SetParams);
+			return _baseController.DownloadPrev(@base, id, true, Response, SetParams, token);
 		}
 
 		[HttpPost]

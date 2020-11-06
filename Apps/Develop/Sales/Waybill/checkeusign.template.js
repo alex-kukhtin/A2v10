@@ -56,7 +56,7 @@ async function verifySignature() {
 	eusign.beginRequest();
 	eusign.beginRequest();
 	try {
-		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id);
+		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id, att.Token);
 		console.dir('blob:'); console.dir(blob);
 		let signature = await eusign.loadSignature('/sales/waybill/attachment', sign.Id);
 		console.dir('signature:'); console.dir(signature);

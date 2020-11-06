@@ -8024,7 +8024,7 @@ TODO:
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200617-7674
+// 20201106-7720
 // components/upload.js
 
 (function () {
@@ -8104,17 +8104,22 @@ TODO:
 					fd.append('file', file, file.name);
 				}
 				http.upload(imgUrl, fd).then((result) => {
-					// result = {status: '', ids:[]}
+					// result = {status: '', elems:[Id:0, Token:'']}
 					ev.target.value = ''; // clear current selection
+					let token = undefined;
+					if (this.item._meta_)
+						token = this.item._meta_.$token;
 					if (result.status === 'OK') {
 						if (this.newItem) {
 							let p0 = this.item.$parent;
-							for (let id of result.ids) {
+							for (let elem of result.elems) {
 								let ni = p0.$append();
-								ni[this.prop] = id;
+								ni[this.prop] = elem.Id;
+								ni[token] = elem.Token;
 							}
 						} else {
-							this.item[this.prop] = result.ids[0];
+							this.item[this.prop] = result.elems[0].Id;
+							this.item[token] = result.elems[0].Token;
 						}
 					}
 				}).catch(msg => {
@@ -9204,7 +9209,7 @@ TODO:
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200617-7674
+// 20201106-7720
 // components/image.js
 
 (function () {
@@ -9257,7 +9262,10 @@ TODO:
 				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
 				if (!id) return undefined;
-				return url.combine(root, '_image', this.base, this.prop, id);
+				let qry = {};
+				if (this.item._meta_ && this.item._meta_.$token)
+					qry.token = this.item[this.item._meta_.$token];
+				return url.combine(root, '_image', this.base, this.prop, id) + url.makeQueryString(qry);
 			},
 			tip() {
 				if (this.readOnly) return this.placeholder;
@@ -10949,7 +10957,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200817-7702*/
+/*20201106-7720*/
 // controllers/base.js
 
 (function () {
@@ -11399,10 +11407,16 @@ Vue.directive('resize', {
 				const root = window.$$rootUrl;
 				let cmd = opts && opts.export ? 'export' : 'show';
 				let id = arg;
-				if (arg && utils.isObject(arg))
+				let token = undefined;
+				if (arg && utils.isObject(arg)) {
 					id = utils.getStringId(arg);
+					if (arg._meta_ && arg._meta_.$token)
+						token = arg[arg._meta_.$token];
+				}
 				let attUrl = urltools.combine(root, 'attachment', cmd, id);
 				let qry = { base: url };
+				if (token)
+					qry.token = token;
 				attUrl = attUrl + urltools.makeQueryString(qry);
 				if (opts && opts.newWindow)
 					window.open(attUrl, '_blank');

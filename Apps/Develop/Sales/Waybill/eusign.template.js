@@ -11,7 +11,9 @@ const template = {
 		'TAttachment.$Info': Object,
 		'TAttachment.$HasKeys'() { return this.Keys.length > 0; },
 		'TAttachment.$Alias': String,
-		'TAttachment.$FrameUrl'() { return '/attachment/show/' + this.Id + '?base=/sales/waybill/attachment';}
+		'TAttachment.$FrameUrl'() {
+			return `/attachment/show/${this.Id}?base=/sales/waybill/attachment&token=${this.Token}`;
+		}
 	},
 	events: {
 		"Model.load": modelLoad,
@@ -61,7 +63,8 @@ async function signFile() {
 	eusign.beginRequest();
 	const base = '/sales/waybill/attachment';
 	try {
-		let blobs = await eusign.loadAttachment(base, att.Id);
+		debugger;
+		let blobs = await eusign.loadAttachment(base, att.Id, att.Token);
 		console.dir('blob:'); console.dir(blobs);
 		let signed = eusign.signData(blobs);
 		console.dir('signed:'); console.dir(signed.data);

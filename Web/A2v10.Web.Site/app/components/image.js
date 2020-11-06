@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20200617-7674
+// 20201106-7720
 // components/image.js
 
 (function () {
@@ -53,7 +53,10 @@
 				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
 				if (!id) return undefined;
-				return url.combine(root, '_image', this.base, this.prop, id);
+				let qry = {};
+				if (this.item._meta_ && this.item._meta_.$token)
+					qry.token = this.item[this.item._meta_.$token];
+				return url.combine(root, '_image', this.base, this.prop, id) + url.makeQueryString(qry);
 			},
 			tip() {
 				if (this.readOnly) return this.placeholder;

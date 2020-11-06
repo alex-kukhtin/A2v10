@@ -150,6 +150,7 @@
     <Compile Include="Start\CacheForStaticFiles.cs" />
     <Compile Include="Start\WebApplication.cs" />
     <Compile Include="Start\FilterConfig.cs" />
+    <Compile Include="Start\WebTokenProvider.cs" />
     <Compile Include="Views\Account\SendCode.generated.cs">
       <DependentUpon>SendCode.cshtml</DependentUpon>
       <DesignTime>True</DesignTime>

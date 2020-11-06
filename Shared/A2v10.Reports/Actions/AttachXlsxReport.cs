@@ -14,10 +14,13 @@ namespace A2v10.Reports.Actions
 	public class AttachXlsxReport : AttachReportBase, IInvokeTarget
 	{
 		private IDbContext _dbContext;
-		public void Inject(IApplicationHost host, IDbContext dbContext)
+		private ITokenProvider _tokenProvider;
+
+		public void Inject(IApplicationHost host, IDbContext dbContext, ITokenProvider tokenProvider)
 		{
 			_host = host;
 			_dbContext = dbContext;
+			_tokenProvider = tokenProvider;
 		}
 
 		protected override String FileExtension => ".xlsx";
@@ -47,8 +50,9 @@ namespace A2v10.Reports.Actions
 						};
 						if (String.IsNullOrEmpty(ai.Name))
 							ai.Name = "Attachment";
-						await _dbContext.ExecuteAsync(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
-						return new { ai.Id };
+						var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>
+							(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
+						return new { Id = aout.Id, Token = _tokenProvider.GenerateToken(aout.Token) };
 					}
 				}
 			}

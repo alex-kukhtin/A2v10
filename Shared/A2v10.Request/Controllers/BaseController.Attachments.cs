@@ -15,6 +15,7 @@ namespace A2v10.Request
 	{
 		public String Mime { get; set; }
 		public String Name { get; set; }
+		public Guid Token { get; set; }
 		public Byte[] Stream { get; set; }
 	}
 
@@ -28,6 +29,19 @@ namespace A2v10.Request
 		public String Mime { get; set; }
 		public String Name { get; set; }
 		public Stream Stream { get; set; }
+	}
+
+	public class AttachmentUpdateOutput
+	{
+		public Object Id { get; set; }
+		public Guid Token { get; set; }
+	}
+
+	public class AttachmentUpdateIdToken
+	{
+		public Object Id { get; set; }
+		public String Mime { get; set; }
+		public String Token { get; set; }
 	}
 
 	public class AttachmentUpdateResult
@@ -87,7 +101,7 @@ namespace A2v10.Request
 			return await _dbContext.LoadAsync<ReturnSignatureInfo>(rm.CurrentSource, procedure, prms);
 		}
 
-		public async Task<IList<Object>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
+		public async Task<IList<AttachmentUpdateIdToken>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
@@ -103,20 +117,24 @@ namespace A2v10.Request
 				ii.TenantId = tenantId;
 			if (_host.IsMultiCompany)
 				ii.CompanyId = companyId;
-			var retList = new List<Object>();
+			var retList = new List<AttachmentUpdateIdToken>();
 			for (Int32 i = 0; i < files.Count; i++)
 			{
 				HttpPostedFileBase file = files[i];
 				ii.Mime = file.ContentType;
 				ii.Name = Path.GetFileName(file.FileName);
 				ii.Stream = file.InputStream;
-				await _dbContext.ExecuteAsync(rm.CurrentSource, procedure, ii);
-				retList.Add(ii.Id);
+				var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(rm.CurrentSource, procedure, ii);
+				retList.Add(new AttachmentUpdateIdToken()
+				{
+					Id = aout.Id,
+					Token = _tokenProvider.GenerateToken(aout.Token)
+				});
 			}
 			return retList;
 		}
 
-		public async Task<IList<Object>> SaveAttachmentsMime(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
+		public async Task<IList<AttachmentUpdateIdToken>> SaveAttachmentsMime(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
@@ -132,15 +150,20 @@ namespace A2v10.Request
 				ii.TenantId = tenantId;
 			if (_host.IsMultiCompany)
 				ii.CompanyId = companyId;
-			var retList = new List<Object>();
+			var retList = new List<AttachmentUpdateIdToken>();
 			for (Int32 i = 0; i < files.Count; i++)
 			{
 				HttpPostedFileBase file = files[i];
 				ii.Mime = file.ContentType;
 				ii.Name = Path.GetFileName(file.FileName);
 				ii.Stream = file.InputStream;
-				await _dbContext.ExecuteAsync(rm.CurrentSource, procedure, ii);
-				retList.Add(new { id = ii.Id, mime = file.ContentType });
+				var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(rm.CurrentSource, procedure, ii);
+				retList.Add(new AttachmentUpdateIdToken()
+				{
+					Id = aout.Id,
+					Mime = file.ContentType,
+					Token = _tokenProvider.GenerateToken(aout.Token)
+				});
 			}
 			return retList;
 		}

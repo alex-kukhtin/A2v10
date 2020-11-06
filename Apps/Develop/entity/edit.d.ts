@@ -9,6 +9,7 @@ export interface TEntity extends IElement {
 	Name: string;
 	Article: string;
 	Image: number;
+	Token: string;
 	Tag: string;
 	Memo: string;
 	Unit: TUnit;

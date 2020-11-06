@@ -15,13 +15,15 @@ namespace A2v10.Reports.Actions
 	{
 		private IDbContext _dbContext;
 		private ReportHelper _reportHelper;
+		private ITokenProvider _tokenProvider;
 
 		protected override String FileExtension => ".mrt";
 
-		public void Inject(IApplicationHost host, IDbContext dbContext)
+		public void Inject(IApplicationHost host, IDbContext dbContext, ITokenProvider tokenProvider)
 		{
 			_host = host;
 			_dbContext = dbContext;
+			_tokenProvider = tokenProvider;
 			_reportHelper = new ReportHelper();
 		}
 
@@ -50,8 +52,9 @@ namespace A2v10.Reports.Actions
 					};
 					if (String.IsNullOrEmpty(ai.Name))
 						ai.Name = "Attachment";
-					await _dbContext.ExecuteAsync(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
-					return new { ai.Id };
+					var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>
+						(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
+					return new { Id = aout.Id, Token =_tokenProvider.GenerateToken(aout.Token) };
 				}
 			}
 		}

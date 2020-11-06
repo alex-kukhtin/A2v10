@@ -76,7 +76,7 @@ async function attachReport(doc) {
 	console.dir(result);
 	//alert('attach result:' + result);
 	vm.$toast("Успешно добавлено");
-	doc.Attachments.$append({ Id: result.Id });
+	doc.Attachments.$append({ Id: result.Id, Token: result.Token });
 }
 
 async function attachReport2(doc) {
@@ -85,7 +85,7 @@ async function attachReport2(doc) {
 	console.dir(result);
 	//alert('attach result:' + result);
 	vm.$toast("Успешно добавлено");
-	doc.Attachments.$append({ Id: result.Id });
+	doc.Attachments.$append({ Id: result.Id, Token: result.Token });
 }
 
 function testCommand(arg) {
@@ -107,7 +107,7 @@ function printToPdf(arg) {
 	frame.id = frameId;
 	frame.style.display = "none";
 	document.body.appendChild(frame);
-	frame.setAttribute('src', `/attachment/show/${arg.Id}?base=%2FSales%2FWaybill%2FAttachment`);
+	frame.setAttribute('src', `/attachment/show/${arg.Id}?base=/sales/waybill/attachment&token=${arg.Token}`);
 
 	frame.onload = function (ev) {
 		let cw = frame.contentWindow;

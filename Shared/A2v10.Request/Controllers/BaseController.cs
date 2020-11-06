@@ -40,6 +40,7 @@ namespace A2v10.Request
 		protected readonly IMessageService _messageService;
 		protected readonly IUserStateManager _userStateManager;
 		protected readonly IExternalDataProvider _externalDataProvider;
+		protected readonly ITokenProvider _tokenProvider;
 
 		public class DataModelAndView
 		{
@@ -64,6 +65,7 @@ namespace A2v10.Request
 			_messageService = _locator.GetServiceOrNull<IMessageService>();
 			_userStateManager = _locator.GetServiceOrNull<IUserStateManager>();
 			_externalDataProvider = _locator.GetServiceOrNull<IExternalDataProvider>();
+			_tokenProvider = _locator.GetService<ITokenProvider>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;

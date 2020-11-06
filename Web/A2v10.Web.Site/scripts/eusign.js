@@ -1,6 +1,6 @@
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20200723-7692*/
+/*20201106-7720*/
 /* services/eusign.js */
 
 app.modules['std:eusign'] = function () {
@@ -176,9 +176,9 @@ app.modules['std:eusign'] = function () {
 		return loadRaw(url, id, 'signature');
 	}
 
-	function loadAttachment(url, id) {
-		let raw = loadRaw(url, id, 'raw');
-		let prev = loadRaw(url, id, 'prev');
+	function loadAttachment(url, id, token) {
+		let raw = loadRaw(url, id, 'raw', token);
+		let prev = loadRaw(url, id, 'prev', token);
 		return Promise.all([raw, prev]);
 	}
 
@@ -186,9 +186,9 @@ app.modules['std:eusign'] = function () {
 		return loadRaw(url, id, 'prev');
 	}
 
-	function loadRaw(url, id, controller) {
+	function loadRaw(url, id, controller, token) {
 		return new Promise(async function (resolve, reject) {
-			let postUrl = `/attachment/${controller}/${id}` + urltools.makeQueryString({ base: url });
+			let postUrl = `/attachment/${controller}/${id}` + urltools.makeQueryString({ base: url, token: token });
 			try {
 				let result = await http.post(postUrl, null, true); // raw
 				let fr = new FileReader();

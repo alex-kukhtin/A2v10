@@ -297,6 +297,8 @@ const vm = new DataModelController({
 				sb.Append($"$items: '{meta.Items}',");
 			if (!String.IsNullOrEmpty(meta.MainObject))
 				sb.Append($"$main: '{meta.MainObject}',");
+			if (!String.IsNullOrEmpty(meta.Token))
+				sb.Append($"$token: '{meta.Token}',");
 			if (meta.IsGroup)
 				sb.Append($"$group: true,");
 			if (meta.HasCross)

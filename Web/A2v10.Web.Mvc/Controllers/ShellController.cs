@@ -25,6 +25,8 @@ using A2v10.Request.Models;
 using System.Net.Http.Headers;
 using System.Linq;
 using A2v10.Web.Base;
+using System.Security.Cryptography;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -541,8 +543,11 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
+				var token = Request.QueryString["token"];
 				AttachmentInfo info = await _baseController.DownloadAttachment(url, SetSqlQueryParams);
 				if (info == null)
+					return;
+				if (!_baseController.IsTokenValid(Response, info.Token, token))
 					return;
 				Response.ContentType = info.Mime;
 				if (info.Stream == null)
@@ -583,7 +588,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var list = await _baseController.SaveAttachments(TenantId, url, files, UserId, CompanyId);
 				var rval = new ExpandoObject();
 				rval.Set("status", "OK");
-				rval.Set("ids", list);
+				rval.Set("elems", list);
 				String result = JsonConvert.SerializeObject(rval, JsonHelpers.StandardSerializerSettings);
 				Response.Write(result);
 			}
