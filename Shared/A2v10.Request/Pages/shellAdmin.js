@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20181005-7312*/
+/*20201111-7721*/
 
 (function () {
 
@@ -8,6 +8,7 @@
 	const locale = window.$$locale;
 
 	const menu = $(Menu);
+	const menucomp = component('std:navmenu');
 
 	const shell = new Shell({
 		el: '#shell',
@@ -16,6 +17,17 @@
 			subtitle: locale.$Admin,
 			version: '$(AppVersion)',
 			menu: menu.Menu[0].Menu
+		},
+		methods: {
+			root() {
+				let opts = { title: null };
+				let currentUrl = this.$store.getters.url;
+				let menuUrl = menucomp.makeMenuUrl(this.menu, '/', opts);
+				if (currentUrl === menuUrl) {
+					return; // already in root
+				}
+				this.$store.commit('navigate', { url: menuUrl, title: opts.title });
+			}
 		}
 	});
 

@@ -16,6 +16,9 @@
 @AllUsers=Всі користувачі
 @AdminUsers=Адміністратори
 @User=Користувач
+@Users=Користувачі
+@Groups=Групи
+@Roles=Ролі
 @OldPassword=Старий пароль
 @NewPassword=Новий пароль
 @SetPassword=Встановити пароль
