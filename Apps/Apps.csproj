@@ -98,6 +98,7 @@
     <TypeScriptCompile Include="Develop\pos\posterm.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\export.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\elems.d.ts" />
+    <TypeScriptCompile Include="Develop\sales\waybill\index.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\print.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\waybill2.template.ts" />
     <Content Include="Develop\dashboard\homepage.template.box.js" />

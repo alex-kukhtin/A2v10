@@ -73,10 +73,12 @@ namespace A2v10.Request
 
 		FieldMetadata CalcExpression(String expression)
 		{
-			if (expression == null)
+			if (String.IsNullOrEmpty(expression))
 				return null;
 			if (expression.StartsWith("Parent."))
 				return null;
+			if (expression.StartsWith("."))
+				return null; // inner context (DataGrid ?)
 			if (expression.Contains(".$selected"))
 				return null;
 			if (expression.StartsWith("-"))
@@ -113,7 +115,9 @@ namespace A2v10.Request
 
 		public void CheckTypedXamlExpression(String expression, TypeCheckerTypeCode typeCode)
 		{
-			var type = CalcExpression(expression).Type;
+			var type = CalcExpression(expression)?.Type;
+			if (type == null)
+				return;
 			var codeString = TypeCodeToString(typeCode);
 			if (type.TypeName != codeString)
 				throw new TypeCheckerException($"Xaml. Path='{expression}'. Incompatible types. Expected:'{codeString}', Actual:'{type.TypeName}'");
