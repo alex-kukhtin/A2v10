@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web.Mvc;
@@ -25,8 +25,6 @@ using A2v10.Request.Models;
 using System.Net.Http.Headers;
 using System.Linq;
 using A2v10.Web.Base;
-using System.Security.Cryptography;
-using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Controllers
 {

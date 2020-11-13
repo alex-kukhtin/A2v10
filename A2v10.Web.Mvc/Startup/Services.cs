@@ -52,6 +52,7 @@ namespace A2v10.Web.Mvc.Startup
 				locator.RegisterService<IWorkflowEngine>(workflowEngine);
 				locator.RegisterService<IScriptProcessor>(scriptProcessor);
 				locator.RegisterService<IHttpService>(httpService);
+				locator.RegisterService<ITokenProvider>(tokenProvider);
 
 				host.StartApplication(false);
 				HttpContext.Current.Items.Add("ServiceLocator", locator);
