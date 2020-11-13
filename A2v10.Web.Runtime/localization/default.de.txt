@@ -16,6 +16,9 @@
 @AllUsers=Alle Benutzer
 @AdminUsers=Administratoren
 @User=Benutzer
+@Users=Benutzer
+@Groups=Gruppen
+@Roles=Rollen
 @OldPassword=altes Passwort
 @NewPassword=Neues Passwort
 @SetPassword=Passwort festlegen

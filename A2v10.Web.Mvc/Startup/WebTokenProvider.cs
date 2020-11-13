@@ -9,8 +9,9 @@ using Microsoft.AspNet.Identity;
 
 using A2v10.Data.Interfaces;
 
-namespace A2v10.Web.Mvc.Start
+namespace A2v10.Web.Mvc.Startup
 {
+	// COPY/PASTE from A2v10.Web.Mvc.Start.WebTokenProvider!
 	public class WebTokenProvider : ITokenProvider
 	{
 		public String GenerateToken(Guid accessToken)

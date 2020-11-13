@@ -24,11 +24,13 @@ namespace A2v10.Web.Mvc.Startup
 				IProfiler profiler = new WebProfiler();
 				IApplicationHost host = new WebApplicationHost(profiler);
 				ILocalizer localizer = new WebLocalizer(host);
+				ITokenProvider tokenProvider = new WebTokenProvider();
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,
 					host as IDataConfiguration,
 					localizer as IDataLocalizer,
-					host as ITenantManager);
+					host as ITenantManager,
+					tokenProvider);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger, host);
