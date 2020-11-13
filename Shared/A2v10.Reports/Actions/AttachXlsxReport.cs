@@ -52,7 +52,7 @@ namespace A2v10.Reports.Actions
 							ai.Name = "Attachment";
 						var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>
 							(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
-						return new { Id = aout.Id, Token = _tokenProvider.GenerateToken(aout.Token) };
+						return new { aout.Id, Token = _tokenProvider.GenerateToken(aout.Token) };
 					}
 				}
 			}
