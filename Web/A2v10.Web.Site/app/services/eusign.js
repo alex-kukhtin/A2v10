@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20201106-7720*/
+/*20201115-7727*/
 /* services/eusign.js */
 
 app.modules['std:eusign'] = function () {
@@ -172,8 +172,8 @@ app.modules['std:eusign'] = function () {
 	}
 
 
-	function loadSignature(url, id) {
-		return loadRaw(url, id, 'signature');
+	function loadSignature(url, id, token) {
+		return loadRaw(url, id, 'signature', token);
 	}
 
 	function loadAttachment(url, id, token) {
@@ -182,8 +182,8 @@ app.modules['std:eusign'] = function () {
 		return Promise.all([raw, prev]);
 	}
 
-	function loadSignedData(url, id) {
-		return loadRaw(url, id, 'prev');
+	function loadSignedData(url, id, token) {
+		return loadRaw(url, id, 'prev', token);
 	}
 
 	function loadRaw(url, id, controller, token) {

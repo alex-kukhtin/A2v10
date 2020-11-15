@@ -41,6 +41,7 @@ namespace A2v10.Request
 	{
 		public Object Id { get; set; }
 		public String Mime { get; set; }
+		public String Name { get; set; }
 		public String Token { get; set; }
 	}
 
@@ -128,6 +129,8 @@ namespace A2v10.Request
 				retList.Add(new AttachmentUpdateIdToken()
 				{
 					Id = aout.Id,
+					Name = ii.Name,
+					Mime = ii.Mime,
 					Token = _tokenProvider.GenerateToken(aout.Token)
 				});
 			}
@@ -162,6 +165,7 @@ namespace A2v10.Request
 				{
 					Id = aout.Id,
 					Mime = file.ContentType,
+					Name = file.FileName,
 					Token = _tokenProvider.GenerateToken(aout.Token)
 				});
 			}
