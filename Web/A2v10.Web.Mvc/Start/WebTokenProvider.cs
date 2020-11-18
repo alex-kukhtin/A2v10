@@ -16,6 +16,8 @@ namespace A2v10.Web.Mvc.Start
 		public String GenerateToken(Guid accessToken)
 		{
 			var context = HttpContext.Current;
+			if (context == null)
+				return null;
 			var sessionId = context.Session.SessionID;
 			var userId = context.User.Identity.GetUserId<Int64>();
 			if (accessToken == null)

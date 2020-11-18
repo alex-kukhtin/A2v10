@@ -1299,7 +1299,7 @@ header .dropdown.separate.show .btn.btn-success,
   top: 42px;
 }
 .side-bar-position-left.collapsed .content-view.partial-page {
-  left: 56px;
+  left: 42px;
 }
 .side-bar-position-top .content-view.partial-page,
 .side-bar-position-top .content-view.full-page {
@@ -6547,7 +6547,7 @@ table > colgroup col.blue {
   content: "\e9a3";
 }
 .side-bar.collapsed {
-  width: 36px;
+  width: 42px;
   background-color: var(--neutralBk);
 }
 .side-bar.collapsed .collapse-handle {
@@ -6621,7 +6621,7 @@ table > colgroup col.blue {
 			*/
 }
 .side-bar-compact.collapsed {
-  width: 56px;
+  width: 42px;
   transition: width 0.1s ease-out;
 }
 .side-bar-compact.collapsed .side-bar-body::-webkit-scrollbar {

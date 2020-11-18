@@ -22,5 +22,10 @@
 			"type": "sql",
 			"procedure": "Entity.Article.CheckDuplicate"
 		}
+	},
+	"files": {
+		"myfile": {
+			"model": "Entity.Image"
+		}
 	}
 }

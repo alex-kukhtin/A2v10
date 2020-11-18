@@ -4,6 +4,11 @@ export interface TUser extends IElement {
 	Name: string;
 }
 
+export interface TImage extends IElement {
+	Id: number;
+	Token: string;
+}
+
 export interface TEntity extends IElement {
 	Id: number;
 	Name: string;
@@ -17,6 +22,7 @@ export interface TEntity extends IElement {
 	DateModified: Date;
 	UserCreated: TUser;
 	UserModified: TUser;
+	FImage: TImage;
 }
 
 export interface TUnit extends IArrayElement {

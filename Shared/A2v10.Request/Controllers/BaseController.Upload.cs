@@ -194,7 +194,7 @@ namespace A2v10.Request
 			ExpandoObject loadPrms = new ExpandoObject();
 			setParams?.Invoke(loadPrms);
 			loadPrms.Set("Id", ru.Id);
-			loadPrms.RemoveKeys("export,Export");
+			loadPrms.RemoveKeys("export,Export,token,Token");
 
 			switch (ru.type)
 			{

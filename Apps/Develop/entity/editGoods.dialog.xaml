@@ -21,6 +21,8 @@
 		<Tab Header="Картинка">
 			<Image Source="{Bind Entity.Image}" Base="/entity" Height="200" Margin="20" ReadOnly="False"
 				Placeholder="Клацніть для фото!" Icon="UserImage"/>
+			<Button Content="Download" Command="{BindCmd File, FileAction=Download, Url='/entity/myfile', Argument={Bind Entity.FImage}}" />
+			<Button Content="Print" Command="{BindCmd File, FileAction=Print, Url='/entity/myfile', Argument={Bind Entity.FImage}}" />
 		</Tab>
 		<Tab Header="Radio bind">
 			<FieldSet Title="Radio" Orientation="Horizontal">

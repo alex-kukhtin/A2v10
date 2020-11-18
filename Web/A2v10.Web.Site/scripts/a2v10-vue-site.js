@@ -4852,13 +4852,11 @@ template: `
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20201106-7720*/
+/*20201106-7730*/
 // controllers/base.js
 
 (function () {
 
-
-	// TODO: delete this.__queryChange
 
 	const eventBus = require('std:eventBus');
 	const utils = require('std:utils');
@@ -5283,15 +5281,23 @@ template: `
 			$file(url, arg, opts) {
 				const root = window.$$rootUrl;
 				let id = arg;
-				if (arg && utils.isObject(arg))
+				let token = undefined;
+				if (arg && utils.isObject(arg)) {
 					id = utils.getStringId(arg);
+					if (arg._meta_ && arg._meta_.$token)
+						token = arg[arg._meta_.$token];
+				}
 				let fileUrl = urltools.combine(root, '_file', url, id);
+				let qry = {};
+				if (token)
+					qry.token = token;
 				switch ((opts || {}).action) {
 					case 'download':
-						htmlTools.downloadUrl(fileUrl + '?export=1');
+						qry.export = 1;
+						htmlTools.downloadUrl(fileUrl + urltools.makeQueryString(qry));
 						break;
 					case 'print':
-						htmlTools.printDirect(fileUrl);
+						htmlTools.printDirect(fileUrl + urltools.makeQueryString(qry));
 						break;
 					default:
 						window.open(fileUrl, '_blank');
@@ -6105,8 +6111,6 @@ template: `
 			eventBus.$on('invokeTest', this.__invoke__test__);
 			eventBus.$on('globalPeriodChanged', this.__global_period_changed__);
 
-			// TODO: delete this.__queryChange
-			this.$on('localQueryChange', this.__queryChange);
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
 			this.__currentToken__ = window.app.nextToken();
@@ -6127,7 +6131,6 @@ template: `
 			eventBus.$off('invokeTest', this.__invoke__test__);
 			eventBus.$off('globalPeriodChanged', this.__global_period_changed__);
 
-			this.$off('localQueryChange', this.__queryChange);
 			this.$off('cwChange', this.__cwChange);
 			htmlTools.removePrintFrame();
 			if (this.$data.$destroy)

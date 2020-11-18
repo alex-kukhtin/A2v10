@@ -513,8 +513,16 @@ namespace A2v10.Web.Mvc.Controllers
 				case "GET":
 					try
 					{
+						var token = Request.QueryString["token"];
 						var ai = await _baseController.LoadFileGet(url, SetQueryStringAndSqlQueryParams);
 						if (ai == null)
+						{
+							Response.StatusCode = 404;
+							Response.ContentType = "text/plain";
+							Response.Write($"Not found. Url='{url}'");
+							return;
+						}
+						if (!_baseController.IsTokenValid(Response, ai.Token, token))
 							return;
 						Response.ContentType = ai.Mime;
 						if (Request.QueryString["export"] != null)
