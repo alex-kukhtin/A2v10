@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20201106-7720
+// 20201119-7731
 // components/image.js
 
 (function () {
@@ -15,7 +15,9 @@
     <span>{{newElem}}</span>
      */
 
-	var url = require('std:url');
+	const url = require('std:url');
+	const utils = require('std:utils');
+
 	const locale = window.$$locale;
 
 	Vue.component('a2-image', {
@@ -126,12 +128,19 @@
 			url: String,
 			width: String,
 			height: String,
-			value: [String, Number]
+			value: [String, Number, Object]
 		},
 		computed: {
 			href: function () {
 				let root = window.$$rootUrl;
-				return url.combine(root, '_file', this.url, this.value);
+				let id = this.value;
+				let qry = {};
+				if (utils.isObjectExact(this.value)) {
+					id = utils.getStringId(this.value);
+					if (this.value._meta_ && this.value._meta_.$token)
+						qry.token = this.value[this.value._meta_.$token];
+				}
+				return url.combine(root, '_file', this.url, id) + url.makeQueryString(qry);
 			},
 			cssStyle() {
 				let r = {};

@@ -9209,7 +9209,7 @@ TODO:
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20201106-7720
+// 20201119-7731
 // components/image.js
 
 (function () {
@@ -9224,7 +9224,9 @@ TODO:
     <span>{{newElem}}</span>
      */
 
-	var url = require('std:url');
+	const url = require('std:url');
+	const utils = require('std:utils');
+
 	const locale = window.$$locale;
 
 	Vue.component('a2-image', {
@@ -9335,12 +9337,19 @@ TODO:
 			url: String,
 			width: String,
 			height: String,
-			value: [String, Number]
+			value: [String, Number, Object]
 		},
 		computed: {
 			href: function () {
 				let root = window.$$rootUrl;
-				return url.combine(root, '_file', this.url, this.value);
+				let id = this.value;
+				let qry = {};
+				if (utils.isObjectExact(this.value)) {
+					id = utils.getStringId(this.value);
+					if (this.value._meta_ && this.value._meta_.$token)
+						qry.token = this.value[this.value._meta_.$token];
+				}
+				return url.combine(root, '_file', this.url, id) + url.makeQueryString(qry);
 			},
 			cssStyle() {
 				let r = {};
@@ -10957,7 +10966,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20201106-7730*/
+/*20201119-7731*/
 // controllers/base.js
 
 (function () {
@@ -11396,13 +11405,14 @@ Vue.directive('resize', {
 				let qry = {};
 				if (token)
 					qry.token = token;
+				fileUrl += urltools.makeQueryString(qry);
 				switch ((opts || {}).action) {
 					case 'download':
 						qry.export = 1;
-						htmlTools.downloadUrl(fileUrl + urltools.makeQueryString(qry));
+						htmlTools.downloadUrl(fileUrl);
 						break;
 					case 'print':
-						htmlTools.printDirect(fileUrl + urltools.makeQueryString(qry));
+						htmlTools.printDirect(fileUrl);
 						break;
 					default:
 						window.open(fileUrl, '_blank');

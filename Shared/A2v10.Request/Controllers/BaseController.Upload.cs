@@ -173,15 +173,22 @@ namespace A2v10.Request
 			};
 			if (_host.IsMultiTenant)
 				ii.TenantId = prms.Get<Int32>("TenantId");
-			var resultList = new List<AttachmentUpdateResult>();
+			var resultList = new List<AttachmentUpdateIdToken>();
 			for (Int32 i = 0; i < files.Count; i++)
 			{
 				HttpPostedFileBase file = files[i];
 				ii.Name = Path.GetFileName(file.FileName);
 				ii.Mime = file.ContentType;
 				ii.Stream = file.InputStream;
-				var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateResult>(ru.CurrentSource, ru.FileProcedureUpdate, ii);
-				resultList.Add(result);
+				var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(ru.CurrentSource, ru.FileProcedureUpdate, ii);
+				resultList.Add(new AttachmentUpdateIdToken()
+					{
+						Id = result.Id,
+						Name = ii.Name,
+						Mime = ii.Mime,
+						Token = _tokenProvider.GenerateToken(result.Token)
+					}
+				);
 			}
 			return resultList;
 		}

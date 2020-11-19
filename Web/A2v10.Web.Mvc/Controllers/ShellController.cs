@@ -539,7 +539,15 @@ namespace A2v10.Web.Mvc.Controllers
 					}
 					catch (Exception ex)
 					{
-						WriteExceptionStatus(ex);
+						var accept = Request.Headers["Accept"];
+						if (accept != null && accept.Trim().StartsWith("image"))
+						{
+							WriteImageException(ex);
+						}
+						else
+						{
+							WriteExceptionStatus(ex);
+						}
 					}
 					break;
 			}

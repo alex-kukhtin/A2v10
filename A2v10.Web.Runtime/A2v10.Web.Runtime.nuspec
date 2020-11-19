@@ -19,6 +19,7 @@
 			<reference file="A2v10.Workflow.dll" />
 			<reference file="A2v10.Data.Interfaces.dll" />
 			<reference file="A2v10.Infrastructure.dll" />
+			<reference file="A2v10.Messaging.dll" />
 		</references>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net461" />

@@ -45,14 +45,6 @@ namespace A2v10.Request
 		public String Token { get; set; }
 	}
 
-	public class AttachmentUpdateResult
-	{
-		public Object Id { get; set; }
-		public String Mime { get; set; }
-		public String Name { get; set; }
-		public Int64 Size { get; set; }
-	}
-
 	public class ReturnSignatureInfo
 	{
 		public Int64 Id { get; set; }

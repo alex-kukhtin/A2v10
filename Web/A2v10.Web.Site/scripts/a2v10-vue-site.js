@@ -4852,7 +4852,7 @@ template: `
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20201106-7730*/
+/*20201119-7731*/
 // controllers/base.js
 
 (function () {
@@ -5291,13 +5291,14 @@ template: `
 				let qry = {};
 				if (token)
 					qry.token = token;
+				fileUrl += urltools.makeQueryString(qry);
 				switch ((opts || {}).action) {
 					case 'download':
 						qry.export = 1;
-						htmlTools.downloadUrl(fileUrl + urltools.makeQueryString(qry));
+						htmlTools.downloadUrl(fileUrl);
 						break;
 					case 'print':
-						htmlTools.printDirect(fileUrl + urltools.makeQueryString(qry));
+						htmlTools.printDirect(fileUrl);
 						break;
 					default:
 						window.open(fileUrl, '_blank');
