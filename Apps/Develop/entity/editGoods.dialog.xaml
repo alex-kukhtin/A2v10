@@ -27,6 +27,7 @@
 			<Hyperlink Icon="Download" Command="{BindCmd File, FileAction=Download, Argument={Bind Entity.FImage}, Url='/entity/myfile'}"/>
 			<Hyperlink Icon="Print" Command="{BindCmd File, FileAction=Print, Argument={Bind Entity.FImage}, Url='/entity/myfile'}"/>
 			<Hyperlink Icon="Eye" Command="{BindCmd File, FileAction=Show, Argument={Bind Entity.FImage}, Url='/entity/myfile'}"/>
+			<UploadFile Delegate="onFileUpload" Url="/entity/myfile"/>
 		</Tab>
 		<Tab Header="Radio bind">
 			<FieldSet Title="Radio" Orientation="Horizontal">

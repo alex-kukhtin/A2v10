@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20190223-7441
+// 20201120-7732
 // locale-de.js
 
 "use strict";
@@ -43,8 +43,9 @@
 		$PasswordLength: 'das Passwort muss mindestens 6 Zeichen lang sein',
 		$InvalidLoginError: 'Ungültige E-Mail oder Passwort',
 		$InvalidEMailError: 'Ungültige E-Mail',
-		$UserLockuotError: 'Der Benutzer wurde gesperrt. \ NIn wenigen Minuten erneut versuchen',
-		$EmailNotConfirmed: 'Eine E-Mail wurde nicht bestätigt. \ NMail in wenigen Minuten prüfen',
+		$UserLockuotError: 'Der Benutzer wurde gesperrt.\nIn wenigen Minuten erneut versuchen',
+		$EmailNotConfirmed: 'Eine E-Mail wurde nicht bestätigt.\nMail in wenigen Minuten prüfen',
+		$AntiForgery: 'Die Anfrage konnte nicht bearbeitet werden.\nAktualisieren Sie die Seite und versuchen Sie es erneut.\nWahrscheinlich sind dem Browser keine Cookies erlaubt.',
 		$PasswordTip: 'Zum Bestätigen Passwort erneut eingeben',
 		$CheckEMail: 'Überprüfen Sie Ihre E-Mails',
 		$ConfirmReset: 'Ein Link zur Passwortwiederherstellung wurde an {0} gesendet.',

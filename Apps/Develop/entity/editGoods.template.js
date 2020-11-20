@@ -16,6 +16,9 @@ const template = {
 		"Entity.Name": 'Введите наименование',
 		"Entity.Article":
 			{ valid: duplicateArticle, async: true, msg: "Товар с таким артикулом уже существует" }
+	},
+	delegates: {
+		onFileUpload
 	}
 };
 
@@ -42,3 +45,10 @@ function duplicateArticle(entity, article) {
 }
 
 module.exports = template;
+
+function onFileUpload(result) {
+	let itm = result[0];
+	console.dir(itm);
+	this.Entity.Image = itm.Id;
+	this.Entity.Token = itm.Token;
+}

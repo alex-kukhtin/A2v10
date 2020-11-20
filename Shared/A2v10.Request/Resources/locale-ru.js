@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20180401-7145
+// 20201120-7732
 // locale-ru.js
 
 "use strict";
@@ -45,6 +45,7 @@
 		$InvalidEMailError: 'Неправильный е-mail',
 		$UserLockuotError: 'Пользователь заблокирован.\nПопробуйте еще через несколько минут',
 		$EmailNotConfirmed: 'Ваш e-mail не подтвержден.\nПроверьте почту через несколько минут',
+		$AntiForgery: 'Невозможно обработать запрос.\nОбновите страницу и попробуйте еще раз.\nВозможно в браузере запрещены cookies?',
 		$PasswordTip: 'Для подтверждения введите пароль еще раз',
 		$CheckEMail: 'Через некоторое время проверьте почту.',
 		$ConfirmReset: 'На адрес {0} была отправлена ссылка для восстановления пароля.',

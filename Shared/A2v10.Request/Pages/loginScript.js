@@ -77,6 +77,8 @@
 							that.failure(that.locale.$UserLockuotError);
 						else if (result === 'EmailNotConfirmed')
 							that.failure(that.locale.$EmailNotConfirmed);
+						else if (result === 'AntiForgery')
+							that.failure(that.locale.$AntiForgery);
 						else
 							alert(result);
 					})

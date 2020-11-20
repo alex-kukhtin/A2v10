@@ -39,17 +39,20 @@
 		background-color: @dialog-header-bg-color;
 		//padding: .4rem .4rem .4rem 1rem;
 		border-bottom: 1px solid @default-brd-color;
+		display:flex;
+		align-items:center;
 
 		.debug-pane-title {
 			font-size: @font-size-small;
 			display:inline-block;
 			padding:0.5rem;
+			flex-grow:1;
 		}
 		// TODO: JOIN WITH FEEDBACK
 		a.btn {
-			float: right;
-			padding: 0 .25rem;
+			padding: .2rem .4rem;
 			border: 1px solid transparent;
+			margin: 0 4px;
 
 			&:hover {
 				color: #555;

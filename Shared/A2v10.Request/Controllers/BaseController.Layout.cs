@@ -148,7 +148,10 @@ namespace A2v10.Request
 			if (_host.Mobile)
 				loadPrms.Set("Mobile", true);
 
-
+			if (_host.IsMultiTenant)
+			{
+				// TODO: Create Multi Tenant Load Menus....
+			}
 			String proc = bAdmin ? "a2admin.[Menu.Admin.Load]" : "a2ui.[Menu.User.Load]";
 			IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);
 

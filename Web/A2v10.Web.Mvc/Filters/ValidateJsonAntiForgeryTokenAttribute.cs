@@ -14,8 +14,22 @@ namespace A2v10.Web.Mvc.Filters
 		{
 			var httpContext = filterContext.HttpContext;
 			var cookie = httpContext.Request.Cookies[AntiForgeryConfig.CookieName]?.Value;
+			if (cookie == null)
+				throw new HttpAntiForgeryException();
 			var header = httpContext.Request.Headers["__RequestVerificationToken"];
 			AntiForgery.Validate(cookie, header);
+		}
+	}
+
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	public sealed class HandlAntiForgeryExecptionAttribute : FilterAttribute, IExceptionFilter
+	{
+		public void OnException(ExceptionContext exceptionContext)
+		{
+			if (!exceptionContext.ExceptionHandled && exceptionContext.Exception is HttpAntiForgeryException) {
+				exceptionContext.Result = new JsonResult() { Data = new { Status = "AntiForgery" } };
+				exceptionContext.ExceptionHandled = true;
+			}
 		}
 	}
 }

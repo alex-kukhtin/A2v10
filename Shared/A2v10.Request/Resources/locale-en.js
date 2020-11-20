@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-// 20180401-7145
+// 20201120-7732
 // locale-en.js
 
 "use strict";
@@ -39,24 +39,25 @@
 		$EnterPhone: 'enter phone number',
 		$EnterName: 'enter user name',
 		$EnterPassword: 'enter password',
-		$MatchError: 'the password does not match the confirmation',
-		$PasswordLength: 'the password must be at least 6 characters long',
-		$InvalidLoginError: 'Invalid е-mail or password',
-		$InvalidEMailError: 'Invalid е-mail',
-		$UserLockuotError: 'The user has been locked out.\nTry again in a few minutes',
-		$EmailNotConfirmed: 'A e-mail is not confirmed.\nCheck mail in a few minutes',
-		$PasswordTip: 'To confirm, enter password again',
+		$MatchError: 'the password does not match the confirmation.',
+		$PasswordLength: 'the password must be at least 6 characters long.',
+		$InvalidLoginError: 'Invalid е-mail or password.',
+		$InvalidEMailError: 'Invalid е-mail.',
+		$UserLockuotError: 'The user has been locked out.\nTry again in a few minutes.',
+		$EmailNotConfirmed: 'A e-mail is not confirmed.\nCheck mail in a few minutes.',
+		$AntiForgery:'The request could not be processed.\nRefresh the page and try again.\nProbably the browser is not allowed cookies.',
+		$PasswordTip: 'To confirm, enter password again.',
 		$CheckEMail: 'Check your mail in a little time.',
 		$ConfirmReset: 'A password recovery link was sent to {0}.',
 		$ConfirmRegister: 'A email confirm link was sent to {0}.',
 		$ResetPasswordSuccess: 'Password has been successfully reset.',
-		$ResetPasswordError: 'Password recovery failed',
-		$ResetPasswordNotAllowed: 'Reset password not allowed',
+		$ResetPasswordError: 'Password recovery failed.',
+		$ResetPasswordNotAllowed: 'Reset password not allowed.',
 		$ErrorText: 'An error occurred while processing your request.',
-		$ConfirmEMailText: 'Email has been successfully confirmed',
-		$AlreadyTaken: 'е-mail {0} is invalid or aleady taken',
-		$PhoneNumberAlreadyTaken: 'Phone number {0} is invalid or aleady taken',
-		$TryLater: 'Too many login attempts in a short time.\nTry to register in five minutes'
+		$ConfirmEMailText: 'Email has been successfully confirmed.',
+		$AlreadyTaken: 'е-mail {0} is invalid or aleady taken.',
+		$PhoneNumberAlreadyTaken: 'Phone number {0} is invalid or aleady taken.',
+		$TryLater: 'Too many login attempts in a short time.\nTry to register in five minutes.'
 	};
 
 

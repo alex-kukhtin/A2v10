@@ -1801,9 +1801,6 @@ table.data-grid > tbody > tr.bold > td {
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
   white-space: pre;
 }
-.validation-summary .error {
-  white-space: normal;
-}
 .control-group {
   display: block;
   margin-bottom: 0.5rem;

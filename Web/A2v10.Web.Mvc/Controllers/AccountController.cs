@@ -156,6 +156,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[IsAjaxOnly]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> LoginPOST()
 		{
 			LoginViewModel model;
@@ -198,6 +199,7 @@ namespace A2v10.Web.Mvc.Controllers
 			return Json(new { Status = status });
 		}
 
+
 		void ClearAllCookies()
 		{
 			var expires = DateTime.Now.AddDays(-1d);
@@ -232,6 +234,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -282,7 +285,8 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			String host = Request.UserHostAddress;
 			var now = DateTime.Now;
-			if (_ddosChecker.TryGetValue(host, out DateTime time)) {
+			if (_ddosChecker.TryGetValue(host, out DateTime time))
+			{
 				var timeOffest = now - time;
 				if (timeOffest.TotalSeconds < 60)
 				{
@@ -323,9 +327,10 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (String.IsNullOrEmpty(referral))
 				return;
-			var uri = new UserReferralInfo() {
+			var uri = new UserReferralInfo()
+			{
 				UserId = userId,
-				Referral= referral
+				Referral = referral
 			};
 			await _dbContext.ExecuteAsync<UserReferralInfo>(_host.CatalogDataSource, "a2security.SaveReferral", uri);
 		}
@@ -350,6 +355,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[IsAjaxOnly]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> RegisterPOST()
 		{
 			String status;
@@ -421,7 +427,8 @@ namespace A2v10.Web.Mvc.Controllers
 				else
 				{
 					status = String.Join(", ", result.Errors);
-					foreach (var e in result.Errors) {
+					foreach (var e in result.Errors)
+					{
 						if (e.Contains("is already taken"))
 						{
 							RemoveDDOSTime();
@@ -469,7 +476,7 @@ namespace A2v10.Web.Mvc.Controllers
 					String body = GetEMailBody("invite", null);
 					if (!String.IsNullOrEmpty(body))
 					{
-						var inviteCallback = Url.Action("Default", "Shell", routeValues:null, protocol: Request.Url.Scheme);
+						var inviteCallback = Url.Action("Default", "Shell", routeValues: null, protocol: Request.Url.Scheme);
 						body = body.Replace("{0}", inviteCallback);
 						await UserManager.SendEmailAsync(user.Id, subject, body);
 					}
@@ -491,7 +498,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public void ForgotPassword()
 		{
-			String page = GetRedirectedPage("forgotpassword", _host.Mobile ? ResourceHelper.ForgotPasswordMobileHtml  : ResourceHelper.ForgotPasswordHtml);
+			String page = GetRedirectedPage("forgotpassword", _host.Mobile ? ResourceHelper.ForgotPasswordMobileHtml : ResourceHelper.ForgotPasswordHtml);
 			SendPage(page, ResourceHelper.ForgotPasswordScript);
 		}
 
@@ -502,6 +509,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[IsAjaxOnly]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> ForgotPasswordPOST()
 		{
 			String status;
@@ -563,6 +571,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[IsAjaxOnly]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> ResetPasswordPOST()
 		{
 			String status = null;
@@ -592,7 +601,7 @@ namespace A2v10.Web.Mvc.Controllers
 					}
 					else
 					{
-						foreach ( var e in result.Errors)
+						foreach (var e in result.Errors)
 						{
 							if (e.Contains("Invalid token"))
 								status = "InvalidToken";
@@ -671,6 +680,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[HttpPost]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> SendCode(SendCodeViewModel model)
 		{
 			if (!ModelState.IsValid)
@@ -724,7 +734,7 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		async Task UpdateUser(AppUser user, Boolean? success = null)
-		{ 
+		{
 			// may be locked out
 			if (success.HasValue)
 			{
@@ -767,7 +777,7 @@ namespace A2v10.Web.Mvc.Controllers
 					return null;
 				body = _localizer.Localize(null, dictName);
 			}
-			if (body.IndexOf("{0}") == - 1)
+			if (body.IndexOf("{0}") == -1)
 				throw new InvalidProgramException($"Invalid email template for {code}");
 			return body;
 		}
