@@ -2,8 +2,10 @@
 <html lang="uk">
 <head>
 	<style>
-		body,select,input, button {
+		body, select, input, button {
 			font-size: 15px;
+			font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
+			box-sizing:border-box;
 		}
 		.page {
 			width:640px;
@@ -33,6 +35,12 @@
 		.btn:active {
 			background-color:darkblue;
 		}
+		.hidden {
+			display:none;
+		}
+		button:disabled {
+			opacity:.5;
+		}
 	</style>
 </head>
 <body>
@@ -47,13 +55,15 @@
 				<option value="IKC-V11">IKC-V11</option>
 				<option value="MINI-FP54">MINI-FP54</option>
 				<option value="MARIA-301">MARIA-301</option>
+				<option value="ESC-POS">ESC/POS</option>
+				<option value="WINDOWS">WINDOWS PRINTER</option>
 			</select>
 		</div>
-		<div class="control">
+		<div class="control hidden">
 			<label for="">Порт</label>
 			<select id="port"></select>
 		</div>
-		<div class="control">
+		<div class="control hidden">
 			<label for="">Швидкість порту</label>
 			<select id="baud">
 				<option value="9600">9600</option>
@@ -61,9 +71,13 @@
 				<option value="38400">19200</option>
 			</select>
 		</div>
+		<div class="control hidden">
+			<label for="">Назва прінтера</label>
+			<input id="sharename">
+		</div>
 		<div class="control">
 			<label for="">Код термінала</label>
-			<input id="terminal" >
+			<input id="terminal">
 		</div>
 		<div>
 			<button class="btn" id="set">Зберегти</button>

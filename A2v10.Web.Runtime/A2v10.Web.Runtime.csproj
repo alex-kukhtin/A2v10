@@ -59,6 +59,8 @@
     <Content Include="App_application\%40sql\platform\source\a2v10ui.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10workflow.sql" />
     <Content Include="css\fonts\A2v10.svg" />
+    <Content Include="css\mobile.css" />
+    <Content Include="css\mobile.min.css" />
     <Content Include="css\site.advance.css" />
     <Content Include="css\site.advance.min.css" />
     <Content Include="css\site.css" />
@@ -80,6 +82,7 @@
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
+    <Content Include="scripts\mobile.js" />
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />
     <Content Include="App_application\%40schemas\model-json-schema.json" />

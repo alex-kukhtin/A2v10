@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7715",
+	"$version": "10.0.7733",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -80,6 +80,7 @@
 						"schema": { "type": "string" },
 						"model": { "type": "string" },
 						"view": { "type": "string" },
+						"viewMobile": { "type": "string" },
 						"template": { "type": "string" },
 						"copy": { "type": "boolean" },
 						"checkTypes": { "type": "string" },
@@ -120,6 +121,7 @@
 						"source": { "type": "string" },
 						"model": { "type": "string" },
 						"view": { "type": "string" },
+						"viewMobile": { "type": "string" },
 						"template": { "type": "string" },
 						"checkTypes": { "type": "string" },
 						"processDbEvents": { "type": "boolean" }
