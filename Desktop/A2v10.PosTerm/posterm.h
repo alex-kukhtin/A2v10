@@ -19,12 +19,15 @@ struct PosConnectParams
 	const wchar_t* id;
 	const wchar_t* model;
 	const wchar_t* port;
+	const wchar_t* printerName;
+	int lineLen;
 	int baud;
 	const wchar_t* payModes;
 	const wchar_t* taxModes;
 	PosConnectParams()
 		: id(nullptr), model(nullptr), port(nullptr),
-		baud(0), payModes(nullptr), taxModes(nullptr)
+		baud(0), payModes(nullptr), taxModes(nullptr),
+		printerName(nullptr), lineLen(0)
 	{
 
 	}

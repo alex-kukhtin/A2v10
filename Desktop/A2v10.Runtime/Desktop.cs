@@ -154,11 +154,13 @@ namespace A2v10RuntimeNet
 				IProfiler profiler = new DesktopProfiler();
 				DesktopApplicationHost host = new DesktopApplicationHost(profiler);
 				ILocalizer localizer = new DesktopLocalizer(host);
+				ITokenProvider tokenProvider = new DesktopTokenProvider();
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,
 					host as IDataConfiguration,
 					localizer as IDataLocalizer,
-					tenantManager: null); /*host as ITenantManager*/
+					tenantManager: null,
+					tokenProvider: tokenProvider); /*host as ITenantManager*/
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine wfEngine = new WorkflowEngine(host, dbContext, null);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
@@ -176,6 +178,7 @@ namespace A2v10RuntimeNet
 				service.RegisterService<ISupportUserInfo>(host);
 				service.RegisterService<ILicenseManager>(licManager);
 				service.RegisterService<IExternalDataProvider>(dataProvider);
+				service.RegisterService<ITokenProvider>(tokenProvider);
 				host.TenantId = 1;
 			};
 		}

@@ -7,12 +7,21 @@
 #include "fiscalprinterimpl.h"
 #include "fp_EscPos.h"
 #include "errors.h"
+#include "escpos_printer.h"
 
 #define MAX_COMMAND_LEN 512
 
 CFiscalPrinter_EscPos::CFiscalPrinter_EscPos(const wchar_t* model)
-	: m_nLastReceipt(1234), _nLastZReportNo(2233)
+	: m_nLastReceipt(1234), _nLastZReportNo(2233), _printer(nullptr)
 {
+}
+
+CFiscalPrinter_EscPos::~CFiscalPrinter_EscPos()
+{
+	if (_printer != nullptr) {
+		delete _printer;
+		_printer = nullptr;
+	}
 }
 
 // virtual 
@@ -35,8 +44,9 @@ void CFiscalPrinter_EscPos::GetErrorCode()
 // virtual 
 void CFiscalPrinter_EscPos::SetParams(const PosConnectParams& prms)
 {
-	//TraceINFO(L"ESCPOS [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
-		//_id.c_str(), prms.payModes, prms.taxModes);
+	TraceINFO(L"ESCPOS [%s]. SetParams({printerName:'%s', lineLen:'%d'})",
+		_id.c_str(), prms.printerName, prms.lineLen);
+	_printer = new EscPos_Printer(prms.printerName, prms.lineLen);
 }
 
 void CFiscalPrinter_EscPos::AddArticle(const RECEIPT_ITEM& item)
@@ -72,6 +82,8 @@ void CFiscalPrinter_EscPos::Payment(PAYMENT_MODE mode, long sum)
 long CFiscalPrinter_EscPos::CloseReceipt(bool bDisplay)
 {
 	TraceINFO(L"ESCPOS [%s]. CloseReceipt()", _id.c_str());
+	if (!_printer->Print())
+		throw EQUIPException(L"Print error");
 	return m_nLastReceipt++;
 }
 
@@ -79,19 +91,30 @@ long CFiscalPrinter_EscPos::CloseReceipt(bool bDisplay)
 void CFiscalPrinter_EscPos::Close()
 {
 	TraceINFO(L"ESCPOS [%s]. Close()", _id.c_str());
+	if (!_printer->Print())
+		throw EQUIPException(L"Print error");
 }
 
 // virtual 
 bool CFiscalPrinter_EscPos::Open(const wchar_t* port, DWORD baud)
 {
-	TraceINFO(L"ESCPOS [%s]. Open({port:'%s', baud:%d})", _id.c_str(), port, (int) baud);
+	TraceINFO(L"ESCPOS [%s]. Open({printerName:'%s'})", _id.c_str(), _printerName.c_str());
 	return true;
 }
 
 // virtual 
 long CFiscalPrinter_EscPos::NullReceipt(bool bOpenCashDrawer)
 {
+	if (_printer == nullptr)
+		throw EQUIPException(L"Print error");
 	TraceINFO(L"ESCPOS [%s]. NullReceipt({openCashDrawer:%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
+	_printer->Start();
+	_printer->AppendLine(L"Нульовий чек", EscPos_Printer::Align::Center, EscPos_Printer::PrintMode::DoubleWidth);
+	_printer->AppendGraphLine(EscPos_Printer::LineType::Single);
+	_printer->AppendLine(L"0.00", EscPos_Printer::Align::Right, EscPos_Printer::PrintMode::DoubleWidth);
+	_printer->AppendLine(L"Приходьте ще!", EscPos_Printer::Align::Center);
+	_printer->Cut();
+	_printer->Print();
 	return m_nLastReceipt++;
 }
 
@@ -134,45 +157,8 @@ long CFiscalPrinter_EscPos::CopyReceipt()
 	return m_nLastReceipt++;
 }
 
-//virtual 
-/*
-bool CFiscalPrinter_EscPos::PrintCheckItem(const CFPCheckItemInfo& info)
-{
-	CString s;
-	s.Format(L"%s (qty=%#.03f, iqty=%ld, price=%ld, excise=%s)",
-		info.m_name, (double)info.m_fQty, (long)info.m_iQty,
-		(long)info.m_price,
-		info.m_bExcise ? L"true" : L"false");
-	int dscPrc = info.m_dscPercent;
-	int dscSum = info.m_dscSum;
-	if (dscPrc)
-	{
-		ATLASSERT(!dscSum);
-		CString d;
-		d.Format(L",-%02d.%02d", dscPrc / 100, dscPrc % 100);
-		s += d;
-	}
-	else if (dscSum)
-	{
-		ATLASSERT(!dscPrc);
-		CString d;
-		d.Format(L";-%02d.%02d", dscSum / 100, dscSum % 100);
-		s += d;
-	}
-	AfxMessageBox(s);
-	return true;
-}
-*/
 
 // virtual
-/*
-LONG CFiscalPrinter_EscPos::GetCurrentZReportNo(bool bFromPrinter /*= false * /)
-{
-	if (bFromPrinter)
-		_nLastZReportNo = GetPrinterLastZReportNo();
-	return _nLastZReportNo;
-}
-*/
 
 // virtual 
 void CFiscalPrinter_EscPos::Init()
@@ -185,26 +171,6 @@ long CFiscalPrinter_EscPos::GetPrinterLastZReportNo()
 {
 	return _nLastZReportNo;
 }
-
-// virtual 
-/*
-bool CFiscalPrinter_EscPos::FillZReportInfo(ZREPORT_INFO& zri)
-{
-	ZREPORT_INFO nullzri;
-	nullzri.m_termId = zri.m_termId;
-	nullzri.LoadTest();
-
-	zri.m_sum_nv = nullzri.m_sum_nv;
-	zri.m_sum_v = nullzri.m_sum_v;
-	zri.m_vsum = nullzri.m_vsum;
-	zri.m_pay0 = nullzri.m_pay0;
-	zri.m_pay1 = nullzri.m_pay1;
-
-	// m_currentZRepNo = nullzri.m_zNo; Этого делать нельзя, система создаст новый z-отчет
-
-	return true;
-}
-*/
 
 // virtual 
 long CFiscalPrinter_EscPos::XReport()
@@ -248,36 +214,6 @@ SERVICE_SUM_INFO CFiscalPrinter_EscPos::ServiceInOut(bool bOut, __currency sum, 
 }
 
 // virtual 
-/*
-bool CFiscalPrinter_EscPos::CloseCheck(int sum, int get, CFiscalPrinter::PAY_MODE pm, LPCWSTR szText /*= NULL* /)
-{
-	CString msg;
-	if (pm == CFiscalPrinter::_fpay_card)
-		msg.Format(L"NOPRINTER (key=%s): Печать чека (кредитная карта)\nCумма=(%d.%02d), Получено=(%d.%02d)", (LPCWSTR)_id, sum / 100, sum % 100, get / 100, get % 100);
-	else if (pm == CFiscalPrinter::_fpay_cash)
-		msg.Format(L"NOPRINTER (key=%s): Печать чека (наличные)\nCумма=(%d.%02d), Получено=(%d.%02d)", (LPCWSTR)m_strKey, sum / 100, sum % 100, get / 100, get % 100);
-	else if (pm == CFiscalPrinter::_fpay_credit)
-		msg.Format(L"NOPRINTER (key=%s): Печать чека (кредит)\nCумма=(%d.%02d), Получено=(%d.%02d)", (LPCWSTR)m_strKey, sum / 100, sum % 100, get / 100, get % 100);
-	else
-		msg.Format(L"NOPRINTER (key=%s): Печать чека (INVALID PAY_MODE)\nCумма=(%d.%02d), Получено=(%d.%02d)", (LPCWSTR)m_strKey, sum / 100, sum % 100, get / 100, get % 100);
-	AfxMessageBox(msg);
-	if (szText && szText)
-	{
-		CString r;
-		CString rx;
-		for (int i = 0; true; i++)
-		{
-			if (!AfxExtractSubString(r, szText, i, L'\n'))
-				break;
-			rx.Format(L"%s -- %d", (LPCWSTR)r, r.GetLength());
-			AfxMessageBox(rx);
-		}
-	}
-	return true;
-}
-*/
-
-// virtual 
 void CFiscalPrinter_EscPos::PrintFiscalText(const wchar_t* szText)
 {
 	TraceINFO(L"ESCPOS [%s]. PrintFiscalText({text:'%s')",
@@ -303,32 +239,6 @@ bool CFiscalPrinter_EscPos::PeriodicalByNo(BOOL Short, LONG From, LONG To)
 	return true;
 }
 
-// virtual 
-/*
-bool CFiscalPrinter_EscPos::PeriodicalByDate(BOOL Short, COleDateTime From, COleDateTime To)
-{
-	if (Short)
-		AfxMessageBox(L"NOPRINTER: Короткий периодический отчет по датам: " + CConvert::Date2String(From) + L":" + CConvert::Date2String(To));
-	else
-		AfxMessageBox(L"NOPRINTER: Полный периодический отчет по датам: " + CConvert::Date2String(From) + L":" + CConvert::Date2String(To));
-	return true;
-}
-*/
-
-/*
-// virtual 
-bool CFiscalPrinter_EscPos::GetCash(__int64 termId, COleCurrency& cy)
-{
-	// достаем процедурой
-	ZREPORT_INFO zri;
-	zri.m_termId = termId;
-	zri.m_zNo = m_nLastZReportNo;
-	if (!zri.Find(L"cash"))
-		return false;
-	cy = zri.m_sum_nv; // в этом поле ЗНАЧЕНИЕ суммы
-	return true;
-}
-*/
 
 // virtual 
 void CFiscalPrinter_EscPos::DisplayDateTime()
@@ -346,13 +256,11 @@ void CFiscalPrinter_EscPos::DisplayClear()
 // virtual 
 void CFiscalPrinter_EscPos::DisplayRow(int nRow, const wchar_t* szString, TEXT_ALIGN align)
 {
-	throw EQUIPException(L"Yet not implemented");
 }
 
 // virtual 
 void CFiscalPrinter_EscPos::SetCurrentTime()
 {
-	throw EQUIPException(L"Yet not implemented");
 }
 
 //virtual 
@@ -412,7 +320,6 @@ void CFiscalPrinter_EscPos::GetStatusMessages(std::vector<std::wstring>& msgs)
 // virtual 
 void CFiscalPrinter_EscPos::GetPrinterInfo(JsonObject& json)
 {
-	json.Add(L"model", L"Null Printer");
-	json.Add(L"port", L"Any");
+	json.Add(L"model", L"ESC/POS Printer");
 	json.Add(L"zno", _nLastZReportNo);
 }

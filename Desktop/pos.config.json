@@ -3,14 +3,16 @@
 	"startUrl": "/pos",
 	"fiscalPrinters": [
 		{
-			"model": "TESTPRINTER",
+			"model": "ESC-POS",
 			"model2": "DATECS-Krypton",
 			"model3": "IKC-V11",
 			"port": "COM5",
 			"baud2": 9600,
 			"baud": 38400,
-			"terminal2": "MAIN",
-			"terminal": "IKC"
+			"terminal": "MAIN",
+			"terminal2": "IKC",
+			"printerName": "\\\\ASUS\\XP90",
+			"lineLen": 32
 		}
 	],
 	"acquiringTerminals2": [

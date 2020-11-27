@@ -9,15 +9,19 @@ public:
 	std::wstring _port;
 	int _baud;
 	std::wstring _terminal;
+	std::wstring _printerName;
+	int _lineLen;
 
 	CAppConfigFiscalPrinter();
 
 protected:
-	BEGIN_JSON_PROPS(4)
+	BEGIN_JSON_PROPS(6)
 		STRING_PROP(model, _model)
 		STRING_PROP(port, _port)
 		INT_PROP(baud, _baud)
 		STRING_PROP(terminal, _terminal)
+		STRING_PROP(printerName, _printerName)
+		INT_PROP(lineLen, _lineLen)
 	END_JSON_PROPS()
 };
 

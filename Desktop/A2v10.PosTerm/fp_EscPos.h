@@ -2,12 +2,18 @@
 
 #pragma once
 
+class EscPos_Printer;
+
 class CFiscalPrinter_EscPos : public FiscalPrinterImpl
 {
 	long m_nLastReceipt;
 	long _nLastZReportNo;
+
+	std::wstring _printerName;
+	EscPos_Printer* _printer;
 public:
 	CFiscalPrinter_EscPos(const wchar_t* model);
+	virtual ~CFiscalPrinter_EscPos();
 	virtual void Init() override;
 	virtual bool IsOpen() const override;
 	virtual bool IsReady() const override;

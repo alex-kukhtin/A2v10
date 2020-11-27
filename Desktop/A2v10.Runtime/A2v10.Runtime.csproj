@@ -69,6 +69,7 @@
     <Compile Include="DesktopLocalizer.cs" />
     <Compile Include="DesktopProfiler.cs" />
     <Compile Include="DesktopRequest.cs" />
+    <Compile Include="DesktopTokenProvider.cs" />
     <Compile Include="DesktopUserStateManager.cs" />
     <Compile Include="HttpPostedFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -169,6 +169,7 @@
     <ClInclude Include="acqterminalimpl.h" />
     <ClInclude Include="equipmentbase.h" />
     <ClInclude Include="errors.h" />
+    <ClInclude Include="escpos_printer.h" />
     <ClInclude Include="fiscalprinter.h" />
     <ClInclude Include="fiscalprinterImpl.h" />
     <ClInclude Include="fp_DatecsKrypton.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="command.cpp" />
     <ClCompile Include="acqterminal.cpp" />
     <ClCompile Include="equipmentbase.cpp" />
+    <ClCompile Include="escpos_printer.cpp" />
     <ClCompile Include="fiscalprinter.cpp" />
     <ClCompile Include="fiscalprinterimpl.cpp" />
     <ClCompile Include="fp_DatecsKrypton.cpp" />

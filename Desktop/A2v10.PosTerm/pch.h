@@ -10,7 +10,6 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
-#include <windows.h>
 
 #include "string"
 #include "locale"
@@ -20,6 +19,10 @@
 #include "memory"
 #include "unordered_map"
 #include "algorithm"
+
+#include "rpc.h"
+#include "rpcndr.h"
+#include <windows.h>
 
 #include "../A2v10.StaticBase/staticbase.h"
 

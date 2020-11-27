@@ -29,6 +29,8 @@ bool CAppConfig::ConnectToPrinter()
 	prms.model = pPrinter->_model.c_str();
 	prms.port = pPrinter->_port.c_str();
 	prms.baud = pPrinter->_baud;
+	prms.printerName = pPrinter->_printerName.c_str();
+	prms.lineLen = pPrinter->_lineLen;
 	theApp._terminalCode = pPrinter->_terminal.c_str();
 
 	if (pPrinter->_terminal.empty()) {
@@ -39,8 +41,12 @@ bool CAppConfig::ConnectToPrinter()
 	bool rc = PosConnectToPrinter(prms);
 	if (!rc) {
 		CString msg;
-		msg.Format(L"Could not connect to fiscal printer.\n{\n  model:'%s',\n  port:'%s',\n  baud:%d,\n  error:'%s'\n}",
-			pPrinter->_model.c_str(), pPrinter->_port.c_str(), pPrinter->_baud, PosLastErrorMessage());
+		if (!pPrinter->_printerName.empty())
+			msg.Format(L"Could not connect to fiscal printer.\n{\n  model:'%s',\n  printerName:'%s',\n  lineLen:%d,\n  error:'%s'\n}",
+				pPrinter->_model.c_str(), pPrinter->_printerName.c_str(), pPrinter->_lineLen, PosLastErrorMessage());
+		else
+			msg.Format(L"Could not connect to fiscal printer.\n{\n  model:'%s',\n  port:'%s',\n  baud:%d,\n  error:'%s'\n}",
+				pPrinter->_model.c_str(), pPrinter->_port.c_str(), pPrinter->_baud, PosLastErrorMessage());
 		AfxMessageBox(msg);
 		return false;
 	}
