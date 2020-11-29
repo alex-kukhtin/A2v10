@@ -146,3 +146,19 @@ protected:
 		STRING_PROP(align, _align)
 	END_JSON_PROPS()
 };
+
+class PosSetNonFiscalInfoData : public JsonTarget
+{
+public:
+	int _zno;
+	int _rcpno;
+
+	PosSetNonFiscalInfoData() 
+		:_zno(-1), _rcpno(-1)
+	{}
+protected:
+	BEGIN_JSON_PROPS(2)
+		INT_PROP(zno, _zno)
+		INT_PROP(rcpno, _rcpno)
+	END_JSON_PROPS()
+};

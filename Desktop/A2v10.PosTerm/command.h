@@ -53,6 +53,7 @@ protected:
 	std::wstring CopyReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring TestReceipt(FiscalPrinter* pPrinter, JsonTarget* data);
 	std::wstring DisplayMessage(FiscalPrinter* pPrinter, JsonTarget* data);
+	std::wstring SetNonFiscalInfo(FiscalPrinter* pPrinter, JsonTarget* data);
 
 	JsonTarget* NullReceiptData();
 	JsonTarget* PrintReceiptData();
@@ -61,6 +62,7 @@ protected:
 	JsonTarget* ServiceInOutData();
 	JsonTarget* PeriodReportData();
 	JsonTarget* DisplayMessageData();
+	JsonTarget* SetNonFiscalInfoData();
 
 private:
 	static COMMAND_BIND _binded_commands[];

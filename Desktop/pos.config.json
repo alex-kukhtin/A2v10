@@ -11,8 +11,7 @@
 			"baud": 38400,
 			"terminal": "MAIN",
 			"terminal2": "IKC",
-			"printerName": "\\\\ASUS\\XP90",
-			"lineLen": 32
+			"printerName": "\\\\ASUS\\XP90"
 		}
 	],
 	"acquiringTerminals2": [

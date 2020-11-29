@@ -63,6 +63,7 @@ public:
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) = 0;
 	virtual void Init();
 	virtual void SetParams(const PosConnectParams& prms) = 0;
+	virtual void SetNonFiscalInfo(const PosNonFiscalInfo& prms);
 	virtual void Close();
 	virtual DWORD GetFlags();
 	virtual void GetStatusMessages(std::vector<std::wstring>& msgs) = 0;

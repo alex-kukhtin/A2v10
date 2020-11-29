@@ -30,6 +30,7 @@ PosCommand::COMMAND_BIND PosCommand::_binded_commands[] =
 	{L"copyReceipt",        &PosCommand::CopyReceipt,        nullptr},
 	{L"testReceipt",        &PosCommand::TestReceipt,        &PosCommand::PrintReceiptData},
 	{L"displayMessage",     &PosCommand::DisplayMessage,     &PosCommand::DisplayMessageData},
+	{L"setNonFiscalInfo",   &PosCommand::SetNonFiscalInfo,   &PosCommand::SetNonFiscalInfoData},
 	{nullptr, nullptr}
 };
 
@@ -133,6 +134,11 @@ JsonTarget* PosCommand::PeriodReportData()
 JsonTarget* PosCommand::DisplayMessageData()
 {
 	return new PosDisplayMessageData();
+}
+
+JsonTarget* PosCommand::SetNonFiscalInfoData()
+{
+	return new PosSetNonFiscalInfoData();
 }
 
 std::wstring PosCommand::XReport(FiscalPrinter* pPrinter, JsonTarget* data)
@@ -267,6 +273,17 @@ std::wstring PosCommand::DisplayMessage(FiscalPrinter* pPrinter, JsonTarget* dat
 		ta = TEXT_ALIGN::_right;
 	pPrinter->DisplayRow(0, pdmd->_topText.c_str(), ta);
 	pPrinter->DisplayRow(1, pdmd->_bottomText.c_str(), ta);
+	JsonObject js;
+	return js.Value();
+}
+
+std::wstring PosCommand::SetNonFiscalInfo(FiscalPrinter* pPrinter, JsonTarget* data)
+{
+	PosSetNonFiscalInfoData* pdmd = dynamic_cast<PosSetNonFiscalInfoData*>(data);
+	PosNonFiscalInfo info;
+	info.zno = pdmd->_zno;
+	info.rcpno = pdmd->_rcpno;
+	pPrinter->SetNonFiscalInfo(info);
 	JsonObject js;
 	return js.Value();
 }

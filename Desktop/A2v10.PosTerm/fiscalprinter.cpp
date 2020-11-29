@@ -84,6 +84,11 @@ void FiscalPrinter::SetParams(const PosConnectParams& prms)
 	_impl->SetParams(prms);
 }
 
+void FiscalPrinter::SetNonFiscalInfo(const PosNonFiscalInfo& info)
+{
+	_impl->SetNonFiscalInfo(info);
+}
+
 bool FiscalPrinter::Open(const wchar_t* port, int baud)
 {
 	try 

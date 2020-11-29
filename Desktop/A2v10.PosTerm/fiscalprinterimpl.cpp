@@ -51,6 +51,12 @@ bool FiscalPrinterImpl::IsEndOfTape()
 	return false;
 }
 
+// virtual 
+void FiscalPrinterImpl::SetNonFiscalInfo(const PosNonFiscalInfo& prms)
+{
+
+}
+
 void FiscalPrinterImpl::PrintNonFiscalText(const wchar_t* szText)
 {
 }

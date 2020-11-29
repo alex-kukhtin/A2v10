@@ -900,7 +900,7 @@ long CFiscalPrinter_DatecsKrypton::CloseFiscal(bool bDisplay)
 	std::string result((char*) m_data);
 
 	if (IS_EMULATION())
-		result = Format("0000;%ld;", _testReceiptNo++);
+		result = FormatString("0000;%ld;", _testReceiptNo++);
 
 	TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
 	auto arr = _split(result, ';');

@@ -8,11 +8,12 @@
 #include "fp_EscPos.h"
 #include "errors.h"
 #include "escpos_printer.h"
+#include "stringtools.h"
 
 #define MAX_COMMAND_LEN 512
 
 CFiscalPrinter_EscPos::CFiscalPrinter_EscPos(const wchar_t* model)
-	: m_nLastReceipt(1234), _nLastZReportNo(2233), _printer(nullptr)
+	: _nLastReceipt(-1), _nLastZReportNo(-1), _cashSum(0), _printer(nullptr)
 {
 }
 
@@ -49,10 +50,20 @@ void CFiscalPrinter_EscPos::SetParams(const PosConnectParams& prms)
 	_printer = new EscPos_Printer(prms.printerName, prms.lineLen);
 }
 
+// virtual 
+void CFiscalPrinter_EscPos::SetNonFiscalInfo(const PosNonFiscalInfo& info)
+{
+	TraceINFO(L"ESCPOS [%s]. SetNonFiscalInfo({repno:'%d', zno:'%d'})",
+		_id.c_str(), info.rcpno, info.zno);
+	_nLastReceipt = info.rcpno;
+	_nLastZReportNo = info.zno;
+}
+
 void CFiscalPrinter_EscPos::AddArticle(const RECEIPT_ITEM& item)
 {
 	TraceINFO(L"ESCPOS [%s]. AddArticle({article:%I64d, name:'%s', tax:%ld, price:%ld, excise:%ld})", 
 		_id.c_str(), item.article, item.name, item.vat.units(), item.price.units(), item.excise.units());
+	// do nothing
 }
 
 // virtual 
@@ -82,17 +93,14 @@ void CFiscalPrinter_EscPos::Payment(PAYMENT_MODE mode, long sum)
 long CFiscalPrinter_EscPos::CloseReceipt(bool bDisplay)
 {
 	TraceINFO(L"ESCPOS [%s]. CloseReceipt()", _id.c_str());
-	if (!_printer->Print())
-		throw EQUIPException(L"Print error");
-	return m_nLastReceipt++;
+	PrinterEndReceipt();
+	return _nLastReceipt++;
 }
 
 // virtual 
 void CFiscalPrinter_EscPos::Close()
 {
 	TraceINFO(L"ESCPOS [%s]. Close()", _id.c_str());
-	if (!_printer->Print())
-		throw EQUIPException(L"Print error");
 }
 
 // virtual 
@@ -109,13 +117,10 @@ long CFiscalPrinter_EscPos::NullReceipt(bool bOpenCashDrawer)
 		throw EQUIPException(L"Print error");
 	TraceINFO(L"ESCPOS [%s]. NullReceipt({openCashDrawer:%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	_printer->Start();
-	_printer->AppendLine(L"Нульовий чек", EscPos_Printer::Align::Center, EscPos_Printer::PrintMode::DoubleWidth);
-	_printer->AppendGraphLine(EscPos_Printer::LineType::Single);
-	_printer->AppendLine(L"0.00", EscPos_Printer::Align::Right, EscPos_Printer::PrintMode::DoubleWidth);
-	_printer->AppendLine(L"Приходьте ще!", EscPos_Printer::Align::Center);
-	_printer->Cut();
-	_printer->Print();
-	return m_nLastReceipt++;
+	_printer->AppendLine(L"Нульовий чек", EscPos_Printer::Align::Center);
+	PrinterTotalSum(0);
+	PrinterEndReceipt();
+	return _nLastReceipt++;
 }
 
 
@@ -123,12 +128,14 @@ long CFiscalPrinter_EscPos::NullReceipt(bool bOpenCashDrawer)
 void CFiscalPrinter_EscPos::OpenReceipt()
 {
 	TraceINFO(L"ESCPOS [%s]. OpenReceipt()", _id.c_str());
+	// do nothing
 }
 
 // virtual 
 void CFiscalPrinter_EscPos::OpenReturnReceipt()
 {
 	TraceINFO(L"ESCPOS [%s]. OpenReturnReceipt()", _id.c_str());
+	// do nothing
 }
 
 
@@ -148,17 +155,16 @@ void CFiscalPrinter_EscPos::CancelReceiptUnconditional()
 void CFiscalPrinter_EscPos::PrintTotal()
 {
 	TraceINFO(L"ESCPOS [%s]. PrintTotal()", _id.c_str());
+	// TODO: totalSum
+	PrinterTotalSum(123455);
 }
 
 // virtual 
 long CFiscalPrinter_EscPos::CopyReceipt()
 {
 	TraceINFO(L"ESCPOS [%s]. CopyReceipt()", _id.c_str());
-	return m_nLastReceipt++;
+	throw EQUIPException(L"Receipt copy is not supported");
 }
-
-
-// virtual
 
 // virtual 
 void CFiscalPrinter_EscPos::Init()
@@ -176,7 +182,7 @@ long CFiscalPrinter_EscPos::GetPrinterLastZReportNo()
 long CFiscalPrinter_EscPos::XReport()
 {
 	TraceINFO(L"ESCPOS [%s]. XReport()", _id.c_str());
-	return m_nLastReceipt++;
+	return _nLastReceipt++;
 }
 
 // virtual 
@@ -184,7 +190,7 @@ ZREPORT_RESULT CFiscalPrinter_EscPos::ZReport()
 {
 	TraceINFO(L"ESCPOS [%s]. ZReport()", _id.c_str());
 	ZREPORT_RESULT result;
-	result.no = m_nLastReceipt++;
+	result.no = _nLastReceipt++;
 	result.zno = _nLastZReportNo++;
 	return result;
 }
@@ -218,6 +224,9 @@ void CFiscalPrinter_EscPos::PrintFiscalText(const wchar_t* szText)
 {
 	TraceINFO(L"ESCPOS [%s]. PrintFiscalText({text:'%s')",
 		_id.c_str(), szText);
+	if (_printer == nullptr)
+		throw EQUIPException(L"Print error");
+	_printer->AppendLine(szText);
 }
 
 // virtual 
@@ -225,6 +234,9 @@ void CFiscalPrinter_EscPos::PrintNonFiscalText(const wchar_t* szText)
 {
 	TraceINFO(L"ESCPOS [%s]. PrintNonFiscalText({text:'%s')",
 		_id.c_str(), szText);
+	if (_printer == nullptr)
+		throw EQUIPException(L"Print error");
+	_printer->AppendLine(szText);
 }
 
 // virtual 
@@ -232,9 +244,9 @@ bool CFiscalPrinter_EscPos::PeriodicalByNo(BOOL Short, LONG From, LONG To)
 {
 	wchar_t buff[MAX_COMMAND_LEN];
 	if (Short)
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: Short periodic report by numbers: %ld-%ld", From, To);
+		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"ESCPOS: Short periodic report by numbers: %ld-%ld", From, To);
 	else
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"NOPRINTER: Long periodic report by numbers: %ld-%ld", From, To);
+		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"ESCPOS: Long periodic report by numbers: %ld-%ld", From, To);
 	ReportMessage(buff);
 	return true;
 }
@@ -322,4 +334,40 @@ void CFiscalPrinter_EscPos::GetPrinterInfo(JsonObject& json)
 {
 	json.Add(L"model", L"ESC/POS Printer");
 	json.Add(L"zno", _nLastZReportNo);
+	json.Add(L"nonfiscal", true);
+}
+
+void CFiscalPrinter_EscPos::PrinterTotalSum(__currency sum)
+{
+	if (_printer == nullptr)
+		throw EQUIPException(L"Print error");
+	// double width
+	int lineLen = _printer->LineLength() / 2;
+	std::wstring strSum = sum.to_wstring();
+	std::wstring text = L"Сума";
+	int delta = lineLen - (4 + strSum.length());
+	text.append(std::wstring(delta, L' '));
+	text.append(strSum);
+	_printer->AppendGraphLine(EscPos_Printer::LineType::Single);
+	_printer->AppendLine(text.c_str(), EscPos_Printer::Align::Left, EscPos_Printer::PrintMode::DoubleWidth | EscPos_Printer::PrintMode::DoubleHeight);
+	_printer->AppendGraphLine(EscPos_Printer::LineType::Single);
+}
+
+void CFiscalPrinter_EscPos::PrinterEndReceipt() 
+{
+	if (_printer == nullptr)
+		throw EQUIPException(L"Print error");
+	// ReceiptNo, Date Time
+	std::wstring rcpNo = FormatString(L"%ld", _nLastReceipt);
+	int delta = _printer->LineLength() - rcpNo.length() - 19 /*date/time length*/;
+	time_t time = std::time(0);
+	tm now;
+	localtime_s(&now, &time);
+	std::wstring dateTimeString = FormatString(L"%0d-%0d-%04d %02d:%02d:%02d", 
+		now.tm_mday, now.tm_mon + 1, now.tm_year + 1900, now.tm_hour, now.tm_min, now.tm_sec);
+	rcpNo.append(std::wstring(delta, L' '));
+	rcpNo.append(dateTimeString);
+	_printer->AppendLine(rcpNo.c_str());
+	_printer->Cut();
+	_printer->Print();
 }

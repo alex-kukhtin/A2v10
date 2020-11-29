@@ -33,6 +33,12 @@ struct PosConnectParams
 	}
 };
 
+struct PosNonFiscalInfo
+{
+	int zno;
+	int rcpno;
+};
+
 /*
 struct PosResult {
 	pos_result_t result;

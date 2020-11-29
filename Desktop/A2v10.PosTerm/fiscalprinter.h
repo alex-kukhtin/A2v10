@@ -43,6 +43,7 @@ public:
 	bool Create(const wchar_t* model);
 	bool Open(const wchar_t* port, int baud);
 	void SetParams(const PosConnectParams& prms);
+	void SetNonFiscalInfo(const PosNonFiscalInfo& info);
 	void Disconnect();
 	const wchar_t* GetLastError();
 	void ReadErrorCode();

@@ -7,9 +7,10 @@
 
 #define PROP_LENGTH 64
 #define DEFAULT_BAUD 9600
+#define DEFAULT_LINELEN 32
 
 CAppConfigFiscalPrinter::CAppConfigFiscalPrinter()
-	:_baud(DEFAULT_BAUD)
+	:_baud(DEFAULT_BAUD), _lineLen(DEFAULT_LINELEN)
 {
 
 }

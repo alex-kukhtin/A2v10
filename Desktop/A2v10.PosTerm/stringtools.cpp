@@ -31,7 +31,7 @@ std::string W2A(const wchar_t* source, UINT acp /*= CP_THREAD_ACP*/) {
 	return result;
 }
 
-std::string Format(const char* fmt, ...)
+std::string FormatString(const char* fmt, ...)
 {
 	va_list argList;
 	va_start(argList, fmt);
@@ -41,7 +41,7 @@ std::string Format(const char* fmt, ...)
 	return buff;
 }
 
-std::wstring Format(const wchar_t* fmt, ...)
+std::wstring FormatString(const wchar_t* fmt, ...)
 {
 	va_list argList;
 	va_start(argList, fmt);

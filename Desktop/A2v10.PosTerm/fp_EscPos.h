@@ -6,8 +6,9 @@ class EscPos_Printer;
 
 class CFiscalPrinter_EscPos : public FiscalPrinterImpl
 {
-	long m_nLastReceipt;
+	long _nLastReceipt;
 	long _nLastZReportNo;
+	long _cashSum;
 
 	std::wstring _printerName;
 	EscPos_Printer* _printer;
@@ -19,6 +20,7 @@ public:
 	virtual bool IsReady() const override;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
 	virtual void SetParams(const PosConnectParams& prms) override;
+	virtual void SetNonFiscalInfo(const PosNonFiscalInfo& info) override;
 	virtual void Close() override;
 	virtual void GetErrorCode() override;
 
@@ -65,4 +67,8 @@ public:
 protected:
 	long GetPrinterLastZReportNo();
 	void ReportMessage(const wchar_t* msg);
+
+private:
+	void PrinterTotalSum(__currency sum);
+	void PrinterEndReceipt();
 };
