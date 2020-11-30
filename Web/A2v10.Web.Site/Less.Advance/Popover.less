@@ -1,9 +1,9 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
+@import "Variables.less";
 @import "Utlis.less";
 
 
-@popover-brd-color: @light-gray-color;
 @popup-bk-color: @light-yellow-bg-color;
 @popup-bk-color-cyan: #edfcfe;
 @popup-bk-color-green: #f4ffd8;
@@ -70,7 +70,6 @@
 		font-size: @font-size;
 		padding: 4px 6px 6px 6px;
 		background-color: @popup-bk-color;
-		border: 1px solid @popover-brd-color;
 		white-space: normal;
 		min-width: 150px;
 		min-height: 30px;
@@ -113,7 +112,6 @@
 	> .arrow {
 		left: -@arrow-size * 2;
 		top: @arrow-gap;
-		border-right-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size - 2px);
@@ -132,7 +130,6 @@
 	> .arrow {
 		left: -@arrow-size * 2;
 		bottom: @arrow-gap;
-		border-right-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size - 2px);
@@ -151,7 +148,6 @@
 	> .arrow {
 		right: -(@arrow-size * 2);
 		top: @arrow-gap;
-		border-left-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size);
@@ -170,7 +166,6 @@
 	> .arrow {
 		right: -(@arrow-size * 2);
 		bottom: @arrow-gap;
-		border-left-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size);
@@ -189,7 +184,6 @@
 	> .arrow {
 		left: @arrow-gap;
 		bottom: -(@arrow-size * 2);
-		border-top-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size - 1px);
@@ -208,7 +202,6 @@
 	> .arrow {
 		right: @arrow-gap;
 		bottom: -(@arrow-size * 2);
-		border-top-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size - 1px);
@@ -227,7 +220,6 @@
 	> .arrow {
 		left: @arrow-gap;
 		top: -(@arrow-size * 2);
-		border-bottom-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size - 1px);
@@ -246,7 +238,6 @@
 	> .arrow {
 		right: @arrow-gap;
 		top: -(@arrow-size * 2);
-		border-bottom-color: @popover-brd-color;
 
 		&:after {
 			left: -(@arrow-size - 1px);

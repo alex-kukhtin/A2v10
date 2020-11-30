@@ -9602,7 +9602,7 @@ Vue.component('a2-panel', {
 });
 // Copyright © 2020 Alex Kukhtin. All rights reserved.
 
-// 20200205-7625
+// 20201130-7634
 // components/inlinedialog.js
 (function () {
 	const eventBus = require('std:eventBus');
@@ -9648,6 +9648,7 @@ Vue.component('a2-panel', {
 				if (opts.id !== this.dialogId) return;
 				switch (opts.cmd) {
 					case 'close':
+						if (window.__requestsCount__ > 0) return;
 						this.open = false;
 						this.visible = false;
 						document.removeEventListener('keyup', this.__keyUp);
@@ -10966,7 +10967,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20201119-7731*/
+/*20201130-7734*/
 // controllers/base.js
 
 (function () {
@@ -11722,17 +11723,27 @@ Vue.directive('resize', {
 				return doDialog();
 			},
 
-			$export(arg, url, dat) {
+			$export(arg, url, dat, opts) {
 				if (this.$isLoading) return;
+				const doExport = () => {
+					let id = arg || '0';
+					if (arg && utils.isObject(arg))
+						id = utils.getStringId(arg);
+					const self = this;
+					const root = window.$$rootUrl;
+					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
+					newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
+					window.location = newurl; // to display errors
+				};
 
-				let id = arg || '0';
-				if (arg && utils.isObject(arg))
-					id = utils.getStringId(arg);
-				const self = this;
-				const root = window.$$rootUrl;
-				let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
-				newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
-				window.location = newurl; // to display errors
+				if (opts && opts.saveRequired && this.$isDirty) {
+					this.$save().then(() => {
+						doExport();
+					});
+				}
+				else {
+					doExport();
+				}
 			},
 
 			$exportTo(format, fileName) {
@@ -13089,6 +13100,8 @@ Vue.directive('resize', {
 
 				if (!me.modals.length) return;
 				// not real! any.
+				if (me.requestsCount > 0) return;
+
 				const dlg = me.modals[me.modals.length - 1];
 
 				function closeImpl(closeResult) {

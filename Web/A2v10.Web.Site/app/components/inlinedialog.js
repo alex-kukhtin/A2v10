@@ -1,6 +1,6 @@
 ﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
 
-// 20200205-7625
+// 20201130-7634
 // components/inlinedialog.js
 (function () {
 	const eventBus = require('std:eventBus');
@@ -46,6 +46,7 @@
 				if (opts.id !== this.dialogId) return;
 				switch (opts.cmd) {
 					case 'close':
+						if (window.__requestsCount__ > 0) return;
 						this.open = false;
 						this.visible = false;
 						document.removeEventListener('keyup', this.__keyUp);

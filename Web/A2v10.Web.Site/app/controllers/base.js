@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
-/*20201119-7731*/
+/*20201130-7734*/
 // controllers/base.js
 
 (function () {
@@ -756,17 +756,27 @@
 				return doDialog();
 			},
 
-			$export(arg, url, dat) {
+			$export(arg, url, dat, opts) {
 				if (this.$isLoading) return;
+				const doExport = () => {
+					let id = arg || '0';
+					if (arg && utils.isObject(arg))
+						id = utils.getStringId(arg);
+					const self = this;
+					const root = window.$$rootUrl;
+					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
+					newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
+					window.location = newurl; // to display errors
+				};
 
-				let id = arg || '0';
-				if (arg && utils.isObject(arg))
-					id = utils.getStringId(arg);
-				const self = this;
-				const root = window.$$rootUrl;
-				let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
-				newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
-				window.location = newurl; // to display errors
+				if (opts && opts.saveRequired && this.$isDirty) {
+					this.$save().then(() => {
+						doExport();
+					});
+				}
+				else {
+					doExport();
+				}
 			},
 
 			$exportTo(format, fileName) {

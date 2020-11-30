@@ -389,6 +389,8 @@
 
 				if (!me.modals.length) return;
 				// not real! any.
+				if (me.requestsCount > 0) return;
+
 				const dlg = me.modals[me.modals.length - 1];
 
 				function closeImpl(closeResult) {

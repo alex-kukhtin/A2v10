@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7715 */
+/* Version 10.0.7734 */
 
 
 declare function require(url: string): any;
@@ -269,7 +269,8 @@ interface IViewModel extends IController {
 	$getErrors(severity: Severity): IErrorInfo[] | null;
 	$dbRemove(elem: object, confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
 	$dbRemoveSelected(arr: object[], confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
-	$setCurrentUrl(url:string): void;
+	$setCurrentUrl(url: string): void;
+	$export(arg: any, url: string, data?: any, opts?: { saveRequired: boolean }): void;
 }
 
 // utilities

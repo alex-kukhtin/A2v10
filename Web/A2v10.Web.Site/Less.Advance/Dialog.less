@@ -3,8 +3,10 @@
 @modal-padding: @padding-default;
 
 @modal-header-height: 3rem;
+@modal-header-line: 1.9rem;
 
-@modal-footer-bg-color: @whitesmoke-gray-bg-color;
+@modal-footer-bg-color: var(--neutralBkLight);
+@modal-border-color: var(--neutralBkDark);
 @ani-time: 0.1s;
 
 // see modal.js
@@ -137,12 +139,11 @@
 
 .modal-header {
 	background-color: @dialog-header-bg-color;
-	padding: .5rem .5rem .5rem @modal-padding;
+	padding: .5em .5em .5em @modal-padding;
 	cursor: move;
 	font-weight: @font-bold;
-	border-bottom: 1px solid @light-gray-color;
 	min-height: @modal-header-height;
-	line-height: 1.9rem;
+	line-height: @modal-header-line;
 
 	.modal-title-info {
 		margin-left: 1rem;
@@ -150,15 +151,12 @@
 
 	.btnclose {
 		float: right;
-		color: #aaa;
-		width: 1.9rem;
-		height: 1.9rem;
+		width: @modal-header-line;
+		height: @modal-header-line;
 
 		&:not([disabled]) {
 			&:hover, &:active, &:focus {
-				color: #555;
-				background-color: lighten(@dialog-header-bg-color, 10%);
-				border-color: @tb-hover-brd-color;
+				background-color: @dialog-header-bg-color-light;
 			}
 		}
 
@@ -170,16 +168,19 @@
 
 	.btn-help {
 		float: right;
-		color: #999;
-		line-height: 1.8rem; /* ? */
-		padding: 0 4px;
-		margin-right: .2rem;
-		border: 1px solid transparent;
+		color: @text-color-opacity40;
+		width: @modal-header-line;
+		height: @modal-header-line;
+		text-align: center;
+		padding-top:2px;
+
+		.ico {
+			font-size:120%;
+		}
 
 		&:hover {
 			/*color: @link-hover-color-dark;*/
-			background-color: lighten(@dialog-header-bg-color, 10%);
-			border-color: @tb-hover-brd-color;
+			background-color: @dialog-header-bg-color-light;
 		}
 	}
 }
@@ -187,7 +188,7 @@
 .modal-footer {
 	padding: @modal-padding;
 	background-color: @modal-footer-bg-color;
-	border-top: 1px solid @light-gray-color;
+	border-top: 1px solid @modal-border-color;
 	display: flex;
 	justify-content: flex-end;
 	align-items: flex-start;
@@ -265,12 +266,13 @@
 
 .button-on-top {
 	.modal-content {
-		order:2;
+		order: 2;
 	}
+
 	.modal-footer {
-		order:1;
-		border-bottom:1px solid #ddd;
-		border-top:none;
+		order: 1;
+		border-bottom: 1px solid @modal-border-color;
+		border-top: none;
 	}
 }
 
