@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7733</version>
+		<version>10.0.7734</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
@@ -70,6 +70,7 @@
 		<file src="bin/Owin.dll" target="lib/net461" />
 		<file src="bin/Jint.dll" target="lib/net461" />
 		<file src="bin/Esprima.dll" target="lib/net461" />
+
 
 		<file src="D:/Git/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
 		<file src="D:/Git/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>
