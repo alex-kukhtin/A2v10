@@ -36,6 +36,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
   </ItemGroup>
@@ -71,6 +72,10 @@
     <Compile Include="Helpers\JsonHelpers.cs" />
     <Compile Include="Models\ShellModel.cs" />
     <Compile Include="Models\TenantUserModel.cs" />
+    <Compile Include="QRCode\AbstractQRCode.cs" />
+    <Compile Include="QRCode\QRCode.cs" />
+    <Compile Include="QRCode\QRCodeData.cs" />
+    <Compile Include="QRCode\QRCodeGenerator.cs" />
     <Compile Include="ResourceHelper.cs" />
     <Compile Include="Models\RequestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

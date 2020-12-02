@@ -9,6 +9,9 @@ class CFiscalPrinter_EscPos : public FiscalPrinterImpl
 	long _nLastReceipt;
 	long _nLastZReportNo;
 	long _cashSum;
+	__currency _totalSum;
+	std::wstring _header;
+	std::wstring _footer;
 
 	std::wstring _printerName;
 	EscPos_Printer* _printer;
@@ -71,4 +74,5 @@ protected:
 private:
 	void PrinterTotalSum(__currency sum);
 	void PrinterEndReceipt();
+	void PrintMutliline(const std::wstring& line, bool before = false, bool after = false);
 };

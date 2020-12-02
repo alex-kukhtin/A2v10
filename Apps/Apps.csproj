@@ -609,4 +609,9 @@
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Develop_4app_1json__JSONSchema="" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

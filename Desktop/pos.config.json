@@ -9,8 +9,8 @@
 			"port": "COM5",
 			"baud2": 9600,
 			"baud": 38400,
-			"terminal": "MAIN",
-			"terminal2": "IKC",
+			"terminal2": "MAIN",
+			"terminal": "IKC",
 			"printerName": "\\\\ASUS\\XP90"
 		}
 	],

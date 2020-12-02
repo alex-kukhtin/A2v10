@@ -10,10 +10,20 @@
 #include "escpos_printer.h"
 #include "stringtools.h"
 
-#define MAX_COMMAND_LEN 512
+/*TODO:
+Print receipt item
+Print total sum
+Payment: mode / charge
+Весовой товар
+Z-Report
+инструкция
+выложить ChromeExtension
+ошибки при ServiceIn/Out
+NonFiscal - сделать так же
+*/
 
 CFiscalPrinter_EscPos::CFiscalPrinter_EscPos(const wchar_t* model)
-	: _nLastReceipt(-1), _nLastZReportNo(-1), _cashSum(0), _printer(nullptr)
+	: _nLastReceipt(-1), _nLastZReportNo(-1), _cashSum(0), _totalSum(0), _printer(nullptr)
 {
 }
 
@@ -53,10 +63,12 @@ void CFiscalPrinter_EscPos::SetParams(const PosConnectParams& prms)
 // virtual 
 void CFiscalPrinter_EscPos::SetNonFiscalInfo(const PosNonFiscalInfo& info)
 {
-	TraceINFO(L"ESCPOS [%s]. SetNonFiscalInfo({repno:'%d', zno:'%d'})",
-		_id.c_str(), info.rcpno, info.zno);
+	TraceINFO(L"ESCPOS [%s]. SetNonFiscalInfo({rcpno: %d, zno: %d, header: '%s', footer: '%s'})",
+		_id.c_str(), info.rcpno, info.zno, info.header, info.footer);
 	_nLastReceipt = info.rcpno;
 	_nLastZReportNo = info.zno;
+	_header = info.header;
+	_footer = info.footer;
 }
 
 void CFiscalPrinter_EscPos::AddArticle(const RECEIPT_ITEM& item)
@@ -71,6 +83,10 @@ void CFiscalPrinter_EscPos::PrintReceiptItem(const RECEIPT_ITEM& item)
 {
 	TraceINFO(L"ESCPOS [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%d, weight:%ld, price:%ld, sum:%ld, discount:%ld})",
 		_id.c_str(), item.article, item.name, item.qty, item.weight.units(), item.price.units(), item.sum.units(), item.discount.units());
+	_totalSum += item.sum;
+	std::wstring str = FormatString(L"%d x %s   %s", item.qty, item.price.to_wstring().c_str(), item.sum.to_wstring().c_str());
+	_printer->AppendLine(str.c_str());
+	_printer->AppendLine(item.name);
 }
 
 // virtual 
@@ -117,7 +133,8 @@ long CFiscalPrinter_EscPos::NullReceipt(bool bOpenCashDrawer)
 		throw EQUIPException(L"Print error");
 	TraceINFO(L"ESCPOS [%s]. NullReceipt({openCashDrawer:%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
 	_printer->Start();
-	_printer->AppendLine(L"Нульовий чек", EscPos_Printer::Align::Center);
+	PrintMutliline(_header, false, true);
+	_printer->AppendLine(L"Нульовий чек", EscPos_Printer::Align::Center, EscPos_Printer::PrintMode::DoubleWidth);
 	PrinterTotalSum(0);
 	PrinterEndReceipt();
 	return _nLastReceipt++;
@@ -129,6 +146,9 @@ void CFiscalPrinter_EscPos::OpenReceipt()
 {
 	TraceINFO(L"ESCPOS [%s]. OpenReceipt()", _id.c_str());
 	// do nothing
+	_totalSum = 0;
+	_printer->Start();
+	PrintMutliline(_header, false, true);
 }
 
 // virtual 
@@ -136,6 +156,7 @@ void CFiscalPrinter_EscPos::OpenReturnReceipt()
 {
 	TraceINFO(L"ESCPOS [%s]. OpenReturnReceipt()", _id.c_str());
 	// do nothing
+	_totalSum = 0;
 }
 
 
@@ -156,7 +177,7 @@ void CFiscalPrinter_EscPos::PrintTotal()
 {
 	TraceINFO(L"ESCPOS [%s]. PrintTotal()", _id.c_str());
 	// TODO: totalSum
-	PrinterTotalSum(123455);
+	PrinterTotalSum(_totalSum);
 }
 
 // virtual 
@@ -170,18 +191,13 @@ long CFiscalPrinter_EscPos::CopyReceipt()
 void CFiscalPrinter_EscPos::Init()
 {
 	TraceINFO(L"ESCPOS [%s]. Init()", _id.c_str());
-	_nLastZReportNo = GetPrinterLastZReportNo();
-}
-
-long CFiscalPrinter_EscPos::GetPrinterLastZReportNo()
-{
-	return _nLastZReportNo;
 }
 
 // virtual 
 long CFiscalPrinter_EscPos::XReport()
 {
 	TraceINFO(L"ESCPOS [%s]. XReport()", _id.c_str());
+	throw EQUIPException(L"XReport is not supported");
 	return _nLastReceipt++;
 }
 
@@ -205,17 +221,25 @@ void CFiscalPrinter_EscPos::OpenCashDrawer()
 SERVICE_SUM_INFO CFiscalPrinter_EscPos::ServiceInOut(bool bOut, __currency sum, bool bOpenCashDrawer)
 {
 	long sum_c = sum.units();
-	if (bOut)
+	if (bOut) 
+	{
 		TraceINFO(L"ESCPOS [%s]. ServiceInOut({mode:'withdraw', sum:%ld})", _id.c_str(), -sum_c);
-	else if (sum_c > 0)
+		throw EQUIPException(L"ServiceInOut is not supported");
+	}
+	else if (sum_c > 0) 
+	{
 		TraceINFO(L"ESCPOS [%s]. ServiceInOut({mode:'deposit', sum:%ld})", _id.c_str(), sum_c);
-	else
+		throw EQUIPException(L"ServiceInOut is not supported");
+	} 
+	else 
+	{
 		TraceINFO(L"ESCPOS [%s]. ServiceInOut({mode:'get', sum:%ld})", _id.c_str(), sum_c);
+	}
 	if (bOpenCashDrawer)
 		OpenCashDrawer();
 	SERVICE_SUM_INFO info;
-	info.sumOnHand = __currency::from_units(1534);
-	info.no = 55;
+	info.sumOnHand = __currency::from_units(0);
+	info.no = 0;
 	return info;
 }
 
@@ -242,12 +266,8 @@ void CFiscalPrinter_EscPos::PrintNonFiscalText(const wchar_t* szText)
 // virtual 
 bool CFiscalPrinter_EscPos::PeriodicalByNo(BOOL Short, LONG From, LONG To)
 {
-	wchar_t buff[MAX_COMMAND_LEN];
-	if (Short)
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"ESCPOS: Short periodic report by numbers: %ld-%ld", From, To);
-	else
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"ESCPOS: Long periodic report by numbers: %ld-%ld", From, To);
-	ReportMessage(buff);
+	TraceINFO(L"ESCPOS [%s]. PrintNonFiscalText({short: %s, from: %ld, to: %ld})",
+		_id.c_str(), Short ? L"true" : L"false", From, To);
 	return true;
 }
 
@@ -363,11 +383,26 @@ void CFiscalPrinter_EscPos::PrinterEndReceipt()
 	time_t time = std::time(0);
 	tm now;
 	localtime_s(&now, &time);
-	std::wstring dateTimeString = FormatString(L"%0d-%0d-%04d %02d:%02d:%02d", 
+	std::wstring dateTimeString = FormatString(L"%02d-%02d-%04d %02d:%02d:%02d", 
 		now.tm_mday, now.tm_mon + 1, now.tm_year + 1900, now.tm_hour, now.tm_min, now.tm_sec);
 	rcpNo.append(std::wstring(delta, L' '));
 	rcpNo.append(dateTimeString);
 	_printer->AppendLine(rcpNo.c_str());
+	PrintMutliline(_footer, true, false);
 	_printer->Cut();
 	_printer->Print();
+}
+
+void CFiscalPrinter_EscPos::PrintMutliline(const std::wstring& line, bool before /*= false*/, bool after /*= false*/)
+{
+	if (line.empty())
+		return;
+	if (before)
+		_printer->AppendLine();
+	std::wstringstream wss(line);
+	std::wstring tmp;
+	while (std::getline(wss, tmp, L'\n'))
+		_printer->AppendLine(tmp.c_str());
+	if (after)
+		_printer->AppendLine();
 }

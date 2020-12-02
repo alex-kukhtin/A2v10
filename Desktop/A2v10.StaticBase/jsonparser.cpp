@@ -175,8 +175,14 @@ void JsonScaner::NextToken()
 			}
 			if (_ch == L'\\') {
 				NextChar();
+				if (_ch == L'n')
+					AppendChar(L'\n');
+				else
+					AppendChar(_ch);
 			}
-			AppendChar(_ch);
+			else {
+				AppendChar(_ch);
+			}
 			NextChar();
 		}
 		break;

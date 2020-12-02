@@ -152,13 +152,16 @@ class PosSetNonFiscalInfoData : public JsonTarget
 public:
 	int _zno;
 	int _rcpno;
+	std::wstring _header;
+	std::wstring _footer;
 
 	PosSetNonFiscalInfoData() 
-		:_zno(-1), _rcpno(-1)
-	{}
+		:_zno(-1), _rcpno(-1) {}
 protected:
-	BEGIN_JSON_PROPS(2)
+	BEGIN_JSON_PROPS(4)
 		INT_PROP(zno, _zno)
 		INT_PROP(rcpno, _rcpno)
+		STRING_PROP(header, _header)
+		STRING_PROP(footer, _footer)
 	END_JSON_PROPS()
 };

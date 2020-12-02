@@ -1,4 +1,4 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2018-2020 Alex Kukhtin. All rights reserved.
 
 #pragma once
 
@@ -37,6 +37,8 @@ struct PosNonFiscalInfo
 {
 	int zno;
 	int rcpno;
+	const wchar_t* header;
+	const wchar_t* footer;
 };
 
 /*

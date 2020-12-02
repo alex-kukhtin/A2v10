@@ -26,6 +26,8 @@ namespace A2v10.Request
 		public String BaseUrl;
 		public ScriptInfo Scripts;
 		public IDataModel DataModel;
+
+		public String Params;
 	}
 
 	public partial class BaseController

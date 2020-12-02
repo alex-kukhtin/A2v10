@@ -19,6 +19,7 @@
 #include "memory"
 #include "unordered_map"
 #include "algorithm"
+#include "sstream"
 
 #include "rpc.h"
 #include "rpcndr.h"

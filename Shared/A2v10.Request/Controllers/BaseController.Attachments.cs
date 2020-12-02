@@ -8,6 +8,9 @@ using System.Web;
 using System.Collections.Generic;
 
 using A2v10.Infrastructure;
+using System.Net.Mime;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace A2v10.Request
 {
@@ -163,5 +166,71 @@ namespace A2v10.Request
 			}
 			return retList;
 		}
+
+		public async Task<IList<AttachmentUpdateIdToken>> SaveAttachmentsMimeCompress(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId, Int32 factor)
+		{
+			if (factor < 0 || factor > 100)
+				throw new ArgumentOutOfRangeException(nameof(factor), $"Invalid factor value: {factor}. Expected [0..100]");
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			ExpandoObject prms = new ExpandoObject();
+			String key = rm.ModelAction.ToPascalCase();
+			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
+			AttachmentUpdateInfo ii = new AttachmentUpdateInfo
+			{
+				UserId = userId,
+				Id = rm._id,
+				Key = key
+			};
+			if (_host.IsMultiTenant)
+				ii.TenantId = tenantId;
+			if (_host.IsMultiCompany)
+				ii.CompanyId = companyId;
+			var retList = new List<AttachmentUpdateIdToken>();
+			for (Int32 i = 0; i < files.Count; i++)
+			{
+				HttpPostedFileBase file = files[i];
+				ii.Mime = file.ContentType;
+				ii.Name = Path.GetFileName(file.FileName);
+				ii.Stream = CompressImage(file.InputStream, file.ContentType, factor);
+				var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(rm.CurrentSource, procedure, ii);
+				retList.Add(new AttachmentUpdateIdToken()
+				{
+					Id = aout.Id,
+					Mime = file.ContentType,
+					Name = file.FileName,
+					Token = _tokenProvider.GenerateToken(aout.Token)
+				});
+			}
+			return retList;
+		}
+
+
+		Stream CompressImage(Stream stream, String contentType, Int32 factor)
+		{
+			if (contentType != MediaTypeNames.Image.Jpeg)
+				return stream;
+			if (factor == 100)
+				return stream;
+			var jpegEncoder = GetJpegEncoder();
+			using (Bitmap bmp = new Bitmap(stream))
+			{
+				var ms = new MemoryStream();
+				var qualEncoder = Encoder.Quality;
+				var encParams = new EncoderParameters(1);
+				var encParam = new EncoderParameter(qualEncoder, (long) factor);
+				encParams.Param[0] = encParam;
+				bmp.Save(ms, jpegEncoder, encParams);
+				return ms;
+			}
+		}
+
+		ImageCodecInfo GetJpegEncoder()
+		{
+			foreach (var enc in ImageCodecInfo.GetImageEncoders())
+				if (enc.FormatID == ImageFormat.Jpeg.Guid)
+					return enc;
+			throw new InvalidOperationException("JPEG encoder not found");
+		}
+
 	}
 }

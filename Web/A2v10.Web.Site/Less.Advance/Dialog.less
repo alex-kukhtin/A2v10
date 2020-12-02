@@ -7,6 +7,7 @@
 
 @modal-footer-bg-color: var(--neutralBkLight);
 @modal-border-color: var(--neutralBkDark);
+@modal-header-hover-color: rgba(128,128,128,.15);
 @ani-time: 0.1s;
 
 // see modal.js
@@ -156,7 +157,7 @@
 
 		&:not([disabled]) {
 			&:hover, &:active, &:focus {
-				background-color: @dialog-header-bg-color-light;
+				background-color: @modal-header-hover-color;
 			}
 		}
 
@@ -172,15 +173,14 @@
 		width: @modal-header-line;
 		height: @modal-header-line;
 		text-align: center;
-		padding-top:2px;
+		padding-top: 2px;
 
 		.ico {
-			font-size:120%;
+			font-size: 120%;
 		}
 
 		&:hover {
-			/*color: @link-hover-color-dark;*/
-			background-color: @dialog-header-bg-color-light;
+			background-color: @modal-header-hover-color;
 		}
 	}
 }

@@ -27,6 +27,7 @@ namespace A2v10.Web.Base
 				scriptText.Replace("$(PageId)", viewInfo.PageId);
 				scriptText.Replace("$(DataModel)", viewInfo?.Scripts?.DataScript);
 				scriptText.Replace("$(BaseUrl)", viewInfo.BaseUrl);
+				scriptText.Replace("$(Params)", viewInfo.Params);
 
 				sb.Append($"<script type=\"text/javascript\">{scriptText.ToString()}</script>");
 			}

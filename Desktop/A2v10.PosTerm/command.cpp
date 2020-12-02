@@ -1,4 +1,4 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2018-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
 #include "posterm.h"
@@ -283,6 +283,8 @@ std::wstring PosCommand::SetNonFiscalInfo(FiscalPrinter* pPrinter, JsonTarget* d
 	PosNonFiscalInfo info;
 	info.zno = pdmd->_zno;
 	info.rcpno = pdmd->_rcpno;
+	info.header = pdmd->_header.c_str();
+	info.footer = pdmd->_footer.c_str();
 	pPrinter->SetNonFiscalInfo(info);
 	JsonObject js;
 	return js.Value();
