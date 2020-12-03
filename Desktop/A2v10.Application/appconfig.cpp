@@ -7,12 +7,10 @@
 
 #define PROP_LENGTH 64
 #define DEFAULT_BAUD 9600
-#define DEFAULT_LINELEN 32
 
 CAppConfigFiscalPrinter::CAppConfigFiscalPrinter()
-	:_baud(DEFAULT_BAUD), _lineLen(DEFAULT_LINELEN)
+	:_baud(DEFAULT_BAUD), _lineLen(0)
 {
-
 }
 
 bool CAppConfig::NeedBackgroundThread() 
@@ -30,7 +28,7 @@ bool CAppConfig::ConnectToPrinter()
 	prms.model = pPrinter->_model.c_str();
 	prms.port = pPrinter->_port.c_str();
 	prms.baud = pPrinter->_baud;
-	prms.printerName = pPrinter->_printerName.c_str();
+	prms.shareName = pPrinter->_printerName.c_str();
 	prms.lineLen = pPrinter->_lineLen;
 	theApp._terminalCode = pPrinter->_terminal.c_str();
 

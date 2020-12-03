@@ -28,6 +28,7 @@ public:
 
 	EscPos_Printer(const wchar_t* printerName, int lineLen);
 
+	static int DefaultLineLength();
 	int LineLength() { return _lineLength; }
 	void Start();
 	void AppendLine(const wchar_t* text, Align align = Align::Left, int mode = 0);

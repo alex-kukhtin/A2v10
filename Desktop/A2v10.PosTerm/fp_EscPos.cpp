@@ -19,6 +19,7 @@ NonFiscal - сделать так же
 
 const int ITEM_MARGIN = 4;
 
+
 CFiscalPrinter_EscPos::CFiscalPrinter_EscPos(const wchar_t* model)
 	: _nLastReceipt(-1), _nLastZReportNo(-1), _cashSum(0), _totalSum(0), _printer(nullptr)
 {
@@ -53,9 +54,12 @@ void CFiscalPrinter_EscPos::GetErrorCode()
 // virtual 
 void CFiscalPrinter_EscPos::SetParams(const PosConnectParams& prms)
 {
-	TraceINFO(L"ESCPOS [%s]. SetParams({printerName:'%s', lineLen:'%d'})",
-		_id.c_str(), prms.printerName, prms.lineLen);
-	_printer = new EscPos_Printer(prms.printerName, prms.lineLen);
+	int ll = prms.lineLen;
+	if (ll == 0)
+		ll = EscPos_Printer::DefaultLineLength();
+	TraceINFO(L"ESCPOS [%s]. SetParams({shareName:'%s', lineLen: %d})",
+		_id.c_str(), prms.shareName, ll);
+	_printer = new EscPos_Printer(prms.shareName, ll);
 }
 
 // virtual 

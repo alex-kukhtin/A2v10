@@ -11,10 +11,18 @@
 #define new DEBUG_NEW
 #endif
 
+#define DEFAULT_LINELEN 32
+
 EscPos_Printer::EscPos_Printer(const wchar_t* printerName, int lineLength)
 {
 	_printerName = printerName;
 	_lineLength = lineLength;
+}
+
+// static 
+int EscPos_Printer::DefaultLineLength()
+{
+	return DEFAULT_LINELEN;
 }
 
 // reset + reset china mode + select 866 code page

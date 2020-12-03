@@ -91,6 +91,7 @@ std::wstring PosCommand::Connect(FiscalPrinter* pPrinter, JsonTarget* data)
 	prms.model = pcd->_model.c_str();
 	prms.port = pcd->_port.c_str();
 	prms.baud = pcd->_baud;
+	prms.shareName = pcd->_sharename.c_str();
 	pPrinter = FiscalPrinter::Connect(prms);
 	JsonObject js;
 	js.Add(L"model", pcd->_model.c_str());
