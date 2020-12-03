@@ -68,11 +68,11 @@ public:
 	virtual void GetPrinterInfo(JsonObject& json) override;
 
 protected:
-	long GetPrinterLastZReportNo();
 	void ReportMessage(const wchar_t* msg);
 
 private:
 	void PrinterTotalSum(__currency sum);
 	void PrinterEndReceipt();
 	void PrintMutliline(const std::wstring& line, bool before = false, bool after = false);
+	void PrintName(const wchar_t* name);
 };

@@ -22,6 +22,7 @@ union __currency {
 	long units() const;
 	__currency negate() const;
 	std::wstring to_wstring() const;
+	std::wstring to_wstring3digit() const;
 	static __currency from_units(long units);
 	static __currency from_units(long c, long f);
 	static __currency from_string(const std::string& units);

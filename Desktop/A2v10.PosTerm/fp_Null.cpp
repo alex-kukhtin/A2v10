@@ -10,6 +10,11 @@
 
 #define MAX_COMMAND_LEN 512
 
+CFiscalPrinter_Null::CFiscalPrinter_Null()
+	: _nLastReceipt(-1), _nLastZReportNo(-1), _cashSum(0), _totalSum(0)
+{
+}
+
 // virtual 
 bool CFiscalPrinter_Null::IsOpen() const
 {
@@ -34,6 +39,16 @@ void CFiscalPrinter_Null::SetParams(const PosConnectParams& prms)
 	//TraceINFO(L"TESTPRINTER [%s]. SetParams({payModes:'%s', taxModes:'%s'})",
 		//_id.c_str(), prms.payModes, prms.taxModes);
 }
+
+// virtual 
+void CFiscalPrinter_Null::SetNonFiscalInfo(const PosNonFiscalInfo& info)
+{
+	TraceINFO(L"TESTPRINTER [%s]. SetNonFiscalInfo({rcpno: %d, zno: %d})",
+		_id.c_str(), info.rcpno, info.zno);
+	_nLastReceipt = info.rcpno;
+	_nLastZReportNo = info.zno;
+}
+
 
 void CFiscalPrinter_Null::AddArticle(const RECEIPT_ITEM& item)
 {
@@ -68,7 +83,7 @@ void CFiscalPrinter_Null::Payment(PAYMENT_MODE mode, long sum)
 long CFiscalPrinter_Null::CloseReceipt(bool bDisplay)
 {
 	TraceINFO(L"TESTPRINTER [%s]. CloseReceipt()", _id.c_str());
-	return m_nLastReceipt++;
+	return _nLastReceipt++;
 }
 
 // virtual 
@@ -88,7 +103,7 @@ bool CFiscalPrinter_Null::Open(const wchar_t* port, DWORD baud)
 long CFiscalPrinter_Null::NullReceipt(bool bOpenCashDrawer)
 {
 	TraceINFO(L"TESTPRINTER [%s]. NullReceipt({openCashDrawer:%s})", _id.c_str(), bOpenCashDrawer ? L"true" : L"false");
-	return m_nLastReceipt++;
+	return _nLastReceipt++;
 }
 
 
@@ -127,48 +142,8 @@ void CFiscalPrinter_Null::PrintTotal()
 long CFiscalPrinter_Null::CopyReceipt()
 {
 	TraceINFO(L"TESTPRINTER [%s]. CopyReceipt()", _id.c_str());
-	return m_nLastReceipt++;
+	return _nLastReceipt++;
 }
-
-//virtual 
-/*
-bool CFiscalPrinter_Null::PrintCheckItem(const CFPCheckItemInfo& info)
-{
-	CString s;
-	s.Format(L"%s (qty=%#.03f, iqty=%ld, price=%ld, excise=%s)",
-		info.m_name, (double)info.m_fQty, (long)info.m_iQty,
-		(long)info.m_price,
-		info.m_bExcise ? L"true" : L"false");
-	int dscPrc = info.m_dscPercent;
-	int dscSum = info.m_dscSum;
-	if (dscPrc)
-	{
-		ATLASSERT(!dscSum);
-		CString d;
-		d.Format(L",-%02d.%02d", dscPrc / 100, dscPrc % 100);
-		s += d;
-	}
-	else if (dscSum)
-	{
-		ATLASSERT(!dscPrc);
-		CString d;
-		d.Format(L";-%02d.%02d", dscSum / 100, dscSum % 100);
-		s += d;
-	}
-	AfxMessageBox(s);
-	return true;
-}
-*/
-
-// virtual
-/*
-LONG CFiscalPrinter_Null::GetCurrentZReportNo(bool bFromPrinter /*= false * /)
-{
-	if (bFromPrinter)
-		_nLastZReportNo = GetPrinterLastZReportNo();
-	return _nLastZReportNo;
-}
-*/
 
 // virtual 
 void CFiscalPrinter_Null::Init()
@@ -183,30 +158,10 @@ long CFiscalPrinter_Null::GetPrinterLastZReportNo()
 }
 
 // virtual 
-/*
-bool CFiscalPrinter_Null::FillZReportInfo(ZREPORT_INFO& zri)
-{
-	ZREPORT_INFO nullzri;
-	nullzri.m_termId = zri.m_termId;
-	nullzri.LoadTest();
-
-	zri.m_sum_nv = nullzri.m_sum_nv;
-	zri.m_sum_v = nullzri.m_sum_v;
-	zri.m_vsum = nullzri.m_vsum;
-	zri.m_pay0 = nullzri.m_pay0;
-	zri.m_pay1 = nullzri.m_pay1;
-
-	// m_currentZRepNo = nullzri.m_zNo; Ётого делать нельз€, система создаст новый z-отчет
-
-	return true;
-}
-*/
-
-// virtual 
 long CFiscalPrinter_Null::XReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. XReport()", _id.c_str());
-	return m_nLastReceipt++;
+	return _nLastReceipt++;
 }
 
 // virtual 
@@ -214,8 +169,9 @@ ZREPORT_RESULT CFiscalPrinter_Null::ZReport()
 {
 	TraceINFO(L"TESTPRINTER [%s]. ZReport()", _id.c_str());
 	ZREPORT_RESULT result;
-	result.no = m_nLastReceipt++;
-	result.zno = _nLastZReportNo++;
+	result.no = _nLastReceipt++;
+	result.zno = _nLastZReportNo;
+	_nLastZReportNo = -1; // RESET
 	return result;
 }
 
@@ -411,4 +367,5 @@ void CFiscalPrinter_Null::GetPrinterInfo(JsonObject& json)
 	json.Add(L"model", L"Null Printer");
 	json.Add(L"port", L"Any");
 	json.Add(L"zno", _nLastZReportNo);
+	json.Add(L"nonfiscal", true);
 }

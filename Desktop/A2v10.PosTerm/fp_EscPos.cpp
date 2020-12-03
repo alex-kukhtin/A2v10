@@ -11,20 +11,18 @@
 #include "stringtools.h"
 
 /*TODO:
-Print receipt item
-Print total sum
-Payment: mode / charge
 Весовой товар
-Z-Report
 инструкция
 выложить ChromeExtension
-ошибки при ServiceIn/Out
 NonFiscal - сделать так же
 */
+
+const int ITEM_MARGIN = 4;
 
 CFiscalPrinter_EscPos::CFiscalPrinter_EscPos(const wchar_t* model)
 	: _nLastReceipt(-1), _nLastZReportNo(-1), _cashSum(0), _totalSum(0), _printer(nullptr)
 {
+	_printerName = model;
 }
 
 CFiscalPrinter_EscPos::~CFiscalPrinter_EscPos()
@@ -84,18 +82,61 @@ void CFiscalPrinter_EscPos::PrintReceiptItem(const RECEIPT_ITEM& item)
 	TraceINFO(L"ESCPOS [%s]. PrintReceiptItem({article:%I64d, name:'%s', qty:%d, weight:%ld, price:%ld, sum:%ld, discount:%ld})",
 		_id.c_str(), item.article, item.name, item.qty, item.weight.units(), item.price.units(), item.sum.units(), item.discount.units());
 	_totalSum += item.sum;
-	std::wstring str = FormatString(L"%d x %s   %s", item.qty, item.price.to_wstring().c_str(), item.sum.to_wstring().c_str());
-	_printer->AppendLine(str.c_str());
-	_printer->AppendLine(item.name);
+	std::wstring strQty;
+	std::wstring strPrice(item.price.to_wstring());
+	std::wstring strSum(item.sum.to_wstring());
+	if (item.weight.units() == 0) 
+	{
+		strQty = FormatString(L"%d", item.qty);
+	}
+	else 
+	{
+		// weight
+		strQty = item.weight.to_wstring3digit();
+	}
+
+	PrintName(item.name);
+
+	std::wstring strQPS = strQty;
+	strQPS.append(L" x ");
+	strQPS.append(strPrice);
+	int delta = _printer->LineLength() - strQPS.length() - strSum.length();
+	std::wstring line1(strQPS);
+	line1.append(std::wstring(delta, L' '));
+	line1.append(strSum);
+	_printer->AppendLine(line1.c_str());
 }
+
+void CFiscalPrinter_EscPos::PrintName(const wchar_t* name)
+{
+	std::wstring strName(name);
+	size_t len = _printer->LineLength() - ITEM_MARGIN;
+	if (strName.length() <= len)
+		_printer->AppendLine(strName.c_str());
+	else 
+	{
+		size_t offset = 0;
+		std::wstring subStr;
+		while (true) {
+			if (offset >= strName.length())
+				break;
+			subStr = strName.substr(offset, len);
+			_printer->AppendLine(subStr.c_str());
+			offset += len;
+		}
+	}
+}
+
 
 // virtual 
 void CFiscalPrinter_EscPos::Payment(PAYMENT_MODE mode, long sum)
 {
 	const wchar_t* strMode = L"unknown";
+	std::wstring strText(L"Готівка");
 	switch (mode) {
 	case PAYMENT_MODE::_pay_card:
 		strMode = L"card";
+		strText.assign(L"Картка");
 		break;
 	case PAYMENT_MODE::_pay_cash:
 		strMode = L"cash";
@@ -103,6 +144,21 @@ void CFiscalPrinter_EscPos::Payment(PAYMENT_MODE mode, long sum)
 	}
 	TraceINFO(L"ESCPOS [%s]. Payment({mode:'%s', sum:%ld})",
 		_id.c_str(), strMode, sum);
+	__currency cySum = __currency::from_units(sum);
+	std::wstring strSum  = cySum.to_wstring();
+	int delta = _printer->LineLength() - strSum.length() - strText.length();
+	strText.append(std::wstring(delta, L' '));
+	strText.append(strSum);
+	_printer->AppendLine(strText.c_str());
+	long charge = cySum.units() - _totalSum.units();
+	if (charge > 0) {
+		std::wstring strCharge = __currency::from_units(charge).to_wstring();
+		strText.assign(L"Решта");
+		delta = _printer->LineLength() - strCharge.length() - strText.length();
+		strText.append(std::wstring(delta, L' '));
+		strText.append(strCharge);
+		_printer->AppendLine(strText.c_str());
+	}
 }
 
 // virtual 
@@ -207,7 +263,8 @@ ZREPORT_RESULT CFiscalPrinter_EscPos::ZReport()
 	TraceINFO(L"ESCPOS [%s]. ZReport()", _id.c_str());
 	ZREPORT_RESULT result;
 	result.no = _nLastReceipt++;
-	result.zno = _nLastZReportNo++;
+	result.zno = _nLastZReportNo;
+	_nLastZReportNo = -1; // RESET
 	return result;
 }
 

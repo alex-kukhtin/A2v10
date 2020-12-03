@@ -4,16 +4,18 @@
 
 class CFiscalPrinter_Null : public FiscalPrinterImpl
 {
-	long m_nLastReceipt;
+	long _nLastReceipt;
 	long _nLastZReportNo;
+	long _cashSum;
+	__currency _totalSum;
 public:
-	CFiscalPrinter_Null()
-		: m_nLastReceipt(1234), _nLastZReportNo(2233) {}
+	CFiscalPrinter_Null();
 	virtual void Init() override;
 	virtual bool IsOpen() const override;
 	virtual bool IsReady() const override;
 	virtual bool Open(const wchar_t* Port, DWORD nBaudRate) override;
 	virtual void SetParams(const PosConnectParams& prms) override;
+	virtual void SetNonFiscalInfo(const PosNonFiscalInfo& info);
 	virtual void Close() override;
 	virtual void GetErrorCode() override;
 
