@@ -1,6 +1,6 @@
 ﻿{
 	"name": "A2v10 equipment host",
-	"version": "10.0.7511",
+	"version": "10.0.7736",
 	"manifest_version": 2,
 	"description": "Communicate with A2v10 native applications",
 	"options_page": "options.html",
