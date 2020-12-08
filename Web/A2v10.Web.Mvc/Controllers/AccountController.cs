@@ -141,7 +141,7 @@ namespace A2v10.Web.Mvc.Controllers
 			if (User.Identity.IsAuthenticated)
 			{
 				AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-				Response.Redirect("/Account/Login");
+				Response.Redirect("/account/login");
 				return;
 			}
 			Session.Abandon();
@@ -476,7 +476,7 @@ namespace A2v10.Web.Mvc.Controllers
 					String body = GetEMailBody("invite", null);
 					if (!String.IsNullOrEmpty(body))
 					{
-						var inviteCallback = Url.Action("Default", "Shell", routeValues: null, protocol: Request.Url.Scheme);
+						var inviteCallback = Url.Action("default", "shell", routeValues: null, protocol: Request.Url.Scheme);
 						body = body.Replace("{0}", inviteCallback);
 						await UserManager.SendEmailAsync(user.Id, subject, body);
 					}
@@ -534,7 +534,7 @@ namespace A2v10.Web.Mvc.Controllers
 				else
 				{
 					String code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-					var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
+					var callbackUrl = Url.Action("resetpassword", "account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
 					String subject = _localizer.Localize(null, "@[ResetPassword]");
 					String body = _localizer
 						.Localize(null, "@[ResetPasswordBody]")
