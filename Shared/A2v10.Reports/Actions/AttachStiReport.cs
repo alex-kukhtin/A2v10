@@ -54,6 +54,8 @@ namespace A2v10.Reports.Actions
 						ai.Name = "Attachment";
 					var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>
 						(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
+					if (aout == null)
+						throw new InvalidOperationException($"'[{Schema}].[{Model}.SaveAttachment]' procedure did not return result");
 					return new { aout.Id, Token =_tokenProvider.GenerateToken(aout.Token) };
 				}
 			}
