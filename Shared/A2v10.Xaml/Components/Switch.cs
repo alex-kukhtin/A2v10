@@ -41,7 +41,7 @@ namespace A2v10.Xaml
 		{
 			var expr = GetBinding(nameof(Expression));
 			if (expr == null)
-				new XamlException("Binding 'Expression' must be a Bind");
+				throw new XamlException("Binding 'Expression' must be a Bind");
 			for (var i=0; i<Cases.Count; i++)
 			{
 				var itm = Cases[i];

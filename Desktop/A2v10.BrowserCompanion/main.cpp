@@ -21,12 +21,22 @@ int main(int argc, char *argv[], char *envp[])
 
 	PosCreateMonitor();
 
-	while (!std::cin.eof()) {
-		std::cin >> len._b[0] >> len._b[1] >> len._b[2] >> len._b[3];
+
+	while (!std::cin.eof()) 
+	{
+		len._b[0] = std::cin.get();
+		len._b[1] = std::cin.get();
+		len._b[2] = std::cin.get();
+		len._b[3] = std::cin.get();
+
+		// std::cin >> len._b[0] >> len._b[1] >> len._b[2] >> len._b[3];
 
 		if (len._len >= MAX_LEN)
 		{
-			const char* msg = "{\"error\":\"message too long\"}";
+			std::string msg = "{\"error\":\"message too long\"}";
+			len._len = msg.length();
+			std::cout << len._b[0] << len._b[1] << len._b[2] << len._b[3];
+			std::cout.write(msg.c_str(), len._len);
 		}
 		else 
 		{

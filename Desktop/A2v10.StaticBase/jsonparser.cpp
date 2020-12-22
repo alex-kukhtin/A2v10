@@ -34,15 +34,15 @@ __currency _string2Currency(const wchar_t* szString)
 
 enum TokenId {
 	End,
-	Equal,
-	Colon,
-	Comma,
-	OpenParen, // (
-	CloseParen, // )
-	OpenBracket, // ]
-	CloseBracket, // ]
-	OpenCurly, // {
-	CloseCurly, // }
+	Equal,	// =
+	Colon,	// :
+	Comma,	// ,
+	OpenParen,		// (
+	CloseParen,		// )
+	OpenBracket,	// ]
+	CloseBracket,	// ]
+	OpenCurly,		// {
+	CloseCurly,		// }
 	StringLiteral,
 	NumberLiteral,
 	TrueLiteral,
@@ -177,6 +177,8 @@ void JsonScaner::NextToken()
 				NextChar();
 				if (_ch == L'n')
 					AppendChar(L'\n');
+				else if (_ch == L'r')
+					AppendChar(L'\r');
 				else
 					AppendChar(_ch);
 			}
@@ -288,7 +290,7 @@ void JsonParser::ParseObject(JsonTarget* target)
 			name = ct._value;
 			_scan->NextToken();
 			if (ct._tok != TokenId::Colon)
-				throw JsonException(L"Lxpected ':'");
+				throw JsonException(L"Expected ':'");
 			_scan->NextToken();
 			switch (ct._tok) {
 			case TokenId::OpenCurly:

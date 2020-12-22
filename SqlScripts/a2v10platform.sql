@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 08.12.2020 12:05:04
+generated: 22.12.2020 11:35:43
 */
 
 set nocount on;
@@ -1500,18 +1500,18 @@ go
 
 
 /*
-Copyright © 2008-2019 Alex Kukhtin
+Copyright © 2008-2020 Alex Kukhtin
 
-Last updated : 21 dec 2019
-module version : 7053
+Last updated : 14 dec 2020
+module version : 7054
 */
 ------------------------------------------------
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:messaging')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7053);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7054);
 	else
-		update a2sys.Versions set [Version] = 7053 where Module = N'std:messaging';
+		update a2sys.Versions set [Version] = 7054 where Module = N'std:messaging';
 end
 go
 ------------------------------------------------
@@ -1560,7 +1560,7 @@ begin
 		[Message] bigint not null
 			constraint FK_Parameters_Messages_Id references a2messaging.[Messages](Id),
 		[Name] nvarchar(255) not null,
-		[Value] nvarchar(255) not null
+		[Value] nvarchar(max) null
 	);
 end
 go
@@ -1652,7 +1652,7 @@ go
 create type a2messaging.[NameValue.TableType] as
 table (
 	[Name] nvarchar(255),
-	[Value] nvarchar(255)
+	[Value] nvarchar(max)
 )
 go
 ------------------------------------------------
