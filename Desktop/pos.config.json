@@ -11,7 +11,8 @@
 			"baud": 38400,
 			"terminal2": "MAIN",
 			"terminal": "IKC",
-			"printerName": "\\\\ASUS\\XP90"
+			"printerName2": "\\\\ASUS\\XP90",
+			"printerName": "d:/_1/receipt.txt"
 		}
 	],
 	"acquiringTerminals2": [

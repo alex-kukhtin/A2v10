@@ -4243,7 +4243,7 @@ ul.news-list > li {
   height: 100%;
 }
 .modal-header {
-  background-color: #f8f108;
+  background-color: #fff138;
   padding: 0.5em 0.5em 0.5em 1rem;
   cursor: move;
   font-weight: 600;
@@ -6815,7 +6815,7 @@ td.vert > .vcell {
   box-shadow: 5px 0 10px 0 rgba(0, 0, 0, 0.2);
 }
 .debug-panel .debug-pane-header {
-  background-color: #f8f108;
+  background-color: #fff138;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
@@ -6833,7 +6833,7 @@ td.vert > .vcell {
 }
 .debug-panel .debug-pane-header a.btn:hover {
   color: #555;
-  background-color: #f9f43a;
+  background-color: #fff56b;
   border-color: #e5c365;
 }
 .debug-panel .toolbar {
@@ -6905,7 +6905,7 @@ td.vert > .vcell {
   flex-direction: column;
 }
 .feedback-panel .feedback-pane-header {
-  background-color: #f8f108;
+  background-color: #fff138;
   padding: 2px 2px 2px 6px;
   border-bottom: 1px solid #ddd;
 }
@@ -6920,7 +6920,7 @@ td.vert > .vcell {
 }
 .feedback-panel .feedback-pane-header a.btn:hover {
   color: #555;
-  background-color: #f9f43a;
+  background-color: #fff56b;
   border-color: #e5c365;
 }
 .feedback-panel .feedback-body {
