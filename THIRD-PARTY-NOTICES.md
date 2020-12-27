@@ -11,6 +11,8 @@ A2v10 uses third party material from the projects listed below.
 * Vuex - https://github.com/vuejs/vuex
 * D3: Data-Driven Documents - https://d3js.org
 * Jasmine - https://github.com/jasmine/jasmine
+* JInt - https://github.com/sebastienros/jint
+* QRCoder - https://github.com/codebude/QRCoder
 
 ---
  
