@@ -54,6 +54,8 @@
 					<SpanIcon Icon="Eye"/>
 					<Span Content="{Bind Phone, Mask='+38 (0##) ###-##-##'}"/>
 				</Text>
+				<Popover Url="{Bind $Popover}" Text="Popover" Placement="BottomRight"/>
+				<Hyperlink Content="Command" Command="{BindCmd Execute, CommandName='invoke1'}"/>
 			</StackPanel>
 		</DataGridColumn>
 		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>

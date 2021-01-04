@@ -592,6 +592,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Admin\Identity\User\popover.popup.xaml">
+      <SubType>Designer</SubType>
+    </None>
     <Page Include="Develop\entity\browseGoods.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

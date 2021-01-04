@@ -1803,9 +1803,9 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20180227-7121*/
+/*20210104-7738*/
 /* services/log.js */
 
 app.modules['std:log'] = function () {
@@ -1868,6 +1868,31 @@ app.modules['std:log'] = function () {
 	}
 };
 
+
+app.modules['std:console'] = function () {
+	return {
+		log() {
+			if (window.$$debug)
+				console.log(...arguments);
+		},
+		dir() {
+			if (window.$$debug)
+				console.dir(...arguments);
+		},
+		info() {
+			if (window.$$debug)
+				console.info(...arguments);
+		},
+		error() {
+			if (window.$$debug)
+				console.error(...arguments);
+		},
+		warn() {
+			if (window.$$debug)
+				console.warn(...arguments);
+		}
+	}
+};
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 /*20191122-7587*/
@@ -7174,9 +7199,9 @@ template: `
 })();
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-//20191202-7591
+//20210104-7738
 /*components/popover.js*/
 
 Vue.component('popover', {
@@ -7194,7 +7219,7 @@ Vue.component('popover', {
 `,
 	/*
 	1. If you add tabindex = "- 1" for 'toggle', then you can close it by 'blur'
-
+	
 	2. You can add a close button. It can be any element with a 'close-dropdown' attribute.
 		For expample: <span class="close" close-dropdown style="float:right">x</span >
 	*/
@@ -7202,7 +7227,7 @@ Vue.component('popover', {
 	data() {
 		return {
 			state: 'hidden',
-			hoverstate : false,
+			hoverstate: false,
 			popoverUrl: ''
 		};
 	},
@@ -7260,8 +7285,11 @@ Vue.component('popover', {
 	mounted() {
 		this.$el._show = () => {
 			this.state = 'shown';
-			if (this.url)
-				this.popoverUrl = '/_popup' + this.url;
+			if (this.url) {
+				const urltools = require('std:url');
+				let root = window.$$rootUrl;
+				this.popoverUrl = urltools.combine(root, '/_popup', this.url);
+			}
 		};
 		this.$el._hide = () => {
 			this.state = 'hidden';

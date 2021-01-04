@@ -1607,9 +1607,9 @@ app.modules['std:http'] = function () {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20180227-7121*/
+/*20210104-7738*/
 /* services/log.js */
 
 app.modules['std:log'] = function () {
@@ -1672,6 +1672,31 @@ app.modules['std:log'] = function () {
 	}
 };
 
+
+app.modules['std:console'] = function () {
+	return {
+		log() {
+			if (window.$$debug)
+				console.log(...arguments);
+		},
+		dir() {
+			if (window.$$debug)
+				console.dir(...arguments);
+		},
+		info() {
+			if (window.$$debug)
+				console.info(...arguments);
+		},
+		error() {
+			if (window.$$debug)
+				console.error(...arguments);
+		},
+		warn() {
+			if (window.$$debug)
+				console.warn(...arguments);
+		}
+	}
+};
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 /*20191122-7587*/

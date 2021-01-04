@@ -1,0 +1,7 @@
+<Popup xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<StackPanel>
+		<Text>Text 1</Text>
+		<Text>Text 2</Text>
+		<Text>Text 3</Text>
+	</StackPanel>
+</Popup>

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("BuildSql")]
-[assembly: AssemblyCopyright("Copyright © 2015-2020 Alex Kukhtin. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2015-2021 AlexKukhtin. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
