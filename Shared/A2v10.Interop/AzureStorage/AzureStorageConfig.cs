@@ -27,8 +27,10 @@ namespace A2v10.Interop.AzureStorage
 			var cnnStr = ConfigurationManager.ConnectionStrings[cnnStrName]?.ConnectionString;
 			if (cnnStr == null)
 				throw new AzureStorageException($"ConnectionString '{cnnStrName}' not found");
-			var csb = new DbConnectionStringBuilder();
-			csb.ConnectionString = cnnStr;
+			var csb = new DbConnectionStringBuilder()
+			{
+				ConnectionString = cnnStr
+			};
 			if (csb.TryGetValue("DefaultEndpointsProtocol", out Object proto))
 				Protocol = proto.ToString();
 			if (csb.TryGetValue("AccountName", out Object accName))

@@ -133,6 +133,8 @@ namespace A2v10.Web.Mvc.OAuth2
 				context.Rejected();
 			}
 			context.TryGetFormCredentials(out String clientId, out String clientSecret);
+			//var oaClaim = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
+			//var ticket = new AuthenticationTicket(oaClaim, new AuthenticationProperties());
 			context.Validated("clientId");
 			return Task.CompletedTask;
 		}
@@ -170,6 +172,9 @@ namespace A2v10.Web.Mvc.OAuth2
 			ExpandoObject dataEO = new ExpandoObject();
 			dataEO.Set("UserId", 99);
 			dataEO.Set("TenantId", 123);
+			dataEO.Set(ClaimsIdentity.DefaultNameClaimType, "admin@admin.com");
+			dataEO.Set("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", 99);
+			dataEO.Set("Segment", "Segment345");
 
 			var strData = body["data"];
 			if (strData != null)

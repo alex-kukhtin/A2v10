@@ -49,6 +49,8 @@ namespace A2v10.Web.Mvc.Start
 
 			authProvider.OnApplyRedirect = (context) =>
 			{
+				if (context.Request.Path.StartsWithSegments(new PathString("/apiv2")))
+					return;
 				var refer = context.Request.Query["ref"];
 				var loginPath = context.Options.LoginPath;
 				String qs = $"{context.Options.ReturnUrlParameter}={HttpUtility.UrlEncode(context.Request.Path.Value)}";
@@ -63,7 +65,7 @@ namespace A2v10.Web.Mvc.Start
 				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
 				LoginPath = new PathString("/account/login"),
 				Provider = authProvider,
-				CookieName = GetApplicationCookieName()
+				CookieName = GetApplicationCookieName(),
 			});
 
 
