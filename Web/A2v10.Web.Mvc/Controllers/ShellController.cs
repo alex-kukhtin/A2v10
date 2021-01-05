@@ -533,9 +533,8 @@ namespace A2v10.Web.Mvc.Controllers
 							};
 							Response.Headers.Add("Content-Disposition", cdh.ToString());
 						}
-						if (ai.Stream == null)
-							return;
-						Response.BinaryWrite(ai.Stream);
+						if (ai.Stream != null)
+							Response.BinaryWrite(ai.Stream);
 					}
 					catch (Exception ex)
 					{

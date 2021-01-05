@@ -42,6 +42,7 @@ begin
 		Id bigint identity(100, 1) not null constraint PK_Attachments primary key,
 		Name nvarchar(255) null,
 		Mime nvarchar(255) null,
+		BlobName nvarchar(255) null,
 		[Data] varbinary(max) null,
 		DateCreated datetime not null constraint DF_Attachments_DateCreated default(getdate()),
 		[SignedData] varbinary(max) null,
@@ -55,6 +56,8 @@ begin
 	alter table a2demo.Attachments add [SignedData] varbinary(max) null;
 end
 go
+--alter table a2demo.Attachments add [BlobName] nvarchar(255) null;
+--go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2demo' and SEQUENCE_NAME=N'SQ_Agents')
 	create sequence a2demo.SQ_Agents as bigint start with 100 increment by 1;
@@ -1599,11 +1602,11 @@ create procedure [a2demo].[Entity.Image.Load]
 @TenantId int = null,
 @UserId bigint,
 @Id bigint = null,
-@Key nvarchar(255)
+@Key nvarchar(255) = null
 as
 begin
 	set nocount on;
-	select Mime, Stream = [Data], [Name] from a2demo.Attachments where Id=@Id;
+	select Mime, Stream = [Data], [Name], BlobName, Token=AccessKey from a2demo.Attachments where Id=@Id;
 end
 go
 ------------------------------------------------
@@ -1619,6 +1622,7 @@ create procedure [a2demo].[Entity.Image.Update]
 @Mime nvarchar(255),
 @Name nvarchar(255),
 @Stream varbinary(max),
+@BlobName nvarchar(255) = null,
 @RetId bigint output
 as
 begin
@@ -1627,11 +1631,12 @@ begin
 
 	declare @rtable table (Id bigint);
 	
-	insert into a2demo.Attachments(UserId, [Name], Mime, [Data])
+	insert into a2demo.Attachments(UserId, [Name], Mime, [Data], BlobName)
 		output inserted.Id into @rtable
-	values(@UserId, @Name, @Mime, @Stream);
+	values(@UserId, @Name, @Mime, @Stream, @BlobName);
 
 	select @RetId = Id from @rtable;
+	select [Id], Token=AccessKey from a2demo.Attachments where Id=@RetId;
 end
 go
 ------------------------------------------------

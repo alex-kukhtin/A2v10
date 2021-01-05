@@ -25,6 +25,8 @@
 	},
 	"files": {
 		"myfile": {
+			"type": "azureBlob",
+			"container": "images",
 			"model": "Entity.Image"
 		}
 	}

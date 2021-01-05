@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Interop;
+using A2v10.Interop.AzureStorage;
 
 namespace A2v10.Request
 {
@@ -89,6 +90,13 @@ namespace A2v10.Request
 					{
 						savePrms.Set("Id", ru.Id);
 						var result = await SaveFilesSql(ru, savePrms, files);
+						writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration)));
+					}
+					break;
+				case RequestFileType.azureBlob:
+					{
+						savePrms.Set("Id", ru.Id);
+						var result = await SaveFilesAzureStorage(ru, savePrms, files);
 						writer.Write(JsonConvert.SerializeObject(result, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration)));
 					}
 					break;
@@ -186,8 +194,43 @@ namespace A2v10.Request
 						Id = result.Id,
 						Name = ii.Name,
 						Mime = ii.Mime,
-						Token = _tokenProvider.GenerateToken(result.Token)
+						Token = result != null ? _tokenProvider.GenerateToken(result.Token) : null
 					}
+				);
+			}
+			return resultList;
+		}
+
+		async Task<Object> SaveFilesAzureStorage(RequestFile ru, ExpandoObject prms, HttpFileCollectionBase files)
+		{
+			AttachmentUpdateInfo ii = new AttachmentUpdateInfo()
+			{
+				UserId = prms.Get<Int64>("UserId")
+			};
+			if (_host.IsMultiTenant)
+				ii.TenantId = prms.Get<Int32>("TenantId");
+			var resultList = new List<AttachmentUpdateIdToken>();
+			var azureClient = new AzureStorageRestClient();
+
+			for (Int32 i = 0; i < files.Count; i++)
+			{
+				HttpPostedFileBase file = files[i];
+				var blobName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+
+				await azureClient.Put(ru.azureSource, ru.container, blobName, file.InputStream, file.ContentLength);
+
+				ii.Name = Path.GetFileName(file.FileName);
+				ii.Mime = file.ContentType;
+				ii.Stream = null;
+				ii.BlobName = $"{ru.container}/{blobName}";
+				var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(ru.CurrentSource, ru.FileProcedureUpdate, ii);
+				resultList.Add(new AttachmentUpdateIdToken()
+				{
+					Id = result.Id,
+					Name = ii.Name,
+					Mime = ii.Mime,
+					Token = result != null ? _tokenProvider.GenerateToken(result.Token) : null
+				}
 				);
 			}
 			return resultList;
@@ -207,6 +250,20 @@ namespace A2v10.Request
 			{
 				case RequestFileType.sql:
 					return await _dbContext.LoadAsync<AttachmentInfo>(ru.CurrentSource, ru.FileProcedureLoad, loadPrms);
+				case RequestFileType.azureBlob:
+					{
+						var ai = await _dbContext.LoadAsync<AttachmentInfo>(ru.CurrentSource, ru.FileProcedureLoad, loadPrms);
+						if (ai.BlobName != null)
+						{
+							var azureClient = new AzureStorageRestClient();
+							var blobName = Path.GetFileName(ai.BlobName);
+							var container = Path.GetDirectoryName(ai.BlobName);
+							ai.Stream = await azureClient.Get(ru.azureSource, container, blobName);
+						}
+						else
+							throw new InvalidOperationException("The 'POST' method is not allowed for requested url");
+						return ai;
+					}
 				default:
 					throw new InvalidOperationException("The 'POST' method is not allowed for requested url");
 			}

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -584,7 +584,8 @@ namespace A2v10.Request
 	{
 		sql,
 		clr,
-		parse
+		parse,
+		azureBlob
 	}
 
 
@@ -622,6 +623,8 @@ namespace A2v10.Request
 		public RequestFileParseType parse;
 		public String clrType;
 		public Boolean async;
+		public String container;
+		public String azureSource;
 
 		public List<RequestFileAvaliModel> availableModels;
 		[JsonIgnore]

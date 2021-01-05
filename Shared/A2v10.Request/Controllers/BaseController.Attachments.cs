@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -11,6 +11,7 @@ using A2v10.Infrastructure;
 using System.Net.Mime;
 using System.Drawing;
 using System.Drawing.Imaging;
+using A2v10.Interop.AzureStorage;
 
 namespace A2v10.Request
 {
@@ -20,6 +21,7 @@ namespace A2v10.Request
 		public String Name { get; set; }
 		public Guid Token { get; set; }
 		public Byte[] Stream { get; set; }
+		public String BlobName { get; set; }
 	}
 
 	public class AttachmentUpdateInfo
@@ -32,6 +34,7 @@ namespace A2v10.Request
 		public String Mime { get; set; }
 		public String Name { get; set; }
 		public Stream Stream { get; set; }
+		public String BlobName { get; set; }
 	}
 
 	public class AttachmentUpdateOutput
@@ -70,7 +73,14 @@ namespace A2v10.Request
 			prms.Set("Id", rm._id);
 			prms.Set("Key", key);
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.{suffix}]";
-			return await _dbContext.LoadAsync<AttachmentInfo>(rm.CurrentSource, procedure, prms);
+			var ai = await _dbContext.LoadAsync<AttachmentInfo>(rm.CurrentSource, procedure, prms);
+			if (!String.IsNullOrEmpty(ai.BlobName))
+			{
+				var azureClient = new AzureStorageRestClient();
+				ai.Stream = await azureClient.GetBlob(ai.BlobName);
+			}
+			return ai;
+
 		}
 
 		public async Task<SignatureInfo> DownloadSignature(String pathInfo, Action<ExpandoObject> setParams)

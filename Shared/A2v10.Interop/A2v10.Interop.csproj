@@ -56,6 +56,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AzureStorage\AzureStorageConfig.cs" />
+    <Compile Include="AzureStorage\AzureStorageException.cs" />
+    <Compile Include="AzureStorage\AzureStoragePutResult.cs" />
+    <Compile Include="AzureStorage\AzureStorageRestClient.cs" />
     <Compile Include="ClrInvoker.cs" />
     <Compile Include="ExcelFormats.cs" />
     <Compile Include="ExcelParser.cs" />
