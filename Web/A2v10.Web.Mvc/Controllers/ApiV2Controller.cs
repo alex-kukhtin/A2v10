@@ -65,6 +65,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (!IsAuthenticated())
 				return Task.CompletedTask;
+			StartTenant();
 			var eo = new ExpandoObject();
 			var q = new ExpandoObject();
 			Request.QueryString.CopyTo(q);

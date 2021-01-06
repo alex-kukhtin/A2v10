@@ -1,4 +1,4 @@
-﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -12,7 +12,6 @@ using System.Dynamic;
 using System.Security.Claims;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security;
@@ -56,39 +55,6 @@ namespace A2v10.Web.Mvc.OAuth2
 			}
 		}
 
-		ClientElement GetClientInfo(NameValueCollection body, BaseValidatingContext<OAuthAuthorizationServerOptions> context)
-		{
-			if (body == null)
-				return null;
-
-			var oauth2Config = ConfigurationManager.GetSection("oauth2") as Oauth2Section;
-
-			var clientId = body["client_id"];
-			if (clientId == null)
-			{
-				context.SetError("'client_id' not found");
-				context.Rejected();
-				return null;
-			}
-			var client = oauth2Config.clients.GetSource(clientId);
-			if (client == null)
-			{
-				context.SetError("'client_id' not found");
-				context.Rejected();
-				return null;
-			}
-			if (!String.IsNullOrEmpty(client.allowIp) && client.allowIp != "*")
-			{
-				// TODO: check Ip
-			}
-			if (!String.IsNullOrEmpty(client.allowOrigin) && client.allowOrigin != "*")
-			{
-				// TODO: checkOrigin
-			}
-
-			return client;
-		}
-
 		public override Task MatchEndpoint(OAuthMatchEndpointContext context)
 		{
 			return base.MatchEndpoint(context);
@@ -109,103 +75,81 @@ namespace A2v10.Web.Mvc.OAuth2
 			return base.GrantResourceOwnerCredentials(context);
 		}
 
-		public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+		public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
 		{
 			/* POST only. TODO: uncomment this
 			if (context.Request.Method?.ToUpperInvariant() != "POST")
 			{
 				context.Rejected();
 				context.SetError("Invalid http method", "Only the POST method is allowed");
-				return Task.CompletedTask;
+				return;
 			}
 			*/
 
-			NameValueCollection body = ParseBody(context.Request);
-
-			var info = GetClientInfo(body, context);
-			if (info != null)
+			if (!context.TryGetFormCredentials(out String clientId, out String clientSecret))
 			{
-				context.Validated();
-				context.Response.Headers.Add("Access-Control-Allow-Origin", new String[] { "*" });
+				context.SetError("parameter_absent");
+				context.Rejected();
+				return;
 			}
-			else
+
+			var prms = new ExpandoObject();
+			prms.Set("ClientId", clientId);
+			prms.Set("ClientSecret", clientSecret);
+
+			ApiV2User user = await _dbContext.LoadAsync<ApiV2User>(_host.CatalogDataSource, "a2security.[ApiUser.Load]", prms);
+
+			if (user == null)
 			{
 				context.Rejected();
+				return;
 			}
-			context.TryGetFormCredentials(out String clientId, out String clientSecret);
-			//var oaClaim = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
-			//var ticket = new AuthenticationTicket(oaClaim, new AuthenticationProperties());
-			context.Validated("clientId");
-			return Task.CompletedTask;
+
+			// TODO: allow ORIGIN, allowIp
+			context.Response.Headers.Add("Access-Control-Allow-Origin", new String[] { "*" });
+			context.Request.Set<ApiV2User>("ApiUser", user);
+			context.Validated(clientId);
 		}
 
 		public override Task GrantAuthorizationCode(OAuthGrantAuthorizationCodeContext context)
 		{
-			ExpandoObject dataEO = new ExpandoObject();
-			dataEO.Set("UserId", 99);
-			dataEO.Set("TenantId", 123);
-
-			var claims = new List<Claim>();
-			foreach (var kv in dataEO.Enumerate())
-				claims.Add(new Claim(kv.Key, kv.Value.ToString()));
-
-			var oaClaim = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
-			var ticket = new AuthenticationTicket(oaClaim, new AuthenticationProperties());
-
-			context.Validated(ticket);
-
-			return Task.CompletedTask;
+			return base.GrantAuthorizationCode(context);
 		}
 
 		public override Task GrantClientCredentials(OAuthGrantClientCredentialsContext context)
 		{
-			NameValueCollection body = ParseBody(context.Request);
+			var user = context.Request.Get<ApiV2User>("ApiUser");
 
-			var client = GetClientInfo(body, context);
-
-			if (client == null)
+			if (user == null)
 			{
 				context.Rejected();
+				context.SetError("unauthorized_client");
 				return Task.CompletedTask;
 			}
 
-			ExpandoObject dataEO = new ExpandoObject();
-			dataEO.Set("UserId", 99);
-			dataEO.Set("TenantId", 123);
-			dataEO.Set(ClaimsIdentity.DefaultNameClaimType, "admin@admin.com");
-			dataEO.Set("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", 99);
-			dataEO.Set("Segment", "Segment345");
+			var body = ParseBody(context.Request);
 
-			var strData = body["data"];
-			if (strData != null)
+			var claims = new List<Claim>
 			{
-				var dataJson = Encrypt.DecryptString_Aes(strData, client.key, client.vector);
-				dataEO = JsonConvert.DeserializeObject<ExpandoObject>(dataJson, new ExpandoObjectConverter());
-			}
-			var strSecret = body["client_secret"];
-			if (strSecret != null)
+				new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", user.Id.ToString()),
+				new Claim(ClaimsIdentity.DefaultNameClaimType, user.Name),
+				new Claim("client_id", body["client_id"])
+			};
+
+			void AddClaimFromBody(String name)
 			{
-				/*
-				if (strSecret == client.secret)
-				{
-					dataEO = new ExpandoObject();
-					dataEO.Set("client_id", body["client_id"]);
-					dataEO.Set("session_id", body["session_id"]);
-				}
-				*/
+				var val = body[name];
+				if (val != null)
+					claims.Add(new Claim(name, val));
 			}
 
-			/*
-			if (dataEO == null || dataEO.Get<String>("client_id") != client.id)
-			{
-				context.Rejected();
-				return Task.CompletedTask;
-			}
-			*/
+			if (user.Segment != null)
+				claims.Add(new Claim("Segment", user.Segment));
+			if (user.TenantId != 0)
+				claims.Add(new Claim("TenantId", user.TenantId.ToString()));
 
-			var claims = new List<Claim>();
-			foreach (var kv in dataEO.Enumerate())
-				claims.Add(new Claim(kv.Key, kv.Value.ToString()));
+			AddClaimFromBody("session_id");
+			AddClaimFromBody("state");
 
 			var oaClaim = new ClaimsIdentity(claims, OAuthDefaults.AuthenticationType);
 			var ticket = new AuthenticationTicket(oaClaim, new AuthenticationProperties());

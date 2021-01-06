@@ -133,6 +133,7 @@
     <Compile Include="Hooks\SetPasswordHandler.cs" />
     <Compile Include="Hooks\SetPersonNameHandler.cs" />
     <Compile Include="Hooks\SetPhoneNumberHandler.cs" />
+    <Compile Include="OAuth2\ApiV2User.cs" />
     <Compile Include="OAuth2\ConfigSection.cs" />
     <Compile Include="OAuth2\Encrypt.cs" />
     <Compile Include="OAuth2\OAuth2Provider.cs" />
