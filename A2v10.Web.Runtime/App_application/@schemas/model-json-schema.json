@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7733",
+	"$version": "10.0.7738",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -202,7 +202,7 @@
 						"model": { "type": "string" },
 						"type": {
 							"type": "string",
-							"enum": [ "parse", "clr" ]
+							"enum": [ "parse", "clr", "sql", "azureBlob" ]
 						},
 						"parse": {
 							"type": "string",
@@ -213,6 +213,8 @@
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
 						},
+						"container": { "type": "string" },
+						"azureSource": { "type": "string" },
 						"availableModels": {
 							"type": "array",
 							"items": {

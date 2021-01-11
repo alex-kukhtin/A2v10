@@ -214,6 +214,51 @@ namespace A2v10.Request
 			return retList;
 		}
 
+		public async Task<IList<AttachmentUpdateIdToken>> SaveAttachmentsMimeCompressAzure(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId, Int32 factor, String container)
+		{
+			if (factor < 0 || factor > 100)
+				throw new ArgumentOutOfRangeException(nameof(factor), $"Invalid factor value: {factor}. Expected [0..100]");
+			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			ExpandoObject prms = new ExpandoObject();
+			String key = rm.ModelAction.ToPascalCase();
+			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
+			AttachmentUpdateInfo ii = new AttachmentUpdateInfo
+			{
+				UserId = userId,
+				Id = rm._id,
+				Key = key
+			};
+			if (_host.IsMultiTenant)
+				ii.TenantId = tenantId;
+			if (_host.IsMultiCompany)
+				ii.CompanyId = companyId;
+			var azureClient = new AzureStorageRestClient();
+			var retList = new List<AttachmentUpdateIdToken>();
+			for (Int32 i = 0; i < files.Count; i++)
+			{
+				HttpPostedFileBase file = files[i];
+				var blobName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+
+				ii.Mime = file.ContentType;
+				ii.Name = Path.GetFileName(file.FileName);
+				ii.BlobName = $"{container}/{blobName}";
+				ii.Stream = null;
+
+				var stream = CompressImage(file.InputStream, file.ContentType, factor);
+				await azureClient.Put(null, container, blobName, stream, (Int32) stream.Length);
+				ii.Stream = CompressImage(file.InputStream, file.ContentType, factor);
+
+				var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(rm.CurrentSource, procedure, ii);
+				retList.Add(new AttachmentUpdateIdToken()
+				{
+					Id = aout.Id,
+					Mime = file.ContentType,
+					Name = file.FileName,
+					Token = _tokenProvider.GenerateToken(aout.Token)
+				});
+			}
+			return retList;
+		}
 
 		Stream CompressImage(Stream stream, String contentType, Int32 factor)
 		{
