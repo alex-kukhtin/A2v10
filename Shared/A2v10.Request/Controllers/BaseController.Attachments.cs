@@ -246,7 +246,6 @@ namespace A2v10.Request
 
 				var stream = CompressImage(file.InputStream, file.ContentType, factor);
 				await azureClient.Put(null, container, blobName, stream, (Int32) stream.Length);
-				ii.Stream = CompressImage(file.InputStream, file.ContentType, factor);
 
 				var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(rm.CurrentSource, procedure, ii);
 				retList.Add(new AttachmentUpdateIdToken()
