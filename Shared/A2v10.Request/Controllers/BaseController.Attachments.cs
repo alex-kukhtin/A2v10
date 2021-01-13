@@ -274,6 +274,7 @@ namespace A2v10.Request
 				var encParam = new EncoderParameter(qualEncoder, (long) factor);
 				encParams.Param[0] = encParam;
 				bmp.Save(ms, jpegEncoder, encParams);
+				ms.Seek(0, SeekOrigin.Begin);
 				return ms;
 			}
 		}
