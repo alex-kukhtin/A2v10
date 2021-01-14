@@ -249,23 +249,20 @@ namespace A2v10.Request
 			switch (ru.type)
 			{
 				case RequestFileType.sql:
-					return await _dbContext.LoadAsync<AttachmentInfo>(ru.CurrentSource, ru.FileProcedureLoad, loadPrms);
 				case RequestFileType.azureBlob:
 					{
 						var ai = await _dbContext.LoadAsync<AttachmentInfo>(ru.CurrentSource, ru.FileProcedureLoad, loadPrms);
-						if (ai.BlobName != null)
+						if (!String.IsNullOrEmpty(ai.BlobName))
 						{
 							var azureClient = new AzureStorageRestClient();
 							var blobName = Path.GetFileName(ai.BlobName);
 							var container = Path.GetDirectoryName(ai.BlobName);
 							ai.Stream = await azureClient.Get(ru.azureSource, container, blobName);
 						}
-						else
-							throw new InvalidOperationException("The 'POST' method is not allowed for requested url");
 						return ai;
 					}
 				default:
-					throw new InvalidOperationException("The 'POST' method is not allowed for requested url");
+					throw new InvalidOperationException($"Invalid type for file: '{ru.type.ToString()}'");
 			}
 		}
 	}

@@ -153,7 +153,8 @@
 							<Span Content="{Bind Id}"/>
 							<Span Content="{Bind Mime}"/>
 							<Span Content="{Bind Size}"/>
-							<FileImage Url="/agent/attachment" Value="{Bind Id}" Width="50" Height="50"/>
+							<FileImage Url="/agent/attachment" Value="{Bind}" Width="50" Height="50"/>
+							<Button Command="{BindCmd Attachment, Url='/agent/attachment', Argument={Bind}}" Icon="Eye"/>
 						</FlexList>
 					</ListItem.Content>
 					<ListItem.CommandBar>
@@ -163,7 +164,8 @@
 					</ListItem.CommandBar>
 				</ListItem>
 			</List>
-			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment" Accept="application/pdf,image/*" Limit="100"/>
+			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment" Accept="application/pdf,image/*" Limit="100000"/>
+			<Button Command="{BindCmd Command=Attachment, Url=/agent/attachment, Argument=101}" Content="View"/>
 			<Block>
 				<Span Content="{Bind Agent.$SelectedMime}"></Span>
 			</Block>

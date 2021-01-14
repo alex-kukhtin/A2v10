@@ -762,6 +762,11 @@
 }
 .ico-a2logo:before {
   content: "\ea10";
+  color: #dd2c5e;
+}
+.a2logo-layout {
+  font-size: 125%;
+  margin-right: 3px;
 }
 .ico-logo-github:before {
   content: "\ead1";

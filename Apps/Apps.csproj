@@ -77,10 +77,10 @@
     <TypeScriptCompile Include="Develop\entity\edit.d.ts" />
     <Content Include="Develop\entity\editGoods.template.js" />
     <TypeScriptCompile Include="Develop\purchase\Goods\index.d.ts" />
-    <Content Include="Develop\purchase\Supplier\index.view.html">
+    <None Include="Develop\purchase\Supplier\index.view.html_">
       <Generator>XamlIntelliSenseFileGenerator</Generator>
       <SubType>Designer</SubType>
-    </Content>
+    </None>
     <None Include="Develop\reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <Content Include="Develop\sales\catalog\index.template.js" />
@@ -431,10 +431,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Develop\purchase\Supplier\index.view.xaml_">
+    <Page Include="Develop\purchase\Supplier\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </None>
+    </Page>
     <None Include="Develop\purchase\WaybillIn\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
