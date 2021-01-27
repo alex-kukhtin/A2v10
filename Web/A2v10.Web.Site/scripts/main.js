@@ -5812,9 +5812,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191123-7587*/
+/*20210127-7744*/
 // components/selector.js
 
 /*TODO*/
@@ -6013,6 +6013,9 @@ Vue.component('validator-control', {
 			open() {
 				if (!this.isOpen) {
 					eventBus.$emit('closeAllPopups');
+					if (this.current != -1)
+						this.$nextTick(() => this.scrollIntoView());
+						//setTimeout(, 0);
 					this.doFetch(this.valueText, true);
 					if (this.isCombo) {
 						let combo = this.$refs['xcombo'];
@@ -6090,6 +6093,7 @@ Vue.component('validator-control', {
 				this.query = this.valueText;
 				this.isOpen = false;
 				this.isOpenNew = false;
+				this.current = this.items.indexOf(itm);
 				this.$nextTick(() => {
 					if (this.hitfunc) {
 						this.hitfunc.call(this.item.$root, itm);
@@ -6162,19 +6166,25 @@ Vue.component('validator-control', {
 						this.items = [];
 					});
 				} else {
-					if (utils.isArray(fData))
-						this.items = fData;
+					if (utils.isArray(fData)) {
+						if (this.items != fData) {
+							if (this.items.length != fData.length)
+								this.current = -1; // reset current element
+							this.items = fData;
+						}
+					}
 				}
 			},
 			fetchData(text, all) {
+				if (!this.fetch)
+					console.error('Selector. Fetch not defined');
 				all = all || false;
 				let elem = this.item[this.prop];
-				if (!('$vm' in elem))
+				if (elem && !('$vm' in elem))
 					elem.$vm = this.$root; // plain object hack
 				return this.fetch.call(this.item.$root, elem, text, all);
 			},
 			doNew() {
-				//console.dir(this.createNew);
 				this.isOpen = false;
 				if (this.createNew) {
 					let elem = this.item[this.prop];

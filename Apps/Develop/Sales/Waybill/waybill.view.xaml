@@ -91,7 +91,8 @@
 						<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 					</TextBox.AddOns>
 				</TextBox>
-				<Selector Size="Large" Label="Selector" Grid.Row="4" Grid.Col="4" Grid.ColSpan="3" Value="{Bind Document.Agent}" DisplayProperty="Name">
+				<Selector Size="Large" Label="Selector" Grid.Row="4" Grid.Col="4" Grid.ColSpan="3" 
+						  Value="{Bind Document.Agent}" DisplayProperty="Name" Delegate="fetchAgent" ShowCaret="True">
 					<Selector.AddOns>
 						<Hyperlink Icon="Search" />
 					</Selector.AddOns>

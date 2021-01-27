@@ -113,6 +113,10 @@
 			"type": "sql",
 			"procedure": "SaveDocumentTime"
 		},
+		"fetchCustomer": {
+			"type": "sql",
+			"procedure": "Agent.Fetch"
+		},
 		"serverScript": {
 			"type": "script",
 			"template": "server.template",

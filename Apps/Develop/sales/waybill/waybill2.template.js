@@ -79,6 +79,9 @@ define(["require", "exports"], function (require, exports) {
             testPost,
             sendMessage,
             checkTypes
+        },
+        delegates: {
+            fetchAgent
         }
     };
     exports.default = template;
@@ -183,5 +186,9 @@ define(["require", "exports"], function (require, exports) {
         const doc = this.Document;
         let r = await ctrl.$invoke('checkTypes', { Id: doc.Id });
         alert(JSON.stringify(r));
+    }
+    async function fetchAgent(agent, text) {
+        let vm = this.$vm;
+        return await vm.$invoke('fetchCustomer', { Text: text, Kind: 'Customer' });
     }
 });

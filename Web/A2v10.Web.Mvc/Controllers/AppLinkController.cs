@@ -43,9 +43,14 @@ namespace A2v10.Web.Mvc.Controllers
 			var page = pathInfo.ToLowerInvariant();
 			try
 			{
-				if (pathInfo.ToLowerInvariant() == "appstyles")
+				if (pathInfo.Equals("appstyles", StringComparison.InvariantCultureIgnoreCase))
 				{
 					AppStyles();
+					return;
+				}
+				else if (pathInfo.Equals("about", StringComparison.InvariantCultureIgnoreCase))
+				{
+					await _baseController.RenderAbout(Response.Output);
 					return;
 				}
 

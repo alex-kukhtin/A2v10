@@ -5812,9 +5812,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191123-7587*/
+/*20210127-7744*/
 // components/selector.js
 
 /*TODO*/
@@ -6167,9 +6167,11 @@ Vue.component('validator-control', {
 				}
 			},
 			fetchData(text, all) {
+				if (!this.fetch)
+					console.error('Selector. Fetch not defined');
 				all = all || false;
 				let elem = this.item[this.prop];
-				if (!('$vm' in elem))
+				if (elem && !('$vm' in elem))
 					elem.$vm = this.$root; // plain object hack
 				return this.fetch.call(this.item.$root, elem, text, all);
 			},

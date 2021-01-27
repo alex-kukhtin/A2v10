@@ -41,7 +41,8 @@ const template = {
 		}
 	},
 	delegates: {
-		drawSparkline
+		drawSparkline,
+		docToSelect
 	}
 };
 
@@ -59,6 +60,11 @@ function agentPopoverUrl() {
 	if (doc.Agent.Id)
 		return "/Agent/State/" + doc.Agent.Id;
 	return '';
+}
+
+function docToSelect(elem, text, all) {
+	let r = this.Documents;
+	return r.filter(r => all || r.Memo.indexOf(text) !== -1);
 }
 
 module.exports = template;

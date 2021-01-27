@@ -89,6 +89,9 @@ const template: Template = {
 		testPost,
 		sendMessage,
 		checkTypes
+	},
+	delegates: {
+		fetchAgent
 	}
 };
 
@@ -209,4 +212,9 @@ async function checkTypes() {
 	const doc = this.Document;
 	let r = await ctrl.$invoke('checkTypes', { Id: doc.Id });
 	alert(JSON.stringify(r));
+}
+
+async function fetchAgent(agent, text) {
+	let vm = this.$vm;
+	return await vm.$invoke('fetchCustomer', { Text: text, Kind: 'Customer' });
 }
