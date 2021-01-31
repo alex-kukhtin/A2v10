@@ -52,6 +52,8 @@
     <None Include="Admin\Identity\Group\model.json" />
     <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
+    <Content Include="%40schemas\model-json-schema.json" />
+    <Content Include="%40schemas\sql-json-schema.json" />
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
@@ -72,7 +74,17 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Develop\pos\model.json" />
+    <Content Include="App_application\%40sql\platform\a2v10admin.sql" />
+    <Content Include="App_application\%40sql\platform\a2v10platform.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10admin.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10api.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10messaging.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10security.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10system.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10ui.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10workflow.sql" />
     <Content Include="Develop\dashboard\server.module.js" />
+    <Content Include="App_application\%40types\platform.d.ts" />
     <TypeScriptCompile Include="Develop\agent\state.d.ts" />
     <TypeScriptCompile Include="Develop\entity\edit.d.ts" />
     <Content Include="Develop\entity\editGoods.template.js" />
@@ -112,9 +124,16 @@
     <Content Include="Develop\sales\waybill\server.template.js" />
     <Content Include="Develop\include.module.js" />
     <Content Include="Develop\Workflows\second-mail.html" />
+    <Content Include="Samples\_sql\schema.sql" />
+    <Content Include="Samples\_sql\ui.sql" />
     <Content Include="tsconfig.json" />
     <None Include="Develop\_tests\Tests.Runner.config" />
+    <None Include="Samples\catalog\agent\model.json" />
     <None Include="VueSite\blog\model.json" />
+    <TypeScriptCompile Include="Samples\catalog\agent\editFolder.template.ts" />
+    <TypeScriptCompile Include="Samples\catalog\agent\folder.d.ts" />
+    <TypeScriptCompile Include="Samples\catalog\agent\index.template.ts" />
+    <TypeScriptCompile Include="Samples\catalog\agent\index.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\catalog\Customers\model.json" />
@@ -467,6 +486,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Samples\catalog\agent\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Samples\catalog\agent\editFolder.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\sales\invoice\demo.wizard.xaml">
@@ -550,7 +577,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="%40types\platform.d.ts" />
     <TypeScriptCompile Include="Develop\sales\invoice\invoice2.template.ts" />
     <TypeScriptCompile Include="Develop\sales\invoice\model.d.ts" />
     <TypeScriptCompile Include="Develop\sales\waybill\model.d.ts" />

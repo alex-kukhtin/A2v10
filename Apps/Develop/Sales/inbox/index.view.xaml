@@ -24,8 +24,8 @@
 	<Page.Pager>
 		<Pager Source="{Bind Parent.Pager}" />
 	</Page.Pager>
-	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
-				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True"
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" HeadersVisibility="Column"
+				Sort="True" GridLines="Vertical" FixedHeader="True"
 				DoubleClick="{BindCmd OpenSelected, Url='/sales/inbox/open', Argument={Bind Inbox}}">
 		<DataGridColumn Header="Id" Content="{Bind Id}" Align="Right" Fit="True"  Command="{BindCmd Open, Url='/sales/inbox/open'}"  Icon="Workflow1" Wrap="NoWrap"/>
 		<DataGridColumn Header="Text" Content="{Bind Text}" />

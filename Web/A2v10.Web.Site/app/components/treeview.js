@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20201011-7713*/
+/*20210131-7744*/
 // components/treeview.js
 
 (function () {
@@ -15,6 +15,7 @@
 		name: 'tree-item',
 		template: `
 <li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick(item)"
+	v-show=isItemVisible
 	:class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
 	<div :class="{overlay:true, 'no-icons': !options.hasIcon}">
 		<a class="toggle" v-if="isFolder" href @click.stop.prevent=toggle></a>
@@ -96,6 +97,11 @@
 				let ch = this.item[this.options.subitems];
 				return ch && ch.length;
 			},
+			isItemVisible: function () {
+				let iv = this.options.isVisible;
+				if (!iv) return true;
+				return this.item[iv];
+			},
 			isExpanded: function () {
 				return this.isFolder && this.item.$expanded;
 			},
@@ -136,7 +142,6 @@
 		},
 		watch: {
 			isItemSelected(newVal) {
-				//console.dir('isItemSelected:' + newVal);
 				if (newVal && this.$el.scrollIntoViewCheck)
 					this.$el.scrollIntoViewCheck();
 			}
@@ -189,12 +194,16 @@
 		},
 		methods: {
 			selectFirstItem() {
-				if (!this.isSelectFirstItem)
-					return;
+				if (!this.isSelectFirstItem) return;
 				let itms = this.items;
-				if (!itms.length)
-					return;
-				let fe = itms[0];
+				if (!itms.length) return;
+				let fe = null;
+				if (this.options && this.options.isVisible) {
+					let vi = this.options.isVisible;
+					fe = itms.$find(x => x[vi]);
+				} else
+					fe = itms[0];
+				if (!fe) return;
 				if (fe.$select)
 					fe.$select(this.items);
 			},

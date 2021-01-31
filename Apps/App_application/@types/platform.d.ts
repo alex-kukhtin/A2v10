@@ -1,6 +1,6 @@
 ﻿
-/* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7706 */
+/* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
+/* Version 10.0.7744 */
 
 
 declare function require(url: string): any;
@@ -38,7 +38,7 @@ interface IArrayElement extends IElement {
 	$selected: boolean;
 	$checked: boolean;
 	$remove(): void;
-	$select(): void;
+	$select(root?: IElementArray<IElement>): void;
 }
 
 interface ITreeElement extends IArrayElement {
@@ -86,6 +86,7 @@ interface IElementArray<T> extends Array<T> {
 
 	$isLazy(): boolean;
 
+	$find(callback: (this: any, elem: T, index?: number, array?: IElementArray<T>) => boolean, thisArg?: any): T;
 	$remove(elem: T): IElementArray<T>;
 	$empty(): IElementArray<T>;
 	$renumberRows(): IElementArray<T>;
@@ -236,7 +237,8 @@ interface IController {
 	$notifyOwner(id: any, toast?: string | { text: string, style?: CommonStyle }): void;
 	$navigate(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
 	$defer(handler: () => void): void;
-	$setFilter(target: object, prop: string, value: any): void;
+	$setFilter(target: any, prop: string, value: any): void;
+	$expand(elem: ITreeElement, prop: string, value: boolean): Promise<any>;
 }
 
 interface IMessage {
@@ -269,6 +271,7 @@ interface IViewModel extends IController {
 	$dbRemove(elem: object, confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
 	$dbRemoveSelected(arr: object[], confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
 	$setCurrentUrl(url: string): void;
+	$export(arg: any, url: string, data?: any, opts?: { saveRequired: boolean }): void;
 }
 
 // utilities

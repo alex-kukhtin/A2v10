@@ -1,6 +1,6 @@
 ﻿
-/* Copyright © 2019-2020 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7734 */
+/* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
+/* Version 10.0.7744 */
 
 
 declare function require(url: string): any;
@@ -38,7 +38,7 @@ interface IArrayElement extends IElement {
 	$selected: boolean;
 	$checked: boolean;
 	$remove(): void;
-	$select(): void;
+	$select(root?: IElementArray<IElement>): void;
 }
 
 interface ITreeElement extends IArrayElement {
@@ -237,7 +237,8 @@ interface IController {
 	$notifyOwner(id: any, toast?: string | { text: string, style?: CommonStyle }): void;
 	$navigate(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
 	$defer(handler: () => void): void;
-	$setFilter(target: object, prop: string, value: any): void;
+	$setFilter(target: any, prop: string, value: any): void;
+	$expand(elem: ITreeElement, prop: string, value: boolean): Promise<any>;
 }
 
 interface IMessage {

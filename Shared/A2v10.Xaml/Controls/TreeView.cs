@@ -62,6 +62,13 @@ namespace A2v10.Xaml
 				sb.Append($"isGroup: '{isGroupBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			else if (IsGroup != null)
 				throw new XamlException("The IsGroup property must be a binding");
+
+			// visible => if or show
+			var showBind = GetBinding(nameof(Show));
+			if (showBind == null)
+				showBind = GetBinding(nameof(If));
+			if (showBind != null)
+				sb.Append($"isVisible: '{showBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 		}
 	}
 

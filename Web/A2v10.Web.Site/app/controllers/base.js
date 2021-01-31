@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20201130-7734*/
+/*20210131-7744*/
 // controllers/base.js
 
 (function () {
@@ -999,28 +999,52 @@
 				return '';
 			},
 
-			$expand(elem, propName) {
-				let arr = elem[propName];
-				if (arr.$loaded)
-					return;
-				if (!utils.isDefined(elem.$hasChildren))
-					return; // no $hasChildren property - static expand
+			$expand(elem, propName, expval) {
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/expand',
-					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+					url = root + '/_data/expand';
 
-				dataservice.post(url, jsonData).then(function (data) {
-					if (self.__destroyed__) return;
-					let srcArray = data[propName];
-					arr.$empty();
-					for (let el of srcArray)
-						arr.push(arr.$new(el));
-				}).catch(function (msg) {
-					self.$alertUi(msg);
+				return new Promise(function (resolve, reject) {
+					let arr = elem[propName];
+					if (utils.isDefined(expval)) {
+						if (elem.$expanded == expval) {
+							resolve(arr);
+							return;
+						} else {
+							platform.set(elem, '$expanded', expval);
+						}
+					}
+					if (arr.$loaded) {
+						resolve(arr);
+						return;
+					}
+					if (!utils.isDefined(elem.$hasChildren)) {
+						resolve(arr);
+						return; // no $hasChildren property - static expand
+					}
+					if (!elem.$hasChildren) {
+						// try to expand empty array
+						arr.$loaded = true;
+						resolve(arr);
+						return;
+					}
+					let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
+						let srcArray = data[propName];
+						arr.$empty();
+						if (srcArray) {
+							for (let el of srcArray)
+								arr.push(arr.$new(el));
+						}
+						resolve(arr);
+					}).catch(function (msg) {
+						self.$alertUi(msg);
+						reject(arr);
+					});
+
+					arr.$loaded = true;
 				});
-
-				arr.$loaded = true;
 			},
 
 			$loadLazy(elem, propName) {
@@ -1192,7 +1216,8 @@
 					$notifyOwner: this.$notifyOwner,
 					$navigate: this.$navigate,
 					$defer: platform.defer,
-					$setFilter: this.$setFilter
+					$setFilter: this.$setFilter,
+					$expand: this.$expand
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

@@ -1,0 +1,35 @@
+﻿{
+	"$schema": "../../../@schemas/model-json-schema.json#",
+	"schema": "samples",
+	"model": "Agent",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "index.view",
+			"template": "index.template"
+		}
+	},
+	"dialogs": {
+		"editFolder": {
+			"model": "Agent.Folder",
+			"template": "editFolder.template",
+			"view": "editFolder.dialog"
+		},
+		"editItem": {
+			"model": "Agent.Item",
+			"template": "editItem.template",
+			"view": "editItem.dialog"
+		},
+		"browse": {
+			"index": true,
+			"template": "browse.template",
+			"view": "browse.dialog"
+		}
+	},
+	"commands": {
+		"deleteFolder": {
+			"type": "sql",
+			"procedure": "Agent.Folder.Delete234"
+		}
+	}
+}

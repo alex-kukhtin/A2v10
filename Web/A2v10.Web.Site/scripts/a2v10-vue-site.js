@@ -2321,9 +2321,9 @@ app.modules['std:validators'] = function () {
 
 
 
-/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20201017-7715*/
+/*20210131-7744*/
 // services/datamodel.js
 
 (function () {
@@ -3018,6 +3018,11 @@ app.modules['std:validators'] = function () {
 					for (let i = 0; i < that.length; i++)
 						that[i][rowNoProp] = i + 1; // 1-based
 				}
+				if (that.$parent && that.$parent._meta_.$hasChildren) {
+					let hcp = that.$parent._meta_.$hasChildren;
+					that.$parent[hcp] = true;
+
+				}
 				return ne;
 			}
 			if (utils.isArray(src)) {
@@ -3086,7 +3091,15 @@ app.modules['std:validators'] = function () {
 			let eventName = this._path_ + '[].remove';
 			this._root_.$setDirty(true);
 			this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-			if (!this.length) return this;
+
+			if (!this.length) {
+				if (this.$parent) {
+					let hasCh = this.$parent._meta_.$hasChildren;
+					if (hasCh)
+						this.$parent[hasCh] = false;
+				}
+				return this;
+			}
 			if (index >= this.length)
 				index -= 1;
 			this.$renumberRows();
@@ -4850,9 +4863,9 @@ template: `
 		}
 	});
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20201130-7734*/
+/*20210131-7744*/
 // controllers/base.js
 
 (function () {
@@ -5851,28 +5864,52 @@ template: `
 				return '';
 			},
 
-			$expand(elem, propName) {
-				let arr = elem[propName];
-				if (arr.$loaded)
-					return;
-				if (!utils.isDefined(elem.$hasChildren))
-					return; // no $hasChildren property - static expand
+			$expand(elem, propName, expval) {
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/expand',
-					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+					url = root + '/_data/expand';
 
-				dataservice.post(url, jsonData).then(function (data) {
-					if (self.__destroyed__) return;
-					let srcArray = data[propName];
-					arr.$empty();
-					for (let el of srcArray)
-						arr.push(arr.$new(el));
-				}).catch(function (msg) {
-					self.$alertUi(msg);
+				return new Promise(function (resolve, reject) {
+					let arr = elem[propName];
+					if (utils.isDefined(expval)) {
+						if (elem.$expanded == expval) {
+							resolve(arr);
+							return;
+						} else {
+							platform.set(elem, '$expanded', expval);
+						}
+					}
+					if (arr.$loaded) {
+						resolve(arr);
+						return;
+					}
+					if (!utils.isDefined(elem.$hasChildren)) {
+						resolve(arr);
+						return; // no $hasChildren property - static expand
+					}
+					if (!elem.$hasChildren) {
+						// try to expand empty array
+						arr.$loaded = true;
+						resolve(arr);
+						return;
+					}
+					let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
+						let srcArray = data[propName];
+						arr.$empty();
+						if (srcArray) {
+							for (let el of srcArray)
+								arr.push(arr.$new(el));
+						}
+						resolve(arr);
+					}).catch(function (msg) {
+						self.$alertUi(msg);
+						reject(arr);
+					});
+
+					arr.$loaded = true;
 				});
-
-				arr.$loaded = true;
 			},
 
 			$loadLazy(elem, propName) {
@@ -6044,7 +6081,8 @@ template: `
 					$notifyOwner: this.$notifyOwner,
 					$navigate: this.$navigate,
 					$defer: platform.defer,
-					$setFilter: this.$setFilter
+					$setFilter: this.$setFilter,
+					$expand: this.$expand
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

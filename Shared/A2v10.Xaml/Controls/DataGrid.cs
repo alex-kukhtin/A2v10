@@ -27,8 +27,8 @@ namespace A2v10.Xaml
 	[ContentProperty("Columns")]
 	public class DataGrid : Control
 	{
-		public Boolean Hover { get; set; }
-		public Boolean Striped { get; set; }
+		public Boolean? Hover { get; set; }
+		public Boolean? Striped { get; set; }
 		public Boolean Border { get; set; }
 		public Boolean Sort { get; set; }
 		public Boolean Compact { get; set; }
@@ -105,8 +105,8 @@ namespace A2v10.Xaml
 			var isb = GetBinding(nameof(ItemsSource));
 			if (isb != null)
 				dataGrid.MergeAttribute(":items-source", isb.GetPath(context));
-			MergeBoolAttribute(dataGrid, context, nameof(Hover), Hover);
-			MergeBoolAttribute(dataGrid, context, nameof(Striped), Striped);
+			MergeBoolAttributeIfExists(dataGrid, context, nameof(Hover), Hover);
+			MergeBoolAttributeIfExists(dataGrid, context, nameof(Striped), Striped);
 			MergeBoolAttribute(dataGrid, context, nameof(Border), Border);
 			MergeBoolAttribute(dataGrid, context, nameof(Sort), Sort);
 			dataGrid.MergeAttribute(":route-query", "$query"); // always!

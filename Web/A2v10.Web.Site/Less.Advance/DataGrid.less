@@ -68,6 +68,14 @@ table.data-grid {
 		}
 	}
 
+	&:not(.no-hover) > tbody > tr:hover {
+		background-color: @hover-bg-color;
+	}
+
+	&:not(.no-hover) > tbody > tr.active:hover {
+		background-color: @active-bg-color;
+	}
+
 	td {
 		padding: .5rem;
 		vertical-align: top;
@@ -417,7 +425,7 @@ table.data-grid > tbody {
 				text-align: left !important;
 
 				> .h-fill {
-					padding: 0 @table-cell-padding-h;
+					padding: 0 8px;
 					height: 0;
 					color: transparent;
 					line-height: 0 !important;
@@ -501,7 +509,6 @@ table.data-grid > tbody {
 			color: @label-color;
 			border-style: none;
 		}
-
 		//tr.dg-row:last-child > td {
 		//border-bottom-style: none;
 		//}

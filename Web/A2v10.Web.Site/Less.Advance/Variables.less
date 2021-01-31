@@ -36,8 +36,8 @@
 
 @brand-hover-color: ~"var(--themeDarker)"; //lighten(@brand-bk-color, 15%);
 
-@hover-bg-color: #fdf4bf;
-@active-bg-color: #cde6f7;
+@hover-bg-color: #edebe9;
+@active-bg-color: #F0C1C5;
 @alter-bg-color: rgba(208, 208, 208, 0.15);
 
 //@link-color: #26a3c6; // var(--themeDark);//#208cf8; //#57a8fa;
@@ -80,8 +80,11 @@
 @footer-bg-color: var(--neutralBk);
 /* nav bar */
 @navbar-height: 32px;
-@navbar-bg-color: #f2f3f9;
-@navbar-highlight-color: darken(@navbar-bg-color, 3%);
+@navbar-bg-color: var(--neutralBk);
+@navbar-bg-color-dark: var(--neutralBkDark);
+@navbar-highlight-color: @navbar-bg-color-dark;
+@navbar-link-color: var(--themeDarker);
+
 @sidebar-tab-height: 42px;
 /* side bar */
 @side-bar-bg-color: var(--neutralBk);
@@ -113,7 +116,7 @@
 
 @error-border-color: #ff6a00;
 /* dialog */
-@dialog-header-bg-color: #fff138;
+@dialog-header-bg-color: #fcf374;
 
 @dropdown-brd-color: @default-brd-color;
 @dropdown-bg-color: #eaf0ff;

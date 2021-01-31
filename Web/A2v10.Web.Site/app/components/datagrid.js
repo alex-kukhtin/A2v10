@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20201001-7708
+// 20210127-7744
 // components/datagrid.js*/
 
 (function () {
@@ -509,10 +509,15 @@
 			'items-source': [Object, Array],
 			border: Boolean,
 			grid: String,
-			striped: Boolean,
 			fixedHeader: Boolean,
 			hideHeader: Boolean,
-			hover: { type: Boolean, default: false },
+			hover: {
+				type: Boolean, default: undefined
+			},
+			striped: {
+				type: Boolean,
+				default: undefined
+			},
 			compact: Boolean,
 			sort: Boolean,
 			routeQuery: Object,
@@ -565,8 +570,10 @@
 			cssClass() {
 				let cssClass = 'data-grid';
 				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
-				if (this.striped) cssClass += ' striped';
-				if (this.hover) cssClass += ' hover';
+				if (this.striped != undefined)
+					cssClass += this.striped ? ' striped' : ' no-striped';
+				if (this.hover != undefined)
+					cssClass += this.hover ? ' hover' : ' no-hover';
 				if (this.compact) cssClass += ' compact';
 				return cssClass;
 			},

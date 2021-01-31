@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 27.01.2021 22:39:36
+generated: 31.01.2021 16:47:44
 */
 
 set nocount on;
@@ -1719,18 +1719,18 @@ go
 
 
 /*
-Copyright © 2008-2020 Alex Kukhtin
+Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 15 oct 2020
-module version : 7674
+Last updated : 31 jan 2021
+module version : 7675
 */
 ------------------------------------------------
 begin
 	set nocount on;
 	if not exists(select * from a2sys.Versions where Module = N'std:ui')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7674);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7675);
 	else
-		update a2sys.Versions set [Version] = 7674 where Module = N'std:ui';
+		update a2sys.Versions set [Version] = 7675 where Module = N'std:ui';
 	end
 go
 ------------------------------------------------
@@ -2083,9 +2083,9 @@ begin
 end
 go
 ------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA = N'a2ui' and DOMAIN_NAME = N'Menu.TableType')
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA = N'a2ui' and DOMAIN_NAME = N'Menu2.TableType')
 exec sp_executesql N'
-create type a2ui.[Menu.TableType] as table
+create type a2ui.[Menu2.TableType] as table
 (
 	Id bigint,
 	Parent bigint,
@@ -2095,7 +2095,7 @@ create type a2ui.[Menu.TableType] as table
 	[Url] nvarchar(255),
 	Icon nvarchar(255),
 	[Model] nvarchar(255),
-	[Order] nvarchar(255),
+	[Order] int,
 	[Description] nvarchar(255),
 	[Help] nvarchar(255),
 	Params nvarchar(255)
@@ -2107,7 +2107,7 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2ui
 go
 ------------------------------------------------
 create procedure a2ui.[Menu.Merge]
-@Menu a2ui.[Menu.TableType] readonly,
+@Menu a2ui.[Menu2.TableType] readonly,
 @Start bigint,
 @End bigint
 as

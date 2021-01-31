@@ -1,6 +1,6 @@
-﻿/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
+﻿/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20201017-7715*/
+/*20210131-7744*/
 // services/datamodel.js
 
 (function () {
@@ -695,6 +695,11 @@
 					for (let i = 0; i < that.length; i++)
 						that[i][rowNoProp] = i + 1; // 1-based
 				}
+				if (that.$parent && that.$parent._meta_.$hasChildren) {
+					let hcp = that.$parent._meta_.$hasChildren;
+					that.$parent[hcp] = true;
+
+				}
 				return ne;
 			}
 			if (utils.isArray(src)) {
@@ -763,7 +768,15 @@
 			let eventName = this._path_ + '[].remove';
 			this._root_.$setDirty(true);
 			this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-			if (!this.length) return this;
+
+			if (!this.length) {
+				if (this.$parent) {
+					let hasCh = this.$parent._meta_.$hasChildren;
+					if (hasCh)
+						this.$parent[hasCh] = false;
+				}
+				return this;
+			}
 			if (index >= this.length)
 				index -= 1;
 			this.$renumberRows();
