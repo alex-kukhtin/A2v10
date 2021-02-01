@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20191011-7568
+// 20210201-7744
 // components/debug.js*/
 
 (function () {
@@ -8,7 +8,7 @@
     /**
      */
 
-	const dataService = require('std:dataservice');
+	const http = require('std:http');
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
@@ -148,7 +148,8 @@
 				const root = window.$$rootUrl;
 				const url = urlTools.combine(root, 'shell/trace');
 				const that = this;
-				dataService.post(url).then(function (result) {
+				// with skip events
+				http.post(url, null, null, true).then(function (result) {
 					that.trace.splice(0, that.trace.length);
 					if (!result) return;
 					result.forEach((val) => {

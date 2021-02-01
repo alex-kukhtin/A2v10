@@ -9,6 +9,10 @@ define(["require", "exports"], function (require, exports) {
             'TFolder.$IsFolder'() { return this.Id !== -1; },
             'TFolder.$IsVisible'() {
                 return this.$IsFolder || !!this.$root.$Filter;
+            },
+            'TRoot.$ParentFolderData'() {
+                let sel = this.Folders.$selected;
+                return sel ? { Parent: sel.Id } : {};
             }
         },
         events: {
@@ -18,8 +22,7 @@ define(["require", "exports"], function (require, exports) {
         commands: {
             clearFilter,
             createFolder: {
-                exec: createFolder,
-                canExec: canExecForFolder
+                exec: createFolder
             },
             createSubFolder: {
                 exec: createSubFolder,
@@ -29,6 +32,11 @@ define(["require", "exports"], function (require, exports) {
                 exec: deleteFolder,
                 canExec: canDeleteFolder,
                 confirm: 'Ви дійсно бажаєте видалити папку?'
+            },
+            deleteItem: {
+                exec: deleteItem,
+                canExec(arr) { return !!arr && !!arr.$selected; },
+                confirm: 'Ви дійсно бажаєте видалити контрагента?'
             }
         }
     };
@@ -70,13 +78,17 @@ define(["require", "exports"], function (require, exports) {
     function canExecForFolder(sel) {
         return sel && sel.$IsFolder;
     }
-    function createFolder(sel) {
-        if (sel.$IsSearch)
+    async function createFolder(parent) {
+        const ctrl = this.$ctrl;
+        if (parent && parent.$IsSearch)
             return;
-        alert('top level folder');
+        let elem = await ctrl.$showDialog('/catalog/agent/editFolder');
+        let searchFolder = this.Folders.$find(x => x.Id === -1);
+        let fld = this.Folders.$insert(elem, "above", searchFolder);
+        fld.$select(this.Folders);
     }
     async function createSubFolder(parent) {
-        let ctrl = this.$ctrl;
+        const ctrl = this.$ctrl;
         if (!parent || parent.$IsSearch)
             return;
         await ctrl.$expand(parent, 'SubItems', true);
@@ -88,9 +100,17 @@ define(["require", "exports"], function (require, exports) {
         const ctrl = this.$ctrl;
         if (!folder || folder.$IsSearch || !canDeleteFolder(folder))
             return;
+        await ctrl.$invoke('deleteFolder', { Id: folder.Id });
         folder.$remove();
     }
     function canDeleteFolder(folder) {
         return folder && folder.$IsFolder && !folder.HasSubItems && folder.Children.$isEmpty;
+    }
+    async function deleteItem(arr) {
+        const ctrl = this.$ctrl;
+        if (!arr || !arr.$selected)
+            return;
+        await ctrl.$invoke('deleteItem', { Id: arr.$selected.Id });
+        arr.$selected.$remove();
     }
 });

@@ -27,3 +27,8 @@ begin
 	);
 end
 go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'samples.Agents') and name = N'IX_Agents_Parent')
+	create index IX_Agents_Parent on samples.Agents ([Parent]) include (Id, Void, Folder);
+go
+

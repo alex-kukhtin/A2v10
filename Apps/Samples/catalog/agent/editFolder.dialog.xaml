@@ -6,7 +6,7 @@
 		<Button Content="Скасувати" Command="{BindCmd Close}"/>
 	</Dialog.Buttons>
 	<Grid>
-		<Static Label="Id" Value="{Bind Folder.Id}"/>
+		<Static Label="Id" Value="{Bind Folder.Id, DataType=Number, HideZeros=True}"/>
 		<Static Label="Батьківська папка" Value="{Bind ParentFolder.Name}"/>
 		<TextBox Label="Назва" Value="{Bind Folder.Name}" UpdateTrigger="Input"/>
 	</Grid>

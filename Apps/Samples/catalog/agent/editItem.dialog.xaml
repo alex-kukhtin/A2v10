@@ -1,0 +1,16 @@
+<!-- Edit Item -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+		Title="Властивості контрагента" Size="Small" Overflow="True">
+	<Dialog.Buttons>
+		<Button Content="Зберегти та закрити" Command="{BindCmd SaveAndClose, ValidRequired=True}"/>
+		<Button Content="Скасувати" Command="{BindCmd Close}"/>
+	</Dialog.Buttons>
+	<Grid>
+		<Static Label="Id" Value="{Bind Agent.Id, DataType=Number, HideZeros=True}"/>
+		<Static Label="Батьківська папка" Value="{Bind ParentFolder.Name}"/>
+		<TextBox Label="Назва" Value="{Bind Agent.Name}" UpdateTrigger="Input"/>
+		<TextBox Label="Код ЄДРПОУ" Value="{Bind Agent.Code}" UpdateTrigger="Input" Number="True"/>
+		<TextBox Label="Примітка" Value="{Bind Agent.Memo}" UpdateTrigger="Input" Multiline="True"/>
+	</Grid>
+</Dialog>
+

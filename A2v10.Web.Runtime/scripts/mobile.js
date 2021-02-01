@@ -1425,9 +1425,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190808-7517
+// 20210201-7744
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1438,10 +1438,10 @@ app.modules['std:http'] = function () {
 	let fc = null;
 
 	return {
-		get: get,
-		post: post,
-		load: load,
-		upload: upload,
+		get,
+		post,
+		load,
+		upload,
 		localpost
 	};
 
@@ -1454,12 +1454,13 @@ app.modules['std:http'] = function () {
 		fr.readAsText(blob);
 	}
 
-	function doRequest(method, url, data, raw) {
+	function doRequest(method, url, data, raw, skipEvents) {
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 
 			xhr.onload = function (response) {
-				eventBus.$emit('endRequest', url);
+				if (!skipEvents)
+					eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
 					if (raw) {
 						resolve(xhr.response);
@@ -1490,7 +1491,8 @@ app.modules['std:http'] = function () {
 					reject(xhr.statusText);
 			};
 			xhr.onerror = function (response) {
-				eventBus.$emit('endRequest', url);
+				if (!skipEvents)
+					eventBus.$emit('endRequest', url);
 				reject(xhr.statusText);
 			};
 			xhr.open(method, url, true);
@@ -1498,7 +1500,8 @@ app.modules['std:http'] = function () {
 			xhr.setRequestHeader('Accept', 'application/json, text/html');
 			if (raw)
 				xhr.responseType = "blob";
-			eventBus.$emit('beginRequest', url);
+			if (!skipEvents)
+				eventBus.$emit('beginRequest', url);
 			xhr.send(data);
 		});
 	}
@@ -1507,8 +1510,8 @@ app.modules['std:http'] = function () {
 		return doRequest('GET', url, null, raw);
 	}
 
-	function post(url, data, raw) {
-		return doRequest('POST', url, data, raw);
+	function post(url, data, raw, skipEvents) {
+		return doRequest('POST', url, data, raw, skipEvents);
 	}
 
 	function upload(url, data) {
@@ -2067,9 +2070,9 @@ app.modules['std:validators'] = function () {
 
 
 
-/* Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20201017-7715*/
+/*20210201-7744*/
 // services/datamodel.js
 
 (function () {
@@ -2764,6 +2767,12 @@ app.modules['std:validators'] = function () {
 					for (let i = 0; i < that.length; i++)
 						that[i][rowNoProp] = i + 1; // 1-based
 				}
+				if (that.$parent) {
+					let m = that.$parent._meta_;
+					if (m.$hasChildren && that._path_.endsWith('.' + m.$items)) { 
+						that.$parent[m.$hasChildren] = true;
+					}
+				}
 				return ne;
 			}
 			if (utils.isArray(src)) {
@@ -2832,7 +2841,19 @@ app.modules['std:validators'] = function () {
 			let eventName = this._path_ + '[].remove';
 			this._root_.$setDirty(true);
 			this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-			if (!this.length) return this;
+
+			if (!this.length) {
+				if (this.$parent) {
+					let m = this.$parent._meta_;
+					if (m.$hasChildren && this._path_.endsWith('.' + m.$items)) {
+						this.$parent[m.$hasChildren] = false;
+					}
+					// try to select parent element
+					if (m.$items)
+						this.$parent.$select();
+				}
+				return this;
+			}
 			if (index >= this.length)
 				index -= 1;
 			this.$renumberRows();
@@ -5812,9 +5833,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191123-7587*/
+/*20210127-7744*/
 // components/selector.js
 
 /*TODO*/
@@ -6013,6 +6034,9 @@ Vue.component('validator-control', {
 			open() {
 				if (!this.isOpen) {
 					eventBus.$emit('closeAllPopups');
+					if (this.current != -1)
+						this.$nextTick(() => this.scrollIntoView());
+						//setTimeout(, 0);
 					this.doFetch(this.valueText, true);
 					if (this.isCombo) {
 						let combo = this.$refs['xcombo'];
@@ -6090,6 +6114,7 @@ Vue.component('validator-control', {
 				this.query = this.valueText;
 				this.isOpen = false;
 				this.isOpenNew = false;
+				this.current = this.items.indexOf(itm);
 				this.$nextTick(() => {
 					if (this.hitfunc) {
 						this.hitfunc.call(this.item.$root, itm);
@@ -6162,19 +6187,25 @@ Vue.component('validator-control', {
 						this.items = [];
 					});
 				} else {
-					if (utils.isArray(fData))
-						this.items = fData;
+					if (utils.isArray(fData)) {
+						if (this.items != fData) {
+							if (this.items.length != fData.length)
+								this.current = -1; // reset current element
+							this.items = fData;
+						}
+					}
 				}
 			},
 			fetchData(text, all) {
+				if (!this.fetch)
+					console.error('Selector. Fetch not defined');
 				all = all || false;
 				let elem = this.item[this.prop];
-				if (!('$vm' in elem))
+				if (elem && !('$vm' in elem))
 					elem.$vm = this.$root; // plain object hack
 				return this.fetch.call(this.item.$root, elem, text, all);
 			},
 			doNew() {
-				//console.dir(this.createNew);
 				this.isOpen = false;
 				if (this.createNew) {
 					let elem = this.item[this.prop];
@@ -6196,9 +6227,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20201001-7708
+// 20210127-7744
 // components/datagrid.js*/
 
 (function () {
@@ -6707,10 +6738,15 @@ Vue.component('validator-control', {
 			'items-source': [Object, Array],
 			border: Boolean,
 			grid: String,
-			striped: Boolean,
 			fixedHeader: Boolean,
 			hideHeader: Boolean,
-			hover: { type: Boolean, default: false },
+			hover: {
+				type: Boolean, default: undefined
+			},
+			striped: {
+				type: Boolean,
+				default: undefined
+			},
 			compact: Boolean,
 			sort: Boolean,
 			routeQuery: Object,
@@ -6763,8 +6799,10 @@ Vue.component('validator-control', {
 			cssClass() {
 				let cssClass = 'data-grid';
 				if (this.grid) cssClass += ' grid-' + this.grid.toLowerCase();
-				if (this.striped) cssClass += ' striped';
-				if (this.hover) cssClass += ' hover';
+				if (this.striped != undefined)
+					cssClass += this.striped ? ' striped' : ' no-striped';
+				if (this.hover != undefined)
+					cssClass += this.hover ? ' hover' : ' no-hover';
 				if (this.compact) cssClass += ' compact';
 				return cssClass;
 			},
@@ -7298,9 +7336,9 @@ Vue.component('popover', {
 	}
 });
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20201011-7713*/
+/*20210131-7744*/
 // components/treeview.js
 
 (function () {
@@ -7315,6 +7353,7 @@ Vue.component('popover', {
 		name: 'tree-item',
 		template: `
 <li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick(item)"
+	v-show=isItemVisible
 	:class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
 	<div :class="{overlay:true, 'no-icons': !options.hasIcon}">
 		<a class="toggle" v-if="isFolder" href @click.stop.prevent=toggle></a>
@@ -7396,6 +7435,11 @@ Vue.component('popover', {
 				let ch = this.item[this.options.subitems];
 				return ch && ch.length;
 			},
+			isItemVisible: function () {
+				let iv = this.options.isVisible;
+				if (!iv) return true;
+				return this.item[iv];
+			},
 			isExpanded: function () {
 				return this.isFolder && this.item.$expanded;
 			},
@@ -7436,7 +7480,6 @@ Vue.component('popover', {
 		},
 		watch: {
 			isItemSelected(newVal) {
-				//console.dir('isItemSelected:' + newVal);
 				if (newVal && this.$el.scrollIntoViewCheck)
 					this.$el.scrollIntoViewCheck();
 			}
@@ -7489,12 +7532,16 @@ Vue.component('popover', {
 		},
 		methods: {
 			selectFirstItem() {
-				if (!this.isSelectFirstItem)
-					return;
+				if (!this.isSelectFirstItem) return;
 				let itms = this.items;
-				if (!itms.length)
-					return;
-				let fe = itms[0];
+				if (!itms.length) return;
+				let fe = null;
+				if (this.options && this.options.isVisible) {
+					let vi = this.options.isVisible;
+					fe = itms.$find(x => x[vi]);
+				} else
+					fe = itms[0];
+				if (!fe) return;
 				if (fe.$select)
 					fe.$select(this.items);
 			},
@@ -10050,9 +10097,9 @@ Vue.component('a2-panel', {
 	});
 })();
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20191011-7568
+// 20210201-7744
 // components/debug.js*/
 
 (function () {
@@ -10060,7 +10107,7 @@ Vue.component('a2-panel', {
     /**
      */
 
-	const dataService = require('std:dataservice');
+	const http = require('std:http');
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
@@ -10200,7 +10247,8 @@ Vue.component('a2-panel', {
 				const root = window.$$rootUrl;
 				const url = urlTools.combine(root, 'shell/trace');
 				const that = this;
-				dataService.post(url).then(function (result) {
+				// with skip events
+				http.post(url, null, null, true).then(function (result) {
 					that.trace.splice(0, that.trace.length);
 					if (!result) return;
 					result.forEach((val) => {
@@ -10993,9 +11041,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20201130-7734*/
+/*20210131-7744*/
 // controllers/base.js
 
 (function () {
@@ -11994,28 +12042,52 @@ Vue.directive('resize', {
 				return '';
 			},
 
-			$expand(elem, propName) {
-				let arr = elem[propName];
-				if (arr.$loaded)
-					return;
-				if (!utils.isDefined(elem.$hasChildren))
-					return; // no $hasChildren property - static expand
+			$expand(elem, propName, expval) {
 				let self = this,
 					root = window.$$rootUrl,
-					url = root + '/_data/expand',
-					jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+					url = root + '/_data/expand';
 
-				dataservice.post(url, jsonData).then(function (data) {
-					if (self.__destroyed__) return;
-					let srcArray = data[propName];
-					arr.$empty();
-					for (let el of srcArray)
-						arr.push(arr.$new(el));
-				}).catch(function (msg) {
-					self.$alertUi(msg);
+				return new Promise(function (resolve, reject) {
+					let arr = elem[propName];
+					if (utils.isDefined(expval)) {
+						if (elem.$expanded == expval) {
+							resolve(arr);
+							return;
+						} else {
+							platform.set(elem, '$expanded', expval);
+						}
+					}
+					if (arr.$loaded) {
+						resolve(arr);
+						return;
+					}
+					if (!utils.isDefined(elem.$hasChildren)) {
+						resolve(arr);
+						return; // no $hasChildren property - static expand
+					}
+					if (!elem.$hasChildren) {
+						// try to expand empty array
+						arr.$loaded = true;
+						resolve(arr);
+						return;
+					}
+					let jsonData = utils.toJson({ baseUrl: self.$baseUrl, id: elem.$id });
+					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
+						let srcArray = data[propName];
+						arr.$empty();
+						if (srcArray) {
+							for (let el of srcArray)
+								arr.push(arr.$new(el));
+						}
+						resolve(arr);
+					}).catch(function (msg) {
+						self.$alertUi(msg);
+						reject(arr);
+					});
+
+					arr.$loaded = true;
 				});
-
-				arr.$loaded = true;
 			},
 
 			$loadLazy(elem, propName) {
@@ -12187,7 +12259,8 @@ Vue.directive('resize', {
 					$notifyOwner: this.$notifyOwner,
 					$navigate: this.$navigate,
 					$defer: platform.defer,
-					$setFilter: this.$setFilter
+					$setFilter: this.$setFilter,
+					$expand: this.$expand
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

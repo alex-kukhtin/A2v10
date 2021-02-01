@@ -1395,9 +1395,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190808-7517
+// 20210201-7744
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1408,10 +1408,10 @@ app.modules['std:http'] = function () {
 	let fc = null;
 
 	return {
-		get: get,
-		post: post,
-		load: load,
-		upload: upload,
+		get,
+		post,
+		load,
+		upload,
 		localpost
 	};
 
@@ -1424,12 +1424,13 @@ app.modules['std:http'] = function () {
 		fr.readAsText(blob);
 	}
 
-	function doRequest(method, url, data, raw) {
+	function doRequest(method, url, data, raw, skipEvents) {
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 
 			xhr.onload = function (response) {
-				eventBus.$emit('endRequest', url);
+				if (!skipEvents)
+					eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
 					if (raw) {
 						resolve(xhr.response);
@@ -1460,7 +1461,8 @@ app.modules['std:http'] = function () {
 					reject(xhr.statusText);
 			};
 			xhr.onerror = function (response) {
-				eventBus.$emit('endRequest', url);
+				if (!skipEvents)
+					eventBus.$emit('endRequest', url);
 				reject(xhr.statusText);
 			};
 			xhr.open(method, url, true);
@@ -1468,7 +1470,8 @@ app.modules['std:http'] = function () {
 			xhr.setRequestHeader('Accept', 'application/json, text/html');
 			if (raw)
 				xhr.responseType = "blob";
-			eventBus.$emit('beginRequest', url);
+			if (!skipEvents)
+				eventBus.$emit('beginRequest', url);
 			xhr.send(data);
 		});
 	}
@@ -1477,8 +1480,8 @@ app.modules['std:http'] = function () {
 		return doRequest('GET', url, null, raw);
 	}
 
-	function post(url, data, raw) {
-		return doRequest('POST', url, data, raw);
+	function post(url, data, raw, skipEvents) {
+		return doRequest('POST', url, data, raw, skipEvents);
 	}
 
 	function upload(url, data) {
@@ -2334,7 +2337,7 @@ Vue.component('a2-pager', {
 
 /* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20210131-7744*/
+/*20210201-7744*/
 // services/datamodel.js
 
 (function () {
@@ -3029,10 +3032,11 @@ Vue.component('a2-pager', {
 					for (let i = 0; i < that.length; i++)
 						that[i][rowNoProp] = i + 1; // 1-based
 				}
-				if (that.$parent && that.$parent._meta_.$hasChildren) {
-					let hcp = that.$parent._meta_.$hasChildren;
-					that.$parent[hcp] = true;
-
+				if (that.$parent) {
+					let m = that.$parent._meta_;
+					if (m.$hasChildren && that._path_.endsWith('.' + m.$items)) { 
+						that.$parent[m.$hasChildren] = true;
+					}
 				}
 				return ne;
 			}
@@ -3105,9 +3109,13 @@ Vue.component('a2-pager', {
 
 			if (!this.length) {
 				if (this.$parent) {
-					let hasCh = this.$parent._meta_.$hasChildren;
-					if (hasCh)
-						this.$parent[hasCh] = false;
+					let m = this.$parent._meta_;
+					if (m.$hasChildren && this._path_.endsWith('.' + m.$items)) {
+						this.$parent[m.$hasChildren] = false;
+					}
+					// try to select parent element
+					if (m.$items)
+						this.$parent.$select();
 				}
 				return this;
 			}

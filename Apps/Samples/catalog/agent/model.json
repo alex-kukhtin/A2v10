@@ -29,7 +29,11 @@
 	"commands": {
 		"deleteFolder": {
 			"type": "sql",
-			"procedure": "Agent.Folder.Delete234"
+			"procedure": "Agent.Folder.Delete"
+		},
+		"deleteItem": {
+			"type": "sql",
+			"procedure": "Agent.Item.Delete"
 		}
 	}
 }

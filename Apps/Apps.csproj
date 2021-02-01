@@ -130,7 +130,9 @@
     <None Include="Develop\_tests\Tests.Runner.config" />
     <None Include="Samples\catalog\agent\model.json" />
     <None Include="VueSite\blog\model.json" />
+    <TypeScriptCompile Include="Samples\catalog\agent\editItem.template.ts" />
     <TypeScriptCompile Include="Samples\catalog\agent\editFolder.template.ts" />
+    <TypeScriptCompile Include="Samples\catalog\agent\item.d.ts" />
     <TypeScriptCompile Include="Samples\catalog\agent\folder.d.ts" />
     <TypeScriptCompile Include="Samples\catalog\agent\index.template.ts" />
     <TypeScriptCompile Include="Samples\catalog\agent\index.d.ts" />
@@ -491,6 +493,10 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Samples\catalog\agent\editFolder.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Samples\catalog\agent\editItem.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

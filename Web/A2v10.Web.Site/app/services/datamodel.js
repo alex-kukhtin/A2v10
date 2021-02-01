@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20210131-7744*/
+/*20210201-7744*/
 // services/datamodel.js
 
 (function () {
@@ -695,10 +695,11 @@
 					for (let i = 0; i < that.length; i++)
 						that[i][rowNoProp] = i + 1; // 1-based
 				}
-				if (that.$parent && that.$parent._meta_.$hasChildren) {
-					let hcp = that.$parent._meta_.$hasChildren;
-					that.$parent[hcp] = true;
-
+				if (that.$parent) {
+					let m = that.$parent._meta_;
+					if (m.$hasChildren && that._path_.endsWith('.' + m.$items)) { 
+						that.$parent[m.$hasChildren] = true;
+					}
 				}
 				return ne;
 			}
@@ -771,9 +772,13 @@
 
 			if (!this.length) {
 				if (this.$parent) {
-					let hasCh = this.$parent._meta_.$hasChildren;
-					if (hasCh)
-						this.$parent[hasCh] = false;
+					let m = this.$parent._meta_;
+					if (m.$hasChildren && this._path_.endsWith('.' + m.$items)) {
+						this.$parent[m.$hasChildren] = false;
+					}
+					// try to select parent element
+					if (m.$items)
+						this.$parent.$select();
 				}
 				return this;
 			}

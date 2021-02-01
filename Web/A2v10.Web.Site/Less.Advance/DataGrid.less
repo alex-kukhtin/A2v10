@@ -30,7 +30,7 @@
 @group-txt-color: #777;
 @group-brd-color: @table-hdr-brd-color;
 
-@dg-header-height: 2.6rem;
+@dg-header-height: 37px;
 
 
 .data-grid-container {
@@ -498,8 +498,9 @@ table.data-grid > tbody {
 
 	&.fixed-header {
 		> .data-grid-body.fixed-header {
-			margin-top: 30px;
-			height: ~"calc(100% - 30px)";
+			//@dg-header-height -1
+			margin-top: 36px;
+			height: ~"calc(100% - 36px)";
 		}
 	}
 

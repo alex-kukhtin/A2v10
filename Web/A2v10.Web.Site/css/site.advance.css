@@ -2953,7 +2953,7 @@ pre.a2-code {
   border-left: 1px solid #ddd;
   width: 0;
   z-index: 1;
-  height: 2.6rem;
+  height: 37px;
 }
 table.data-grid {
   cursor: default;
@@ -3230,10 +3230,10 @@ table.data-grid > tbody > tr.bold > td {
   height: 100%;
   overflow: hidden;
   position: relative;
-  min-height: 2.6rem;
+  min-height: 37px;
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header {
-  margin-top: 2.6rem;
+  margin-top: 37px;
   overflow: hidden;
   overflow-y: auto;
   height: calc(100% - 2.6rem);
@@ -3273,7 +3273,7 @@ table.data-grid > tbody > tr.bold > td {
   top: 0;
   background-color: inherit;
   width: 100%;
-  min-height: 2.6rem;
+  min-height: 37px;
   margin-left: -1px;
   border-left: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
@@ -3293,14 +3293,14 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container > .data-grid-body > .data-grid-empty {
   position: absolute;
-  top: 2.6rem;
+  top: 37px;
   left: 0;
   right: 0;
   margin-top: 1px;
 }
 .data-grid-container.data-grid-light.fixed-header > .data-grid-body.fixed-header {
-  margin-top: 30px;
-  height: calc(100% - 30px);
+  margin-top: 36px;
+  height: calc(100% - 36px);
 }
 .data-grid-container.data-grid-light table.data-grid th {
   color: #999;

@@ -68,6 +68,7 @@ create or alter procedure samples.[Agent.Children]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
 	declare @fr nvarchar(255);
@@ -79,7 +80,7 @@ begin
 
 	with T(Id, [Name], Code, Memo, RowNumber)
 	as (
-		select Id, [Name], Code, Memo = @Fragment,
+		select Id, [Name], Code, Memo,
 			[RowNumber] = row_number() over (
 				order by 
 					case when @Order=N'id'   and @Dir=@Asc  then a.Id end asc,
@@ -113,7 +114,7 @@ go
 ------------------------------------------------
 create or alter procedure samples.[Agent.Folder.Load]
 	@UserId bigint,
-	@Id bigint,
+	@Id bigint = null,
 	@Parent bigint = null
 as
 begin
@@ -124,11 +125,33 @@ begin
 		select @Parent = Parent from samples.Agents where Id=@Id;
 
 	select [Folder!TFolder!Object] = null, [Id!!Id] = Id, [Name!!Name] = [Name], Icon=N'folder-outline',
-		ParentFolder
+		ParentFolder = Parent
 	from samples.Agents 
 	where Id=@Id and Folder = 1;
 	
-	select [ParentFolder!TParentFolder!Object] = null, [Name!!Name] = [Name] 
+	select [ParentFolder!TParentFolder!Object] = null,  [Id!!Id] = Id, [Name!!Name] = [Name]
+	from samples.Agents 
+	where Id=@Parent;
+end
+go
+------------------------------------------------
+create or alter procedure samples.[Agent.Item.Load]
+@UserId bigint,
+@Id bigint = null,
+@Parent bigint = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	if @Parent is null
+		select @Parent = Parent from samples.Agents where Id=@Id;
+
+	select [Agent!TAgent!Object] = null, [Id!!Id] = Id, [Name!!Name] = [Name], Code, Memo,
+		ParentFolder = Parent
+	from samples.Agents 
+	where Id=@Id and Folder = 0;
+	
+	select [ParentFolder!TParentFolder!Object] = null,  [Id!!Id] = Id, [Name!!Name] = [Name]
 	from samples.Agents 
 	where Id=@Parent;
 end
@@ -136,17 +159,33 @@ go
 ------------------------------------------------
 drop procedure if exists samples.[Agent.Folder.Metadata];
 drop procedure if exists samples.[Agent.Folder.Update];
+drop procedure if exists samples.[Agent.Item.Metadata];
+drop procedure if exists samples.[Agent.Item.Update];
 go
 ------------------------------------------------
-if exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'samples' and DOMAIN_NAME=N'Agent.Folder.TableType' and DATA_TYPE=N'table type')
+if exists(select 1 from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'samples' and DOMAIN_NAME=N'Agent.Folder.TableType' and DATA_TYPE=N'table type')
 	drop type samples.[Agent.Folder.TableType];
 go
 ------------------------------------------------
 create type samples.[Agent.Folder.TableType]
 as table(
 	Id bigint null,
-	Parent bigint,
+	ParentFolder bigint,
 	[Name] nvarchar(255)
+)
+go
+------------------------------------------------
+if exists(select 1 from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'samples' and DOMAIN_NAME=N'Agent.Item.TableType' and DATA_TYPE=N'table type')
+	drop type samples.[Agent.Item.TableType];
+go
+------------------------------------------------
+create type samples.[Agent.Item.TableType]
+as table(
+	Id bigint null,
+	ParentFolder bigint,
+	[Name] nvarchar(255),
+	Code nvarchar(32),
+	Memo nvarchar(255)
 )
 go
 ------------------------------------------------
@@ -182,7 +221,56 @@ begin
 			t.[UserModified] = @UserId
 	when not matched by target then 
 		insert (Folder, Parent, [Name], UserCreated, UserModified)
-		values (1, s.Parent, s.[Name], @UserId, @UserId)
+		values (1, nullif(s.ParentFolder, 0), s.[Name], @UserId, @UserId)
+	output 
+		$action op, inserted.Id id
+	into @output(op, id);
+
+	select top(1) @RetId = id from @output;
+
+	select [Folder!TFolder!Object] = null, [Id!!Id] = Id, [Name!!Name] = [Name], Icon=N'folder-outline',
+		ParentFolder = Parent
+	from samples.Agents 
+	where Id=@RetId;
+end
+go
+------------------------------------------------
+create or alter procedure samples.[Agent.Item.Metadata]
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	declare @Agent samples.[Agent.Item.TableType];
+	select [Agent!Agent!Metadata] = null, * from @Agent;
+end
+go
+------------------------------------------------
+create or alter procedure samples.[Agent.Item.Update]
+@UserId bigint,
+@Agent samples.[Agent.Item.TableType] readonly,
+@RetId bigint = null output
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	declare @output table(op sysname, id bigint);
+
+	merge samples.Agents as t
+	using @Agent as s
+	on (t.Id = s.Id)
+	when matched then
+		update set 
+			t.[Name] = s.[Name],
+			t.[Code] = s.[Code],
+			t.[Memo] = s.[Memo],
+			t.[DateModified] = getdate(),
+			t.[UserModified] = @UserId
+	when not matched by target then 
+		insert (Folder, Parent, [Name], Code, Memo, UserCreated, UserModified)
+		values (0, case when s.ParentFolder = 0 then null else s.ParentFolder end, 
+			s.[Name], Code, Memo, @UserId, @UserId)
 	output 
 		$action op,
 		inserted.Id id
@@ -190,9 +278,36 @@ begin
 
 	select top(1) @RetId = id from @output;
 
-	select [Folder!TFolder!Object] = null, [Id!!Id] = Id, [Name!!Name] = [Name], Icon=N'folder-outline',
-		Parent
-	from samples.Agents 
+	select [Agent!TAgent!Object] = null, [Id!!Id] = Id, [Name!!Name] = [Name], Code, Memo,
+		ParentFolder = Parent
+	from samples.Agents
 	where Id=@RetId;
+end
+go
+------------------------------------------------
+create or alter procedure [samples].[Agent.Folder.Delete]
+@UserId bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	if exists(select 1 from samples.Agents where Parent=@Id and Void=0)
+		throw 60000, N'UI:Неможливо видалити папку', 0;
+	update samples.Agents set Void=1 where Id=@Id and Folder = 1;
+end
+go
+------------------------------------------------
+create or alter procedure samples.[Agent.Item.Delete]
+@UserId bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	-- TODO: check if there are any references
+	update samples.Agents set Void=1 where Id=@Id and Folder=0;
 end
 go

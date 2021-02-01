@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190808-7517
+// 20210201-7744
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -11,10 +11,10 @@ app.modules['std:http'] = function () {
 	let fc = null;
 
 	return {
-		get: get,
-		post: post,
-		load: load,
-		upload: upload,
+		get,
+		post,
+		load,
+		upload,
 		localpost
 	};
 
@@ -27,12 +27,13 @@ app.modules['std:http'] = function () {
 		fr.readAsText(blob);
 	}
 
-	function doRequest(method, url, data, raw) {
+	function doRequest(method, url, data, raw, skipEvents) {
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 
 			xhr.onload = function (response) {
-				eventBus.$emit('endRequest', url);
+				if (!skipEvents)
+					eventBus.$emit('endRequest', url);
 				if (xhr.status === 200) {
 					if (raw) {
 						resolve(xhr.response);
@@ -63,7 +64,8 @@ app.modules['std:http'] = function () {
 					reject(xhr.statusText);
 			};
 			xhr.onerror = function (response) {
-				eventBus.$emit('endRequest', url);
+				if (!skipEvents)
+					eventBus.$emit('endRequest', url);
 				reject(xhr.statusText);
 			};
 			xhr.open(method, url, true);
@@ -71,7 +73,8 @@ app.modules['std:http'] = function () {
 			xhr.setRequestHeader('Accept', 'application/json, text/html');
 			if (raw)
 				xhr.responseType = "blob";
-			eventBus.$emit('beginRequest', url);
+			if (!skipEvents)
+				eventBus.$emit('beginRequest', url);
 			xhr.send(data);
 		});
 	}
@@ -80,8 +83,8 @@ app.modules['std:http'] = function () {
 		return doRequest('GET', url, null, raw);
 	}
 
-	function post(url, data, raw) {
-		return doRequest('POST', url, data, raw);
+	function post(url, data, raw, skipEvents) {
+		return doRequest('POST', url, data, raw, skipEvents);
 	}
 
 	function upload(url, data) {
