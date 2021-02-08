@@ -1911,9 +1911,8 @@ pre.a2-code {
   font-size: 1em;
 }
 .control-group label {
-  font-size: 0.95em;
   color: #999;
-  margin-bottom: 0.15em;
+  margin-bottom: 0.25em;
   display: block;
   font-weight: normal;
 }

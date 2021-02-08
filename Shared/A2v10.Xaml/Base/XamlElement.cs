@@ -144,7 +144,7 @@ namespace A2v10.Xaml
 			if (cmd == null)
 				return;
 			cmd.MergeCommandAttributes(tag, context);
-			tag.MergeAttribute("@click.prevent", cmd.GetCommand(context, indirect:false, argument:null, src:this));
+			tag.MergeAttribute("@click.stop.prevent", cmd.GetCommand(context, indirect:false, argument:null, src:this));
 			if (withHref)
 				tag.MergeAttribute(":href", cmd.GetHrefForCommand(context));
 		}

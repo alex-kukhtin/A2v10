@@ -12,7 +12,7 @@ define(["require", "exports"], function (require, exports) {
     function modelLoad(root) {
         let agent = root.Agent;
         if (agent.$isNew)
-            agent.ParentFolder = root.ParentFolder.Id;
+            agent.ParentFolder.$set(root.ParentFolder);
     }
     exports.default = template;
 });

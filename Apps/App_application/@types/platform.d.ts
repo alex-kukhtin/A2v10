@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7744 */
+/* Version 10.0.7745 */
 
 
 declare function require(url: string): any;
@@ -43,6 +43,8 @@ interface IArrayElement extends IElement {
 
 interface ITreeElement extends IArrayElement {
 	$expanded: boolean;
+	$expand<T>(this: T): Promise<IElementArray<T>>;
+	$selectPath<T>(this: T, path: Array<any>, predicate: (item: T, val: any) => boolean): Promise<T>;
 }
 
 declare const enum InsertTo {
@@ -52,18 +54,28 @@ declare const enum InsertTo {
 	below = 'below'
 }
 
+declare const enum SortDir {
+	asc = 'asc',
+	desc = 'desc'
+}
+
 interface IModelInfo {
-	Filter: any;
+	Filter?: any;
+	PageSize?: number;
+	Offset?: number;
+	SortDir?: SortDir
+	SortOrder: string;
 }
 
 interface IElementArray<T> extends Array<T> {
+
+	readonly Count: number;
 
 	readonly $parent: IElement;
 	readonly $vm: IViewModel;
 	readonly $root: IRoot;
 	readonly $ctrl: IController;
 
-	readonly Count: number;
 	readonly $isEmpty: boolean;
 	readonly $hasSelected: boolean;
 	readonly $checked: IElementArray<T>;
@@ -71,6 +83,7 @@ interface IElementArray<T> extends Array<T> {
 	readonly $selectedIndex: number;
 	readonly $cross: { [prop: string]: string[] };
 	readonly $ModelInfo: IModelInfo;
+	readonly $loaded: boolean;
 
 	Selected(prop: string): IElementArray<T>;
 
@@ -80,6 +93,7 @@ interface IElementArray<T> extends Array<T> {
 	$insert(src: object, to: InsertTo, ref?: T): T;
 
 	$clearSelected(): IElementArray<T>;
+	$reload(): Promise<IElementArray<T>>;
 	$load(): void;
 	$loadLazy(): Promise<IElementArray<T>>;
 	$resetLazy(): IElementArray<T>;
@@ -106,11 +120,11 @@ interface IRoot extends IElement {
 	$emit(event: string, ...params: any[]): void;
 	$forceValidate(): void;
 	$setDirty(dirty: boolean, path?: string): void;
+	$createModelInfo(elem: IElementArray<IElement>, modelInfo: IModelInfo): IModelInfo;
 }
 
 
 /* template commands */
-
 declare const enum TemplateCommandResult {
 	save = 'save'
 }

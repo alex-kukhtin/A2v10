@@ -1238,7 +1238,7 @@ app.modules['std:validators'] = function () {
 
 /* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20210201-7744*/
+/*20210208-7745*/
 // services/datamodel.js
 
 (function () {
@@ -1476,6 +1476,29 @@ app.modules['std:validators'] = function () {
 		}
 	}
 
+	function addTreeMethods(elem) {
+		elem.$expand = function () {
+			if (!this._meta_.$items) return null;
+			if (this.$expanded) return null;
+			let coll = this[this._meta_.$items];
+			return this.$vm.$expand(this, this._meta_.$items, true);
+		};
+		elem.$selectPath = async function (arr, cb) {
+			if (!arr.length) return null;
+			let itemsProp = this._meta_.$items;
+			if (!itemsProp) return null;
+			let current = null;
+			if (cb(this, arr[0]))
+				current = this;
+			for (let i = 1 /*second*/; i < arr.length; i++) {
+				if (!current) return null;
+				await current.$expand();
+				current = current[itemsProp].$find(itm => cb(itm, arr[i]));
+			}
+			return current;
+		}
+	}
+
 	function createObject(elem, source, path, parent) {
 		const ctorname = elem.constructor.name;
 		let startTime = null;
@@ -1512,6 +1535,7 @@ app.modules['std:validators'] = function () {
 			elem.$expanded = false; // tree elem
 			elem.$collapsed = false; // sheet elem
 			elem.$level = 0;
+			addTreeMethods(elem);
 		}
 
 		elem.$lockEvents = function () {
@@ -1631,6 +1655,7 @@ app.modules['std:validators'] = function () {
 					elem[m].$RowCount = rcv;
 				}
 			}
+			elem.$createModelInfo = createElemModelInfo;
 			elem._setModelInfo_ = setRootModelInfo;
 			elem._setRuntimeInfo_ = setRootRuntimeInfo;
 			elem._findRootModelInfo = findRootModelInfo;
@@ -1874,6 +1899,10 @@ app.modules['std:validators'] = function () {
 				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
 			});
 		};
+
+		arr.$reload = function() {
+			return this.$vm.$reload(this);
+		}
 
 		arr.$append = function (src) {
 			return this.$insert(src, 'end');
@@ -2694,21 +2723,29 @@ app.modules['std:validators'] = function () {
 		return obj;
 	}
 
+	function setModelInfoFilter(prop, val) {
+		if (period.isPeriod(val))
+			this.Filter[prop].assign(val);
+		else
+			this.Filter[prop] = val;
+	}
+
 	function setRootModelInfo(elem, data) {
 		if (!data.$ModelInfo) return;
 		for (let p in data.$ModelInfo) {
 			if (!elem) elem = this[p];
 			elem.$ModelInfo = checkPeriod(data.$ModelInfo[p]);
-
-			elem.$ModelInfo.$setFilter = function (prop, val) {
-				if (period.isPeriod(val))
-					this.Filter[prop].assign(val);
-				else
-					this.Filter[prop] = val;
-			};
-
-			return; // first element only
+			elem.$ModelInfo.$setFilter = setModelInfoFilter;
+			return elem.$ModelInfo;
 		}
+	}
+
+	function createElemModelInfo(elem, raw) {
+		if (!elem.$ModelInfo) {
+			elem.$ModelInfo = checkPeriod(raw);
+			elem.$ModelInfo.$setFilter = setModelInfoFilter;
+		}
+		return elem.$ModelInfo;
 	}
 
 	function setRootRuntimeInfo(runtime) {

@@ -14,7 +14,7 @@ const template: Template = {
 function modelLoad(this: TRoot, root: TRoot) {
 	let agent = root.Agent;
 	if (agent.$isNew)
-		agent.ParentFolder = root.ParentFolder.Id;
+		agent.ParentFolder.$set(root.ParentFolder);
 }
 
 export default template;

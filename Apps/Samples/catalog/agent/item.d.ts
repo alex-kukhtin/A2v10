@@ -2,7 +2,7 @@
 
 export interface TAgent extends IElement {
 	Id: number;
-	ParentFolder: number;
+	ParentFolder: TParentFolder;
 	Name: string;
 	Code: string;
 	Memo: string

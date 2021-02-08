@@ -7,7 +7,12 @@
 	</Dialog.Buttons>
 	<Grid>
 		<Static Label="Id" Value="{Bind Agent.Id, DataType=Number, HideZeros=True}"/>
-		<Static Label="Батьківська папка" Value="{Bind ParentFolder.Name}"/>
+		<Static Label="Батьківська папка" Value="{Bind Agent.ParentFolder.Name}">
+			<Static.AddOns>
+				<Hyperlink Icon="Search" 
+					Command="{BindCmd Dialog, Action=Browse, Argument={Bind Agent.ParentFolder}, Url='/catalog/agent/browseFolder'}"/>
+			</Static.AddOns>
+		</Static>
 		<TextBox Label="Назва" Value="{Bind Agent.Name}" UpdateTrigger="Input"/>
 		<TextBox Label="Код ЄДРПОУ" Value="{Bind Agent.Code}" UpdateTrigger="Input" Number="True"/>
 		<TextBox Label="Примітка" Value="{Bind Agent.Memo}" UpdateTrigger="Input" Multiline="True"/>

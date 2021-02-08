@@ -1,0 +1,15 @@
+<!-- Edit Item -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+		Title="Властивості контрагента" Size="Small" Overflow="True" Padding="1rem">
+	<Dialog.Buttons>
+		<Button Content="Обрати" Command="{BindCmd Select, Argument={Bind Folders}}"/>
+		<Button Content="Скасувати" Command="{BindCmd Close}"/>
+	</Dialog.Buttons>
+	<TreeView Indent="True" Height="30rem"
+			ItemsSource="{Bind Folders}" FolderSelect="True"
+			DoubleClick="{BindCmd Select, Argument={Bind Folders}}">
+		<TreeViewItem ItemsSource="{Bind SubItems}" Icon="{Bind Icon}"
+			Label="{Bind Name}" IsGroup="{Bind HasSubItems}"/>
+	</TreeView>
+</Dialog>
+

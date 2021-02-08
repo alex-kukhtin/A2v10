@@ -27,6 +27,7 @@
 				CommandName=deleteFolder, Argument={Bind Folders.$selected}}"/>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}"/>
+			<Button Icon="External" Command="{BindCmd Execute, CommandName=test}" />
 		</Toolbar>
 		<TreeView Grid.Row="2" Grid.Col="1" Grid.VAlign="Stretch"
 			AutoSelect="FirstItem" ExpandFirstItem="True" Indent="True"
@@ -48,7 +49,7 @@
 					<!--Здесь вполне можно обойтись стандартными командами -->
 					<Button Icon="Add" Content="@[Create]" Tip="Створити контрагента" 
 						Command="{BindCmd Dialog, Action=Append, Url={StaticResource EditItemUrl}, Argument={Bind Folders.Selected(Children)}, Data={Bind Root.$ParentFolderData}}" />
-					<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditItemUrl}, Argument={Bind Folders.Selected(Children)}}" />
+					<Button Icon="Edit" Command="{BindCmd Execute, CommandName=editItem, Argument={Bind Folders.Selected(Children)}}" />
 					<Button Icon="Delete" Command="{BindCmd Execute, CommandName=deleteItem, Argument={Bind Folders.Selected(Children)}}"/>
 					<Separator />
 					<TextBox Label="Пошук:" Value="{Bind Root.$Filter}" Placeholder="фрагмент назви, коду, примітки" Width="25rem">
@@ -60,6 +61,8 @@
 					<Separator />
 					<Button Icon="Reload" 
 							Command="{BindCmd Reload, Argument={Bind Folders.Selected(Children)}}" Tip="Оновити"/>
+					<Separator />
+					<CheckBox Label="Показувати архівні"/>
 				</Toolbar>
 				<DataGrid Grid.Row="2" ItemsSource="{Bind Parent.ItemsSource}" Style="Light"
 							Sort="True" FixedHeader="True" GridLines="Horizontal"
@@ -67,11 +70,18 @@
 					<DataGridColumn Header="Код" Content="{Bind Id}" Role="Id"/>
 					<DataGridColumn Header="Назва" Content="{Bind Name}"/>
 					<DataGridColumn Header="Код ЄДРПОУ" Content="{Bind Code}" Role="Id"/>
+					<DataGridColumn Header="Папка" Sort="False">
+						<Group>
+							<Label Content="{Bind ParentFolder.Name}" If="{Bind !Root.$IsSeachFolder}"/>
+							<Hyperlink Content="{Bind ParentFolder.Name}" If="{Bind Root.$IsSeachFolder}"
+								Command="{BindCmd Execute, CommandName=gotoFolder, Argument={Bind}}"/>
+						</Group>
+					</DataGridColumn>
 					<DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
 					<DataGridColumn Fit="True">
 						<CommandBar Visibility="Hover">
 							<Button Icon="Edit" 
-									Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditItemUrl}, Argument={Bind}}"/>
+									Command="{BindCmd Execute, CommandName=editItem, Argument={Bind $parent}}"/>
 							<Button Icon="Delete" Command="{BindCmd Execute, CommandName=deleteItem, Argument={Bind $parent}}"/>
 						</CommandBar>
 					</DataGridColumn>

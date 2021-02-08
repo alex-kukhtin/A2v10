@@ -3,9 +3,18 @@ import { TRoot, TFolder, TFolders, TAgent, TAgents } from 'index.d';
 
 let savedFolderId: number;
 
+/*TODO:
+ * 1. Убрать папку поиска в дереве выбора.
+ * 2. Сделать перемещение папок в дереве (editFolder)
+ * 3. Сделать поиск папки в дереве
+ * 4. Сделать поиск по вхождению в диалоге
+*/
+
+
 const template: Template = {
 	properties: {
 		'TRoot.$Filter': String,
+		'TRoot.$IsSeachFolder'(this: TRoot) { return this.Folders.$selected.$IsSearch; },
 
 		'TFolder.$IsSearch'(this: TFolder): boolean { return this.Id === -1; },
 		'TFolder.$IsFolder'(this: TFolder): boolean { return this.Id !== -1; },
@@ -14,12 +23,13 @@ const template: Template = {
 			return this.$IsFolder || !!this.$root.$Filter;
 		},
 		// это свойство нужно, чтобы передавать его как Data в команду создания чего-нибудь
-		'TRoot.$ParentFolderData'(this: TRoot) {
-			let sel = this.Folders.$selected;
+		'TRoot.$ParentFolderData'(this: TRoot): object {
+			let sel: TFolder = this.Folders.$selected;
 			return sel ? { Parent: sel.Id } : {};
 		}
 	},
 	events: {
+		'Model.load': modelLoad,
 		'Root.$Filter.change': filterChange,
 		'Folders[].select': selectionChange
 	},
@@ -41,11 +51,42 @@ const template: Template = {
 			exec: deleteItem,
 			canExec(this:TRoot, arr: TAgents): boolean { return !!arr && !!arr.$selected; },
 			confirm: 'Ви дійсно бажаєте видалити контрагента?'
-		}
+		},
+		editItem: {
+			exec: editItem,
+			canExec(this: TRoot, arr: TAgents): boolean { return !!arr && !!arr.$selected; }
+		},
+		gotoFolder,
+		test
 	}
 };
 
 export default template;
+
+
+function createModelInfo(root: TRoot, arr: TAgents): IModelInfo {
+
+	/* Нужно создать значение ModelInfo для дочерних элементов в папке поиска (Id=-1).
+	   Его не будет до первого обращения, поэтому создаем в ТОЧНОМ
+	   соответствии со значениями "по умолчанию" из базы данных
+	 */
+
+	return root.$createModelInfo(arr, {
+		Filter: {
+			Fragment:null
+		},
+		PageSize: 10,
+		Offset: 0,
+		SortDir: SortDir.asc,
+		SortOrder: 'name'
+	});
+}
+
+async function modelLoad(this: TRoot) {
+	const ctrl = this.$ctrl;
+	let srFolder = this.Folders.$find(x => x.Id == -1);
+	createModelInfo(this, srFolder.Children);
+}
 
 function filterChange(this: TRoot, elem: TRoot, newVal: string, oldVal: string, propName: string):void {
 
@@ -62,10 +103,18 @@ function filterChange(this: TRoot, elem: TRoot, newVal: string, oldVal: string, 
 			savedFolderId = sel ? sel.Id : 0;
 		}
 		srFolder.$select(folders);
+
+		srFolder.Children.$ModelInfo.Filter.Fragment = newVal;
+		ctrl.$reload(srFolder.Children);
+
+		/*
 		this.$defer(() => {
+			srFolder.Children.$ModelInfo.Filter.Fragment = newVal;
+			ctrl.$reload(srFolder.Children);
 			// установка фильтра нужна в следущем "тике".
-			ctrl.$setFilter(srFolder.Children, 'Fragment', newVal);
+			//ctrl.$setFilter(srFolder.Children, 'Fragment', newVal);
 		});
+		*/
 	} else {
 		// поиск сбросили, вернем все в первоначальное состояние
 		srFolder.Children.$resetLazy();
@@ -148,4 +197,138 @@ async function deleteItem(this: TRoot, arr: TAgents) {
 	await ctrl.$invoke('deleteItem', { Id: arr.$selected.Id });
 
 	arr.$selected.$remove();
+}
+
+// TODO: remove
+async function test() {
+	let path = [112, 113, 128, 130];
+	let folders = this.Folders;
+	let l1: TFolder = folders.$find(itm => itm.Id == path[0]);
+	let selectedElem: TFolder = await l1.$selectPath<TFolder>(path, (itm, num) => itm.Id == num);
+	console.dir(selectedElem);
+	if (selectedElem)
+		selectedElem.$select(folders);
+}
+
+// TODO: remove
+async function selectFolder() {
+	let folders = this.Folders;
+	let fld = folders.$find(itm => itm.Id == 101);
+	await fld.$expand();
+	let f103 = folders.$find(itm => itm.Id == 103);
+	f103.$select(folders);
+}
+
+//<Button Icon="Edit" Command = "{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditItemUrl}, Argument={Bind Folders.Selected(Children)}}" />
+
+async function editItem(this: TRoot, arr: TAgents): Promise<any> {
+	const ctrl = this.$ctrl;
+	if (!arr || !arr.$selected) return;
+
+	let ag: TAgent = arr.$selected;
+	let oldParent: number = ag.ParentFolder.Id;
+
+	let result = await ctrl.$showDialog('/catalog/agent/editItem', ag);
+	let newParent:number = result.ParentFolder.Id;
+	if (newParent == oldParent) {
+		// в той же папке, просто обновляем свойства
+		ag.$merge(result);
+	} else {
+		// в другой папке, убираем из текущего, добавляем в новый
+		ag.$remove();
+		// находим родительскую папку
+		let nf = this.Folders.$find(x => x.Id === newParent);
+		if (nf != null) {
+			// нашли родительскую и в ней уже загружены Children, просто добавляем в список
+			if (nf.Children.$loaded)
+				nf.Children.$append(result);
+		}
+	}
+}
+
+async function gotoFolder(this: TRoot, agent: TAgent): Promise<any> {
+	const ctrl = this.$ctrl;
+
+	function findAgent(arr: TAgents) {
+		let ag = arr.$find(a => a.Id == agent.Id);
+		if (ag) {
+			console.dir(ag);
+			ag.$select();
+			return ag;
+		}
+		return null;
+	}
+
+	async function findAgentOffset(folder, mi): Promise<number> {
+		// TODO:? блокировать на время одного обращения? или вообще блокировать?
+		folder.Children.$lockOnce = true;
+		let res = await ctrl.$invoke('findIndex', { Id: agent.Id, Parent: folder.Id, Order: mi.SortOrder, Dir: mi.SortDir });
+		if (res && res.Result) {
+			let ix: number = res.Result.RowNo;
+			// это индекс в списке. Он будет на странице 
+			let pageNo = Math.floor(ix / mi.PageSize);
+			return pageNo * mi.PageSize;
+		}
+		return -1;
+	}
+
+	// переход к родительской папке в дереве
+	const parentFolder = agent.ParentFolder.Id;
+	const folders = this.Folders;
+
+	let fld: any = folders.$find(itm => itm.Id == parentFolder);
+	let path = [];
+	if (fld != null) {
+		// нашли папку, значит она уже есть. Соберем в массив родителей
+		while (fld && fld != this) {
+			path.push(fld.Id);
+			fld = fld.$parent.$parent;
+		}
+		path = path.reverse();
+	} else {
+		// папки в дереве (которое в памяти) нету, идем на сервер и получаем путь в дереве
+		let result = await ctrl.$invoke('getPath', { Id: agent.ParentFolder.Id });
+		if (result && result.Result)
+			path = result.Result.map(x => x.Id);
+	}
+
+	if (!path.length) return; // нету пути, просто уйдем
+
+	// выделим найденную папку в дереве, потом найденный элемент в списке
+	let l1: TFolder = folders.$find(itm => itm.Id == path[0]);
+	let selFolder: TFolder = await l1.$selectPath<TFolder>(path, (itm, num) => itm.Id === num);
+	if (!selFolder) return; // что-то пошло не так. Элемента нету.
+	selFolder.$select(folders);
+	let ch = selFolder.Children;
+	if (ch.$loaded) {
+		let ag = findAgent(ch);
+		if (!ag) {
+			/* элемент не найден, возможно он на другой странице
+			   найдем смещение в базе. в соотвтествии с текущим фильтром
+			   перезагружаем коллекцию с новым фильтром
+			*/
+			let mi = createModelInfo(this, ch);
+			let offset = await findAgentOffset(selFolder, mi);
+			if (offset == -1)
+				return;
+			mi.Offset = offset;
+			await ch.$reload();
+			findAgent(ch);
+		}
+	}
+	else {
+		// дочерние еще не загружались или сброшены. Ищем нужную страницу
+		console.dir('новая загрузка')
+		let mi = createModelInfo(this, ch);
+		// TODO: мигает. при обращении к Invoke перезаполняется Lazy со значением "по умолчанию"
+		//ch.$lockUpdate(true);
+		let offset = await findAgentOffset(selFolder, mi);
+		if (offset == -1)
+			return;
+		mi.Offset = offset;
+		//ch.$lockUpdate(false);
+		console.dir('offset: ' + offset);
+		await ch.$reload();
+		findAgent(ch);
+	}
 }

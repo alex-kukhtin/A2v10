@@ -124,6 +124,8 @@
     <Content Include="Develop\sales\waybill\server.template.js" />
     <Content Include="Develop\include.module.js" />
     <Content Include="Develop\Workflows\second-mail.html" />
+    <Content Include="Samples\catalog\agent\model.sql" />
+    <Content Include="Samples\catalog\agent\schema.sql" />
     <Content Include="Samples\_sql\schema.sql" />
     <Content Include="Samples\_sql\ui.sql" />
     <Content Include="tsconfig.json" />
@@ -497,6 +499,10 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Samples\catalog\agent\editItem.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Samples\catalog\agent\browseFolder.dialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

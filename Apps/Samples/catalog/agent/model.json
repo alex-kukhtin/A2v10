@@ -20,10 +20,10 @@
 			"template": "editItem.template",
 			"view": "editItem.dialog"
 		},
-		"browse": {
+		"browseFolder": {
+			"model": "Agent",
 			"index": true,
-			"template": "browse.template",
-			"view": "browse.dialog"
+			"view": "browseFolder.dialog"
 		}
 	},
 	"commands": {
@@ -34,6 +34,14 @@
 		"deleteItem": {
 			"type": "sql",
 			"procedure": "Agent.Item.Delete"
+		},
+		"getPath": {
+			"type": "sql",
+			"procedure": "Agent.Folder.GetPath"
+		},
+		"findIndex": {
+			"type": "sql",
+			"procedure": "Agent.Item.FindIndex"
 		}
 	}
 }

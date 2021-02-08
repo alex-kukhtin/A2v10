@@ -1,10 +1,7 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190725-7508
+// 20210208-7745
 // components/graphics.js
-
-/* TODO:
-*/
 
 (function () {
 
@@ -20,7 +17,7 @@
 			`<div :id="id" class="a2-graphics"></div>`,
 		props: {
 			render: Function,
-			arg: [Object, String, Number, Array],
+			arg: [Object, String, Number, Array, Boolean, Date],
 			watchmode: String
 		},
 		data() {

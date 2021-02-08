@@ -5,6 +5,7 @@ define(["require", "exports"], function (require, exports) {
     const template = {
         properties: {
             'TRoot.$Filter': String,
+            'TRoot.$IsSeachFolder'() { return this.Folders.$selected.$IsSearch; },
             'TFolder.$IsSearch'() { return this.Id === -1; },
             'TFolder.$IsFolder'() { return this.Id !== -1; },
             'TFolder.$IsVisible'() {
@@ -16,6 +17,7 @@ define(["require", "exports"], function (require, exports) {
             }
         },
         events: {
+            'Model.load': modelLoad,
             'Root.$Filter.change': filterChange,
             'Folders[].select': selectionChange
         },
@@ -37,10 +39,32 @@ define(["require", "exports"], function (require, exports) {
                 exec: deleteItem,
                 canExec(arr) { return !!arr && !!arr.$selected; },
                 confirm: 'Ви дійсно бажаєте видалити контрагента?'
-            }
+            },
+            editItem: {
+                exec: editItem,
+                canExec(arr) { return !!arr && !!arr.$selected; }
+            },
+            gotoFolder,
+            test
         }
     };
     exports.default = template;
+    function createModelInfo(root, arr) {
+        return root.$createModelInfo(arr, {
+            Filter: {
+                Fragment: null
+            },
+            PageSize: 10,
+            Offset: 0,
+            SortDir: "asc",
+            SortOrder: 'name'
+        });
+    }
+    async function modelLoad() {
+        const ctrl = this.$ctrl;
+        let srFolder = this.Folders.$find(x => x.Id == -1);
+        createModelInfo(this, srFolder.Children);
+    }
     function filterChange(elem, newVal, oldVal, propName) {
         const folders = elem.Folders;
         const ctrl = this.$ctrl;
@@ -51,9 +75,8 @@ define(["require", "exports"], function (require, exports) {
                 savedFolderId = sel ? sel.Id : 0;
             }
             srFolder.$select(folders);
-            this.$defer(() => {
-                ctrl.$setFilter(srFolder.Children, 'Fragment', newVal);
-            });
+            srFolder.Children.$ModelInfo.Filter.Fragment = newVal;
+            ctrl.$reload(srFolder.Children);
         }
         else {
             srFolder.Children.$resetLazy();
@@ -112,5 +135,110 @@ define(["require", "exports"], function (require, exports) {
             return;
         await ctrl.$invoke('deleteItem', { Id: arr.$selected.Id });
         arr.$selected.$remove();
+    }
+    async function test() {
+        let path = [112, 113, 128, 130];
+        let folders = this.Folders;
+        let l1 = folders.$find(itm => itm.Id == path[0]);
+        let selectedElem = await l1.$selectPath(path, (itm, num) => itm.Id == num);
+        console.dir(selectedElem);
+        if (selectedElem)
+            selectedElem.$select(folders);
+    }
+    async function selectFolder() {
+        let folders = this.Folders;
+        let fld = folders.$find(itm => itm.Id == 101);
+        await fld.$expand();
+        let f103 = folders.$find(itm => itm.Id == 103);
+        f103.$select(folders);
+    }
+    async function editItem(arr) {
+        const ctrl = this.$ctrl;
+        if (!arr || !arr.$selected)
+            return;
+        let ag = arr.$selected;
+        let oldParent = ag.ParentFolder.Id;
+        let result = await ctrl.$showDialog('/catalog/agent/editItem', ag);
+        let newParent = result.ParentFolder.Id;
+        if (newParent == oldParent) {
+            ag.$merge(result);
+        }
+        else {
+            ag.$remove();
+            let nf = this.Folders.$find(x => x.Id === newParent);
+            if (nf != null) {
+                if (nf.Children.$loaded)
+                    nf.Children.$append(result);
+            }
+        }
+    }
+    async function gotoFolder(agent) {
+        const ctrl = this.$ctrl;
+        function findAgent(arr) {
+            let ag = arr.$find(a => a.Id == agent.Id);
+            if (ag) {
+                console.dir(ag);
+                ag.$select();
+                return ag;
+            }
+            return null;
+        }
+        async function findAgentOffset(folder, mi) {
+            folder.Children.$lockOnce = true;
+            let res = await ctrl.$invoke('findIndex', { Id: agent.Id, Parent: folder.Id, Order: mi.SortOrder, Dir: mi.SortDir });
+            if (res && res.Result) {
+                let ix = res.Result.RowNo;
+                let pageNo = Math.floor(ix / mi.PageSize);
+                return pageNo * mi.PageSize;
+            }
+            return -1;
+        }
+        const parentFolder = agent.ParentFolder.Id;
+        const folders = this.Folders;
+        let fld = folders.$find(itm => itm.Id == parentFolder);
+        let path = [];
+        if (fld != null) {
+            while (fld && fld != this) {
+                path.push(fld.Id);
+                fld = fld.$parent.$parent;
+            }
+            path = path.reverse();
+        }
+        else {
+            let result = await ctrl.$invoke('getPath', { Id: agent.ParentFolder.Id });
+            if (result && result.Result)
+                path = result.Result.map(x => x.Id);
+        }
+        if (!path.length)
+            return;
+        let l1 = folders.$find(itm => itm.Id == path[0]);
+        let selFolder = await l1.$selectPath(path, (itm, num) => itm.Id === num);
+        if (!selFolder)
+            return;
+        selFolder.$select(folders);
+        let ch = selFolder.Children;
+        if (ch.$loaded) {
+            let ag = findAgent(ch);
+            if (!ag) {
+                let mi = createModelInfo(this, ch);
+                let offset = await findAgentOffset(selFolder, mi);
+                if (offset == -1)
+                    return;
+                mi.Offset = offset;
+                await ch.$reload();
+                findAgent(ch);
+            }
+        }
+        else {
+            console.dir('новая загрузка');
+            let mi = createModelInfo(this, ch);
+            let offset = await findAgentOffset(selFolder, mi);
+            if (offset == -1)
+                return;
+            mi.Offset = offset;
+            console.dir('offset: ' + offset);
+            await ch.$reload();
+            findAgent(ch);
+        }
     }
 });

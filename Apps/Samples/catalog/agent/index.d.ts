@@ -1,8 +1,13 @@
 ﻿
+export interface TParentFolder extends IElement {
+	Id: number;
+	Name: string;
+}
 
 export interface TAgent extends IArrayElement {
 	Id: number;
 	Name: string;
+	ParentFolder: TParentFolder
 }
 
 declare type TAgents = IElementArray<TAgent>;

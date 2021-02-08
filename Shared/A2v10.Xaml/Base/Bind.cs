@@ -28,24 +28,24 @@ namespace A2v10.Xaml
 			Path = path;
 		}
 
-		internal String GetPath(RenderContext context)
+		public String GetPath(RenderContext context)
 		{
 			return context.GetNormalizedPath(Path);
 		}
 
-		internal String GetTypedPath(RenderContext context, TypeCheckerTypeCode typeCode)
+		public String GetTypedPath(RenderContext context, TypeCheckerTypeCode typeCode)
 		{
 			return context.GetTypedNormalizedPath(Path, typeCode);
 		}
 
-		internal void SetWrapped()
+		public void SetWrapped()
 		{
 			_wrapped = true;
 		}
 
 
 		// for text bindings only
-		internal String GetPathFormat(RenderContext context)
+		public String GetPathFormat(RenderContext context)
 		{
 			if (Path == null)
 				return context.GetEmptyPath(); // may be scoped
