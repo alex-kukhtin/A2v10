@@ -1,4 +1,5 @@
 ﻿
+@import "Variables.less";
 
 @control-border: @default-brd-color;
 @control-bg-color: white;
@@ -302,7 +303,7 @@
 			color: @label-color;
 			padding: 0 .4em;
 			display: inline-block; // fix EDGE
-			line-height: 2em;
+			line-height: @control-height + .3em;
 
 			&:hover {
 				text-decoration: none;

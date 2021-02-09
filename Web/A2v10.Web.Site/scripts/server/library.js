@@ -1810,6 +1810,12 @@ app.modules['std:validators'] = function () {
 
 		defineCommonProps(arr);
 
+		arr.$lock = false;
+
+		arr.$lockUpdate = function(lock) {
+			this.$lock = lock;
+		};
+
 		arr.$new = function (src) {
 			let newElem = new this._elem_(src || null, this._path_ + '[]', this);
 			newElem.__checked = false;
@@ -1879,6 +1885,7 @@ app.modules['std:validators'] = function () {
 		};
 
 		arr.$resetLazy = function () {
+			this.$lock = false;
 			this.$empty();
 			if (this.$loaded)
 				this.$loaded = false;
@@ -1888,6 +1895,7 @@ app.modules['std:validators'] = function () {
 		arr.$loadLazy = function () {
 			if (!this.$isLazy())
 				return;
+			if (this.$lock) return;
 			return new Promise((resolve, reject) => {
 				if (!this.$vm) return;
 				if (this.$loaded) { resolve(this); return; }
@@ -1900,7 +1908,8 @@ app.modules['std:validators'] = function () {
 			});
 		};
 
-		arr.$reload = function() {
+		arr.$reload = function () {
+			this.$lock = false;
 			return this.$vm.$reload(this);
 		}
 

@@ -24,6 +24,21 @@ namespace A2v10.Xaml
 			throw new NotImplementedException(nameof(RenderElement));
 		}
 
+		private String GetActiveValueArg(RenderContext context)
+		{
+			var activeValueArg = $"'{ActiveValue}'";
+			var avBind = GetBinding(nameof(ActiveValue));
+			if (avBind != null)
+				activeValueArg = avBind.GetPathFormat(context);
+			return activeValueArg;
+		}
+
+		public String GetClassForParent(RenderContext context, String valuePath)
+		{
+			var activeValueArg = GetActiveValueArg(context);
+			return $"{{'active': {activeValueArg} == {valuePath}}}";
+		}
+
 		internal void RenderMe(RenderContext context, String valuePath)
 		{
 			if (SkipRender(context))
@@ -31,16 +46,13 @@ namespace A2v10.Xaml
 
 			var btn = new TagBuilder("a", "a2-tab-button");
 
-			var activeValueArg = $"'{ActiveValue}'";
-			var avBind = GetBinding(nameof(ActiveValue));
-			if (avBind != null)
-				activeValueArg = avBind.GetPathFormat(context);
+			var activeValueArg = GetActiveValueArg(context);
 
 			MergeAttributes(btn, context);
 			if (valuePath != null)
 			{
 				btn.MergeAttribute(":class", $"{{'active': {activeValueArg} == {valuePath}}}");
-				btn.MergeAttribute("@click.prevent", $"{valuePath}={activeValueArg}");
+				btn.MergeAttribute("@click.stop.prevent", $"{valuePath}={activeValueArg}");
 			}
 
 			btn.RenderStart(context);

@@ -47,7 +47,8 @@ const template = {
 
 module.exports = template;
 
-function drawChart(g) {
+function drawChart(g, arg, elem) {
+	console.dir(elem);
 	const chart = g.append('svg')
 		.attr('viewBox', `0 0 300 50`);
 

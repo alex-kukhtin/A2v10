@@ -27,7 +27,6 @@
 				CommandName=deleteFolder, Argument={Bind Folders.$selected}}"/>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}"/>
-			<Button Icon="External" Command="{BindCmd Execute, CommandName=test}" />
 		</Toolbar>
 		<TreeView Grid.Row="2" Grid.Col="1" Grid.VAlign="Stretch"
 			AutoSelect="FirstItem" ExpandFirstItem="True" Indent="True"

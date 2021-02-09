@@ -40,7 +40,7 @@
 					</TextBox.AddOns>
 				</TextBox>
 				<Button Icon="Reload" Command="{BindCmd Reload, Argument={Bind Agents.Selected(Children)}}" Tip="Обновить данные"/>
-				<Button Content="Отчеты" Icon="FileLink" Toolbar.Align="Right">
+				<Button Content="Отчеты" Icon="FileLink" Toolbar.Align="Right" Disabled="{Bind !Root.$SelectedItem}">
 					<Button.DropDown>
 						<DropDownMenu Direction="DownLeft">
 							<MenuItem Content="Реестр счетов" Icon="Table"

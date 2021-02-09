@@ -62,7 +62,7 @@
 
 		<StateCard DropShadow="Shadow1" Grid.Row="1" Grid.Col="2" Header="Тенанти" Icon="Database" Text="4455">
 			<Group>
-				<Graphics Delegate="drawChart"/>
+				<Graphics Delegate="drawChart" HtmlId="chart1"/>
 			</Group>
 			<StateCard.Footer>
 				<Text>

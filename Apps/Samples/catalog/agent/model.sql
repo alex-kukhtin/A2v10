@@ -8,7 +8,8 @@ Last updated : 31 jan 2021
 /* основна процедура - повертає вернхій рівень дерева, та структури даних*/
 create or alter procedure samples.[Agent.Index]
 @UserId bigint,
-@Id bigint = null
+@Id bigint = null,
+@HideSearch bit = 0
 as
 begin
 	set nocount on;
@@ -18,6 +19,7 @@ begin
 	as (
 		select Id = cast(-1 as bigint), [Name] = N'[Результат пошуку]', Icon='search',
 			HasChildren = cast(0 as bit), IsSpec=1
+		where @HideSearch = 0
 		union all
 		select Id, [Name], Icon = N'folder-outline',
 			HasChildren= case when exists(select 1 from samples.Agents c where c.Void = 0 and c.Parent = a.Id and c.Folder = 1) then 1 else 0 end,
@@ -46,7 +48,8 @@ go
 /* разворачивание одного узла дерева */
 create or alter procedure samples.[Agent.Expand]
 	@UserId bigint,
-	@Id bigint
+	@Id bigint,
+	@HideSearch bit = 0
 as
 begin
 	set nocount on;

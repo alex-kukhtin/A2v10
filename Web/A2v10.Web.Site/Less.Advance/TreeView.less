@@ -2,6 +2,10 @@
 
 @tree-ident:2rem;
 
+@tv-hover-bg-color: @hover-bg-color-light;
+@tv-active-bg-color: @active-bg-color-light;
+
+
 .tree-view {
 	margin: 0;
 	padding: 0;
@@ -19,10 +23,10 @@
 		}
 
 		&.active > .overlay {
-			background-color: @active-bg-color;
+			background-color: @tv-active-bg-color;
 
 			&:hover {
-				background-color: @active-bg-color;
+				background-color: @tv-active-bg-color;
 			}
 		}
 

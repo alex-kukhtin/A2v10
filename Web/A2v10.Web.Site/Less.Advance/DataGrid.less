@@ -1,5 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
-
+﻿@import "Variables.less";
 /*
     TODO:
     1. do somthing with border: (td:first-child (left:none???)
@@ -32,6 +31,8 @@
 
 @dg-header-height: 37px;
 
+@dg-hover-bg-color: @hover-bg-color-light;
+@dg-active-bg-color: @active-bg-color-light;
 
 .data-grid-container {
 	overflow-x: hidden;
@@ -69,11 +70,11 @@ table.data-grid {
 	}
 
 	&:not(.no-hover) > tbody > tr:hover {
-		background-color: @hover-bg-color;
+		background-color: @dg-hover-bg-color;
 	}
 
 	&:not(.no-hover) > tbody > tr.active:hover {
-		background-color: @active-bg-color;
+		background-color: @dg-active-bg-color;
 	}
 
 	td {
@@ -175,7 +176,7 @@ table.data-grid {
 	}
 
 	tr.active {
-		background-color: @active-bg-color !important;
+		background-color: @dg-active-bg-color !important;
 	}
 
 	tr.row-details {

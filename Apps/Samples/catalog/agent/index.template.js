@@ -44,8 +44,7 @@ define(["require", "exports"], function (require, exports) {
                 exec: editItem,
                 canExec(arr) { return !!arr && !!arr.$selected; }
             },
-            gotoFolder,
-            test
+            gotoFolder
         }
     };
     exports.default = template;
@@ -136,22 +135,6 @@ define(["require", "exports"], function (require, exports) {
         await ctrl.$invoke('deleteItem', { Id: arr.$selected.Id });
         arr.$selected.$remove();
     }
-    async function test() {
-        let path = [112, 113, 128, 130];
-        let folders = this.Folders;
-        let l1 = folders.$find(itm => itm.Id == path[0]);
-        let selectedElem = await l1.$selectPath(path, (itm, num) => itm.Id == num);
-        console.dir(selectedElem);
-        if (selectedElem)
-            selectedElem.$select(folders);
-    }
-    async function selectFolder() {
-        let folders = this.Folders;
-        let fld = folders.$find(itm => itm.Id == 101);
-        await fld.$expand();
-        let f103 = folders.$find(itm => itm.Id == 103);
-        f103.$select(folders);
-    }
     async function editItem(arr) {
         const ctrl = this.$ctrl;
         if (!arr || !arr.$selected)
@@ -184,8 +167,9 @@ define(["require", "exports"], function (require, exports) {
             return null;
         }
         async function findAgentOffset(folder, mi) {
-            folder.Children.$lockOnce = true;
+            folder.Children.$lockUpdate(true);
             let res = await ctrl.$invoke('findIndex', { Id: agent.Id, Parent: folder.Id, Order: mi.SortOrder, Dir: mi.SortDir });
+            folder.Children.$lockUpdate(false);
             if (res && res.Result) {
                 let ix = res.Result.RowNo;
                 let pageNo = Math.floor(ix / mi.PageSize);
@@ -220,6 +204,7 @@ define(["require", "exports"], function (require, exports) {
         if (ch.$loaded) {
             let ag = findAgent(ch);
             if (!ag) {
+                ch.$resetLazy();
                 let mi = createModelInfo(this, ch);
                 let offset = await findAgentOffset(selFolder, mi);
                 if (offset == -1)

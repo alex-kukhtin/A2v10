@@ -6,18 +6,22 @@
 @toolbar-txt-color: @text-color;
 
 @tb-item-height: 2.3575rem;
-@tb-item-margin: 4px 2px;
+@tb-item-margin: 0 4px;
 
 .toolbar {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	padding: 0 2px;
+	padding: 4px;
 	overflow: visible;
 	background-color: @toolbar-bg-color;
 	// color: @toolbar-txt-color;
 	//min-height:34px;
 	z-index: 1;
+
+	input, select {
+		height: auto;
+	}
 
 	.checkbox {
 		margin: 0 6px;
@@ -41,6 +45,13 @@
 			margin-left: 6px;
 		}
 	}
+
+	.dropdown.show {
+		.btn {
+			background-color: @toolbar-active;
+		}
+	}
+
 
 	&.transparent {
 		background-color: transparent;
@@ -101,18 +112,19 @@
 		flex-grow: 0;
 		display: inline-block;
 		width: 2px;
-		border-right: 1px solid #eee; //lighten(@toolbar-bg-color, 5%);
+		border-right: 1px solid var(--neutralBkLight);
 		align-self: stretch;
-		background-color: #ccc; //darken(@toolbar-bg-color, 15%);
-		margin: .5rem .25rem;
+		background-color: var(--neutralBkDarker); //darken(@toolbar-bg-color, 15%);
+		margin: .25rem;
 	}
 
 	> .control-group {
 		display: inline-flex;
 		background-color: transparent;
-		margin: @tb-item-margin!important;
+		margin: @tb-item-margin !important;
 
 		.input-group {
+			height: @tb-item-height;
 			min-height: @tb-item-height;
 		}
 
@@ -133,9 +145,7 @@
 .btn-tb {
 	white-space: nowrap;
 	background-color: transparent;
-	//text-transform: lowercase;
 	min-width: 0;
-	margin: @tb-item-margin;
 
 	&:focus {
 		outline: 1px dotted #777; //darken(@toolbar-bg-color, 15%);

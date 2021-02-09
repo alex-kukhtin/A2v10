@@ -14,7 +14,7 @@
 
 	Vue.component("a2-graphics", {
 		template:
-			`<div :id="id" class="a2-graphics"></div>`,
+			`<div :id="id" class="a2-graphics" ref=canvas></div>`,
 		props: {
 			render: Function,
 			arg: [Object, String, Number, Array, Boolean, Date],
@@ -33,9 +33,10 @@
 		},
 		methods: {
 			draw() {
-				const chart = d3.select('#' + this.id);
+				const domElem = this.$refs.canvas;
+				const chart = d3.select(domElem);
 				chart.selectAll('*').remove();
-				this.render.call(this.controller.$data, chart, this.arg);
+				this.render.call(this.controller.$data, chart, this.arg, domElem);
 			}
 		},
 		mounted() {

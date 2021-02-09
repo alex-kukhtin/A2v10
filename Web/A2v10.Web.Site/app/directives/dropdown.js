@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20180507-7077*/
+/*20210209-7445*/
 /* directives/dropdown.js */
 
 
@@ -27,6 +27,7 @@ Vue.directive('dropdown', {
 
 		el.addEventListener('click', function (event) {
 			let trg = event.target;
+			if (el._btn.disabled) return;
 			while (trg) {
 				if (trg === el._btn) break;
 				if (trg === el) return;

@@ -95,7 +95,10 @@ header, .header {
 
 	> a.nav-admin {
 		color: inherit;
-		padding: 6px 8px;
+		padding: 0 1em;
+		height: 100%;
+		display: inline-flex;
+		align-items: center;
 
 		&:hover {
 			background-color: @brand-hover-color;
@@ -115,7 +118,7 @@ header, .header {
 		height: 100%;
 
 		.menu {
-			margin-top: -1px;
+			margin-top: 0;
 			min-width: 185px;
 		}
 	}
@@ -124,11 +127,18 @@ header, .header {
 		background-color: transparent;
 		white-space: nowrap;
 		color: white;
-		padding: 4px;
-		height: @header-height - 4px;
+		padding: 0 .5em 0 1em;
+		height: 100%;
 
 		&:hover {
 			background-color: @brand-hover-color;
+		}
+		&.user-name, &.company-name {
+			padding:0 .5em 0 1em;
+		}
+
+		.caret {
+			margin:0 .25em 0 .5em;
 		}
 	}
 
@@ -420,11 +430,11 @@ pre.a2-code {
 	position: absolute;
 	left: 0;
 	right: 0;
-	top: @header-height - 4px;
-	height: 4px;
+	top: @header-height - @progress-bar-height;
+	height: @progress-bar-height;
 	width: 100%;
 	overflow: hidden;
-	background-color: @navbar-bg-color-dark;
+	background-color: @progress-bar-bk-color;
 
 	&:before {
 		content: '';
@@ -432,9 +442,11 @@ pre.a2-code {
 		position: relative;
 		left: 0;
 		width: 50%;
-		height: 4px;
-		background-color: gold;
+		height: @progress-bar-height;
+		background-color: @progress-bar-color;
 		animation: loading 2s linear infinite;
+		border-radius: @progress-bar-height * 3;
+		opacity: .75;
 	}
 }
 

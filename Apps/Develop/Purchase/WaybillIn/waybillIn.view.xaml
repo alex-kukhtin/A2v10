@@ -13,7 +13,7 @@
     </Page.Toolbar>
     <Page.Taskpad>
         <Taskpad Width="290">
-            <ContentControl Content="{Source Path='../../Document/Info'}"/>
+            <ContentControl Content="{Source '../../Document/Info'}"/>
         </Taskpad>
     </Page.Taskpad>
     <Grid Columns="150, 150, 150, 1*">

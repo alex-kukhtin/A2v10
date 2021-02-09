@@ -23,7 +23,10 @@
 		"browseFolder": {
 			"model": "Agent",
 			"index": true,
-			"view": "browseFolder.dialog"
+			"view": "browseFolder.dialog",
+			"parameters": {
+				"HideSearch": true
+			}
 		}
 	},
 	"commands": {

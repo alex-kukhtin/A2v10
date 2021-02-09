@@ -29,7 +29,7 @@
 	<Page.Taskpad>
 		<Taskpad Width="290" Collapsible="True" Collapsed="{Bind Root.$Collapsed}">
 			<TextBox Accel="Ctrl+F7" Label="Штрих-код" Value="{Bind Root.$BarCode}"/>
-			<ContentControl Content="{Source Path='../../Document/Info'}"/>
+			<ContentControl Content="{Source '../../Document/Info'}"/>
 			<Panel Header="Основание" Icon="Link" If="{Bind Document.$HasParent}" Style="Default" Padding="6" Collapsible="True">
 				<Hyperlink Icon="FileLink"
                            Content="{Bind Document.ParentDoc.$Name}"

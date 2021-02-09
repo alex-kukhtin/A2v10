@@ -2909,6 +2909,12 @@ Vue.component('a2-pager', {
 
 		defineCommonProps(arr);
 
+		arr.$lock = false;
+
+		arr.$lockUpdate = function(lock) {
+			this.$lock = lock;
+		};
+
 		arr.$new = function (src) {
 			let newElem = new this._elem_(src || null, this._path_ + '[]', this);
 			newElem.__checked = false;
@@ -2978,6 +2984,7 @@ Vue.component('a2-pager', {
 		};
 
 		arr.$resetLazy = function () {
+			this.$lock = false;
 			this.$empty();
 			if (this.$loaded)
 				this.$loaded = false;
@@ -2987,6 +2994,7 @@ Vue.component('a2-pager', {
 		arr.$loadLazy = function () {
 			if (!this.$isLazy())
 				return;
+			if (this.$lock) return;
 			return new Promise((resolve, reject) => {
 				if (!this.$vm) return;
 				if (this.$loaded) { resolve(this); return; }
@@ -2999,7 +3007,8 @@ Vue.component('a2-pager', {
 			});
 		};
 
-		arr.$reload = function() {
+		arr.$reload = function () {
+			this.$lock = false;
 			return this.$vm.$reload(this);
 		}
 

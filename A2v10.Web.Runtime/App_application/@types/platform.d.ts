@@ -97,6 +97,7 @@ interface IElementArray<T> extends Array<T> {
 	$load(): void;
 	$loadLazy(): Promise<IElementArray<T>>;
 	$resetLazy(): IElementArray<T>;
+	$lockUpdate(lock: boolean): void;
 
 	$isLazy(): boolean;
 

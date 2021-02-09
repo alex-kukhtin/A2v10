@@ -1,9 +1,15 @@
 ﻿
+@import "Variables.less";
+
 @tabbar-border-height: .3rem;
 @tabbar-border-color: #ddd;
 @tabbar-padding: .65rem;
 @tab-active-brd-color: gold;
 @tab-brd-color: @light-gray-color;
+
+@tabbar-link-color:var(--themeDark);
+@tabbar-link-hover-color: var(--themeDarker);
+@tabbar-link-hover-background: var(--neutralLighterAlt);
 
 .a2-tab-bar {
 	display: flex;
@@ -18,6 +24,10 @@
 	&:first-child {
 		padding-left: 0;
 	}
+
+	&:not(.active):hover {
+		background-color: @tabbar-link-hover-background;
+	}
 }
 
 .a2-tab-button {
@@ -27,9 +37,14 @@
 	font-weight: bold;
 	font-size: 1.2rem;
 	display: block;
+	color: @tabbar-link-color;
+
+	&:hover {
+		color: @tabbar-link-hover-color;
+	}
 
 	&.active {
-		border-bottom-color: @link-color;
+		border-bottom-color: @tabbar-link-color;
 		color: @label-color;
 	}
 
@@ -67,8 +82,8 @@
 
 		&.active {
 			font-weight: 500;
-			color: @link-color;
-			border-bottom-color: @link-color;
+			color: @tabbar-link-color;
+			border-bottom-color: @tabbar-link-color;
 		}
 	}
 }

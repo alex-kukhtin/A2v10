@@ -4,10 +4,11 @@ import { TRoot, TFolder, TFolders, TAgent, TAgents } from 'index.d';
 let savedFolderId: number;
 
 /*TODO:
- * 1. Убрать папку поиска в дереве выбора.
  * 2. Сделать перемещение папок в дереве (editFolder)
  * 3. Сделать поиск папки в дереве
  * 4. Сделать поиск по вхождению в диалоге
+ * 5. Глобальный фильтр.
+ * 6. Режим "Просмотр/Редактирование"
 */
 
 
@@ -56,8 +57,7 @@ const template: Template = {
 			exec: editItem,
 			canExec(this: TRoot, arr: TAgents): boolean { return !!arr && !!arr.$selected; }
 		},
-		gotoFolder,
-		test
+		gotoFolder
 	}
 };
 
@@ -106,20 +106,11 @@ function filterChange(this: TRoot, elem: TRoot, newVal: string, oldVal: string, 
 
 		srFolder.Children.$ModelInfo.Filter.Fragment = newVal;
 		ctrl.$reload(srFolder.Children);
-
-		/*
-		this.$defer(() => {
-			srFolder.Children.$ModelInfo.Filter.Fragment = newVal;
-			ctrl.$reload(srFolder.Children);
-			// установка фильтра нужна в следущем "тике".
-			//ctrl.$setFilter(srFolder.Children, 'Fragment', newVal);
-		});
-		*/
 	} else {
 		// поиск сбросили, вернем все в первоначальное состояние
 		srFolder.Children.$resetLazy();
 		if (savedFolderId) {
-			// повернути збережену папку
+			// вернем сохраненную папку
 			let frItem = folders.$find(x => x.Id === savedFolderId);
 			if (frItem)
 				frItem.$select(folders);
@@ -199,27 +190,6 @@ async function deleteItem(this: TRoot, arr: TAgents) {
 	arr.$selected.$remove();
 }
 
-// TODO: remove
-async function test() {
-	let path = [112, 113, 128, 130];
-	let folders = this.Folders;
-	let l1: TFolder = folders.$find(itm => itm.Id == path[0]);
-	let selectedElem: TFolder = await l1.$selectPath<TFolder>(path, (itm, num) => itm.Id == num);
-	console.dir(selectedElem);
-	if (selectedElem)
-		selectedElem.$select(folders);
-}
-
-// TODO: remove
-async function selectFolder() {
-	let folders = this.Folders;
-	let fld = folders.$find(itm => itm.Id == 101);
-	await fld.$expand();
-	let f103 = folders.$find(itm => itm.Id == 103);
-	f103.$select(folders);
-}
-
-//<Button Icon="Edit" Command = "{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditItemUrl}, Argument={Bind Folders.Selected(Children)}}" />
 
 async function editItem(this: TRoot, arr: TAgents): Promise<any> {
 	const ctrl = this.$ctrl;
@@ -260,9 +230,12 @@ async function gotoFolder(this: TRoot, agent: TAgent): Promise<any> {
 	}
 
 	async function findAgentOffset(folder, mi): Promise<number> {
-		// TODO:? блокировать на время одного обращения? или вообще блокировать?
-		folder.Children.$lockOnce = true;
+		/* поскольку при обращении к серверу вызовется обновление UI, появится
+		 * "холостой" вызов с Offset=0. Просто заблокируем его.
+		*/
+		folder.Children.$lockUpdate(true);
 		let res = await ctrl.$invoke('findIndex', { Id: agent.Id, Parent: folder.Id, Order: mi.SortOrder, Dir: mi.SortDir });
+		folder.Children.$lockUpdate(false);
 		if (res && res.Result) {
 			let ix: number = res.Result.RowNo;
 			// это индекс в списке. Он будет на странице 
@@ -307,6 +280,7 @@ async function gotoFolder(this: TRoot, agent: TAgent): Promise<any> {
 			   найдем смещение в базе. в соотвтествии с текущим фильтром
 			   перезагружаем коллекцию с новым фильтром
 			*/
+			ch.$resetLazy(); // сбросим старое содержимое
 			let mi = createModelInfo(this, ch);
 			let offset = await findAgentOffset(selFolder, mi);
 			if (offset == -1)
@@ -321,12 +295,10 @@ async function gotoFolder(this: TRoot, agent: TAgent): Promise<any> {
 		console.dir('новая загрузка')
 		let mi = createModelInfo(this, ch);
 		// TODO: мигает. при обращении к Invoke перезаполняется Lazy со значением "по умолчанию"
-		//ch.$lockUpdate(true);
 		let offset = await findAgentOffset(selFolder, mi);
 		if (offset == -1)
 			return;
 		mi.Offset = offset;
-		//ch.$lockUpdate(false);
 		console.dir('offset: ' + offset);
 		await ch.$reload();
 		findAgent(ch);

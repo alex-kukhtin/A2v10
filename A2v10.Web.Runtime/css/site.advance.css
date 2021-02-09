@@ -1225,7 +1225,10 @@ header .h-menu:hover,
 header > a.nav-admin,
 .header > a.nav-admin {
   color: inherit;
-  padding: 6px 8px;
+  padding: 0 1em;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
 }
 header > a.nav-admin:hover,
 .header > a.nav-admin:hover {
@@ -1242,7 +1245,7 @@ header > .dropdown,
 }
 header > .dropdown .menu,
 .header > .dropdown .menu {
-  margin-top: -1px;
+  margin-top: 0;
   min-width: 185px;
 }
 header .btn,
@@ -1250,12 +1253,22 @@ header .btn,
   background-color: transparent;
   white-space: nowrap;
   color: white;
-  padding: 4px;
-  height: 38px;
+  padding: 0 0.5em 0 1em;
+  height: 100%;
 }
 header .btn:hover,
 .header .btn:hover {
   background-color: var(--themeDarker);
+}
+header .btn.user-name,
+.header .btn.user-name,
+header .btn.company-name,
+.header .btn.company-name {
+  padding: 0 0.5em 0 1em;
+}
+header .btn .caret,
+.header .btn .caret {
+  margin: 0 0.25em 0 0.5em;
 }
 header .user-name .person-name,
 .header .user-name .person-name,
@@ -1451,7 +1464,7 @@ header .dropdown.separate.show .btn.btn-success,
   border: 1px solid transparent;
 }
 .menu-navbar .menu-navbar-link.active {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .menu-navbar .menu-navbar-link:hover:not(.active) {
   background-color: #edebe9;
@@ -1911,9 +1924,8 @@ pre.a2-code {
   font-size: 1em;
 }
 .control-group label {
-  font-size: 0.95em;
   color: #999;
-  margin-bottom: 0.15em;
+  margin-bottom: 0.25em;
   display: block;
   font-weight: normal;
 }
@@ -2141,7 +2153,7 @@ pre.a2-code {
   color: #999;
   padding: 0 0.4em;
   display: inline-block;
-  line-height: 2em;
+  line-height: 2.3em;
 }
 .control-group .input-group > a:hover,
 .control-group .input-group > .dropdown > a:hover {
@@ -2665,7 +2677,7 @@ pre.a2-code {
   background-color: #fff9d0 !important;
 }
 .calendar-pane tbody td.active > a {
-  background-color: #F0C1C5 !important;
+  background-color: #f0c1c5 !important;
 }
 .calendar-pane tbody td.other > a {
   opacity: 0.33;
@@ -2761,7 +2773,7 @@ pre.a2-code {
   background-color: #edebe9;
 }
 .period-picker .period-menu li.active {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .period-picker .period-pane {
   display: grid;
@@ -2899,7 +2911,7 @@ pre.a2-code {
   background-color: #edebe9;
 }
 .input-group > .selector-pane ul.selector-ul li.active {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .input-group > .selector-pane a.create-elem {
   padding: 4px;
@@ -2970,7 +2982,7 @@ table.data-grid:not(.no-hover) > tbody > tr:hover {
   background-color: #edebe9;
 }
 table.data-grid:not(.no-hover) > tbody > tr.active:hover {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 table.data-grid td {
   padding: 0.5rem;
@@ -3052,7 +3064,7 @@ table.data-grid th.sort.asc .h-holder:after {
   vertical-align: 2px;
 }
 table.data-grid tr.active {
-  background-color: #F0C1C5 !important;
+  background-color: #f0c1c5 !important;
 }
 table.data-grid tr.row-details:hover {
   background-color: white !important;
@@ -3321,10 +3333,14 @@ table.data-grid > tbody > tr.bold > td {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  padding: 0 2px;
+  padding: 4px;
   overflow: visible;
   background-color: var(--neutralBk);
   z-index: 1;
+}
+.toolbar input,
+.toolbar select {
+  height: auto;
 }
 .toolbar .checkbox {
   margin: 0 6px;
@@ -3341,6 +3357,9 @@ table.data-grid > tbody > tr.bold > td {
 }
 .toolbar > .control-group.first-elem label {
   margin-left: 6px;
+}
+.toolbar .dropdown.show .btn {
+  background-color: var(--neutralBkDarker);
 }
 .toolbar.transparent {
   background-color: transparent;
@@ -3382,17 +3401,18 @@ table.data-grid > tbody > tr.bold > td {
   flex-grow: 0;
   display: inline-block;
   width: 2px;
-  border-right: 1px solid #eee;
+  border-right: 1px solid var(--neutralBkLight);
   align-self: stretch;
-  background-color: #ccc;
-  margin: 0.5rem 0.25rem;
+  background-color: var(--neutralBkDarker);
+  margin: 0.25rem;
 }
 .toolbar > .control-group {
   display: inline-flex;
   background-color: transparent;
-  margin: 4px 2px !important;
+  margin: 0 4px !important;
 }
 .toolbar > .control-group .input-group {
+  height: 2.3575rem;
   min-height: 2.3575rem;
 }
 .toolbar > .control-group label {
@@ -3408,7 +3428,6 @@ table.data-grid > tbody > tr.bold > td {
   white-space: nowrap;
   background-color: transparent;
   min-width: 0;
-  margin: 4px 2px;
 }
 .btn-tb:focus {
   outline: 1px dotted #777;
@@ -3501,10 +3520,10 @@ tr:hover .commandbar.visible-hover {
   text-decoration: none;
 }
 .tree-view li.active > .overlay {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .tree-view li.active > .overlay:hover {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .tree-view li > .overlay {
   display: inline-flex;
@@ -3822,6 +3841,9 @@ tr:hover .commandbar.visible-hover {
 .a2-tab-bar-item:first-child {
   padding-left: 0;
 }
+.a2-tab-bar-item:not(.active):hover {
+  background-color: var(--neutralLighterAlt);
+}
 .a2-tab-button {
   padding: 0.65rem 0;
   border-bottom: 0.3rem solid #ddd;
@@ -3829,9 +3851,13 @@ tr:hover .commandbar.visible-hover {
   font-weight: bold;
   font-size: 1.2rem;
   display: block;
+  color: var(--themeDark);
+}
+.a2-tab-button:hover {
+  color: var(--themeDarker);
 }
 .a2-tab-button.active {
-  border-bottom-color: var(--link);
+  border-bottom-color: var(--themeDark);
   color: #999;
 }
 .a2-tab-button .content {
@@ -3863,8 +3889,8 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-tab-bar.tab-bar-main-menu .a2-tab-button.active {
   font-weight: 500;
-  color: var(--link);
-  border-bottom-color: var(--link);
+  color: var(--themeDark);
+  border-bottom-color: var(--themeDark);
 }
 .a2-tab-bar.tab-bar-button-group {
   margin: 0;
@@ -3931,7 +3957,7 @@ tr:hover .commandbar.visible-hover {
   visibility: visible;
 }
 .a2-list .a2-list-item.active {
-  background-color: #F0C1C5 !important;
+  background-color: #f0c1c5 !important;
 }
 .a2-list .a2-list-item:focus {
   outline-style: none;
@@ -4476,10 +4502,10 @@ ul.news-list > li {
   border-left-color: inherit;
 }
 .wizard-header li.active {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .wizard-header li.active > a {
-  border-color: #F0C1C5;
+  border-color: #f0c1c5;
 }
 .wizard-header li.disabled {
   background-color: #eee;
@@ -4577,7 +4603,7 @@ table.hover > tbody > tr:hover {
   background-color: #edebe9 !important;
 }
 table.hover > tbody > tr.active:hover {
-  background-color: #F0C1C5 !important;
+  background-color: #f0c1c5 !important;
 }
 .grid-vertical > tbody > tr > td,
 .grid-both > tbody > tr > td,
@@ -5038,10 +5064,10 @@ label.checkbox.small span:after {
   background-color: #f9f9f9;
 }
 .a2-pager button.active {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .a2-pager button.active:hover {
-  background-color: #F0C1C5;
+  background-color: #f0c1c5;
 }
 .a2-pager button:first-child {
   border-left-width: 1px;
@@ -5066,7 +5092,6 @@ TODO:
     1. shadow into variables
 */
 .menu {
-  margin: 2px 0;
   top: 100%;
   min-width: 160px;
   box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
@@ -6322,7 +6347,7 @@ table > colgroup col.blue {
   height: 4px;
   width: 100%;
   overflow: hidden;
-  background-color: var(--neutralBkDark);
+  background-color: var(--neutralBkDarker);
 }
 .load-indicator:before {
   content: '';
@@ -6331,8 +6356,10 @@ table > colgroup col.blue {
   left: 0;
   width: 50%;
   height: 4px;
-  background-color: gold;
+  background-color: #2c5edd;
   animation: loading 2s linear infinite;
+  border-radius: 12px;
+  opacity: 0.75;
 }
 @keyframes loading {
   from {
@@ -6669,11 +6696,10 @@ table > colgroup col.blue {
   grid-template-columns: auto;
 }
 .a2-company-btn {
-  border-left: 1px solid #999;
-  border-right: 1px solid #999;
-  margin: 0 8px;
-  padding: 0 8px;
-  display: inline-block;
+  border-left: 1px solid #d96888;
+  border-right: 1px solid #d96888;
+  height: 100%;
+  display: inline-flex;
 }
 .block {
   display: block!important;
