@@ -2102,6 +2102,7 @@ pre.a2-code {
   background-color: white;
   width: auto;
   position: relative;
+  line-height: 2em;
 }
 .control-group .input-group .selector-combo {
   width: 100%;
@@ -2153,7 +2154,6 @@ pre.a2-code {
   color: #999;
   padding: 0 0.4em;
   display: inline-block;
-  line-height: 2.3em;
 }
 .control-group .input-group > a:hover,
 .control-group .input-group > .dropdown > a:hover {
@@ -3412,8 +3412,9 @@ table.data-grid > tbody > tr.bold > td {
   margin: 0 4px !important;
 }
 .toolbar > .control-group .input-group {
-  height: 2.3575rem;
-  min-height: 2.3575rem;
+  height: 2.2em;
+  min-height: 2.2em;
+  line-height: 2.2em;
 }
 .toolbar > .control-group label {
   align-self: center;
