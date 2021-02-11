@@ -112,6 +112,7 @@
     <Content Include="app\server\validate.js" />
     <Content Include="app\services\eusign.js" />
     <Content Include="app\services\html.js" />
+    <Content Include="app\services\impl\array.js" />
     <Content Include="app\services\locale.js" />
     <Content Include="app\services\routing.js" />
     <Content Include="app\services\templates.js" />
@@ -213,6 +214,7 @@
     <Content Include="TestPages\nativeHost.html" />
     <Content Include="TestPages\JasmineTests.html" />
     <Content Include="TestPages\slot.html" />
+    <Content Include="tests\datamodelarrays.js" />
     <Content Include="tests\format.js" />
     <Content Include="Less\TabBar.less" />
     <Content Include="Less\D3.less" />

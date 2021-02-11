@@ -1,7 +1,16 @@
 ﻿/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20210208-7745*/
+/*20210211-7747*/
 // services/datamodel.js
+
+/*
+ * TODO: template & validate => /impl
+ * arr.$checked => /impl/array
+ * arr.$load/lazy => /impl/array
+ * treeImpl => /impl/tree
+ * ensureType to std:utils
+ * try minimize by grunt
+ */
 
 (function () {
 
@@ -13,6 +22,7 @@
 	const PATH = '_path_';
 	const ROOT = '_root_';
 	const ERRORS = '_errors_';
+	const ROWCOUNT = '$RowCount';
 
 	const ERR_STR = '#err#';
 
@@ -22,14 +32,13 @@
 	const FLAG_APPLY = 8;
 	const FLAG_UNAPPLY = 16;
 
-	const DEFAULT_PAGE_SIZE = 20;
-
 	const platform = require('std:platform');
 	const validators = require('std:validators');
 	const utils = require('std:utils');
 	const log = require('std:log', true);
 	const period = require('std:period');
-	const modelInfoTool = require('std:modelInfo');
+	const mitool = require('std:modelInfo');
+	const arrtool = require('std:impl:array');
 
 	let __initialized__ = false;
 
@@ -404,11 +413,13 @@
 		let _lastCaller = null;
 		let propForConstruct = path ? propFromPath(path) : '';
 		elem._root_.$emit(constructEvent, elem, propForConstruct);
+
 		if (elem._root_ === elem) {
 			// root element
 			elem._root_ctor_ = elem.constructor;
 			elem.$dirty = false;
 			elem._query_ = {};
+
 			// rowcount implementation
 			for (var m in elem._meta_.props) {
 				let rcp = m + '.$RowCount';
@@ -417,20 +428,23 @@
 					elem[m].$RowCount = rcv;
 				}
 			}
-			elem.$createModelInfo = createElemModelInfo;
-			elem._setModelInfo_ = setRootModelInfo;
+			mitool.setModelInfoForRoot(elem);
+
 			elem._setRuntimeInfo_ = setRootRuntimeInfo;
-			elem._findRootModelInfo = findRootModelInfo;
+
 			elem._saveSelections = saveSelections;
 			elem._restoreSelections = restoreSelections;
+
 			elem._enableValidate_ = true;
 			elem._needValidate_ = false;
+
 			elem._modelLoad_ = (caller) => {
 				_lastCaller = caller;
 				setDefaults(elem);
 				elem._fireLoad_();
 				__initialized__ = true;
 			};
+
 			elem._fireLoad_ = () => {
 				platform.defer(() => {
 					let isRequery = elem.$vm.__isModalRequery();
@@ -441,6 +455,7 @@
 			elem._fireUnload_ = () => {
 				elem.$emit('Model.unload', elem);
 			};
+
 			defHiddenGet(elem, '$readOnly', isReadOnly);
 			defHiddenGet(elem, '$stateReadOnly', isStateReadOnly);
 			defHiddenGet(elem, '$isCopy', isModelIsCopy);
@@ -473,15 +488,6 @@
 				seal(val);
 			}
 		}
-	}
-
-	function findRootModelInfo() {
-		for (let p in this._meta_.props) {
-			let x = this[p];
-			if (x.$ModelInfo)
-				return x.$ModelInfo;
-		}
-		return null;
 	}
 
 	function isReadOnly() {
@@ -528,6 +534,7 @@
 		defHidden(arr, PATH, path);
 		defHidden(arr, PARENT, parent);
 		defHidden(arr, ROOT, parent._root_ || parent);
+
 		defPropertyGet(arr, "$valid", function () {
 			if (this._errors_)
 				return false;
@@ -537,6 +544,7 @@
 			}
 			return true;
 		});
+
 		defPropertyGet(arr, "$invalid", function () {
 			return !this.$valid;
 		});
@@ -566,23 +574,11 @@
 		return arr;
 	}
 
-	//_BaseArray.prototype = Array.prototype;
-
 	function addArrayProps(arr) {
 
 		defineCommonProps(arr);
 
-		arr.$lock = false;
-
-		arr.$lockUpdate = function(lock) {
-			this.$lock = lock;
-		};
-
-		arr.$new = function (src) {
-			let newElem = new this._elem_(src || null, this._path_ + '[]', this);
-			newElem.__checked = false;
-			return newElem;
-		};
+		arrtool.defineArray(arr);
 
 		defPropertyGet(arr, "$selected", function () {
 			for (let x of this.$elements) {
@@ -675,190 +671,6 @@
 			return this.$vm.$reload(this);
 		}
 
-		arr.$append = function (src) {
-			return this.$insert(src, 'end');
-		};
-
-		arr.$prepend = function (src) {
-			return this.$insert(src, 'start');
-		};
-
-		arr.$insert = function (src, to, current) {
-			const that = this;
-
-			function append(src, select) {
-				let addingEvent = that._path_ + '[].adding';
-				let newElem = that.$new(src);
-				// emit adding and check result
-				let er = that._root_.$emit(addingEvent, that/*array*/, newElem/*elem*/);
-				if (er === false)
-					return null; // disabled
-				let len = that.length;
-				let ne = null;
-				let ix;
-				switch (to) {
-					case 'end':
-						len = that.push(newElem);
-						ne = that[len - 1]; // maybe newly created reactive element
-						break;
-					case 'start':
-						that.unshift(newElem);
-						ne = that[0];
-						len = 1; 
-						break;
-					case 'above':
-						ix = that.indexOf(current);
-						that.splice(ix, 0, newElem);
-						ne = that[ix];
-						len = ix + 1;
-						break;
-					case 'below':
-						ix = that.indexOf(current) + 1;
-						that.splice(ix, 0, newElem);
-						ne = that[ix];
-						len = ix + 1;
-						break;
-				}
-				if ('$RowCount' in that) that.$RowCount += 1;
-				let eventName = that._path_ + '[].add';
-				that._root_.$setDirty(true);
-				that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
-				if (select) {
-					ne.$select();
-					emitSelect(that, ne);
-				}
-				// set RowNumber
-				if ('$rowNo' in newElem._meta_) {
-					let rowNoProp = newElem._meta_.$rowNo;
-					for (let i = 0; i < that.length; i++)
-						that[i][rowNoProp] = i + 1; // 1-based
-				}
-				if (that.$parent) {
-					let m = that.$parent._meta_;
-					if (m.$hasChildren && that._path_.endsWith('.' + m.$items)) { 
-						that.$parent[m.$hasChildren] = true;
-					}
-				}
-				return ne;
-			}
-			if (utils.isArray(src)) {
-				let ra = [];
-				let lastElem = null;
-				src.forEach(function (elem) {
-					lastElem = append(elem, false);
-					ra.push(lastElem);
-				});
-				if (lastElem) {
-					// last added element
-					lastElem.$select();
-				}
-				return ra;
-			} else
-				return append(src, true);
-
-		};
-
-		arr.$empty = function () {
-			if (this.$root.isReadOnly)
-				return this;
-			this.splice(0, this.length);
-			if ('$RowCount' in this) this.$RowCount = 0;
-			return this;
-		};
-
-		arr.$renumberRows = function () {
-			if (!this.length) return this;
-			let item = this[0];
-			// renumber rows
-			if ('$rowNo' in item._meta_) {
-				let rowNoProp = item._meta_.$rowNo;
-				for (let i = 0; i < this.length; i++) {
-					this[i][rowNoProp] = i + 1; // 1-based
-				}
-			}
-			return this;
-		};
-
-		arr.$sort = function (compare) {
-			this.sort(compare);
-			this.$renumberRows();
-			return this;
-		};
-
-		arr.$clearSelected = function () {
-			let sel = this.$selected;
-			if (!sel) return this; // already null
-			sel.$selected = false;
-			emitSelect(this, null);
-			return this;
-		};
-
-		arr.$remove = function (item) {
-			if (this.$root.isReadOnly)
-				return this;
-			if (!item)
-				return this;
-			let index = this.indexOf(item);
-			if (index === -1)
-				return this;
-			this.splice(index, 1);
-			if ('$RowCount' in this) this.$RowCount -= 1;
-			// EVENT
-			let eventName = this._path_ + '[].remove';
-			this._root_.$setDirty(true);
-			this._root_.$emit(eventName, this /*array*/, item /*elem*/, index);
-
-			if (!this.length) {
-				if (this.$parent) {
-					let m = this.$parent._meta_;
-					if (m.$hasChildren && this._path_.endsWith('.' + m.$items)) {
-						this.$parent[m.$hasChildren] = false;
-					}
-					// try to select parent element
-					if (m.$items)
-						this.$parent.$select();
-				}
-				return this;
-			}
-			if (index >= this.length)
-				index -= 1;
-			this.$renumberRows();
-			if (this.length > index) {
-				this[index].$select();
-			}
-			return this;
-		};
-
-		arr.$copy = function (src) {
-			if (this.$root.isReadOnly)
-				return this;
-			this.$empty();
-			if (utils.isArray(src)) {
-				for (let i = 0; i < src.length; i++) {
-					this.push(this.$new(src[i]));
-				}
-			}
-			return this;
-		};
-
-		arr.$sum = function (fn) {
-			return this.reduce((a, c) => a + fn(c), 0);
-		};
-
-		arr.$find = function (fc, thisArg) {
-			for (let i = 0; i < this.length; i++) {
-				let el = this[i];
-				if (fc.call(thisArg, el, i, this))
-					return el;
-				if ('$items' in el) {
-					let x = el.$items.$find(fc);
-					if (x)
-						return x;
-				}
-			}
-			return null;
-		}
-
 		arr.__fireChange__ = function (opts) {
 			let root = this.$root;
 			let itm = this;
@@ -947,9 +759,8 @@
 			return this[nameName];
 		});
 
-		if (arrayItem) {
+		if (arrayItem) 
 			defArrayItem(obj);
-		}
 
 		if (meta.$hasChildren) {
 			defHiddenGet(obj.prototype, "$hasChildren", function () {
@@ -986,35 +797,10 @@
 		}
 	}
 
-	function emitSelect(arr, item) {
-		let selectEvent = arr._path_ + '[].select';
-		let er = arr._root_.$emit(selectEvent, arr/*array*/, item);
-	}
-
 	function defArrayItem(elem) {
 
-		elem.prototype.$remove = function () {
-			let arr = this._parent_;
-			arr.$remove(this);
-		};
-		elem.prototype.$select = function (root) {
-			let arr = root || this._parent_;
-			let sel = arr.$selected;
-			if (sel === this) return;
-			if (sel) sel.$selected = false;
-			this.$selected = true;
-			emitSelect(arr, this);
-			if (this._meta_.$items) {
-				// expand all parent items
-				let p = this._parent_._parent_;
-				while (p) {
-					if (!p || p === this.$root)
-						break;
-					p.$expanded = true;
-					p = p._parent_._parent_;
-				}
-			}
-		};
+		arrtool.defineArrayItemProto(elem);
+
 		Object.defineProperty(elem.prototype, '$checked', {
 			enumerable: true,
 			configurable: true, /* needed */
@@ -1054,7 +840,7 @@
 
 	function getDelegate(name) {
 		let tml = this.$template;
-		if (!tml.delegates) {
+		if (!tml || !tml.delegates) {
 			console.error('There are no delegates in the template');
 			return null;
 		}
@@ -1403,7 +1189,7 @@
 						trg.$loaded = false; // may be lazy
 					trg.$copy(src[prop]);
 					// copy rowCount
-					if ('$RowCount' in trg) {
+					if (ROWCOUNT in trg) {
 						let rcProp = prop + '.$RowCount';
 						if (rcProp in src)
 							trg.$RowCount = src[rcProp] || 0;
@@ -1483,42 +1269,6 @@
         */
 	}
 
-	function checkPeriod(obj) {
-		let f = obj.Filter;
-		if (!f) return obj;
-		if (!('Period' in f))
-			return obj;
-		let p = f.Period;
-		if (period.like(p))
-			f.Period = new period.constructor(p);
-		return obj;
-	}
-
-	function setModelInfoFilter(prop, val) {
-		if (period.isPeriod(val))
-			this.Filter[prop].assign(val);
-		else
-			this.Filter[prop] = val;
-	}
-
-	function setRootModelInfo(elem, data) {
-		if (!data.$ModelInfo) return;
-		for (let p in data.$ModelInfo) {
-			if (!elem) elem = this[p];
-			elem.$ModelInfo = checkPeriod(data.$ModelInfo[p]);
-			elem.$ModelInfo.$setFilter = setModelInfoFilter;
-			return elem.$ModelInfo;
-		}
-	}
-
-	function createElemModelInfo(elem, raw) {
-		if (!elem.$ModelInfo) {
-			elem.$ModelInfo = checkPeriod(raw);
-			elem.$ModelInfo.$setFilter = setModelInfoFilter;
-		}
-		return elem.$ModelInfo;
-	}
-
 	function setRootRuntimeInfo(runtime) {
 		if (!runtime) return;
 		if (runtime.$cross) {
@@ -1544,19 +1294,6 @@
 		}
 	}
 
-	function setModelInfo(root, info, rawData) {
-		// may be default
-		root.__modelInfo = info ? info : {
-			PageSize: DEFAULT_PAGE_SIZE
-		};
-		let mi = rawData.$ModelInfo;
-		if (!mi) return;
-		modelInfoTool.reconcileAll(mi);
-		for (let p in mi) {
-			root[p].$ModelInfo = checkPeriod(mi[p]);
-		}
-	}
-
 	function destroyRoot() {
 		this._host_.$viewModel = null;
 		this._host_ = null;
@@ -1567,7 +1304,7 @@
 		createArray: createArray,
 		defineObject: defineObject,
 		implementRoot: implementRoot,
-		setModelInfo: setModelInfo,
+		setModelInfo: mitool.setModelInfo,
 		enumData: enumData
 	};
 })();
