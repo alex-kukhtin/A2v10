@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace A2v10.Xaml
 {
+	//[DefaultProperty("Path")]
 	public class Bind : BindBase, ISupportInitialize
 	{
 		public String Path { get; set; }

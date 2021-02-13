@@ -13,11 +13,11 @@ using System.Security.Claims;
 
 using Newtonsoft.Json;
 
-using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.OAuth;
 
 using A2v10.Infrastructure;
-using Microsoft.Owin;
 using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.OAuth2

@@ -23,6 +23,7 @@ namespace A2v10.Xaml
 	}
 
 
+	//[DefaultProperty("Member")]
 	public class StyleResource : MarkupExtension
 	{
 		public String Member { get; set; }

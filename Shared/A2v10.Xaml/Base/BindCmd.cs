@@ -91,6 +91,7 @@ namespace A2v10.Xaml
 		CanUnapply = 16,
 	}
 
+	//[DefaultProperty("Command")]
 	public class BindCmd : BindBase
 	{
 		private const String nullString = "null";
@@ -131,6 +132,8 @@ namespace A2v10.Xaml
 		}
 		public BindCmd(String command)
 		{
+			if (command == null)
+				return;
 			if (!Enum.TryParse<CommandType>(command, out CommandType cmdType))
 				throw new XamlException($"Invalid command '{command}'");
 			Command = cmdType;

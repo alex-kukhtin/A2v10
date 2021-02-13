@@ -6,6 +6,7 @@ using System.Xaml;
 
 namespace A2v10.Xaml
 {
+	//[DefaultProperty("Member")]
 	public class StaticResource : MarkupExtension
 	{
 		public String Member { get; set; }

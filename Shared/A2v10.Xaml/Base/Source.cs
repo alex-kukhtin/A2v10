@@ -7,6 +7,7 @@ using System.Xaml;
 
 namespace A2v10.Xaml
 {
+	//[DefaultProperty("Path")]
 	public class Source : MarkupExtension
 	{
 		public String Path { get; set; }
