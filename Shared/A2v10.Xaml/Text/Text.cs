@@ -9,6 +9,7 @@ namespace A2v10.Xaml
 	[ContentProperty("Inlines")]
 	public class Text : UIElement
 	{
+		// TODO:CORE: set;
 		public InlineCollection Inlines { get; } = new InlineCollection();
 
 		public TextSize Size { get; set; }

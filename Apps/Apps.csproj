@@ -567,7 +567,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\styles.xaml">
+    <None Include="Develop\styles.xaml_">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
