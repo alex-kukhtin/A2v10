@@ -21,6 +21,7 @@ namespace A2v10.Xaml
 		BottomShadow
 	}
 
+	//[AttachedProperties("Align")]
 	public class Toolbar : Container
 	{
 

@@ -146,7 +146,7 @@
 			},
 			loadTrace() {
 				const root = window.$$rootUrl;
-				const url = urlTools.combine(root, 'shell/trace');
+				const url = urlTools.combine(root, '_shell/trace');
 				const that = this;
 				// with skip events
 				http.post(url, null, null, true).then(function (result) {
@@ -173,7 +173,7 @@
 		},
 		created() {
 			eventBus.$on('endRequest', (url) => {
-				if (url.indexOf('/shell/trace') !== -1) return;
+				if (url.indexOf('/_shell/trace') !== -1) return;
 				if (!this.traceVisible) return;
 				this.loadTrace();
 			});

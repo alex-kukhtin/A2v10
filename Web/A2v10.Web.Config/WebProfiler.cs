@@ -131,7 +131,7 @@ namespace A2v10.Web.Config
 		{
 			if (!Enabled)
 				return null;
-			if (address.ToLowerInvariant().EndsWith("/shell/trace"))
+			if (address.ToLowerInvariant().EndsWith("/_shell/trace"))
 				return null;
 			_request = new ProfileRequest(address);
 			AddRequestToSession(_request);

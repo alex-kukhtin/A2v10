@@ -7,6 +7,7 @@ using System.Collections.Generic;
 namespace A2v10.Xaml
 {
 
+	//[AttachedProperties("Width,MinWidth")]
 	public class Splitter : Container
 	{
 		public Orientation Orientation { get; set; }

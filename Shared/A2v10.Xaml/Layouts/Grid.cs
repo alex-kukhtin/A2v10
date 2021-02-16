@@ -19,6 +19,7 @@ namespace A2v10.Xaml
 		ColumnDense 
 	}
 
+	//[AttachedProperties("Col,Row,ColSpan,RowSpan,VAlign")]
 	public class Grid : Container
 	{
 

@@ -74,7 +74,7 @@
 			},
 			submit() {
 				const root = window.$$rootUrl;
-				const url = urlTools.combine(root, 'shell/savefeedback');
+				const url = urlTools.combine(root, '_shell/savefeedback');
 				const that = this;
 				let jsonData = utils.toJson({ text: this.value });
 				dataService.post(url, jsonData).then(function (result) {

@@ -10359,7 +10359,7 @@ Vue.component('a2-panel', {
 			},
 			loadTrace() {
 				const root = window.$$rootUrl;
-				const url = urlTools.combine(root, 'shell/trace');
+				const url = urlTools.combine(root, '_shell/trace');
 				const that = this;
 				// with skip events
 				http.post(url, null, null, true).then(function (result) {
@@ -10386,7 +10386,7 @@ Vue.component('a2-panel', {
 		},
 		created() {
 			eventBus.$on('endRequest', (url) => {
-				if (url.indexOf('/shell/trace') !== -1) return;
+				if (url.indexOf('/_shell/trace') !== -1) return;
 				if (!this.traceVisible) return;
 				this.loadTrace();
 			});
@@ -10470,7 +10470,7 @@ Vue.component('a2-panel', {
 			},
 			submit() {
 				const root = window.$$rootUrl;
-				const url = urlTools.combine(root, 'shell/savefeedback');
+				const url = urlTools.combine(root, '_shell/savefeedback');
 				const that = this;
 				let jsonData = utils.toJson({ text: this.value });
 				dataService.post(url, jsonData).then(function (result) {

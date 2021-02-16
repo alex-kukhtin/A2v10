@@ -34,7 +34,7 @@ namespace A2v10.Request
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
 
-			sb.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("shell"));
+			sb.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("_shell"));
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
 			sb.Replace("$(LayoutManifest)", _host.CustomManifest());
@@ -197,7 +197,7 @@ namespace A2v10.Request
 					return String.Empty;
 				foreach (var f in files)
 					// at least one file
-					return $"<script type=\"text/javascript\" src=\"/shell/appscripts\"></script>";
+					return $"<script type=\"text/javascript\" src=\"/_shell/appscripts\"></script>";
 				return String.Empty;
 			}
 		}

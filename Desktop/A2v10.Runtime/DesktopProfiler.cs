@@ -115,7 +115,7 @@ namespace A2v10.Runtime
 		{
 			if (!Enabled)
 				return null;
-			if (address.ToLowerInvariant().EndsWith("shell/trace"))
+			if (address.ToLowerInvariant().EndsWith("_shell/trace"))
 				return null;
 			_request = new ProfileRequest(address);
 			sessionArray.AddFirst(_request);

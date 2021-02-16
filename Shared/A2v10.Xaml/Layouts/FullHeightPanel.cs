@@ -6,6 +6,7 @@ using System.Text;
 
 namespace A2v10.Xaml
 {
+	//[AttachedProperties("Fill,Skip")]
 	public class FullHeightPanel : Container
 	{
 		#region Attached Properties

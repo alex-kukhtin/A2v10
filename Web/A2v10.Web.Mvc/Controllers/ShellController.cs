@@ -105,7 +105,7 @@ namespace A2v10.Web.Mvc.Controllers
 				return;
 			}
 
-			if (pathInfo.StartsWith("shell"))
+			if (pathInfo.StartsWith("_shell"))
 			{
 				Boolean adminShell = pathInfo.Contains("admin");
 				if (adminShell)
@@ -610,15 +610,15 @@ namespace A2v10.Web.Mvc.Controllers
 
 		async Task Shell(String pathInfo, Boolean bAdmin)
 		{
-			if (pathInfo.StartsWith("shell/script"))
+			if (pathInfo.StartsWith("_shell/script"))
 				await ShellScript(bAdmin);
-			else if (pathInfo.StartsWith("shell/trace"))
+			else if (pathInfo.StartsWith("_shell/_trace"))
 				ShellTrace();
-			else if (pathInfo.StartsWith("shell/appstyles"))
+			else if (pathInfo.StartsWith("_shell/appstyles"))
 				ShellAppStyles();
-			else if (pathInfo.StartsWith("shell/appscripts"))
+			else if (pathInfo.StartsWith("_shell/appscripts"))
 				ShellAppScripts();
-			else if (pathInfo.StartsWith("shell/savefeedback"))
+			else if (pathInfo.StartsWith("_shell/savefeedback"))
 				await ShellSaveFeedback();
 			else
 				throw new RequestModelException($"Invalid shell action: '{pathInfo}'");

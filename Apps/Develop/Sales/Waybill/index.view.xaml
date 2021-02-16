@@ -73,9 +73,6 @@
 			</CollectionView.Filter>
 		</CollectionView>
 	</Page.CollectionView>
-	<Page.Pager>
-		<Pager Source="{Bind Parent.Pager}" />
-	</Page.Pager>
 	<!--="{Bind Parent.GroupBy} ItemsSource="{Bind Parent.ItemsSource}" -->
 	<DataGrid XamlStyle="{StyleResource DataGrid}" HeadersVisibility="Column"
 				Sort="True" FixedHeader="True" TestId="MyDataGrid"
@@ -135,4 +132,7 @@
 			</DataGridRowDetails>
 		</DataGrid.RowDetails>
 	</DataGrid>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}" />
+	</Page.Pager>
 </Page>
