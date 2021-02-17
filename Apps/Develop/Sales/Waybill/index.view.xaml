@@ -73,9 +73,9 @@
 			</CollectionView.Filter>
 		</CollectionView>
 	</Page.CollectionView>
-	<!--="{Bind Parent.GroupBy} ItemsSource="{Bind Parent.ItemsSource}" -->
-	<DataGrid XamlStyle="{StyleResource DataGrid}" HeadersVisibility="Column"
-				Sort="True" FixedHeader="True" TestId="MyDataGrid"
+	<!--="{Bind Parent.GroupBy}  -->
+	<DataGrid XamlStyle="{StyleResource DataGrid}" HeadersVisibility="Column" GridLines="Horizontal"
+				Sort="True" FixedHeader="True" TestId="MyDataGrid" ItemsSource="{Bind Parent.ItemsSource}"
 				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
 				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="{Bind Parent.Grouping.GroupBy}">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Role="Number"

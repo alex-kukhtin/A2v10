@@ -2602,16 +2602,16 @@ pre.a2-code {
 }
 .btn-outline {
   background-color: transparent;
-  border: 1px solid #ddd;
+  border: 1px solid var(--neutralBk);
 }
 .btn-outline:hover {
-  border-color: #e5c365;
-  background-color: #edebe9;
+  border-color: var(--neutralBkDark);
+  background-color: var(--neutralBk);
 }
 .btn-outline:active {
-  background-color: #fff29d;
+  background-color: var(--neutralBkDark);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
-  border-color: #e5c365;
+  border-color: var(--neutralBkDark);
   outline: none;
 }
 .btn-outline:focus {
@@ -2635,6 +2635,7 @@ pre.a2-code {
   padding: 0.8em;
   box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
   color: var(--text);
+  line-height: normal;
 }
 .calendar-pane td {
   background-color: white;
@@ -2818,7 +2819,7 @@ pre.a2-code {
   font-size: 1.3rem;
 }
 .period-picker.pp-hyperlink.pp-large .input-group .period-text {
-  line-height: 2.3rem;
+  line-height: 2;
 }
 .period-picker.pp-navbar {
   margin-bottom: 0;
@@ -3390,7 +3391,7 @@ table.data-grid > tbody > tr.bold > td {
   background-color: transparent;
 }
 .toolbar .btn-caret:hover {
-  background-color: #edebe9;
+  background-color: var(--neutralBkDark);
   outline: none;
 }
 .toolbar .a2-header {
@@ -3476,11 +3477,11 @@ table.data-grid > tbody > tr.bold > td {
   outline-offset: -2px;
 }
 .commandbar .btn-cb:hover {
-  background-color: #edebe9;
+  background-color: var(--neutralBkDark);
   outline: none;
 }
 .commandbar .btn-cb:active {
-  background-color: #fff29d;
+  background-color: var(--neutralBkDarker);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
   outline: none;
 }
@@ -5324,8 +5325,8 @@ TODO:
   border-bottom-color: transparent;
 }
 .popover-wrapper > .popover-title:hover {
-  color: var(--themeDarker);
-  border-bottom-color: var(--themeDarker);
+  color: var(--link);
+  border-bottom-color: var(--link);
 }
 .popover-wrapper > .popup-body {
   display: none;

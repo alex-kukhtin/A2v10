@@ -1,4 +1,6 @@
 ﻿
+@import "Variables.less";
+
 .btn {
 	padding: .5em .75em;
 	vertical-align: middle;
@@ -137,23 +139,25 @@
 
 .btn-outline {
 	background-color: transparent;
-	border: 1px solid #ddd;
+	border: 1px solid var(--neutralBk);
 
 	&:hover {
-		border-color: @tb-hover-brd-color;
-		background-color: @hover-bg-color;
+		border-color: var(--neutralBkDark);
+		background-color: var(--neutralBk);
 	}
 
 	&:active {
-		background-color: @tb-active-bg-color;
+		background-color: var(--neutralBkDark);
 		box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
-		border-color: @tb-hover-brd-color;
+		border-color: var(--neutralBkDark);
 		outline: none;
 	}
+
 	&:focus {
-		outline:none;
+		outline: none;
 	}
+
 	.ico:before {
-		color: #777!important;
+		color: #777 !important;
 	}
 }

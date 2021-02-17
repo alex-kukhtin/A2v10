@@ -1,0 +1,112 @@
+﻿@import "variables.less";
+
+@tree-ident:2rem;
+
+@tv-hover-bg-color: @hover-bg-color;
+@tv-active-bg-color: @active-bg-color;
+
+
+.tree-view {
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+
+	li {
+		list-style: none;
+		cursor: pointer;
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+
+		a:hover, a:active {
+			text-decoration: none;
+		}
+
+		&.active > .overlay {
+			background-color: @tv-active-bg-color;
+
+			&:hover {
+				background-color: @tv-active-bg-color;
+			}
+		}
+
+		> .overlay {
+			display: inline-flex;
+			align-items: baseline;
+			width: 100%;
+			padding: 7px 0;
+
+			.tv-folder {
+				font-weight: 600;
+			}
+
+			a {
+				color: currentColor;
+			}
+
+			.toggle {
+				display: inline-block;
+				flex-shrink: 0; /*fixed*/
+				font-size: 1.2rem;
+				min-width: @tree-ident;
+				font-family: "A2v10";
+				color: @tv-icon-color;
+				text-align: center;
+			}
+
+			&:hover {
+				background-color: @hover-bg-color;
+			}
+
+			i.ico {
+				flex-shrink: 0; /*fixed*/
+				color: @icon-color;
+				font-size: 1.2rem;
+				width: 2rem;
+			}
+
+			.no-wrap {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			&.no-icons > .toggle {
+				margin-right: 4px;
+			}
+		}
+
+		> ul {
+			margin: 0;
+			padding-left: @tree-ident; /*indentation*/
+		}
+
+		&.collapsed {
+			> .overlay > .toggle {
+
+				&:after {
+					content: "\e9a5"; /*chevron-right*/
+				}
+			}
+
+			ul {
+				display: none;
+			}
+		}
+
+		&.expanded {
+			> .overlay > .toggle {
+				&:after {
+					content: "\e9a4"; /*chevron-down*/
+				}
+			}
+		}
+	}
+
+	&.no-indent {
+		li > ul {
+			padding-left: 0;
+		}
+	}
+}
+

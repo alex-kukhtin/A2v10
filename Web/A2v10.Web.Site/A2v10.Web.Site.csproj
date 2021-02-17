@@ -299,6 +299,8 @@
     <Content Include="css\blue.colorscheme" />
     <Content Include="Less.Advance\_ColorSchemes.less" />
     <Content Include="Less.Advance\Colors.less" />
+    <Content Include="Less.Mobile\Tab.less" />
+    <Content Include="Less.Mobile\TreeView.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
