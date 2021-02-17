@@ -17,6 +17,7 @@
 @AdminUsers=Адміністратори
 @User=Користувач
 @Users=Користувачі
+@ApiUsers=Користувачі API
 @Groups=Групи
 @Roles=Ролі
 @OldPassword=Старий пароль

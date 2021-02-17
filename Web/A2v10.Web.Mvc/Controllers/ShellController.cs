@@ -612,7 +612,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (pathInfo.StartsWith("_shell/script"))
 				await ShellScript(bAdmin);
-			else if (pathInfo.StartsWith("_shell/_trace"))
+			else if (pathInfo.StartsWith("_shell/trace"))
 				ShellTrace();
 			else if (pathInfo.StartsWith("_shell/appstyles"))
 				ShellAppStyles();

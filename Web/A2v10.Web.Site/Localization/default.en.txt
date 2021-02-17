@@ -15,6 +15,7 @@
 @SubstUser=Change user
 @User=User
 @Users=Users
+@ApiUsers=API Users
 @Groups=Groups
 @Roles=Roles
 @OldPassword=Old password

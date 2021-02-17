@@ -31,7 +31,7 @@ namespace A2v10.Xaml
 				AddCssClass(classes);
 		}
 
-		internal void SetInnerText(Object p)
+		public void SetInnerText(Object p)
 		{
 			throw new NotImplementedException(nameof(SetInnerText));
 		}

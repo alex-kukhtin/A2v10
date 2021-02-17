@@ -2,6 +2,7 @@
 
 using System;
 using System.Configuration;
+using System.Threading.Tasks;
 using System.Web;
 
 using Owin;
@@ -13,6 +14,7 @@ using Microsoft.Owin.Security.OAuth;
 
 using A2v10.Web.Identity;
 using A2v10.Web.Mvc.OAuth2;
+using A2v10.Web.Identity.ApiKey;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -96,6 +98,13 @@ namespace A2v10.Web.Mvc.Start
 					AllowInsecureHttp = oauth2Config.allowInsecureHttp,
 					AccessTokenExpireTimeSpan = expTimeSpan
 				});
+			}
+
+			if (ConfigurationManager.AppSettings["enableApiKeyAuth"] == "true")
+			{
+				var opts = new ApiKeyAuthenticationOptions();
+				opts.Provider.OnValidateIdentity = (context) => DbValidateApiKey.ValidateApiKey(context);
+				app.UseApiKeyAuthentication(opts);
 			}
 		}
 	}

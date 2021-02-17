@@ -49,6 +49,7 @@
     <Content Include="Admin\A2v10.Web.Admin.nuspec">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Admin\Identity\Api\model.json" />
     <None Include="Admin\Identity\Group\model.json" />
     <None Include="Admin\Identity\Role\model.json" />
     <None Include="Admin\Identity\User\model.json" />
@@ -74,6 +75,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Develop\pos\model.json" />
+    <Content Include="Admin\Identity\Api\edit.template.js" />
+    <Content Include="Admin\Identity\Api\index.template.js" />
+    <Content Include="Admin\Identity\Api\readme.txt" />
     <Content Include="App_application\%40sql\platform\a2v10admin.sql" />
     <Content Include="App_application\%40sql\platform\a2v10platform.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10admin.sql" />
@@ -452,6 +456,12 @@
     </None>
     <None Include="Develop\purchase\Goods\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Admin\Identity\Api\index.view.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Admin\Identity\Api\edit.dialog.xaml">
       <SubType>Designer</SubType>
     </None>
     <Page Include="Develop\purchase\Supplier\index.view.xaml">

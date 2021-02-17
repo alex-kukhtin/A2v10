@@ -149,7 +149,7 @@ namespace A2v10.Request
 					loadPrms.Set("Id", rw.Id);
 					if (rw.parameters != null)
 						loadPrms.AppendIfNotExists(rw.parameters);
-					var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+					var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms,  rw.commandTimeout);
 					innerModel.Merge(newModel);
 					innerModel.System.Set("__indirectUrl__", rm.BaseUrl);
 				}
@@ -175,7 +175,7 @@ namespace A2v10.Request
 				if (loadProc != null)
 				{
 					loadPrms.Set("Id", rw.Id);
-					var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms);
+					var newModel = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, loadPrms, rw.commandTimeout);
 					innerModel.Merge(newModel);
 				}
 			}
@@ -212,10 +212,10 @@ namespace A2v10.Request
 						prms2.Set("TenantId", loadPrms.Get<Int32>("TenantId"));
 					}
 				}
-				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
+				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2, rw.commandTimeout);
 				if (rw.HasMerge)
 				{
-					var mergeModel = await _dbContext.LoadModelAsync(rw.MergeSource, rw.MergeLoadProcedure, prms2);
+					var mergeModel = await _dbContext.LoadModelAsync(rw.MergeSource, rw.MergeLoadProcedure, prms2, rw.commandTimeout);
 					model.Merge(mergeModel);
 				}
 				if (rw.copy)
@@ -430,7 +430,7 @@ namespace A2v10.Request
 			var prms = new ExpandoObject();
 			prms.Set("UserId", userId);
 			prms.Set("Id", rw.Id);
-			IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms);
+			IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms, rw.commandTimeout);
 
 			var msi = new ModelScriptInfo()
 			{

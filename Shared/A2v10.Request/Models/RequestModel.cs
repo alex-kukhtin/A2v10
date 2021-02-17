@@ -116,6 +116,7 @@ namespace A2v10.Request
 		public String invoke;
 		public String checkTypes;
 		public Boolean processDbEvents;
+		public Int32 commandTimeout;
 
 		[JsonIgnore]
 		protected RequestModel _parent;
@@ -451,7 +452,6 @@ namespace A2v10.Request
 		public String clrType;
 		public Boolean async;
 		public String wrapper;
-		public Int32 commandTimeout;
 		public ExpandoObject args;
 
 		public IList<String> xmlSchemas;

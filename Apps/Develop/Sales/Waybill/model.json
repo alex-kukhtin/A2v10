@@ -10,7 +10,8 @@
 			"checkTypes": "index.d.ts",
 			"export": {
 				"format": "xlsx"
-			}
+			},
+			"commandTimeout": 400
 		},
 		"edit": {
 			"model": "Document",

@@ -17,6 +17,7 @@
 @AdminUsers=Administratoren
 @User=Benutzer
 @Users=Benutzer
+@ApiUsers=API Benutzer
 @Groups=Gruppen
 @Roles=Rollen
 @OldPassword=altes Passwort

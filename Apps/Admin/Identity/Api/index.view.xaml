@@ -1,0 +1,44 @@
+<!-- Demo page -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	>
+	<Page.Resources>
+		<sys:String x:Key="EditUrl">/identity/api/edit</sys:String>
+	</Page.Resources>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Edit" Tip="Свойства пользователя" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Users}}">Свойства</Button>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<DataGrid ItemsSource="{Bind Users}" Hover="True" FixedHeader="True"
+		DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Users}}"
+			Striped="True" Sort="False" GridLines="Vertical">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Role="Id"/>
+		<DataGridColumn Header="Наименование" Content="{Bind Name}" Wrap="NoWrap" Fit="True"
+			Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
+		<DataGridColumn Header="Вход">
+			<StackPanel Orientation="Vertical" If="{Bind LastLoginHost}">
+				<Text Wrap="NoWrap" Size="Small">
+					<SpanIcon Icon="Calendar"/>
+					<Span Content="{Bind LastLoginDate, DataType=DateTime}"/>
+				</Text>
+				<Text Wrap="NoWrap" Size="Small">
+					<SpanIcon Icon="Devices"/>
+					<Span Content="{Bind LastLoginHost}"/>
+				</Text>
+			</StackPanel>
+		</DataGridColumn>
+		<DataGridColumn Fit="True" Wrap="NoWrap">
+			<Group>
+				<Hyperlink Icon="Edit" Tip="Свойства пользователя" 
+					Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
+			</Group>
+		</DataGridColumn>
+	</DataGrid>
+</Page>
+
+    

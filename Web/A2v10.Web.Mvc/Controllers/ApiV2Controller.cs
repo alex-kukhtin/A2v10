@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace A2v10.Web.Mvc.Controllers
 {
-	[AllowAnonymous]
+	[Authorize]
 	public class ApiV2Controller : Controller, IControllerTenant
 	{
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
@@ -50,8 +50,9 @@ namespace A2v10.Web.Mvc.Controllers
 
 		Boolean IsAuthenticated()
 		{
-			if (Request.IsAuthenticated)
+			if (Request.IsAuthenticated && User?.Identity?.AuthenticationType == "ApiKey")
 				return true;
+			var apiType = User?.Identity?.AuthenticationType;
 			Response.ContentType = "application/json";
 			var eo = new ExpandoObject();
 			eo.Set("error", "invalid_grant");
@@ -73,9 +74,11 @@ namespace A2v10.Web.Mvc.Controllers
 			eo.Set("userId", UserId);
 			eo.Set("tenantId", TenantId);
 			eo.Set("segment", UserSegment);
+			eo.Set("allowIp", User.Identity.GetUserClaim("AllowIp"));
 			eo.Set("pathInfo", pathInfo);
 			eo.Set("query", q);
 			eo.Set("userName", User.Identity.Name);
+			eo.Set("clientId", User.Identity.GetUserClaim("ClientId"));
 			String json = JsonConvert.SerializeObject(eo, JsonHelpers.StandardSerializerSettings);
 			//_logger.LogApi($"response: {json}", Request.UserHostAddress, apiGuid);
 			Response.Write(json);

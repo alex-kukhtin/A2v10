@@ -13,7 +13,7 @@ namespace A2v10.Xaml
 		public Boolean? Hide { get; set; }
 		public RenderMode? Render { get; set; }
 
-		internal Boolean IsInGrid { get; set; }
+		public Boolean IsInGrid { get; set; }
 
 		public Thickness Margin { get; set; }
 		public Thickness Padding { get; set; }
@@ -200,7 +200,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal virtual void MergeAlign(TagBuilder input, RenderContext context, TextAlign align)
+		protected virtual void MergeAlign(TagBuilder input, RenderContext context, TextAlign align)
 		{
 			var alignProp = GetBinding("Align");
 			if (alignProp != null)

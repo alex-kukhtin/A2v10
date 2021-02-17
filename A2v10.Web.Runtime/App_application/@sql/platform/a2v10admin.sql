@@ -1,17 +1,18 @@
 /*
 ------------------------------------------------
-Copyright © 2008-2020 Alex Kukhtin
+Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 25 jul 2020
-module version : 7171
+Last updated : 17 feb 2021
+module version : 7747
 */
 ------------------------------------------------
 begin
 	set nocount on;
+	declare @Version int = 7747;
 	if not exists(select * from a2sys.Versions where Module = N'std:admin')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:admin', 7171);
+		insert into a2sys.Versions (Module, [Version]) values (N'std:admin', @Version);
 	else
-		update a2sys.Versions set [Version] = 7171 where Module = N'std:admin';
+		update a2sys.Versions set [Version] = @Version where Module = N'std:admin';
 end
 go
 ------------------------------------------------
@@ -135,7 +136,6 @@ begin
 		[!Users!Offset] = @Offset, [!Users.Fragment!Filter] = @Fragment;
 end
 go
-
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'User.Load')
 	drop procedure [a2admin].[User.Load]
@@ -909,7 +909,8 @@ begin
 		(901, 900,	N'@[Users]',	N'identity',	null,		10),
 		(910, 901,	N'@[Users]',	N'user',		N'user',	10),
 		(911, 901,	N'@[Groups]',	N'group',		N'users',	20),
-		(912, 901,	N'@[Roles]',	N'role',		N'users',	30);
+		(912, 901,	N'@[Roles]',	N'role',		N'users',	30),
+		(913, 901,	N'@[ApiUsers]',	N'api',			N'external',40);
 			
 	merge a2ui.Menu as target
 	using @menu as source
@@ -927,6 +928,132 @@ begin
 		delete;
 end
 go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'ApiUser.Index')
+	drop procedure [a2admin].[ApiUser.Index]
+go
+------------------------------------------------
+create procedure a2admin.[ApiUser.Index]
+@TenantId int = null,
+@UserId bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
+
+	-- list of Api users
+	select [Users!TUser!Array]=null, [Id!!Id] = Id, [Name] = UserName, [Memo], LastLoginDate, LastLoginHost
+	from a2security.Users where ApiUser = 1 and Void=0;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'ApiUser.Load')
+	drop procedure [a2admin].[ApiUser.Load]
+go
+------------------------------------------------
+create procedure a2admin.[ApiUser.Load]
+@TenantId int = null,
+@UserId bigint,
+@Id bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
+
+	-- one API user
+	select [User!TUser!Object]=null, [Id!!Id] = Id, [Name] = UserName, [Memo], 
+		LastLoginDate, LastLoginHost, [Logins!TLogin!MapObject!ApiKey:OAuth2:JWT] = null,
+		/*TMP*/ClientId = cast(null as nvarchar(255)), ApiKey = cast(null as nvarchar(255))
+	from a2security.Users where ApiUser = 1 and Void=0 and Id=@Id;
+
+	select [!TLogin!MapObject] = null, [!!Key] = [Mode],
+		[!TUser.Logins!ParentId] = [User], ClientId, ClientSecret, ApiKey
+	from a2security.ApiUserLogins where [User]=@Id;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'ApiUser.Metadata')
+	drop procedure [a2admin].[ApiUser.Metadata]
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'ApiUser.Update')
+	drop procedure [a2admin].[ApiUser.Update]
+go
+------------------------------------------------
+if exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2admin' and DOMAIN_NAME=N'ApiUser.TableType' and DATA_TYPE=N'table type')
+	drop type [a2admin].[ApiUser.TableType];
+go
+------------------------------------------------
+create type a2admin.[ApiUser.TableType]
+as table(
+	Id bigint null,
+	[Name] nvarchar(255),
+	[ClientId] nvarchar(255),
+	[ApiKey] nvarchar(255),
+	[Memo] nvarchar(255)
+)
+go
+------------------------------------------------
+create procedure a2admin.[ApiUser.Metadata]
+as
+begin
+	set nocount on;
+
+	declare @User a2admin.[ApiUser.TableType];
+	select [User!User!Metadata]=null, * from @User;
+end
+go
+------------------------------------------------
+create procedure [a2admin].[ApiUser.Update]
+	@TenantId int = null,
+	@UserId bigint,
+	@User a2admin.[ApiUser.TableType] readonly
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
+
+	declare @output table(op sysname, id bigint);
+	declare @RetId bigint;
+
+	merge a2security.Users as target
+	using @User as source
+	on (target.Id = source.Id)
+	when matched then
+		update set 
+			target.[UserName] = source.[Name],
+			target.Memo = source.Memo
+	when not matched by target then
+		insert ([UserName], Memo, SecurityStamp)
+		values ([Name], Memo, N'')
+	output 
+		$action op,
+		inserted.Id id
+	into @output(op, id);
+
+	select top(1) @RetId = id from @output;
+
+	merge a2security.ApiUserLogins as t
+	using @User as s
+	on (t.[User] = s.[Id] and t.Mode = N'ApiKey')
+	when matched then update set
+		t.[ClientId] = s.ClientId,
+		t.[ApiKey] = s.ApiKey
+	when not matched by target then insert
+		([User], Mode, ApiKey, ClientId) values
+		(@RetId, N'ApiKey', s.ApiKey, s.ClientId);
+		
+	exec a2admin.[ApiUser.Load] @TenantId, @UserId, @RetId;
+end
+go
+
 ------------------------------------------------
 if not exists(select * from a2security.Users where Id <> 0)
 begin

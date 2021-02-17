@@ -87,12 +87,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiAppUser.cs" />
     <Compile Include="AppRole.cs" />
     <Compile Include="AppSignInManager.cs" />
     <Compile Include="AppUser.cs" />
     <Compile Include="AppUserManager.cs" />
     <Compile Include="AppUserStore.cs" />
     <Compile Include="IdentityEmailService.cs" />
+    <Compile Include="Security.ApiKey\ApiKeyAuthenticationHandler.cs" />
+    <Compile Include="Security.ApiKey\ApiKeyAuthenticationMiddleware.cs" />
+    <Compile Include="Security.ApiKey\ApiKeyAuthenticationOptions.cs" />
+    <Compile Include="Security.ApiKey\ApiKeyAuthenticationProvider.cs" />
+    <Compile Include="Security.ApiKey\ApiKeyGenerator.cs" />
+    <Compile Include="Security.ApiKey\ApiKeyValidateIdentityContext.cs" />
+    <Compile Include="Security.ApiKey\AppBuilderExtensions.cs" />
+    <Compile Include="Security.ApiKey\DbValidateApiKey.cs" />
     <Compile Include="Services\ExternalLoginManager.cs" />
     <Compile Include="IdentityController.cs" />
     <Compile Include="IdentityExtensions.cs" />

@@ -1,0 +1,37 @@
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		Title="{Bind User.Id, Format='Властивості користувача API [{0}]'}" Width="50rem">
+	<Dialog.Buttons>
+		<Button Command="{BindCmd SaveAndClose, ValidRequired=True}">OK</Button>
+		<Button Command="{BindCmd Close}">@[Cancel]</Button>
+	</Dialog.Buttons>
+	<Grid Columns="1*" Rows="Auto,1*,Auto">
+		<TextBox Grid.Row="1" Label="@[Name]" Required="True"
+			Value="{Bind User.Name}" TabIndex="1"/>
+		<TabPanel Grid.Row="2" Grid.ColSpan="2" MinHeight="20rem" Border="True">
+			<Tab Header="ApiKey">
+				<Slot Scope="{Bind User.Logins.ApiKey}">
+					<Grid Columns="1*,Auto,Auto" Rows="Auto,Auto,1*">
+						<TextBox Grid.Row="1" Label="Client Id" 
+								Value="{Bind ClientId}"/>
+						<TextBox Grid.Row="2" Label="Api Key"
+								Value="{Bind ApiKey}" Disabled="True"/>
+						<Button Grid.Row="2" Grid.Col="2" Tip="Згенерувати новий"
+							Style="Outline" Size="Small" Icon="Refresh"
+								Command="{BindCmd Execute, CommandName=refresh}"/>
+						<Button Grid.Row="2" Grid.Col="3" Tip="Копіювати"
+							Style="Outline" Size="Small" Icon="Copy" 
+								Command="{BindCmd Execute, CommandName=copy}"/>
+					</Grid>
+				</Slot>
+			</Tab>
+			<Tab Header="OAuth2 Token">
+				<EmptyPanel Icon="WarningOutline" Content="Yet not implemented"/>
+			</Tab>
+			<Tab Header="JWT Token">
+				<EmptyPanel Icon="WarningOutline" Content="Yet not implemented"/>
+			</Tab>
+		</TabPanel>
+		<TextBox Grid.Row="3" Label="@[Memo]" Value="{Bind User.Memo}" TabIndex="5" 
+			Multiline="True" Rows="3" />
+	</Grid>
+</Dialog>

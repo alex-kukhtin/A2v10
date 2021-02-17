@@ -1,0 +1,25 @@
+﻿/*identity/user*/
+{
+	"$schema": "../../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
+	"schema": "a2admin",
+	"model": "ApiUser",
+	"actions": {
+		"index": {
+			"index": true,
+			"template": "index.template",
+			"view": "index.view"
+		}
+	},
+	"dialogs": {
+		"edit": {
+			"view": "edit.dialog",
+			"template": "edit.template"
+		}
+	},
+	"commands": {
+		"generatekey": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Web.Mvc.Hooks.GenerateApiKey;assembly=A2v10.Web.Mvc"
+		}
+	}
+}
