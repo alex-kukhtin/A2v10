@@ -41,9 +41,6 @@ namespace A2v10.Web.Identity.ApiKey
 					IssuedUtc = DateTime.UtcNow
 				});
 			}
-			Response.ContentType = "application/json";
-			Response.Write("{\"status\":\"forbidden\"}");
-			Response.StatusCode = 403;
 			return null;
 		}
 	}
