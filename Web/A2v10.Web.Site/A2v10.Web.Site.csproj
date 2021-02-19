@@ -170,6 +170,10 @@
     <Content Include="App_application\admin\Identity\User\password.template.js" />
     <Content Include="App_application\Home\controller.js" />
     <Content Include="App_application\Home\index.view.cshtml" />
+    <Content Include="css\default.colorscheme.css" />
+    <Content Include="css\default.colorscheme.min.css">
+      <DependentUpon>default.colorscheme.css</DependentUpon>
+    </Content>
     <Content Include="css\mobile.css" />
     <Content Include="css\mobile.min.css">
       <DependentUpon>mobile.css</DependentUpon>
@@ -295,7 +299,7 @@
     <Content Include="Less.Advance\Variables.less" />
     <Content Include="Less.Advance\WaitCursor.less" />
     <Content Include="Less.Advance\Wizard.less" />
-    <Content Include="css\default.colorscheme" />
+    <None Include="Less.Advance\_Default.colorscheme.less" />
     <Content Include="css\blue.colorscheme" />
     <Content Include="Less.Advance\_ColorSchemes.less" />
     <Content Include="Less.Advance\Colors.less" />

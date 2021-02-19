@@ -42,10 +42,10 @@ namespace A2v10.Web.Config
 
 			if (!String.IsNullOrEmpty(schemeName))
 			{
-				var schemePath = Path.Combine(hostingPath, "css", $"{schemeName}.colorscheme");
+				var schemePath = Path.Combine(hostingPath, "css", $"{schemeName}.colorscheme.min.css");
 				if (File.Exists(schemePath))
 				{
-					ColorScheme = $"style=\"{File.ReadAllText(schemePath).RemoveEOL()}\"";
+					ColorScheme = $"<style>{File.ReadAllText(schemePath)}</style>";
 				}
 			}
 		}

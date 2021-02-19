@@ -72,7 +72,7 @@
 		&.today > a {
 			//background-color: @tb-active-bg-color;
 			font-weight: 500;
-			background-color: lighten(@tb-active-bg-color, 10%)!important;
+			background-color: @tb-active-bg-color!important;
 		}
 
 		&.active > a {
@@ -86,12 +86,12 @@
 
 		&.period-start > a {
 			//border-left: 1px solid @primary-base-color;
-			background-color: darken(@active-bg-color, 7%);
+			background-color: @active-bg-color;
 		}
 
 		&.period-end > a {
 			//border-right: 1px solid @primary-base-color;
-			background-color: darken(@active-bg-color, 7%);
+			background-color: @active-bg-color;
 		}
 	}
 

@@ -12,6 +12,10 @@
 		"inputFile": "Less.Advance/site.less"
 	},
 	{
+		"outputFile": "css/default.colorscheme.css",
+		"inputFile": "Less.Advance/_Default.colorscheme.less"
+	},
+	{
 		"outputFile": "Scripts/locale-uk.min.js",
 		"inputFile": "app/localization/locale-uk.js"
 	},
