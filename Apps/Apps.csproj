@@ -128,6 +128,8 @@
     <Content Include="Develop\sales\waybill\server.template.js" />
     <Content Include="Develop\include.module.js" />
     <Content Include="Develop\Workflows\second-mail.html" />
+    <Content Include="Develop\_assets\extensioncomponents.js" />
+    <Content Include="Develop\_assets\inputmask.js" />
     <Content Include="Samples\catalog\agent\model.sql" />
     <Content Include="Samples\catalog\agent\schema.sql" />
     <Content Include="Samples\_sql\schema.sql" />
@@ -266,6 +268,10 @@
     <ProjectReference Include="..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{e0577880-9b04-4a2a-b791-8fdb47caa3bc}</Project>
       <Name>A2v10.Xaml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XamExtensionsSample\XamExtensionsSample.csproj">
+      <Project>{228bd9a6-f2d8-46e8-bfc7-a2854382a456}</Project>
+      <Name>XamExtensionsSample</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

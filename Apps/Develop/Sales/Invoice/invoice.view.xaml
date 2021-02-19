@@ -1,5 +1,6 @@
 <!-- Invoice index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+	  xmlns:myControls="clr-namespace:XamExtensionsSample;assembly=XamExtensionsSample"
       Title="{Bind Document.Id, Format='@[Reload] [{0}]'}">
 	<Page.Toolbar>
 		<Toolbar>
@@ -71,6 +72,9 @@
 				<Hyperlink Content="Static"/>
 			</Static.Link>
 		</Static>
+		<myControls:TextBoxWithMask Grid.Row="2" Grid.Col="4" Mask="###-###-###"
+				Label="InputMask" Value="{Bind Document.Memo}">
+		</myControls:TextBoxWithMask>
 		<!--
 		-->
 		<Selector Grid.Row="3" Grid.ColSpan="3" Placeholder="Выберите покупателя"

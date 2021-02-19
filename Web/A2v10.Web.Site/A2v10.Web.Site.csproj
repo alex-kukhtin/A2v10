@@ -506,6 +506,10 @@
     <Folder Include="Scss\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\XamExtensionsSample\XamExtensionsSample.csproj">
+      <Project>{228bd9a6-f2d8-46e8-bfc7-a2854382a456}</Project>
+      <Name>XamExtensionsSample</Name>
+    </ProjectReference>
     <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
       <Project>{2fbba076-26f4-4d61-872c-4ee29afa1edb}</Project>
       <Name>A2v10.Web.Base</Name>

@@ -189,6 +189,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Lang", "Shared\A2v10.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Web.Mvc", "A2v10.Web.Mvc\A2v10.Web.Mvc.csproj", "{1C529C37-1732-4981-992A-5056471AA586}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamExtensionsSample", "XamExtensionsSample\XamExtensionsSample.csproj", "{228BD9A6-F2D8-46E8-BFC7-A2854382A456}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -748,6 +750,18 @@ Global
 		{1C529C37-1732-4981-992A-5056471AA586}.Release|x64.Build.0 = Release|Any CPU
 		{1C529C37-1732-4981-992A-5056471AA586}.Release|x86.ActiveCfg = Release|Any CPU
 		{1C529C37-1732-4981-992A-5056471AA586}.Release|x86.Build.0 = Release|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Debug|x64.Build.0 = Debug|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Debug|x86.Build.0 = Debug|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Release|x64.ActiveCfg = Release|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Release|x64.Build.0 = Release|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Release|x86.ActiveCfg = Release|Any CPU
+		{228BD9A6-F2D8-46E8-BFC7-A2854382A456}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

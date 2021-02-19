@@ -4895,9 +4895,9 @@ Vue.component('validator-control', {
     }
 });
 */
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20200205-7625*/
+/*20200219-7749*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -4908,7 +4908,7 @@ Vue.component('validator-control', {
 	const mask = require('std:mask');
 
 	let textBoxTemplate =
-`<div :class="cssClass()" :test-id="testId">
+		`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<input v-if="password" type="text" class="fake-pwd-field" />
@@ -4927,7 +4927,7 @@ Vue.component('validator-control', {
 `;
 
 	let textAreaTemplate =
-`<div :class="cssClass()" :test-id="testId">
+		`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
 		<textarea ref="input" v-focus v-auto-size="autoSize" v-bind:value="modelValue2" :style="areaStyle"
@@ -4944,7 +4944,7 @@ Vue.component('validator-control', {
 `;
 
 	let staticTemplate =
-`<div :class="cssClass()" :test-id="testId">
+		`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group static">
 		<span v-focus v-text="textProp" :class="inputClass" :tabindex="tabIndex" class="static-input"/>
@@ -4963,7 +4963,7 @@ Vue.component('validator-control', {
 
 	let baseControl = component('control');
 
-	Vue.component('textbox', {
+	const textbox = {
 		extends: baseControl,
 		template: textBoxTemplate,
 		props: {
@@ -5011,15 +5011,18 @@ Vue.component('validator-control', {
 			},
 			onKey(event) {
 				if (!this.number) return;
-				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/ ) {
+				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/) {
 					event.preventDefault();
 					event.stopPropagation();
 				}
 			}
 		}
-	});
+	};
 
-	Vue.component('a2-textarea', {
+	Vue.component('textbox', textbox);
+	app.components['textbox'] = textbox;
+
+	const textarea = {
 		extends: baseControl,
 		template: textAreaTemplate,
 		props: {
@@ -5034,7 +5037,7 @@ Vue.component('validator-control', {
 			placeholder: String,
 			autoSize: Boolean,
 			rows: Number,
-			spellCheck: { type: Boolean, default:undefined },
+			spellCheck: { type: Boolean, default: undefined },
 			enterCommand: Function,
 			maxHeight: String
 		},
@@ -5083,9 +5086,9 @@ Vue.component('validator-control', {
 			}
 		}
 
-	});
+	};
 
-	Vue.component('static', {
+	const staticControl = {
 		extends: baseControl,
 		template: staticTemplate,
 		props: {
@@ -5098,7 +5101,7 @@ Vue.component('validator-control', {
 			itemToValidate: Object,
 			propToValidate: String,
 			text: [String, Number, Date]
-		}, 
+		},
 		computed: {
 			textProp() {
 				if (this.mask && this.text)
@@ -5106,7 +5109,17 @@ Vue.component('validator-control', {
 				return this.text;
 			}
 		}
-	});
+	};
+
+
+	Vue.component('textbox', textbox);
+	app.components['textbox'] = textbox;
+
+	Vue.component('a2-textarea', textarea);
+	app.components['a2-textarea', textarea];
+
+	Vue.component('static', staticControl);
+	app.components['static', staticControl];
 
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.

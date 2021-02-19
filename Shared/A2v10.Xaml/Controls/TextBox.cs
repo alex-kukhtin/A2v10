@@ -31,12 +31,13 @@ namespace A2v10.Xaml
 
 		public Accel Accel { get; set; }
 
+		protected virtual String TagName => Multiline ? "a2-textarea" : "textbox";
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (CheckDisabledModel(context))
 				return;
-			var tagName = Multiline ? "a2-textarea" : "textbox";
-			var input = new TagBuilder(tagName, null, IsInGrid);
+			var input = new TagBuilder(TagName, null, IsInGrid);
 			onRender?.Invoke(input);
 			MergeAttributes(input, context);
 			MergeDisabled(input, context);
