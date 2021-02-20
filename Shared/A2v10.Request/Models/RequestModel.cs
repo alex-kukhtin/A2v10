@@ -617,6 +617,12 @@ namespace A2v10.Request
 		}
 	}
 
+	public class ImageSettings
+	{
+		public Int32 quality;
+		public Int32 threshold;
+	}
+
 	public class RequestFile : RequestBase
 	{
 		public RequestFileType type;
@@ -625,6 +631,8 @@ namespace A2v10.Request
 		public Boolean async;
 		public String container;
 		public String azureSource;
+		public ImageSettings imageCompress;
+
 
 		public List<RequestFileAvaliModel> availableModels;
 		[JsonIgnore]

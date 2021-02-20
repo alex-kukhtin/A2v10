@@ -1,4 +1,5 @@
 ﻿{
+	"$schema": "../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
 	"schema": "a2demo",
 	"model": "Entity",
 	"dialogs": {
@@ -27,7 +28,11 @@
 		"myfile": {
 			"type": "azureBlob",
 			"container": "images",
-			"model": "Entity.Image"
+			"model": "Entity.Image",
+			"imageCompress": {
+				"quality": 40,
+				"threshold": 1
+			}
 		}
 	}
 }

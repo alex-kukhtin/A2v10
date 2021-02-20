@@ -11171,7 +11171,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210131-7744*/
+/*20210220-7749*/
 // controllers/base.js
 
 (function () {
@@ -11608,12 +11608,14 @@ Vue.directive('resize', {
 				}
 				let fileUrl = urltools.combine(root, '_file', url, id);
 				let qry = {};
+				let action = (opts || {}).action;
 				if (token)
 					qry.token = token;
+				if (action == 'download')
+					qry.export = 1;
 				fileUrl += urltools.makeQueryString(qry);
-				switch ((opts || {}).action) {
+				switch (action) {
 					case 'download':
-						qry.export = 1;
 						htmlTools.downloadUrl(fileUrl);
 						break;
 					case 'print':

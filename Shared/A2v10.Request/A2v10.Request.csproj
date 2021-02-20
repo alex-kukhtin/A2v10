@@ -70,6 +70,7 @@
     <Compile Include="Handlers\FileHandler.cs" />
     <Compile Include="Helpers\HostHelpers.cs" />
     <Compile Include="Helpers\JsonHelpers.cs" />
+    <Compile Include="Helpers\MimeHelpers.cs" />
     <Compile Include="Models\ShellModel.cs" />
     <Compile Include="Models\TenantUserModel.cs" />
     <Compile Include="QRCode\AbstractQRCode.cs" />

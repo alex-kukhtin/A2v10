@@ -57,7 +57,7 @@ namespace A2v10.Interop.AzureStorage
 			}
 		}
 
-		public async Task<AzureStoragePutResult> Put(String source, String container, String blob, Stream stream, Int32 len)
+		public async Task<AzureStoragePutResult> Put(String source, String container, String blob, Stream stream, Int64 len)
 		{
 			var config = new AzureStorageConfig(source);
 			var ari = new AzureRequestInfo();

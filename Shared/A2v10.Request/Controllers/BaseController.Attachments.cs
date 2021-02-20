@@ -259,6 +259,18 @@ namespace A2v10.Request
 			return retList;
 		}
 
+		static Boolean IsImageForCompress(ImageSettings settings, HttpPostedFileBase file)
+		{
+			if (settings == null)
+				return false;
+			if (file.ContentType != MediaTypeNames.Image.Jpeg)
+				return false;
+			var fileLen = file.ContentLength / 1024 / 1024;
+			if (fileLen < settings.threshold)
+				return false;
+			return true;
+		}
+
 		Stream CompressImage(Stream stream, String contentType, Int32 factor)
 		{
 			if (contentType != MediaTypeNames.Image.Jpeg)

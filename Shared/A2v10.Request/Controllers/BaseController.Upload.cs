@@ -24,6 +24,7 @@ namespace A2v10.Request
 			ExpandoObject prms = new ExpandoObject();
 			var ru = rm.GetFile();
 
+	
 			ExpandoObject savePrms = new ExpandoObject();
 			setParams?.Invoke(savePrms);
 			savePrms.AppendIfNotExists(ru.parameters);
@@ -181,13 +182,19 @@ namespace A2v10.Request
 			};
 			if (_host.IsMultiTenant)
 				ii.TenantId = prms.Get<Int32>("TenantId");
+
+			ImageSettings compress = ru.imageCompress;
+
 			var resultList = new List<AttachmentUpdateIdToken>();
 			for (Int32 i = 0; i < files.Count; i++)
 			{
 				HttpPostedFileBase file = files[i];
 				ii.Name = Path.GetFileName(file.FileName);
 				ii.Mime = file.ContentType;
-				ii.Stream = file.InputStream;
+				if (compress != null && IsImageForCompress(compress, file))
+					ii.Stream = CompressImage(file.InputStream, file.ContentType, compress.quality);
+				else
+					ii.Stream = file.InputStream;
 				var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(ru.CurrentSource, ru.FileProcedureUpdate, ii);
 				resultList.Add(new AttachmentUpdateIdToken()
 					{
@@ -217,7 +224,12 @@ namespace A2v10.Request
 				HttpPostedFileBase file = files[i];
 				var blobName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
 
-				await azureClient.Put(ru.azureSource, ru.container, blobName, file.InputStream, file.ContentLength);
+				var azureStream = file.InputStream;
+				if (ru.imageCompress != null && IsImageForCompress(ru.imageCompress, file)) {
+					azureStream = CompressImage(file.InputStream, file.ContentType, ru.imageCompress.quality);
+				}
+
+				await azureClient.Put(ru.azureSource, ru.container, blobName, azureStream, azureStream.Length);
 
 				ii.Name = Path.GetFileName(file.FileName);
 				ii.Mime = file.ContentType;

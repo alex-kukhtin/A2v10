@@ -169,8 +169,7 @@
 						"errorCode": { "type": "number" },
 						"parameters": { "type": "object" },
 						"args": { "type": "object" },
-						"file": { "type": "string" },
-						"commandTimeout": { "type": "number" }
+						"file": { "type": "string" }
 					},
 					"additionalProperties": false
 				}
@@ -219,6 +218,13 @@
 						},
 						"container": { "type": "string" },
 						"azureSource": { "type": "string" },
+						"imageCompress": {
+							"type": "object",
+							"properties": {
+								"quality": { "type": "number" },
+								"threshold": { "type": "number" }
+							}
+						},
 						"availableModels": {
 							"type": "array",
 							"items": {

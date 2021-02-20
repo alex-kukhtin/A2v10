@@ -323,6 +323,7 @@ namespace A2v10.Web.Mvc.Controllers
 				if (info == null || info.Stream == null)
 					return;
 				Response.ContentType = info.Mime;
+				CacheImage(info);
 				Response.BinaryWrite(info.Stream);
 			}
 			catch (Exception ex)
@@ -472,6 +473,7 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.ContentType = info.Mime;
 				if (info.Stream == null)
 					return;
+				CacheImage(info);
 				Response.BinaryWrite(info.Stream);
 			}
 			catch (Exception ex)
@@ -530,6 +532,10 @@ namespace A2v10.Web.Mvc.Controllers
 							};
 							Response.Headers.Add("Content-Disposition", cdh.ToString());
 						}
+						else
+						{
+							CacheImage(ai);
+						}
 						if (ai.Stream != null)
 							Response.BinaryWrite(ai.Stream);
 					}
@@ -562,11 +568,21 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.ContentType = info.Mime;
 				if (info.Stream == null)
 					return;
+
+				CacheImage(info);
 				Response.BinaryWrite(info.Stream);
 			}
 			catch (Exception ex)
 			{
 				WriteImageException(ex);
+			}
+		}
+
+		void CacheImage(AttachmentInfo ai)
+		{
+			if (ai != null && MimeHelpers.IsImage(ai.Mime)) {
+				Response.Cache.SetCacheability(HttpCacheability.Private);
+				Response.Cache.SetMaxAge(TimeSpan.FromDays(30));
 			}
 		}
 
