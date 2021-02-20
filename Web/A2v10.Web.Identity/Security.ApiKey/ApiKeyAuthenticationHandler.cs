@@ -28,8 +28,10 @@ namespace A2v10.Web.Identity.ApiKey
 
 			if (context.IsValidated)
 			{
-				var claims = new List<Claim>();
-				claims.Add(new Claim(ClaimTypes.AuthenticationMethod, context.Options.AuthenticationType));
+				var claims = new List<Claim>
+				{
+					new Claim(ClaimTypes.AuthenticationMethod, context.Options.AuthenticationType)
+				};
 
 				foreach (var cl in context.Claims)
 					claims.Add(cl);

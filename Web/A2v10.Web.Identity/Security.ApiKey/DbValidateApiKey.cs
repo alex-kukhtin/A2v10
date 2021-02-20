@@ -26,13 +26,15 @@ namespace A2v10.Web.Identity.ApiKey
 
 			if (user != null)
 			{
-				var claims = new List<Claim>();
-				claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
-				claims.Add(new Claim("TenantId", user.Tenant.ToString()));
-				claims.Add(new Claim("Segment", user.Segment ?? String.Empty));
-				claims.Add(new Claim(ClaimTypes.Name, user.Name));
-				claims.Add(new Claim("AllowIp", user.AllowIP ?? String.Empty));
-				claims.Add(new Claim("ClientId", user.ClientId ?? String.Empty));
+				var claims = new List<Claim>
+				{
+					new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+					new Claim("TenantId", user.Tenant.ToString()),
+					new Claim("Segment", user.Segment ?? String.Empty),
+					new Claim(ClaimTypes.Name, user.Name),
+					new Claim("AllowIp", user.AllowIP ?? String.Empty),
+					new Claim("ClientId", user.ClientId ?? String.Empty)
+				};
 
 				context.Claims = claims;
 				context.IsValidated = true;
