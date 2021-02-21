@@ -24,9 +24,16 @@ namespace A2v10.Web.Mvc.Start
 			var siteMode = ConfigurationManager.AppSettings["siteMode"];
 
 			routes.MapRoute(
-				name: "Account",
-				url: "Account/{action}",
+				name: "account",
+				url: "account/{action}",
 				defaults: new { controller = "Account" }
+			);
+
+			// before api!
+			routes.MapRoute(
+				name: "apiv2",
+				url: $"api/v2/{{*pathInfo}}",
+				defaults: new { controller = "ApiV2", action = "Default" }
 			);
 
 			foreach (var name in new String[] { "Report", "Attachment", "EUSign" })
@@ -38,7 +45,8 @@ namespace A2v10.Web.Mvc.Start
 				);
 			}
 
-			foreach (var name in new String[] {"Api", "ApiV2", "Static", "AppLink" })
+
+			foreach (var name in new String[] {"Api", "Static", "AppLink" })
 			{
 				routes.MapRoute(
 					name: name,
@@ -48,8 +56,8 @@ namespace A2v10.Web.Mvc.Start
 			}
 
 			routes.MapRoute(
-				name: "Demo",
-				url: "Demo",
+				name: "demo",
+				url: "demo",
 				defaults: new { controller = "Account", action = "Demo" }
 			);
 

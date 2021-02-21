@@ -41,6 +41,13 @@
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ApiCommandHandler.cs" />
+    <Compile Include="Api\ApiDataService.cs" />
+    <Compile Include="Api\ApiRequest.cs" />
+    <Compile Include="Api\ApiResponse.cs" />
+    <Compile Include="Api\ApiV2Exception.cs" />
+    <Compile Include="Api\ApiV2RequestModel.cs" />
+    <Compile Include="Api\SqlCommandHandler.cs" />
     <Compile Include="Commands\ExecuteCallApiCommand.cs" />
     <Compile Include="Commands\ExecuteClrCommand.cs" />
     <Compile Include="Commands\ExecuteJavaScriptCommand.cs" />

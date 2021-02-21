@@ -1,9 +1,7 @@
-﻿using Microsoft.Owin.Security;
+﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Owin.Security;
 
 namespace A2v10.Web.Identity.ApiKey
 {
@@ -14,6 +12,7 @@ namespace A2v10.Web.Identity.ApiKey
 		{
 			Header = "Authorization";
 			Key = "ApiKey";
+			UnauthorizedCode = 401;
 			Provider = new ApiKeyAuthenticationProvider();
 		}
 
@@ -21,5 +20,6 @@ namespace A2v10.Web.Identity.ApiKey
 
 		public String Header { get; set; }
 		public String Key { get; set; }
+		public Int32 UnauthorizedCode { get; set; }
 	}
 }

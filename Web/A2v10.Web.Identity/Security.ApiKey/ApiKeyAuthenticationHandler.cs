@@ -11,6 +11,12 @@ namespace A2v10.Web.Identity.ApiKey
 {
 	internal class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
 	{
+		AuthenticationTicket Fail()
+		{
+			Response.StatusCode = Options.UnauthorizedCode;
+			return null;
+		}
+
 		protected override async Task<AuthenticationTicket> AuthenticateCoreAsync()
 		{
 			String header = Request.Headers.Get(Options.Header);
@@ -43,7 +49,7 @@ namespace A2v10.Web.Identity.ApiKey
 					IssuedUtc = DateTime.UtcNow
 				});
 			}
-			return null;
+			return Fail();
 		}
 	}
 }

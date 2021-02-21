@@ -10,7 +10,7 @@
 		<TabPanel Grid.Row="2" Grid.ColSpan="2" MinHeight="20rem" Border="True">
 			<Tab Header="ApiKey">
 				<Slot Scope="{Bind User.Logins.ApiKey}">
-					<Grid Columns="1*,Auto,Auto" Rows="Auto,Auto,1*">
+					<Grid Columns="1*,Auto,Auto" Rows="Auto,Auto,Auto,1*">
 						<TextBox Grid.Row="1" Label="Client Id" 
 								Value="{Bind ClientId}"/>
 						<TextBox Grid.Row="2" Label="Api Key"
@@ -21,6 +21,8 @@
 						<Button Grid.Row="2" Grid.Col="3" Tip="Копіювати"
 							Style="Outline" Size="Small" Icon="Copy" 
 								Command="{BindCmd Execute, CommandName=copy}"/>
+						<TextBox Grid.Row="3" Label="Дозволені IP"
+								Value="{Bind AllowIP}" Description="Через кому або пробіл. '*' не дозволяються"/>
 					</Grid>
 				</Slot>
 			</Tab>

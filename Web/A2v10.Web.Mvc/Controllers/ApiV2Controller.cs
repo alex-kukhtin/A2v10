@@ -3,31 +3,45 @@
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Dynamic;
+using System.IO;
 
 using Microsoft.AspNet.Identity;
 
 using A2v10.Infrastructure;
 using A2v10.Web.Identity;
-using A2v10.Request;
-using System.Dynamic;
-using Newtonsoft.Json;
+using A2v10.Web.Mvc.Filters;
+using A2v10.Request.Api;
+using A2v10.Data.Interfaces;
+
+/*TODO:
+ * ExecuteSql
+ * UpdateModel
+ * AllowOrigin
+ * Log. Попроще и записать результат
+ */
 
 namespace A2v10.Web.Mvc.Controllers
 {
-	[Authorize]
+	[AuthorizeApi]
 	public class ApiV2Controller : Controller, IControllerTenant
 	{
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 		public String UserSegment => User.Identity.GetUserSegment();
 
-		private readonly BaseController _baseController = new BaseController();
+		//private readonly BaseController _baseController = new BaseController();
+		private readonly IApplicationHost _host;
 		private readonly ILogger _logger;
+		private readonly IDbContext _dbContext;
 
 		public ApiV2Controller()
 		{
 			_logger = ServiceLocator.Current.GetService<ILogger>();
-			_baseController.Host.StartApplication(false);
+			_host = ServiceLocator.Current.GetService<IApplicationHost>();
+			_dbContext = ServiceLocator.Current.GetService<IDbContext>();
+			_host.StartApplication(false);
+			_host.Profiler.Enabled = false;
 		}
 
 		[HttpOptions]
@@ -40,49 +54,49 @@ namespace A2v10.Web.Mvc.Controllers
 		#region IControllerTenant
 		public void StartTenant()
 		{
-			var host = ServiceLocator.Current.GetService<IApplicationHost>();
-			host.TenantId = TenantId;
-			host.UserId = UserId;
-			host.UserSegment = UserSegment;
+			_host.TenantId = TenantId;
+			_host.UserId = UserId;
+			_host.UserSegment = UserSegment;
 		}
 		#endregion
 
-
-		Boolean IsAuthenticated()
+		public async Task Default(String pathInfo)
 		{
-			if (Request.IsAuthenticated && User?.Identity?.AuthenticationType == "ApiKey")
-				return true;
-			var apiType = User?.Identity?.AuthenticationType;
-			Response.ContentType = "application/json";
-			var eo = new ExpandoObject();
-			eo.Set("error", "invalid_grant");
-			String json = JsonConvert.SerializeObject(eo, JsonHelpers.StandardSerializerSettings);
-			Response.Write(json);
-			Response.StatusCode = 401;
-			return false;
-		}
-
-		public Task Default(String pathInfo)
-		{
-			if (!IsAuthenticated())
-				return Task.CompletedTask;
 			StartTenant();
-			var eo = new ExpandoObject();
-			var q = new ExpandoObject();
-			Request.QueryString.CopyTo(q);
-			Response.ContentType = "application/json";
-			eo.Set("userId", UserId);
-			eo.Set("tenantId", TenantId);
-			eo.Set("segment", UserSegment);
-			eo.Set("allowIp", User.Identity.GetUserClaim("AllowIp"));
-			eo.Set("pathInfo", pathInfo);
-			eo.Set("query", q);
-			eo.Set("userName", User.Identity.Name);
-			eo.Set("clientId", User.Identity.GetUserClaim("ClientId"));
-			String json = JsonConvert.SerializeObject(eo, JsonHelpers.StandardSerializerSettings);
-			//_logger.LogApi($"response: {json}", Request.UserHostAddress, apiGuid);
-			Response.Write(json);
-			return Task.CompletedTask;
+
+			String body = null;
+			if (Request.InputStream != null && Request.InputStream.Length > 0)
+			{
+				Request.InputStream.Seek(0, SeekOrigin.Begin); // ensure
+				using (var tr = new StreamReader(Request.InputStream))
+				{
+					body = tr.ReadToEnd();
+				}
+			}
+
+			var query = new ExpandoObject();
+			Request.QueryString.CopyTo(query);
+
+			var request = new ApiRequest()
+			{
+				HttpMethod = Request.HttpMethod.ToLowerInvariant(),
+				ContentType = Request.ContentType,
+				UserId = UserId,
+				Segment = UserSegment,
+				ClientId = User.Identity.GetUserClaim("ClientId"),
+				Path = pathInfo?.ToLowerInvariant(),
+				Query = query,
+				Body = body
+			};
+
+			if (_host.IsMultiTenant)
+				request.TenantId = TenantId;
+
+			var apiService = new ApiDataService(_host, _dbContext);
+			var response = await apiService.ProcessRequest(request);
+
+			Response.ContentType = response.ContentType;
+			Response.Write(response.Body);
 		}
 	}
 }

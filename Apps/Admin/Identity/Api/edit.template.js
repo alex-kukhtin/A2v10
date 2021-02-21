@@ -5,7 +5,8 @@ const template = {
 	properties: {
 		/* TEMPORARY */
 		'TUser.ClientId'() { return this.Logins.ApiKey.ClientId; },
-		'TUser.ApiKey'() { return this.Logins.ApiKey.ApiKey; }
+		'TUser.ApiKey'() { return this.Logins.ApiKey.ApiKey; },
+		'TUser.AllowIP'() { return this.Logins.ApiKey.AllowIP; }
 	},
 	events: {
 	},

@@ -52,7 +52,7 @@ namespace A2v10.Web.Mvc.Start
 
 			authProvider.OnApplyRedirect = (context) =>
 			{
-				if (context.Request.Path.StartsWithSegments(new PathString("/apiv2")))
+				if (context.Request.SkipAuthRedirect())
 					return;
 				var refer = context.Request.Query["ref"];
 				var loginPath = context.Options.LoginPath;
@@ -103,7 +103,10 @@ namespace A2v10.Web.Mvc.Start
 
 			if (ConfigurationManager.AppSettings["enableApiKeyAuth"] == "true")
 			{
-				var opts = new ApiKeyAuthenticationOptions();
+				var opts = new ApiKeyAuthenticationOptions()
+				{
+					UnauthorizedCode = 403
+				};
 				opts.Provider.OnValidateIdentity = (context) => DbValidateApiKey.ValidateApiKey(context);
 				app.UseApiKeyAuthentication(opts);
 			}

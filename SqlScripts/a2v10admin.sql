@@ -2,13 +2,13 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 17 feb 2021
-module version : 7747
+Last updated : 21 feb 2021
+module version : 7749
 */
 ------------------------------------------------
 begin
 	set nocount on;
-	declare @Version int = 7747;
+	declare @Version int = 7749;
 	if not exists(select * from a2sys.Versions where Module = N'std:admin')
 		insert into a2sys.Versions (Module, [Version]) values (N'std:admin', @Version);
 	else
@@ -971,7 +971,7 @@ begin
 	from a2security.Users where ApiUser = 1 and Void=0 and Id=@Id;
 
 	select [!TLogin!MapObject] = null, [!!Key] = [Mode],
-		[!TUser.Logins!ParentId] = [User], ClientId, ClientSecret, ApiKey
+		[!TUser.Logins!ParentId] = [User], ClientId, ClientSecret, ApiKey, AllowIP
 	from a2security.ApiUserLogins where [User]=@Id;
 end
 go

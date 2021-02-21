@@ -1,6 +1,7 @@
 ﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace A2v10.Request
 {
@@ -27,6 +28,33 @@ namespace A2v10.Request
 				NullValueHandling = NullValueHandling.Ignore,
 				DefaultValueHandling = DefaultValueHandling.Ignore
 			};
+
+		public static readonly JsonSerializerSettings CompactSerializerSettings =
+			new JsonSerializerSettings()
+			{
+				Formatting = Formatting.None,
+				StringEscapeHandling = StringEscapeHandling.Default,
+				DateFormatHandling = DateFormatHandling.IsoDateFormat,
+				DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+				NullValueHandling = NullValueHandling.Ignore,
+				DefaultValueHandling = DefaultValueHandling.Ignore
+			};
+
+		public static readonly JsonSerializerSettings CamelCaseSerializerSettings =
+			new JsonSerializerSettings()
+			{
+				Formatting = Formatting.None,
+				StringEscapeHandling = StringEscapeHandling.Default,
+				DateFormatHandling = DateFormatHandling.IsoDateFormat,
+				DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+				NullValueHandling = NullValueHandling.Ignore,
+				DefaultValueHandling = DefaultValueHandling.Ignore,
+				ContractResolver = new DefaultContractResolver()
+				{
+					NamingStrategy = new CamelCaseNamingStrategy()
+				}
+			};
+
 
 		public static JsonSerializerSettings ConfigSerializerSettings(bool bDebug)
 		{

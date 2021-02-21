@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+
 using System;
 using System.Web;
 

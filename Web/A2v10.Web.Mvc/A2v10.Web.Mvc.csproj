@@ -123,6 +123,7 @@
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\RequestExtensions.cs" />
+    <Compile Include="Filters\AuthorizeApiAttribute.cs" />
     <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
     <Compile Include="Hooks\CompanyModels.cs" />
     <Compile Include="Hooks\GenerateApiKey.cs" />

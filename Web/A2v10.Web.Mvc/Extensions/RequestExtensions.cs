@@ -1,7 +1,9 @@
-﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web;
+
+using Microsoft.Owin;
 
 using A2v10.Infrastructure;
 
@@ -22,6 +24,16 @@ namespace A2v10.Web.Mvc
 			if (metaText != null)
 				return metaText;
 			return String.Empty;
+		}
+
+		public static Boolean SkipAuthRedirect(this IOwinRequest request)
+		{
+			if (request.Path.StartsWithSegments(new PathString("/api/v2")))
+				return true;
+			if (request.Headers["X-Requested-With"] == "XMLHttpRequest")
+				return true;
+			return false;
+
 		}
 	}
 }

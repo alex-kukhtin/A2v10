@@ -1,7 +1,9 @@
-﻿using System;
+﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+
+using Owin;
+
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Infrastructure;
-using Owin;
 
 namespace A2v10.Web.Identity.ApiKey
 {

@@ -52,7 +52,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (Request.IsAuthenticated)
 				return true;
-			Response.ContentType = "application/json";
+			Response.ContentType = MimeTypes.Application.Json;
 			var eo = new ExpandoObject();
 			eo.Set("error", "invalid_grant");
 			String json = JsonConvert.SerializeObject(eo, JsonHelpers.StandardSerializerSettings);
@@ -69,7 +69,7 @@ namespace A2v10.Web.Mvc.Controllers
 			var eo = new ExpandoObject();
 			var q = new ExpandoObject();
 			Request.QueryString.CopyTo(q);
-			Response.ContentType = "application/json";
+			Response.ContentType = MimeTypes.Application.Json;
 			eo.Set("userId", UserId);
 			eo.Set("tenantId", TenantId);
 			eo.Set("segment", UserSegment);

@@ -252,7 +252,7 @@ namespace A2v10.Web.Mvc.Controllers
 					return;
 				}
 
-				Response.ContentType = "application/json";
+				Response.ContentType = MimeTypes.Application.Json;
 				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
 
 				String json = null;

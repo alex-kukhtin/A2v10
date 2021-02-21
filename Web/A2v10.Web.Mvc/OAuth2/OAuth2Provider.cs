@@ -48,7 +48,7 @@ namespace A2v10.Web.Mvc.OAuth2
 				{
 					case "application/x-www-form-urlencoded":
 						return HttpUtility.ParseQueryString(strBody);
-					case "application/json":
+					case MimeTypes.Application.Json:
 						return JsonConvert.DeserializeObject<NameValueCollection>(strBody);
 				}
 				return null;

@@ -1,0 +1,34 @@
+﻿/*apiv2: test/agent*/
+{
+	"$schema": "../../../../../a2v10.web.runtime/app_application/@schemas/api-model-json-schema.json#",
+	"schema": "a2demo",
+	"commands": {
+		"get": {
+			"type": "sql",
+			"method": "get",
+			"clientId": [ "PrivatBank" ],
+			"sqlCommand": {
+				"action": "loadModel",
+				"model": "Agent",
+				"commandTimeout": 30,
+				"parameters": {
+					"Id": "id"
+				},
+				"returns": "Agent"
+			}
+		},
+		"update": {
+			"type": "sql",
+			"method": "post",
+			"sqlCommand": {
+				"action": "executeSql",
+				"procedure": "ExecuteApi",
+				"parameters": {
+					"Id": "id",
+					"Name": "body.name",
+					"Memo": "body.memo"
+				}
+			}
+		}
+	}
+}
