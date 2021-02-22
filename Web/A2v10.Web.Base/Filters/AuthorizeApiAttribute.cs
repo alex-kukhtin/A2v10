@@ -5,7 +5,7 @@ using System;
 using System.Web;
 using System.Web.Mvc;
 
-namespace A2v10.Web.Mvc.Filters
+namespace A2v10.Web.Base
 {
 	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 	public sealed class AuthorizeApiAttribute : AuthorizeAttribute, IAuthorizationFilter

@@ -47,6 +47,7 @@
     <Compile Include="Extensions\ViewInfoExtensions.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\ViewEngineExtensions.cs" />
+    <Compile Include="Filters\AuthorizeApiAttribute.cs" />
     <Compile Include="Filters\AuthorizeFilterAttribute.cs" />
     <Compile Include="Filters\CheckMobileFilterAttribute.cs" />
     <Compile Include="Filters\ExecutingFilterAttribute.cs" />

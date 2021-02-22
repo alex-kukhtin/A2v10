@@ -7,7 +7,7 @@ using System.Web.Mvc;
 namespace A2v10.Web.Base
 {
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-	public sealed class HttpOptionsAttribute : ActionMethodSelectorAttribute
+	public sealed class HttpOptions2Attribute : ActionMethodSelectorAttribute
 	{
 		public override Boolean IsValidForRequest(ControllerContext controllerContext, MethodInfo methodInfo)
 		{

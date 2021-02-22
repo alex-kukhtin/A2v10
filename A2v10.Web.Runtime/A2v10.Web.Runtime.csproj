@@ -58,6 +58,8 @@
     <Content Include="App_application\%40sql\platform\source\a2v10system.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10ui.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10workflow.sql" />
+    <Content Include="css\default.colorscheme.css" />
+    <Content Include="css\default.colorscheme.min.css" />
     <Content Include="css\fonts\A2v10.svg" />
     <Content Include="css\mobile.css" />
     <Content Include="css\mobile.min.css" />
@@ -67,7 +69,6 @@
     <Content Include="css\site.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="css\default.colorscheme" />
     <Content Include="App_application\%40schemas\api-model-json-schema.json" />
     <None Include="localization\de.xml" />
     <Content Include="localization\default.de.txt" />

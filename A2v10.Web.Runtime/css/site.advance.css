@@ -1426,7 +1426,7 @@ header .dropdown.separate.show .btn.btn-success,
   font-size: 22px;
 }
 .menu-navbar .menu-navbar-back:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
 }
 .menu-navbar .menu-navbar-top {
   display: flex;
@@ -1464,10 +1464,10 @@ header .dropdown.separate.show .btn.btn-success,
   border: 1px solid transparent;
 }
 .menu-navbar .menu-navbar-link.active {
-  background-color: #f0c1c5;
+  background-color: var(--activeBk);
 }
 .menu-navbar .menu-navbar-link:hover:not(.active) {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
   color: var(--link);
 }
 .menu-navbar .menu-navbar-link .ico {
@@ -1696,7 +1696,7 @@ header .dropdown.separate.show .btn.btn-success,
   text-align: center;
 }
 .a2-image .remove-image:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
 }
 .a2-image .remove-image:active {
   background-color: #fff29d;
@@ -2671,23 +2671,23 @@ pre.a2-code {
   color: var(--text);
 }
 .calendar-pane a:hover {
-  background-color: #edebe9 !important;
+  background-color: var(--hoverBk) !important;
 }
 .calendar-pane tbody td.today > a {
   font-weight: 500;
-  background-color: #fff9d0 !important;
+  background-color: #fff29d !important;
 }
 .calendar-pane tbody td.active > a {
-  background-color: #f0c1c5 !important;
+  background-color: var(--activeBk) !important;
 }
 .calendar-pane tbody td.other > a {
   opacity: 0.33;
 }
 .calendar-pane tbody td.period-start > a {
-  background-color: #e9a4aa;
+  background-color: var(--activeBk);
 }
 .calendar-pane tbody td.period-end > a {
-  background-color: #e9a4aa;
+  background-color: var(--activeBk);
 }
 .calendar-pane tbody > tr:first-child > td {
   padding-top: 6px;
@@ -2771,10 +2771,10 @@ pre.a2-code {
   color: var(--text);
 }
 .period-picker .period-menu li:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
 }
 .period-picker .period-menu li.active {
-  background-color: #f0c1c5;
+  background-color: var(--activeBk);
 }
 .period-picker .period-pane {
   display: grid;
@@ -2909,10 +2909,10 @@ pre.a2-code {
   cursor: pointer;
 }
 .input-group > .selector-pane ul.selector-ul li:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
 }
 .input-group > .selector-pane ul.selector-ul li.active {
-  background-color: #f0c1c5;
+  background-color: var(--activeBk);
 }
 .input-group > .selector-pane a.create-elem {
   padding: 4px;
@@ -2980,10 +2980,10 @@ table.data-grid.striped > tbody > tr.even {
   background-color: rgba(208, 208, 208, 0.15);
 }
 table.data-grid:not(.no-hover) > tbody > tr:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBkLight);
 }
 table.data-grid:not(.no-hover) > tbody > tr.active:hover {
-  background-color: #f0c1c5;
+  background-color: var(--activeBkLight);
 }
 table.data-grid td {
   padding: 0.5rem;
@@ -3065,7 +3065,7 @@ table.data-grid th.sort.asc .h-holder:after {
   vertical-align: 2px;
 }
 table.data-grid tr.active {
-  background-color: #f0c1c5 !important;
+  background-color: var(--activeBkLight) !important;
 }
 table.data-grid tr.row-details:hover {
   background-color: white !important;
@@ -3522,10 +3522,10 @@ tr:hover .commandbar.visible-hover {
   text-decoration: none;
 }
 .tree-view li.active > .overlay {
-  background-color: #f0c1c5;
+  background-color: var(--activeBkLight);
 }
 .tree-view li.active > .overlay:hover {
-  background-color: #f0c1c5;
+  background-color: var(--activeBkLight);
 }
 .tree-view li > .overlay {
   display: inline-flex;
@@ -3550,7 +3550,7 @@ tr:hover .commandbar.visible-hover {
   text-align: center;
 }
 .tree-view li > .overlay:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
 }
 .tree-view li > .overlay i.ico {
   flex-shrink: 0;
@@ -3953,13 +3953,13 @@ tr:hover .commandbar.visible-hover {
   border-left: 4px solid transparent;
 }
 .a2-list .a2-list-item:hover {
-  background-color: #edebe9 !important;
+  background-color: var(--hoverBk) !important;
 }
 .a2-list .a2-list-item:hover .commandbar.visible-hover {
   visibility: visible;
 }
 .a2-list .a2-list-item.active {
-  background-color: #f0c1c5 !important;
+  background-color: var(--activeBk) !important;
 }
 .a2-list .a2-list-item:focus {
   outline-style: none;
@@ -4504,10 +4504,10 @@ ul.news-list > li {
   border-left-color: inherit;
 }
 .wizard-header li.active {
-  background-color: #f0c1c5;
+  background-color: var(--activeBk);
 }
 .wizard-header li.active > a {
-  border-color: #f0c1c5;
+  border-color: var(--activeBk);
 }
 .wizard-header li.disabled {
   background-color: #eee;
@@ -4602,10 +4602,10 @@ table td.wrap {
   border-spacing: 10px;
 }
 table.hover > tbody > tr:hover {
-  background-color: #edebe9 !important;
+  background-color: var(--hoverBk) !important;
 }
 table.hover > tbody > tr.active:hover {
-  background-color: #f0c1c5 !important;
+  background-color: var(--activeBk) !important;
 }
 .grid-vertical > tbody > tr > td,
 .grid-both > tbody > tr > td,
@@ -5066,10 +5066,10 @@ label.checkbox.small span:after {
   background-color: #f9f9f9;
 }
 .a2-pager button.active {
-  background-color: #f0c1c5;
+  background-color: var(--activeBk);
 }
 .a2-pager button.active:hover {
-  background-color: #f0c1c5;
+  background-color: var(--activeBk);
 }
 .a2-pager button:first-child {
   border-left-width: 1px;
@@ -5133,7 +5133,7 @@ TODO:
   background-color: transparent;
 }
 .menu .dropdown-item:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
 }
 .menu .divider {
   flex-grow: 0;
@@ -6608,7 +6608,7 @@ table > colgroup col.blue {
   padding: 1px;
 }
 .side-bar-compact .collapse-handle:hover {
-  background-color: #edebe9;
+  background-color: var(--hoverBk);
 }
 .side-bar-compact .side-bar-body {
   height: 100%;

@@ -3,22 +3,18 @@
 using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Dynamic;
-using System.IO;
 
 using Microsoft.AspNet.Identity;
 
 using A2v10.Infrastructure;
 using A2v10.Web.Identity;
-using A2v10.Web.Mvc.Filters;
 using A2v10.Request.Api;
 using A2v10.Data.Interfaces;
+using A2v10.Web.Base;
 
 /*TODO:
  * UpdateModel - проверить
  * AllowOrigin
- * Log. Попроще и записать результат
- * CheckIP
  */
 
 namespace A2v10.Web.Mvc.Controllers

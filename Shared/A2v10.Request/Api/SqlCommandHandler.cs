@@ -62,18 +62,16 @@ namespace A2v10.Request.Api
 			var eo = await _dbContext.ExecuteAndLoadExpandoAsync(_command.RealSource, sql, prms, _command.CommandTimeout);
 			if (!String.IsNullOrEmpty(_command.Returns))
 				eo = eo.Eval<ExpandoObject>(_command.Returns);
+
 			var resp = new ApiResponse()
 			{
 				ContentType = MimeTypes.Application.Json,
 			};
+
 			if (eo != null)
-			{
 				resp.Body = JsonConvert.SerializeObject(eo, JsonHelpers.CompactSerializerSettings);
-			}
 			else
-			{
-				resp.Body = "{\"status\":\"OK\"}";
-			}
+				resp.Body = "{\"status\":\"ok\"}";
 			return resp;
 		}
 
@@ -102,10 +100,13 @@ namespace A2v10.Request.Api
 			if (request.TenantId != null)
 				eo.Set("TenantId", request.TenantId);
 
-			foreach (var p in _command.Parameters)
+			if (_command.Parameters != null)
 			{
-				// key - name, value => path
-				eo.Set(p.Key, rq.Eval<Object>(p.Value.ToString()));
+				foreach (var p in _command.Parameters)
+				{
+					// key - name, value => path
+					eo.Set(p.Key, rq.Eval<Object>(p.Value.ToString()));
+				}
 			}
 			return eo;
 		}
