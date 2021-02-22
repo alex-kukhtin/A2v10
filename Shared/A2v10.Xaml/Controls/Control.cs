@@ -53,7 +53,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal void RenderAddOns(RenderContext context)
+		protected void RenderAddOns(RenderContext context)
 		{
 			RenderPopover(context);
 			RenderHint(context);
@@ -71,7 +71,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal void RenderPopover(RenderContext context)
+		protected void RenderPopover(RenderContext context)
 		{
 			if (Popover == null)
 				return;
@@ -97,7 +97,7 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal void RenderHint(RenderContext context)
+		protected void RenderHint(RenderContext context)
 		{
 			if (Hint == null)
 				return;
@@ -113,7 +113,7 @@ namespace A2v10.Xaml
 			tag.RenderEnd(context);
 		}
 
-		internal void RenderLink(RenderContext context)
+		protected void RenderLink(RenderContext context)
 		{
 			if (Link == null)
 				return;
@@ -127,7 +127,7 @@ namespace A2v10.Xaml
 			tag.RenderEnd(context);
 		}
 
-		internal virtual void MergeDisabled(TagBuilder tag, RenderContext context, Boolean nativeControl = false)
+		protected virtual void MergeDisabled(TagBuilder tag, RenderContext context, Boolean nativeControl = false)
 		{
 			// may override the disabled attribute from the command
 			var disBind = GetBinding(nameof(Disabled));
@@ -142,12 +142,12 @@ namespace A2v10.Xaml
 			}
 		}
 
-		internal virtual Boolean SkipCheckReadOnly()
+		protected virtual Boolean SkipCheckReadOnly()
 		{
 			return false;
 		}
 
-		internal Boolean CheckDisabledModel(RenderContext context)
+		protected Boolean CheckDisabledModel(RenderContext context)
 		{
 			var rm = GetRenderMode(context);
 			if (rm == RenderMode.Hide)

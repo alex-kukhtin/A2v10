@@ -15,10 +15,10 @@ using A2v10.Request.Api;
 using A2v10.Data.Interfaces;
 
 /*TODO:
- * ExecuteSql
- * UpdateModel
+ * UpdateModel - проверить
  * AllowOrigin
  * Log. Попроще и записать результат
+ * CheckIP
  */
 
 namespace A2v10.Web.Mvc.Controllers
@@ -64,33 +64,15 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			StartTenant();
 
-			String body = null;
-			if (Request.InputStream != null && Request.InputStream.Length > 0)
+			var request = ApiRequest.FromHttpRequest(Request, pathInfo, (rq) =>
 			{
-				Request.InputStream.Seek(0, SeekOrigin.Begin); // ensure
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					body = tr.ReadToEnd();
-				}
-			}
+				rq.UserId = UserId;
+				rq.Segment = UserSegment;
+				rq.ClientId = User.Identity.GetUserClaim("ClientId");
+				if (_host.IsMultiTenant)
+					rq.TenantId = TenantId;
+			});
 
-			var query = new ExpandoObject();
-			Request.QueryString.CopyTo(query);
-
-			var request = new ApiRequest()
-			{
-				HttpMethod = Request.HttpMethod.ToLowerInvariant(),
-				ContentType = Request.ContentType,
-				UserId = UserId,
-				Segment = UserSegment,
-				ClientId = User.Identity.GetUserClaim("ClientId"),
-				Path = pathInfo?.ToLowerInvariant(),
-				Query = query,
-				Body = body
-			};
-
-			if (_host.IsMultiTenant)
-				request.TenantId = TenantId;
 
 			var apiService = new ApiDataService(_host, _dbContext);
 			var response = await apiService.ProcessRequest(request);

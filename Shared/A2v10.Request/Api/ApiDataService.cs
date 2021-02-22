@@ -17,6 +17,7 @@ namespace A2v10.Request.Api
 		private readonly IApplicationReader _appReader;
 		private readonly IDbContext _dbContext;
 		private readonly Guid _guid;
+		private Int64 _userId;
 
 		public ApiDataService(IApplicationHost host, IDbContext dbContext)
 		{
@@ -28,9 +29,13 @@ namespace A2v10.Request.Api
 
 		private async Task WriteLogRequest(ApiRequest request)
 		{
-			var eo = new ExpandoObject();
+			var m = new ExpandoObject();
+			m.Set("path", request.Path);
+			m.SetNotEmpty("query", request.Query);
+			m.SetNotEmpty("body", request.Body);
+			var msg = JsonConvert.SerializeObject(m, JsonHelpers.CompactSerializerSettings);
 
-			var msg = JsonConvert.SerializeObject(request, JsonHelpers.CompactSerializerSettings);
+			var eo = new ExpandoObject();
 
 			eo.Set("UserId", request.UserId);
 			eo.Set("Guid", _guid);
@@ -40,8 +45,21 @@ namespace A2v10.Request.Api
 			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "[a2api].[WriteLog]", eo);
 		}
 
+		private async Task WriteLogResponse(ApiResponse resp)
+		{
+			var eo = new ExpandoObject();
+
+			eo.Set("UserId", _userId);
+			eo.Set("Guid", _guid);
+			eo.Set("Severity", (Int32)'I');
+			eo.Set("Message", "response: {\"status\":\"ok\"}");
+
+			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "[a2api].[WriteLog]", eo);
+		}
+
 		public async Task<ApiResponse> ProcessRequest(ApiRequest request)
 		{
+			_userId = request.UserId;
 			try
 			{
 				await WriteLogRequest(request);
@@ -55,13 +73,16 @@ namespace A2v10.Request.Api
 
 				var handler = cmd.GetHandler(ServiceLocator.Current);
 
-				return await handler.ExecuteAsync(request);
+				var resp = await handler.ExecuteAsync(request);
+				await WriteLogResponse(resp);
+				return resp;
 			}
 			catch (Exception ex)
 			{
 				if (ex.InnerException != null)
 					ex = ex.InnerException;
-				//await WriteException(request, ex);
+
+				await WriteException(request, ex);
 
 				return new ApiResponse()
 				{

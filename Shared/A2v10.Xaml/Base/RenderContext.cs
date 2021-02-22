@@ -85,7 +85,7 @@ namespace A2v10.Xaml
 
 
 
-	internal class ScopeContext : IDisposable
+	public class ScopeContext : IDisposable
 	{
 		RenderContext _renderContext;
 		public ScopeContext(RenderContext context, String scope, String path, Func<String, String> replace = null)

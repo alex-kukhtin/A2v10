@@ -63,11 +63,15 @@ namespace A2v10.Request.Api
 	{
 		private ApiV2RequestModel _model;
 
+		#region JSON
+
 		public ApiV2CommandType Type { get; set; }
 		public ApiSqlCommand SqlCommand { get; set; }
 		public HttpMethod Method { get; set; }
 		public String[] ClientId { get; set; }
 		public String AllowOrigin { get; set; }
+
+		#endregion
 
 
 		internal void SetParent(ApiV2RequestModel parent)

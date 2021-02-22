@@ -994,6 +994,7 @@ as table(
 	[Name] nvarchar(255),
 	[ClientId] nvarchar(255),
 	[ApiKey] nvarchar(255),
+	[AllowIP] nvarchar(255),
 	[Memo] nvarchar(255)
 )
 go
@@ -1045,10 +1046,11 @@ begin
 	on (t.[User] = s.[Id] and t.Mode = N'ApiKey')
 	when matched then update set
 		t.[ClientId] = s.ClientId,
-		t.[ApiKey] = s.ApiKey
+		t.[ApiKey] = s.ApiKey,
+		t.[AllowIP] = s.[AllowIP]
 	when not matched by target then insert
-		([User], Mode, ApiKey, ClientId) values
-		(@RetId, N'ApiKey', s.ApiKey, s.ClientId);
+		([User], Mode, ApiKey, ClientId, AllowIP) values
+		(@RetId, N'ApiKey', s.ApiKey, s.ClientId, AllowIP);
 		
 	exec a2admin.[ApiUser.Load] @TenantId, @UserId, @RetId;
 end

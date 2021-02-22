@@ -47,6 +47,22 @@ namespace A2v10.Infrastructure
 				d.Add(name, value);
 		}
 
+		public static Boolean IsEmpty(this ExpandoObject obj)
+		{
+			if (!(obj is IDictionary<String, Object> d))
+				return true;
+			return d.Count == 0;
+		}
+
+		public static void SetNotEmpty(this ExpandoObject obj, String name, Object value)
+		{
+			if (value == null)
+				return;
+			if (value is IDictionary<String, Object> vd && vd.Count == 0)
+				return;
+			obj.Set(name, value);
+		}
+
 		public static void SetIfNotExists(this ExpandoObject obj, String name, Object value)
 		{
 			if (!(obj is IDictionary<String, Object> d))

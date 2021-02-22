@@ -254,14 +254,16 @@ namespace A2v10.Web.Identity
 			return Task.FromResult(list);
 		}
 
-		public async Task<AppUser> FindAsync(UserLoginInfo login)
+		public Task<AppUser> FindAsync(UserLoginInfo login)
 		{
 			if (login.LoginProvider == "PhoneNumber")
-				return await FindByPhoneNumberAsync(login.ProviderKey);
+				return FindByPhoneNumberAsync(login.ProviderKey);
 			else if (login.LoginProvider == "UserName")
-				return await FindByNameAsync(login.ProviderKey);
-			var user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByLogin]", new { login.LoginProvider, login.ProviderKey });
-			return user;
+				return FindByNameAsync(login.ProviderKey);
+			else if (login.LoginProvider == "Email")
+				return FindByEmailAsync(login.ProviderKey);
+			else
+				return _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByLogin]", new { login.LoginProvider, login.ProviderKey });
 		}
 		#endregion
 

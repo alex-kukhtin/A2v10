@@ -168,6 +168,10 @@ namespace A2v10.Web.Mvc.Controllers
 			// LOWER CASE!
 			model.Name = model.Name.ToLower();
 			var user = await UserManager.FindByNameAsync(model.Name);
+
+			// Find by Phone Number
+			// await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", model.Name));
+
 			if (user == null)
 				return Json(new { Status = "Failure" });
 

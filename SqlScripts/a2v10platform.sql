@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 18.02.2021 09:26:20
+generated: 22.02.2021 10:25:31
 */
 
 set nocount on;
@@ -365,13 +365,13 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 17 feb 2021
-module version : 7747
+Last updated : 21 feb 2021
+module version : 7749
 */
 ------------------------------------------------
 begin
 	set nocount on;
-	declare @Version int = 7747;
+	declare @Version int = 7749;
 	if not exists(select * from a2sys.Versions where Module = N'std:security')
 		insert into a2sys.Versions (Module, [Version]) values (N'std:security', @Version);
 	else
@@ -1339,7 +1339,8 @@ begin
 		(26, N'EmailConfirmed'      ), 
 		(27, N'PhoneNumberConfirmed'),
 		(64, N'ApiKey: Success'     ), 
-		(65, N'ApiKey: Fail'        ); 
+		(65, N'ApiKey: Fail'        ),
+		(66, N'ApiKey: IP forbidden'); 
 
 	merge into a2security.[LogCodes] t
 	using @codes s on s.Code = t.Code

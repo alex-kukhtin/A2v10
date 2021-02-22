@@ -21,7 +21,7 @@ namespace A2v10.Xaml
 			base.MergeAttributes(tag, context, mode);
 		}
 
-		internal override Boolean SkipCheckReadOnly()
+		protected override Boolean SkipCheckReadOnly()
 		{
 			var cmdBind = GetBindingCommand(nameof(Command));
 			if (cmdBind != null)
