@@ -179,9 +179,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200925-7708
+// 20210223-7751
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -717,8 +717,7 @@ app.modules['std:utils'] = function () {
 		var du = 0;
 		switch (unit) {
 			case 'year':
-				// TODO: check getTimezone
-				return new Date(dt.getFullYear() + nm, dt.getMonth(), dt.getDate(), 0, 0, 0, 0);
+				return new Date(Date.UTC(dt.getFullYear() + nm, dt.getMonth(), dt.getDate(), 0, 0, 0, 0));
 			case 'month':
 				// save day of month
 				let newMonth = dt.getMonth() + nm;
@@ -2222,9 +2221,9 @@ app.modules['std:routing'] = function () {
 	}
 };
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191122-7587*/
+/*20210223-7751*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -2367,6 +2366,9 @@ app.modules['std:validators'] = function () {
 				}
 				else if (utils.isString(vr)) {
 					retval.push({ msg: vr, severity: sev });
+				}
+				else if (utils.isObjectExact(vr)) {
+					retval.push({ msg: vr.msg, severity: vr.severity });
 				}
 				else if (!vr) {
 					retval.push({ msg: rule.msg, severity: sev });

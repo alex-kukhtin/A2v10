@@ -1,0 +1,96 @@
+﻿
+.a2-image {
+	display: flex;
+	position: relative;
+	align-items: flex-start;
+
+	.remove-image {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 1.6rem;
+		height: 1.6rem;
+		border-radius: 50%;
+		background-color: #fff;
+		border: 1px solid @dark-bk-color;
+		color: @dark-bk-color;
+		text-align: center;
+
+		&:hover {
+			background-color: @hover-bg-color;
+		}
+
+		&:active {
+			background-color: @tb-active-bg-color;
+		}
+	}
+
+	img {
+		margin: auto;
+		width: auto;
+		height: auto;
+	}
+
+	.file-upload {
+		margin: auto;
+		max-width: 250px;
+		max-height: 250px;
+	}
+}
+
+.file-upload {
+	display: block;
+	padding: 0;
+	background-color: lemonchiffon;
+	border: 2px dotted @default-brd-color;
+	position: relative;
+	color: @default-brd-color;
+
+	&.hover {
+		border-color: gold;
+	}
+
+	input {
+		width: 100%;
+		height: 100%;
+		font-size: 1px;
+		opacity: 0;
+		display: inherit;
+		padding: 0;
+	}
+
+	.ico {
+		position: absolute;
+		font-size: 5rem;
+		top: ~"calc(50% - 2.5rem)";
+		left: ~"calc(50% - 2.5rem)";
+	}
+
+	.upload-tip {
+		display: block;
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding-bottom: 1rem;
+		text-align: center;
+		font-size:0.95rem;
+	}
+}
+
+.a2-file-upload {
+
+	.file-upload {
+		height: 5rem;
+
+		.ico {
+			font-size: 1.5rem;
+			top: 1rem;
+			left: ~"calc(50% - 1rem)";
+		}
+
+		.upload-tip {
+			padding-bottom: 0.2rem;
+		}
+	}
+}

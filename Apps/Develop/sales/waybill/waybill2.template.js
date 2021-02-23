@@ -51,6 +51,17 @@ define(["require", "exports"], function (require, exports) {
             'Document.Rows[].Price': 'Укажите цену',
             'Document.No': {
                 valid(doc) { return doc.No > 0; }, msg: 'Invalid document number', severity: cst.SEVERITY.WARNING
+            },
+            'TestValidator'(item, val) {
+                return { msg: '', severity: "info" };
+            },
+            'TestValidator2': {
+                valid(item, val) {
+                    return { msg: '', severity: "warning" };
+                },
+                applyIf(item, val) {
+                    return false;
+                }
             }
         },
         events: {

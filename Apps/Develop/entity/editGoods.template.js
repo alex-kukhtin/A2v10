@@ -15,7 +15,23 @@ const template = {
 	validators: {
 		"Entity.Name": 'Введите наименование',
 		"Entity.Article":
-			{ valid: duplicateArticle, async: true, msg: "Товар с таким артикулом уже существует" }
+			{ valid: duplicateArticle, async: true, msg: "Товар с таким артикулом уже существует" },
+		"Entity.Memo": [
+			function (item, val) {
+				console.log('function', this);
+				return { msg: 'error from function', severity: 'info' };
+			},
+			{
+				valid(item, val) {
+					console.log('valid in object', this);
+					return {msg: 'error from object', severity:'info'};
+				},
+				applyIf(item, val) {
+					console.log('applyIf', this);
+					return true;
+				}
+			}
+		]
 	},
 	delegates: {
 		onFileUpload
@@ -38,6 +54,7 @@ function entityCreate(ent) {
 }
 
 function duplicateArticle(entity, article) {
+	console.log('async function', this);
 	var vm = entity.$vm;
 	if (!entity.Article)
 		return true;

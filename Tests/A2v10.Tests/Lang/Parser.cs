@@ -1,6 +1,8 @@
 ﻿
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using A2v10.Infrastructure;
 using A2v10.Lang;
+using A2v10.Web.Config;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace A2v10.Tests.Lang
 {
@@ -11,8 +13,11 @@ namespace A2v10.Tests.Lang
 		[TestMethod]
 		public void ParseFile()
 		{
-			var parser = new TSDefParser(null, null);
-			parser.Parse("c:\\git\\a2v10\\apps\\Develop\\sales\\waybill\\model.d.ts");
+			var profiler = new NullProfiler();
+			var host = new WebApplicationHost(profiler);
+			host.StartApplication(false);
+			var parser = new TSDefParser(host.ApplicationReader, "typescript");
+			parser.Parse("model.d.ts");
 		}
 	}
 }

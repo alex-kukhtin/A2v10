@@ -59,17 +59,18 @@ namespace A2v10.Request.Api
 		{
 			var sql = $"[{_command.RealSchema}].[{_command.Procedure}]";
 			var prms = CreateParameters(request);
-			var eo = await _dbContext.ExecuteAndLoadExpandoAsync(_command.RealSource, sql, prms, _command.CommandTimeout);
+			var dmRoot = await _dbContext.ExecuteAndLoadExpandoAsync(_command.RealSource, sql, prms, _command.CommandTimeout);
+			Object retObj = dmRoot;
 			if (!String.IsNullOrEmpty(_command.Returns))
-				eo = eo.Eval<ExpandoObject>(_command.Returns);
+				retObj = dmRoot.Eval<Object>(_command.Returns);
 
 			var resp = new ApiResponse()
 			{
 				ContentType = MimeTypes.Application.Json,
 			};
 
-			if (eo != null)
-				resp.Body = JsonConvert.SerializeObject(eo, JsonHelpers.CompactSerializerSettings);
+			if (retObj != null)
+				resp.Body = JsonConvert.SerializeObject(retObj, JsonHelpers.CompactSerializerSettings);
 			else
 				resp.Body = "{\"status\":\"ok\"}";
 			return resp;
@@ -77,9 +78,9 @@ namespace A2v10.Request.Api
 
 		ApiResponse ModelResponse(IDataModel dm)
 		{ 
-			var model = dm.Root;
+			Object model = dm.Root;
 			if (!String.IsNullOrEmpty(_command.Returns))
-				model = model.Eval<ExpandoObject>(_command.Returns);
+				model = dm.Eval<Object>(_command.Returns);
 
 			return new ApiResponse()
 			{

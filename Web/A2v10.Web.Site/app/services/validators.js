@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191122-7587*/
+/*20210223-7751*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -143,6 +143,9 @@ app.modules['std:validators'] = function () {
 				}
 				else if (utils.isString(vr)) {
 					retval.push({ msg: vr, severity: sev });
+				}
+				else if (utils.isObjectExact(vr)) {
+					retval.push({ msg: vr.msg, severity: vr.severity });
 				}
 				else if (!vr) {
 					retval.push({ msg: rule.msg, severity: sev });

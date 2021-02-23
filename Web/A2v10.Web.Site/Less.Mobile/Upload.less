@@ -1,0 +1,53 @@
+﻿
+
+
+@upload-bg: @pane-green-bg;
+@upload-brd: darken(@upload-bg, 10%);
+
+.a2-simple-upload {
+	display: block;
+	height: 27px;
+	line-height: 25px;
+	padding: 0;
+
+	.ico {
+		margin-right: 3px;
+		font-size: 14px;
+		color: #999;
+	}
+
+	.btnclose {
+		float: right;
+		margin: 3px 0;
+
+		&:hover {
+			background-color: @upload-brd;
+		}
+	}
+
+	.upload-text {
+		color: @link-color;
+		border-bottom: 1px dotted @link-color;
+		cursor: pointer;
+		margin-right: 5px;
+	}
+
+	input[type=file] {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	&.has-file {
+		background-color: @upload-bg;
+		border: 1px solid @upload-brd;
+		padding: 0 3px 0 4px;
+
+		.upload-text {
+			color: inherit;
+			border-bottom-style: none;
+			cursor: default;
+		}
+	}
+}

@@ -41,6 +41,13 @@ describe("Date tools", function () {
 		expect(d2.getFullYear()).toBe(d1.getFullYear() + 1);
 		d2 = du.add(d1, -1, 'year');
 		expect(d2.getFullYear()).toBe(d1.getFullYear() - 1);
+
+		d1 = du.create(2020, 02, 29);
+		d2 = du.add(d1, 1, 'year');
+		expect(d2.getTime()).toBe(du.create(2021, 03, 01).getTime());
+
+		d2 = du.add(d1, -1, 'year');
+		expect(d2.getTime()).toBe(du.create(2019, 03, 01).getTime());
 	});
 
 	it('date add (month)', function () {

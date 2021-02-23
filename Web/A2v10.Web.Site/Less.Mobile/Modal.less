@@ -1,6 +1,11 @@
-﻿
+﻿@import "Variables.less";
+
+
 @modal-padding: .75rem;
 @modal-header-height: 34px;
+@modal-width-medium: 500px;
+
+@modal-footer-bg-color: @whitesmoke-gray-bg-color;
 
 .modal-stack {
 	position: fixed;
@@ -21,43 +26,104 @@
 		overflow: auto;
 	}
 
-	.modal-header {
-		background-color: @dialog-header-bg-color;
-		padding: @modal-padding;
-		cursor: move;
-		font-weight: 500;
-		border-bottom: 1px solid @light-gray-color;
-		min-height: @modal-header-height;
+}
 
-		.modal-title-info {
-			margin-left: 1rem;
-		}
+.modal-header {
+	background-color: @dialog-header-bg-color;
+	padding: @modal-padding;
+	cursor: move;
+	font-weight: 500;
+	border-bottom: 1px solid @light-gray-color;
+	min-height: @modal-header-height;
 
-		.btnclose {
-			float: right;
-			color: #aaa;
-			line-height: 1.6rem;
+	.modal-title-info {
+		margin-left: 1rem;
+	}
 
-			&:hover, &:active, &:focus {
-				color: #555;
-				background-color: lighten(@dialog-header-bg-color, 10%);
-				border-color: @tb-hover-brd-color;
-			}
-		}
+	.btnclose {
+		float: right;
+		color: #aaa;
+		line-height: 1.6rem;
 
-		.btn-help {
-			float: right;
-			color: #999;
-			line-height: 1.6rem; /* ? */
-			padding: 0 4px;
-			margin-right: .2rem;
-			border: 1px solid transparent;
-
-			&:hover {
-				/*color: @link-hover-color-dark;*/
-				background-color: lighten(@dialog-header-bg-color, 10%);
-				border-color: @tb-hover-brd-color;
-			}
+		&:hover, &:active, &:focus {
+			color: #555;
+			background-color: lighten(@dialog-header-bg-color, 10%);
+			border-color: @tb-hover-brd-color;
 		}
 	}
+
+	.btn-help {
+		float: right;
+		color: #999;
+		line-height: 1.6rem; /* ? */
+		padding: 0 4px;
+		margin-right: .2rem;
+		border: 1px solid transparent;
+
+		&:hover {
+			/*color: @link-hover-color-dark;*/
+			background-color: lighten(@dialog-header-bg-color, 10%);
+			border-color: @tb-hover-brd-color;
+		}
+	}
+}
+
+.modal-footer {
+	padding: @modal-padding;
+	background-color: @modal-footer-bg-color;
+	border-top: 1px solid @light-gray-color;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+
+	.btn {
+		min-width: 6rem;
+	}
+
+	.btn + .btn {
+		margin-left: @modal-padding;
+	}
+
+	.btn-help {
+		cursor: pointer;
+		margin-top: 5px;
+
+		.ico {
+			margin-right: 4px;
+		}
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+	.btn + .btn-caret {
+		min-width: 0;
+		margin-left: 0;
+	}
+}
+
+.inline-modal-wrapper {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: @modal-wrapper-index;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.25);
+
+	.modal-window {
+		position: relative;
+		width:100%!important;
+		width: @modal-width-medium;
+		height: auto;
+		background-color: white;
+	}
+}
+
+.modal {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }

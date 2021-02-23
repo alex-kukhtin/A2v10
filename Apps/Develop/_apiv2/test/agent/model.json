@@ -14,7 +14,7 @@
 				"parameters": {
 					"Id": "id"
 				},
-				"returns": "Agent"
+				"returns": "Agent.Attachments"
 			}
 		},
 		"update": {
@@ -28,6 +28,18 @@
 					"Name": "body.name",
 					"Memo": "body.memo"
 				}
+			}
+		},
+		"executeSql": {
+			"type": "sql",
+			"method": "get",
+			"sqlCommand": {
+				"action": "executeSql",
+				"procedure": "Agent.Load",
+				"parameters": {
+					"Id": "id"
+				},
+				"returns": "DateCreated"
 			}
 		}
 	}

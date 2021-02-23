@@ -1755,7 +1755,7 @@ table.data-grid > tbody > tr.bold > td {
   width: 100% !important;
   overflow: auto;
 }
-.modal-stack .modal-header {
+.modal-header {
   background-color: #fff29d;
   padding: 0.75rem;
   cursor: move;
@@ -1763,22 +1763,22 @@ table.data-grid > tbody > tr.bold > td {
   border-bottom: 1px solid #ddd;
   min-height: 34px;
 }
-.modal-stack .modal-header .modal-title-info {
+.modal-header .modal-title-info {
   margin-left: 1rem;
 }
-.modal-stack .modal-header .btnclose {
+.modal-header .btnclose {
   float: right;
   color: #aaa;
   line-height: 1.6rem;
 }
-.modal-stack .modal-header .btnclose:hover,
-.modal-stack .modal-header .btnclose:active,
-.modal-stack .modal-header .btnclose:focus {
+.modal-header .btnclose:hover,
+.modal-header .btnclose:active,
+.modal-header .btnclose:focus {
   color: #555;
   background-color: #fff9d0;
   border-color: #e5c365;
 }
-.modal-stack .modal-header .btn-help {
+.modal-header .btn-help {
   float: right;
   color: #999;
   line-height: 1.6rem;
@@ -1787,10 +1787,60 @@ table.data-grid > tbody > tr.bold > td {
   margin-right: 0.2rem;
   border: 1px solid transparent;
 }
-.modal-stack .modal-header .btn-help:hover {
+.modal-header .btn-help:hover {
   /*color: @link-hover-color-dark;*/
   background-color: #fff9d0;
   border-color: #e5c365;
+}
+.modal-footer {
+  padding: 0.75rem;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.modal-footer .btn {
+  min-width: 6rem;
+}
+.modal-footer .btn + .btn {
+  margin-left: 0.75rem;
+}
+.modal-footer .btn-help {
+  cursor: pointer;
+  margin-top: 5px;
+}
+.modal-footer .btn-help .ico {
+  margin-right: 4px;
+}
+.modal-footer .btn-help:hover {
+  text-decoration: none;
+}
+.modal-footer .btn + .btn-caret {
+  min-width: 0;
+  margin-left: 0;
+}
+.inline-modal-wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+.inline-modal-wrapper .modal-window {
+  position: relative;
+  width: 100%!important;
+  width: 500px;
+  height: auto;
+  background-color: white;
+}
+.modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 /*TODO: 
     2. v-focus-parent directive
@@ -4513,6 +4563,125 @@ td.vert > .vcell {
 }
 .tree-view.no-indent li > ul {
   padding-left: 0;
+}
+.a2-image {
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+}
+.a2-image .remove-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid #8591a2;
+  color: #8591a2;
+  text-align: center;
+}
+.a2-image .remove-image:hover {
+  background-color: #fdf4bf;
+}
+.a2-image .remove-image:active {
+  background-color: #fff29d;
+}
+.a2-image img {
+  margin: auto;
+  width: auto;
+  height: auto;
+}
+.a2-image .file-upload {
+  margin: auto;
+  max-width: 250px;
+  max-height: 250px;
+}
+.file-upload {
+  display: block;
+  padding: 0;
+  background-color: lemonchiffon;
+  border: 2px dotted #ddd;
+  position: relative;
+  color: #ddd;
+}
+.file-upload.hover {
+  border-color: gold;
+}
+.file-upload input {
+  width: 100%;
+  height: 100%;
+  font-size: 1px;
+  opacity: 0;
+  display: inherit;
+  padding: 0;
+}
+.file-upload .ico {
+  position: absolute;
+  font-size: 5rem;
+  top: calc(50% - 2.5rem);
+  left: calc(50% - 2.5rem);
+}
+.file-upload .upload-tip {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-bottom: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+.a2-file-upload .file-upload {
+  height: 5rem;
+}
+.a2-file-upload .file-upload .ico {
+  font-size: 1.5rem;
+  top: 1rem;
+  left: calc(50% - 1rem);
+}
+.a2-file-upload .file-upload .upload-tip {
+  padding-bottom: 0.2rem;
+}
+.a2-simple-upload {
+  display: block;
+  height: 27px;
+  line-height: 25px;
+  padding: 0;
+}
+.a2-simple-upload .ico {
+  margin-right: 3px;
+  font-size: 14px;
+  color: #999;
+}
+.a2-simple-upload .btnclose {
+  float: right;
+  margin: 3px 0;
+}
+.a2-simple-upload .btnclose:hover {
+  background-color: #b0debb;
+}
+.a2-simple-upload .upload-text {
+  color: #208cf8;
+  border-bottom: 1px dotted #208cf8;
+  cursor: pointer;
+  margin-right: 5px;
+}
+.a2-simple-upload input[type=file] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.a2-simple-upload.has-file {
+  background-color: #d4edda;
+  border: 1px solid #b0debb;
+  padding: 0 3px 0 4px;
+}
+.a2-simple-upload.has-file .upload-text {
+  color: inherit;
+  border-bottom-style: none;
+  cursor: default;
 }
 .block {
   display: block!important;

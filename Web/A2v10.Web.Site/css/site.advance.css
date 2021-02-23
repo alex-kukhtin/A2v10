@@ -1362,6 +1362,9 @@ header .dropdown.separate.show .btn.btn-success,
   white-space: nowrap;
   text-transform: uppercase;
 }
+.nav-bar > li a {
+  color: var(--themeDarker);
+}
 .nav-bar > li a:hover {
   text-decoration: none;
 }
@@ -1369,7 +1372,6 @@ header .dropdown.separate.show .btn.btn-success,
   background-color: var(--neutralBkDark);
 }
 .nav-bar > li.active a {
-  color: var(--themeDarker);
   border-bottom: 3px solid var(--themeDarker);
   font-weight: 500;
 }
@@ -1982,13 +1984,17 @@ pre.a2-code {
   border-bottom: 7px solid #f2dede;
   border-top-width: 0;
 }
-.control-group .validator .error {
+.control-group .validator .error,
+.control-group .validator .warning,
+.control-group .validator .info {
   display: list-item;
   list-style-type: none;
   padding-left: 6px;
   white-space: nowrap;
 }
-.control-group .validator .error:before {
+.control-group .validator .error:before,
+.control-group .validator .warning:before,
+.control-group .validator .info:before {
   content: '\2022';
   position: absolute;
   left: 3px;

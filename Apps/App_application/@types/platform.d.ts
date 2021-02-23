@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7745 */
+/* Version 10.0.7751 */
 
 
 declare function require(url: string): any;
@@ -192,7 +192,9 @@ declare type templateDefault = templateDefaultFunc | string | number | boolean |
 
 /* template validators */
 
-interface tempateValidatorFunc { (elem: IElement, value?: any): boolean | string | Promise<any>; }
+declare type templateValidatorResult = { msg: string, severity: Severity };
+
+interface tempateValidatorFunc { (elem: IElement, value?: any): boolean | string | templateValidatorResult | Promise<any>; }
 
 interface templateValidatorObj {
 	valid: tempateValidatorFunc | StdValidator,

@@ -269,6 +269,7 @@
 			"app/services/const.js",
 			"app/services/utils.js",
 			"app/services/period.js",
+			"app/services/modelinfo.js",
 			"app/services/validators.js",
 			"app/services/impl/array.js",
 			"app/services/datamodel.js",

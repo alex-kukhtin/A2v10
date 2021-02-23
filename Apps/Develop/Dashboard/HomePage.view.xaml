@@ -2,7 +2,7 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
 	Title="Home page title" Background="WhiteSmoke" Padding="2rem">
 	<Grid Rows="Auto, Auto, Auto, 1*" Columns="Auto, Auto, Auto">
-		<Block Grid.Row="2" Grid.Col="2">
+		<Block Grid.Row="2" Grid.Col="2" Grid.VAlign="Bottom">
 			<Span>2.2</Span>
 		</Block>
 		<Block Grid.Row="2" Grid.Col="1">
