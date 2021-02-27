@@ -256,7 +256,7 @@ const vm = new DataModelController({
 			return sb;
 		}
 
-		String GetCrossProperties(IDataMetadata meta)
+		static String GetCrossProperties(IDataMetadata meta)
 		{
 			var sb = new StringBuilder("{");
 			foreach (var c in meta.Cross)
@@ -264,14 +264,6 @@ const vm = new DataModelController({
 				sb.Append($"{c.Key}: [");
 				if (c.Value != null)
 					sb.Append(String.Join(",", c.Value.Select(s =>  $"'{s}'")));
-				/*
-				if (c.Value != null)
-				{
-					foreach (var s in c.Value)
-						sb.Append($"'{s}',");
-					sb.RemoveTailComma();
-				}
-				*/
 				sb.Append("]");
 			}
 			sb.AppendLine("}");

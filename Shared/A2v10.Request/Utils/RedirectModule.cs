@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using A2v10.Infrastructure;
-using System.Security.Permissions;
 
 namespace A2v10.Request
 {
