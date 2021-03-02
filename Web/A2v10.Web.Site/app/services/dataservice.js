@@ -1,11 +1,10 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20180319-7135
+// 20210302-7752
 // dataservice.js
 (function () {
 
 	let http = require('std:http');
-	let utils = require('std:utils');
 
 	function post(url, data, raw) {
 		return http.post(url, data, raw);

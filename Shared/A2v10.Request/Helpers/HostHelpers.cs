@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace A2v10.Request
 {
@@ -56,6 +57,27 @@ namespace A2v10.Request
 			var manifestPath = Path.Combine(host.HostingPath, "manifest.json");
 			return File.Exists(manifestPath) ? "<link rel=\"manifest\" href=\"/manifest.json\">" : null;
 		}
+
+		public static String AppleTouchIcon(this IApplicationHost host)
+		{
+			var touchIconPath = Path.Combine(host.HostingPath, "touch-icon-iphone.png");
+			return File.Exists(touchIconPath) ? "<link rel=\"apple-touch-icon\"  href=\"/touch-icon-iphone.png\">" : null;
+		}
+
+		public static void ReplaceMacros(this IApplicationHost host, StringBuilder sb)
+		{
+			sb.Replace("$(Build)", host.AppBuild);
+			sb.Replace("$(LayoutHead)", host.CustomAppHead());
+			sb.Replace("$(AppleTouchIcon)", host.AppleTouchIcon());
+			sb.Replace("$(LayoutManifest)", host.CustomManifest());
+			sb.Replace("$(AssetsStyleSheets)", host.AppStyleSheetsLink("applink"));
+			sb.Replace("$(HelpUrl)", host.HelpUrl);
+			sb.Replace("$(Description)", host.AppDescription);
+			var theme = host.Theme;
+			sb.Replace("$(ColorScheme)", theme.ColorScheme);
+			sb.Replace("$(Theme)", theme.FileName);
+		}
+
 
 		public static Task ProcessDbEvents(this IApplicationHost host, IDbContext dbContext, String source)
 		{

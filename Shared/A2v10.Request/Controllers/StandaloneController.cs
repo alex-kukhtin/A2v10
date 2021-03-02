@@ -28,6 +28,7 @@ namespace A2v10.Request
 				String json = null;
 				using (var tr = new StreamReader(request.InputStream))
 					json = tr.ReadToEnd();
+				response.ContentType = MimeTypes.Application.Json;
 				await _baseController.ReloadData(null, json, response.Output);
 			}
 			catch (Exception ex)
@@ -46,6 +47,7 @@ namespace A2v10.Request
 				String json = null;
 				using (var tr = new StreamReader(request.InputStream))
 					json = tr.ReadToEnd();
+				response.ContentType = MimeTypes.Application.Json;
 				await _baseController.LoadLazyData((prms) => prms.Set("UserId", userId), json, response.Output);
 			}
 			catch (Exception ex)
@@ -71,6 +73,7 @@ namespace A2v10.Request
 					baseUrl = baseUrl.Replace("/model/dialog/", "/_dialog/");
 					dataToSave.Set("baseUrl", baseUrl);
 				}
+				response.ContentType = MimeTypes.Application.Json;
 				await _baseController.SaveDataObj(prms => prms.Set("UserId", userId), dataToSave, response.Output);
 			}
 			catch (Exception ex)

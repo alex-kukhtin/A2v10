@@ -28,18 +28,16 @@ namespace A2v10.Request
 		public void Layout(TextWriter writer, IDictionary<String, String> prms)
 		{
 			String layout = Admin ? Resources.layoutAdmin :
-							_host.Mobile ? Resources.layoutMobile : Resources.layout;
+				_host.Mobile ? Resources.layoutMobile : Resources.layout;
 			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
 
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
 
-			sb.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("_shell"));
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
-			sb.Replace("$(LayoutHead)", _host.CustomAppHead());
-			sb.Replace("$(LayoutManifest)", _host.CustomManifest());
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 			sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");
+			_host.ReplaceMacros(sb);
 			writer.Write(sb.ToString());
 		}
 

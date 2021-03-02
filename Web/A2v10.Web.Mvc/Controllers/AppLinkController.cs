@@ -70,19 +70,11 @@ namespace A2v10.Web.Mvc.Controllers
 			AppTitleModel appTitle = await _dbContext.LoadAsync<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
 			StringBuilder layout = new StringBuilder(_localizer.Localize(null, ResourceHelper.InitLayoutHtml));
 			layout.Replace("$(Lang)", CurrentLang);
-			layout.Replace("$(Build)", _host.AppBuild);
-			layout.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("applink"));
-			layout.Replace("$(LayoutHead)", _host.CustomAppHead());
 			layout.Replace("$(LayoutScripts)", _host.CustomAppScripts());
-			layout.Replace("$(HelpUrl)", _host.HelpUrl);
 			layout.Replace("$(Partial)", pageContent);
 			layout.Replace("$(Title)", appTitle.AppTitle);
-			layout.Replace("$(Description)", _host.AppDescription);
 			layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
-			layout.Replace("$(LayoutManifest)", _host.CustomManifest());
-			var theme = _host.Theme;
-			layout.Replace("$(ColorScheme)", theme.ColorScheme);
-			layout.Replace("$(Theme)", theme.FileName);
+			_host.ReplaceMacros(layout);
 
 			StringBuilder script = new StringBuilder(ResourceHelper.AppLinksScript);
 			script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: false, registation: false }}");

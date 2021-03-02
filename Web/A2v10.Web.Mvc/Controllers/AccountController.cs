@@ -74,19 +74,12 @@ namespace A2v10.Web.Mvc.Controllers
 
 				StringBuilder layout = new StringBuilder(_localizer.Localize(null, GetRedirectedPage("layout", layoutHtml)));
 				layout.Replace("$(Lang)", CurrentLang);
-				layout.Replace("$(Build)", _host.AppBuild);
-				layout.Replace("$(AssetsStyleSheets)", _host.AppStyleSheetsLink("applink"));
 				StringBuilder html = new StringBuilder(rsrcHtml);
 				layout.Replace("$(Partial)", html.ToString());
 				layout.Replace("$(Title)", appTitle?.AppTitle);
-				layout.Replace("$(HelpUrl)", _host.HelpUrl);
-				layout.Replace("$(Description)", _host.AppDescription);
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
 				layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
-				layout.Replace("$(LayoutManifest)", _host.CustomManifest());
-				var theme = _host.Theme;
-				layout.Replace("$(ColorScheme)", theme?.ColorScheme);
-				layout.Replace("$(Theme)", theme?.FileName);
+				_host.ReplaceMacros(layout);
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
 				String regMode = _host.IsRegistrationEnabled.ToString().ToLowerInvariant();

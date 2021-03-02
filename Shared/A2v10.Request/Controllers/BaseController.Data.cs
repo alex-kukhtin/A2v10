@@ -24,18 +24,22 @@ namespace A2v10.Request
 			switch (command.ToLowerInvariant())
 			{
 				case "save":
+					response.ContentType = MimeTypes.Application.Json;
 					await SaveData(setParams, json, response.Output);
 					break;
 				case "reload":
+					response.ContentType = MimeTypes.Application.Json;
 					await ReloadData(setParams, json, response.Output);
 					break;
 				case "dbremove":
 					await DbRemove(setParams, json, response.Output);
 					break;
 				case "expand":
+					response.ContentType = MimeTypes.Application.Json;
 					await ExpandData(setParams, json, response.Output);
 					break;
 				case "loadlazy":
+					response.ContentType = MimeTypes.Application.Json;
 					await LoadLazyData(setParams, json, response.Output);
 					break;
 				case "invoke":
