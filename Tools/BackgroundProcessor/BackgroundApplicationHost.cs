@@ -49,6 +49,8 @@ namespace BackgroundProcessor
 			}
 		}
 
+		public Boolean IsProductionEnvironment => true;
+
 		public String ScriptEngine => ConfigurationManager.AppSettings["scriptEngine"];
 
 		public Boolean IsRegistrationEnabled => throw new NotImplementedException(nameof(IsRegistrationEnabled));

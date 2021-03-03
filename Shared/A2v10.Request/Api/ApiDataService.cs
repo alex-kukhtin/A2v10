@@ -75,6 +75,7 @@ namespace A2v10.Request.Api
 
 				var resp = await handler.ExecuteAsync(request);
 				await WriteLogResponse(resp);
+
 				return resp;
 			}
 			catch (Exception ex)
@@ -84,10 +85,14 @@ namespace A2v10.Request.Api
 
 				await WriteException(request, ex);
 
+				var msg = ex.Message;
+				if (!_host.IsDebugConfiguration)
+					msg = "invalid request data";
+
 				return new ApiResponse()
 				{
 					ContentType = MimeTypes.Application.Json,
-					Body = JsonConvert.SerializeObject(new {status = "error", message = ex.Message })
+					Body = JsonConvert.SerializeObject(new {success = false, error = msg }, JsonHelpers.CompactSerializerSettings)
 				};
 			}
 		}

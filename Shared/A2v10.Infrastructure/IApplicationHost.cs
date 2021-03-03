@@ -37,6 +37,7 @@ namespace A2v10.Infrastructure
 		String ScriptEngine { get; }
 	
 		Boolean IsDebugConfiguration { get; }
+		Boolean IsProductionEnvironment { get; }
 		Boolean IsRegistrationEnabled { get; }
 		Boolean IsDTCEnabled { get; }
 		Boolean IsAdminAppPresent { get; }

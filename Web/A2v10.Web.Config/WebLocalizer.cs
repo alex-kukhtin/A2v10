@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Concurrent;
@@ -12,12 +12,11 @@ namespace A2v10.Web.Config
 
 	class LocaleMapItem
 	{
-		public ConcurrentDictionary<String, String> Map { get; }
-		public Boolean Loaded { get; set; }
+		public ConcurrentDictionary<String, String> Map { get; } = new ConcurrentDictionary<String, String>();
 
-		public LocaleMapItem()
+		public LocaleMapItem(Action<ConcurrentDictionary<String, String>> load)
 		{
-			Map = new ConcurrentDictionary<String, String>();
+			load(Map);
 		}
 	}
 
@@ -42,35 +41,33 @@ namespace A2v10.Web.Config
 
 		public IDictionary<String, String> GetLocalizerDictionary(IApplicationHost host, String locale)
 		{
-			var map = GetCurrentMap(locale);
-			if (map.Loaded)
-				return map.Map;
-			map.Loaded = true;
-
-			foreach (var localePath in GetLocalizerFilePath(host, locale))
+			var localmap = GetCurrentMap(locale, (map) =>
 			{
-				IEnumerable<String> lines = localePath.IsFileSystem ?
-					File.ReadAllLines(localePath.Path) :
-					host.ApplicationReader.FileReadAllLines(localePath.Path);
-
-				foreach (var line in lines)
+				foreach (var localePath in GetLocalizerFilePath(host, locale))
 				{
-					if (String.IsNullOrWhiteSpace(line))
-						continue;
-					if (line.StartsWith(";"))
-						continue;
-					Int32 pos = line.IndexOf('=');
-					if (pos != -1)
+					IEnumerable<String> lines = localePath.IsFileSystem ?
+						File.ReadAllLines(localePath.Path) :
+						host.ApplicationReader.FileReadAllLines(localePath.Path);
+
+					foreach (var line in lines)
 					{
-						var key = line.Substring(0, pos);
-						var val = line.Substring(pos + 1);
-						map.Map.AddOrUpdate(key, val, (k, oldVal) => val);
+						if (String.IsNullOrWhiteSpace(line))
+							continue;
+						if (line.StartsWith(";"))
+							continue;
+						Int32 pos = line.IndexOf('=');
+						if (pos != -1)
+						{
+							var key = line.Substring(0, pos);
+							var val = line.Substring(pos + 1);
+							map.AddOrUpdate(key, val, (k, oldVal) => val);
+						}
+						else
+							throw new InvalidDataException($"Invalid dictionary string '{line}'");
 					}
-					else
-						throw new InvalidDataException($"Invalid dictionary string '{line}'");
 				}
-			}
-			return map.Map;
+			});
+			return localmap.Map;
 		}
 
 		IEnumerable<LocalePath> GetLocalizerFilePath(IApplicationHost host, String locale)
@@ -117,9 +114,9 @@ namespace A2v10.Web.Config
 		}
 
 
-		LocaleMapItem GetCurrentMap(String locale)
+		LocaleMapItem GetCurrentMap(String locale, Action<ConcurrentDictionary<String, String>> load)
 		{
-			return _maps.GetOrAdd(locale, (key) => new LocaleMapItem());
+			return _maps.GetOrAdd(locale, (key) => new LocaleMapItem(load));
 		}
 
 
@@ -127,7 +124,7 @@ namespace A2v10.Web.Config
 		{
 			if (_watcher_system != null)
 				return;
-			if (!host.IsDebugConfiguration)
+			if (!host.IsDebugConfiguration || host.IsProductionEnvironment)
 				return;
 			if (!String.IsNullOrEmpty(dirPath))
 			{
@@ -167,7 +164,7 @@ namespace A2v10.Web.Config
 	{
 		private readonly IApplicationHost _host;
 
-		private static readonly Lazy<WebDictionary> _webDictionary = new Lazy<WebDictionary>(()=>new WebDictionary(), isThreadSafe:true);
+		private static readonly WebDictionary _webDictionary = new WebDictionary();
 
 		public WebLocalizer(IApplicationHost host)
 			:base()
@@ -177,7 +174,7 @@ namespace A2v10.Web.Config
 
 		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
 		{
-			return _webDictionary.Value.GetLocalizerDictionary(_host, locale);
+			return _webDictionary.GetLocalizerDictionary(_host, locale);
 		}
 
 		String IDataLocalizer.Localize(String content)

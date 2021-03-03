@@ -70,7 +70,7 @@ namespace A2v10.Request.Api
 		public HttpMethod Method { get; set; }
 		public String[] ClientId { get; set; }
 		public String AllowOrigin { get; set; }
-
+		public Boolean Wrap { get; set; }
 		#endregion
 
 
@@ -90,7 +90,7 @@ namespace A2v10.Request.Api
 			switch (Type)
 			{
 				case ApiV2CommandType.Sql:
-					return new SqlCommandHandler(serviceLocator, SqlCommand);
+					return new SqlCommandHandler(serviceLocator, SqlCommand, Wrap);
 			}
 			throw new ApiV2Exception($"invalid command type {Type}");
 		}

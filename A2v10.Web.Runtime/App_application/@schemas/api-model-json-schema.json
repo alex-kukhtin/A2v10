@@ -26,24 +26,25 @@
 							"type": "array",
 							"items": { "type": "string" }
 						},
-						"allowOrigin": {"type": "string"},
+						"allowOrigin": { "type": "string" },
+						"wrap": { "type": "boolean" },
 						"sqlCommand": {
 							"type": "object",
 							"properties": {
 								"source": { "type": "string" },
 								"schema": { "type": "string" },
 								"procedure": { "type": "string" },
-								"model": {"type": "string"},
+								"model": { "type": "string" },
 								"commandTimeout": { "type": "number" },
 								"action": {
 									"type": "string",
-									"enum": ["loadModel","updateModel", "executeSql"]
+									"enum": [ "loadModel", "updateModel", "executeSql" ]
 								},
 								"parameters": {
 									"type": "object",
 									"additionalProperties": true
 								},
-								"returns": {"type": "string"}
+								"returns": { "type": "string" }
 							},
 							"additionalProperties": false
 						}

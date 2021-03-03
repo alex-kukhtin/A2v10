@@ -59,12 +59,19 @@ namespace A2v10.Web.Config
 		private readonly IProfiler _profiler;
 		private readonly Boolean _emulateBox = false;
 		private Boolean _admin;
+		private readonly Boolean _debug;
+		private readonly String _environment;
 
 		public WebApplicationHost(IProfiler profiler)
 		{
 			_profiler = profiler;
 			_profiler.Enabled = IsDebugConfiguration;
 			_emulateBox = IsAppSettingsIsTrue("emulateBox");
+
+			var conf = ConfigurationManager.AppSettings["configuration"];
+			_debug = String.IsNullOrEmpty(conf) || conf == "debug";
+
+			_environment = ConfigurationManager.AppSettings["environment"];
 		}
 
 		public IProfiler Profiler => _profiler;
@@ -205,16 +212,8 @@ namespace A2v10.Web.Config
 		public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
 		public String TenantDataSource => String.IsNullOrEmpty(UserSegment) ? null : UserSegment;
 
-		public Boolean IsDebugConfiguration
-		{
-			get
-			{
-				var debug = ConfigurationManager.AppSettings["configuration"];
-				if (String.IsNullOrEmpty(debug))
-					return true; // default is 'debug'
-				return debug.ToLowerInvariant() == "debug";
-			}
-		}
+		public Boolean IsDebugConfiguration => _debug;
+		public Boolean IsProductionEnvironment => _environment == "production";
 
 		public String MakeRelativePath(String path, String fileName)
 		{

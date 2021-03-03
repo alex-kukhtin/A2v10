@@ -15,7 +15,8 @@
 					"Id": "id"
 				},
 				"returns": "Agent.Attachments"
-			}
+			},
+			"wrap": true
 		},
 		"update": {
 			"type": "sql",
@@ -39,8 +40,9 @@
 				"parameters": {
 					"Id": "id"
 				},
-				"returns": "DateCreated"
-			}
+				"returns": ""
+			},
+			"wrap": true
 		}
 	}
 }

@@ -83,6 +83,7 @@ namespace A2v10.Tests.Config
 		public Boolean IsUsePeriodAndCompanies => false;
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDebugConfiguration => true;
+		public Boolean IsProductionEnvironment => false;
 		public Boolean IsDTCEnabled => false;
 		public Boolean IsAdminAppPresent => false;
 

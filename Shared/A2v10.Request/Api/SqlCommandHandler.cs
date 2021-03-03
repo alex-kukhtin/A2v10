@@ -14,10 +14,12 @@ namespace A2v10.Request.Api
 	{
 		private readonly IDbContext _dbContext;
 		private readonly ApiSqlCommand _command;
-		public SqlCommandHandler(IServiceLocator serviceLocator, ApiSqlCommand command)
+		private readonly Boolean _wrap;
+		public SqlCommandHandler(IServiceLocator serviceLocator, ApiSqlCommand command, Boolean wrap)
 		{
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_command = command;
+			_wrap = wrap;
 		}
 
 		public override Task<ApiResponse> ExecuteAsync(ApiRequest request)
@@ -70,10 +72,20 @@ namespace A2v10.Request.Api
 			};
 
 			if (retObj != null)
-				resp.Body = JsonConvert.SerializeObject(retObj, JsonHelpers.CompactSerializerSettings);
+				resp.Body = JsonConvert.SerializeObject(Wrap(retObj), JsonHelpers.CompactSerializerSettings);
 			else
-				resp.Body = "{\"status\":\"ok\"}";
+				resp.Body = "{\"success\": true}";
 			return resp;
+		}
+
+		private Object Wrap(Object data)
+		{
+			if (!_wrap)
+				return data;
+			var m = new ExpandoObject();
+			m.Set("success", true);
+			m.Set("data", data);
+			return m;
 		}
 
 		ApiResponse ModelResponse(IDataModel dm)
@@ -85,7 +97,7 @@ namespace A2v10.Request.Api
 			return new ApiResponse()
 			{
 				ContentType = MimeTypes.Application.Json,
-				Body = JsonConvert.SerializeObject(model, JsonHelpers.CompactSerializerSettings)
+				Body = JsonConvert.SerializeObject(Wrap(model), JsonHelpers.CompactSerializerSettings)
 			};
 		}
 

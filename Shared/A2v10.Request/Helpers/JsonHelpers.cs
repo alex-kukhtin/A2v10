@@ -37,7 +37,7 @@ namespace A2v10.Request
 				DateFormatHandling = DateFormatHandling.IsoDateFormat,
 				DateTimeZoneHandling = DateTimeZoneHandling.Utc,
 				NullValueHandling = NullValueHandling.Ignore,
-				DefaultValueHandling = DefaultValueHandling.Ignore
+				DefaultValueHandling = DefaultValueHandling.Include
 			};
 
 		public static readonly JsonSerializerSettings CamelCaseSerializerSettings =

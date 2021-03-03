@@ -70,13 +70,8 @@ namespace A2v10.Runtime
 		public ITheme Theme => null;
 		public String HelpUrl => CurrentHelpUrl;
 
-		public Boolean IsDebugConfiguration
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public Boolean IsProductionEnvironment => false;
+		public Boolean IsDebugConfiguration => true;
 
 		private static IApplicationReader _reader = null;
 
