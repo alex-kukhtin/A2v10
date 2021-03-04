@@ -211,6 +211,11 @@ namespace A2v10.Web.Mvc.Controllers
 
 		async Task Render(String pathInfo, RequestUrlKind kind)
 		{
+			/*
+			 * PARAMS:
+			 * 1. initial = [queryString, controller]
+			 * 2. real = [model.json, id, initial]
+			 */
 			//  Ajax
 			if (IsNotAjax())
 				return;
@@ -218,14 +223,17 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				Response.ContentType = "text/html";
 				ExpandoObject loadPrms = new ExpandoObject();
+				// query string
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 				if (pathInfo.StartsWith("app/"))
 				{
+					// controller after query string
 					SetUserTenantToParams(loadPrms); // without claims
 					await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output);
 				}
 				else
 				{
+					// controller after query string
 					SetSqlQueryParams(loadPrms);
 					await _baseController.RenderElementKind(kind, pathInfo, loadPrms, Response.Output);
 				}

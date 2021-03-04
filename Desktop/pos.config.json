@@ -1,6 +1,6 @@
 ﻿{
 	"connectionString": "Data Source=localhost;Initial Catalog=bookkeeper;Integrated Security=True",
-	"startUrl": "/pos",
+	"startUrl2": "/pos",
 	"fiscalPrinters": [
 		{
 			"model": "ESC-POS",

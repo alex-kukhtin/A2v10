@@ -118,15 +118,17 @@ namespace A2v10.Request
 			ExpandoObject dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = dataToSave.Get<String>("baseUrl");
 
-			ExpandoObject loadPrms = new ExpandoObject();
+			// initial = [query, controller]
+			ExpandoObject initialParams = new ExpandoObject();
 			if (baseUrl.Contains("?"))
 			{
 				var parts = baseUrl.Split('?');
 				baseUrl = parts[0];
 				// parts[1] contains query parameters
-				var qryParams = HttpUtility.ParseQueryString(parts[1]);
-				loadPrms.Append(CheckPeriod(qryParams), toPascalCase: true);
+				var qryParamsColl = HttpUtility.ParseQueryString(parts[1]);
+				initialParams.Append(CheckPeriod(qryParamsColl), toPascalCase:true);
 			}
+			setParams?.Invoke(initialParams);
 
 			if (NormalizeBaseUrl != null)
 				baseUrl = NormalizeBaseUrl(baseUrl);
@@ -139,9 +141,12 @@ namespace A2v10.Request
 			String loadProc = rw.LoadProcedure;
 			if (loadProc == null)
 				throw new RequestModelException("The data model is empty");
-			setParams?.Invoke(loadPrms);
-			loadPrms.Set("Id", rw.Id);
-			loadPrms.Append(rw.parameters);
+			// realParams = [model.json, id, initial]
+			var loadPrms = new ExpandoObject();
+			loadPrms.Append(rw.parameters); // model.json
+			loadPrms.Set("Id", rw.Id);		// id
+			loadPrms.Append(initialParams); // initial
+
 			ExpandoObject prms2 = loadPrms;
 			if (rw.indirect)
 			{

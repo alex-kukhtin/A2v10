@@ -77,9 +77,9 @@ namespace A2v10.Runtime
 				{
 					if (String.IsNullOrEmpty(url))
 						RenderIndex(dr.Output);
-					else if (url.StartsWith("shell/"))
+					else if (url.StartsWith("_shell/"))
 					{
-						Shell(url.Substring(6).ToLowerInvariant(), dr.Output, out String shellMime);
+						Shell(url.Substring(7).ToLowerInvariant(), dr.Output, out String shellMime);
 						MimeType = shellMime;
 					}
 					else if (url.StartsWith("report/"))

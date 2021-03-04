@@ -182,34 +182,36 @@ namespace A2v10.Request
 			return rw;
 		}
 
-		internal async Task<DataModelAndView> GetDataModelForView(RequestView rw, ExpandoObject loadPrms)
+		internal async Task<DataModelAndView> GetDataModelForView(RequestView rw, ExpandoObject initialParams)
 		{
 			var dmv = new DataModelAndView()
 			{
 				RequestView = rw
 			};
 			String loadProc = rw.LoadProcedure;
+
+
+			// real params = [model.json, id, initial]
+			var realParams = new ExpandoObject();
+			realParams.Append(rw.parameters);
+			if (rw.Id != null)
+				realParams.Set("Id", rw.Id);
+			realParams.Append(initialParams);
+
 			IDataModel model = null;
-			if (rw.parameters != null && loadPrms == null)
-				loadPrms = rw.parameters;
-			if (loadPrms != null)
-			{
-				loadPrms.AppendIfNotExists(rw.parameters);
-				if (rw.Id != null)
-					loadPrms.Set("Id", rw.Id);
-			}
+
 			if (loadProc != null)
 			{
-				ExpandoObject prms2 = loadPrms;
+				ExpandoObject prms2 = realParams;
 				if (rw.indirect)
 				{
 					// for indirect - @TenantId, @UserId and @Id only
 					prms2 = new ExpandoObject();
 					prms2.Set("Id", rw.Id);
-					if (loadPrms != null)
+					if (realParams != null)
 					{
-						prms2.Set("UserId", loadPrms.Get<Int64>("UserId"));
-						prms2.Set("TenantId", loadPrms.Get<Int32>("TenantId"));
+						prms2.Set("UserId", realParams.Get<Int64>("UserId"));
+						prms2.Set("TenantId", realParams.Get<Int32>("TenantId"));
 					}
 				}
 				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2, rw.commandTimeout);
@@ -232,7 +234,7 @@ namespace A2v10.Request
 				}
 			}
 			if (rw.indirect)
-				rw = await LoadIndirect(rw, model, loadPrms);
+				rw = await LoadIndirect(rw, model, realParams);
 			if (model?.Root != null)
 			{
 				// side effect!
@@ -244,7 +246,7 @@ namespace A2v10.Request
 
 			if (_userStateManager != null && model != null)
 			{
-				Int64 userId = loadPrms.Get<Int64>("UserId");
+				Int64 userId = realParams.Get<Int64>("UserId");
 				if (_userStateManager.IsReadOnly(userId))
 					model.SetReadOnly();
 			}

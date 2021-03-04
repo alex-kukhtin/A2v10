@@ -74,8 +74,8 @@ namespace A2v10.Request
 			sb.Replace("$(HelpUrl)", host.HelpUrl);
 			sb.Replace("$(Description)", host.AppDescription);
 			var theme = host.Theme;
-			sb.Replace("$(ColorScheme)", theme.ColorScheme);
-			sb.Replace("$(Theme)", theme.FileName);
+			sb.Replace("$(ColorScheme)", theme?.ColorScheme ?? null);
+			sb.Replace("$(Theme)", theme?.FileName ?? null);
 		}
 
 

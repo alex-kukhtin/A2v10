@@ -307,6 +307,7 @@
     <Content Include="Less.Mobile\TreeView.less" />
     <Content Include="Less.Mobile\Image.less" />
     <Content Include="Less.Mobile\Upload.less" />
+    <Content Include="Less.Mobile\Debug.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

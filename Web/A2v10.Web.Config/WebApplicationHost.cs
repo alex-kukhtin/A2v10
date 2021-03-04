@@ -65,11 +65,13 @@ namespace A2v10.Web.Config
 		public WebApplicationHost(IProfiler profiler)
 		{
 			_profiler = profiler;
-			_profiler.Enabled = IsDebugConfiguration;
 			_emulateBox = IsAppSettingsIsTrue("emulateBox");
 
 			var conf = ConfigurationManager.AppSettings["configuration"];
 			_debug = String.IsNullOrEmpty(conf) || conf == "debug";
+
+			// after _debug!
+			_profiler.Enabled = _debug;
 
 			_environment = ConfigurationManager.AppSettings["environment"];
 		}

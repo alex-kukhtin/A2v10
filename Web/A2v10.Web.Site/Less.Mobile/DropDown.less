@@ -4,7 +4,7 @@
 @divider-color: @dropdown-brd-color;
 
 .menu {
-	padding: 2px;
+	padding: .25em 0;
 	margin: 3px 0;
 	top: 100%;
 	min-width: 160px; //TODO:
@@ -14,13 +14,14 @@
 	.dropdown-item {
 		display: flex;
 		cursor: pointer;
-		padding: 4px 6px;
+		padding: .5em 1em;
 		white-space: nowrap;
 		color: @text-color;
 		align-items: baseline;
 		background-color: transparent;
 		width: 100%;
 		text-align: left;
+		border: none;
 
 		&:hover {
 			text-decoration: none;
@@ -29,9 +30,10 @@
 
 		> .ico {
 			display: inline-block;
-			margin-right: 4px;
+			margin-right: .5em;
 			color: inherit;
-			min-width: 16px;
+			min-width: 1.25em;
+			font-size: 1.077em;
 
 			&:before {
 				color: @icon-color;
@@ -55,7 +57,7 @@
 	.divider {
 		flex-grow: 0;
 		height: 1px;
-		margin: 4px 6px;
+		margin: .5em;
 		background-color: @divider-color;
 	}
 
@@ -85,7 +87,7 @@
 
 	> .checkbox {
 		margin-left: 1rem;
-		padding:.5em;
+		padding:.5em 0;
 
 		> span {
 			padding-left: 26px;
