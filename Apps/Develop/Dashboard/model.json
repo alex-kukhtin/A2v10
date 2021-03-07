@@ -77,6 +77,13 @@
 					}
 				}
 			]
+		},
+		"parseCSV": {
+			"type": "parse",
+			"parse": "csv",
+			"schema": "a2",
+			"locale": "uk",
+			"model": "ConsumptionGas.Import.Upload"
 		}
 	},
 	"commands": {

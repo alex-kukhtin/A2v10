@@ -9,6 +9,9 @@ namespace A2v10.Interop
 {
 	internal class FlatTableHandler : ITableDescription
 	{
+
+		public IFormatProvider FormatProvider { get; set; }
+
 		private readonly List<Object> _list;
 
 		public FlatTableHandler()

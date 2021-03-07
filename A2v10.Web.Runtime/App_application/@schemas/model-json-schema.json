@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7748",
+	"$version": "10.0.7756",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -203,6 +203,7 @@
 					"type": "object",
 					"properties": {
 						"model": { "type": "string" },
+						"schema": {"type": "string"},
 						"type": {
 							"type": "string",
 							"enum": [ "parse", "clr", "sql", "azureBlob" ]
@@ -216,6 +217,7 @@
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
 						},
+						"locale": {"type": "string"},
 						"container": { "type": "string" },
 						"azureSource": { "type": "string" },
 						"imageCompress": {

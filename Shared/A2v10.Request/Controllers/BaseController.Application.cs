@@ -44,9 +44,7 @@ namespace A2v10.Request
 				throw new InvalidOperationException("Unable to switch to company with id='0'");
 			if (_host.IsMultiTenant)
 			{
-				Int32 TenantId = 1;
-				if (_host.IsMultiTenant)
-					TenantId = data.Get<Int32>("TenantId");
+				Int32 TenantId = data.Get<Int32>("TenantId");
 				var saveModel = new SwitchToCompanySaveModel()
 				{
 					UserId = UserId,

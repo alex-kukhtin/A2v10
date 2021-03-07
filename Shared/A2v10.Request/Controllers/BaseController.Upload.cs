@@ -13,6 +13,7 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Interop;
 using A2v10.Interop.AzureStorage;
+using System.Globalization;
 
 namespace A2v10.Request
 {
@@ -144,19 +145,22 @@ namespace A2v10.Request
 			}
 		}
 
-		async Task<ExpandoObject> SaveFlat(String format, RequestFile ru, Stream stream, ExpandoObject prms)
+		async Task<ExpandoObject> SaveFlat(String format, RequestFile rf, Stream stream, ExpandoObject prms)
 		{
 			if (_externalDataProvider == null)
 				throw new ArgumentNullException(nameof(_externalDataProvider));
+			IFormatProvider formatProvider = CultureInfo.InvariantCulture;
 			var rdr = _externalDataProvider.GetReader(format, null, null);
-			if (String.IsNullOrEmpty(ru.CurrentModel))
+			if (String.IsNullOrEmpty(rf.CurrentModel))
 			{
 				return rdr.CreateDataModel(stream);
 			}
 			else
 			{
-				var dm = await _dbContext.SaveModelAsync(ru.CurrentSource, ru.UpdateProcedure, null, prms, (table) =>
+				var dm = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, null, prms, (table) =>
 				{
+					if (!String.IsNullOrEmpty(rf.locale))
+						table.FormatProvider = CultureInfo.GetCultureInfo(rf.locale);
 					return rdr.ParseFile(stream, table);
 				});
 				return dm?.Root;

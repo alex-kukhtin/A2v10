@@ -14,7 +14,8 @@ const template = {
 	methods: {
 	},
 	delegates: {
-		drawChart
+		drawChart,
+		onUpload
 	},
 	events: {
 	},
@@ -79,4 +80,8 @@ function drawChart(g, arg, elem) {
 		.attr('fill', "hsla(0,0%,70%,.25)")
 		.attr('d', area);
 		//.attr('stroke', '#fff')
+}
+
+function onUpload(result) {
+	console.dir(result);
 }

@@ -632,7 +632,7 @@ namespace A2v10.Request
 		public String container;
 		public String azureSource;
 		public ImageSettings imageCompress;
-
+		public String locale;
 
 		public List<RequestFileAvaliModel> availableModels;
 		[JsonIgnore]
