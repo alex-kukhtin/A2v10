@@ -111,7 +111,7 @@ namespace A2v10.Reports
 			if (_host.IsMultiTenant)
 				vars.Set("TenantId", context.TenantId);
 			if (_host.IsMultiCompany)
-				prms.Set("CompanyId", context.CompanyId);
+				vars.Set("CompanyId", context.CompanyId);
 			vars.Set("Id", id);
 			ri.Variables = vars;
 			var repName = _localizer.Localize(null, String.IsNullOrEmpty(rep.name) ? rep.ReportName : rep.name);

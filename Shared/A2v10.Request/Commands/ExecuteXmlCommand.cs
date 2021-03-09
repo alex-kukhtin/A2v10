@@ -51,7 +51,7 @@ namespace A2v10.Request
 			var bytes = xmlCreator.CreateXml();
 			return new ServerCommandResult(Encoding.UTF8.GetString(bytes))
 			{
-				ConentType = "text/xml"
+				ContentType = "text/xml"
 			};
 		}
 	}

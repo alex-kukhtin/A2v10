@@ -331,7 +331,7 @@ namespace A2v10.Request
 			// may be null for background processing
 			if (response != null)
 			{
-				response.ContentType = result.ConentType;
+				response.ContentType = result.ContentType;
 				if (result.Data != null)
 					response.Output.Write(result.Data);
 			}

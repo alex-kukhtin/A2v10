@@ -28,7 +28,7 @@ namespace A2v10.Request
 				throw new RequestModelException("A procedure must be specified for sql-type command");
 			IDataModel model = await _dbContext.LoadModelAsync(cmd.CurrentSource, cmd.CommandProcedure, dataToExec, cmd.commandTimeout);
 
-			_host.CheckTypes(cmd.Path, cmd.checkTypes, model);
+			//_host.CheckTypes(cmd.Path, cmd.checkTypes, model);
 
 			String invokeTarget = cmd.GetInvokeTarget();
 			if (invokeTarget != null)

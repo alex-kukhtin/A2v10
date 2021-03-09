@@ -61,7 +61,7 @@ namespace A2v10.Request
 					{
 						return new ServerCommandResult(await result.Content?.ReadAsStringAsync())
 						{
-							ConentType = result.Content?.Headers?.ContentType?.MediaType
+							ContentType = result.Content?.Headers?.ContentType?.MediaType
 						};
 					}
 					else

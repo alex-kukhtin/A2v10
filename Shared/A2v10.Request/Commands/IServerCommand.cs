@@ -22,7 +22,7 @@ namespace A2v10.Request
 
 		public String Data { get; set; }
 
-		public String ConentType
+		public String ContentType
 		{
 			get
 			{
