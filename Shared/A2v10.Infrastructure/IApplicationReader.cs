@@ -21,9 +21,9 @@ namespace A2v10.Infrastructure
 		Boolean FileExists(String fullPath);
 		Boolean DirectoryExists(String fullPath);
 		String FileReadAllText(String fullPath);
-		IEnumerable<String> FileReadAllLines(String fullPath);
+		//IEnumerable<String> FileReadAllLines(String fullPath);
 
-		Stream FileStream(String path, String fileName);
+		//Stream FileStream(String path, String fileName);
 		Stream FileStreamFullPathRO(String fullPath);
 	}
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
@@ -35,9 +36,26 @@ namespace A2v10.Web.Config
 
 	internal class WebDictionary
 	{
-		ConcurrentDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
+		private static readonly ConcurrentDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
 		FileSystemWatcher _watcher_system = null;
 		FileSystemWatcher _watcher_app = null;
+
+		IEnumerable<String> ReadLines(IApplicationReader reader, String path)
+		{
+			using (var stream = reader.FileStreamFullPathRO(path))
+			{
+				using (var rdr = new StreamReader(stream))
+				{
+					while (!rdr.EndOfStream)
+					{
+						var s = rdr.ReadLine();
+						if (String.IsNullOrEmpty(s) || s.StartsWith(";"))
+							continue;
+						yield return s;
+					}
+				}
+			}
+		}
 
 		public IDictionary<String, String> GetLocalizerDictionary(IApplicationHost host, String locale)
 		{
@@ -45,16 +63,9 @@ namespace A2v10.Web.Config
 			{
 				foreach (var localePath in GetLocalizerFilePath(host, locale))
 				{
-					IEnumerable<String> lines = localePath.IsFileSystem ?
-						File.ReadAllLines(localePath.Path) :
-						host.ApplicationReader.FileReadAllLines(localePath.Path);
-
+					var lines = ReadLines(host.ApplicationReader, localePath.Path);
 					foreach (var line in lines)
 					{
-						if (String.IsNullOrWhiteSpace(line))
-							continue;
-						if (line.StartsWith(";"))
-							continue;
 						Int32 pos = line.IndexOf('=');
 						if (pos != -1)
 						{
@@ -164,7 +175,7 @@ namespace A2v10.Web.Config
 	{
 		private readonly IApplicationHost _host;
 
-		private static readonly WebDictionary _webDictionary = new WebDictionary();
+		private readonly WebDictionary _webDictionary = new WebDictionary();
 
 		public WebLocalizer(IApplicationHost host)
 			:base()

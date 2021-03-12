@@ -20,9 +20,9 @@ using A2v10.Javascript;
 
 namespace A2v10.Web.Mvc.Start
 {
-	public partial class Startup
+	public static partial class Startup
 	{
-		public void StartServices()
+		public static void StartServices()
 		{
 			// DI ready
 			ServiceLocator.Start = (IServiceLocator locator) =>

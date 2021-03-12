@@ -71,18 +71,21 @@ namespace A2v10.Infrastructure
 			return File.ReadAllText(fullPath);
 		}
 
+		/*
 		public IEnumerable<String> FileReadAllLines(String fullPath)
 		{
 			return File.ReadAllLines(fullPath);
 		}
+		*/
 
+		/*
 		public Stream FileStream(String path, String fileName)
 		{
 			String fullPath = GetFullPath(path, fileName);
 			if (FileExists(fullPath))
 				return new FileStream(fullPath, FileMode.Open);
 			return null;
-		}
+		}*/
 
 		public Stream FileStreamFullPathRO(String fullPath)
 		{

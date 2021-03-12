@@ -24,6 +24,7 @@ namespace A2v10.Web.Mvc.Startup
 
 	public static class Services
 	{
+
 		public static void StartServices(Action<StartOptions> opts)
 		{
 			// DI ready

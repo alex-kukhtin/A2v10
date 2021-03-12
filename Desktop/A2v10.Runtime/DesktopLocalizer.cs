@@ -61,6 +61,23 @@ namespace A2v10.Runtime
 			return mapItem;
 		}
 
+		IEnumerable<String> ReadLines(IApplicationReader reader, String path)
+		{
+			using (var stream = reader.FileStreamFullPathRO(path))
+			{
+				using (var rdr = new StreamReader(stream))
+				{
+					while (!rdr.EndOfStream)
+					{
+						var s = rdr.ReadLine();
+						if (String.IsNullOrEmpty(s) || s.StartsWith(";"))
+							continue;
+						yield return s;
+					}
+				}
+			}
+		}
+
 		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
 		{
 			var map = GetCurrentMap(locale);
@@ -95,10 +112,7 @@ namespace A2v10.Runtime
 
 			foreach (var localePath in GetLocalizerFilePath(locale))
 			{
-				IEnumerable<String> lines = localePath.IsFileSystem ?
-					File.ReadAllLines(localePath.Path) :
-					_host.ApplicationReader.FileReadAllLines(localePath.Path);
-
+				var lines = ReadLines(_host.ApplicationReader, localePath.Path);
 				foreach (var line in lines)
 					AddLine(line);
 			}

@@ -1,9 +1,10 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+
 using A2v10.Infrastructure;
 
 namespace A2v10.Request
@@ -11,9 +12,9 @@ namespace A2v10.Request
 	public class RedirectModule
 	{
 		private readonly IApplicationHost _host;
-		private IDictionary<String, String> _redirect;
+		private IDictionary<String, String> _redirect = new Dictionary<String, String>();
+		private Object _redirectLock = new Object();
 		private FileSystemWatcher _redirectWatcher;
-		private Boolean _loaded;
 
 
 		public RedirectModule()
@@ -30,16 +31,21 @@ namespace A2v10.Request
 
 		public void Read()
 		{
-			if (_loaded)
-				return;
 			String redJson = _host.ApplicationReader.ReadTextFile(String.Empty, "redirect.json");
 			if (redJson != null)
-				_redirect = JsonConvert.DeserializeObject<Dictionary<String, String>>(redJson);
-			_loaded = true;
+			{
+				var dict = JsonConvert.DeserializeObject<Dictionary<String, String>>(redJson);
+				lock (_redirectLock) {
+					_redirect.Clear();
+					_redirect.Append(dict, replaceExisiting: true);
+				}
+			}
 		}
 
 		public void CreateWatcher()
-		{ 
+		{
+			if (_host.IsProductionEnvironment)
+				return;
 			if (_host.IsDebugConfiguration && _redirectWatcher == null && _host.ApplicationReader.IsFileSystem)
 			{
 				String redFilePath = _host.ApplicationReader.MakeFullPath(String.Empty, "redirect.json");
@@ -53,7 +59,7 @@ namespace A2v10.Request
 				};
 				_redirectWatcher.Changed += (sender, e) =>
 				{
-					_loaded = false;
+					Read();
 				};
 				_redirectWatcher.EnableRaisingEvents = true;
 			}
@@ -61,8 +67,7 @@ namespace A2v10.Request
 
 		public String Redirect(String path)
 		{
-			Read();
-			if (_redirect == null)
+			if (_redirect.Count == 0)
 				return path;
 			if (_redirect.TryGetValue(path, out String outPath))
 				return outPath;

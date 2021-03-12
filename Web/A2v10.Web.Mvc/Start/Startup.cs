@@ -6,9 +6,9 @@ using Owin;
 [assembly: OwinStartupAttribute(typeof(A2v10.Web.Mvc.Start.Startup))]
 namespace A2v10.Web.Mvc.Start
 {
-	public partial class Startup
+	public static partial class Startup
 	{
-		public void Configuration(IAppBuilder app)
+		public static void Configuration(IAppBuilder app)
 		{
 			StartServices();
 			ConfigureAuth(app);

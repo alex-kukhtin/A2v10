@@ -18,9 +18,9 @@ using A2v10.Web.Identity.ApiKey;
 
 namespace A2v10.Web.Mvc.Start
 {
-	public partial class Startup
+	public static partial class Startup
 	{
-		public void ConfigureAuth(IAppBuilder app)
+		public static void ConfigureAuth(IAppBuilder app)
 		{
 			// Configure the db context, user manager and signin manager to use a single instance per request
 			app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
