@@ -1085,6 +1085,13 @@ hr {
   vertical-align: baseline;
   border-radius: 0.25rem;
 }
+.a2-badge {
+  background-color: #8591a2;
+  color: white;
+  padding: 0.15rem 0.4rem 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+}
 .tag-label {
   background-color: #8f94b0;
   color: white;
