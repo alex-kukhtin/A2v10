@@ -42,6 +42,7 @@ namespace A2v10.Web.Identity.ApiKey
 		public static async Task ValidateApiKey(ApiKeyValidateIdentityContext context, String schema = null)
 		{
 			var dbContext = ServiceLocator.Current.GetService<IDbContext>();
+			var host = ServiceLocator.Current.GetService<IApplicationHost>();
 
 			schema = schema ?? "a2security";
 			var findUsersql = $"[{schema}].[FindApiUserByApiKey]";
@@ -51,7 +52,7 @@ namespace A2v10.Web.Identity.ApiKey
 			prms.Set("Host", context.Host);
 			prms.Set("ApiKey", context.ApiKey);
 
-			var user = await dbContext.LoadAsync<ApiAppUser>(null, findUsersql, prms);
+			var user = await dbContext.LoadAsync<ApiAppUser>(host.CatalogDataSource, findUsersql, prms);
 
 			if (user != null)
 			{
@@ -67,7 +68,7 @@ namespace A2v10.Web.Identity.ApiKey
 					fo.Set("SeverityChar", "W");
 					fo.Set("Code", 66 /*Api IP forbidden*/);
 					fo.Set("Message", $"expected: '{user.AllowIP}', actual:'{context.Host}'");
-					await dbContext.ExecuteExpandoAsync(null, writeLogSql, fo);
+					await dbContext.ExecuteExpandoAsync(host.CatalogDataSource, writeLogSql, fo);
 				}
 			}
 		}

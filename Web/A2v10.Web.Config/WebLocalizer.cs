@@ -69,8 +69,8 @@ namespace A2v10.Web.Config
 						Int32 pos = line.IndexOf('=');
 						if (pos != -1)
 						{
-							var key = line.Substring(0, pos);
-							var val = line.Substring(pos + 1);
+							var key = line.Substring(0, pos).Trim();
+							var val = line.Substring(pos + 1).Trim();
 							map.AddOrUpdate(key, val, (k, oldVal) => val);
 						}
 						else
@@ -86,8 +86,8 @@ namespace A2v10.Web.Config
 			// locale may be "uk_UA"
 			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
 			var appReader = host.ApplicationReader;
-			///var appPath = Path.GetFullPath(Path.Combine(_host.AppPath, _host.AppKey ?? String.Empty, "_localization"));
-			var appPath = appReader.MakeFullPath("_localization", String.Empty);
+			var appPath = Path.Combine(host.AppPath, host.AppKey, "_localization");
+			// нельзя использовать appReader.MakeFullPath()! Там может быть AppKey = "admin"
 			if (!Directory.Exists(dirPath))
 				dirPath = null;
 
