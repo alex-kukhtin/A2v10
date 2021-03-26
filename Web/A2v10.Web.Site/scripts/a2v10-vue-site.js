@@ -4990,7 +4990,7 @@ template: `
 })();
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210220-7749*/
+/*20210326-7760*/
 // controllers/base.js
 
 (function () {
@@ -5704,6 +5704,7 @@ template: `
 							});
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
+							if (!arg.$selected) return;
 							return __runDialog(url, arg.$selected, query, (result) => {
 								arg.$selected.$merge(result);
 								arg.__fireChange__('selected');
