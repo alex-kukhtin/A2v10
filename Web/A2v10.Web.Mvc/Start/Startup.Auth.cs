@@ -45,7 +45,6 @@ namespace A2v10.Web.Mvc.Start
 				OnResponseSignedIn = (context) =>
 				{
 				}
-				
 			};
 
 			//var originalHandler = authProvider.OnApplyRedirect;

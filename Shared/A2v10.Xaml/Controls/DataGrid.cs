@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -58,6 +58,7 @@ namespace A2v10.Xaml
 
 		public UIElement EmptyPanel { get; set; }
 		public String EmptyPanelDelegate { get; set; }
+		public AutoSelectMode AutoSelect { get; set; }
 
 		GroupDescriptions _groupBy;
 		public GroupDescriptions GroupBy
@@ -153,6 +154,9 @@ namespace A2v10.Xaml
 			{
 				dataGrid.MergeAttribute(":group-by", _groupBy.GetJsValue(context));
 			}
+
+			if (AutoSelect != AutoSelectMode.None)
+				dataGrid.MergeAttribute("auto-select", AutoSelect.ToString().ToKebabCase());
 
 			dataGrid.RenderStart(context);
 			Int32 colIndex = 0;

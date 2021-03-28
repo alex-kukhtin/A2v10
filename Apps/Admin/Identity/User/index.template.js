@@ -2,6 +2,9 @@
 /* identity/user index template */
 
 const template = {
+	options: {
+		persistSelect: ['Users']
+	},
 	properties: {
 		"TUser.$Icon"() {
 			return this.IsAdmin ? "gear-outline" : null;

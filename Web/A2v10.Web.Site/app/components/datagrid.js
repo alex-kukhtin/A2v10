@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210127-7744
+// 20210328-7760
 // components/datagrid.js*/
 
 (function () {
@@ -533,7 +533,8 @@
 			isItemActive: Function,
 			hitItem: Function,
 			emptyPanelCallback: Function,
-			testId: String
+			testId: String,
+			autoSelect: String
 		},
 		template: dataGridTemplate,
 		components: {
@@ -697,9 +698,8 @@
 		methods: {
 			selected() {
 				let src = this.itemsSource;
-				if (src.$origin) {
+				if (src.$origin)
 					src = src.$origin;
-				}
 				return src.$selected;
 			},
 			$addColumn(column) {
@@ -809,6 +809,17 @@
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
 			},
+			__autoSelect() {
+				if (!this.autoSelect || !this.$items || !this.$items.length) return;
+				if (this.$items.$selected) return;
+				switch (this.autoSelect) {
+					case 'first-item':
+						this.$items[0].$select();
+						break;
+					case 'last-item':
+						this.$items[this.$items.length - 1].$select();
+				}
+			},
 			__invoke__test__(args) {
 				args = args || {};
 				if (args.target !== 'datagrid')
@@ -836,6 +847,7 @@
 				let tr = rows[ix].$refs.tr;
 				tr.scrollIntoViewCheck();
 			}
+			this.__autoSelect();
 		},
 		mounted() {
 			if (this.testId)
