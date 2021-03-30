@@ -19,14 +19,23 @@ namespace A2v10.Web.Identity.ApiKey
 
 		protected override async Task<AuthenticationTicket> AuthenticateCoreAsync()
 		{
-			String header = Request.Headers.Get(Options.Header);
-			if (String.IsNullOrEmpty(header))
-				return null;
+			const String API_KEY = "ApiKey";
 
-			if (!header.StartsWith(Options.Key, StringComparison.InvariantCultureIgnoreCase))
-				return null;
+			String apiKey = null;
+			String header = Request.Headers.Get("Authorization");
+			if (!String.IsNullOrEmpty(header)) {
+				if (header.StartsWith(API_KEY, StringComparison.OrdinalIgnoreCase))
+					apiKey = header.Substring(API_KEY.Length).Trim();
+			}
+			else
+			{
+				header = Request.Headers.Get("X-API-Key");
+				if (!String.IsNullOrEmpty(header))
+					apiKey = header;
+			}
 
-			String apiKey = header.Substring(Options.Key.Length).Trim();
+			if (apiKey == null)
+				return null;
 
 			var context = new ApiKeyValidateIdentityContext(Context, Options, apiKey, Request.RemoteIpAddress);
 

@@ -12,7 +12,7 @@ namespace A2v10.Request
 	public class RedirectModule
 	{
 		private readonly IApplicationHost _host;
-		private IDictionary<String, String> _redirect = new Dictionary<String, String>();
+		private IDictionary<String, String> _redirect = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
 		private Object _redirectLock = new Object();
 		private FileSystemWatcher _redirectWatcher;
 

@@ -14,11 +14,6 @@ namespace A2v10.Web.Base
 		{
 			if (!base.AuthorizeCore(httpContext))
 				return false;
-			var authHeader = httpContext.Request.Headers["Authorization"];
-			if (authHeader == null)
-				return false;
-			if (!authHeader.StartsWith("ApiKey "))
-				return false;
 			return true;
 		}
 

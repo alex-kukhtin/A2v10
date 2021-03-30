@@ -684,17 +684,17 @@ namespace A2v10.Request
 		public String allowOrigin;
 
 		[JsonProperty("actions")]
-		public Dictionary<String, RequestAction> Actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.InvariantCultureIgnoreCase);
+		public Dictionary<String, RequestAction> Actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.OrdinalIgnoreCase);
 		[JsonProperty("dialogs")]
-		public Dictionary<String, RequestDialog> Dialogs { get; set; } = new Dictionary<String, RequestDialog>(StringComparer.InvariantCultureIgnoreCase);
+		public Dictionary<String, RequestDialog> Dialogs { get; set; } = new Dictionary<String, RequestDialog>(StringComparer.OrdinalIgnoreCase);
 		[JsonProperty("popups")]
-		public Dictionary<String, RequestPopup> Popups { get; set; } = new Dictionary<String, RequestPopup>(StringComparer.InvariantCultureIgnoreCase);
+		public Dictionary<String, RequestPopup> Popups { get; set; } = new Dictionary<String, RequestPopup>(StringComparer.OrdinalIgnoreCase);
 		[JsonProperty("commands")]
-		public Dictionary<String, RequestCommand> Commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.InvariantCultureIgnoreCase);
+		public Dictionary<String, RequestCommand> Commands { get; set; } = new Dictionary<String, RequestCommand>(StringComparer.OrdinalIgnoreCase);
 		[JsonProperty("reports")]
-		public Dictionary<String, RequestReport> Reports { get; set; } = new Dictionary<String, RequestReport>(StringComparer.InvariantCultureIgnoreCase);
+		public Dictionary<String, RequestReport> Reports { get; set; } = new Dictionary<String, RequestReport>(StringComparer.OrdinalIgnoreCase);
 		[JsonProperty("files")]
-		public Dictionary<String, RequestFile> Files { get; set; } = new Dictionary<String, RequestFile>(StringComparer.InvariantCultureIgnoreCase);
+		public Dictionary<String, RequestFile> Files { get; set; } = new Dictionary<String, RequestFile>(StringComparer.OrdinalIgnoreCase);
 
 
 		[JsonIgnore]
@@ -765,7 +765,7 @@ namespace A2v10.Request
 					throw new InvalidOperationException($"There are no actions in model '{_modelPath}'");
 				if (String.IsNullOrEmpty(_action))
 					throw new InvalidOperationException($"Invalid empty action in url for model {_modelPath}");
-				if (Actions.TryGetValue(_action.ToLowerInvariant(), out RequestAction ma))
+				if (Actions.TryGetValue(_action, out RequestAction ma))
 					return ma;
 				throw new InvalidOperationException($"Action '{_action}' not found in model {_modelPath}");
 			}
@@ -877,7 +877,7 @@ namespace A2v10.Request
 			var mi = new RequestModelInfo();
 
 			if (kind == RequestUrlKind.Simple) {
-				mi.path = normalizedUrl;
+				mi.path = normalizedUrl.ToLowerInvariant();
 				return mi;
 			}
 
@@ -889,7 +889,7 @@ namespace A2v10.Request
 				throw new RequestModelException($"invalid url ({normalizedUrl})");
 			}
 			mi.id = urlParts[len - 1];
-			String action = urlParts[len - 2];
+			String action = urlParts[len - 2].ToLowerInvariant();
 			switch (kind)
 			{
 				case RequestUrlKind.Page:
@@ -929,7 +929,7 @@ namespace A2v10.Request
 					throw new RequestModelException($"Invalid action kind ({kind})");
 			}
 			var pathArr = new ArraySegment<String>(urlParts, 0, len - 2);
-			mi.path = String.Join("/", pathArr);
+			mi.path = String.Join("/", pathArr).ToLowerInvariant();
 			return mi;
 		}
 
@@ -961,7 +961,7 @@ namespace A2v10.Request
 
 		public static async Task<RequestModel> CreateFromApiUrl(IApplicationHost host, String apiUrl)
 		{
-			apiUrl = apiUrl.ToLowerInvariant();
+			//apiUrl = apiUrl.ToLowerInvariant();
 			var rm = await CreateFromUrl(host, false, RequestUrlKind.Api, apiUrl + "/0" /*id*/);
 			rm._kind = RequestUrlKind.Api;
 			return rm;
@@ -969,49 +969,49 @@ namespace A2v10.Request
 
 		public static async Task<RequestModel> CreateFromBaseUrl(IApplicationHost host, Boolean bAdmin, String baseUrl)
 		{
-			baseUrl = baseUrl.ToLowerInvariant();
+			//baseUrl = baseUrl.ToLowerInvariant();
 			RequestUrlKind kind;
-			if (baseUrl.StartsWith("/_dialog"))
+			if (baseUrl.StartsWith("/_dialog", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Dialog;
 				baseUrl = baseUrl.Substring(9);
 			}
-			else if (baseUrl.StartsWith("/_page"))
+			else if (baseUrl.StartsWith("/_page", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Page;
 				baseUrl = baseUrl.Substring(7);
 			}
-			else if (baseUrl.StartsWith("/_popup"))
+			else if (baseUrl.StartsWith("/_popup", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Popup;
 				baseUrl = baseUrl.Substring(8);
 			}
-			else if (baseUrl.StartsWith("/_image"))
+			else if (baseUrl.StartsWith("/_image", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Image;
 				baseUrl = baseUrl.Substring(8);
 			}
-			else if (baseUrl.StartsWith("/_attachment"))
+			else if (baseUrl.StartsWith("/_attachment, StringComparison.OrdinalIgnoreCase"))
 			{
 				kind = RequestUrlKind.Attachment;
 				baseUrl = baseUrl.Substring(13);
 			}
-			else if (baseUrl.StartsWith("/_file"))
+			else if (baseUrl.StartsWith("/_file", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.File;
 				baseUrl = baseUrl.Substring(7);
 			}
-			else if (baseUrl.StartsWith("/_report"))
+			else if (baseUrl.StartsWith("/_report", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Report;
 				baseUrl = baseUrl.Substring(9);
 			}
-			else if (baseUrl.StartsWith("/_export"))
+			else if (baseUrl.StartsWith("/_export", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Export;
 				baseUrl = baseUrl.Substring(9);
 			}
-			else if (baseUrl.StartsWith("/_simple"))
+			else if (baseUrl.StartsWith("/_simple", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Simple;
 				baseUrl = baseUrl.Substring(9);

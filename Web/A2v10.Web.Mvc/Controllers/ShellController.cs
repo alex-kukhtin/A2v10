@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web.Mvc;
@@ -88,9 +88,9 @@ namespace A2v10.Web.Mvc.Controllers
 				return;
 			}
 
-			pathInfo = pathInfo.ToLowerInvariant();
+			//pathInfo = pathInfo.ToLowerInvariant();
 
-			if (pathInfo.StartsWith("admin/"))
+			if (pathInfo.StartsWith("admin/", StringComparison.OrdinalIgnoreCase))
 			{
 				pathInfo = pathInfo.Substring(6);
 				// ADMIN mode
@@ -99,71 +99,71 @@ namespace A2v10.Web.Mvc.Controllers
 
 			_baseController.Host.StartApplication(_baseController.Admin);
 
-			if (pathInfo.EndsWith(".ts"))
+			if (pathInfo.EndsWith(".ts", StringComparison.OrdinalIgnoreCase))
 			{
 				TypeScriptSource(pathInfo);
 				return;
 			}
 
-			if (pathInfo.StartsWith("_shell"))
+			if (pathInfo.StartsWith("_shell", StringComparison.OrdinalIgnoreCase))
 			{
 				Boolean adminShell = pathInfo.Contains("admin");
 				if (adminShell)
 					_baseController.Host.SetAdmin(true);
 				await Shell(pathInfo, adminShell);
 			}
-			else if (pathInfo.StartsWith("_page/"))
+			else if (pathInfo.StartsWith("_page/", StringComparison.OrdinalIgnoreCase))
 			{
 				await Render(pathInfo.Substring(6), RequestUrlKind.Page);
 			}
-			else if (pathInfo.StartsWith("_dialog/"))
+			else if (pathInfo.StartsWith("_dialog/", StringComparison.OrdinalIgnoreCase))
 			{
 				await Render(pathInfo.Substring(8), RequestUrlKind.Dialog);
 			}
-			else if (pathInfo.StartsWith("_popup/"))
+			else if (pathInfo.StartsWith("_popup/", StringComparison.OrdinalIgnoreCase))
 			{
 				await Render(pathInfo.Substring(7), RequestUrlKind.Popup);
 			}
-			else if (pathInfo.StartsWith("_data/"))
+			else if (pathInfo.StartsWith("_data/", StringComparison.OrdinalIgnoreCase))
 			{
 				String command = pathInfo.Substring(6);
 				await Data(command);
 			}
-			else if (pathInfo.StartsWith("_image/"))
+			else if (pathInfo.StartsWith("_image/", StringComparison.OrdinalIgnoreCase))
 			{
 				await Image("/" + pathInfo); // with _image prefix
 			}
-			else if (pathInfo.StartsWith("_attachment/"))
+			else if (pathInfo.StartsWith("_attachment/", StringComparison.OrdinalIgnoreCase))
 			{
 				await Attachment("/" + pathInfo); // with _attachment/ prefix
 			}
-			else if (pathInfo.StartsWith("_file/"))
+			else if (pathInfo.StartsWith("_file/", StringComparison.OrdinalIgnoreCase))
 			{
 				await DoFile("/" + pathInfo); // with _image prefix
 			}
-			else if (pathInfo.StartsWith("_export/"))
+			else if (pathInfo.StartsWith("_export/", StringComparison.OrdinalIgnoreCase))
 			{
 				await Export("/" + pathInfo);
 			}
-			else if (pathInfo.StartsWith("_iframe/"))
+			else if (pathInfo.StartsWith("_iframe/", StringComparison.OrdinalIgnoreCase))
 			{
 				await IFrame("/" + pathInfo);
 			}
-			else if (pathInfo.StartsWith("file/"))
+			else if (pathInfo.StartsWith("file/", StringComparison.OrdinalIgnoreCase))
 			{
 				LoadFile(pathInfo.Substring(5));
 			}
-			else if (pathInfo.StartsWith("fragment/"))
+			else if (pathInfo.StartsWith("fragment/", StringComparison.OrdinalIgnoreCase))
 			{
 				LoadFragment(pathInfo.Substring(9));
 			}
-			else if (pathInfo.StartsWith("_static_image/"))
+			else if (pathInfo.StartsWith("_static_image/", StringComparison.OrdinalIgnoreCase))
 			{
 				StaticImage(pathInfo.Substring(14).Replace('-', '.'));
 			}
-			else if (pathInfo.StartsWith("_server"))
+			else if (pathInfo.StartsWith("_server", StringComparison.OrdinalIgnoreCase))
 				await RunServer(pathInfo.Substring(8));
-			else if (pathInfo.StartsWith("_application"))
+			else if (pathInfo.StartsWith("_application", StringComparison.OrdinalIgnoreCase))
 				await ApplicationCommand(pathInfo.Substring(13));
 			else
 			{
@@ -240,7 +240,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			catch (Exception ex)
 			{
-				if (ex.Message.StartsWith("UI:"))
+				if (ex.Message.StartsWith("UI:", StringComparison.OrdinalIgnoreCase))
 				{
 					var error = _baseController.Localize(ex.Message.Substring(3));
 					_baseController.WriteExceptionStatus(ex, Response);
@@ -544,7 +544,7 @@ namespace A2v10.Web.Mvc.Controllers
 					catch (Exception ex)
 					{
 						var accept = Request.Headers["Accept"];
-						if (accept != null && accept.Trim().StartsWith("image"))
+						if (accept != null && accept.Trim().StartsWith("image", StringComparison.OrdinalIgnoreCase))
 						{
 							WriteImageException(ex);
 						}
@@ -628,15 +628,15 @@ namespace A2v10.Web.Mvc.Controllers
 
 		async Task Shell(String pathInfo, Boolean bAdmin)
 		{
-			if (pathInfo.StartsWith("_shell/script"))
+			if (pathInfo.StartsWith("_shell/script", StringComparison.OrdinalIgnoreCase))
 				await ShellScript(bAdmin);
-			else if (pathInfo.StartsWith("_shell/trace"))
+			else if (pathInfo.StartsWith("_shell/trace", StringComparison.OrdinalIgnoreCase))
 				ShellTrace();
-			else if (pathInfo.StartsWith("_shell/appstyles"))
+			else if (pathInfo.StartsWith("_shell/appstyles", StringComparison.OrdinalIgnoreCase))
 				ShellAppStyles();
-			else if (pathInfo.StartsWith("_shell/appscripts"))
+			else if (pathInfo.StartsWith("_shell/appscripts", StringComparison.OrdinalIgnoreCase))
 				ShellAppScripts();
-			else if (pathInfo.StartsWith("_shell/savefeedback"))
+			else if (pathInfo.StartsWith("_shell/savefeedback", StringComparison.OrdinalIgnoreCase))
 				await ShellSaveFeedback();
 			else
 				throw new RequestModelException($"Invalid shell action: '{pathInfo}'");

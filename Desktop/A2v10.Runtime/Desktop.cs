@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Globalization;
@@ -272,7 +272,7 @@ namespace A2v10RuntimeNet
 			};
 			Byte[] result;
 			using (var resp = new DesktopResponse()) {
-				if (url.StartsWith("_image/"))
+				if (url.StartsWith("_image/", StringComparison.OrdinalIgnoreCase))
 				{
 					result = dr.SaveImage("/" + url, files, resp);
 				}

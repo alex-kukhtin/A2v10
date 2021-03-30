@@ -68,7 +68,7 @@ namespace A2v10.Request
 				response.ContentType = "application/json";
 				var dataToSave = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 				String baseUrl = dataToSave.Get<String>("baseUrl");
-				if (baseUrl.StartsWith("/model/dialog/"))
+				if (baseUrl.StartsWith("/model/dialog/", StringComparison.OrdinalIgnoreCase))
 				{
 					baseUrl = baseUrl.Replace("/model/dialog/", "/_dialog/");
 					dataToSave.Set("baseUrl", baseUrl);

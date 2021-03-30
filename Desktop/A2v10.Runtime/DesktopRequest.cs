@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -63,7 +63,7 @@ namespace A2v10.Runtime
 
 		Byte[] ProcessRequestImpl(String url, Byte[] post, Boolean postMethod)
 		{
-			if (url.StartsWith("admin/"))
+			if (url.StartsWith("admin/", StringComparison.OrdinalIgnoreCase))
 			{
 				url = url.Substring(6);
 				_controller.Host.SetAdmin(true);
@@ -77,12 +77,12 @@ namespace A2v10.Runtime
 				{
 					if (String.IsNullOrEmpty(url))
 						RenderIndex(dr.Output);
-					else if (url.StartsWith("_shell/"))
+					else if (url.StartsWith("_shell/", StringComparison.OrdinalIgnoreCase))
 					{
 						Shell(url.Substring(7).ToLowerInvariant(), dr.Output, out String shellMime);
 						MimeType = shellMime;
 					}
-					else if (url.StartsWith("report/"))
+					else if (url.StartsWith("report/", StringComparison.OrdinalIgnoreCase))
 					{
 						Report(url.Substring(6).ToLowerInvariant(), dr);
 						MimeType = dr.ContentType;
@@ -90,13 +90,13 @@ namespace A2v10.Runtime
 						if (dr.IsBinaryWrited)
 							return dr.GetBytes();
 					}
-					else if (url.StartsWith("_page/"))
+					else if (url.StartsWith("_page/", StringComparison.OrdinalIgnoreCase))
 						Render(RequestUrlKind.Page, url.Substring(6), dr.Output);
-					else if (url.StartsWith("_dialog/"))
+					else if (url.StartsWith("_dialog/", StringComparison.OrdinalIgnoreCase))
 						Render(RequestUrlKind.Dialog, url.Substring(8), dr.Output);
-					else if (url.StartsWith("_popup/"))
+					else if (url.StartsWith("_popup/", StringComparison.OrdinalIgnoreCase))
 						Render(RequestUrlKind.Popup, url.Substring(7), dr.Output);
-					else if (url.StartsWith("_data/"))
+					else if (url.StartsWith("_data/", StringComparison.OrdinalIgnoreCase))
 					{
 						var command = url.Substring(6);
 						dr.ContentType = "application/json";
@@ -106,7 +106,7 @@ namespace A2v10.Runtime
 						if (dr.IsBinaryWrited)
 							return dr.GetBytes();
 					}
-					else if (url.StartsWith("_image/"))
+					else if (url.StartsWith("_image/", StringComparison.OrdinalIgnoreCase))
 					{
 						if (postMethod)
 							throw new NotImplementedException("SaveImage (post)");
@@ -117,20 +117,20 @@ namespace A2v10.Runtime
 							return bytes;
 						}
 					}
-					else if (url.StartsWith("_static_image/"))
+					else if (url.StartsWith("_static_image/", StringComparison.OrdinalIgnoreCase))
 					{
 						var bytes = StaticImage(url.Substring(14).Replace('-', '.'), dr);
 						MimeType = dr.ContentType;
 						return bytes;
 					}
-					else if (url.StartsWith("_export/"))
+					else if (url.StartsWith("_export/", StringComparison.OrdinalIgnoreCase))
 					{
 						Export("/" + url, dr);
 						MimeType = dr.ContentType;
 						ContentDisposition = dr.Headers["Content-Disposition"];
 						return dr.GetBytes();
 					}
-					else if (url.StartsWith("_application/"))
+					else if (url.StartsWith("_application/", StringComparison.OrdinalIgnoreCase))
 					{
 						if (!postMethod)
 							throw new InvalidOperationException();
@@ -142,7 +142,7 @@ namespace A2v10.Runtime
 							dr.Output.WriteLine("{}");
 						return Encoding.UTF8.GetBytes(dr.Output.ToString());
 					}
-					else if (url.StartsWith("fragment/"))
+					else if (url.StartsWith("fragment/", StringComparison.OrdinalIgnoreCase))
 					{
 						LoadFragment(url.Substring(9), dr);
 						MimeType = dr.ContentType;
