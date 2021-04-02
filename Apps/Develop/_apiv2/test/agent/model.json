@@ -27,7 +27,8 @@
 				"parameters": {
 					"Id": "id",
 					"Name": "body.name",
-					"Memo": "body.memo"
+					"Memo": "body.memo",
+					"Config": "config.url"
 				}
 			}
 		},

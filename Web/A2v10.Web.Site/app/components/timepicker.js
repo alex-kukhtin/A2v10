@@ -181,6 +181,8 @@
 				set(str) {
 					let md = new Date(this.modelDate);
 					if (str) {
+						if (utils.date.isZero(md))
+							md = utils.date.today();
 						let time = utils.date.parseTime(str);
 						md.setUTCHours(time.getHours(), time.getMinutes());
 					} else {

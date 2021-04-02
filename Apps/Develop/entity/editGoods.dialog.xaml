@@ -9,12 +9,12 @@
 		<Tab Header="Общие">
 			<Grid Columns="1*, 1*">
 				<TextBox Grid.Row="1" Grid.ColSpan="2" Label="Наименование" Value="{Bind Entity.Name}" TabIndex="1"/>
-				<TextBox Grid.Row="2" Label="Артикул" Value="{Bind Entity.Article}"/>
+				<TextBox Grid.Row="2" Label="Артикул" Value="{Bind Entity.Article}" TabIndex="-1"/>
 				<ComboBox Grid.Row="2" Grid.Col="2" Label="Ед. изм." Value="{Bind Entity.Unit}" ItemsSource="{Bind Units}"/>
-				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Entity.Memo}" Rows="3" Multiline="True"/>
+				<TextBox Grid.Row="5" Grid.ColSpan="2" Label="Примечание" Value="{Bind Entity.Memo}" Rows="3" Multiline="True" TabIndex="3"/>
 				<PeriodPicker Grid.Row="6" Grid.Col="1"/>
 				<DatePicker Grid.Row="6" Grid.Col="2" Value="{Bind Root.$Date}" YearCutOff="+0"/>
-				<TextBox Grid.Row="7" />
+				<TimePicker Grid.Row="7" TabIndex="2" Value="{Bind Root.$Date}"/>
 				<Code Grid.Row="7" Grid.Col="2" Content="{Bind Root.$Date, DataType=DateTime}"/>
 			</Grid>
 		</Tab>

@@ -1915,6 +1915,10 @@ pre.a2-code {
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
   white-space: pre;
 }
+.a2-hyperlink:focus,
+.a2-hyperlink:active {
+  outline: thin dotted #ccc;
+}
 .control-group {
   display: block;
   font-size: 1em;

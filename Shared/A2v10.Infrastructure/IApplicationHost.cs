@@ -70,6 +70,7 @@ namespace A2v10.Infrastructure
 
 		String GetAppSettings(String source);
 		ExpandoObject GetEnvironmentObject(String key);
+		ExpandoObject GetAppSettingsObject(String key);
 
 		void CheckIsMobile(String host);
 	}

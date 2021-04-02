@@ -107,6 +107,7 @@ namespace A2v10.Request.Api
 			rq.Set("id", _command.RealId);
 			rq.Set("body", request.BodyObject());
 			rq.Set("query", request.Query);
+			rq.Set("config", request.Config);
 
 			var eo = new ExpandoObject();
 			eo.Set("UserId", request.UserId);

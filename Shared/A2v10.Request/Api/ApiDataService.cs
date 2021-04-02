@@ -33,6 +33,7 @@ namespace A2v10.Request.Api
 			m.Set("path", request.Path);
 			m.SetNotEmpty("query", request.Query);
 			m.SetNotEmpty("body", request.Body);
+			m.SetNotEmpty("config", request.Config);
 			var msg = JsonConvert.SerializeObject(m, JsonHelpers.CompactSerializerSettings);
 
 			var eo = new ExpandoObject();

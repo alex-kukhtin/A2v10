@@ -13,7 +13,7 @@ namespace A2v10.Request
 	{
 		private readonly IApplicationHost _host;
 		private IDictionary<String, String> _redirect = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
-		private Object _redirectLock = new Object();
+		private readonly Object _redirectLock = new Object();
 		private FileSystemWatcher _redirectWatcher;
 
 

@@ -181,7 +181,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210223-7751
+// 20210402-7760
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -613,9 +613,19 @@ app.modules['std:utils'] = function () {
 		let today = dateToday();
 		let seg = str.split(/[^\d]/).filter(x => x);
 		if (seg.length === 1) {
-			seg.push('' + (today.getMonth() + 1));
-			seg.push('' + today.getFullYear());
-		} else if (seg.length === 2) {
+			if (seg[0].length === 8) {
+				//ddmmyyyy
+				let x = seg[0];
+				seg = [];
+				seg.push(x.substring(0, 2)); // day
+				seg.push(x.substring(2, 4)); // month
+				seg.push(x.substring(4)); // year
+			} else {
+				seg.push('' + (today.getMonth() + 1));
+				seg.push('' + today.getFullYear());
+			}
+		}
+		else if (seg.length === 2) {
 			seg.push('' + today.getFullYear());
 		}
 

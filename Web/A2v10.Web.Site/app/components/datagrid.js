@@ -348,9 +348,9 @@
 						getHref() {
 							if (!col.command) return null;
 							if (col.command.isDialog)
-								return null;
+								return '';
 							if (col.command.cmd.name.indexOf('$exec') !== -1)
-								return null;
+								return '';
 							let id = arg2;
 							if (utils.isObjectExact(arg2))
 								id = arg2.$id;

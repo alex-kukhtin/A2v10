@@ -33,6 +33,11 @@
 	white-space: pre;
 }
 
+.a2-hyperlink {
+	&:focus, &:active {
+		outline: thin dotted #ccc;
+	}
+}
 
 .control-group {
 	display: block;
@@ -246,7 +251,7 @@
 		position: relative;
 		width: auto;
 		position: relative;
-		line-height:2em;
+		line-height: 2em;
 
 		.selector-combo {
 			width: 100%;
@@ -295,6 +300,7 @@
 				outline-style: none;
 			}
 		}
+
 		> .popover-wrapper {
 			display: inline-block;
 			margin-right: 3px;
@@ -304,7 +310,6 @@
 			color: @label-color;
 			padding: 0 .4em;
 			display: inline-block; // fix EDGE
-
 			&:hover {
 				text-decoration: none;
 				color: @control-focus-color;
@@ -330,7 +335,6 @@
 
 	&.lg {
 		font-size: 1.3rem;
-
 	}
 
 	&.with-width {

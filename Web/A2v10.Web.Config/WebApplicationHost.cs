@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -8,6 +8,7 @@ using System.Text;
 using System.Dynamic;
 using System.Data.SqlClient;
 using System.Web.Hosting;
+using System.Text.RegularExpressions;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -16,17 +17,15 @@ using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
 
 using A2v10.Web.Base;
-using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace A2v10.Web.Config
 {
 	public class ThemeInfo : ITheme
 	{
-		public ThemeInfo(String text, String hostingPath)
+		public ThemeInfo(String text, String hostingPath, Boolean mobile)
 		{
 			Name = text ?? String.Empty;
-			FileName = "site";
+			FileName = mobile ? "mobile" : "site";
 			String schemeName = null;
 			if (Name.Contains("."))
 			{
@@ -151,7 +150,7 @@ namespace A2v10.Web.Config
 
 		public String HostingPath => HostingEnvironment.MapPath("~");
 
-		public ITheme Theme => new ThemeInfo(ConfigurationManager.AppSettings["theme"], HostingPath);
+		public ITheme Theme => new ThemeInfo(ConfigurationManager.AppSettings["theme"], HostingPath, Mobile);
 
 		public Boolean IsAdminAppPresent {
 			get
@@ -288,6 +287,14 @@ namespace A2v10.Web.Config
 			} while (true);
 			sb.Append(source.Substring(xpos));
 			return sb.ToString();
+		}
+
+		public ExpandoObject GetAppSettingsObject(String key)
+		{
+			var val = ConfigurationManager.AppSettings[key];
+			if (val == null)
+				return null;
+			return JsonConvert.DeserializeObject<ExpandoObject>(val, new ExpandoObjectConverter());
 		}
 
 		public ExpandoObject GetEnvironmentObject(String key)

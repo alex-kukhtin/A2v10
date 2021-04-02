@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200129-7623
+// 20210402-7760
 // components/modal.js
 
 
@@ -11,7 +11,7 @@
 	const utils = require('std:utils');
 
 	const modalTemplate = `
-<div class="modal-window modal-animation-window" @keydown.tab="tabPress" :class="mwClass">
+<div class="modal-window modal-animation-window" @keydown.tab="tabPress" :class="mwClass" ref=dialog>
 	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded" :inside-dialog="true"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
@@ -63,7 +63,6 @@
 
 	const dragDialogDirective = {
 		inserted(el, binding) {
-
 			const mw = el.closest('.modal-window');
 			if (!mw)
 				return;
@@ -151,48 +150,27 @@
 				return utils.text.sanitize(this.dialog.message);
 			},
 			tabPress(event) {
-				function createThisElems() {
-					let qs = document.querySelectorAll('.modal-body [tabindex]');
-					let ea = [];
-					for (let i = 0; i < qs.length; i++) {
-						//TODO: check visibilty!
-						ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
-					}
-					ea = ea.sort((a, b) => a.ti > b.ti);
-					//console.dir(ea);
-					return ea;
-				}
-
-
-				if (this._tabElems === undefined) {
-					this._tabElems = createThisElems();
-				}
-				if (!this._tabElems || !this._tabElems.length)
-					return;
-				let back = event.shiftKey;
-				let lastItm = this._tabElems.length - 1;
-				let maxIndex = this._tabElems[lastItm].ti;
-				let aElem = document.activeElement;
-				let ti = +aElem.getAttribute("tabindex");
-				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
-				if (ti === 0) {
-					event.preventDefault();
-					return;
-				}
-				if (back) {
-					if (ti === 1) {
-						event.preventDefault();
-						this._tabElems[lastItm].el.focus();
-					}
-				} else {
-					if (ti === maxIndex) {
-						event.preventDefault();
-						this._tabElems[0].el.focus();
-					}
-				}
+				const dialog = this.$refs.dialog;
+				const activeInput = document.activeElement;
+				let elems = Array.from(dialog.querySelectorAll('input:enabled, button:enabled, textarea:enabled, select:enabled, a:not([disabled])'));
+				elems = elems
+					.filter(el => el && (el.offsetLeft || el.offsetTop || el.offsetWidth || el.offsetHeight))
+					.map(el => { return { elem: el, ti: +el.getAttribute('tabindex') || 0, active: el == activeInput }; })
+					.filter(el => el.ti !== -1)
+					.sort((e1, e2) => e1.ti == e2.ti ? 0 : e1.ti < e2.ti ? -1 : 1);
+				if (!elems.length) return;
+				const d = event.shiftKey ? -1 : 1;
+				let ai = elems.findIndex(x => x.active);
+				let ni = ai + d;
+				if (ni < 0)
+					ni = elems.length - 1;
+				else if (ni >= elems.length)
+					ni = 0;
+				elems[ni].elem.focus();
+				event.preventDefault();
 			},
 			__modalRequery() {
-				alert('requery');
+				alert('requery yet not implemented');
 			}
 		},
 		computed: {

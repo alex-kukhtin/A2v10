@@ -53,21 +53,21 @@ namespace BackgroundProcessor
 
 		public String ScriptEngine => ConfigurationManager.AppSettings["scriptEngine"];
 
-		public Boolean IsRegistrationEnabled => throw new NotImplementedException(nameof(IsRegistrationEnabled));
-		public Boolean IsDTCEnabled =>  throw new NotImplementedException(nameof(IsDTCEnabled));
-		public Boolean IsAdminAppPresent => throw new NotImplementedException(nameof(IsAdminAppPresent));
-		public String UseClaims => throw new NotImplementedException(nameof(UseClaims));
-		public Boolean IsMultiTenant => throw new NotImplementedException(nameof(IsMultiTenant));
-		public Boolean IsUsePeriodAndCompanies => throw new NotImplementedException(nameof(IsUsePeriodAndCompanies));
+		public Boolean IsRegistrationEnabled => throw new NotSupportedException(nameof(IsRegistrationEnabled));
+		public Boolean IsDTCEnabled =>  throw new NotSupportedException(nameof(IsDTCEnabled));
+		public Boolean IsAdminAppPresent => throw new NotSupportedException(nameof(IsAdminAppPresent));
+		public String UseClaims => throw new NotSupportedException(nameof(UseClaims));
+		public Boolean IsMultiTenant => throw new NotSupportedException(nameof(IsMultiTenant));
+		public Boolean IsUsePeriodAndCompanies => throw new NotSupportedException(nameof(IsUsePeriodAndCompanies));
 		public Boolean IsMultiCompany => false;
-		public Int32? TenantId { get => throw new NotImplementedException(); set => throw new InvalidOperationException(nameof(TenantId)); }
-		public Int64? UserId { get => throw new NotImplementedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }
-		public String UserSegment { get => throw new NotImplementedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }
-		public String CatalogDataSource => throw new NotImplementedException(nameof(CatalogDataSource));
-		public String TenantDataSource => throw new NotImplementedException(nameof(TenantDataSource));
-		public String AppVersion => throw new NotImplementedException(nameof(AppVersion));
-		public String AppBuild => throw new NotImplementedException(nameof(AppBuild));
-		public String Copyright => throw new NotImplementedException(nameof(Copyright));
+		public Int32? TenantId { get => throw new NotSupportedException(); set => throw new InvalidOperationException(nameof(TenantId)); }
+		public Int64? UserId { get => throw new NotSupportedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }
+		public String UserSegment { get => throw new NotSupportedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }
+		public String CatalogDataSource => throw new NotSupportedException(nameof(CatalogDataSource));
+		public String TenantDataSource => throw new NotSupportedException(nameof(TenantDataSource));
+		public String AppVersion => throw new NotSupportedException(nameof(AppVersion));
+		public String AppBuild => throw new NotSupportedException(nameof(AppBuild));
+		public String Copyright => throw new NotSupportedException(nameof(Copyright));
 
 		public String ConnectionString(String source)
 		{
@@ -141,6 +141,11 @@ namespace BackgroundProcessor
 		}
 
 		public ExpandoObject GetEnvironmentObject(String key)
+		{
+			throw new NotImplementedException(nameof(GetEnvironmentObject));
+		}
+
+		public ExpandoObject GetAppSettingsObject(String key)
 		{
 			throw new NotImplementedException(nameof(GetEnvironmentObject));
 		}

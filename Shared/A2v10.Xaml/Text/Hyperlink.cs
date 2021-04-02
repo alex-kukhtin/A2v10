@@ -72,6 +72,7 @@ namespace A2v10.Xaml
 			Boolean bHasDropDown = DropDown != null;
 
 			var tag = new TagBuilder("a", "a2-hyperlink", inGrid);
+			tag.MergeAttribute("href", String.Empty);
 			onRender?.Invoke(tag);
 			var attrMode = MergeAttrMode.All;
 			if (inside)

@@ -181,7 +181,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210223-7751
+// 20210402-7760
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -613,9 +613,19 @@ app.modules['std:utils'] = function () {
 		let today = dateToday();
 		let seg = str.split(/[^\d]/).filter(x => x);
 		if (seg.length === 1) {
-			seg.push('' + (today.getMonth() + 1));
-			seg.push('' + today.getFullYear());
-		} else if (seg.length === 2) {
+			if (seg[0].length === 8) {
+				//ddmmyyyy
+				let x = seg[0];
+				seg = [];
+				seg.push(x.substring(0, 2)); // day
+				seg.push(x.substring(2, 4)); // month
+				seg.push(x.substring(4)); // year
+			} else {
+				seg.push('' + (today.getMonth() + 1));
+				seg.push('' + today.getFullYear());
+			}
+		}
+		else if (seg.length === 2) {
 			seg.push('' + today.getFullYear());
 		}
 
@@ -5423,9 +5433,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200831-7704
+// 20210402-7760
 // components/datepicker.js
 
 
@@ -5446,7 +5456,7 @@ Vue.component('validator-control', {
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group"  @click="clickInput($event)">
 		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="inputDisabled"/>
-		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
+		<a href @click.stop.prevent="toggle($event)" tabindex="-1"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen">		
 			<a2-calendar :model="modelDate" :view="view"
@@ -5744,6 +5754,8 @@ Vue.component('validator-control', {
 				set(str) {
 					let md = new Date(this.modelDate);
 					if (str) {
+						if (utils.date.isZero(md))
+							md = utils.date.today();
 						let time = utils.date.parseTime(str);
 						md.setUTCHours(time.getHours(), time.getMinutes());
 					} else {
@@ -6707,9 +6719,9 @@ Vue.component('validator-control', {
 						getHref() {
 							if (!col.command) return null;
 							if (col.command.isDialog)
-								return null;
+								return '';
 							if (col.command.cmd.name.indexOf('$exec') !== -1)
-								return null;
+								return '';
 							let id = arg2;
 							if (utils.isObjectExact(arg2))
 								id = arg2.$id;
@@ -8820,9 +8832,9 @@ TODO:
 	});
 })();
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200129-7623
+// 20210402-7760
 // components/modal.js
 
 
@@ -8833,7 +8845,7 @@ TODO:
 	const utils = require('std:utils');
 
 	const modalTemplate = `
-<div class="modal-window modal-animation-window" @keydown.tab="tabPress" :class="mwClass">
+<div class="modal-window modal-animation-window" @keydown.tab="tabPress" :class="mwClass" ref=dialog>
 	<include v-if="isInclude" class="modal-body" :src="dialog.url" :done="loaded" :inside-dialog="true"></include>
 	<div v-else class="modal-body">
 		<div class="modal-header" v-drag-window><span v-text="title"></span><button ref='btnclose' class="btnclose" @click.prevent="modalClose(false)">&#x2715;</button></div>
@@ -8885,7 +8897,6 @@ TODO:
 
 	const dragDialogDirective = {
 		inserted(el, binding) {
-
 			const mw = el.closest('.modal-window');
 			if (!mw)
 				return;
@@ -8973,48 +8984,27 @@ TODO:
 				return utils.text.sanitize(this.dialog.message);
 			},
 			tabPress(event) {
-				function createThisElems() {
-					let qs = document.querySelectorAll('.modal-body [tabindex]');
-					let ea = [];
-					for (let i = 0; i < qs.length; i++) {
-						//TODO: check visibilty!
-						ea.push({ el: qs[i], ti: +qs[i].getAttribute('tabindex') });
-					}
-					ea = ea.sort((a, b) => a.ti > b.ti);
-					//console.dir(ea);
-					return ea;
-				}
-
-
-				if (this._tabElems === undefined) {
-					this._tabElems = createThisElems();
-				}
-				if (!this._tabElems || !this._tabElems.length)
-					return;
-				let back = event.shiftKey;
-				let lastItm = this._tabElems.length - 1;
-				let maxIndex = this._tabElems[lastItm].ti;
-				let aElem = document.activeElement;
-				let ti = +aElem.getAttribute("tabindex");
-				//console.warn(`ti: ${ti}, maxIndex: ${maxIndex}, back: ${back}`);
-				if (ti === 0) {
-					event.preventDefault();
-					return;
-				}
-				if (back) {
-					if (ti === 1) {
-						event.preventDefault();
-						this._tabElems[lastItm].el.focus();
-					}
-				} else {
-					if (ti === maxIndex) {
-						event.preventDefault();
-						this._tabElems[0].el.focus();
-					}
-				}
+				const dialog = this.$refs.dialog;
+				const activeInput = document.activeElement;
+				let elems = Array.from(dialog.querySelectorAll('input:enabled, button:enabled, textarea:enabled, select:enabled, a:not([disabled])'));
+				elems = elems
+					.filter(el => el && (el.offsetLeft || el.offsetTop || el.offsetWidth || el.offsetHeight))
+					.map(el => { return { elem: el, ti: +el.getAttribute('tabindex') || 0, active: el == activeInput }; })
+					.filter(el => el.ti !== -1)
+					.sort((e1, e2) => e1.ti == e2.ti ? 0 : e1.ti < e2.ti ? -1 : 1);
+				if (!elems.length) return;
+				const d = event.shiftKey ? -1 : 1;
+				let ai = elems.findIndex(x => x.active);
+				let ni = ai + d;
+				if (ni < 0)
+					ni = elems.length - 1;
+				else if (ni >= elems.length)
+					ni = 0;
+				elems[ni].elem.focus();
+				event.preventDefault();
 			},
 			__modalRequery() {
-				alert('requery');
+				alert('requery yet not implemented');
 			}
 		},
 		computed: {

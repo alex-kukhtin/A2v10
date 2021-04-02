@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200831-7704
+// 20210402-7760
 // components/datepicker.js
 
 
@@ -21,7 +21,7 @@
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group"  @click="clickInput($event)">
 		<input v-focus v-model.lazy="model" :class="inputClass" :disabled="inputDisabled"/>
-		<a href @click.stop.prevent="toggle($event)"><i class="ico ico-calendar"></i></a>
+		<a href @click.stop.prevent="toggle($event)" tabindex="-1"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen">		
 			<a2-calendar :model="modelDate" :view="view"

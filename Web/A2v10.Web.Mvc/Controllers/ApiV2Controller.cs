@@ -67,6 +67,7 @@ namespace A2v10.Web.Mvc.Controllers
 				rq.ClientId = User.Identity.GetUserClaim("ClientId");
 				if (_host.IsMultiTenant)
 					rq.TenantId = TenantId;
+				rq.Config = _host.GetAppSettingsObject("apiV2Config");
 			});
 
 

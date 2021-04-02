@@ -223,6 +223,11 @@ namespace A2v10.Runtime
 			throw new NotImplementedException(nameof(GetEnvironmentObject));
 		}
 
+		public ExpandoObject GetAppSettingsObject(String key)
+		{
+			throw new NotImplementedException(nameof(GetEnvironmentObject));
+		}
+
 		public void CheckIsMobile(String host)
 		{
 		}

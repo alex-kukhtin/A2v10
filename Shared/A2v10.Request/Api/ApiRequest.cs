@@ -26,6 +26,7 @@ namespace A2v10.Request.Api
 		public ExpandoObject Query { get; set; }
 		public String Body { get; set; }
 		public String ContentType { get; set; }
+		public ExpandoObject Config { get; set; }
 
 		public ExpandoObject BodyObject()
 		{
@@ -60,9 +61,6 @@ namespace A2v10.Request.Api
 				HttpMethod = request.HttpMethod.ToLowerInvariant(),
 				ContentType = request.ContentType,
 				Host = request.UserHostAddress,
-				//UserId = UserId,
-				//Segment = UserSegment,
-				//ClientId = User.Identity.GetUserClaim("ClientId"),
 				Path = pathInfo?.ToLowerInvariant(),
 				Query = query,
 				Body = body
