@@ -86,6 +86,7 @@ namespace A2v10.Tests.Config
 		public Boolean IsProductionEnvironment => false;
 		public Boolean IsDTCEnabled => false;
 		public Boolean IsAdminAppPresent => false;
+		public String CustomUserMenu => null;
 
 		public Int32? TenantId { get; set; }
 		public Int64? UserId { get; set; }

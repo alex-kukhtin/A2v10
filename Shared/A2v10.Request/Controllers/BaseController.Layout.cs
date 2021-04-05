@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -105,8 +105,66 @@ namespace A2v10.Request
 			return null;
 		}
 
+		public async Task ShellScript2(Action<ExpandoObject> setParams, IUserInfo userInfo, TextWriter writer)
+		{
+
+			ExpandoObject loadPrms = new ExpandoObject();
+			setParams?.Invoke(loadPrms);
+
+			var macros = new ExpandoObject();
+			Boolean isUserIsAdmin = userInfo.IsAdmin && _host.IsAdminAppPresent;
+
+			macros.Append(new Dictionary<String, Object>
+			{
+				{ "AppVersion", _host.AppVersion },
+				{ "Admin", isUserIsAdmin ? "true" : "false" },
+				{ "TenantAdmin", userInfo.IsTenantAdmin ? "true" : "false" },
+				{ "Debug", IsDebugConfiguration ? "true" : "false" },
+				{ "AppData", GetAppData() },
+				{ "Companies", "null" },
+				{ "Period", "null" },
+			});
+
+			if (_host.Mobile)
+				loadPrms.Set("Mobile", true);
+
+			IDataModel dm = await _dbContext.LoadModelAsync(_host.TenantDataSource, _host.CustomUserMenu, loadPrms);
+			SetUserStatePermission(dm);
+
+			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
+
+			var companies = menuRoot.Eval<List<ExpandoObject>>("Companies");
+			var links = menuRoot.Eval<List<ExpandoObject>>("CompaniesLinks");
+			var period = menuRoot.Eval<Object>("Period");
+			if (companies != null)
+			{
+				String jsonCompanies = JsonConvert.SerializeObject(new { menu = companies, links },
+					JsonHelpers.StandardSerializerSettings);
+				var currComp = companies?.Find(c => c.Get<Boolean>("Current"));
+				if (currComp == null)
+					throw new InvalidDataException("There is no current company");
+				_userStateManager.SetUserCompanyId(currComp.Get<Int64>("Id"));
+				macros.Set("Companies", jsonCompanies);
+			}
+			if (period != null) { 
+				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
+				macros.Set("Period", jsonPeriod);
+			}
+
+			menuRoot.RemoveKeys("Companies,CompaniesLinks,Period");
+			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
+			macros.Set("Menu", jsonMenu);
+
+			writer.Write(Resources.shell.ResolveMacros(macros));
+		}
+
 		public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, IUserInfo userInfo, Boolean bAdmin, TextWriter writer)
 		{
+			if (!bAdmin && _host.CustomUserMenu != null)
+			{
+				await ShellScript2(setParams, userInfo, writer);
+				return;
+			}
 			String shell = bAdmin ? Resources.shellAdmin : Resources.shell;
 
 			ExpandoObject loadPrms = new ExpandoObject();

@@ -98,6 +98,7 @@ namespace A2v10.Runtime
 		public Boolean IsMultiTenant => false; // TODO:
 		public Boolean IsMultiCompany => true;
 		public Boolean IsUsePeriodAndCompanies => true;
+		public String CustomUserMenu => null;
 
 		public Boolean IsRegistrationEnabled => false;
 		public Boolean IsDTCEnabled => false;

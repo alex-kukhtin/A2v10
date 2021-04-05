@@ -5,7 +5,7 @@
 	"commands": {
 		"get": {
 			"type": "sql",
-			"method": "get",
+			"method": "post",
 			"clientId": [ "PrivatBank" ],
 			"sqlCommand": {
 				"action": "loadModel",

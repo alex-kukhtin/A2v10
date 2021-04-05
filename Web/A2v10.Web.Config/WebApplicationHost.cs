@@ -173,13 +173,9 @@ namespace A2v10.Web.Config
 			return mt.ToLowerInvariant() == "true";
 		}
 
-		public Boolean IsUsePeriodAndCompanies
-		{
-			get
-			{
-				return IsAppSettingsIsTrue("custom");
-			}
-		}
+		public Boolean IsUsePeriodAndCompanies => IsAppSettingsIsTrue("custom");
+
+		public String CustomUserMenu => ConfigurationManager.AppSettings[AppHostKeys.customUserMenu];
 
 		public Boolean IsMultiTenant => IsAppSettingsIsTrue("multiTenant");
 		public Boolean IsMultiCompany => !_admin && IsAppSettingsIsTrue("multiCompany");

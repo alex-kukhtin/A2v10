@@ -60,6 +60,7 @@ namespace BackgroundProcessor
 		public Boolean IsMultiTenant => throw new NotSupportedException(nameof(IsMultiTenant));
 		public Boolean IsUsePeriodAndCompanies => throw new NotSupportedException(nameof(IsUsePeriodAndCompanies));
 		public Boolean IsMultiCompany => false;
+		public String CustomUserMenu => null;
 		public Int32? TenantId { get => throw new NotSupportedException(); set => throw new InvalidOperationException(nameof(TenantId)); }
 		public Int64? UserId { get => throw new NotSupportedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }
 		public String UserSegment { get => throw new NotSupportedException(nameof(UserId)); set => throw new InvalidOperationException(nameof(UserId)); }

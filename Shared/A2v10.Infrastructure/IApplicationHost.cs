@@ -8,6 +8,7 @@ namespace A2v10.Infrastructure
 	public static class AppHostKeys
 	{
 		public const String customSecuritySchema = "customSecuritySchema";
+		public const String customUserMenu = "customUserMenu";
 	}
 
 	public interface ITheme
@@ -48,6 +49,7 @@ namespace A2v10.Infrastructure
 		Boolean IsMultiCompany { get; }
 		String CustomSecuritySchema { get; }
 		Boolean IsUsePeriodAndCompanies { get; }
+		String CustomUserMenu { get; }
 
 		Int32? TenantId { get; set; }
 		Int64? UserId { get; set; }
