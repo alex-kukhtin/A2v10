@@ -991,7 +991,7 @@ namespace A2v10.Request
 				kind = RequestUrlKind.Image;
 				baseUrl = baseUrl.Substring(8);
 			}
-			else if (baseUrl.StartsWith("/_attachment, StringComparison.OrdinalIgnoreCase"))
+			else if (baseUrl.StartsWith("/_attachment", StringComparison.OrdinalIgnoreCase))
 			{
 				kind = RequestUrlKind.Attachment;
 				baseUrl = baseUrl.Substring(13);
