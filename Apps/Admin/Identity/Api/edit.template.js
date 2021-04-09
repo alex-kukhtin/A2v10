@@ -6,7 +6,8 @@ const template = {
 		/* TEMPORARY */
 		'TUser.ClientId'() { return this.Logins.ApiKey.ClientId; },
 		'TUser.ApiKey'() { return this.Logins.ApiKey.ApiKey; },
-		'TUser.AllowIP'() { return this.Logins.ApiKey.AllowIP; }
+		'TUser.AllowIP'() { return this.Logins.ApiKey.AllowIP; },
+		'TUser.RedirectUrl'() { return this.Logins.ApiKey.RedirectUrl; }
 	},
 	events: {
 	},

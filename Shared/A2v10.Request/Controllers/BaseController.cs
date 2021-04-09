@@ -97,7 +97,7 @@ namespace A2v10.Request
 
 		public async Task RenderApplicationKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
 		{
-			var segs = pathInfo.Split('/');
+			var segs = pathInfo.ToLowerInvariant().Split('/');
 			if (segs.Length < 2)
 				throw new RequestModelException($"Invalid application Url: {pathInfo}");
 			if (segs[0] != "app")

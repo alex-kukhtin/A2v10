@@ -1,8 +1,8 @@
 ﻿/*
-Copyright © 2008-2020 Alex Kukhtin
+Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 05 nov 2020
-module version : 7057
+Last updated : 09 apr 2021
+module version : 7058
 */
 ------------------------------------------------
 set nocount on;
@@ -32,9 +32,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7057);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7058);
 else
-	update a2sys.Versions set [Version] = 7057 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7058 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -207,6 +207,24 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'SetVersion')
+	drop procedure a2sys.[SetVersion]
+go
+------------------------------------------------
+create procedure a2sys.[SetVersion]
+@Module nvarchar(255),
+@Version int
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	if not exists(select * from a2sys.Versions where Module = @Module)
+		insert into a2sys.Versions (Module, [Version]) values (@Module, @Version);
+	else
+		update a2sys.Versions set [Version] = @Version where Module = @Module;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'LoadApplicationFile')
 	drop procedure [a2sys].[LoadApplicationFile]
 go
@@ -226,8 +244,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sy
 go
 ------------------------------------------------
 create procedure [a2sys].[UploadApplicationFile]
-	@Path nvarchar(255),
-	@Stream nvarchar(max)
+@Path nvarchar(255),
+@Stream nvarchar(max)
 as
 begin
 	set nocount on;

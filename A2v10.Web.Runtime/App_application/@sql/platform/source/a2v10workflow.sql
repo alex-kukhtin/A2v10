@@ -1,9 +1,9 @@
 /*
 ------------------------------------------------
-Copyright © 2008-2020 A. Kukhtin
+Copyright © 2008-2021 A. Kukhtin
 
-Last updated : 24 jun 2020
-module version : 7055
+Last updated : 09 apr 2021
+module version : 7056
 */
 
 /*
@@ -16,13 +16,7 @@ Depends on Windows Workflow Foundation scripts.
 */
 
 ------------------------------------------------
-begin
-	set nocount on;
-	if not exists(select * from a2sys.Versions where Module = N'std:workflow')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:workflow', 7055);
-	else
-		update a2sys.Versions set [Version] = 7055 where Module = N'std:workflow';
-	end
+exec a2sys.SetVersion N'std:workflow', 7056;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2workflow')
@@ -83,6 +77,10 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2workflow.Processes') and name = N'IX_WorkflowProcesses_WorkflowId')
+	create nonclustered index IX_WorkflowProcesses_WorkflowId on a2workflow.Processes (WorkflowId);
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2workflow' and SEQUENCE_NAME=N'SQ_Inbox')
 	create sequence a2workflow.SQ_Inbox as bigint start with 100 increment by 1;
 go
@@ -126,6 +124,10 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2workflow.Inbox') and name = N'IX_Inbox_ProcessId')
+	create nonclustered index IX_Inbox_ProcessId on a2workflow.Inbox (ProcessId);
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2workflow' and SEQUENCE_NAME=N'SQ_Log')
 	create sequence a2workflow.SQ_Log as bigint start with 100 increment by 1;
 go
@@ -146,6 +148,10 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2workflow.Log') and name = N'IX_WorkflowLog_WorkflowId')
+	create nonclustered index IX_WorkflowLog_WorkflowId on a2workflow.[Log] (WorkflowId);
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2workflow' and SEQUENCE_NAME=N'SQ_Track')
 	create sequence a2workflow.SQ_Track as bigint start with 100 increment by 1;
 go
@@ -164,6 +170,10 @@ begin
 		[Message] nvarchar(max) null,
 	);
 end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2workflow.Track') and name = N'IX_WorkflowTrack_ProcessId')
+	create nonclustered index IX_WorkflowTrack_ProcessId on a2workflow.[Track] (ProcessId);
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2workflow' and ROUTINE_NAME=N'WriteLog')

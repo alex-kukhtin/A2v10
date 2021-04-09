@@ -1267,12 +1267,17 @@ html {
   padding: 0;
   height: 100%;
   width: 100%;
+  caret-color: transparent;
 }
 input,
 textarea,
 select,
 button {
   font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+input,
+textarea {
+  caret-color: auto;
 }
 body {
   overflow: hidden;

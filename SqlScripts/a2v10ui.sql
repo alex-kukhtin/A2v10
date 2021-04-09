@@ -1,17 +1,11 @@
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 31 jan 2021
-module version : 7675
+Last updated : 09 apr 2021
+module version : 7676
 */
 ------------------------------------------------
-begin
-	set nocount on;
-	if not exists(select * from a2sys.Versions where Module = N'std:ui')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:ui', 7675);
-	else
-		update a2sys.Versions set [Version] = 7675 where Module = N'std:ui';
-	end
+exec a2sys.SetVersion N'std:ui', 7676;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -40,33 +34,30 @@ begin
 		[Order] int not null constraint DF_Menu_Order default(0),
 		[Description] nvarchar(255) null,
 		[Params] nvarchar(255) null,
-		[Feature] nchar(4) null
+		[Feature] nchar(4) null,
+		[Feature2] nvarchar(255) null
 	);
 end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Help')
-begin
 	alter table a2ui.Menu add Help nvarchar(255) null;
-end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Key')
-begin
 	alter table a2ui.Menu add [Key] nchar(4) null;
-end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Params')
-begin
 	alter table a2ui.Menu add Params nvarchar(255) null;
-end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Feature')
-begin
 	alter table a2ui.Menu add [Feature] nchar(4) null;
-end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2ui' and TABLE_NAME=N'Menu' and COLUMN_NAME=N'Feature2')
+	alter table a2ui.Menu add Feature2 nvarchar(255) null;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Menu.Acl')
@@ -378,7 +369,8 @@ create type a2ui.[Menu2.TableType] as table
 	[Order] int,
 	[Description] nvarchar(255),
 	[Help] nvarchar(255),
-	Params nvarchar(255)
+	Params nvarchar(255),
+	Feature2 nvarchar(255)
 )';
 go
 ------------------------------------------------

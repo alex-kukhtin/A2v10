@@ -23,6 +23,8 @@
 								Command="{BindCmd Execute, CommandName=copy}"/>
 						<TextBox Grid.Row="3" Label="Дозволені IP"
 								Value="{Bind AllowIP}" Description="Через кому або пробіл. '*' не дозволяються"/>
+						<TextBox Grid.Row="4" Label="Redirect URL"
+								Value="{Bind RedirectUrl}"/>
 					</Grid>
 				</Slot>
 			</Tab>

@@ -12607,9 +12607,9 @@ Vue.directive('resize', {
 		isSeparatePage
 	};
 })();	
-// Copyright © 2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
-/*20200611-7672*/
+/*20210409-7762*/
 /* controllers/navbar.js */
 
 (function () {
@@ -12673,21 +12673,22 @@ Vue.directive('resize', {
 			showHelp() {
 				window.open(this.helpHref(), "_blank");
 			},
-			helpHref() {
+			_findHelp() {
+				if (!this.menu) return null;
 				let am = this.menu.find(x => this.isActive(x));
 				if (am && am.Menu) {
 					let am2 = am.Menu.find(x => this.isActive2(x));
 					if (am2 && am2.Help)
-						return urlTools.helpHref(am2.Help);
+						return am2.Help;
 				}
-				if (am && am.Help)
-					return urlTools.helpHref(am.Help);
-				return urlTools.helpHref('');
+				return am ? am.Help : null;
+			},
+			helpHref() {
+				let helpUrl = this._findHelp() || '';
+				return urlTools.helpHref(helpUrl);
 			},
 			hasHelp() {
-				if (!this.menu) return false;
-				let am = this.menu.find(x => this.isActive(x));
-				return am && am.Help;
+				return !!this._findHelp();
 			},
 			periodChanged(period) {
 				// post to shell

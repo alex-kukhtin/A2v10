@@ -56,7 +56,7 @@ namespace A2v10.Web.Config
 	public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
 	{
 		private readonly IProfiler _profiler;
-		private readonly Boolean _emulateBox = false;
+		private readonly Boolean _emulateBox;
 		private Boolean _admin;
 		private readonly Boolean _debug;
 		private readonly String _environment;

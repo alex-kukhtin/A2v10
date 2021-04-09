@@ -2,24 +2,19 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 21 feb 2021
-module version : 7749
+Last updated : 09 apr 2021
+module version : 7750
 */
 ------------------------------------------------
-begin
-	set nocount on;
-	declare @Version int = 7749;
-	if not exists(select * from a2sys.Versions where Module = N'std:admin')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:admin', @Version);
-	else
-		update a2sys.Versions set [Version] = @Version where Module = N'std:admin';
-end
+exec a2sys.SetVersion N'std:admin', 7750;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
-begin
 	exec sp_executesql N'create schema a2admin';
-end
+go
+------------------------------------------------
+set nocount on;
+grant execute on schema ::a2admin to public;
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2admin' and ROUTINE_NAME=N'Ensure.Admin')
@@ -967,11 +962,12 @@ begin
 	-- one API user
 	select [User!TUser!Object]=null, [Id!!Id] = Id, [Name] = UserName, [Memo], 
 		LastLoginDate, LastLoginHost, [Logins!TLogin!MapObject!ApiKey:OAuth2:JWT] = null,
-		/*TMP*/ClientId = cast(null as nvarchar(255)), ApiKey = cast(null as nvarchar(255))
+		/*TMP*/ClientId = cast(null as nvarchar(255)), ApiKey = cast(null as nvarchar(255)),
+		RedirectUrl = cast(null as nvarchar(255))
 	from a2security.Users where ApiUser = 1 and Void=0 and Id=@Id;
 
 	select [!TLogin!MapObject] = null, [!!Key] = [Mode],
-		[!TUser.Logins!ParentId] = [User], ClientId, ClientSecret, ApiKey, AllowIP
+		[!TUser.Logins!ParentId] = [User], ClientId, ClientSecret, ApiKey, AllowIP, RedirectUrl
 	from a2security.ApiUserLogins where [User]=@Id;
 end
 go
@@ -995,7 +991,8 @@ as table(
 	[ClientId] nvarchar(255),
 	[ApiKey] nvarchar(255),
 	[AllowIP] nvarchar(255),
-	[Memo] nvarchar(255)
+	[Memo] nvarchar(255),
+	RedirectUrl nvarchar(255)
 )
 go
 ------------------------------------------------
@@ -1047,10 +1044,11 @@ begin
 	when matched then update set
 		t.[ClientId] = s.ClientId,
 		t.[ApiKey] = s.ApiKey,
-		t.[AllowIP] = s.[AllowIP]
+		t.[AllowIP] = s.[AllowIP],
+		t.[RedirectUrl] = s.[RedirectUrl]
 	when not matched by target then insert
-		([User], Mode, ApiKey, ClientId, AllowIP) values
-		(@RetId, N'ApiKey', s.ApiKey, s.ClientId, AllowIP);
+		([User], Mode, ApiKey, ClientId, AllowIP, [RedirectUrl]) values
+		(@RetId, N'ApiKey', s.ApiKey, s.ClientId, AllowIP, [RedirectUrl]);
 		
 	exec a2admin.[ApiUser.Load] @TenantId, @UserId, @RetId;
 end
@@ -1064,11 +1062,5 @@ begin
 	values (99, N'admin@admin.com', N'c9bb451a-9d2b-4b26-9499-2d7d408ce54e', N'AJcfzvC7DCiRrfPmbVoigR7J8fHoK/xdtcWwahHDYJfKSKSWwX5pu9ChtxmE7Rs4Vg==',
 		N'System administrator', 1);
 	insert into a2security.UserGroups(UserId, GroupId) values (99, 77), (99, 1); /*predefined values*/
-end
-go
-------------------------------------------------
-begin
-	set nocount on;
-	grant execute on schema ::a2admin to public;
 end
 go

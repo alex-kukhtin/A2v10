@@ -2,13 +2,13 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 21 feb 2021
-module version : 7749
+Last updated : 09 apr 2021
+module version : 7750
 */
 ------------------------------------------------
 begin
 	set nocount on;
-	declare @Version int = 7749;
+	declare @Version int = 7750;
 	if not exists(select * from a2sys.Versions where Module = N'std:security')
 		insert into a2sys.Versions (Module, [Version]) values (N'std:security', @Version);
 	else
@@ -360,10 +360,15 @@ begin
 		[ApiKey] nvarchar(255),
 		[AllowIP] nvarchar(1024),
 		Memo nvarchar(255),
+		RedirectUrl nvarchar(255),
 		[DateModified] datetime not null constraint DF_ApiUserLogins_DateModified default(a2sys.fn_getCurrentDate()),
 		constraint PK_ApiUserLogins primary key([User], Mode)
 	);
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'ApiUserLogins' and COLUMN_NAME=N'RedirectUrl')
+	alter table a2security.ApiUserLogins add RedirectUrl nvarchar(255);
 go
 ------------------------------------------------
 if not exists (select * from sys.indexes where object_id = object_id(N'a2security.ApiUserLogins') and name = N'UNQ_ApiUserLogins_ApiKey')

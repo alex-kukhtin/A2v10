@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 05.04.2021 13:22:39
+generated: 09.04.2021 11:59:59
 */
 
 set nocount on;
@@ -29,10 +29,10 @@ go
 /* a2v10platform.sql */
 
 /*
-Copyright © 2008-2020 Alex Kukhtin
+Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 05 nov 2020
-module version : 7057
+Last updated : 09 apr 2021
+module version : 7058
 */
 ------------------------------------------------
 set nocount on;
@@ -62,9 +62,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7057);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7058);
 else
-	update a2sys.Versions set [Version] = 7057 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7058 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -237,6 +237,24 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'SetVersion')
+	drop procedure a2sys.[SetVersion]
+go
+------------------------------------------------
+create procedure a2sys.[SetVersion]
+@Module nvarchar(255),
+@Version int
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	if not exists(select * from a2sys.Versions where Module = @Module)
+		insert into a2sys.Versions (Module, [Version]) values (@Module, @Version);
+	else
+		update a2sys.Versions set [Version] = @Version where Module = @Module;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'LoadApplicationFile')
 	drop procedure [a2sys].[LoadApplicationFile]
 go
@@ -256,8 +274,8 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sy
 go
 ------------------------------------------------
 create procedure [a2sys].[UploadApplicationFile]
-	@Path nvarchar(255),
-	@Stream nvarchar(max)
+@Path nvarchar(255),
+@Stream nvarchar(max)
 as
 begin
 	set nocount on;
@@ -365,13 +383,13 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 21 feb 2021
-module version : 7749
+Last updated : 09 apr 2021
+module version : 7750
 */
 ------------------------------------------------
 begin
 	set nocount on;
-	declare @Version int = 7749;
+	declare @Version int = 7750;
 	if not exists(select * from a2sys.Versions where Module = N'std:security')
 		insert into a2sys.Versions (Module, [Version]) values (N'std:security', @Version);
 	else
@@ -723,10 +741,15 @@ begin
 		[ApiKey] nvarchar(255),
 		[AllowIP] nvarchar(1024),
 		Memo nvarchar(255),
+		RedirectUrl nvarchar(255),
 		[DateModified] datetime not null constraint DF_ApiUserLogins_DateModified default(a2sys.fn_getCurrentDate()),
 		constraint PK_ApiUserLogins primary key([User], Mode)
 	);
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'ApiUserLogins' and COLUMN_NAME=N'RedirectUrl')
+	alter table a2security.ApiUserLogins add RedirectUrl nvarchar(255);
 go
 ------------------------------------------------
 if not exists (select * from sys.indexes where object_id = object_id(N'a2security.ApiUserLogins') and name = N'UNQ_ApiUserLogins_ApiKey')
@@ -1575,19 +1598,13 @@ go
 
 
 /*
-Copyright © 2008-2020 Alex Kukhtin
+Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 14 dec 2020
-module version : 7054
+Last updated : 09 apr 2020
+module version : 7055
 */
 ------------------------------------------------
-begin
-	set nocount on;
-	if not exists(select * from a2sys.Versions where Module = N'std:messaging')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7054);
-	else
-		update a2sys.Versions set [Version] = 7054 where Module = N'std:messaging';
-end
+exec a2sys.SetVersion N'std:messaging', 7055;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2messaging')
@@ -1640,6 +1657,10 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2messaging.Parameters') and name = N'IX_MessagingParameters_Message')
+	create nonclustered index IX_MessagingParameters_Message on a2messaging.[Parameters] ([Message]);
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2messaging' and SEQUENCE_NAME=N'SQ_Environment')
 	create sequence a2messaging.SQ_Environment as bigint start with 100 increment by 1;
 go
@@ -1656,6 +1677,15 @@ begin
 		[Value] nvarchar(255) not null
 	);
 end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2messaging.Environment') and name = N'IX_MessagingEnvironment_Message')
+	create nonclustered index IX_MessagingEnvironment_Message on a2messaging.[Environment] ([Message]);
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2messaging.Environment') and name = N'IX_MessagingEnvironment_Name')
+	create nonclustered index IX_MessagingEnvironment_Name on a2messaging.[Environment] ([Name])
+	include ([Message],[Value]);
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2messaging' and TABLE_NAME=N'Log')

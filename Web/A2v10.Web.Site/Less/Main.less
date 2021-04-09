@@ -8,12 +8,17 @@ html {
 	color: @text-color;
 	box-sizing: border-box;
 	padding: 0;
-	height:100%;
-	width:100%;
+	height: 100%;
+	width: 100%;
+	caret-color: transparent;
 }
 
 input, textarea, select, button {
 	font-family: @font-family;
+}
+
+input, textarea {
+	caret-color: auto;
 }
 
 body {

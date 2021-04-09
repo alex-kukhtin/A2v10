@@ -1,17 +1,11 @@
 ﻿/*
-Copyright © 2008-2020 Alex Kukhtin
+Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 14 dec 2020
-module version : 7054
+Last updated : 09 apr 2020
+module version : 7055
 */
 ------------------------------------------------
-begin
-	set nocount on;
-	if not exists(select * from a2sys.Versions where Module = N'std:messaging')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:messaging', 7054);
-	else
-		update a2sys.Versions set [Version] = 7054 where Module = N'std:messaging';
-end
+exec a2sys.SetVersion N'std:messaging', 7055;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2messaging')
@@ -64,6 +58,10 @@ begin
 end
 go
 ------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2messaging.Parameters') and name = N'IX_MessagingParameters_Message')
+	create nonclustered index IX_MessagingParameters_Message on a2messaging.[Parameters] ([Message]);
+go
+------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2messaging' and SEQUENCE_NAME=N'SQ_Environment')
 	create sequence a2messaging.SQ_Environment as bigint start with 100 increment by 1;
 go
@@ -80,6 +78,15 @@ begin
 		[Value] nvarchar(255) not null
 	);
 end
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2messaging.Environment') and name = N'IX_MessagingEnvironment_Message')
+	create nonclustered index IX_MessagingEnvironment_Message on a2messaging.[Environment] ([Message]);
+go
+------------------------------------------------
+if not exists (select * from sys.indexes where object_id = object_id(N'a2messaging.Environment') and name = N'IX_MessagingEnvironment_Name')
+	create nonclustered index IX_MessagingEnvironment_Name on a2messaging.[Environment] ([Name])
+	include ([Message],[Value]);
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2messaging' and TABLE_NAME=N'Log')
