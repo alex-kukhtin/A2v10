@@ -1136,6 +1136,7 @@ html {
   padding: 0;
   height: 100%;
   width: 100%;
+  caret-color: transparent;
 }
 input,
 textarea,
@@ -1143,6 +1144,10 @@ select,
 button {
   font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
   color: var(--text);
+}
+input,
+textarea {
+  caret-color: auto;
 }
 body {
   overflow: hidden;
@@ -5670,8 +5675,8 @@ TODO:
 }
 .grid {
   display: grid !important;
-  padding: 1rem;
-  grid-gap: 1rem;
+  padding: 0.5rem;
+  grid-gap: 0.5rem;
   align-items: flex-end;
   grid-template-columns: auto;
   grid-template-rows: auto;
