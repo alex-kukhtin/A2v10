@@ -51,6 +51,7 @@
   <ItemGroup>
     <Content Include="App_application\%40sql\platform\a2v10admin.sql" />
     <Content Include="App_application\%40sql\platform\a2v10platform.sql" />
+    <Content Include="App_application\%40sql\platform\mt\a2v10multitenant.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10admin.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10api.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10messaging.sql" />

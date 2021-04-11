@@ -1,8 +1,9 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
 using System.Text;
+
+using A2v10.Infrastructure;
 
 /*
  * $exec(cmd, arg, confirm, opts) : $canExecute(cmd, arg, opts)
@@ -58,6 +59,7 @@ namespace A2v10.Xaml
 		Edit,
 		EditSelected,
 		Show,
+		ShowSelected,
 		Browse,
 		Append, // create in dialog and append to array,
 		New, // create in dialog and update selected in array;
@@ -594,7 +596,7 @@ namespace A2v10.Xaml
 					}
 					break;
 				case CommandType.Dialog:
-					if (Action == DialogAction.EditSelected)
+					if (Action == DialogAction.EditSelected || Action == DialogAction.ShowSelected)
 					{
 						var arg = GetBinding(nameof(Argument));
 						if (arg != null)

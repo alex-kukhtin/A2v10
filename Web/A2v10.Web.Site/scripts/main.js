@@ -4908,7 +4908,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20200219-7749*/
+/*20210410-7763*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -4922,7 +4922,7 @@ Vue.component('validator-control', {
 		`<div :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<input v-if="password" type="text" class="fake-pwd-field" />
+		<input v-if="password" type="text" class="fake-pwd-field" tabindex="-1"/>
 		<input ref="input" :type="controlType" v-focus :autocomplete="autocompleteText"
 			v-bind:value="modelValue" 
 				v-on:change="onChange($event.target.value)" 
@@ -11174,7 +11174,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210326-7760*/
+/*20210326-7764*/
 // controllers/base.js
 
 (function () {
@@ -11860,9 +11860,9 @@ Vue.directive('resize', {
 						that.$alert(locale.$PermissionDenied);
 						return;
 					}
-					if (utils.isFunction(query)) {
+					if (utils.isFunction(query))
 						query = query();
-					}
+					let reloadAfter = opts && opts.reloadAfter;
 					switch (command) {
 						case 'new':
 							if (argIsNotAnArray()) return;
@@ -11892,27 +11892,39 @@ Vue.directive('resize', {
 							return __runDialog(url, arg.$selected, query, (result) => {
 								arg.$selected.$merge(result);
 								arg.__fireChange__('selected');
-								if (opts && opts.reloadAfter) {
+								if (reloadAfter) 
 									that.$reload();
-								}
+							});
+						case 'show-selected': 
+							if (argIsNotAnArray()) return;
+							if (!arg.$selected) return;
+							return __runDialog(url, arg.$selected, query, (result) => {
+								if (result === 'reload' || reloadAfter)
+									that.$reload();
 							});
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => {
 								if (result === 'reload')
 									that.$reload();
-								else if (arg.$merge && utils.isObjectExact(result))
+								else if (arg.$merge && utils.isObjectExact(result)) {
 									arg.$merge(result);
-								else if (opts && opts.reloadAfter)
-									that.$reload();
+									if (reloadAfter)
+										that.$reload();
+								}
 							});
 						case 'copy':
 							if (argIsNotAnObject()) return;
 							let arr = arg.$parent;
-							return __runDialog(url, arg, query, (result) => { arr.$append(result); });
-						default: // simple show dialog
 							return __runDialog(url, arg, query, (result) => {
-								if (opts && opts.reloadAfter) {
+								arr.$append(result);
+								if (reloadAfter) {
+									that.$reload();
+								}
+							});
+						default: // simple show dialog
+							return __runDialog(url, arg, query, (r) => {
+								if (reloadAfter) {
 									that.$reload();
 								}
 							});

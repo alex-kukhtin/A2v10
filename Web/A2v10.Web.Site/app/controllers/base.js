@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210326-7760*/
+/*20210326-7764*/
 // controllers/base.js
 
 (function () {
@@ -686,9 +686,9 @@
 						that.$alert(locale.$PermissionDenied);
 						return;
 					}
-					if (utils.isFunction(query)) {
+					if (utils.isFunction(query))
 						query = query();
-					}
+					let reloadAfter = opts && opts.reloadAfter;
 					switch (command) {
 						case 'new':
 							if (argIsNotAnArray()) return;
@@ -718,27 +718,39 @@
 							return __runDialog(url, arg.$selected, query, (result) => {
 								arg.$selected.$merge(result);
 								arg.__fireChange__('selected');
-								if (opts && opts.reloadAfter) {
+								if (reloadAfter) 
 									that.$reload();
-								}
+							});
+						case 'show-selected': 
+							if (argIsNotAnArray()) return;
+							if (!arg.$selected) return;
+							return __runDialog(url, arg.$selected, query, (result) => {
+								if (result === 'reload' || reloadAfter)
+									that.$reload();
 							});
 						case 'edit':
 							if (argIsNotAnObject()) return;
 							return __runDialog(url, arg, query, (result) => {
 								if (result === 'reload')
 									that.$reload();
-								else if (arg.$merge && utils.isObjectExact(result))
+								else if (arg.$merge && utils.isObjectExact(result)) {
 									arg.$merge(result);
-								else if (opts && opts.reloadAfter)
-									that.$reload();
+									if (reloadAfter)
+										that.$reload();
+								}
 							});
 						case 'copy':
 							if (argIsNotAnObject()) return;
 							let arr = arg.$parent;
-							return __runDialog(url, arg, query, (result) => { arr.$append(result); });
-						default: // simple show dialog
 							return __runDialog(url, arg, query, (result) => {
-								if (opts && opts.reloadAfter) {
+								arr.$append(result);
+								if (reloadAfter) {
+									that.$reload();
+								}
+							});
+						default: // simple show dialog
+							return __runDialog(url, arg, query, (r) => {
+								if (reloadAfter) {
 									that.$reload();
 								}
 							});

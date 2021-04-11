@@ -2,18 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 apr 2021
-module version : 7750
+Last updated : 10 apr 2021
+module version : 7751
 */
 ------------------------------------------------
-begin
-	set nocount on;
-	declare @Version int = 7750;
-	if not exists(select * from a2sys.Versions where Module = N'std:security')
-		insert into a2sys.Versions (Module, [Version]) values (N'std:security', @Version);
-	else
-		update a2sys.Versions set [Version] = @Version where Module = N'std:security';
-end
+exec a2sys.SetVersion N'std:security', 7751;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1206,6 +1199,20 @@ begin
 	set xact_abort on;
 	select [UserCompany!TCompany!Object] = null, Company from a2security.UserCompanies 
 	where [User]=@UserId and [Current]=1
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_isUserTenantAdmin') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_isUserTenantAdmin;
+go
+------------------------------------------------
+create function a2security.fn_isUserTenantAdmin(@TenantId int, @UserId bigint)
+returns bit
+as
+begin
+	return case when 
+		exists(select * from a2security.Tenants where Id = @TenantId and [Admin] = @UserId) then 1 
+	else 0 end;
 end
 go
 ------------------------------------------------
