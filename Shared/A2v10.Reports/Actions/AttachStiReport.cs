@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
-
-using Stimulsoft.Report;
 
 namespace A2v10.Reports.Actions
 {
@@ -35,12 +33,9 @@ namespace A2v10.Reports.Actions
 
 			using (var stream = CreateStream(dm, Report))
 			{
-				var r = StiReportExtensions.CreateReport(stream, String.Empty);
-				r.AddDataModel(dm);
 				using (var ms = new MemoryStream())
 				{
-					r.Render();
-					r.ExportDocument(StiExportFormat.Pdf, ms, StiReportExtensions.GetDefaultPdfSettings());
+					String repName = await _reportHelper.ExportDocumentAsync(stream, dm, ms);
 					ms.Seek(0, SeekOrigin.Begin);
 					AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
 					{
@@ -49,7 +44,7 @@ namespace A2v10.Reports.Actions
 						Id = Id,
 						Mime = "application/pdf",
 						Stream = ms,
-						Name = r.ReportName
+						Name = repName
 					};
 					if (String.IsNullOrEmpty(ai.Name))
 						ai.Name = "Attachment";

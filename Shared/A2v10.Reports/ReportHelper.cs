@@ -4,15 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Threading.Tasks;
-
-using Stimulsoft.Report.Mvc;
+using System.Configuration;
+using System.IO;
+using System.Web.Mvc;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
-using System.Configuration;
-using Stimulsoft.Report;
-using System.IO;
+using System.Web;
 
 namespace A2v10.Reports
 {
@@ -23,14 +22,7 @@ namespace A2v10.Reports
 		public Int64 CompanyId;
 	}
 
-	public class ExportReportResult
-	{
-		public String ContentType;
-		public String Extension;
-	}
-	
-
-	public class ReportInfo
+	public class ReportInfo : IStumulsoftReportInfo
 	{
 		public IDataModel DataModel { get; set; }
 		public String Name { get; set; }
@@ -53,13 +45,12 @@ namespace A2v10.Reports
 		}
 	}
 
-	public class ReportHelper
+	public sealed class ReportHelper
 	{
-		protected readonly IApplicationHost _host;
-		protected readonly IDbContext _dbContext;
-		protected readonly IRenderer _renderer;
-		protected readonly IWorkflowEngine _workflowEngine;
-		protected readonly ILocalizer _localizer;
+		private readonly IApplicationHost _host;
+		private readonly IDbContext _dbContext;
+		private readonly ILocalizer _localizer;
+		private readonly IStimulsoftReportShim _stimulsoftReportShim;
 
 		public ReportHelper()
 		{
@@ -68,6 +59,13 @@ namespace A2v10.Reports
 			_host = locator.GetService<IApplicationHost>();
 			_dbContext = locator.GetService<IDbContext>();
 			_localizer = locator.GetService<ILocalizer>();
+			_stimulsoftReportShim = locator.GetService<IStimulsoftReportShim>(sloc =>
+			{
+				var inst = System.Activator.CreateInstance("A2v10.Stimulsoft", "A2v10.Stimulsoft.StimulsoftReportShim");
+				var shim = inst.Unwrap() as IStimulsoftReportShim;
+				shim.Inject(sloc);
+				return shim;
+			});
 		}
 
 		public async Task<ReportInfo> GetReportInfo(ReportContext context, String url, String id, ExpandoObject prms)
@@ -133,79 +131,22 @@ namespace A2v10.Reports
 
 		// saveFileDialog: true -> download
 		// saveFileDialog: false -> show
-		public StiMvcActionResult ExportStiReport(ReportInfo ri, String format, Boolean saveFile = true)
+		public ActionResult ExportStiReport(ReportInfo ri, String format, Boolean saveFile = true)
 		{
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
 			using (var stream = ri.GetStream(_host.ApplicationReader))
 			{
-				var r = StiReportExtensions.CreateReport(stream, ri.Name);
-				r.AddDataModel(ri.DataModel);
-				if (ri.Variables != null)
-					r.AddVariables(ri.Variables);
-				if (targetFormat == "pdf")
-					return StiMvcReportResponse.ResponseAsPdf(r, StiReportExtensions.GetPdfExportSettings(), saveFileDialog: saveFile);
-				else if (format == "excel")
-					return StiMvcReportResponse.ResponseAsExcel2007(r, StiReportExtensions.GetDefaultXlSettings(), saveFileDialog: saveFile);
-				else if (format == "word")
-					return StiMvcReportResponse.ResponseAsWord2007(r, StiReportExtensions.GetDefaultWordSettings(), saveFileDialog: saveFile);
-				else if (format == "opentext")
-					return StiMvcReportResponse.ResponseAsOdt(r, StiReportExtensions.GetDefaultOdtSettings(), saveFileDialog: saveFile);
-				else if (format == "opensheet")
-					return StiMvcReportResponse.ResponseAsOds(r, StiReportExtensions.GetDefaultOdsSettings(), saveFileDialog: saveFile);
-				else
-					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
+				return _stimulsoftReportShim.ExportStiReport(stream, ri, targetFormat, saveFile);
 			}
 		}
 
-		public ExportReportResult ExportStiReportStream(ReportInfo ri, String format, Stream output)
+		public Task<ExportReportResult> ExportStiReportStreamAsync(ReportInfo ri, String format, Stream output)
 		{
-			var rr = new ExportReportResult();
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
 			using (var stream = ri.GetStream(_host.ApplicationReader))
 			{
-				var r = StiReportExtensions.CreateReport(stream, ri.Name);
-				r.AddDataModel(ri.DataModel);
-				if (ri.Variables != null)
-					r.AddVariables(ri.Variables);
-				if (targetFormat == "pdf")
-				{
-					r.Render();
-					r.ExportDocument(StiExportFormat.Pdf, output, StiReportExtensions.GetDefaultPdfSettings());
-					rr.ContentType = "application/pdf";
-					rr.Extension = "pdf";
-				}
-				else if (format == "excel")
-				{
-					r.Render();
-					r.ExportDocument(StiExportFormat.Excel2007, output, StiReportExtensions.GetDefaultXlSettings());
-					rr.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-					rr.Extension = "xlsx";
-				}
-				else if (format == "word")
-				{
-					r.Render();
-					r.ExportDocument(StiExportFormat.Word2007, output, StiReportExtensions.GetDefaultWordSettings());
-					rr.ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-					rr.Extension = "docx";
-				}
-				else if (format == "opentext")
-				{
-					r.Render();
-					r.ExportDocument(StiExportFormat.Odt, output, StiReportExtensions.GetDefaultOdtSettings());
-					rr.ContentType = "application/vnd.oasis.opendocument.text";
-					rr.Extension = "odt";
-				}
-				else if (format == "opensheet")
-				{
-					r.Render();
-					r.ExportDocument(StiExportFormat.Ods, output, StiReportExtensions.GetDefaultOdsSettings());
-					rr.ContentType = "application/vnd.oasis.opendocument.spreadsheet";
-					rr.Extension = "ods";
-				}
-				else
-					throw new NotImplementedException($"Format '{targetFormat}' is not supported in this version");
+				return _stimulsoftReportShim.ExportStiReportStreamAsync(stream, ri, targetFormat, output);
 			}
-			return rr;
 		}
 
 		private Boolean _licenseSet = false;
@@ -217,7 +158,7 @@ namespace A2v10.Reports
 			_licenseSet = true;
 			var lic = ConfigurationManager.AppSettings["stimulsoft.license"];
 			if (!String.IsNullOrEmpty(lic))
-				Stimulsoft.Base.StiLicense.LoadFromString(lic);
+				_stimulsoftReportShim.SetupLicense(lic);
 		}
 
 		ITypeChecker CheckTypes(String path, String typesFile, IDataModel model)
@@ -231,5 +172,44 @@ namespace A2v10.Reports
 			return tc;
 		}
 
+		public ActionResult ViewerEvent()
+		{
+			return _stimulsoftReportShim.ViewerEvent() as ActionResult;
+		}
+
+		public ActionResult Interaction()
+		{
+			return _stimulsoftReportShim.Interaction() as ActionResult;
+		}
+
+		public ActionResult PrintReport()
+		{
+			return _stimulsoftReportShim.PrintReport() as ActionResult;
+		}
+
+		public ActionResult ExportReport()
+		{
+			return _stimulsoftReportShim.ExportReport() as ActionResult;
+		}
+
+		public MvcHtmlString ShowViewer(Controller controller)
+		{
+			return _stimulsoftReportShim.ShowViewer(controller);
+		}
+
+		public IStimulsoftRequestParams GetViewerRequestParams()
+		{
+			return _stimulsoftReportShim.GetViewerRequestParams();
+		}
+
+		public ActionResult CreateReportResult(Stream input, ReportInfo ri)
+		{
+			return _stimulsoftReportShim.CreateReportResult(input, ri);
+		}
+
+		public Task<String> ExportDocumentAsync(Stream input, IDataModel dataModel, Stream output)
+		{
+			return _stimulsoftReportShim.ExportDocumentAsync(input, dataModel, output);
+		}
 	}
 }

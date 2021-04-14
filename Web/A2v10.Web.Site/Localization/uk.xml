@@ -505,7 +505,7 @@
     <FileNotFound>Файл '{0}' не знайдений</FileNotFound>
     <IdentifierIsNotValid>Неприпустимий ідентифікатор '{0}'.</IdentifierIsNotValid>
     <ImpossibleFindDataSource>Не можу знайти для компонента джерело даних</ImpossibleFindDataSource>
-    <NameExists>Повторюване ім'я компонента '{0}'.  Імена компонентів повинні бути унікальними й незалежними від регістра.</NameExists>
+    <NameExists>Повторюване ім'я компонента '{0}'.  Імена компонентів повинні бути унікальними.</NameExists>
     <NoServices>Сервіси не знайдені в '{0}'</NoServices>
     <NotAssign>Джерело даних не вказано.</NotAssign>
     <NotCorrectFormat>Вхідний рядок у невірному форматі.</NotCorrectFormat>
@@ -629,7 +629,8 @@
     <Zoom>Масштаб:</Zoom>
   </Export>
   <FileFilters>
-    <AllImageFiles>Всі Файли зображень</AllImageFiles>
+    <AllImageFiles>Всі файли зображень</AllImageFiles>
+    <AllFiles>Всі файли</AllFiles>
     <BitmapFiles>Bitmap файли</BitmapFiles>
     <BmpFiles>BMP зображення (*.bmp)|*.bmp</BmpFiles>
     <CalcFiles>OpenDocument Calc файли (*.ods)|*.ods</CalcFiles>
@@ -672,7 +673,7 @@
     <SylkFiles>SYLK файли (*.slk)|*.slk</SylkFiles>
     <TiffFiles>TІFF зображення (*.tіff)|*.tіff</TiffFiles>
     <TxtFiles>Звичайний текст (*.txt)|*.txt</TxtFiles>
-    <Word2007Files>Файли Microsoft Word 2007/2013 (*.docx)|*.docx</Word2007Files>
+    <Word2007Files>Файли Microsoft Word 2007-2016 (*.docx)|*.docx</Word2007Files>
     <WriterFiles>OpenDocument Writer файли (*.odt)|*.odt</WriterFiles>
     <XmlFiles>XML файли (*.xml)|*.xml</XmlFiles>
     <XpsFiles>Microsoft XPS файли (*.xps)|*.xps</XpsFiles>
@@ -827,7 +828,7 @@
     <ShowDescription>Показувати опис</ShowDescription>
     <SLPreview>Silverlight перегляд</SLPreview>
     <title>Дизайнер</title>
-    <WebPreview>Web перегляд</WebPreview>
+    <WebPreview>Flash перегляд</WebPreview>
   </FormDesigner>
   <FormDictionaryDesigner>
     <Actions>Дії</Actions>
@@ -3242,7 +3243,7 @@
     <SelectAllFromRight>Вибрати все справа</SelectAllFromRight>
     <SwitchToDerivedTable>Перемкнути на отриману таблицю</SwitchToDerivedTable>
     <Tables>Таблиці</Tables>
-    <UnexpectedTokenAt>Неочікуваний знак \"{0}\" у стрічці {1}, позиція {2}!</UnexpectedTokenAt>
+    <UnexpectedTokenAt>Неочікуваний знак "{0}" у стрічці {1}, позиція {2}!</UnexpectedTokenAt>
     <Unions>Об'єднання</Unions>
     <UnionSubMenu>Об'єднання</UnionSubMenu>
     <ViewQuery>Перегляд запиту</ViewQuery>

@@ -97,7 +97,6 @@
     <AddAllColumns>Alle Spalten hinzufügen</AddAllColumns>
     <Attach>Anhang</Attach>
     <Build>Erstellen...</Build>
-    <Buttons>Tasten</Buttons>
     <Cancel>Abbrechen</Cancel>
     <Check>Prüfen</Check>
     <Close>Schließen</Close>
@@ -131,7 +130,6 @@
     <SetAll>Alle auswählen</SetAll>
     <ShowLess>Weniger anzeigen</ShowLess>
     <ShowMore>Mehr anzeigen</ShowMore>
-    <ShowSpecific>'{0}' anzeigen</ShowSpecific>
     <Submit>Aktualisieren</Submit>
     <Test>Testen</Test>
     <Up>Nach oben</Up>
@@ -198,11 +196,6 @@
     <LabelsOutside>Außen</LabelsOutside>
     <LabelsOutsideBase>Außen am Anfang</LabelsOutsideBase>
     <LabelsOutsideEnd>Außen am Ende</LabelsOutsideEnd>
-    <LabelsStyleCategory>Kategorie</LabelsStyleCategory>
-    <LabelsStyleCategoryPercentOfTotal>Kategorie - Prozent am Total</LabelsStyleCategoryPercentOfTotal>
-    <LabelsStyleCategoryValue>Kategorie - Wert</LabelsStyleCategoryValue>
-    <LabelsStylePercentOfTotal>Prozent am Total</LabelsStylePercentOfTotal>
-    <LabelsStyleValue>Wert</LabelsStyleValue>
     <LabelsTwoColumns>Zwei Spalten</LabelsTwoColumns>
     <LabelTextAfter>Text danach:</LabelTextAfter>
     <LabelTextBefore>Text davor:</LabelTextBefore>
@@ -224,7 +217,6 @@
     <MoveStripUp>Streifen nach oben</MoveStripUp>
     <NoConditions>Keine Bedingungen</NoConditions>
     <NoFilters>Keine Filter</NoFilters>
-    <Pareto>Pareto</Pareto>
     <Pictorial>Bildhaft</Pictorial>
     <Pie>Kreis</Pie>
     <Radar>Netz</Radar>
@@ -340,7 +332,6 @@
     <AcceptTermsAndPrivacyPolicy>Ich habe gelesen und akzeptiere {0} und {1}</AcceptTermsAndPrivacyPolicy>
     <AccountSettings>Konto Einstellungen</AccountSettings>
     <AddAPlace>Platz hinzufügen</AddAPlace>
-    <AreYouSureYouWantDeleteReport>Wollen Sie den Bericht "{0}" aus dem Speicher wirklich löschen?</AreYouSureYouWantDeleteReport>
     <ButtonChangePassword>Passwort ändern</ButtonChangePassword>
     <ButtonDeleteAll>Alles löschen</ButtonDeleteAll>
     <ButtonDesign>Bericht entwerfen</ButtonDesign>
@@ -361,7 +352,6 @@
     <Cancel>Abbrechen</Cancel>
     <CheckBoxMoveToRecycleBin>In Papierkorb verschieben</CheckBoxMoveToRecycleBin>
     <CheckBoxRememberMe>Angemeldet bleiben</CheckBoxRememberMe>
-    <CheckForUpdate>Nach Aktualisierungen suchen</CheckForUpdate>
     <Cloud>Cloud</Cloud>
     <Collection>Sammlung</Collection>
     <Create>Erstellen</Create>
@@ -370,7 +360,6 @@
     <CreatingReport>Der Bericht wird erstellt...</CreatingReport>
     <DashboardWindowTitleNew>Neues Dashboard</DashboardWindowTitleNew>
     <DeleteFile>Datei löschen</DeleteFile>
-    <DoNotAskMe>Nicht mehr wieder fragen</DoNotAskMe>
     <ExecutionError>Ausführungsfehler</ExecutionError>
     <ExpiredDate>Abgelaufenes Datum</ExpiredDate>
     <FileStorageWindowTitleEdit>Dateispeicher bearbeiten</FileStorageWindowTitleEdit>
@@ -427,7 +416,6 @@
     <Platforms>Plattformen</Platforms>
     <PrivacyPolicy>Datenschutz</PrivacyPolicy>
     <Products>Produkte</Products>
-    <PublishMessage>Um diesen Bericht zu veröffentlichen, muss man ihn auf publish.stimulsoft.com unterbreiten.</PublishMessage>
     <questionOpenThisFile>Wollen Sie die Datei '{0}' wirklich öffnen?</questionOpenThisFile>
     <questionOverrideItem>Wollen Sie die Datei '{0}' wirklich überschreiben?</questionOverrideItem>
     <questionRemoveItem>Wollen Sie die Datei '{0}' wirklich löschen?</questionRemoveItem>
@@ -606,20 +594,14 @@
     <StiZipCode>PLZ</StiZipCode>
   </Components>
   <Dashboard>
-    <AddRange>Bereich hinzufügen</AddRange>
     <AfterGroupingData>Nach der Datengruppierung übernehmen</AfterGroupingData>
-    <AllowUserDrillDown>Benutzer-Drill-Down erlauben</AllowUserDrillDown>
-    <AllowUserFiltering>Benutzer-Filterung erlauben</AllowUserFiltering>
-    <AllowUserSorting>Benutzer-Sortierung erlauben</AllowUserSorting>
     <Blanks>(Rohlinge)</Blanks>
     <BooleanFilters>Boolesche Filter</BooleanFilters>
     <CannotLoadDashboard>Sie können nicht einen Bericht mit Dashboards laden.</CannotLoadDashboard>
     <ChangeChartType>Diagrammtyp ändern</ChangeChartType>
     <ChangeMapType>Kartentyp ändern</ChangeMapType>
-    <ClearAllFormatting>Alle Formatierungen leeren</ClearAllFormatting>
     <ClearFilterFrom>Filter von '{0}' leeren</ClearFilterFrom>
     <ColorScale>Farbenskala</ColorScale>
-    <ColumnInteractions>Spalten-Interaktionen</ColumnInteractions>
     <CustomFilter>Benutzerdefinierter Filter...</CustomFilter>
     <DataBars>Datenbalken</DataBars>
     <DataNotDefined>Daten sind nicht festgelegt</DataNotDefined>
@@ -627,14 +609,10 @@
     <Dimension>Dimension</Dimension>
     <Dimensions>Dimensionen</Dimensions>
     <DragDropDataFromDictionary>Daten aus dem Wörterbuch ziehen und ablegen</DragDropDataFromDictionary>
-    <DrillDown>Drill-Down</DrillDown>
-    <DrillDownSelected>Drill-Down von Ausgewählten</DrillDownSelected>
-    <DrillUp>Drill-Up</DrillUp>
     <DuplicateField>Doppelte Felder</DuplicateField>
     <EditExpression>Ausdruck bearbeiten</EditExpression>
     <EmptyDashboardFooter>Die Komponente aus Toolbox oder Daten aus Wörterbuch ziehen und ablegen</EmptyDashboardFooter>
     <EmptyDashboardHeader>Dashboard ist leer</EmptyDashboardHeader>
-    <FieldInteractions>Felder-Interaktionen</FieldInteractions>
     <FieldTypeRestrictionHint>Nur '{0}' Typ Feld kann verwendet werden!</FieldTypeRestrictionHint>
     <FirstLastPoints>Erste / Letzte Punkte</FirstLastPoints>
     <FirstRowIndex>Erste Reihe Index</FirstRowIndex>
@@ -646,25 +624,18 @@
     <Measure>Maß</Measure>
     <Measures>Maße</Measures>
     <NewDimension>Neue Dimension</NewDimension>
-    <NewField>Neues Feld</NewField>
     <NewMeasure>Neues Maß</NewMeasure>
-    <NoRanges>Keine Bereiche</NoRanges>
     <NoResult>Kein Ergebnis</NoResult>
     <NSelected>{0} ausgewählt</NSelected>
     <Nulls>(Nullen)</Nulls>
     <NumberFilters>Anzahlfilter</NumberFilters>
     <ParentElement>Übergeordnetes Element</ParentElement>
-    <RangeMode>Bereich-Modus</RangeMode>
-    <RangeType>Bereich-Typ</RangeType>
     <RemoveActions>Aktionen entfernen</RemoveActions>
     <RemoveAllFields>Alle Felder entfernen</RemoveAllFields>
     <RemoveField>Feld entfernen</RemoveField>
     <ReplaceValues>Werte ersetzen</ReplaceValues>
     <RowsCount>Reihenanzahl</RowsCount>
-    <RunFieldsEditor>Feldereditor ausführen</RunFieldsEditor>
-    <RunFieldsEditorInfo>Feldereditor ausführen, um die Interaktion jeder Tabellenspalte verändern.</RunFieldsEditorInfo>
     <SelectAll>(Alles auswählen)</SelectAll>
-    <ShowAllValue>(Alle) Werte anzeigen</ShowAllValue>
     <ShowAsPercentages>Zeigen als Prozentsätze</ShowAsPercentages>
     <SkipFirstRows>Erte Reihen überspringen</SkipFirstRows>
     <SortAZ>Sortieren von A bis Z</SortAZ>
@@ -704,10 +675,6 @@
     <CurrentYear>Aktuelles Jahr</CurrentYear>
     <FirstQuarter>Erstes Quartal</FirstQuarter>
     <FourthQuarter>Viertes Quartal</FourthQuarter>
-    <Index>Index</Index>
-    <Last14Days>Letzte 14 Tage</Last14Days>
-    <Last30Days>Letzte 30 Tage</Last30Days>
-    <Last7Days>Letzte 7 Tage</Last7Days>
     <MonthToDate>Monat bis Datum</MonthToDate>
     <NextMonth>Nächster Monat</NextMonth>
     <NextQuarter>Nächstes Quartal</NextQuarter>
@@ -717,14 +684,12 @@
     <PreviousQuarter>Vorheriges Quartal</PreviousQuarter>
     <PreviousWeek>Vorherige Woche</PreviousWeek>
     <PreviousYear>Vorheriges Jahr</PreviousYear>
-    <Quarter>Viertel</Quarter>
     <QuarterToDate>Quartal bis Datum</QuarterToDate>
     <SecondQuarter>Zweites Quartal</SecondQuarter>
     <ThirdQuarter>Drittes Quartal</ThirdQuarter>
     <Today>Heute</Today>
     <Tomorrow>Morgen</Tomorrow>
     <WeekToDate>Woche bis Datum</WeekToDate>
-    <Year>Jahr</Year>
     <YearToDate>Jahr bis Datum</YearToDate>
     <Yesterday>Gestern</Yesterday>
   </DatePickerRanges>
@@ -847,7 +812,6 @@
     <AllowPrintDocument>Drucken des Dokuments zulassen</AllowPrintDocument>
     <Auto>Auto</Auto>
     <BandsFilter>Bänder-Filter:</BandsFilter>
-    <CancelExport>Export abbrechen</CancelExport>
     <Color>Farbe</Color>
     <Compressed>Komprimiert</Compressed>
     <CompressToArchive>Dateien Komprimieren</CompressToArchive>
@@ -893,7 +857,6 @@
     <ExportTypeHtmlFile>HTML-Datei...</ExportTypeHtmlFile>
     <ExportTypeImageFile>Bilddatei...</ExportTypeImageFile>
     <ExportTypeJpegFile>JPEG-Bild...</ExportTypeJpegFile>
-    <ExportTypeJsonFile>JSON-Datei...</ExportTypeJsonFile>
     <ExportTypeMetafile>Windows Metafile...</ExportTypeMetafile>
     <ExportTypeMhtFile>MHT Web Archiv...</ExportTypeMhtFile>
     <ExportTypePcxFile>PCX-Bild...</ExportTypePcxFile>
@@ -930,7 +893,6 @@
     <NoMoreThan>Nicht mehr als</NoMoreThan>
     <OpenAfterExport>Nach dem Export öffnen</OpenAfterExport>
     <PdfACompliance>PDF/A Konformität</PdfACompliance>
-    <PrintingReport>Drucken des Berichts</PrintingReport>
     <RemoveEmptySpaceAtBottom>Leeren Bereich am Ende der Seite entfernen</RemoveEmptySpaceAtBottom>
     <RestrictEditing>Bearbeitung einschränken:</RestrictEditing>
     <Scale>Maßstab:</Scale>
@@ -987,7 +949,7 @@
     <GifFiles>GIF-Bild (*.gif)|*.gif</GifFiles>
     <HtmlFiles>HTML-Dateien (*.html)|*.html</HtmlFiles>
     <InheritedLanguageFiles>{0} Datei(en) für geerbte Berichte (*.{1})|*.{2}</InheritedLanguageFiles>
-    <JpegFiles>JPEG-Bild (*.jpg;*.jpeg)|*.jpg;*.jpeg</JpegFiles>
+    <JpegFiles>JPEG-Bild (*.jpeg)|*.jpeg</JpegFiles>
     <JsonDocumentFiles>Erstellte JSON-Berichte (*.mdcj)|*.mdcj</JsonDocumentFiles>
     <JsonFiles>JSON-Dateien (*.json)|*.json</JsonFiles>
     <JsonReportFiles>JSON-Berichtsvorlagen (*.mrt)|*.mrt</JsonReportFiles>
@@ -1002,7 +964,6 @@
     <PdfFiles>Adobe PDF-Dateien (*.pdf)|*.pdf</PdfFiles>
     <PngFiles>PNG-Bild (*.png)|*.png</PngFiles>
     <Ppt2007Files>Microsoft PowerPoint 2007/2013 Datei (*.pptx)|*.pptx</Ppt2007Files>
-    <ReportEmbededDataFiles>Berichtsvorlagen mit eingebetteten Daten (*.mrt)|*.mrt</ReportEmbededDataFiles>
     <ReportFiles>Bericht-Dateien (*.mrt)|*.mrt</ReportFiles>
     <RtfFiles>Rich Text-Dateien (*.rtf)|*.rtf</RtfFiles>
     <StandaloneReportFiles>Unabhängige Berichte(*.exe)|*.exe</StandaloneReportFiles>
@@ -1050,16 +1011,6 @@
     <date10>*F</date10>
     <date11>dd.MM.yyyy</date11>
     <date12>dd/MM/yyyy</date12>
-    <date13>*g</date13>
-    <date14>*G</date14>
-    <date15>*y</date15>
-    <date16>*m</date16>
-    <date17>s</date17>
-    <date18>u</date18>
-    <date19>*Q</date19>
-    <date20>*YQ</date20>
-    <date21>QI</date21>
-    <date22>YQI</date22>
     <time01>t</time01>
     <time02>T</time02>
     <time03>HH:mm</time03>
@@ -1116,8 +1067,6 @@
     <title>Kreuztabelle bearbeiten</title>
   </FormCrossTabDesigner>
   <FormDatabaseEdit>
-    <ClientId>Client-ID</ClientId>
-    <ClientSecret>Geheimer Clientschlüssel</ClientSecret>
     <ConnectionString>Verbindungszeichenfolge:</ConnectionString>
     <DashboardConnections>Dashboard-Verbindung</DashboardConnections>
     <DB2Edit>IBM DB2 Verbindung ändern</DB2Edit>
@@ -1156,7 +1105,6 @@
     <RelationDirection>Verbindungsrichtung:</RelationDirection>
     <ReportConnections>Berichtsverbindungen</ReportConnections>
     <SelectData>Daten auswählen</SelectData>
-    <SpreadsheetId>Tabellenkalkulation-ID</SpreadsheetId>
     <SqlCeEdit>SQLServerCE-Verbindung ändern</SqlCeEdit>
     <SqlCeNew>Neue SQLServerCE-Verbindung</SqlCeNew>
     <SqlEdit>SQL-Verbindung ändern</SqlEdit>
@@ -1305,7 +1253,6 @@
     <nameOn>Ein</nameOn>
     <nameTrue>Wahr</nameTrue>
     <nameYes>Ja</nameYes>
-    <NegativeInRed>Negative in Rot</NegativeInRed>
     <NegativePattern>Negative Maske:</NegativePattern>
     <Number>Zahl</Number>
     <Percentage>Prozentsatz</Percentage>
@@ -1317,14 +1264,12 @@
     <TextFormat>Textformat</TextFormat>
     <Time>Zeit</Time>
     <title>Format</title>
-    <UseAbbreviation>Abkürzung verwenden</UseAbbreviation>
     <UseGroupSeparator>Gruppen-Trennzeichen benutzen</UseGroupSeparator>
     <UseLocalSetting>Region-Einstellungen benutzen</UseLocalSetting>
   </FormFormatEditor>
   <FormGlobalizationEditor>
     <AddCulture>&amp;Kultur hinzufügen</AddCulture>
     <AutoLocalizeReportOnRun>Bericht beim Starten automatisch lokalisieren</AutoLocalizeReportOnRun>
-    <CreateNewCulture>Um die neue Kultur zu erstellen</CreateNewCulture>
     <GetCulture>Texte für die aktuelle Kultur aus Bericht lesen</GetCulture>
     <qnGetCulture>Wollen Sie die Texte der aktuellen Kultur aus dem Report lesen und überschreiben?</qnGetCulture>
     <qnSetCulture>Wollen Sie die Texte der aktuellen Kultur den entsprechenden Reportelementen zuweisen?</qnSetCulture>
@@ -1340,8 +1285,6 @@
   <FormOptions>
     <AutoSave>Automatisches Speichern</AutoSave>
     <AutoSaveReportToReportClass>Bericht automatisch als C#- oder VB.NET-Datei speichern</AutoSaveReportToReportClass>
-    <BlankDashboard>Leeres Dashboard</BlankDashboard>
-    <BlankReport>Leerer Bericht</BlankReport>
     <Default>Standardwert</Default>
     <Drawing>Zeichnen</Drawing>
     <DrawMarkersWhenMoving>Komponenten-Marker beim Verschieben anzeigen</DrawMarkersWhenMoving>
@@ -1387,11 +1330,9 @@
     <ShowDialogForms>Dialogformularen anzeigen</ShowDialogForms>
     <ShowDimensionLines>Maßlinien anzeigen</ShowDimensionLines>
     <ShowOldGaugeEditor>Alten Gauge-Editor zeigen</ShowOldGaugeEditor>
-    <StartScreen>Startbildschirm</StartScreen>
     <title>Optionen</title>
     <UseComponentColor>Komponenten-Farben zum Ausfüllen benutzen</UseComponentColor>
     <UseLastFormat>Letzte Formatierung benutzen</UseLastFormat>
-    <Welcome>Willkommen</Welcome>
   </FormOptions>
   <FormPageSetup>
     <ApplyTo>Anwenden auf</ApplyTo>
@@ -1465,17 +1406,12 @@
     <ApplyStyleCollectionToReportComponents>Stile-Sammlung den Reportelementen zuweisen</ApplyStyleCollectionToReportComponents>
     <ApplyStyles>Stile anwenden</ApplyStyles>
     <ColorCollectionEditor>Farbekollektion-Editor</ColorCollectionEditor>
-    <CreateNewComponentStyle>Um eine neue Art der Komponente zu erstellen</CreateNewComponentStyle>
     <CreateStyleCollection>Stile-Sammlung erstellen</CreateStyleCollection>
     <CreateStylesFromColor>Stil aus gewählter Farbe erstellen</CreateStylesFromColor>
     <Duplicate>Stil kopieren</Duplicate>
-    <EditColors>[Farben bearbeiten]</EditColors>
-    <FromStyle>Aus der Art</FromStyle>
     <GetStyle>Stil von ausgewählten Komponenten übernehmen</GetStyle>
     <MoreStyles>Mehr Stile</MoreStyles>
-    <NotSpecified>Nicht angegeben</NotSpecified>
     <Open>Stil öffnen</Open>
-    <Predefined>Vordefiniert</Predefined>
     <qnApplyStyleCollection>Wollen Sie die Stile-Sammlung dem Report zuweisen?</qnApplyStyleCollection>
     <Remove>Stil entfernen</Remove>
     <RemoveExistingStyles>Bestehende Stile entfernen</RemoveExistingStyles>
@@ -1808,7 +1744,6 @@
     <CopyStyle>Stil kopieren</CopyStyle>
     <CopyToClipboard>In Zwischenablage kopieren</CopyToClipboard>
     <CurrencySymbol>Währungssymbol</CurrencySymbol>
-    <DashboardNew>Ein neues Dashboard erstellen.</DashboardNew>
     <DataStore>Daten-Depot anzeigen</DataStore>
     <DateTimeFormat>Datum- / Zeit-Format</DateTimeFormat>
     <DockingPanels>Andocken Einstellungen</DockingPanels>
@@ -2074,7 +2009,6 @@
     <menuEditUndoText>&amp;Rückgängig {0}</menuEditUndoText>
     <menuEditVariableNew>Neue Variable...</menuEditVariableNew>
     <menuEditViewData>Daten anzeigen...</menuEditViewData>
-    <menuEmbedAllDataToResources>Alle Daten in die Ressourcen einbetten</menuEmbedAllDataToResources>
     <menuFile>&amp;Datei</menuFile>
     <menuFileClose>&amp;Schliessen</menuFileClose>
     <menuFileDashboardDelete>Dashboard löschen</menuFileDashboardDelete>
@@ -2175,20 +2109,19 @@
 Die E-Mail ist an "{0}" gesendet.
 Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierung zu beenden, folgen Sie, bitte, dem Link aus der E-Mail.</TextRegistrationSuccessfully>
     <ThisFieldIsNotSpecified>Dieses Feld ist nicht angegeben!</ThisFieldIsNotSpecified>
-    <ThisFunctionEmbedsAllReportDataToTheReport>Diese Funktion bettet alle Berichtsdaten in die Berichtsressourcen ein und erstellt Ihren Bericht Stand-Alone. Vorsichtig! Alle Ihre Dateneinstellungen werden verändert und können nicht wiederhergestellt werden.Bitte, erstellen Sie zuerst eine Sicherungskopie Ihres Berichtes.{0}Sind Sie sicher?</ThisFunctionEmbedsAllReportDataToTheReport>
   </Messages>
   <Notices>
     <AccessDenied>Zugriff verweigert!</AccessDenied>
     <AccountLocked>Ihr Konto wurde gesperrt! Um  dieses Problem zu lösen, bitte, senden Sie die Anfrage an sales@stimulsoft.com!</AccountLocked>
-    <ActivationExpiriedBeforeFirstRelease>Ihr Abonnement von Stimulsoft Reports.Ultimate ist früher abgelaufen, als erste Version des Stimulsoft Servers freigegeben wurde!</ActivationExpiriedBeforeFirstRelease>
+    <ActivationExpiriedBeforeFirstRelease>Ihr Abonnement von Stimulsoft Reports.Ultimate ist früher abgelaufen, als erste Version des Stimulsoft Reports Servers freigegeben wurde!</ActivationExpiriedBeforeFirstRelease>
     <ActivationLicenseIsNotCorrect>Die Lizenzdatei ist nicht korrekt! Bitte, kontaktieren Sie unsere Verkaufsabteilung sales@stimulsoft.com!</ActivationLicenseIsNotCorrect>
     <ActivationLockedAccount>Ihr Konto ist gesperrt. Bitte, kontaktieren Sie unsere Verkaufsabteilung über die folgende E-Mail-Adresse: sales@stimulsoft.com!</ActivationLockedAccount>
     <ActivationMaxActivationsReached>Sie haben maximale Anzahl an Aktivierungen erreicht. Bitte, kontaktieren Sie unsere Verkaufsabteilung über die folgende E-Mail-Adresse: sales@stimulsoft.com!</ActivationMaxActivationsReached>
     <ActivationServerIsNotAvailableNow>Stimulsoft Activation Server ist nicht jetzt verfügbar! Bitte, versuchen Sie später erneut.</ActivationServerIsNotAvailableNow>
-    <ActivationServerVersionNotAllowed>Sie können nicht diese Version Stimulsoft Server aktivieren, weil das Abonnement-Programm schon abgelaufen ist! Bitte, melden Sie an und prüfen, welche Version Stimulsoft Server Sie installieren und aktivieren können.</ActivationServerVersionNotAllowed>
+    <ActivationServerVersionNotAllowed>Sie können nicht diese Version Stimulsoft Reports.Server aktivieren, weil das Abonnement-Programm schon abgelaufen ist! Bitte, melden Sie an und prüfen, welche Version Stimulsoft Reports.Server Sie installieren und aktivieren können.</ActivationServerVersionNotAllowed>
     <ActivationSomeTroublesOccurred>Während der Aktivierung ist einen Fehler aufgetreten. Bitte, versuchen Sie später erneut.</ActivationSomeTroublesOccurred>
     <ActivationUserNameOrPasswordIsWrong>Benutzername (E-Mail-Adresse) oder Passwort ist falsch!</ActivationUserNameOrPasswordIsWrong>
-    <ActivationWrongAccountType>Ihrer Kontotyp erlaubt nicht Stimulsoft Server zu aktivieren!</ActivationWrongAccountType>
+    <ActivationWrongAccountType>Ihrer Kontotyp erlaubt nicht Stimulsoft Reports.Server zu aktivieren!</ActivationWrongAccountType>
     <AuthAccountCantBeUsedNow>Das Konto kann nicht verwendet werden!</AuthAccountCantBeUsedNow>
     <AuthAccountIsNotActivated>Das Konto ist nicht nur aktiviert! Bitte, folgen Sie der Anleitung, die Sie in der E-Mail während der Registrierung erhalten haben.</AuthAccountIsNotActivated>
     <AuthCantChangeRoleBecauseLastAdministratorUser>Die Benutzerrolle kann nicht verändert werden, weil die der letzte Administrator-Benutzer im Arbeitsbereich ist!</AuthCantChangeRoleBecauseLastAdministratorUser>
@@ -2311,7 +2244,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <SnapshotAlreadyProcessed>Der Berichts-Schnappschuss ist schon verarbeitet!</SnapshotAlreadyProcessed>
     <SpecifiedItemIsNot>Das angegebene Element ist nicht "{0}"!</SpecifiedItemIsNot>
     <SubscriptionExpired>Ihre Subskription ist abgelaufen!</SubscriptionExpired>
-    <SubscriptionExpiredDate>Ihr Abonnement läuft am {0} aus</SubscriptionExpiredDate>
     <SubscriptionsOut10>10 Tage bis Subskription-Ablauf!</SubscriptionsOut10>
     <SubscriptionsOut20>Die Subskriptionsfrist wird nach 20 Tagen ablaufen!</SubscriptionsOut20>
     <SuccessfullyRenewed>Ihre Subskription ist erfolgreich aktualisiert!</SuccessfullyRenewed>
@@ -2436,7 +2368,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ControlCategory>Steuerung</ControlCategory>
     <ControlsEventsCategory>Ereignisse der Steuerelemente</ControlsEventsCategory>
     <CrossTabCategory>Kreuztabelle</CrossTabCategory>
-    <DashboardCategory>Dashboard</DashboardCategory>
     <DataCategory>Daten</DataCategory>
     <DatePickerCategory>Datumsauswahl</DatePickerCategory>
     <DescriptionCategory>Beschreibung</DescriptionCategory>
@@ -2453,7 +2384,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ImageCategory>Bild</ImageCategory>
     <IndicatorCategory>Indikator</IndicatorCategory>
     <InterlacingCategory>Verflechtung</InterlacingCategory>
-    <LabelsCategory>Beschriftungen</LabelsCategory>
     <LegendCategory>Legende</LegendCategory>
     <ListBoxCategory>Listenfeld</ListBoxCategory>
     <MainCategory>Basis</MainCategory>
@@ -2766,11 +2696,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <StiCapStyleOval>Ovaler Pfeil</StiCapStyleOval>
     <StiCapStyleSquare>Pfeil mit Rechteck</StiCapStyleSquare>
     <StiCapStyleStealth>Rahmenpfeil</StiCapStyleStealth>
-    <StiChartLabelsStyleCategory>Kategorie</StiChartLabelsStyleCategory>
-    <StiChartLabelsStyleCategoryPercentOfTotal>Kategorie - Prozent am Total</StiChartLabelsStyleCategoryPercentOfTotal>
-    <StiChartLabelsStyleCategoryValue>Kategorie - Wert</StiChartLabelsStyleCategoryValue>
-    <StiChartLabelsStylePercentOfTotal>Prozent am Total</StiChartLabelsStylePercentOfTotal>
-    <StiChartLabelsStyleValue>Wert</StiChartLabelsStyleValue>
     <StiChartTitleDockBottom>Unten</StiChartTitleDockBottom>
     <StiChartTitleDockLeft>Links</StiChartTitleDockLeft>
     <StiChartTitleDockRight>Rechts</StiChartTitleDockRight>
@@ -2865,10 +2790,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <StiFormStartModeOnStart>Am Start</StiFormStartModeOnStart>
     <StiGaugeCalculationModeAuto>Auto</StiGaugeCalculationModeAuto>
     <StiGaugeCalculationModeCustom>Benutzerdefiniert</StiGaugeCalculationModeCustom>
-    <StiGaugeRangeModePercentage>Prozentsatz</StiGaugeRangeModePercentage>
-    <StiGaugeRangeModeValue>Wert</StiGaugeRangeModeValue>
-    <StiGaugeRangeTypeColor>Farbe</StiGaugeRangeTypeColor>
-    <StiGaugeRangeTypeNone>Nein</StiGaugeRangeTypeNone>
     <StiGaugeTypeFullCircular>Volles Rundschreiben</StiGaugeTypeFullCircular>
     <StiGaugeTypeHalfCircular>Halbes Rundschreiben</StiGaugeTypeHalfCircular>
     <StiGaugeTypeLinear>Linear</StiGaugeTypeLinear>
@@ -2891,16 +2812,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <StiImageRotationRotate180>Drehen um 180°</StiImageRotationRotate180>
     <StiImageRotationRotate90CCW>Drehen um 90° gegen den Uhrzeiger(CCW)</StiImageRotationRotate90CCW>
     <StiImageRotationRotate90CW>Rotate 90° nach Uhrzeiger(CW)</StiImageRotationRotate90CW>
-    <StiInteractionOnClick>Nein</StiInteractionOnClick>
-    <StiInteractionOnClickApplyFilter>Filter übernehmen</StiInteractionOnClickApplyFilter>
-    <StiInteractionOnClickDrillDown>Drill-Down</StiInteractionOnClickDrillDown>
-    <StiInteractionOnClickOpenHyperlink>Hyperlink öffnen</StiInteractionOnClickOpenHyperlink>
-    <StiInteractionOnClickShowDashboard>Dashboard anzeigen</StiInteractionOnClickShowDashboard>
-    <StiInteractionOnHoverNone>Nein</StiInteractionOnHoverNone>
-    <StiInteractionOnHoverShowHyperlink>Hyperlink anzeigen</StiInteractionOnHoverShowHyperlink>
-    <StiInteractionOnHoverShowToolTip>Tool-Tip anzeigen</StiInteractionOnHoverShowToolTip>
-    <StiInteractionOpenHyperlinkDestinationCurrentTab>Aktuelle Registerkarte</StiInteractionOpenHyperlinkDestinationCurrentTab>
-    <StiInteractionOpenHyperlinkDestinationNewTab>Neue Registerkarte</StiInteractionOpenHyperlinkDestinationNewTab>
     <StiItemSelectionModeMulti>Multi</StiItemSelectionModeMulti>
     <StiItemSelectionModeOne>Ein</StiItemSelectionModeOne>
     <StiKeepDetailsKeepDetailsTogether>Alle Details</StiKeepDetailsKeepDetailsTogether>
@@ -2948,7 +2859,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <StiMapTypeIndividual>Individuell</StiMapTypeIndividual>
     <StiMapTypeNone>Keine</StiMapTypeNone>
     <StiMapTypePoints>Punkte</StiMapTypePoints>
-    <StiMarkerAlignmentCenter>Zentrum</StiMarkerAlignmentCenter>
     <StiMarkerAlignmentLeft>Links</StiMarkerAlignmentLeft>
     <StiMarkerAlignmentRight>Rechts</StiMarkerAlignmentRight>
     <StiMarkerTypeCircle>Kreis</StiMarkerTypeCircle>
@@ -2964,16 +2874,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <StiNestedFactorNormal>Normal</StiNestedFactorNormal>
     <StiNumberOfPassDoublePass>Zwei Durchläufe</StiNumberOfPassDoublePass>
     <StiNumberOfPassSinglePass>Ein Durchlauf</StiNumberOfPassSinglePass>
-    <StiOnlineMapLocationTypeAdminDivision1>AdminDivision1</StiOnlineMapLocationTypeAdminDivision1>
-    <StiOnlineMapLocationTypeAdminDivision2>AdminDivision2</StiOnlineMapLocationTypeAdminDivision2>
-    <StiOnlineMapLocationTypeAuto>Auto</StiOnlineMapLocationTypeAuto>
-    <StiOnlineMapLocationTypeCountryRegion>Land/Region</StiOnlineMapLocationTypeCountryRegion>
-    <StiOnlineMapLocationTypeNeighborhood>Nachbarschaft</StiOnlineMapLocationTypeNeighborhood>
-    <StiOnlineMapLocationTypePopulatedPlace>Ortschaft</StiOnlineMapLocationTypePopulatedPlace>
-    <StiOnlineMapLocationTypePostcode1>Postleitzahl1</StiOnlineMapLocationTypePostcode1>
-    <StiOnlineMapLocationTypePostcode2>Postleitzahl2</StiOnlineMapLocationTypePostcode2>
-    <StiOnlineMapLocationTypePostcode3>Postleitzahl3</StiOnlineMapLocationTypePostcode3>
-    <StiOnlineMapLocationTypePostcode4>Postleitzahl4</StiOnlineMapLocationTypePostcode4>
     <StiOrientationHorizontal>Horizontal</StiOrientationHorizontal>
     <StiOrientationHorizontalRight>Horizontal Rechts</StiOrientationHorizontalRight>
     <StiOrientationVertical>Vertikal</StiOrientationVertical>
@@ -3077,8 +2977,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <StiShowYAxisBoth>Beide</StiShowYAxisBoth>
     <StiShowYAxisCenter>Zentrum</StiShowYAxisCenter>
     <StiShowYAxisLeft>Links</StiShowYAxisLeft>
-    <StiSizeModeAutoSize>Auto-Größe</StiSizeModeAutoSize>
-    <StiSizeModeFit>Passen</StiSizeModeFit>
     <StiSortDirectionAsc>Aufsteigend</StiSortDirectionAsc>
     <StiSortDirectionDesc>Absteigend</StiSortDirectionDesc>
     <StiSortDirectionNone>Ohne Sortierung</StiSortDirectionNone>
@@ -3207,7 +3105,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ProcessCellEvent>Zelle verarbeiten</ProcessCellEvent>
     <ProcessChartEvent>Diagramm verarbeiten</ProcessChartEvent>
     <RenderingEvent>Rendern</RenderingEvent>
-    <ReportCacheProcessingEvent>Berichtscache verarbeiten</ReportCacheProcessingEvent>
     <SelectedIndexChangedEvent>Index geändert</SelectedIndexChangedEvent>
     <StateRestoreEvent>Zustand wiederherstellen</StateRestoreEvent>
     <StateSaveEvent>Zustand sichern</StateSaveEvent>
@@ -3299,25 +3196,18 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <AllowUseForeColor>Farbe zulaßen</AllowUseForeColor>
     <AllowUseHorAlignment>Horizontale Ausrichtung zulassen</AllowUseHorAlignment>
     <AllowUseImage>Angewendete benutzerdefinierte Bilder</AllowUseImage>
-    <AllowUseNegativeTextBrush>Erlauben die Textfarbe für Negative zu verwenden</AllowUseNegativeTextBrush>
     <AllowUserValues>Benutzerdefinierte Werte erlauben</AllowUserValues>
     <AllowUseTextBrush>Text-Pinsel zulassen</AllowUseTextBrush>
-    <AllowUseTextFormat>Erlauben Text-Format zu verwenden</AllowUseTextFormat>
     <AllowUseTextOptions>Textoptionen zulassen</AllowUseTextOptions>
     <AllowUseVertAlignment>Vertikale Ausrichtung zulassen</AllowUseVertAlignment>
     <AllowUsingAsSqlParameter>Verwenden der SQL-Parameter zulassen</AllowUsingAsSqlParameter>
     <AlternatingBackColor>Abwechselnde Hintergrundfarbe</AlternatingBackColor>
-    <AlternatingCellBackColor>Hintergrundfarbe abwechselnder Zelle</AlternatingCellBackColor>
-    <AlternatingCellForeColor>Vordergrundfarbe abwechselnder Zelle</AlternatingCellForeColor>
-    <AlternatingDataColor>Farbe abwechselnder Daten</AlternatingDataColor>
-    <AlternatingDataForeground>Vordergrund abwechselnder Daten</AlternatingDataForeground>
     <Anchor>Anker</Anchor>
     <Angle>Winkel</Angle>
     <Antialiasing>Antialiasing</Antialiasing>
     <Area>Fläche</Area>
     <Argument>Argument</Argument>
     <ArgumentDataColumn>Argumenten-Datenspalte</ArgumentDataColumn>
-    <ArgumentFormat>Argument-Format</ArgumentFormat>
     <Arguments>Argumente</Arguments>
     <ArrowHeight>Höhe der Stiftspitze</ArrowHeight>
     <ArrowStyle>Pfeil-Stil</ArrowStyle>
@@ -3345,7 +3235,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <BackColor>Hintergrundfarbe</BackColor>
     <Background>Hintergrund</Background>
     <BackgroundColor>Hintergrundfarbe</BackgroundColor>
-    <BandColor>Bandfarbe</BandColor>
     <BarCodeType>Barcode-Typ</BarCodeType>
     <BasicStyleColor>Stil Grundfarbe</BasicStyleColor>
     <BindingColumn>gebundene Spalte</BindingColumn>
@@ -3379,9 +3268,7 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <Categories>Kategorien</Categories>
     <Category>Kategorie</Category>
     <CategoryConnections>Verbindungen</CategoryConnections>
-    <CellBackColor>Hintergrundfarbe der Zelle</CellBackColor>
     <CellDockStyle>Zelle Andocken</CellDockStyle>
-    <CellForeColor>Vordergrundfarbe der Zelle</CellForeColor>
     <CellHeight>Zellenhöhe</CellHeight>
     <CellType>Zelle Typ</CellType>
     <CellWidth>Zellenbreite</CellWidth>
@@ -3417,15 +3304,12 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ColorDataColumn>Datenspaltenfarbe</ColorDataColumn>
     <ColorEach>Jeden färben</ColorEach>
     <ColorMeter>Farbe</ColorMeter>
-    <Colors>Farben</Colors>
     <ColorScaleCondition>Farbskala Bedingung</ColorScaleCondition>
     <ColorScaleType>Farbskala Typ</ColorScaleType>
     <Column>Spalte</Column>
     <ColumnCount>Anzahl Spalten</ColumnCount>
     <ColumnDirection>Spalten-Richtung</ColumnDirection>
     <ColumnGaps>Spalten-Zwischenräume</ColumnGaps>
-    <ColumnHeaderBackColor>Hintergrundfarbe der Spaltenkopfzeile</ColumnHeaderBackColor>
-    <ColumnHeaderForeColor>Vordergrundfarbe der Spaltenkopfzeile</ColumnHeaderForeColor>
     <ColumnHeadersVisible>Spaltenkopf sichtbar</ColumnHeadersVisible>
     <Columns>Spalten</Columns>
     <ColumnWidth>Spaltenbreite</ColumnWidth>
@@ -3458,11 +3342,9 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <DataAdapters>Daten-Adapter</DataAdapters>
     <DataBarCondition>Datenleiste Bedingung</DataBarCondition>
     <DataBindings>Datenbindungen</DataBindings>
-    <DataColor>Datenfarbe</DataColor>
     <DataColumn>Datenspalte</DataColumn>
     <DataColumns>Datenspalten</DataColumns>
     <DataField>Datenfeld</DataField>
-    <DataForeground>Datenvordergrund</DataForeground>
     <DataRelation>Beziehung</DataRelation>
     <DataRows>Datenzeilen</DataRows>
     <DataSource>Datenquelle</DataSource>
@@ -3480,7 +3362,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <DependentColumn>Abhängige Spalte</DependentColumn>
     <DependentValue>Abhängiger Werte</DependentValue>
     <Description>Beschreibung</Description>
-    <Destination>Bestimmungsort</Destination>
     <DetectUrls>URL-Adressen ermitteln</DetectUrls>
     <DialogResult>Dialog-Ergebnis</DialogResult>
     <Diameter>Durchmesser</Diameter>
@@ -3569,8 +3450,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <FooterCanBreak>Fußzeile kann unterbrochen werden</FooterCanBreak>
     <FooterCanGrow>Fußzeile kann wachsen</FooterCanGrow>
     <FooterCanShrink>Fußzeile kann schrumpfen</FooterCanShrink>
-    <FooterColor>Fußzeilenfarbe</FooterColor>
-    <FooterForeground>Fußzeilenvordergrund</FooterForeground>
     <FooterPrintAtBottom>Fußzeile drucken unten</FooterPrintAtBottom>
     <FooterPrintIfEmpty>Fußzeile drucken wenn leer</FooterPrintIfEmpty>
     <FooterPrintOn>Fußzeile drucken</FooterPrintOn>
@@ -3586,8 +3465,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <Functions>Funktionen</Functions>
     <GlobalizationStrings>Globalisierungs-Zeichenfolgen</GlobalizationStrings>
     <GlobalizedName>Globalisierter Name</GlobalizedName>
-    <GlyphColor>Glyphenfarbe</GlyphColor>
-    <GridColor>Rasterfarbe</GridColor>
     <GridLineColor>Rasterlinienfarbe</GridLineColor>
     <GridLinesHor>Horizontale Rasterlinien</GridLinesHor>
     <GridLinesHorColor>Die Farbe der horizontalen Rasterlinien</GridLinesHorColor>
@@ -3604,10 +3481,8 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <HeaderCanBreak>Kopfzeile kann unterbrochen werden</HeaderCanBreak>
     <HeaderCanGrow>Kopfzeile kann wachsen</HeaderCanGrow>
     <HeaderCanShrink>Kopfzeile kann schrumpfen</HeaderCanShrink>
-    <HeaderColor>Kopfzeilenfarbe</HeaderColor>
     <HeaderFont>Kopfzeilen Schriftart</HeaderFont>
     <HeaderForeColor>Kopfzeilen Textfarbe</HeaderForeColor>
-    <HeaderForeground>Kopfzeilenvordergrund</HeaderForeground>
     <HeaderPrintAtBottom>Kopfzeile drucken unten</HeaderPrintAtBottom>
     <HeaderPrintIfEmpty>Kopfzeile drucken wenn leer</HeaderPrintIfEmpty>
     <HeaderPrintOn>Kopfzeile drucken</HeaderPrintOn>
@@ -3616,7 +3491,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <HeaderRowsCount>Anzahl Kopfzeilen</HeaderRowsCount>
     <Headers>Kopfzeile</Headers>
     <HeaderText>Kopfzeilentext</HeaderText>
-    <HeatmapColors>Heatmapfarben</HeatmapColors>
     <Height>Höhe</Height>
     <HideSeriesWithEmptyTitle>Reihen ohne Titel ausblenden</HideSeriesWithEmptyTitle>
     <HideZeros>0-Werte unterdrücken</HideZeros>
@@ -3625,16 +3499,7 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <HighValues>Hohe Werte</HighValues>
     <HorAlignment>Horizontale Ausrichtung</HorAlignment>
     <HorSpacing>Horizontalabstand</HorSpacing>
-    <HotBackColor>Hintergrundfarbe beim Daraufzeigen</HotBackColor>
-    <HotColumnHeaderBackColor>Hintergrundfarbe der Spaltenkopfzeile beim Daraufzeigen</HotColumnHeaderBackColor>
-    <HotForeColor>Vordergrundfarbe beim Daraufzeigen</HotForeColor>
-    <HotGlyphColor>Glyphenfarbe beim Daraufzeigen</HotGlyphColor>
-    <HotHeaderColor>Kopfzeilenfarbe beim Daraufzeigen</HotHeaderColor>
     <HotkeyPrefix>Hotkey-Präfix</HotkeyPrefix>
-    <HotRowHeaderBackColor>Hintergrundfarbe der Reihenkopfzeile beim Daraufzeigen</HotRowHeaderBackColor>
-    <HotSelectedBackColor>Ausgewählte Hintergrundfarbe beim Daraufzeigen</HotSelectedBackColor>
-    <HotSelectedForeColor>Ausgewählte Vordergrundfarbe beim Daraufzeigen</HotSelectedForeColor>
-    <HotSelectedGlyphColor>Ausgewählte Glyphenfarbe beim Daraufzeigen</HotSelectedGlyphColor>
     <HtmlTags>Html-Tag</HtmlTags>
     <Hyperlink>Hyperlink</Hyperlink>
     <HyperlinkDataColumn>Hyperlink Datenspalte</HyperlinkDataColumn>
@@ -3657,10 +3522,8 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ImportRelations>Beziehungen importieren</ImportRelations>
     <Increment>Steigerung</Increment>
     <Indent>Einzug</Indent>
-    <IndividualColor>Individuelle Farbe</IndividualColor>
     <InfographicsTitle>Titel</InfographicsTitle>
     <InitBy>Initialisierung durch</InitBy>
-    <InitialSelection>Ursprüngliche Auswahl</InitialSelection>
     <Insert>Zellen einfügen</Insert>
     <Interaction>Interaktion</Interaction>
     <InterlacedBrush>Interlaced Pinsel</InterlacedBrush>
@@ -3693,17 +3556,14 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <Keys>Schlüssel</Keys>
     <Label>Label</Label>
     <LabelColor>Farbe der Überschrift</LabelColor>
-    <LabelForeground>Beschriftungsvordergrund</LabelForeground>
     <LabelRotationMode>Label Rotation Mode</LabelRotationMode>
     <Labels>Überschriften</Labels>
     <LabelsColor>Farbe der Überschriften</LabelsColor>
-    <LabelShadowForeground>Beschriftungsschattenvordergrund</LabelShadowForeground>
     <LabelsOffset>Versatz der Beschriftung</LabelsOffset>
     <Language>Sprache</Language>
     <LargeHeight>Überlänge</LargeHeight>
     <LargeHeightFactor>Faktor der Überlänge</LargeHeightFactor>
     <Latitude>Breitengrad</Latitude>
-    <Layout>Layout</Layout>
     <Left>Linksbündig</Left>
     <LeftSide>Linksseitig</LeftSide>
     <Legend>Legende</Legend>
@@ -3716,10 +3576,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <LengthUnderLabels>Länge unter Beschriftungen</LengthUnderLabels>
     <Lighting>Beleuchtung</Lighting>
     <Linear>Linear</Linear>
-    <LinearBarBorderBrush>Grenzenpinsel linearer Leiste</LinearBarBorderBrush>
-    <LinearBarBrush>Pinsel linearer Leiste</LinearBarBrush>
-    <LinearBarEmptyBorderBrush>Grenzenpinsel linearer leeren Leiste</LinearBarEmptyBorderBrush>
-    <LinearBarEmptyBrush>Pinsel linearer leeren Leiste</LinearBarEmptyBrush>
     <LineColor>Linien-Farbe</LineColor>
     <LineColorNegative>&gt;Linien-Farbe für negative Werte</LineColorNegative>
     <LineLimit>Zeilenbegrenzung</LineLimit>
@@ -3758,7 +3614,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <Marker>Marker</Marker>
     <MarkerAlignment>Marker-Ausrichtung</MarkerAlignment>
     <MarkerBorder>Markierungsrahmen</MarkerBorder>
-    <MarkerBrush>Pinselmarker</MarkerBrush>
     <MarkerColor>Marker-Farbe</MarkerColor>
     <MarkerSize>Marker-Größe</MarkerSize>
     <MarkerType>Marker Typ</MarkerType>
@@ -3806,15 +3661,7 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <NameMeter>Name</NameMeter>
     <NameParent>Übergeordneter Name</NameParent>
     <Namespaces>Namensräume</Namespaces>
-    <NeedleBorderBrush>Grenzenpinsel des Zeigers</NeedleBorderBrush>
-    <NeedleBorderWidth>Grenzenbreite des Zeigers</NeedleBorderWidth>
-    <NeedleBrush>Zeigerpinsel</NeedleBrush>
-    <NeedleCapBorderBrush>Pinsel der Obergrenze des Zeigers</NeedleCapBorderBrush>
-    <NeedleCapBrush>Pinsel der Obergrenze des Zeigers</NeedleCapBrush>
     <Negative>Negativ</Negative>
-    <NegativeColor>Negative Farbe</NegativeColor>
-    <NegativeSeriesColors>Serienfarben für Negative</NegativeSeriesColors>
-    <NegativeTextBrush>Textfarbe für Negative</NegativeTextBrush>
     <NestedLevel>Verschachtelungstiefe</NestedLevel>
     <NewColumnAfter>Nach der neuen Spalte </NewColumnAfter>
     <NewColumnBefore>Vor der neuen Spalte</NewColumnBefore>
@@ -3830,9 +3677,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <OddStyle>Stil der Ungeraden-Zeilen</OddStyle>
     <Offset>Versatz</Offset>
     <OffsetAngle>Versatzwinkel</OffsetAngle>
-    <OnClick>Beim Klicken</OnClick>
-    <OnDataManipulation>Bei der Datenmanipulation</OnDataManipulation>
-    <OnHover>Bei der Berührung</OnHover>
     <OnlyText>Nur Text</OnlyText>
     <OpenValues>Offene Werte</OpenValues>
     <Operation>Operation</Operation>
@@ -3859,13 +3703,11 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <Path>Pfad</Path>
     <PathData>Pfad Daten</PathData>
     <PathSchema>Pfad Schema</PathSchema>
-    <Pattern>Muster</Pattern>
     <Placement>Platzierung</Placement>
     <PlaceOnToolbox>Auf die Werkzeuge platzieren</PlaceOnToolbox>
     <PointAtCenter>Punkt in der Mitte</PointAtCenter>
     <Position>Position</Position>
     <Positive>Positiv</Positive>
-    <PositiveColor>Positive Farbe</PositiveColor>
     <PreferredColumnWidth>Bevorzugte Spaltenbreite</PreferredColumnWidth>
     <PreferredRowHeight>Bevorzugte Spaltenhöhe</PreferredRowHeight>
     <PreventIntersection>Überschneidung vermeiden</PreventIntersection>
@@ -3891,10 +3733,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ProcessTilde>Tilde verarbeiten</ProcessTilde>
     <ProductHomePage>Homepage</ProductHomePage>
     <RadarStyle>Netz Stil</RadarStyle>
-    <RadialBarBorderBrush>Grenzenpinsel radialer Leiste</RadialBarBorderBrush>
-    <RadialBarBrush>Pinsel radialer Leiste</RadialBarBrush>
-    <RadialBarEmptyBorderBrush>Grenzenpinsel radialer leeren Leiste</RadialBarEmptyBorderBrush>
-    <RadialBarEmptyBrush>Pinsel radialer leeren Leiste</RadialBarEmptyBrush>
     <Radius>Radius</Radius>
     <RadiusMode>Radius-Modus</RadiusMode>
     <Range>Seitenbereich</Range>
@@ -3945,8 +3783,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <Round>Runden</Round>
     <RoundValues>Rundwerte</RoundValues>
     <RowCount>Anzahl Zeilen</RowCount>
-    <RowHeaderBackColor>Hintergrundfarbe der Reihen-Kopfzeile</RowHeaderBackColor>
-    <RowHeaderForeColor>Vordergrundfarbe der Reihen-Kopfzeile</RowHeaderForeColor>
     <RowHeadersVisible>Zeilenköpfe sichtbar</RowHeadersVisible>
     <RowHeaderWidth>Zeilenkopf-Breite</RowHeaderWidth>
     <Rows>Reihen</Rows>
@@ -3955,13 +3791,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ScriptLanguage>Script-Sprache</ScriptLanguage>
     <SegmentPerHeight>Segmente pro Höhe</SegmentPerHeight>
     <SegmentPerWidth>Segmente pro Breite</SegmentPerWidth>
-    <SelectedBackColor>Ausgewählte Hintergrundfarbe</SelectedBackColor>
-    <SelectedCellBackColor>Hintergrundfarbe der ausgewählten Zelle</SelectedCellBackColor>
-    <SelectedCellForeColor>Vordergrundfarbe der ausgewählten Zelle</SelectedCellForeColor>
-    <SelectedDataColor>Ausgewählte Datenfarbe</SelectedDataColor>
-    <SelectedDataForeground>Ausgewählter Datenvordergrund</SelectedDataForeground>
-    <SelectedForeColor>Ausgewählter Vordergrund</SelectedForeColor>
-    <SelectedGlyphColor>Ausgewählte Glyphenfarbe</SelectedGlyphColor>
     <SelectedIndex>Ausgewählter Index</SelectedIndex>
     <SelectedItem>Ausgewähltes Element</SelectedItem>
     <SelectedKey>gewählter Schlüssel</SelectedKey>
@@ -3971,15 +3800,12 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <SelectionEnabled>Auswahl aktivieren</SelectionEnabled>
     <SelectionForeColor>Auswahl-Textfarbe</SelectionForeColor>
     <SelectionMode>Auswahl-Modus</SelectionMode>
-    <SeparatorColor>Trennzeichenfarbe</SeparatorColor>
     <SerialNumber>Seriennummer</SerialNumber>
     <Series>Reihen</Series>
-    <SeriesColors>Serienfarben</SeriesColors>
     <SeriesLabels>Reihen-Überschriften</SeriesLabels>
     <SeriesLabelsBorderColor>Randfarbe</SeriesLabelsBorderColor>
     <SeriesLabelsBrush>Beschriftungs-Pinsel</SeriesLabelsBrush>
     <SeriesLabelsColor>Beschriftungsfarbe</SeriesLabelsColor>
-    <SeriesLabelsLineColor>Beschriftungslinien-Farbe</SeriesLabelsLineColor>
     <SeriesLighting>Leuchtenserie</SeriesLighting>
     <SeriesShowShadow>Serien Schatten anzeigen</SeriesShowShadow>
     <SeriesTitle>Serientitel</SeriesTitle>
@@ -3992,7 +3818,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ShiftMode>Verschiebungs-Modus</ShiftMode>
     <ShortName>Kurzname</ShortName>
     <ShortValue>Kurzwert</ShortValue>
-    <ShowAllValue>Alle Werte anzeigen</ShowAllValue>
     <ShowBehind>Hinten anzeigen</ShowBehind>
     <ShowDialog>Dialog anzeigen</ShowDialog>
     <ShowEdgeValues>Werte an den Ränder anzeigen</ShowEdgeValues>
@@ -4100,16 +3925,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <TextOnly>Nur Text</TextOnly>
     <TextOptions>Text-Parameter</TextOptions>
     <TextQuality>Textqualität</TextQuality>
-    <TickLabelMajorFont>Beschriftungsschrift des Haupttickens</TickLabelMajorFont>
-    <TickLabelMajorTextBrush>Beschriftungspinsel des Haupttickens</TickLabelMajorTextBrush>
-    <TickLabelMinorFont>Beschriftungsschrift des Nebentickens</TickLabelMinorFont>
-    <TickLabelMinorTextBrush>Beschriftungspinsel des Nebentickens</TickLabelMinorTextBrush>
-    <TickMarkMajorBorder>Grenzenpinsel der Beschriftung des Haupttickens</TickMarkMajorBorder>
-    <TickMarkMajorBorderWidth>Grenzenbreite der Marke des Haupttickens</TickMarkMajorBorderWidth>
-    <TickMarkMajorBrush>Markenpinsel des Haupttickens</TickMarkMajorBrush>
-    <TickMarkMinorBorder>Markengrenze des Nebentickens</TickMarkMinorBorder>
-    <TickMarkMinorBorderWidth>&gt;Grenzenbreite der Marke des Nebentickens</TickMarkMinorBorderWidth>
-    <TickMarkMinorBrush>Markenpinsel des Nebentickens</TickMarkMinorBrush>
     <Ticks>Striche</Ticks>
     <Title>Überschrift</Title>
     <TitleBeforeHeader>Berichtstitel vor dem Berichtskopf</TitleBeforeHeader>
@@ -4128,7 +3943,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <TopSide>Oberseite</TopSide>
     <Total>Gesamt</Total>
     <Totals>Endsummen</Totals>
-    <TrackColor>Trackfarbe</TrackColor>
     <TransparentColor>Transparentfarbe</TransparentColor>
     <TrendLine>Trend Linie</TrendLine>
     <TrendLineColor>Farbe</TrendLineColor>
@@ -4162,7 +3976,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <ValueDataColumnLow>Tiefstwert-Datenspalte</ValueDataColumnLow>
     <ValueDataColumnOpen>Eröffnungswert-Datenspalte</ValueDataColumnOpen>
     <ValueEnd>Wert Ende</ValueEnd>
-    <ValueFormat>Wert-Format</ValueFormat>
     <ValueHigh>Höchstwert</ValueHigh>
     <ValueLow>Tiefstwert</ValueLow>
     <ValueMeter>Wert</ValueMeter>
@@ -4314,7 +4127,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <BusinessObjects>Geschäftsobjekt</BusinessObjects>
     <Categorized>Kategorisiert</Categorized>
     <Charts>Diagramme</Charts>
-    <Checking>Überprüfung...</Checking>
     <ClickForMoreDetails>klicken, um weitere Informationen zu erhalten</ClickForMoreDetails>
     <CollapseAll>Alle Ebenen reduzieren</CollapseAll>
     <Collection>Sammlung</Collection>
@@ -4602,13 +4414,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <TextEditor>Text-Editor</TextEditor>
     <title>Werkzeuge</title>
   </Toolbox>
-  <WelcomeScreen>
-    <Description>Wir haben für Sie die Berichte, die, wir meinen, am besten für den Schnellstart geeignet sind, ausgewählt.</Description>
-    <GetStartedWithDashboards>Beginnen mit Dashboards</GetStartedWithDashboards>
-    <GetStartedWithReports>Beginnen mit Berichten</GetStartedWithReports>
-    <MoreReports>Mehr Berichte</MoreReports>
-    <Title>Willkommen in Stimulsoft Demo</Title>
-  </WelcomeScreen>
   <Wizards>
     <BlankDashboard>Leeres Dashboard</BlankDashboard>
     <BlankReport>Leerer Bericht</BlankReport>
@@ -4667,7 +4472,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <MasterDetailReport>Master-Detail Bericht</MasterDetailReport>
     <NoFunction>[Keine]</NoFunction>
     <OpenExistingReport>Bericht öffnen</OpenExistingReport>
-    <OpenFrom>Aus {0} öffnen</OpenFrom>
     <Preview>Vorschau</Preview>
     <Reset>Zurüc&amp;ksetzen</Reset>
     <Results>Resultate</Results>
@@ -4679,7 +4483,6 @@ Sie enthält den Link zur Bestätigung Ihrer Registrierung. Um Ihre Registrierun
     <title>Neuer Bericht</title>
     <Totals>Gesamt</Totals>
     <UsingReportWizard>Berichts-Assistent</UsingReportWizard>
-    <YouHaveNotOpenedAnyReportRecently>Sie haben kürzlich keinen Bericht geöffnet. Öffnen Sie existierende Datei, um Durchsuchen von einem Bericht zu starten.</YouHaveNotOpenedAnyReportRecently>
   </Wizards>
   <Zoom>
     <EmptyValue>Leer Wert</EmptyValue>

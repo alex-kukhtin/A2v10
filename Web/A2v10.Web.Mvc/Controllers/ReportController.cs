@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -8,21 +8,18 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Web.Mvc;
+using System.Web;
+using System.Net.Http.Headers;
 
 using Microsoft.AspNet.Identity;
 
 using Newtonsoft.Json;
-
-using Stimulsoft.Report.Mvc;
-using Stimulsoft.Report.Web;
 
 using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Reports;
 using A2v10.Web.Identity;
 using A2v10.Interop;
-using System.Web;
-using System.Net.Http.Headers;
 using A2v10.Web.Base;
 
 namespace A2v10.Web.Mvc.Controllers
@@ -92,10 +89,7 @@ namespace A2v10.Web.Mvc.Controllers
 				MvcHtmlString result = null;
 				using (var pr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"render: {Rep}"))
 				{
-					var view = new EmptyView();
-					var vc = new ViewContext(ControllerContext, view, ViewData, TempData, Response.Output);
-					var hh = new HtmlHelper(vc, view);
-					result = hh.Stimulsoft().StiMvcViewer("A2v10StiMvcViewer", ViewerOptions);
+					result  = _reportHelper.ShowViewer(this);
 				}
 
 				var sb = new StringBuilder(ResourceHelper.StiReportHtml);
@@ -163,7 +157,7 @@ namespace A2v10.Web.Mvc.Controllers
 					switch (ri.Type)
 					{
 						case RequestReportType.stimulsoft:
-							err = _reportHelper.ExportStiReportStream(ri, rep.Format, response.OutputStream);
+							err = await _reportHelper.ExportStiReportStreamAsync(ri, rep.Format, response.OutputStream);
 							break;
 						case RequestReportType.xml:
 							throw new NotImplementedException("ExportDesktop. RequestReportType.xml");
@@ -288,66 +282,19 @@ namespace A2v10.Web.Mvc.Controllers
 
 		private String LocaleKey => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
 
-		private StiMvcViewerOptions ViewerOptions {
-			get {
-				String localeFile = $"~/Localization/{LocaleKey}.xml";
-				return new StiMvcViewerOptions()
-				{
-					Theme = StiViewerTheme.Office2013LightGrayBlue,
-					Localization = localeFile,
-					Server = new StiMvcViewerOptions.ServerOptions()
-					{
-						Controller = "StiReport",
-						RequestTimeout = 300,
-						UseRelativeUrls = true
-					},
-					Actions = new StiMvcViewerOptions.ActionOptions()
-					{
-						GetReport = "GetReport",
-						ViewerEvent = "ViewerEvent",
-						PrintReport = "PrintReport",
-						ExportReport = "ExportReport",
-						Interaction = "Interaction",
-					},
-					Appearance = new StiMvcViewerOptions.AppearanceOptions()
-					{
-						BackgroundColor = System.Drawing.Color.FromArgb(0x00e3e3e3),
-						ShowTooltips = false,
-						ScrollbarsMode = true,
-						FullScreenMode = true,
-					},
-					Toolbar = new StiMvcViewerOptions.ToolbarOptions()
-					{
-						MenuAnimation = false,
-						ShowFullScreenButton = false,
-						ShowMenuMode = StiShowMenuMode.Click,
-						//FontFamily = "system-ui, 'Segoe UI', Tahoma, Verdana, sans-serif",
-						//FontColor = System.Drawing.Color.FromArgb(0x00333333),
-						ShowBookmarksButton = false,
-						ShowParametersButton = true,
-						ShowSendEmailButton = false,
-					},
-					Exports = new StiMvcViewerOptions.ExportOptions()
-					{
-						DefaultSettings = StiReportExtensions.GetExportSettings()
-					}
-				};
-			}
-		}
-
 		public async Task<ActionResult> GetReport()
 		{
 			try
 			{
-				var rp = StiMvcViewer.GetRequestParams();
-				var Rep = rp.HttpContext.Request.Params["Rep"];
-				var Base = rp.HttpContext.Request.Params["Base"];
-				var id = rp.Routes["Id"];
+				var vrp = _reportHelper.GetViewerRequestParams();
+				var Rep = vrp.Param("Rep");
+				var Base = vrp.Param("Base");
+				var id = vrp.Route("Id");
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
 
 				//TODO: profile var token = Profiler.BeginReport("create");
 				var prms = new ExpandoObject();
-				prms.Append(_baseController.CheckPeriod(rp.HttpContext.Request.QueryString), toPascalCase: true);
+				prms.Append(_baseController.CheckPeriod(vrp.QueryString), toPascalCase: true);
 				prms.RemoveKeys("Rep,rep,Base,base,Format,format");
 
 				ReportInfo ri = await GetReportInfo(url, id, prms);
@@ -357,12 +304,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var path = ri.ReportPath;
 				using (var stream = ri.GetStream(_baseController.Host.ApplicationReader))
 				{
-					var r = StiReportExtensions.CreateReport(stream, ri.Name);
-					r.AddDataModel(ri.DataModel);
-					var vars = ri.Variables;
-					if (vars != null)
-						r.AddVariables(vars);
-					return StiMvcViewer.GetReportResult(r);
+					return _reportHelper.CreateReportResult(stream, ri);
 				}
 			}
 			catch (Exception ex)
@@ -377,22 +319,22 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public ActionResult ViewerEvent()
 		{
-			return StiMvcViewer.ViewerEventResult();
+			return _reportHelper.ViewerEvent();
 		}
 
 		public ActionResult PrintReport()
 		{
-			return StiMvcViewer.PrintReportResult();
+			return _reportHelper.PrintReport();
 		}
 
 		public ActionResult ExportReport()
 		{
-			return StiMvcViewer.ExportReportResult();
+			return _reportHelper.ExportReport();
 		}
 
 		public ActionResult Interaction()
 		{
-			return StiMvcViewer.InteractionResult();
+			return _reportHelper.Interaction();
 		}
 
 		#region IControllerTenant

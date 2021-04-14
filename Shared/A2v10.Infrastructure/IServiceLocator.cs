@@ -9,6 +9,7 @@ namespace A2v10.Infrastructure
 	{
 		T GetService<T>() where T : class;
 		T GetServiceOrNull<T>() where T : class;
+		T GetService<T>(Func<IServiceLocator, T> func) where T : class;
 		Object GetService(Type type);
 		void RegisterService<T>(T service) where T : class;
 		Boolean IsServiceRegistered<T>() where T : class;
@@ -42,6 +43,15 @@ namespace A2v10.Infrastructure
 			if (_services.TryGetValue(typeof(T), out Object result))
 				return result as T;
 			throw new InvalidOperationException($"Service '{typeof(T).FullName}' not registered");
+		}
+
+		public T GetService<T>(Func<IServiceLocator, T> func) where T : class
+		{
+			if (_services.TryGetValue(typeof(T), out Object result))
+				return result as T;
+			T inst = func(this);
+			RegisterService<T>(inst);
+			return inst;
 		}
 
 		public T GetServiceOrNull<T>() where T : class

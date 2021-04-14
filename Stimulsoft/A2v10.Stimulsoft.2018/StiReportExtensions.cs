@@ -1,10 +1,9 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Configuration;
 using System.Collections.Generic;
 using System.IO;
-using System.Dynamic;
+using System.Configuration;
 
 using Stimulsoft.Report.Export;
 using Stimulsoft.Report;
@@ -13,13 +12,13 @@ using Stimulsoft.Report.Web;
 
 using A2v10.Data.Interfaces;
 
-namespace A2v10.Reports
+namespace A2v10.Stimulsoft
 {
 	public static class StiReportExtensions
 	{
 		public static StiPdfExportSettings GetDefaultPdfSettings()
 		{
-			return new Stimulsoft.Report.Export.StiPdfExportSettings()
+			return new StiPdfExportSettings()
 			{
 				EmbeddedFonts = true,
 				UseUnicode = true,
@@ -30,7 +29,7 @@ namespace A2v10.Reports
 
 		public static StiExcelExportSettings GetDefaultXlSettings()
 		{
-			return new Stimulsoft.Report.Export.StiExcelExportSettings()
+			return new StiExcelExportSettings()
 			{
 				ExcelType = StiExcelType.Excel2007,
 				UseOnePageHeaderAndFooter = true
@@ -39,21 +38,21 @@ namespace A2v10.Reports
 
 		public static StiWord2007ExportSettings GetDefaultWordSettings()
 		{
-			return new Stimulsoft.Report.Export.StiWord2007ExportSettings()
+			return new StiWord2007ExportSettings()
 			{
 			};
 		}
 
 		public static StiOdtExportSettings GetDefaultOdtSettings()
 		{
-			return new Stimulsoft.Report.Export.StiOdtExportSettings()
+			return new StiOdtExportSettings()
 			{
 			};
 		}
 
 		public static StiOdsExportSettings GetDefaultOdsSettings()
 		{
-			return new Stimulsoft.Report.Export.StiOdsExportSettings()
+			return new StiOdsExportSettings()
 			{
 			};
 		}
@@ -111,7 +110,7 @@ namespace A2v10.Reports
 
 		public static StiReport CreateReport(Stream stream, String repName)
 		{
-			var r = new Stimulsoft.Report.StiReport();
+			var r = new StiReport();
 			r.Load(stream);
 			r.AddReferencedAssemblies();
 			r.SubstDataSources();

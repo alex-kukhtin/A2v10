@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>A2v10.Stimulsoft</id>
+		<version>2021.2.1002</version>
+		<title>A2v10.Stimulsoft</title>
+		<authors>AlexKukhtin</authors>
+		<owners>AlexKukhtin</owners>
+		<projectUrl>https://a2v10.com</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>A2v10 Stimulsoft Shim</description>
+		<releaseNotes>Current NUGET release</releaseNotes>
+		<copyright>Copyright © 2021 Oleksandr Kukhtin</copyright>
+		<tags>A2v10 Platform Business WebApp</tags>
+		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
+		<references>
+		</references>
+		<frameworkAssemblies>
+		</frameworkAssemblies>
+		<contentFiles>
+		</contentFiles>
+		<dependencies>
+			<group targetFramework=".NETFramework4.6.1"/>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin/release/A2v10.Stimulsoft.dll" target="lib/net461" />
+	</files>
+</package>
