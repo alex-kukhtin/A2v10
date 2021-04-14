@@ -5,7 +5,9 @@
 
 const template = {
 	events: {
-		"Model.load": modelLoad
+		"Model.load": modelLoad,
+		"Entity.Name.change": nameChange,
+		"Entity.Memo.change": memoChange
 	},
 	properties: {
 		'TRoot.$RadioValue': String,
@@ -35,6 +37,14 @@ const template = {
 	},
 	delegates: {
 		onFileUpload
+	},
+	commands: {
+		fullScreen() {
+			document.documentElement.requestFullscreen();
+		},
+		enterKey() {
+			console.dir('enterKey');
+		}
 	}
 };
 
@@ -68,4 +78,15 @@ function onFileUpload(result) {
 	console.dir(itm);
 	this.Entity.Image = itm.Id;
 	this.Entity.Token = itm.Token;
+}
+
+function nameChange(entity, name) {
+	//this.$ctrl.$alert(name);
+	this.$vm.$focus('memo-editor');
+}
+
+
+function memoChange(entity, memo) {
+	console.dir(this.$ctrl.$focus);
+	this.$ctrl.$focus('name-editor');
 }

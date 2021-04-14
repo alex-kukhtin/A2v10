@@ -241,7 +241,7 @@
     <Content Include="Develop\_assets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
-    <Content Include="Develop\_emails\confirmemail.uk.html" />
+    <Content Include="Develop\_emails_\confirmemail.uk.html" />
     <Content Include="Develop\_pages\contacts.uk.html" />
   </ItemGroup>
   <ItemGroup>

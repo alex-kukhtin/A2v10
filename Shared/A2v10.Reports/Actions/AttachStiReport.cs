@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
+
 using Stimulsoft.Report;
 
 namespace A2v10.Reports.Actions

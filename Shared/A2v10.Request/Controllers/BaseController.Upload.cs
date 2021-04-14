@@ -157,12 +157,15 @@ namespace A2v10.Request
 			}
 			else
 			{
-				var dm = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, null, prms, (table) =>
-				{
-					if (!String.IsNullOrEmpty(rf.locale))
-						table.FormatProvider = CultureInfo.GetCultureInfo(rf.locale);
-					return rdr.ParseFile(stream, table);
-				});
+				var dm = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, null, prms, 
+					(table) =>
+					{
+						if (!String.IsNullOrEmpty(rf.locale))
+							table.FormatProvider = CultureInfo.GetCultureInfo(rf.locale);
+						return rdr.ParseFile(stream, table);
+					}, 
+					rf.commandTimeout
+				);
 				return dm?.Root;
 			}
 		}

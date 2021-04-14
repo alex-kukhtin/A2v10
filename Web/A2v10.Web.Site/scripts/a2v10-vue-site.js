@@ -181,7 +181,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210402-7760
+// 20210414-7765
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -593,14 +593,14 @@ app.modules['std:utils'] = function () {
 
 	function timeParse(str) {
 		str = str || '';
-		if (!str) return dateZero();
 		let seg = str.split(/[^\d]/).filter(x => x);
-		if (seg.length === 1) {
+		if (seg.length === 0)
+			return new Date(1970, 0, 1, 0, 0, 0, 0);
+		else if (seg.length === 1)
 			seg.push('0');
-		}
 		let h = Math.min(+seg[0], 23);
 		let m = Math.min(+seg[1], 59);
-		let td = new Date(0, 0, 1, h, m, 0, 0);
+		let td = new Date(1970, 0, 1, h, m, 0, 0);
 		return td;
 	}
 
@@ -5000,7 +5000,7 @@ template: `
 })();
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210326-7764*/
+/*20210414-7765*/
 // controllers/base.js
 
 (function () {
@@ -5598,6 +5598,16 @@ template: `
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;
+			},
+
+			$focus(htmlid) {
+				let elem = document.querySelector('#' + htmlid);
+				if (!elem) return;
+				let ch = elem.querySelector('input, textarea, button, select');
+				if (ch && ch.focus)
+					ch.focus();
+				else if (elem.focus)
+					elem.focus();
 			},
 
 			$msg(msg, title, style) {
@@ -6232,7 +6242,8 @@ template: `
 					$navigate: this.$navigate,
 					$defer: platform.defer,
 					$setFilter: this.$setFilter,
-					$expand: this.$expand
+					$expand: this.$expand,
+					$focus: this.$focus
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

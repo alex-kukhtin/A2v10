@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210410-7763*/
+/*20210414-7765*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -22,6 +22,7 @@
 				v-on:keypress="onKey($event)"
 				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
+		<a class="a2-hyperlink add-on a2-inline" tabindex="-1" href="" @click.stop.prevent="clear" v-if="clearVisible"><i class="ico ico-clear"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
 	<slot name="popover"></slot>
@@ -82,7 +83,8 @@
 			password: Boolean,
 			number: Boolean,
 			spellCheck: { type: Boolean, default: undefined },
-			enterCommand: Function
+			enterCommand: Function,
+			hasClear: Boolean
 		},
 		computed: {
 			controlType() {
@@ -90,6 +92,10 @@
 			},
 			autocompleteText() {
 				return this.password ? 'new-password' : 'off';
+			},
+			clearVisible() {
+				if (!this.hasClear) return false;
+				return !!this.item[this.prop];
 			}
 		},
 		methods: {
@@ -113,11 +119,20 @@
 					this.updateValue(value);
 			},
 			onKey(event) {
-				if (!this.number) return;
-				if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/) {
-					event.preventDefault();
-					event.stopPropagation();
+				if (this.number) {
+					if ((event.charCode < 48 || event.charCode > 57) && event.charCode !== 45 /*minus*/) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
 				}
+				if (event.code === "Enter") {
+					if (this.enterCommand) {
+						this.enterCommand();
+					}
+				}
+			},
+			clear() {
+				this.item[this.prop] = '';
 			}
 		}
 	};

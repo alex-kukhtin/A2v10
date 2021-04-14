@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210326-7764*/
+/*20210414-7765*/
 // controllers/base.js
 
 (function () {
@@ -598,6 +598,16 @@
 				let dlgData = { promise: null, data: prms };
 				eventBus.$emit('confirm', dlgData);
 				return dlgData.promise;
+			},
+
+			$focus(htmlid) {
+				let elem = document.querySelector('#' + htmlid);
+				if (!elem) return;
+				let ch = elem.querySelector('input, textarea, button, select');
+				if (ch && ch.focus)
+					ch.focus();
+				else if (elem.focus)
+					elem.focus();
 			},
 
 			$msg(msg, title, style) {
@@ -1232,7 +1242,8 @@
 					$navigate: this.$navigate,
 					$defer: platform.defer,
 					$setFilter: this.$setFilter,
-					$expand: this.$expand
+					$expand: this.$expand,
+					$focus: this.$focus
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

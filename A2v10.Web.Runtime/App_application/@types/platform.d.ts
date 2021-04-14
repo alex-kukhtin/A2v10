@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7751 */
+/* Version 10.0.7765 */
 
 
 declare function require(url: string): any;
@@ -256,6 +256,7 @@ interface IController {
 	$defer(handler: () => void): void;
 	$setFilter(target: any, prop: string, value: any): void;
 	$expand(elem: ITreeElement, prop: string, value: boolean): Promise<any>;
+	$focus(htmlid: string): void;
 }
 
 interface IMessage {

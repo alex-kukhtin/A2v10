@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210402-7760
+// 20210414-7765
 // components/modal.js
 
 
@@ -220,8 +220,10 @@
 		},
 		created() {
 			document.addEventListener('keyup', this.keyUpHandler);
-			if (document.activeElement)
-				document.activeElement.blur();
+			this.savedFocus = document.activeElement;
+			if (this.savedFocus && this.savedFocus.blur) {
+				this.savedFocus.blur();
+			}
 		},
 		mounted() {
 			setTimeout(() => {
@@ -229,6 +231,8 @@
 			}, 50); // same as shell
 		},
 		destroyed() {
+			if (this.savedFocus && this.savedFocus.focus)
+				this.savedFocus.focus();
 			document.removeEventListener('keyup', this.keyUpHandler);
 		}
 	};

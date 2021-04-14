@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -72,7 +72,7 @@ namespace A2v10.Xaml
 			Boolean bHasDropDown = DropDown != null;
 
 			var tag = new TagBuilder("a", "a2-hyperlink", inGrid);
-			tag.MergeAttribute("href", String.Empty);
+			tag.MergeAttribute("href", "javascript:void(0)");
 			onRender?.Invoke(tag);
 			var attrMode = MergeAttrMode.All;
 			if (inside)
