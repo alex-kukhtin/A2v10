@@ -60,6 +60,12 @@ namespace A2v10.Web.Mvc.Models
 		public String Referral { get; set; }
 	}
 
+	public class ConfirmEmailModel
+	{
+		public String Email { get; set; }
+		public String Code { get; set; }
+	}
+
 	public class UserReferralInfo
 	{
 		public Int64 UserId { get; set; }
@@ -85,16 +91,10 @@ namespace A2v10.Web.Mvc.Models
 
 	public class ResetPasswordViewModel
 	{
-		[Required]
-		public String Name { get; set; }
+		public String EMail { get; set; }
 
-		[Required]
-		[DataType(DataType.Password)]
 		public String Password { get; set; }
-
-		[DataType(DataType.Password)]
-		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-		public String ConfirmPassword { get; set; }
+		public String Confirm { get; set; }
 
 		public String Code { get; set; }
 	}
@@ -110,7 +110,6 @@ namespace A2v10.Web.Mvc.Models
 
 	public class ForgotPasswordViewModel
 	{
-		[Required]
-		public String Name { get; set; }
+		public String EMail { get; set; }
 	}
 }

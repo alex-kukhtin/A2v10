@@ -5000,7 +5000,7 @@ template: `
 })();
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210414-7765*/
+/*20210419-7768*/
 // controllers/base.js
 
 (function () {
@@ -5604,10 +5604,12 @@ template: `
 				let elem = document.querySelector('#' + htmlid);
 				if (!elem) return;
 				let ch = elem.querySelector('input, textarea, button, select');
-				if (ch && ch.focus)
-					ch.focus();
-				else if (elem.focus)
-					elem.focus();
+				this.$defer(() => {
+					if (ch && ch.focus)
+						ch.focus();
+					else if (elem.focus)
+						elem.focus();
+				});
 			},
 
 			$msg(msg, title, style) {
@@ -6243,7 +6245,8 @@ template: `
 					$defer: platform.defer,
 					$setFilter: this.$setFilter,
 					$expand: this.$expand,
-					$focus: this.$focus
+					$focus: this.$focus,
+					$report: this.$report
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

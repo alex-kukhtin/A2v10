@@ -1,4 +1,4 @@
-<!-- Demo page -->
+<!-- Identity/Api index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
@@ -8,19 +8,19 @@
 	</Page.Resources>
 	<Page.Toolbar>
 		<Toolbar>
-			<Button Icon="Edit" Tip="Свойства пользователя" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Users}}">Свойства</Button>
+			<Button Icon="Edit" Tip="Властивості користувача" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Users}}">Властивості</Button>
 			<Separator />
-			<Button Icon="Reload" Command="{BindCmd Reload}">Обновить</Button>
+			<Button Icon="Reload" Command="{BindCmd Reload}">Оновити</Button>
 		</Toolbar>
 	</Page.Toolbar>
 	<DataGrid ItemsSource="{Bind Users}" Hover="True" FixedHeader="True"
 		DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditUrl}, Argument={Bind Users}}"
 			Striped="True" Sort="False" GridLines="Vertical">
 		<DataGridColumn Header="Код" Content="{Bind Id}" Role="Id"/>
-		<DataGridColumn Header="Наименование" Content="{Bind Name}" Wrap="NoWrap" Fit="True"
+		<DataGridColumn Header="Назва" Content="{Bind Name}" Wrap="NoWrap" Fit="True"
 			Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
-		<DataGridColumn Header="Примечание" Content="{Bind Memo}"/>
-		<DataGridColumn Header="Вход">
+		<DataGridColumn Header="Примітка" Content="{Bind Memo}"/>
+		<DataGridColumn Header="Вхід">
 			<StackPanel Orientation="Vertical" If="{Bind LastLoginHost}">
 				<Text Wrap="NoWrap" Size="Small">
 					<SpanIcon Icon="Calendar"/>
@@ -34,7 +34,7 @@
 		</DataGridColumn>
 		<DataGridColumn Fit="True" Wrap="NoWrap">
 			<Group>
-				<Hyperlink Icon="Edit" Tip="Свойства пользователя" 
+				<Hyperlink Icon="Edit" Tip="Властивості користувача" 
 					Command="{BindCmd Dialog, Action=Edit, Url={StaticResource EditUrl}, Argument={Bind}}"/>
 			</Group>
 		</DataGridColumn>

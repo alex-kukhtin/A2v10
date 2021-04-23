@@ -27,9 +27,9 @@
 @Warning=Warnung
 ;
 @ResetPassword=Passwortwiederherstellung
-@ResetPasswordMailText=Um Ihr Passwort wiederherzustellen, klicken Sie <a href="{0}">hier</a>
+@ResetPasswordMailText=Code zur Wiederherstellung des Passworts: <b>{0}</b>
 @ConfirmEMail=E-Mail-Bestätigung
-@ConfirmEMailBody=Um Ihre E-Mail zu bestätigen, klicken Sie <a href="{0}">hier</a>
+@ConfirmEMailBody=Bestätigungscode: <b>{0}</b>
 @EMailAlreadyConfirmed=Ihre E-Mail-Adresse wurde bereits bestätigt.
 @SetNewPassword=Passwortfestlegung
 @InviteEMail=Willkommen!

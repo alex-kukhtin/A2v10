@@ -12,11 +12,19 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Identity
 {
+	// https://docs.microsoft.com/en-us/aspnet/identity/overview/features-api/two-factor-authentication-using-sms-and-email-with-aspnet-identity#reg
+
 	public class AppUserManager : UserManager<AppUser, Int64>
 	{
 		public AppUserManager(IUserStore<AppUser, Int64> store)
 			: base(store)
 		{
+		}
+
+		public static class TWOFACTORPROVIDERS
+		{
+			public static String EMailCode = "Email Code";
+			public static String PhoneCode = "Phone Code";
 		}
 
 		public static AppUserManager Create(IdentityFactoryOptions<AppUserManager> options, IOwinContext context)
@@ -26,7 +34,9 @@ namespace A2v10.Web.Identity
 			AppUserStore store = new AppUserStore(dbContext, host);
 			store.SetCustomSchema(host.CustomSecuritySchema);
 			AppUserManager manager = new AppUserManager(store);
+
 			manager.Construct(options);
+
 			return manager;
 		}
 
@@ -59,16 +69,14 @@ namespace A2v10.Web.Identity
 			DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
 			MaxFailedAccessAttemptsBeforeLockout = 5;
 
-            // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
-            // You can write your own provider and plug it in here.
-            RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<AppUser, Int64>
-            {
-                MessageFormat = "Your security code is {0}"
-            });
-			/*
-            manager.SmsService = new SmsService();
-            */
-			RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<AppUser, Int64>
+			// Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
+			// You can write your own provider and plug it in here.
+			RegisterTwoFactorProvider(TWOFACTORPROVIDERS.PhoneCode, new PhoneNumberTokenProvider<AppUser, Int64>()
+			{
+				MessageFormat = "Your security code is {0}",
+			});
+
+			RegisterTwoFactorProvider(TWOFACTORPROVIDERS.EMailCode, new EmailTokenProvider<AppUser, Int64>()
 			{
 				Subject = "Security Code",
 				BodyFormat = "Your security code is {0}"

@@ -34,9 +34,9 @@
 @Dashboard=Dashboard
 ;
 @ResetPassword=Password recovery
-@ResetPasswordMailText=To reset your password, click <a href="{0}">here</a> please
+@ResetPasswordMailText=Password recovery code: <b>{0}</b>
 @ConfirmEMail=Confirm е-mail
-@ConfirmEMailBody=To confirm your е-mail, click <a href="{0}">here</a> please
+@ConfirmEMailBody=Email confirmation code: <b>{0}</b>
 @EMailAlreadyConfirmed=Your e-mail already confirmed.
 @SetNewPassword=Set new password
 @OldPassword=Old password

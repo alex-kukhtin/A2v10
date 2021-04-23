@@ -15,10 +15,12 @@ namespace A2v10.Web.Base
 			base.OnActionExecuting(filterContext);
 			if (filterContext.Controller is IControllerTenant iCtrlTenant)
 				iCtrlTenant.StartTenant();
+			if (filterContext.Controller is IControllerLocale iCtrlLocale)
+				iCtrlLocale.SetLocale();
 			if (!(filterContext.Controller is IControllerProfiler iCtrl))
 				return;
 			var ctrl = filterContext.Controller as Controller;
-			if (iCtrl.SkipRequest(ctrl.Request.Url.LocalPath))
+			if (ctrl != null && iCtrl.SkipRequest(ctrl.Request.Url.LocalPath))
 				return;
 			_request = iCtrl.Profiler.BeginRequest(ctrl.Request.Url.PathAndQuery, ctrl.Session.SessionID);
 		}

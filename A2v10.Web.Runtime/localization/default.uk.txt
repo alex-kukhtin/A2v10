@@ -26,10 +26,10 @@
 @Error=Помилка
 @Warning=Попередження
 ;
-@ResetPassword=Відновлення паролю
-@ResetPasswordBody=Для відновлення паролю перейдіть <a href="{0}">до посилання</a>
+@ResetPassword=Відновлення пароля
+@ResetPasswordBody=Код підтверження для відновлення пароля: <b>{0}</b>
 @ConfirmEMail=Підтвердження е-mail
-@ConfirmEMailBody=Для підтвердження е-mail перейдіть <a href="{0}">до посилання</a>
+@ConfirmEMailBody=Код підтверждення: <b>{0}</b>
 @EMailAlreadyConfirmed=Ваш e-mail вже підтверджено.
 @SetNewPassword=Встановлення паролю
 @InviteEMail=Ласкаво просимо!

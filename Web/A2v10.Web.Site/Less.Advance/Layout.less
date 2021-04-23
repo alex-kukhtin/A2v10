@@ -407,7 +407,7 @@ iframe.eusign-iframe {
 
 
 .flex-list {
-	display: flex!important;
+	display: flex !important;
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -416,18 +416,23 @@ iframe.eusign-iframe {
 		display: block;
 	}
 
+	&.wrap {
+		flex-wrap: wrap;
+	}
+
 	&.horizontal {
 		flex-flow: row wrap;
 
 		&.no-wrap {
 			flex-wrap: nowrap;
 		}
+
 		.flex-list-item {
 			margin-right: @flex-padding;
 		}
 
 		.flex-list-item:last-child {
-			margin-right:0;
+			margin-right: 0;
 		}
 	}
 

@@ -51,7 +51,7 @@ namespace A2v10.Request.Api
 			var sql = $"[{_command.RealSchema}].[{_command.Model}.Update]";
 
 			var prms = CreateParameters(request);
-			var dm = await _dbContext.SaveModelAsync(_command.RealSource, sql, request.BodyObject(), prms);
+			var dm = await _dbContext.SaveModelAsync(_command.RealSource, sql, request.Body, prms);
 
 			return ModelResponse(dm);
 		}
@@ -105,7 +105,7 @@ namespace A2v10.Request.Api
 		{
 			var rq = new ExpandoObject();
 			rq.Set("id", _command.RealId);
-			rq.Set("body", request.BodyObject());
+			rq.Set("body", request.Body);
 			rq.Set("query", request.Query);
 			rq.Set("config", request.Config);
 

@@ -66,6 +66,7 @@ namespace A2v10.Web.Mvc.Start
 			{
 				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
 				LoginPath = new PathString("/account/login"),
+				ReturnUrlParameter = "returnurl",
 				Provider = authProvider,
 				CookieName = GetApplicationCookieName(),
 			});

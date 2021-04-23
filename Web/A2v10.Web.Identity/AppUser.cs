@@ -52,6 +52,8 @@ namespace A2v10.Web.Identity
 		public String TenantRoles { get; set; }
 		public Boolean IsTenantAdmin { get; set; }
 
+		public String Locale { get; set; }
+
 		// optional (for delete)
 		public Int64 CurrentUser { get; set; }
 
@@ -89,6 +91,12 @@ namespace A2v10.Web.Identity
 		public void ClearModified(UserModifiedFlag flag)
 		{
 			_modifiedFlag &= ~flag;
+		}
+
+		public void SetEMailConfirmed()
+		{
+			EmailConfirmed = true;
+			SetModified(UserModifiedFlag.EmailConfirmed);
 		}
 
 		public Boolean IsLockoutModified      => _modifiedFlag.HasFlag(UserModifiedFlag.Lockout);
@@ -130,7 +138,8 @@ namespace A2v10.Web.Identity
 				TenantRoles   == other.TenantRoles &&
 				IsTenantAdmin == other.IsTenantAdmin &&
 				CurrentUser   == other.CurrentUser &&
-				Segment       == other.Segment;
+				Segment       == other.Segment &&
+				Locale        == other.Locale;
 		}
 
 		public String GetClientId()

@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 14.04.2021 18:00:11
+generated: 23.04.2021 14:34:47
 */
 
 set nocount on;
@@ -383,11 +383,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 10 apr 2021
-module version : 7751
+Last updated : 23 apr 2021
+module version : 7752
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7751;
+exec a2sys.SetVersion N'std:security', 7752;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -512,7 +512,7 @@ begin
 			constraint DF_Users_PK default(next value for a2security.SQ_Users),
 		Tenant int null 
 			constraint FK_Users_Tenant_Tenants foreign key references a2security.Tenants(Id),
-		UserName nvarchar(255)	not null constraint UNQ_Users_UserName unique,
+		UserName nvarchar(255) not null constraint UNQ_Users_UserName unique,
 		DomainUser nvarchar(255) null,
 		Void bit not null constraint DF_Users_Void default(0),
 		SecurityStamp nvarchar(max)	not null,
@@ -1430,6 +1430,33 @@ begin
 		set @msg = error_message();
 		raiserror(@msg, 16, 1);
 	end catch
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.CheckRegister')
+	drop procedure a2security.[User.CheckRegister]
+go
+------------------------------------------------
+create procedure a2security.[User.CheckRegister]
+@UserName nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	declare @Id bigint;
+
+	select @Id = Id from a2security.Users where UserName=@UserName and EmailConfirmed = 0 and PhoneNumberConfirmed = 0;
+
+	if @Id is not null
+	begin
+		declare @uid nvarchar(255);
+		set @uid = N'_' + convert(nvarchar(255), newid());
+		update a2security.Users set Void=1, UserName = UserName + @uid, 
+			Email = Email + @uid, PhoneNumber = PhoneNumber + @uid, PasswordHash = null, SecurityStamp = N''
+		where Id=@Id and EmailConfirmed = 0  and PhoneNumberConfirmed = 0 and UserName=@UserName;
+	end
 end
 go
 ------------------------------------------------

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Threading;
@@ -18,8 +18,6 @@ namespace A2v10.Request
 		public static String ForgotPasswordHtml => Resources.forgotPassword;
 		public static String ForgotPasswordMobileHtml => Resources.forgotPasswordMobile;
 		public static String ForgotPasswordScript => Resources.forgotPasswordScript;
-		public static String ResetPasswordHtml => Resources.resetPassword;
-		public static String ResetPasswordScript => Resources.resetPasswordScript;
 		public static String AppLinksScript => Resources.appLinkScript;
 
 		public static String SimpleScript => Resources.simpleScript;

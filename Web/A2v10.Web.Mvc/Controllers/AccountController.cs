@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -27,18 +27,22 @@ using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using System.Configuration;
 using A2v10.Web.Base;
+using System.Dynamic;
 
 namespace A2v10.Web.Mvc.Controllers
 {
 	[Authorize]
 	[CheckMobileFilter]
-	public class AccountController : IdentityController, IControllerTenant
+	[ExecutingFilter]
+	public class AccountController : IdentityController, IControllerTenant, IControllerLocale
 	{
 
 		private readonly IApplicationHost _host;
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
 		private readonly IUserStateManager _userStateManager;
+
+		private const String LOCALE_COOKIE = "_locale";
 
 		public AccountController()
 		{
@@ -129,7 +133,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[AllowAnonymous]
 		[HttpGet]
 		[OutputCache(Duration = 0)]
-		public void Login(String Referral)
+		public void Login(String Referral, String lang)
 		{
 			if (User.Identity.IsAuthenticated)
 			{
@@ -144,7 +148,7 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		// POST: /Account/Login
-		[ActionName("Login")]
+		[ActionName("login")]
 		[HttpPost]
 		[IsAjaxOnly]
 		[AllowAnonymous]
@@ -202,6 +206,8 @@ namespace A2v10.Web.Mvc.Controllers
 			var expires = DateTime.Now.AddDays(-1d);
 			foreach (var key in Request.Cookies.AllKeys)
 			{
+				if (key == LOCALE_COOKIE)
+					continue;
 				var c = Response.Cookies[key];
 				if (c != null)
 					c.Expires = expires;
@@ -215,47 +221,6 @@ namespace A2v10.Web.Mvc.Controllers
 				cc.Expires = DateTime.Now.AddDays(-1d);
 		}
 
-		// GET: /Account/VerifyCode
-		[AllowAnonymous]
-		public async Task<ActionResult> VerifyCode(String provider, String returnUrl, Boolean rememberMe)
-		{
-			// Require that the user has already logged in via username/password or external login
-			if (!await SignInManager.HasBeenVerifiedAsync())
-			{
-				return View("Error");
-			}
-			return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl, RememberMe = rememberMe });
-		}
-
-		// POST: /Account/VerifyCode
-		[HttpPost]
-		[AllowAnonymous]
-		[ValidateJsonAntiForgeryToken]
-		[HandlAntiForgeryExecptionAttribute]
-		public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View(model);
-			}
-
-			// The following code protects for brute force attacks against the two factor codes. 
-			// If a user enters incorrect codes for a specified amount of time then the user account 
-			// will be locked out for a specified amount of time. 
-			// You can configure the account lockout settings in IdentityConfig
-			var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
-			switch (result)
-			{
-				case SignInStatus.Success:
-					return RedirectToLocal(model.ReturnUrl);
-				case SignInStatus.LockedOut:
-					return View("Lockout");
-				case SignInStatus.Failure:
-				default:
-					ModelState.AddModelError("", "Invalid code.");
-					return View(model);
-			}
-		}
 
 		[AllowAnonymous]
 		[HttpGet]
@@ -272,6 +237,14 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.Write("Registration is disabled in this site");
 				return;
 			}
+
+			if (User.Identity.IsAuthenticated)
+			{
+				AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+				Session.Abandon();
+				ClearAllCookies();
+			}
+
 			String page = GetRedirectedPage("register", ResourceHelper.RegisterTenantHtml);
 			SendPage(page, ResourceHelper.RegisterTenantScript);
 		}
@@ -347,7 +320,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 
 		// POST: /Register/Login
-		[ActionName("Register")]
+		[ActionName("register")]
 		[HttpPost]
 		[IsAjaxOnly]
 		[AllowAnonymous]
@@ -380,6 +353,11 @@ namespace A2v10.Web.Mvc.Controllers
 					throw new InvalidDataException("InvalidEmail");
 				}
 
+				// delete user if possible
+				var checkEO = new ExpandoObject();
+				checkEO.Set("UserName", model.Name);
+				await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2security.[User.CheckRegister]", checkEO);
+
 				// create user with tenant
 				var user = new AppUser
 				{
@@ -394,25 +372,30 @@ namespace A2v10.Web.Mvc.Controllers
 				if (String.IsNullOrEmpty(user.Email))
 					user.Email = model.Name;
 
-				var phoneUser = await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", model.Phone));
-				if (phoneUser != null)
+				if (!String.IsNullOrEmpty(model.Phone))
 				{
-					RemoveDDOSTime();
-					throw new InvalidDataException("PhoneNumberAlreadyTaken");
+					var phoneUser = await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", model.Phone));
+					if (phoneUser != null)
+					{
+						RemoveDDOSTime();
+						throw new InvalidDataException("PhoneNumberAlreadyTaken");
+					}
 				}
-
 
 				var result = await UserManager.CreateAsync(user, model.Password);
 
 				if (result.Succeeded)
 				{
 					// email confirmation
-					String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-					var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, Request.Url.Scheme);
+					// String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+					String confirmCode = await UserManager.GenerateTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode);
+
+					//var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, Request.Url.Scheme);
 
 					String subject = _localizer.Localize(null, "@[ConfirmEMail]");
 					String body = GetEMailBody("confirmemail", "@[ConfirmEMailBody]")
-						.Replace("{0}", callbackUrl);
+						.Replace("{0}", confirmCode);
 
 					await UserManager.SendEmailAsync(user.Id, subject, body);
 
@@ -442,52 +425,71 @@ namespace A2v10.Web.Mvc.Controllers
 			return Json(new { Status = status });
 		}
 
-		//
-		// GET: /Account/ConfirmEmail
-		[AllowAnonymous]
-		[HttpGet]
+
+
+		// POST: /Account/ConfirmEmail
 		[OutputCache(Duration = 0)]
-		public async Task ConfirmEmail(Int64? userId, String code)
+		[ActionName("confirmemail")]
+		[HttpPost]
+		[IsAjaxOnly]
+		[AllowAnonymous]
+		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
+		public async Task<ActionResult> ConfirmEmail()
 		{
+			String status = String.Empty;
 			try
 			{
-				if (userId == null || code == null)
+
+				ConfirmEmailModel model;
+				using (var tr = new StreamReader(Request.InputStream))
 				{
-					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
-					return;
+					String json = tr.ReadToEnd();
+					model = JsonConvert.DeserializeObject<ConfirmEmailModel>(json);
 				}
-				var user = await UserManager.FindByIdAsync(userId.Value);
+
+				if (model.Email == null)
+					throw new SecurityException("Invalid e-Mail");
+				if (model.Code == null)
+					throw new SecurityException("Invalid code");
+
+				// LOWER case
+				model.Email = model.Email.ToLowerInvariant();
+
+				var user = await UserManager.FindByNameAsync(model.Email);
+				if (user == null || user.Id == 0)
+					throw new SecurityException("User not found");
+
 				if (user.EmailConfirmed)
+					status = "EMailAlreadyConfirmed";
+				else
 				{
-					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript, null, "@[EMailAlreadyConfirmed]");
-					return;
-				}
-
-				var result = await UserManager.ConfirmEmailAsync(userId.Value, code);
-				if (result.Succeeded)
-				{
-					user = await UserManager.FindByIdAsync(userId.Value);
-					await UserManager.UpdateUser(user);
-
-					String subject = _localizer.Localize(null, "@[InviteEMail]");
-					String body = GetEMailBody("invite", null);
-					if (!String.IsNullOrEmpty(body))
+					var verified = await UserManager.VerifyTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode, model.Code);
+					if (!verified)
+						status = "InvalidConfirmCode";
+					else
 					{
-						var inviteCallback = Url.Action("default", "shell", routeValues: null, protocol: Request.Url.Scheme);
-						body = body.Replace("{0}", inviteCallback);
-						await UserManager.SendEmailAsync(user.Id, subject, body);
-					}
+						user.SetEMailConfirmed();
+						await UserManager.UpdateUser(user);
 
-					SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
-					return;
+						String subject = _localizer.Localize(null, "@[InviteEMail]");
+						String body = GetEMailBody("invite", null);
+						if (!String.IsNullOrEmpty(body))
+						{
+							var inviteCallback = Url.Action("default", "shell", routeValues: null, protocol: Request.Url.Scheme);
+							body = body.Replace("{0}", inviteCallback);
+							await UserManager.SendEmailAsync(user.Id, subject, body);
+						}
+						status = "Success";
+					}
 				}
-				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
 			}
-			catch (Exception /*ex*/)
+			catch (Exception ex)
 			{
 				// TODO: log error here!
-				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
+				status= ex.Message;
 			}
+			return Json(new { Status = status });
 		}
 
 		[AllowAnonymous]
@@ -500,8 +502,47 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		//
+		// POST: /Account/ForgotPasswordCode
+		[ActionName("forgotpasswordcode")]
+		[HttpPost]
+		[IsAjaxOnly]
+		[AllowAnonymous]
+		[ValidateJsonAntiForgeryToken]
+		[HandlAntiForgeryExecptionAttribute]
+		public async Task<ActionResult> ForgotPasswordCode()
+		{
+			String status = "Error";
+			try
+			{
+				ConfirmEmailModel model;
+				using (var tr = new StreamReader(Request.InputStream))
+				{
+					String json = tr.ReadToEnd();
+					model = JsonConvert.DeserializeObject<ConfirmEmailModel>(json);
+				}
+				// LOWER CASE!
+				model.Email = model.Email.ToLower();
+				var user = await UserManager.FindByNameAsync(model.Email);
+				if (user != null)
+				{
+					var verified = await UserManager.VerifyTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode, model.Code);
+					status = verified ? "Success" : "InvalidCode";
+				}
+				else
+				{
+					status = "UserNotFound";
+				}
+			}
+			catch (Exception ex)
+			{
+				status = ex.Message;
+			}
+			return Json(new { Status = status });
+		}
+
+		//
 		// POST: /Account/ForgotPassword
-		[ActionName("ForgotPassword")]
+		[ActionName("forgotpassword")]
 		[HttpPost]
 		[IsAjaxOnly]
 		[AllowAnonymous]
@@ -519,8 +560,8 @@ namespace A2v10.Web.Mvc.Controllers
 					model = JsonConvert.DeserializeObject<ForgotPasswordViewModel>(json);
 				}
 				// LOWER CASE!
-				model.Name = model.Name.ToLower();
-				var user = await UserManager.FindByNameAsync(model.Name);
+				model.EMail = model.EMail.ToLower();
+				var user = await UserManager.FindByNameAsync(model.EMail);
 				if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
 				{
 					// Don't reveal that the user does not exist or is not confirmed
@@ -530,12 +571,11 @@ namespace A2v10.Web.Mvc.Controllers
 					status = "NotAllowed";
 				else
 				{
-					String code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-					var callbackUrl = Url.Action("resetpassword", "account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
+					String code = await UserManager.GenerateTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode);
 					String subject = _localizer.Localize(null, "@[ResetPassword]");
 					String body = _localizer
 						.Localize(null, "@[ResetPasswordBody]")
-						.Replace("{0}", callbackUrl);
+						.Replace("{0}", code);
 					await UserManager.SendEmailAsync(user.Id, subject, body);
 					status = "Success";
 				}
@@ -548,22 +588,8 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		//
-		// GET: /Account/ResetPassword
-		[AllowAnonymous]
-		[HttpGet]
-		[OutputCache(Duration = 0)]
-		public void ResetPassword(String code)
-		{
-			if (code == null)
-				return;
-			String serverInfo = $"{{token: '{code}'}}";
-			String page = GetRedirectedPage("resetpassword", ResourceHelper.ResetPasswordHtml);
-			SendPage(page, ResourceHelper.ResetPasswordScript, serverInfo);
-		}
-
-		//
 		// POST: /Account/ResetPassword
-		[ActionName("ResetPassword")]
+		[ActionName("resetpassword")]
 		[HttpPost]
 		[IsAjaxOnly]
 		[AllowAnonymous]
@@ -581,8 +607,12 @@ namespace A2v10.Web.Mvc.Controllers
 					model = JsonConvert.DeserializeObject<ResetPasswordViewModel>(json);
 				}
 				// LOWER CASE!
-				model.Name = model.Name.ToLower();
-				var user = await UserManager.FindByNameAsync(model.Name);
+				model.EMail = model.EMail.ToLower();
+
+				if (model.Password != model.Confirm)
+					throw new SecurityException("InvalidConfirm");
+
+				var user = await UserManager.FindByNameAsync(model.EMail);
 				if (user == null || String.IsNullOrEmpty(model.Code))
 				{
 					// Don't reveal that the user does not exist
@@ -590,21 +620,30 @@ namespace A2v10.Web.Mvc.Controllers
 				}
 				else
 				{
-					var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
-					if (result.Succeeded)
+					var verified = await UserManager.VerifyTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode, model.Code);
+					if (verified)
 					{
-						await UserManager.UpdateUser(user);
-						status = "Success";
+						var resetCode = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+						var result = await UserManager.ResetPasswordAsync(user.Id, resetCode, model.Password);
+						if (result.Succeeded)
+						{
+							await UserManager.UpdateUser(user);
+							status = "Success";
+						}
+						else
+						{
+							foreach (var e in result.Errors)
+							{
+								if (e.Contains("Invalid token"))
+									status = "InvalidToken";
+							}
+							if (status == null)
+								status = String.Join(", ", result.Errors);
+						}
 					}
 					else
 					{
-						foreach (var e in result.Errors)
-						{
-							if (e.Contains("Invalid token"))
-								status = "InvalidToken";
-						}
-						if (status == null)
-							status = String.Join(", ", result.Errors);
+						status = "InvalidCode";
 					}
 				}
 			}
@@ -656,42 +695,6 @@ namespace A2v10.Web.Mvc.Controllers
 			return Json(new { Status = status });
 		}
 
-		//
-		// GET: /Account/SendCode
-		[AllowAnonymous]
-		public async Task<ActionResult> SendCode(String returnUrl, Boolean? rememberMe)
-		{
-			var userId = await SignInManager.GetVerifiedUserIdAsync();
-			if (userId == 0)
-			{
-				return View("Error");
-			}
-			var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
-			var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-			var rm = rememberMe != null ? rememberMe.Value : false;
-			return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rm });
-		}
-
-		//
-		// POST: /Account/SendCode
-		[HttpPost]
-		[AllowAnonymous]
-		[ValidateJsonAntiForgeryToken]
-		[HandlAntiForgeryExecptionAttribute]
-		public async Task<ActionResult> SendCode(SendCodeViewModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return View();
-			}
-
-			// Generate the token and send it
-			if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
-			{
-				return View("Error");
-			}
-			return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe });
-		}
 
 		[HttpPost]
 		public ActionResult LogOff()
@@ -699,25 +702,15 @@ namespace A2v10.Web.Mvc.Controllers
 			AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 			Session.Abandon();
 			ClearAllCookies();
-			return RedirectToLocal("~/");
+			return Redirect("~/");
 		}
 
 		#region helpers
 
-		private void AddErrors(IdentityResult result)
-		{
-			foreach (var error in result.Errors)
-			{
-				ModelState.AddModelError(String.Empty, error);
-			}
-		}
-
 		private ActionResult RedirectToLocal(String returnUrl)
 		{
 			if (Url.IsLocalUrl(returnUrl))
-			{
 				return Redirect(returnUrl);
-			}
 			return Redirect("~/");
 		}
 
@@ -725,9 +718,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			var user = await UserManager.FindByNameAsync(userName);
 			if (user != null)
-			{
 				await UpdateUser(user, success);
-			}
 		}
 
 		async Task UpdateUser(AppUser user, Boolean? success = null)
@@ -748,6 +739,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			get
 			{
+				// var lng = Request.QueryString["lang"];
 				var culture = Thread.CurrentThread.CurrentUICulture;
 				var lang = culture.TwoLetterISOLanguageName;
 				return lang;
@@ -812,5 +804,17 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 		#endregion
 
+
+		#region IControllerLocale
+		public void SetLocale()
+		{
+			/* from cookies, from */
+			/*
+			var locale = Request.Cookies["_locale"];
+			int z = 55;
+			Response.Cookies.Add(new HttpCookie("_locale", "ru-RU"));
+			*/
+		}
+		#endregion
 	}
 }

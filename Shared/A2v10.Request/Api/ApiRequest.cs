@@ -4,7 +4,6 @@ using System;
 using System.Dynamic;
 using System.Web;
 using System.IO;
-using System.Collections.Specialized;
 
 using Newtonsoft.Json;
 
@@ -24,18 +23,11 @@ namespace A2v10.Request.Api
 		public String Path { get; set; }
 
 		public ExpandoObject Query { get; set; }
-		public String Body { get; set; }
+		public ExpandoObject Body { get; set; }
 		public String ContentType { get; set; }
 		public ExpandoObject Config { get; set; }
 
-		public ExpandoObject BodyObject()
-		{
-			if (!String.IsNullOrEmpty(Body) && ContentType.StartsWith(MimeTypes.Application.Json))
-				return JsonConvert.DeserializeObject<ExpandoObject>(Body);
-			return null;
-		}
-
-		public static ApiRequest FromHttpRequest(HttpRequestBase request, String pathInfo, Action<ApiRequest> setIdentity)
+		static ExpandoObject FromApplicationJson(HttpRequestBase request)
 		{
 			String body = null;
 			if (request.InputStream != null && request.InputStream.Length > 0)
@@ -46,6 +38,35 @@ namespace A2v10.Request.Api
 					body = tr.ReadToEnd();
 				}
 			}
+			if (body != null)
+				return JsonConvert.DeserializeObject<ExpandoObject>(body);
+			return null;
+		}
+
+		static ExpandoObject FromFormData(HttpRequestBase request)
+		{
+			var eo = new ExpandoObject();
+			foreach (var key in request.Form.AllKeys)
+			{
+				eo.SetNotEmpty(key, request.Form[key]);
+			}
+			if (request.Files != null && request.Files.Count > 0)
+			foreach (var f in request.Files.AllKeys)
+			{
+				eo.Set(f, request.Files[f].InputStream);
+			}
+			if (eo.IsEmpty())
+				return null;
+			return eo;
+		}
+
+		public static ApiRequest FromHttpRequest(HttpRequestBase request, String pathInfo, Action<ApiRequest> setIdentity)
+		{
+			ExpandoObject body = null;
+			if (request.ContentType.StartsWith(MimeTypes.Application.Json))
+				body = FromApplicationJson(request);
+			else if (request.ContentType.StartsWith(MimeTypes.Application.FormData))
+				body = FromFormData(request);
 
 			var query = new ExpandoObject();
 			foreach (var key in request.QueryString.Keys) {

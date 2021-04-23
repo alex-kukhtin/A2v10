@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Admin</id>
-		<version>10.0.7687</version>
+		<version>10.0.7769</version>
 		<title>A2v10.Web Admin Part</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>

@@ -50,6 +50,7 @@
     <Compile Include="DynamicHelpers.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="IApplicationReader.cs" />
+    <Compile Include="IControllerLocale.cs" />
     <Compile Include="IHttpService.cs" />
     <Compile Include="IJavaScriptEngine.cs" />
     <Compile Include="ILicenseManager.cs" />

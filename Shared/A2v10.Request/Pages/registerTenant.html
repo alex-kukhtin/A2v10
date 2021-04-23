@@ -2,16 +2,26 @@
 	<div class="initial-form">
 		<h3 class="a2-header text-center" v-text="locale.$RegisterPrompt"></h3>
 		<hr style="margin-top:1rem" />
-		<div v-if="serverError" class="validation-summary" style="margin-top:10px">
+		<div v-if="serverError" class="validation-summary" style="margin-top:10px;white-space:normal">
 			<span class="error" v-text="serverError"></span>
 		</div>
-		<form>
-			<div v-if="showConfirm" class="user-select">
+		<div v-if="showConfirm">
+			<div class="user-select">
 				<p v-text="confirmRegisterText"></p>
-				<p v-text="locale.$CheckEMail"></p>
-				<a tabindex="3" href="/" class="a2-hyperlink" v-text="locale.$LoginLink"></a>
+
+				<div class="control-group bold" style="width:15rem;margin:0 auto;">
+					<label class="a2-label required" v-text="locale.$ConfirmCode"></label>
+					<div class="input-group">
+						<input v-focus class="control text-center" type="text" name="code" v-model="confirmCode" tabindex="1" spellcheck="false" />
+					</div>
+				</div>
+
+				<button @click.stop.prevent="submitConfirm" class="btn btn-default" v-text="locale.$Continue" :disabled="confirmEmailDisabled"></button>
+
+				<a tabindex="3" :href="getReferUrl('/')" class="a2-hyperlink" v-text="locale.$LoginLink"></a>
 			</div>
-			<div v-else>
+		</div>
+		<div v-else>
 				<div class="control-group" :class="{invalid: !validEmail}">
 					<label class="a2-label required" v-text="locale.$Email"></label>
 					<div class="input-group">
@@ -30,8 +40,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="control-group" :class="{invalid: !validPhone}">
-					<label class="a2-label required" v-text="locale.$Phone"></label>
+				<div class="control-group">
+					<label class="a2-label" v-text="locale.$Phone"></label>
 					<div class="input-group">
 						<input class="control" type="text" name="phone" v-model="maskedPhone"
 							   v-on:change="onPhoneChange($event.target.value)"
@@ -60,9 +70,8 @@
 						</div>
 					</div>
 				</div>
-				<button @click.stop.prevent="submit" tabindex="6" class="btn btn-default" v-text="locale.$Register"></button>
+				<button @click.stop.prevent="submitRegister" tabindex="6" class="btn btn-default" v-text="locale.$Register"></button>
 				<a tabindex="7" :href="getReferUrl('/')" class="a2-hyperlink" v-text="locale.$LoginLink"></a>
-			</div>
-		</form>
+		</div>
 	</div>
 </div>

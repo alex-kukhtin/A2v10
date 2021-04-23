@@ -44,6 +44,20 @@
 				"returns": ""
 			},
 			"wrap": true
+		},
+		"userCreate": {
+			"type": "sql",
+			"method": "post",
+			"sqlCommand": {
+				"action": "executeSql",
+				"procedure": "ExecuteApiFile",
+				"parameters": {
+					"Id": "id",
+					"Name": "body.name",
+					"File": "body.file",
+					"Config": "config.url"
+				}
+			}
 		}
 	}
 }

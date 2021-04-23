@@ -138,8 +138,6 @@
     <Content Include="Pages\initLayout.html" />
     <Content Include="Pages\simpleScript.js" />
     <Content Include="Pages\pageUtils.js" />
-    <Content Include="Pages\resetPasswordScript.js" />
-    <Content Include="Pages\resetPassword.html" />
     <Content Include="Pages\registerTenantScript.js" />
     <Content Include="Pages\registerTenant.html" />
     <Content Include="Pages\login.html" />

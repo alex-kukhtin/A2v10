@@ -17,6 +17,7 @@ namespace A2v10.Infrastructure
 		public static class Application
 		{
 			public const String Json = "application/json";
+			public const String FormData = "multipart/form-data";
 		}
 	}
 }

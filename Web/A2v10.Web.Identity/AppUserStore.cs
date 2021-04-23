@@ -62,6 +62,14 @@ namespace A2v10.Web.Identity
 				return null;
 			}
 
+			public void DeleteUser(AppUser user)
+			{
+				if (user == null)
+					return;
+				_mapIds.Remove(user.Id);
+				_mapNames.Remove(user.UserName);
+			}
+
 			public void CacheUser(AppUser user)
 			{
 				if (user == null)
@@ -134,6 +142,7 @@ namespace A2v10.Web.Identity
 		public async Task DeleteAsync(AppUser user)
 		{
 			await _dbContext.ExecuteAsync<AppUser>(DataSource, $"[{DbSchema}].[DeleteUser]", user);
+			_cache.DeleteUser(user);
 		}
 
 		public async Task<AppUser> FindByIdAsync(Int64 userId)
@@ -488,6 +497,8 @@ namespace A2v10.Web.Identity
 			};
 			if (user.IsAdmin)
 				list.Add(new Claim("Admin", "Admin"));
+			if (!String.IsNullOrEmpty(user.Locale))
+				list.Add(new Claim("Locale", user.Locale));
 			if (_host.IsMultiTenant)
 			{
 				var clientId = user.GetClientId();

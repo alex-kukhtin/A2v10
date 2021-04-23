@@ -27,9 +27,9 @@
 @Warning=Предупреждение
 ;
 @ResetPassword=Восстановление пароля
-@ResetPasswordMailText=Для восстановления пароля перейдите <a href="{0}">по ссылке</a>
+@ResetPasswordMailText=Код подтверждения для восстановления пароля: <b>{0}</b>
 @ConfirmEMail=Подтверждение е-mail
-@ConfirmEMailBody=Для подтверждения е-mail перейдите <a href="{0}">по ссылке</a>
+@ConfirmEMailBody=Код подтверждения: <b>{0}</b>
 @EMailAlreadyConfirmed=Ваш e-mail уже подтвержден.
 @SetNewPassword=Установка пароля
 @InviteEMail=Добро пожаловать!

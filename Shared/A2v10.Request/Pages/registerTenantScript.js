@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 "use strict";
 
@@ -32,7 +32,8 @@
 			emailError: '',
 			showConfirm: false,
 			confirmRegisterText: '',
-			passwordError: ''
+			passwordError: '',
+			confirmCode: ''
 		},
 		computed: {
 			locale: function() {
@@ -47,7 +48,6 @@
 				return this.validName &&
 					this.validPassword &&
 					this.validEmail &&
-					this.validPhone &&
 					this.validConfirm;
 			},
 			validName: function() {
@@ -81,16 +81,47 @@
 			validConfirm: function() {
 				return this.submitted ? !!this.confirm && (this.password === this.confirm) : true;
 			},
-			validPhone: function() {
-				return this.submitted ? !!this.phone : true;
-			},
 			refer: function() {
 				let qs = parseQueryString(window.location.search.toLowerCase());
 				return qs.ref || '';
+			},
+			confirmEmailDisabled() {
+				return !this.confirmCode;
 			}
 		},
 		methods: {
-			submit: function() {
+			submitConfirm: function () {
+				this.processing = true;
+				let dataToSend = {
+					Code: this.confirmCode,
+					Email: this.email
+				};
+				const that = this;
+				post('/account/confirmemail', dataToSend)
+					.then(function (response) {
+						console.dir(response);
+						that.processing = false;
+						let result = response.Status;
+						switch (result) {
+							case 'Success':
+								that.navigate();
+								break;
+							case 'EMailAlreadyConfirmed':
+								that.setError('$EMailAlreadyConfirmed');
+								break;
+							case 'InvalidConfirmCode':
+								that.setError('$InvalidConfirmCode');
+								break;
+							default:
+								alert(result);
+						}
+					})
+					.catch(function (error) {
+						that.processing = false;
+						alert(error);
+					});
+			},
+			submitRegister: function() {
 				this.submitted = true;
 				this.serverError = '';
 				this.email = this.email.trim();
@@ -119,9 +150,9 @@
 						else if (result === 'PhoneNumberAlreadyTaken')
 							that.phoneAlreadyTaken();
 						else if (result === 'DDOS')
-							that.ddos();
+							that.setError('$TryLater');
 						else if (result === 'InvalidEmail')
-							that.invalidEmail();
+							that.setError('$InvalidEMailError');
 						else
 							alert(result);
 					})
@@ -145,11 +176,9 @@
 			phoneAlreadyTaken: function() {
 				this.serverError = this.locale.$PhoneNumberAlreadyTaken.replace('{0}', this.maskedPhone);
 			},
-			ddos: function() {
-				this.serverError = this.locale.$TryLater;
-			},
-			invalidEmail: function() {
-				this.serverError = this.locale.$InvalidEMailError;
+			setError: function (key) {
+				let err = this.locale[key];
+				this.serverError = err || key;
 			},
 			failure: function(msg) {
 				this.password = '';

@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using System.Collections.Generic;
+using System.IO;
 
 namespace A2v10.Request.Api
 {
@@ -27,12 +29,27 @@ namespace A2v10.Request.Api
 			_guid = Guid.NewGuid();
 		}
 
+		private ExpandoObject ReplaceStream(ExpandoObject prm)
+		{
+			if (prm.IsEmpty())
+				return null;
+			var eo = new ExpandoObject();
+			foreach (var kv in prm as IDictionary<String, Object>)
+			{
+				if (kv.Value is Stream stream)
+					eo.Set(kv.Key, $"<InputStream({stream.Length})>");
+				else
+					eo.Set(kv.Key, kv.Value);
+			}
+			return eo;
+		}
+
 		private async Task WriteLogRequest(ApiRequest request)
 		{
 			var m = new ExpandoObject();
 			m.Set("path", request.Path);
 			m.SetNotEmpty("query", request.Query);
-			m.SetNotEmpty("body", request.Body);
+			m.SetNotEmpty("body", ReplaceStream(request.Body));
 			m.SetNotEmpty("config", request.Config);
 			var msg = JsonConvert.SerializeObject(m, JsonHelpers.CompactSerializerSettings);
 
@@ -42,6 +59,7 @@ namespace A2v10.Request.Api
 			eo.Set("Guid", _guid);
 			eo.Set("Severity", (Int32) 'I');
 			eo.Set("Message", $"request: {{{msg}}}");
+			eo.SetNotEmpty("Host", request.Host);
 
 			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "[a2api].[WriteLog]", eo);
 		}
