@@ -1,8 +1,8 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
-using System.Threading.Tasks;
+using System.Linq;
 using System.Web;
 
 using Owin;
@@ -15,6 +15,7 @@ using Microsoft.Owin.Security.OAuth;
 using A2v10.Web.Identity;
 using A2v10.Web.Mvc.OAuth2;
 using A2v10.Web.Identity.ApiKey;
+using A2v10.Web.Identity.ApiBasic;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -101,14 +102,26 @@ namespace A2v10.Web.Mvc.Start
 				});
 			}
 
-			if (ConfigurationManager.AppSettings["enableApiKeyAuth"] == "true")
+			var apiAuth = ConfigurationManager.AppSettings["apiAuthentication"];
+			if (apiAuth != null)
 			{
-				var opts = new ApiKeyAuthenticationOptions()
+				var apiAuthKeys = apiAuth.Split(',');
+				if (apiAuthKeys.Any(x => x.Equals("APIKEY", StringComparison.InvariantCultureIgnoreCase)))
 				{
-					UnauthorizedCode = 403
-				};
-				opts.Provider.OnValidateIdentity = (context) => DbValidateApiKey.ValidateApiKey(context);
-				app.UseApiKeyAuthentication(opts);
+					var opts = new ApiKeyAuthenticationOptions()
+					{
+						UnauthorizedCode = 403
+					};
+					app.UseApiKeyAuthentication(opts);
+				}
+				if (apiAuthKeys.Any(x => x.Equals("BASIC", StringComparison.InvariantCultureIgnoreCase)))
+				{
+					var opts = new ApiBasicAuthenticationOptions()
+					{
+						UnauthorizedCode = 403
+					};
+					app.UseApiBasicAuthentication(opts);
+				}
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210328-7760
+// 20210328-7771
 // components/datagrid.js*/
 
 (function () {
@@ -10,28 +10,12 @@
 	 * Groupings. "v-show" on a line is much faster than "v-if" on an entire template.
 	 */
 
-	/*TODO:
-   7. Доделать checked
-   10.
-   */
-
-
 	const utils = require('std:utils');
 	const log = require('std:log');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
 
 	const eqlower = utils.text.equalNoCase;
-
-	/* group marker
-				<th v-if="isGrouping" class="group-cell" style="display:none">
-					<div class="h-group">
-						<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a
-							@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
-					</div>
-				</th>
-			<col v-if="isGrouping" class="fit"/>
-	 */
 
 	const dataGridTemplate = `
 <div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}" :test-id="testId">

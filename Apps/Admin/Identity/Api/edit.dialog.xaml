@@ -20,7 +20,24 @@
 								Command="{BindCmd Execute, CommandName=refresh}"/>
 						<Button Grid.Row="2" Grid.Col="3" Tip="Копіювати"
 							Style="Outline" Size="Small" Icon="Copy" 
-								Command="{BindCmd Execute, CommandName=copy}"/>
+								Command="{BindCmd Execute, CommandName=copy, Argument={Bind ApiKey}}"/>
+						<TextBox Grid.Row="3" Label="Дозволені IP"
+								Value="{Bind AllowIP}" Description="Через кому або пробіл. '*' не дозволяються"/>
+						<TextBox Grid.Row="4" Label="Redirect URL"
+								Value="{Bind RedirectUrl}"/>
+					</Grid>
+				</Slot>
+			</Tab>
+			<Tab Header="Basic">
+				<Slot Scope="{Bind User.Logins.Basic}">
+					<Grid Columns="1*,Auto" Rows="Auto,Auto,Auto,1*">
+						<TextBox Grid.Row="1" Label="Client Id" 
+								Value="{Bind ClientId}"/>
+						<TextBox Grid.Row="2" Label="Client secret"
+								Value="{Bind ClientSecret}"/>
+						<Button Grid.Row="2" Grid.Col="2" Tip="Копіювати"
+							Style="Outline" Size="Small" Icon="Copy" 
+								Command="{BindCmd Execute, CommandName=copy, Argument={Bind ClientSecret}}"/>
 						<TextBox Grid.Row="3" Label="Дозволені IP"
 								Value="{Bind AllowIP}" Description="Через кому або пробіл. '*' не дозволяються"/>
 						<TextBox Grid.Row="4" Label="Redirect URL"

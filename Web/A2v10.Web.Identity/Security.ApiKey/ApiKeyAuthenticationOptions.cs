@@ -11,7 +11,10 @@ namespace A2v10.Web.Identity.ApiKey
 			: base(authenticationType)
 		{
 			UnauthorizedCode = 401;
-			Provider = new ApiKeyAuthenticationProvider();
+			Provider = new ApiKeyAuthenticationProvider()
+			{
+				OnValidateIdentity = (context) => DbValidateApiKey.ValidateApiKey(context)
+			};
 		}
 
 		public ApiKeyAuthenticationProvider Provider { get; set; }

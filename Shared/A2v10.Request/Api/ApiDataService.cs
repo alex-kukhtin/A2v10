@@ -105,7 +105,9 @@ namespace A2v10.Request.Api
 				await WriteException(request, ex);
 
 				var msg = ex.Message;
-				if (!_host.IsDebugConfiguration)
+				if (msg.StartsWith("API:", StringComparison.OrdinalIgnoreCase))
+					msg = msg.Substring(4);
+				else if (!_host.IsDebugConfiguration)
 					msg = "invalid request data";
 
 				return new ApiResponse()

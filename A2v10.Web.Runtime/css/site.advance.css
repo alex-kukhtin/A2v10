@@ -6043,13 +6043,16 @@ iframe.eusign-iframe {
   flex-direction: row;
 }
 .flex-list {
-  display: flex!important;
+  display: flex !important;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .flex-list .flex-list-item {
   display: block;
+}
+.flex-list.wrap {
+  flex-wrap: wrap;
 }
 .flex-list.horizontal {
   flex-flow: row wrap;

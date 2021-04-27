@@ -3705,6 +3705,9 @@ iframe.eusign-iframe {
 .flex-list .flex-list-item {
   display: block;
 }
+.flex-list.wrap {
+  flex-wrap: wrap;
+}
 .flex-list.horizontal {
   flex-flow: row wrap;
 }

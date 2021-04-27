@@ -17,8 +17,6 @@
 				</div>
 
 				<button @click.stop.prevent="submitConfirm" class="btn btn-default" v-text="locale.$Continue" :disabled="confirmEmailDisabled"></button>
-
-				<a tabindex="3" :href="getReferUrl('/')" class="a2-hyperlink" v-text="locale.$LoginLink"></a>
 			</div>
 		</div>
 		<div v-else>

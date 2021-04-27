@@ -57,7 +57,11 @@
 		$ConfirmEMailText: 'E-Mail wurde erfolgreich bestätigt',
 		$AlreadyTaken: 'E-Mail {0} ist ungültig oder bereits vergeben',
 		$PhoneNumberAlreadyTaken: 'Telefonnummer {0} ist ungültig oder bereits vergeben',
-		$TryLater: 'Zu viele Anmeldungsversuche in kurzer Zeit. \ NVersuchen Sie nochmal, sich in fünf Minuten zu registrieren.'
+		$TryLater: 'Zu viele Anmeldungsversuche in kurzer Zeit. \ NVersuchen Sie nochmal, sich in fünf Minuten zu registrieren.',
+		$Continue: 'Fortsetzen',
+		$ConfirmCode: 'Bestätigungscode',
+		$InvalidConfirmCode: 'Ungültiger Bestätigungscode',
+		$EMailAlreadyConfirmed: 'E-Mail bereits bestätigt'
 	};
 
 

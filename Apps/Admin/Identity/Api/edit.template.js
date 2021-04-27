@@ -3,11 +3,6 @@
 
 const template = {
 	properties: {
-		/* TEMPORARY */
-		'TUser.ClientId'() { return this.Logins.ApiKey.ClientId; },
-		'TUser.ApiKey'() { return this.Logins.ApiKey.ApiKey; },
-		'TUser.AllowIP'() { return this.Logins.ApiKey.AllowIP; },
-		'TUser.RedirectUrl'() { return this.Logins.ApiKey.RedirectUrl; }
 	},
 	events: {
 	},
@@ -29,7 +24,7 @@ async function refresh() {
 	this.User.Logins.ApiKey.ApiKey = result.Result;
 }
 
-function copy() {
-	navigator.clipboard.writeText(this.User.Logins.ApiKey.ApiKey);
-	this.$ctrl.$msg('Ключ скопійовано до Clipboard');
+function copy(arg) {
+	navigator.clipboard.writeText(arg);
+	this.$ctrl.$toast('Значення скопійовано до Clipboard', 'success');
 }

@@ -3398,6 +3398,9 @@ tr:hover .commandbar.visible-hover {
 .stack-panel.wrap {
   flex-wrap: wrap;
 }
+.align-stretch {
+  align-items: stretch !important;
+}
 .align-center {
   align-items: center!important;
 }

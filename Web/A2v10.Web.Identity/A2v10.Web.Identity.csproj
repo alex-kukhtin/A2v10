@@ -94,6 +94,13 @@
     <Compile Include="AppUserManager.cs" />
     <Compile Include="AppUserStore.cs" />
     <Compile Include="IdentityEmailService.cs" />
+    <Compile Include="Security.ApiBasic\ApiBasicAuthenticationOptions.cs" />
+    <Compile Include="Security.ApiBasic\ApiBasicAuthenticationProvider.cs" />
+    <Compile Include="Security.ApiBasic\ApiBasicValidateIdentityContext.cs" />
+    <Compile Include="Security.ApiBasic\ApiBasicAuthenticationMiddleware.cs" />
+    <Compile Include="Security.ApiBasic\ApiBasicAuthenticationHandler.cs" />
+    <Compile Include="Security.ApiBasic\AppBuilderExtensions.cs" />
+    <Compile Include="Security.ApiBasic\DbValidateApiBasic.cs" />
     <Compile Include="Security.ApiKey\ApiKeyAuthenticationHandler.cs" />
     <Compile Include="Security.ApiKey\ApiKeyAuthenticationMiddleware.cs" />
     <Compile Include="Security.ApiKey\ApiKeyAuthenticationOptions.cs" />
@@ -130,5 +137,6 @@
       <Name>A2v10.Messaging</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
