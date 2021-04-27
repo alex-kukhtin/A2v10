@@ -659,8 +659,8 @@ go
 ------------------------------------------------
 create procedure a2security.FindApiUserByBasic
 @Host nvarchar(255) = null,
-@User nvarchar(255) = null,
-@Password nvarchar(255) = null
+@ClientId nvarchar(255) = null,
+@ClientSecret nvarchar(255) = null
 as
 begin
 	set nocount on;
@@ -669,7 +669,7 @@ begin
 	declare @status nvarchar(255);
 	declare @code int;
 
-	set @status = N'Basic=' + @User;
+	set @status = N'Basic=' + @ClientId;
 	set @code = 65; /*fail*/
 
 	declare @usertable table(Id bigint, Tenant int, Segment nvarchar(255), [Name] nvarchar(255), ClientId nvarchar(255), AllowIP nvarchar(255));
@@ -677,7 +677,7 @@ begin
 	insert into @usertable(Id, Tenant, Segment, [Name], ClientId, AllowIP)
 	select top(1) u.Id, u.Tenant, Segment, [Name]=u.UserName, s.ClientId, s.AllowIP 
 	from a2security.Users u inner join a2security.ApiUserLogins s on u.Id = s.[User]
-	where u.Void=0 and s.Mode = N'Basic' and s.ClientId=@User and s.ClientSecret = @Password;
+	where u.Void=0 and s.Mode = N'Basic' and s.ClientId = @ClientId and s.ClientSecret = @ClientSecret;
 	
 	if @@rowcount > 0 
 	begin

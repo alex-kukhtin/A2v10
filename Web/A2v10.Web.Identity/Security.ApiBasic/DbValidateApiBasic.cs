@@ -13,18 +13,6 @@ namespace A2v10.Web.Identity.ApiBasic
 {
 	public static class DbValidateApiBasic
 	{
-		private static Boolean IsValidIPAddress(String allow, String real)
-		{
-			if (String.IsNullOrEmpty(allow) || allow == "*")
-				return true; // all
-			var arr = allow.Replace(" ", ",").Split(',');
-			foreach (var x in arr)
-			{
-				if (x == real)
-					return true;
-			}
-			return false;
-		}
 
 		static List<Claim> CreateClaims(ApiAppUser user)
 		{
@@ -50,14 +38,14 @@ namespace A2v10.Web.Identity.ApiBasic
 
 			var prms = new ExpandoObject();
 			prms.Set("Host", context.Host);
-			prms.Set("User", context.User);
-			prms.Set("Password", context.Password);
+			prms.Set("ClientId", context.ClientId);
+			prms.Set("ClientSecret", context.ClientSecret);
 
 			var user = await dbContext.LoadAsync<ApiAppUser>(host.CatalogDataSource, findUsersql, prms);
 
 			if (user != null)
 			{
-				if (IsValidIPAddress(user.AllowIP, context.Host))
+				if (IdentityHelpers.IsValidIPAddress(user.AllowIP, context.Host))
 				{
 					context.Claims = CreateClaims(user);
 					context.IsValidated = true;
