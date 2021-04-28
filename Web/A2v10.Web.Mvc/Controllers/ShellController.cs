@@ -174,10 +174,15 @@ namespace A2v10.Web.Mvc.Controllers
 		public String GetUserPersonName()
 		{
 			var name = User.Identity.GetUserPersonName();
+			return Server.HtmlEncode(name);
+		}
+
+		public String GetUserClientId()
+		{
 			var clientId = User.Identity.GetUserClientId();
 			if (clientId != null)
-				name += $" [{clientId}]";
-			return Server.HtmlEncode(name);
+				return Server.HtmlEncode(clientId);
+			return String.Empty;
 		}
 
 		public String GetCompanyButton()
@@ -196,6 +201,7 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					{ "$(RootUrl)", RootUrl },
 					{ "$(PersonName)", GetUserPersonName() },
+					{ "$(ClientId)", GetUserClientId() },
 					{ "$(CompanyButton)", GetCompanyButton() },
 					{ "$(Locale)", _baseController.CurrentLang },
 					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." }

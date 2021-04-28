@@ -13,7 +13,7 @@ namespace A2v10.Web.Identity.ApiBasic
 		{
 			Options = options;
 			ClientId = clientId;
-			ClientSecret = ClientSecret;
+			ClientSecret = clientSecret;
 			Host = host;
 		}
 

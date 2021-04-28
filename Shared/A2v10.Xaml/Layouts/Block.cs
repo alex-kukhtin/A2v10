@@ -15,7 +15,7 @@ namespace A2v10.Xaml
 		public Length Height { get; set; }
 		public Length Width { get; set; }
 		public Boolean Border { get; set; }
-		public Boolean Scroll { get; set; }
+		public Boolean? Scroll { get; set; }
 		public Boolean Relative { get; set; }
 		public TextAlign Align { get; set; }
 		public TextColor Color { get; set; }
@@ -56,7 +56,7 @@ namespace A2v10.Xaml
 			if (Width != null)
 				div.MergeStyle("width", Width.Value);
 			div.AddCssClassBool(Border, "bordered-pane");
-			div.AddCssClassBool(Scroll, "scrollable-pane");
+			div.AddCssClassBoolNo(Scroll, "scroll");
 			div.AddCssClassBool(Relative, "relative");
 
 			if (DropShadow != ShadowStyle.None)

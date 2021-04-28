@@ -481,7 +481,9 @@
 		},
 		methods: {
 			visible() {
-				if (this.$parent.isRowDetailsCell)
+				if (this.$parent.isRowDetailsAlways)
+					return true;
+				else if (this.$parent.isRowDetailsCell)
 					return this.row._uiprops_.$details ? true : false;
 				return this.row === this.$parent.selected();
 			}
@@ -545,6 +547,9 @@
 			},
 			isRowDetailsCell() {
 				return this.rowDetails && this.rowDetailsActivate === 'cell';
+			},
+			isRowDetailsAlways() {
+				return this.rowDetails && this.rowDetailsActivate === 'always';
 			},
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';

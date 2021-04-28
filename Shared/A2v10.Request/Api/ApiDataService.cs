@@ -88,6 +88,9 @@ namespace A2v10.Request.Api
 
 				var cmd = ApiV2RequestModel.GetCommand(_appReader, request.Path);
 
+				if (cmd.DebugOnly && !_host.IsDebugConfiguration)
+					throw new ArgumentOutOfRangeException("Invalid environment");
+
 				cmd.ValidateRequest(request);
 
 				var handler = cmd.GetHandler(ServiceLocator.Current);

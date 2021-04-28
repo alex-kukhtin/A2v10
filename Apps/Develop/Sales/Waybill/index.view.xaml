@@ -121,7 +121,7 @@
 		<DataGridColumn Header="Dynamic" Content="{Bind Memo}" If="{Bind Root.$$ColumnVisible}" />
 		-->
 		<DataGrid.RowDetails>
-			<DataGridRowDetails Visible="{Bind $HasParent}" Activate="Cell">
+			<DataGridRowDetails Visible="{Bind $HasParent}" Activate="Always">
 				<StackPanel Orientation="Horizontal">
 					<Label Margin="0,6,0,0">Основание:</Label>
 					<Hyperlink Icon="FileLink"

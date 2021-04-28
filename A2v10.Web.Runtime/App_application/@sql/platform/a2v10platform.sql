@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7670
-generated: 25.04.2021 10:06:47
+generated: 28.04.2021 13:27:57
 */
 
 set nocount on;
@@ -383,11 +383,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 23 apr 2021
-module version : 7752
+Last updated : 27 apr 2021
+module version : 7753
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7752;
+exec a2sys.SetVersion N'std:security', 7753;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1031,6 +1031,46 @@ begin
 		values (0, N'I', @code, @Host, @status);
 
 	select * from @user;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'FindApiUserByBasic')
+	drop procedure a2security.FindApiUserByBasic
+go
+------------------------------------------------
+create procedure a2security.FindApiUserByBasic
+@Host nvarchar(255) = null,
+@ClientId nvarchar(255) = null,
+@ClientSecret nvarchar(255) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+
+	declare @status nvarchar(255);
+	declare @code int;
+
+	set @status = N'Basic=' + @ClientId;
+	set @code = 65; /*fail*/
+
+	declare @usertable table(Id bigint, Tenant int, Segment nvarchar(255), [Name] nvarchar(255), ClientId nvarchar(255), AllowIP nvarchar(255));
+
+	insert into @usertable(Id, Tenant, Segment, [Name], ClientId, AllowIP)
+	select top(1) u.Id, u.Tenant, Segment, [Name]=u.UserName, s.ClientId, s.AllowIP 
+	from a2security.Users u inner join a2security.ApiUserLogins s on u.Id = s.[User]
+	where u.Void=0 and s.Mode = N'Basic' and s.ClientId = @ClientId and s.ClientSecret = @ClientSecret;
+	
+	if @@rowcount > 0 
+	begin
+		set @code = 64 /*sucess*/;
+		update a2security.Users set LastLoginDate=getutcdate(), LastLoginHost=@Host
+			from @usertable t inner join a2security.Users u on t.Id = u.Id;
+	end
+
+	insert into a2security.[Log] (UserId, Severity, Code, Host, [Message])
+		values (0, N'I', @code, @Host, @status);
+
+	select * from @usertable;
 end
 go
 ------------------------------------------------

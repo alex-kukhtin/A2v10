@@ -100,6 +100,8 @@
 		</Selector>
 		<Static Grid.Row="3" Grid.Col="4" Value="{Bind Document.Agent.Name}"></Static>
 		<Block Grid.Row="4" Grid.ColSpan="4">
+			<TabPanel Overflow="True">
+				<Tab Header="Test Tab with scroll">
 			<Toolbar Style="Transparent">
 				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
 			</Toolbar>
@@ -128,11 +130,11 @@
 				<TableRow Mark="{Bind $RowMark}">
 					<TableCell Content="{Bind RowNo}" Align="Right"/>
 					<TextBox Value="{Bind Entity.Article}"/>
-					<TextBox Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}">
-						<TextBox.AddOns>
+							<Selector Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}" Delegate="fetchCustomers">
+						<Selector.AddOns>
 							<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods'}"/>
-						</TextBox.AddOns>
-					</TextBox>
+						</Selector.AddOns>
+					</Selector>
 					<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
 					<TextBox Value="{Bind Qty, DataType=Number, Format='0'}" Align="Right" Number="True">
 						<TextBox.AddOns>
@@ -147,6 +149,8 @@
 					<Label Content="{Bind Qty}"></Label>
 				</TableRow>
 			</Table>
+				</Tab>
+			</TabPanel>
 		</Block>
 		<TextBox Grid.Row="6" Grid.ColSpan="4" Label="@[Memo]" Multiline="True" AutoSize="True"
 			Value="{Bind Document.Memo}" Rows="3" UpdateTrigger="Input">

@@ -11,7 +11,7 @@ const template = {
 		'TDocument.$Mark': mark,
 		'TDocument.$Icon'() { return this.Done ? 'flag-green' : ''; },
 		"TDocument.$AgentPopoverUrl": agentPopoverUrl,
-		"TDocument.$HasParent"() { return this.ParentDoc.Id !== 0; },
+		"TDocument.$HasParent"() { return false; /*this.ParentDoc.Id !== 0;*/ },
 		"TDocParent.$Name": parentName
 	},
 	events: {

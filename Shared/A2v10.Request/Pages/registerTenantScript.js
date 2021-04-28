@@ -53,6 +53,9 @@
 			validName: function() {
 				return this.submitted ? !!this.name : true;
 			},
+			validPhone: function () {
+				return this.submitted ? !!this.phone : true;
+			},
 			validEmail: function() {
 				if (!this.submitted) return true;
 				if (!this.email) {

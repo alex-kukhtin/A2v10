@@ -6386,7 +6386,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210328-7760
+// 20210328-7771
 // components/datagrid.js*/
 
 (function () {
@@ -6396,28 +6396,12 @@ Vue.component('validator-control', {
 	 * Groupings. "v-show" on a line is much faster than "v-if" on an entire template.
 	 */
 
-	/*TODO:
-   7. Доделать checked
-   10.
-   */
-
-
 	const utils = require('std:utils');
 	const log = require('std:log');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
 
 	const eqlower = utils.text.equalNoCase;
-
-	/* group marker
-				<th v-if="isGrouping" class="group-cell" style="display:none">
-					<div class="h-group">
-						<a @click.prevent="expandGroups(gi)" v-for="gi in $groupCount" v-text='gi' /><a
-							@click.prevent="expandGroups($groupCount + 1)" v-text='$groupCount + 1' />
-					</div>
-				</th>
-			<col v-if="isGrouping" class="fit"/>
-	 */
 
 	const dataGridTemplate = `
 <div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}" :test-id="testId">
@@ -6883,7 +6867,9 @@ Vue.component('validator-control', {
 		},
 		methods: {
 			visible() {
-				if (this.$parent.isRowDetailsCell)
+				if (this.$parent.isRowDetailsAlways)
+					return true;
+				else if (this.$parent.isRowDetailsCell)
 					return this.row._uiprops_.$details ? true : false;
 				return this.row === this.$parent.selected();
 			}
@@ -6947,6 +6933,9 @@ Vue.component('validator-control', {
 			},
 			isRowDetailsCell() {
 				return this.rowDetails && this.rowDetailsActivate === 'cell';
+			},
+			isRowDetailsAlways() {
+				return this.rowDetails && this.rowDetailsActivate === 'always';
 			},
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';
@@ -12654,13 +12643,13 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
-/*20210409-7762*/
+/*20210428-7771*/
 /* controllers/navbar.js */
 
 (function () {
 
 	const locale = window.$$locale;
-	const menu = component('std:navmenu');
+	const menuTools = component('std:navmenu');
 	const eventBus = require('std:eventBus');
 	const period = require('std:period');
 	const store = component('std:store');
@@ -12707,12 +12696,12 @@ Vue.directive('resize', {
 					return;
 				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
 				let savedUrl = localStorage.getItem(storageKey) || '';
-				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+				if (savedUrl && !menuTools.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
 					// saved segment not found in current menu
 					savedUrl = '';
 				}
 				let opts = { title: null, seg2: savedUrl };
-				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				let url = menuTools.makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
 			},
 			showHelp() {
@@ -12722,7 +12711,8 @@ Vue.directive('resize', {
 				if (!this.menu) return null;
 				let am = this.menu.find(x => this.isActive(x));
 				if (am && am.Menu) {
-					let am2 = am.Menu.find(x => this.isActive2(x));
+					// find recursive!
+					let am2 = menuTools.findMenu(am.Menu, x => this.isActive2(x));
 					if (am2 && am2.Help)
 						return am2.Help;
 				}
@@ -12802,12 +12792,12 @@ Vue.directive('resize', {
 				this.closeNavMenu();
 				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
 				let savedUrl = localStorage.getItem(storageKey) || '';
-				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+				if (savedUrl && !menuTools.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
 					// saved segment not found in current menu
 					savedUrl = '';
 				}
 				let opts = { title: null, seg2: savedUrl };
-				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				let url = menuTools.makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
 			},
 			closeNavMenu() {

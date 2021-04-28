@@ -6867,7 +6867,9 @@ Vue.component('validator-control', {
 		},
 		methods: {
 			visible() {
-				if (this.$parent.isRowDetailsCell)
+				if (this.$parent.isRowDetailsAlways)
+					return true;
+				else if (this.$parent.isRowDetailsCell)
 					return this.row._uiprops_.$details ? true : false;
 				return this.row === this.$parent.selected();
 			}
@@ -6931,6 +6933,9 @@ Vue.component('validator-control', {
 			},
 			isRowDetailsCell() {
 				return this.rowDetails && this.rowDetailsActivate === 'cell';
+			},
+			isRowDetailsAlways() {
+				return this.rowDetails && this.rowDetailsActivate === 'always';
 			},
 			isMarkRow() {
 				return this.markStyle === 'row' || this.markStyle === 'both';
@@ -12638,13 +12643,13 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
-/*20210409-7762*/
+/*20210428-7771*/
 /* controllers/navbar.js */
 
 (function () {
 
 	const locale = window.$$locale;
-	const menu = component('std:navmenu');
+	const menuTools = component('std:navmenu');
 	const eventBus = require('std:eventBus');
 	const period = require('std:period');
 	const store = component('std:store');
@@ -12691,12 +12696,12 @@ Vue.directive('resize', {
 					return;
 				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
 				let savedUrl = localStorage.getItem(storageKey) || '';
-				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+				if (savedUrl && !menuTools.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
 					// saved segment not found in current menu
 					savedUrl = '';
 				}
 				let opts = { title: null, seg2: savedUrl };
-				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				let url = menuTools.makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
 			},
 			showHelp() {
@@ -12706,7 +12711,8 @@ Vue.directive('resize', {
 				if (!this.menu) return null;
 				let am = this.menu.find(x => this.isActive(x));
 				if (am && am.Menu) {
-					let am2 = am.Menu.find(x => this.isActive2(x));
+					// find recursive!
+					let am2 = menuTools.findMenu(am.Menu, x => this.isActive2(x));
 					if (am2 && am2.Help)
 						return am2.Help;
 				}
@@ -12786,12 +12792,12 @@ Vue.directive('resize', {
 				this.closeNavMenu();
 				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
 				let savedUrl = localStorage.getItem(storageKey) || '';
-				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+				if (savedUrl && !menuTools.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
 					// saved segment not found in current menu
 					savedUrl = '';
 				}
 				let opts = { title: null, seg2: savedUrl };
-				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				let url = menuTools.makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
 			},
 			closeNavMenu() {
@@ -12974,9 +12980,9 @@ Vue.directive('resize', {
 		tabSideBar: a2TabSideBar
 	};
 })();	
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20201005-7710*/
+/*20210428-7771*/
 /* controllers/shell.js */
 
 (function () {
@@ -13017,7 +13023,11 @@ Vue.directive('resize', {
 		<a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
 	</template>
 	<div class="dropdown dir-down separate" v-dropdown>
-		<button class="btn user-name" toggle :title="personName"><i class="ico ico-user"></i> <span id="layout-person-name" class="person-name" v-text="personName"></span><span class="caret"></span></button>
+		<button class="btn user-name" toggle :title="personName"><i class="ico ico-user"></i> 
+			<span id="layout-person-name" class="person-name" v-text="personName"></span>
+			<span id="layout-client-id" class="client-id" v-if="clientId"> [<span v-text="clientId" ></span>]</span>
+			<span class="caret"></span>
+		</button>
 		<div class="dropdown-menu menu down-left">
 			<a v-if="!isSinglePage " v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
 			<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> <span v-text="locale.$ChangePassword"></span></a>
@@ -13034,6 +13044,7 @@ Vue.directive('resize', {
 			subtitle: String,
 			userState: Object,
 			personName: String,
+			clientId: String,
 			userIsAdmin: Boolean,
 			menu: Array,
 			newMenu: Array,

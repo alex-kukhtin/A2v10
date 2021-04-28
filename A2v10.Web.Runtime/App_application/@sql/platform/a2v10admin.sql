@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 apr 2021
-module version : 7750
+Last updated : 27 apr 2021
+module version : 7751
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:admin', 7750;
+exec a2sys.SetVersion N'std:admin', 7751;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -939,8 +939,9 @@ begin
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	-- list of Api users
-	select [Users!TUser!Array]=null, [Id!!Id] = Id, [Name] = UserName, [Memo], LastLoginDate, LastLoginHost
-	from a2security.Users where ApiUser = 1 and Void=0;
+	select [Users!TUser!Array]=null, [Id!!Id]=u.Id, [Name!!Name]=UserName, u.Memo, u.LastLoginDate, u.LastLoginHost
+	from a2security.Users u
+	where u.ApiUser = 1 and u.Void=0;
 end
 go
 ------------------------------------------------
@@ -961,9 +962,7 @@ begin
 
 	-- one API user
 	select [User!TUser!Object]=null, [Id!!Id] = Id, [Name] = UserName, [Memo], 
-		LastLoginDate, LastLoginHost, [Logins!TLogin!MapObject!ApiKey:OAuth2:JWT] = null,
-		/*TMP*/ClientId = cast(null as nvarchar(255)), ApiKey = cast(null as nvarchar(255)),
-		RedirectUrl = cast(null as nvarchar(255))
+		LastLoginDate, LastLoginHost, [Logins!TLogin!MapObject!ApiKey:Basic] = null
 	from a2security.Users where ApiUser = 1 and Void=0 and Id=@Id;
 
 	select [!TLogin!MapObject] = null, [!!Key] = [Mode],
@@ -988,7 +987,21 @@ create type a2admin.[ApiUser.TableType]
 as table(
 	Id bigint null,
 	[Name] nvarchar(255),
+	[Memo] nvarchar(255)
+)
+go
+------------------------------------------------
+if exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2admin' and DOMAIN_NAME=N'ApiLogin.TableType' and DATA_TYPE=N'table type')
+	drop type [a2admin].[ApiLogin.TableType];
+go
+------------------------------------------------
+create type a2admin.[ApiLogin.TableType]
+as table(
+	Id bigint null,
+	ParentId bigint,
+	[CurrentKey] nvarchar(255),
 	[ClientId] nvarchar(255),
+	[ClientSecret] nvarchar(255),
 	[ApiKey] nvarchar(255),
 	[AllowIP] nvarchar(255),
 	[Memo] nvarchar(255),
@@ -1002,14 +1015,17 @@ begin
 	set nocount on;
 
 	declare @User a2admin.[ApiUser.TableType];
+	declare @Logins a2admin.[ApiLogin.TableType];
 	select [User!User!Metadata]=null, * from @User;
+	select [Logins!User.Logins*!Metadata] = null, * from @Logins;
 end
 go
 ------------------------------------------------
 create procedure [a2admin].[ApiUser.Update]
 	@TenantId int = null,
 	@UserId bigint,
-	@User a2admin.[ApiUser.TableType] readonly
+	@User a2admin.[ApiUser.TableType] readonly,
+	@Logins a2admin.[ApiLogin.TableType] readonly
 as
 begin
 	set nocount on;
@@ -1029,8 +1045,8 @@ begin
 			target.[UserName] = source.[Name],
 			target.Memo = source.Memo
 	when not matched by target then
-		insert ([UserName], Memo, SecurityStamp)
-		values ([Name], Memo, N'')
+		insert ([UserName], Memo, SecurityStamp, ApiUser)
+		values ([Name], Memo, N'', 1)
 	output 
 		$action op,
 		inserted.Id id
@@ -1039,18 +1055,21 @@ begin
 	select top(1) @RetId = id from @output;
 
 	merge a2security.ApiUserLogins as t
-	using @User as s
-	on (t.[User] = s.[Id] and t.Mode = N'ApiKey')
+	using @Logins as s
+	on (t.[User] = @RetId and t.Mode = s.CurrentKey and s.CurrentKey in (N'ApiUser', N'Basic'))
 	when matched then update set
 		t.[ClientId] = s.ClientId,
+		t.[ClientSecret] = s.[ClientSecret],
 		t.[ApiKey] = s.ApiKey,
 		t.[AllowIP] = s.[AllowIP],
 		t.[RedirectUrl] = s.[RedirectUrl]
 	when not matched by target then insert
-		([User], Mode, ApiKey, ClientId, AllowIP, [RedirectUrl]) values
-		(@RetId, N'ApiKey', s.ApiKey, s.ClientId, AllowIP, [RedirectUrl]);
+		([User], Mode, ApiKey, ClientId, ClientSecret, AllowIP, [RedirectUrl]) values
+		(@RetId, s.CurrentKey, s.ApiKey, s.ClientId, s.ClientSecret, AllowIP, [RedirectUrl])
+	when not matched by source and t.[User] = @RetId then delete;
 		
-	exec a2admin.[ApiUser.Load] @TenantId, @UserId, @RetId;
+
+	exec a2admin.[ApiUser.Load] @TenantId = @TenantId, @UserId = @UserId, @Id = @RetId;
 end
 go
 

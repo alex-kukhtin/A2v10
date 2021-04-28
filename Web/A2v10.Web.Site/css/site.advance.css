@@ -1273,17 +1273,20 @@ header .btn.company-name,
 }
 header .btn .caret,
 .header .btn .caret {
-  margin: 0 0.25em 0 0.5em;
+  margin: 0 0.25em;
 }
 header .user-name .person-name,
 .header .user-name .person-name,
 header .company-name,
 .header .company-name {
-  display: inline-block;
-  vertical-align: bottom;
   overflow: hidden;
   max-width: 20rem;
   text-overflow: ellipsis;
+  user-select: text;
+}
+header .user-name .client-id,
+.header .user-name .client-id {
+  padding-left: 0.3rem;
   user-select: text;
 }
 header .company-menu-name,
@@ -5947,8 +5950,12 @@ TODO:
 .a2-include.full-height .partial {
   height: 100%;
 }
-.scrollable-pane {
+.scrollable-pane,
+.scroll {
   overflow: auto;
+}
+.no-scroll {
+  overflow: hidden;
 }
 .bordered-pane {
   border: 1px solid #ddd;

@@ -21,6 +21,7 @@
 		"update": {
 			"type": "sql",
 			"method": "post",
+			"debugOnly": false,
 			"sqlCommand": {
 				"action": "executeSql",
 				"procedure": "ExecuteApi",

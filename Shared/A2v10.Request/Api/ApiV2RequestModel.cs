@@ -64,13 +64,13 @@ namespace A2v10.Request.Api
 		private ApiV2RequestModel _model;
 
 		#region JSON
-
 		public ApiV2CommandType Type { get; set; }
 		public ApiSqlCommand SqlCommand { get; set; }
 		public HttpMethod Method { get; set; }
 		public String[] ClientId { get; set; }
 		public String AllowOrigin { get; set; }
 		public Boolean Wrap { get; set; }
+		public Boolean DebugOnly { get; set; }
 		#endregion
 
 

@@ -5129,13 +5129,13 @@ app.modules['std:impl:array'] = function () {
 })();	
 // Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
-/*20210409-7762*/
+/*20210428-7771*/
 /* controllers/navbar.js */
 
 (function () {
 
 	const locale = window.$$locale;
-	const menu = component('std:navmenu');
+	const menuTools = component('std:navmenu');
 	const eventBus = require('std:eventBus');
 	const period = require('std:period');
 	const store = component('std:store');
@@ -5182,12 +5182,12 @@ app.modules['std:impl:array'] = function () {
 					return;
 				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
 				let savedUrl = localStorage.getItem(storageKey) || '';
-				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+				if (savedUrl && !menuTools.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
 					// saved segment not found in current menu
 					savedUrl = '';
 				}
 				let opts = { title: null, seg2: savedUrl };
-				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				let url = menuTools.makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
 			},
 			showHelp() {
@@ -5197,7 +5197,8 @@ app.modules['std:impl:array'] = function () {
 				if (!this.menu) return null;
 				let am = this.menu.find(x => this.isActive(x));
 				if (am && am.Menu) {
-					let am2 = am.Menu.find(x => this.isActive2(x));
+					// find recursive!
+					let am2 = menuTools.findMenu(am.Menu, x => this.isActive2(x));
 					if (am2 && am2.Help)
 						return am2.Help;
 				}
@@ -5277,12 +5278,12 @@ app.modules['std:impl:array'] = function () {
 				this.closeNavMenu();
 				let storageKey = 'menu:' + urlTools.combine(window.$$rootUrl, item.Url);
 				let savedUrl = localStorage.getItem(storageKey) || '';
-				if (savedUrl && !menu.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
+				if (savedUrl && !menuTools.findMenu(item.Menu, (mi) => mi.Url === savedUrl)) {
 					// saved segment not found in current menu
 					savedUrl = '';
 				}
 				let opts = { title: null, seg2: savedUrl };
-				let url = menu.makeMenuUrl(this.menu, item.Url, opts);
+				let url = menuTools.makeMenuUrl(this.menu, item.Url, opts);
 				this.$store.commit('navigate', { url: url, title: opts.title });
 			},
 			closeNavMenu() {

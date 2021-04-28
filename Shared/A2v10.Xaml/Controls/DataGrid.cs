@@ -15,7 +15,8 @@ namespace A2v10.Xaml
 	public enum RowDetailsActivate
 	{
 		ActiveRow,
-		Cell
+		Cell,
+		Always
 	}
 
 	public enum DataGridStyle

@@ -139,23 +139,27 @@ header, .header {
 		&:hover {
 			background-color: @brand-hover-color;
 		}
+
 		&.user-name, &.company-name {
-			padding:0 .5em 0 1em;
+			padding: 0 .5em 0 1em;
 		}
 
 		.caret {
-			margin:0 .25em 0 .5em;
+			margin: 0 .25em;
 		}
 	}
 
 	.user-name .person-name,
 	.company-name {
-		display: inline-block;
-		vertical-align: bottom;
 		overflow: hidden;
 		max-width: 20rem;
 		text-overflow: ellipsis;
 		user-select: text;
+	}
+
+	.user-name .client-id {
+		padding-left:.3rem;
+		user-select:text;
 	}
 
 	.company-menu-name {

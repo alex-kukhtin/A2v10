@@ -3398,6 +3398,9 @@ tr:hover .commandbar.visible-hover {
 .stack-panel.wrap {
   flex-wrap: wrap;
 }
+.align-stretch {
+  align-items: stretch !important;
+}
 .align-center {
   align-items: center!important;
 }
@@ -3605,8 +3608,12 @@ tr:hover .commandbar.visible-hover {
 .a2-include.full-height .partial {
   height: 100%;
 }
-.scrollable-pane {
+.scrollable-pane,
+.scroll {
   overflow: auto;
+}
+.no-scroll {
+  overflow: hidden;
 }
 .bordered-pane {
   border: 1px solid #ddd;

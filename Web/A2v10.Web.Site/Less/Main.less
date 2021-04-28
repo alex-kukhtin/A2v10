@@ -58,7 +58,7 @@ header, .header {
 	align-items: center;
 
 	.h-menu-title {
-		font-size:18px;
+		font-size: 18px;
 	}
 
 	.h-block {
@@ -100,6 +100,7 @@ header, .header {
 	> a.nav-admin {
 		color: inherit;
 		padding: 6px 8px;
+
 		&:hover {
 			background-color: @brand-hover-color;
 		}
@@ -132,15 +133,22 @@ header, .header {
 		&:hover {
 			background-color: @brand-hover-color;
 		}
+
+		.caret {
+			margin: 0 .25em;
+		}
 	}
 
 	.user-name .person-name,
 	.company-name {
-		display: inline-block;
-		vertical-align: bottom;
 		overflow: hidden;
 		max-width: 20rem;
 		text-overflow: ellipsis;
+		user-select: text;
+	}
+
+	.user-name .client-id {
+		padding-left: .3rem;
 		user-select: text;
 	}
 

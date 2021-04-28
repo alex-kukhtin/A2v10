@@ -584,11 +584,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Develop\styles.xaml_">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Develop\sales\assets\assets.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

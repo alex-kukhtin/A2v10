@@ -169,7 +169,8 @@
 						"errorCode": { "type": "number" },
 						"parameters": { "type": "object" },
 						"args": { "type": "object" },
-						"file": { "type": "string" }
+						"file": { "type": "string" },
+						"debugOnly": {"type": "boolean" }
 					},
 					"additionalProperties": false
 				}

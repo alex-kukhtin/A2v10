@@ -325,6 +325,10 @@ namespace A2v10.Request
 			setParams?.Invoke(dataToExec);
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			var cmd = rm.GetCommand(command);
+
+			if (cmd.debugOnly && !_host.IsDebugConfiguration)
+				throw new RequestModelException($"Invalid environment");
+
 			dataToExec.Append(cmd.parameters, replace:true);
 
 			var result = await cmd.ExecuteCommand(_locator, dataToExec);

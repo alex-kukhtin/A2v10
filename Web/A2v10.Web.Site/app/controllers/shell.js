@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20201005-7710*/
+/*20210428-7771*/
 /* controllers/shell.js */
 
 (function () {
@@ -41,7 +41,11 @@
 		<a class="nav-admin" v-if="userIsAdmin" href="/admin/" tabindex="-1"><i class="ico ico-gear-outline"></i></a>
 	</template>
 	<div class="dropdown dir-down separate" v-dropdown>
-		<button class="btn user-name" toggle :title="personName"><i class="ico ico-user"></i> <span id="layout-person-name" class="person-name" v-text="personName"></span><span class="caret"></span></button>
+		<button class="btn user-name" toggle :title="personName"><i class="ico ico-user"></i> 
+			<span id="layout-person-name" class="person-name" v-text="personName"></span>
+			<span id="layout-client-id" class="client-id" v-if="clientId"> [<span v-text="clientId" ></span>]</span>
+			<span class="caret"></span>
+		</button>
 		<div class="dropdown-menu menu down-left">
 			<a v-if="!isSinglePage " v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
 			<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> <span v-text="locale.$ChangePassword"></span></a>
@@ -58,6 +62,7 @@
 			subtitle: String,
 			userState: Object,
 			personName: String,
+			clientId: String,
 			userIsAdmin: Boolean,
 			menu: Array,
 			newMenu: Array,

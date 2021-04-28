@@ -456,6 +456,7 @@ namespace A2v10.Request
 
 		public IList<String> xmlSchemas;
 		public Boolean validate;
+		public Boolean debugOnly;
 
 		// for api
 		public String allowOrigin;

@@ -28,6 +28,7 @@
 						},
 						"allowOrigin": { "type": "string" },
 						"wrap": { "type": "boolean" },
+						"debugOnly": { "type": "boolean" },
 						"sqlCommand": {
 							"type": "object",
 							"properties": {
