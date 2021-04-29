@@ -1,11 +1,9 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using System.Threading;
 using System.Security;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Concurrent;
@@ -28,6 +26,7 @@ using A2v10.Web.Identity;
 using System.Configuration;
 using A2v10.Web.Base;
 using System.Dynamic;
+using A2v10.Web.Config;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -41,6 +40,7 @@ namespace A2v10.Web.Mvc.Controllers
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
 		private readonly IUserStateManager _userStateManager;
+		private readonly IUserLocale _userLocale;
 
 		private const String LOCALE_COOKIE = "_locale";
 
@@ -52,6 +52,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
 			_userStateManager = serviceLocator.GetService<IUserStateManager>();
+			_userLocale = serviceLocator.GetService<IUserLocale>();
 			_host.StartApplication(false);
 		}
 
@@ -77,7 +78,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var layoutHtml = _host.Mobile ? ResourceHelper.InitLayoutMobileHtml : ResourceHelper.InitLayoutHtml;
 
 				StringBuilder layout = new StringBuilder(_localizer.Localize(null, GetRedirectedPage("layout", layoutHtml)));
-				layout.Replace("$(Lang)", CurrentLang);
+				layout.Replace("$(Lang)", _userLocale.Language);
 				StringBuilder html = new StringBuilder(rsrcHtml);
 				layout.Replace("$(Partial)", html.ToString());
 				layout.Replace("$(Title)", appTitle?.AppTitle);
@@ -90,7 +91,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 				StringBuilder script = new StringBuilder(rsrcScript);
 				script.Replace("$(Utils)", ResourceHelper.PageUtils);
-				script.Replace("$(Locale)", ResourceHelper.Locale);
+				script.Replace("$(Locale)", ResourceHelper.LocaleLibrary(_userLocale.Language));
 				script.Replace("$(Mask)", ResourceHelper.Mask);
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode}, registration: {regMode} }}");
@@ -112,7 +113,7 @@ namespace A2v10.Web.Mvc.Controllers
 		String GetRedirectedPage(String pageName, String fallback)
 		{
 			var mobileSuffix = _host.Mobile ? ".mobile" : String.Empty;
-			String redirectedText = _host.ApplicationReader.ReadTextFile("_platform/", $"{pageName}.{CurrentLang}{mobileSuffix}.html");
+			String redirectedText = _host.ApplicationReader.ReadTextFile("_platform/", $"{pageName}.{_userLocale.Language}{mobileSuffix}.html");
 			if (redirectedText == null)
 				return fallback;
 			String text = redirectedText + "\r\n";
@@ -123,7 +124,7 @@ namespace A2v10.Web.Mvc.Controllers
 			Int32 spIndex = text.IndexOfAny(" \n\r<>".ToCharArray(), ix);
 			sb.Append(text.Substring(0, ix));
 			String partialFileName = text.Substring(ix + 13, spIndex - ix - 13);
-			String partialPathText = _host.ApplicationReader.ReadTextFile("_platform/", $"{partialFileName}.{CurrentLang}{mobileSuffix}.html");
+			String partialPathText = _host.ApplicationReader.ReadTextFile("_platform/", $"{partialFileName}.{_userLocale.Language}{mobileSuffix}.html");
 			sb.Append(partialPathText);
 			sb.Append(text.Substring(spIndex));
 			return sb.ToString();
@@ -366,7 +367,8 @@ namespace A2v10.Web.Mvc.Controllers
 					PhoneNumber = model.Phone,
 					PersonName = model.PersonName,
 					Tenant = -1,
-					RegisterHost = Request.UrlReferrer.Host
+					RegisterHost = Request.UrlReferrer.Host,
+					Locale = _userLocale.Locale
 				};
 
 				if (String.IsNullOrEmpty(user.Email))
@@ -386,7 +388,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (result.Succeeded)
 				{
-					// email confirmation
+					// email confirmation link?
 					// String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 
 					String confirmCode = await UserManager.GenerateTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode);
@@ -702,6 +704,7 @@ namespace A2v10.Web.Mvc.Controllers
 			AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 			Session.Abandon();
 			ClearAllCookies();
+			Response.Cookies.Add(new HttpCookie(LOCALE_COOKIE, _userLocale.Locale));
 			return Redirect("~/");
 		}
 
@@ -735,17 +738,6 @@ namespace A2v10.Web.Mvc.Controllers
 			await UserManager.UpdateUser(user);
 		}
 
-		String CurrentLang
-		{
-			get
-			{
-				// var lng = Request.QueryString["lang"];
-				var culture = Thread.CurrentThread.CurrentUICulture;
-				var lang = culture.TwoLetterISOLanguageName;
-				return lang;
-			}
-		}
-
 		Boolean IsEmailValid(String mail)
 		{
 			var ema = new EmailAddressAttribute();
@@ -754,7 +746,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		String GetEMailBody(String code, String dictName)
 		{
-			String emailFileBody = _host.ApplicationReader.ReadTextFile("_emails", $"{code}.{CurrentLang}.html");
+			String emailFileBody = _host.ApplicationReader.ReadTextFile("_emails", $"{code}.{_userLocale.Language}.html");
 			String body;
 			if (emailFileBody != null)
 			{
@@ -804,16 +796,31 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 		#endregion
 
-
 		#region IControllerLocale
 		public void SetLocale()
 		{
-			/* from cookies, from */
-			/*
-			var locale = Request.Cookies["_locale"];
-			int z = 55;
-			Response.Cookies.Add(new HttpCookie("_locale", "ru-RU"));
-			*/
+			if (User.Identity.IsAuthenticated)
+			{
+				_userLocale.Locale = User.Identity.GetUserLocale();
+				return;
+			}
+
+			var rq = Request.QueryString["lang"];
+			var loc = WebUserLocale.Lang2Locale(rq);
+			if (loc != null)
+			{
+				Response.Cookies.Add(new HttpCookie(LOCALE_COOKIE, loc));
+				_userLocale.Locale = loc;
+				return;
+			}
+
+			var locale = Request.Cookies[LOCALE_COOKIE];
+			if (locale != null)
+			{
+				// CheckValue
+				_userLocale.Locale = WebUserLocale.CheckLocale(locale.Value);
+				return;
+			}
 		}
 		#endregion
 	}

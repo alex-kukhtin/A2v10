@@ -28,8 +28,9 @@ namespace A2v10.Web.Mvc.Start
 			ServiceLocator.Start = (IServiceLocator locator) =>
 			{
 				IProfiler profiler = new WebProfiler();
-				IApplicationHost host = new WebApplicationHost(profiler);
-				ILocalizer localizer = new WebLocalizer(host);
+				IUserLocale userLocale = new WebUserLocale();
+				IApplicationHost host = new WebApplicationHost(profiler, userLocale);
+				ILocalizer localizer = new WebLocalizer(host, userLocale);
 				ITokenProvider tokenProvider = new WebTokenProvider();
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,
@@ -57,6 +58,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IRenderer>(renderer);
 				locator.RegisterService<IWorkflowEngine>(workflowEngine);
 				locator.RegisterService<IMessaging>(messaging);
+				locator.RegisterService<IUserLocale>(userLocale);
 				locator.RegisterService<ILocalizer>(localizer);
 				locator.RegisterService<IDataScripter>(scripter);
 				locator.RegisterService<ILogger>(logger);

@@ -153,7 +153,8 @@ namespace A2v10RuntimeNet
 			{
 				IProfiler profiler = new DesktopProfiler();
 				DesktopApplicationHost host = new DesktopApplicationHost(profiler);
-				ILocalizer localizer = new DesktopLocalizer(host);
+				IUserLocale userLocale = new DesktopUserLocale();
+				ILocalizer localizer = new DesktopLocalizer(host, userLocale);
 				ITokenProvider tokenProvider = new DesktopTokenProvider();
 				IDbContext dbContext = new SqlDbContext(
 					profiler as IDataProfiler,

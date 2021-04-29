@@ -33,9 +33,9 @@ namespace A2v10.Request
 
 		Task RenderAppPage(TextWriter writer, String page)
 		{
-			String appPageConetent = _host.ApplicationReader.ReadTextFile("_pages", $"{page}.{CurrentLang}.html");
+			String appPageConetent = _host.ApplicationReader.ReadTextFile("_pages", $"{page}.{_userLocale.Language}.html");
 			if (appPageConetent == null)
-				throw new IOException($"Application page not found ({page}.{CurrentLang}).");
+				throw new IOException($"Application page not found ({page}.{_userLocale.Language}).");
 			var appPageHtml = new StringBuilder(_localizer.Localize(null, Resources.appPage));
 			var appPageScript = new StringBuilder(Resources.appPageScript);
 			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!

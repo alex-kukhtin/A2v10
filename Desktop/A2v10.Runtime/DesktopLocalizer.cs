@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Threading;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Runtime.Properties;
@@ -38,14 +38,20 @@ namespace A2v10.Runtime
 			Path = path;
 			IsFileSystem = fs;
 		}
+	}
 
+	public class DesktopUserLocale : IUserLocale
+	{
+		public String Locale { get; set; }
+		public String Language => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
 	}
 
 	public class DesktopLocalizer : BaseLocalizer, IDataLocalizer
 	{
 		private IApplicationHost _host;
 
-		public DesktopLocalizer(IApplicationHost host)
+		public DesktopLocalizer(IApplicationHost host, IUserLocale userLocale)
+			: base(userLocale)
 		{
 			_host = host;
 		}

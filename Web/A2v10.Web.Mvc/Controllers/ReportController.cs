@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Dynamic;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Web.Mvc;
 using System.Web;
 using System.Net.Http.Headers;
@@ -25,15 +24,6 @@ using A2v10.Web.Base;
 namespace A2v10.Web.Mvc.Controllers
 {
 
-	public class EmptyView : IView, IViewDataContainer
-	{
-		public ViewDataDictionary ViewData { get; set; }
-		public void Render(ViewContext viewContext, TextWriter writer)
-		{
-			// do nothing
-		}
-	}
-
 	public class DesktopReport
 	{
 		public String Base;
@@ -49,7 +39,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[Authorize]
 	[ExecutingFilter]
 	[CheckMobileFilter]
-	public class ReportController : Controller, IControllerProfiler, IControllerTenant
+	public class ReportController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
 		ReportHelper _reportHelper = new ReportHelper();
@@ -280,8 +270,6 @@ namespace A2v10.Web.Mvc.Controllers
 			return File(bytes, "text/xml", $"{ri.Name}.xml");
 		}
 
-		private String LocaleKey => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
-
 		public async Task<ActionResult> GetReport()
 		{
 			try
@@ -347,5 +335,12 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 		#endregion
 
+		#region IControllerLocale
+		public void SetLocale()
+		{
+			var locale = User.Identity.GetUserLocale();
+			_baseController.SetUserLocale(locale);
+		}
+		#endregion
 	}
 }

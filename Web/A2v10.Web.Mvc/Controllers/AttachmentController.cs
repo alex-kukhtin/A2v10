@@ -16,7 +16,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[Authorize]
 	[ExecutingFilter]
 	[CheckMobileFilter]
-	public class AttachmentController : Controller, IControllerProfiler, IControllerTenant
+	public class AttachmentController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
 		A2v10.Request.AttachmentController _baseController = new A2v10.Request.AttachmentController();
 
@@ -89,6 +89,14 @@ namespace A2v10.Web.Mvc.Controllers
 			host.TenantId = TenantId;
 			host.UserId = UserId;
 			host.UserSegment = UserSegment;
+		}
+		#endregion
+
+		#region IControllerLocale
+		public void SetLocale()
+		{
+			var locale = User.Identity.GetUserLocale();
+			_baseController.SetUserLocale(locale);
 		}
 		#endregion
 	}

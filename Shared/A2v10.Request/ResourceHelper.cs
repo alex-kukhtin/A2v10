@@ -30,21 +30,16 @@ namespace A2v10.Request
 		public static String Mask => Resources.mask;
 
 
-		public static String Locale
+		public static String LocaleLibrary(String lang)
 		{
-			get
+			switch (lang.ToLowerInvariant())
 			{
-				var culture = Thread.CurrentThread.CurrentUICulture;
-				var lang = culture.TwoLetterISOLanguageName;
-				switch (lang)
-				{
-					case "uk": return Resources.locale_uk;
-					case "en": return Resources.locale_en;
-					case "ru": return Resources.locale_ru;
-					case "de": return Resources.locale_de;
-				}
-				throw new InvalidOperationException("Only the following cultures are supported: 'uk', 'ru', 'en', 'de'");
+				case "uk": return Resources.locale_uk;
+				case "en": return Resources.locale_en;
+				case "ru": return Resources.locale_ru;
+				case "de": return Resources.locale_de;
 			}
+			throw new InvalidOperationException("Only the following cultures are supported: 'uk', 'ru', 'en', 'de'");
 		}
 	}
 }

@@ -25,6 +25,7 @@ using A2v10.Request.Models;
 using System.Net.Http.Headers;
 using System.Linq;
 using A2v10.Web.Base;
+using A2v10.Web.Config;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -32,7 +33,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[AuthorizeFilter]
 	[ExecutingFilter]
 	[CheckMobileFilter]
-	public class ShellController : Controller, IControllerProfiler, IControllerTenant
+	public class ShellController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
 
@@ -744,5 +745,14 @@ namespace A2v10.Web.Mvc.Controllers
 			String content = System.IO.File.ReadAllText(fullPath);
 			Response.Write(content);
 		}
+
+		#region IControllerLocale
+		public void SetLocale()
+		{
+			var locale = User.Identity.GetUserLocale();
+			_baseController.SetUserLocale(locale);
+		}
+		#endregion
+
 	}
 }

@@ -40,8 +40,11 @@ namespace A2v10.Stimulsoft
 
 	public class StimulsoftReportShim : IStimulsoftReportShim
 	{
+		private IUserLocale _userLocale = null;
+
 		public void Inject(IServiceLocator loc)
 		{
+			_userLocale = loc.GetService<IUserLocale>();
 		}
 
 		public void SetupLicense(String license)
@@ -150,7 +153,8 @@ namespace A2v10.Stimulsoft
 
 		public MvcHtmlString ShowViewer(Controller controller)
 		{
-			var v = new StimulsoftViewer();
+			String locale = _userLocale?.Locale;
+			var v = new StimulsoftViewer(locale);
 			return v.Show(controller as Controller);
 		}
 

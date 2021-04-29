@@ -34,8 +34,9 @@ namespace A2v10.Web.Mvc.Startup
 				opts?.Invoke(startOptions);
 
 				IProfiler profiler = startOptions.Profiler ?? new WebProfiler();
-				IApplicationHost host = new WebApplicationHost(profiler);
-				ILocalizer localizer = new WebLocalizer(host);
+				IUserLocale userLocale = new WebUserLocale();
+				IApplicationHost host = new WebApplicationHost(profiler, userLocale);
+				ILocalizer localizer = new WebLocalizer(host, userLocale);
 
 				ITokenProvider tokenProvider = startOptions.TokenProvider;
 				IDbContext dbContext = new SqlDbContext(

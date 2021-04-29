@@ -41,6 +41,15 @@ namespace A2v10.Web.Identity
 			return String.IsNullOrEmpty(value) ? null : value;
 		}
 
+		public static String GetUserLocale(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return null;
+			var value = user.FindFirstValue("Locale");
+			return String.IsNullOrEmpty(value) ? null : value;
+		}
+
+
 		public static Boolean IsTenantAdmin(this IIdentity identity)
 		{
 			if (!(identity is ClaimsIdentity user))

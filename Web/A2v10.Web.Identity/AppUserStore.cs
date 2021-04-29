@@ -498,7 +498,7 @@ namespace A2v10.Web.Identity
 			if (user.IsAdmin)
 				list.Add(new Claim("Admin", "Admin"));
 			if (!String.IsNullOrEmpty(user.Locale))
-				list.Add(new Claim("Locale", user.Locale));
+				list.Add(new Claim("Locale", user.Locale.Replace('_', '-'))); // legacy db-values
 			if (_host.IsMultiTenant)
 			{
 				var clientId = user.GetClientId();

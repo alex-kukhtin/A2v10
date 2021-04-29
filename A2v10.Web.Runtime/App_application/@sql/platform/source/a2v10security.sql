@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 27 apr 2021
-module version : 7753
+Last updated : 29 apr 2021
+module version : 7754
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7753;
+exec a2sys.SetVersion N'std:security', 7754;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -37,9 +37,14 @@ begin
 		[State] nvarchar(128) null,
 		UserSince datetime null,
 		LastPaymentDate datetime null,
-		Balance money null
+		Balance money null,
+		[Locale] nvarchar(32) not null constraint DF_Tenants_Locale default('uk-UA')
 	);
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Tenants' and COLUMN_NAME=N'Locale')
+	alter table a2security.Tenants add [Locale] nvarchar(32) not null constraint DF_Tenants_Locale default('uk-UA');
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Config')
@@ -145,7 +150,7 @@ begin
 		LockoutEnabled	bit	not null constraint DF_Users_LockoutEnabled default(1),
 		LockoutEndDateUtc datetimeoffset null,
 		AccessFailedCount int not null constraint DF_Users_AccessFailedCount default(0),
-		[Locale] nvarchar(32) not null constraint DF_Users_Locale default('uk_UA'),
+		[Locale] nvarchar(32) not null constraint DF_Users_Locale2 default('uk-UA'),
 		PersonName nvarchar(255) null,
 		LastLoginDate datetime null, /*UTC*/
 		LastLoginHost nvarchar(255) null,
@@ -170,6 +175,13 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'ApiUser')
 	alter table a2security.Users add ApiUser bit not null 
 		constraint DF_Users_ApiUser default(0) with values;
+go
+------------------------------------------------
+if exists(select * from sys.default_constraints where name=N'DF_Users_Locale' and parent_object_id = object_id(N'a2security.Users'))
+begin
+	alter table a2security.Users drop constraint DF_Users_Locale;
+	alter table a2security.Users add constraint DF_Users_Locale2 default('uk-UA') for [Locale] with values;
+end
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'UserLogins')
@@ -855,14 +867,17 @@ create procedure a2security.CreateUser
 @RegisterHost nvarchar(255) = null,
 @Memo nvarchar(255) = null,
 @TariffPlan nvarchar(255) = null,
+@Locale nvarchar(255) = null,
 @RetId bigint output
 as
 begin
--- from account/register only
+	-- from account/register only
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
 	
+	set @Locale = isnull(@Locale, N'uk-UA')
+
 	declare @userId bigint; 
 
 	if @Tenant = -1
@@ -872,20 +887,20 @@ begin
 		declare @tenantId int;
 
 		begin tran;
-		insert into a2security.Tenants([Admin])
+		insert into a2security.Tenants([Admin], Locale)
 			output inserted.Id into @tenants(id)
-			values (null);
+		values (null, @Locale);
 
 		select top(1) @tenantId = id from @tenants;
 
 		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, Tenant, PersonName, 
-			RegisterHost, Memo, TariffPlan, Segment)
+			RegisterHost, Memo, TariffPlan, Segment, Locale)
 			output inserted.Id into @users(id)
 			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @tenantId, @PersonName, 
-				@RegisterHost, @Memo, @TariffPlan, a2security.fn_GetCurrentSegment());
+				@RegisterHost, @Memo, @TariffPlan, a2security.fn_GetCurrentSegment(), @Locale);
 		select top(1) @userId = id from @users;
 
-		update a2security.Tenants set [Admin]=@userId where Id=@tenantId;
+		update a2security.Tenants set [Admin] = @userId where Id=@tenantId;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
 
@@ -897,16 +912,15 @@ begin
 			set @prms = N'@TenantId int, @CompanyId bigint, @UserId bigint';
 			exec sp_executesql @sql, @prms, @tenantId, 1, @userId;
 		end
-
 		commit tran;
 	end
 	else
 	begin
 		begin tran;
 
-		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost, Memo, TariffPlan)
+		insert into a2security.ViewUsers(UserName, PasswordHash, SecurityStamp, Email, PhoneNumber, PersonName, RegisterHost, Memo, TariffPlan, Locale)
 			output inserted.Id into @users(id)
-			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost, @Memo, @TariffPlan);
+			values (@UserName, @PasswordHash, @SecurityStamp, @Email, @PhoneNumber, @PersonName, @RegisterHost, @Memo, @TariffPlan, @Locale);
 		select top(1) @userId = id from @users;
 
 		insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);

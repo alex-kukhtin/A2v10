@@ -3,7 +3,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Linq;
+using System.Threading;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
@@ -171,14 +174,64 @@ namespace A2v10.Web.Config
 	}
 
 
+	public class WebUserLocale : IUserLocale
+	{
+		public String Locale { get; set; }
+
+		public String Language
+		{
+			get
+			{
+				var loc = Locale;
+				if (loc != null)
+					return loc.Substring(0, 2);
+				else
+					return Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+			}
+		}
+
+		private static IEnumerable<String> AvailableLocales()
+		{
+			var avail = ConfigurationManager.AppSettings["availableLocales"];
+			if (avail == null)
+				return Enumerable.Empty<String>();
+			return avail.Split(',');
+		}
+
+		public static String AvaliableLanguages()
+		{
+			var avail = AvailableLocales();
+			return String.Join(",", avail.Select(x => x.Substring(0, 2)).ToArray());
+		}
+
+		public static String Lang2Locale(String lang)
+		{
+			if (lang == null)
+				return null;
+			var avail = AvailableLocales();
+			var loc = avail.FirstOrDefault(x => x.Trim().StartsWith(lang, StringComparison.OrdinalIgnoreCase));
+			return loc?.Trim();
+		}
+
+		public static String CheckLocale(String locale)
+		{
+			if (locale == null)
+				return null;
+			var avail = AvailableLocales();
+			if (avail.Any(x => x.Trim() == locale))
+				return locale;
+			return null;
+		}
+	}
+
 	public class WebLocalizer : BaseLocalizer, IDataLocalizer
 	{
 		private readonly IApplicationHost _host;
 
 		private readonly WebDictionary _webDictionary = new WebDictionary();
 
-		public WebLocalizer(IApplicationHost host)
-			:base()
+		public WebLocalizer(IApplicationHost host, IUserLocale userLocale)
+			: base(userLocale)
 		{
 			_host = host;
 		}
@@ -190,7 +243,7 @@ namespace A2v10.Web.Config
 
 		String IDataLocalizer.Localize(String content)
 		{
-			return Localize(null, content, true);
+			return Localize(_userLocale.Locale, content, true);
 		}
 	}
 }

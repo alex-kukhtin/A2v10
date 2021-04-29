@@ -14,7 +14,8 @@ namespace A2v10.Tests.Lang
 		public void ParseFile()
 		{
 			var profiler = new NullProfiler();
-			var host = new WebApplicationHost(profiler);
+			var userLocale = new WebUserLocale();
+			var host = new WebApplicationHost(profiler, userLocale);
 			host.StartApplication(false);
 			var parser = new TSDefParser(host.ApplicationReader, "typescript");
 			parser.Parse("model.d.ts");

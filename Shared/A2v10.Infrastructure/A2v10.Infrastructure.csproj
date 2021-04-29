@@ -71,6 +71,7 @@
     <Compile Include="ISmsService.cs" />
     <Compile Include="ITypeChecker.cs" />
     <Compile Include="IUserId.cs" />
+    <Compile Include="IUserLocale.cs" />
     <Compile Include="IUserStateManager.cs" />
     <Compile Include="IApplicationHost.cs" />
     <Compile Include="ILocalizer.cs" />

@@ -60,10 +60,12 @@ namespace A2v10.Web.Config
 		private Boolean _admin;
 		private readonly Boolean _debug;
 		private readonly String _environment;
+		private readonly IUserLocale _userLocale;
 
-		public WebApplicationHost(IProfiler profiler)
+		public WebApplicationHost(IProfiler profiler, IUserLocale userLocale)
 		{
 			_profiler = profiler;
+			_userLocale = userLocale;
 			_emulateBox = IsAppSettingsIsTrue("emulateBox");
 
 			var conf = ConfigurationManager.AppSettings["configuration"];
@@ -141,7 +143,7 @@ namespace A2v10.Web.Config
 			}
 		}
 
-		public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"];
+		public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"]?.Replace("$(lang)", _userLocale.Language);
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
 		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];

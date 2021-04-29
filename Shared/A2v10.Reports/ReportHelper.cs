@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -7,14 +7,19 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.IO;
 using System.Web.Mvc;
+using System.Reflection;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
-using System.Web;
 
 namespace A2v10.Reports
 {
+	public static class StimulsoftVersion
+	{
+		public const Int32 ExpectedVersion = 1003;
+	}
+
 	public class ReportContext
 	{
 		public Int64 UserId;
@@ -62,7 +67,14 @@ namespace A2v10.Reports
 			_stimulsoftReportShim = locator.GetService<IStimulsoftReportShim>(sloc =>
 			{
 				var inst = System.Activator.CreateInstance("A2v10.Stimulsoft", "A2v10.Stimulsoft.StimulsoftReportShim");
-				var shim = inst.Unwrap() as IStimulsoftReportShim;
+				var instUnwrap = inst.Unwrap();
+				var ass = Assembly.GetAssembly(instUnwrap.GetType());
+
+				var actualBuild = ass.GetName().Version.Build;
+
+				if (actualBuild < StimulsoftVersion.ExpectedVersion)
+					throw new InvalidProgramException($"Invalid A2v10.Stimulsoft build. Expected: {StimulsoftVersion.ExpectedVersion}, Actual: {actualBuild}");
+				var shim = instUnwrap as IStimulsoftReportShim;
 				shim.Inject(sloc);
 				return shim;
 			});

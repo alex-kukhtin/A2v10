@@ -1,27 +1,32 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 
 using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
 using A2v10.Web.Base;
+using A2v10.Web.Config;
+using A2v10.Web.Identity;
 using A2v10.Web.Mvc.Models;
 
 namespace A2v10.Web.Mvc.Controllers
 {
 	[AllowAnonymous]
 	[CheckMobileFilter]
-	public class AppLinkController : Controller
+	[ExecutingFilter]
+	public class AppLinkController : Controller, IControllerLocale
 	{
 		private readonly IApplicationHost _host;
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
+		private readonly IUserLocale _userLocale;
 		private readonly A2v10.Request.BaseController _baseController;
 
 		public AppLinkController()
@@ -31,11 +36,12 @@ namespace A2v10.Web.Mvc.Controllers
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
+			_userLocale = serviceLocator.GetService<IUserLocale>();
 			_baseController = new A2v10.Request.BaseController();
 			_host.StartApplication(false);
 		}
 
-		public String CurrentLang => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+		public String CurrentLang => _userLocale.Language;
 
 
 		public async Task Default(String pathInfo)
@@ -78,7 +84,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 			StringBuilder script = new StringBuilder(ResourceHelper.AppLinksScript);
 			script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: false, registation: false }}");
-			script.Replace("$(Locale)", ResourceHelper.Locale);
+			script.Replace("$(Locale)", ResourceHelper.LocaleLibrary(_userLocale.Language));
 			script.Replace("$(Utils)", ResourceHelper.PageUtils);
 			script.Replace("$(AppLinks)", _localizer.Localize(null, _host.AppLinks()));
 			layout.Replace("$(PageScript)", script.ToString());
@@ -91,5 +97,34 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.ContentType = "text/css";
 			_baseController.GetAppStyleConent(Response.Output);
 		}
+
+		#region IControllerLocale
+		public void SetLocale()
+		{
+			if (User.Identity.IsAuthenticated)
+			{
+				_userLocale.Locale = User.Identity.GetUserLocale();
+				return;
+			}
+
+			var rq = Request.QueryString["lang"];
+			var loc = WebUserLocale.Lang2Locale(rq);
+			if (loc != null)
+			{
+				Response.Cookies.Add(new HttpCookie("_locale", loc));
+				_userLocale.Locale = loc;
+				return;
+			}
+
+			var locale = Request.Cookies["_locale"];
+			if (locale != null)
+			{
+				// CheckValue
+				_userLocale.Locale = WebUserLocale.CheckLocale(locale.Value);
+				return;
+			}
+		}
+		#endregion
+
 	}
 }

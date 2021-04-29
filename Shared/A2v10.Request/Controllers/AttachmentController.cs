@@ -25,6 +25,11 @@ namespace A2v10.Request
 		{
 		}
 
+		public void SetUserLocale(String locale)
+		{
+			_baseController.SetUserLocale(locale);
+		}
+
 		public Task Show(String Base, String id, HttpResponseBase Response, Action<ExpandoObject> setParams, String token)
 		{
 			return ShowImpl(Base, id, Response, setParams, "Load", token);

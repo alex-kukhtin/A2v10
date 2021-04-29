@@ -43,6 +43,7 @@ namespace A2v10.Request
 		protected readonly IUserStateManager _userStateManager;
 		protected readonly IExternalDataProvider _externalDataProvider;
 		protected readonly ITokenProvider _tokenProvider;
+		protected readonly IUserLocale _userLocale;
 
 		public class DataModelAndView
 		{
@@ -68,6 +69,7 @@ namespace A2v10.Request
 			_userStateManager = _locator.GetServiceOrNull<IUserStateManager>();
 			_externalDataProvider = _locator.GetServiceOrNull<IExternalDataProvider>();
 			_tokenProvider = _locator.GetService<ITokenProvider>();
+			_userLocale = _locator.GetService<IUserLocale>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -80,14 +82,11 @@ namespace A2v10.Request
 
 		public Boolean Admin => _host.IsAdminMode;
 
-		public String CurrentLang
+		public String CurrentLang => _userLocale.Language;
+
+		public void SetUserLocale(String locale)
 		{
-			get
-			{
-				var culture = Thread.CurrentThread.CurrentUICulture;
-				var lang = culture.TwoLetterISOLanguageName;
-				return lang;
-			}
+			_userLocale.Locale = locale;
 		}
 
 		public String Localize(String content)

@@ -1,6 +1,7 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Web.Mvc;
@@ -22,7 +23,22 @@ namespace A2v10.Stimulsoft
 	public class StimulsoftViewer
 	{
 
-		private String LocaleKey => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+		private readonly String _locale;
+
+		public StimulsoftViewer(String locale)
+		{
+			_locale = locale;
+		}
+
+		private String LocaleKey
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(_locale))
+					return Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+				return _locale.Substring(0, 2);
+			}
+		}
 
 		private StiMvcViewerOptions ViewerOptions
 		{
