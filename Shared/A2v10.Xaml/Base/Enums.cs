@@ -410,6 +410,8 @@ namespace A2v10.Xaml
 		SendOutline,
 		Server,
 		Share,
+		Smile,
+		SmileSad,
 		Square,
 		Star,
 		StarOutline,

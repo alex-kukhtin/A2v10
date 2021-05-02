@@ -180,6 +180,7 @@ namespace A2v10RuntimeNet
 				service.RegisterService<ILicenseManager>(licManager);
 				service.RegisterService<IExternalDataProvider>(dataProvider);
 				service.RegisterService<ITokenProvider>(tokenProvider);
+				service.RegisterService<IUserLocale>(userLocale);
 				host.TenantId = 1;
 			};
 		}

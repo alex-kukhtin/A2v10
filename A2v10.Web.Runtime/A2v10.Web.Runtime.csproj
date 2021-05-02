@@ -85,6 +85,7 @@
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
+    <Content Include="scripts\main.min.js" />
     <Content Include="scripts\mobile.js" />
     <Content Include="scripts\vue.js" />
     <Content Include="scripts\vue.min.js" />

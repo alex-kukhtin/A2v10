@@ -183,6 +183,7 @@
     <Content Include="css\site.advance.min.css">
       <DependentUpon>site.advance.css</DependentUpon>
     </Content>
+    <Content Include="gruntfile.js" />
     <Content Include="Less\Upload.less" />
     <Content Include="App_application\Web.config">
       <SubType>Designer</SubType>
@@ -209,6 +210,7 @@
     <Content Include="Localization\de.xml" />
     <Content Include="Localization\default.de.txt" />
     <Content Include="scripts\locale-de.min.js" />
+    <Content Include="scripts\main.min.js" />
     <Content Include="scripts\mobile.js" />
     <Content Include="scripts\server\invoke.js" />
     <Content Include="TestMobile\index.html" />
@@ -308,6 +310,7 @@
     <Content Include="Less.Mobile\Image.less" />
     <Content Include="Less.Mobile\Upload.less" />
     <Content Include="Less.Mobile\Debug.less" />
+    <Content Include="package.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
