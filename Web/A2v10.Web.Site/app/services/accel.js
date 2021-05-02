@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191211-7596*/
+/*20210502-7773*/
 /* services/accel.js */
 
 app.modules['std:accel'] = function () {
@@ -20,7 +20,15 @@ app.modules['std:accel'] = function () {
 		if (!el) return;
 		if (el.action === 'focus') {
 			Vue.nextTick(() => {
+				ev.preventDefault();
+				ev.stopPropagation();
 				el.elem.focus();
+			});
+		} else if (el.action == 'func') {
+			Vue.nextTick(() => {
+				ev.preventDefault();
+				ev.stopPropagation();
+				el.elem();
 			});
 		}
 	}
@@ -41,7 +49,7 @@ app.modules['std:accel'] = function () {
 	function registerControl(accel, elem, action) {
 		var found = _elems.findIndex(c => c.elem === elem);
 		if (found === -1)
-			_elems.push({ elem: elem, accel: accel, action: action });
+			_elems.push({ elem: elem, accel: accel, action: action});
 		setListeners();
 	}
 

@@ -91,6 +91,7 @@
   <ItemGroup>
     <Content Include="app\app.js" />
     <Content Include="app\components\calendar.js" />
+    <Content Include="app\components\accelcommand.js" />
     <Content Include="app\components\inlinedialog.js" />
     <Content Include="app\components\spansum.js" />
     <Content Include="app\components\timepicker.js" />

@@ -44,6 +44,9 @@ const template = {
 		},
 		enterKey() {
 			console.dir('enterKey');
+		},
+		testAccel() {
+			alert('accel, id=' + this.Entity.Id);
 		}
 	}
 };

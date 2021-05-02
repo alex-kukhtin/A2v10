@@ -4384,9 +4384,9 @@ app.modules['std:routing'] = function () {
 	}
 };
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191211-7596*/
+/*20210502-7773*/
 /* services/accel.js */
 
 app.modules['std:accel'] = function () {
@@ -4406,7 +4406,15 @@ app.modules['std:accel'] = function () {
 		if (!el) return;
 		if (el.action === 'focus') {
 			Vue.nextTick(() => {
+				ev.preventDefault();
+				ev.stopPropagation();
 				el.elem.focus();
+			});
+		} else if (el.action == 'func') {
+			Vue.nextTick(() => {
+				ev.preventDefault();
+				ev.stopPropagation();
+				el.elem();
 			});
 		}
 	}
@@ -4427,7 +4435,7 @@ app.modules['std:accel'] = function () {
 	function registerControl(accel, elem, action) {
 		var found = _elems.findIndex(c => c.elem === elem);
 		if (found === -1)
-			_elems.push({ elem: elem, accel: accel, action: action });
+			_elems.push({ elem: elem, accel: accel, action: action});
 		setListeners();
 	}
 
@@ -8254,6 +8262,31 @@ TODO:
 		}
 	});
 
+})();
+// Copyright © 2021 Alex Kukhtin. All rights reserved.
+
+// 20210502-7773
+// components/accelcommand.js
+
+const maccel = require('std:accel');
+
+(function () {
+	Vue.component('a2-accel-command', {
+		props: {
+			accel: String,
+			command: Function
+		},
+		render() {
+		},
+		mounted() {
+			if (this.accel)
+				maccel.registerControl(this.accel, this.command, 'func');
+		},
+		beforeDestroy() {
+			if (this.accel)
+				maccel.unregisterControl(this.command);
+		},
+	});
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 

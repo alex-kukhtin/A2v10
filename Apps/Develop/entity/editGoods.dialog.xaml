@@ -5,6 +5,11 @@
 		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
 	</Dialog.Buttons>
+	<Dialog.AccelCommands>
+		<AccelCommand Accel="Ctrl+F7" Command="{BindCmd Close}"/>
+		<AccelCommand Accel="Ctrl+S" Command="{BindCmd Save}"/>
+		<AccelCommand Accel="Insert" Command="{BindCmd Execute, CommandName=testAccel}"/>
+	</Dialog.AccelCommands>
 	<TabPanel TabPosition="Top">
 		<Tab Header="Общие">
 			<Grid Columns="1*, 1*">
