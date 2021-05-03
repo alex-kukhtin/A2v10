@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -96,6 +96,8 @@ namespace A2v10.Xaml
 			var outer = new TagBuilder("div", "page-canvas-outer").RenderStart(context);
 			new TagBuilder("div", "page-canvas").MergeAttribute("id", "page-canvas").Render(context);
 			outer.RenderEnd(context);
+
+			RenderAccelCommands(context);
 
 			if (CollectionView != null)
 				CollectionView.RenderEnd(context);

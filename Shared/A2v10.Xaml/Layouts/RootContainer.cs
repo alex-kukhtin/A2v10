@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -56,6 +56,7 @@ namespace A2v10.Xaml
 				_resources = value;
 			}
 		}
+		public AccelCommandCollection AccelCommands { get; set; } = new AccelCommandCollection();
 
 		public Object FindResource(String key)
 		{
@@ -67,5 +68,16 @@ namespace A2v10.Xaml
 		}
 
 		internal Styles Styles { get; set; }
+
+		protected virtual void RenderAccelCommands(RenderContext context)
+		{
+			if (AccelCommands == null || AccelCommands.Count == 0)
+				return;
+			var cmd = new TagBuilder("template");
+			cmd.RenderStart(context);
+			foreach (var ac in AccelCommands)
+				ac.RenderElement(context);
+			cmd.RenderEnd(context);
+		}
 	}
 }

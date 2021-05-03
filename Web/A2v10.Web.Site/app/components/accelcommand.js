@@ -15,11 +15,11 @@ const maccel = require('std:accel');
 		},
 		mounted() {
 			if (this.accel)
-				maccel.registerControl(this.accel, this.command, 'func');
+				this._key = maccel.registerControl(this.accel, this.command, 'func');
 		},
 		beforeDestroy() {
 			if (this.accel)
-				maccel.unregisterControl(this.command);
+				maccel.unregisterControl(this._key);
 		},
 	});
 })();

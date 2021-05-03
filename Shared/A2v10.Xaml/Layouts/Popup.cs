@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -23,6 +23,7 @@ namespace A2v10.Xaml
 				tag.MergeStyle("min-width", MinWidth.ToString());
 			tag.RenderStart(context);
 			RenderChildren(context);
+			RenderAccelCommands(context);
 			tag.RenderEnd(context);
 		}
 	}

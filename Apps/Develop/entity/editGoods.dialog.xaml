@@ -6,9 +6,11 @@
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
 	</Dialog.Buttons>
 	<Dialog.AccelCommands>
+		<!--
 		<AccelCommand Accel="Ctrl+F7" Command="{BindCmd Close}"/>
 		<AccelCommand Accel="Ctrl+S" Command="{BindCmd Save}"/>
-		<AccelCommand Accel="Insert" Command="{BindCmd Execute, CommandName=testAccel}"/>
+		-->
+		<AccelCommand Accel="Ctrl+Enter" Command="{BindCmd Execute, CommandName=testAccel}"/>
 	</Dialog.AccelCommands>
 	<TabPanel TabPosition="Top">
 		<Tab Header="Общие">
@@ -24,7 +26,7 @@
 					</TextBox.AddOns>
 				</TextBox>
 				<TextBox Grid.Row="2" Label="Артикул" Value="{Bind Entity.Article}" TabIndex="-1"
-						 EnterCommand="{BindCmd Execute, CommandName=enterKey}"/>
+						 EnterCommand="{BindCmd Execute, CommandName=enterKey}" Accel="Ctrl+A"/>
 				<ComboBox Grid.Row="2" Grid.Col="2" Label="Ед. изм." Value="{Bind Entity.Unit}" ItemsSource="{Bind Units}"/>
 				<TextBox Grid.Row="5" HtmlId="memo-editor"
 						 Grid.ColSpan="2" Label="Примечание" Value="{Bind Entity.Memo}" Rows="3" Multiline="True" TabIndex="3"/>

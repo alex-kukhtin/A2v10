@@ -7,6 +7,9 @@ const template = {
 	},
 	delegates: {
 		drawArrow
+	},
+	commands: {
+		accelCommand
 	}
 };
 
@@ -61,3 +64,6 @@ function drawArrow(g) {
 	console.dir(svg);
 }
 
+function accelCommand() {
+	alert('Accel from page');
+}

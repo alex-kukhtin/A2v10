@@ -28,6 +28,9 @@
 	<Page.Pager>
 		<Pager Source="{Bind Parent.Pager}" />
 	</Page.Pager>
+	<Page.AccelCommands>
+		<AccelCommand Accel="Ctrl+Enter" Command="{BindCmd Execute, CommandName=accelCommand}" />
+	</Page.AccelCommands>
 	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
 				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True" 
 				DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Entities}}">

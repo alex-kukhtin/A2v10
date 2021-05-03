@@ -95,7 +95,7 @@
 			if (this.$parent.$registerControl)
 				this.$parent.$registerControl(this);
 			if (this.accel)
-				maccel.registerControl(this.accel, this.$refs.input, 'focus');
+				this._accelKey = maccel.registerControl(this.accel, this.$refs.input, 'focus');
 			if (!this.mask) return;
 			mask.mountElement(this.$refs.input, this.mask);
 		},
@@ -104,7 +104,7 @@
 			if (this.$parent.$unregisterControl)
 				this.$parent.$unregisterControl(this);
 			if (this.accel)
-				maccel.unregisterControl(this.$refs.input);
+				maccel.unregisterControl(this._accelKey);
 			if (!this.mask) return;
 			mask.unmountElement(this.$refs.input, this.mask);
 		},
