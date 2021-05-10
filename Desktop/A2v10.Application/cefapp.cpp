@@ -48,7 +48,9 @@ void CCefApplication::OnBeforeCommandLineProcessing(const CefString& process_typ
 	if (command_line == nullptr)
 		return;
 	command_line->AppendSwitchWithValue(L"process-per-site", L"1");
-	//command_line->AppendSwitchWithValue(L"single-process", "1"); //??? debugger tools???
+#ifdef _DEBUG
+	command_line->AppendSwitchWithValue(L"single-process", "1"); //??? debugger tools???
+#endif
 
 	//command_line->AppendSwitchWithValue(L"disable-gpu", L"1");
 	command_line->AppendSwitchWithValue(L"disable-software-rasterizer", L"1");

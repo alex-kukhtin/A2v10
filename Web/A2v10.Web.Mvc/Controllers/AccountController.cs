@@ -84,7 +84,7 @@ namespace A2v10.Web.Mvc.Controllers
 				layout.Replace("$(Title)", appTitle?.AppTitle);
 				layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
 				layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
-				_host.ReplaceMacros(layout);
+				_host.ReplaceMacros(layout, "applink");
 
 				String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
 				String regMode = _host.IsRegistrationEnabled.ToString().ToLowerInvariant();

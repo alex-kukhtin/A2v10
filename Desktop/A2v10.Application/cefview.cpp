@@ -191,6 +191,7 @@ LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 	if (wParam != WMI_CEF_VIEW_COMMAND_OPEN) 
 		return 0L;
 
+
 	CEF_VIEW_INFO* pInfo = reinterpret_cast<CEF_VIEW_INFO*>(lParam);
 	
 	CRect rect;
@@ -200,7 +201,7 @@ LRESULT CCefView::OnOpenCefView(WPARAM wParam, LPARAM lParam)
 	info.SetAsChild(GetSafeHwnd(), rect);
 
 	CefBrowserSettings browserSettings;
-	browserSettings.web_security = STATE_DISABLED;
+	//browserSettings.web_security = STATE_DISABLED; ?? CEF v 90
 	browserSettings.local_storage = STATE_ENABLED;
 	cef_string_set(L"UTF-8", 5, &browserSettings.default_encoding, true);
 
@@ -248,6 +249,15 @@ void CCefView::OnBeforePopup(CefRefPtr<CefBrowser> browser, const wchar_t* url)
 {
 	CEF_VIEW_INFO viewInfo;
 	viewInfo.szUrl = url;
+
+
+	std::wstring strUrl(url);
+	
+	if (strUrl.find(L"http://domain") != 0) {
+		::ShellExecute(nullptr, L"open", strUrl.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+		return;
+	}
+
 	HWND hFrame = ::GetParent(GetSafeHwnd());
 	::SendMessage(hFrame, WMI_CEF_VIEW_COMMAND, WMI_CEF_VIEW_COMMAND_CREATETAB, reinterpret_cast<LPARAM>(&viewInfo));
 }

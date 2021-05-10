@@ -80,7 +80,7 @@ namespace A2v10.Web.Mvc.Controllers
 			layout.Replace("$(Partial)", pageContent);
 			layout.Replace("$(Title)", appTitle.AppTitle);
 			layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));
-			_host.ReplaceMacros(layout);
+			_host.ReplaceMacros(layout, "applink");
 
 			StringBuilder script = new StringBuilder(ResourceHelper.AppLinksScript);
 			script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: false, registation: false }}");

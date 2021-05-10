@@ -1,5 +1,9 @@
 // Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
+#ifdef _DEBUG
+#define _ITERATOR_DEBUG_LEVEL 0
+#endif
+
 #include <iostream>
 #include <string>
 

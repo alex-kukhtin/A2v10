@@ -11,6 +11,10 @@
 
 #include "targetver.h"
 
+#ifdef _DEBUG
+#define _ITERATOR_DEBUG_LEVEL 0
+#endif
+
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 
 // turns off MFC's hiding of some common and often safely ignored warning messages

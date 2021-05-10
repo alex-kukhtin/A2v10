@@ -4384,15 +4384,16 @@ app.modules['std:routing'] = function () {
 	}
 };
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191211-7596*/
+/*20210502-7773*/
 /* services/accel.js */
 
 app.modules['std:accel'] = function () {
 
 	const _elems = [];
 	let _listenerAdded = false;
+	let _key = 42;
 
 	return {
 		registerControl,
@@ -4401,12 +4402,27 @@ app.modules['std:accel'] = function () {
 
 	function _keyDownHandler(ev) {
 		// control/alt/shift/meta
-		const keyAccel = `${ev.ctrlKey ? 'C' : '_'}${ev.altKey ? 'A' : '_'}${ev.shiftKey ? 'S' : '_'}${ev.metaKey ? 'M' : '_'}:${ev.code}`;
+		let code = ev.code;
+		// console.dir(code);
+		if (code === 'NumpadEnter')
+			code = "Enter";
+		const keyAccel = `${ev.ctrlKey ? 'C' : '_'}${ev.altKey ? 'A' : '_'}${ev.shiftKey ? 'S' : '_'}${ev.metaKey ? 'M' : '_'}:${code}`;
 		let el = _elems.find(x => x.accel === keyAccel);
-		if (!el) return;
-		if (el.action === 'focus') {
+		if (!el || !el.handlers || !el.handlers.length) return;
+		let handler = el.handlers[0];
+		if (handler.action === 'focus') {
+			ev.preventDefault();
+			ev.stopPropagation();
 			Vue.nextTick(() => {
-				el.elem.focus();
+				if (typeof handler.elem.focus === 'function')
+					handler.elem.focus();
+			});
+		} else if (handler.action == 'func') {
+			ev.preventDefault();
+			ev.stopPropagation();
+			Vue.nextTick(() => {
+				if (typeof handler.elem === 'function')
+					handler.elem();
 			});
 		}
 	}
@@ -4417,24 +4433,38 @@ app.modules['std:accel'] = function () {
 				return;
 			document.addEventListener('keydown', _keyDownHandler, false);
 			_listenerAdded = true;
+			//console.dir('set listener')
 		} else {
 			if (!_listenerAdded)
 				return;
 			document.removeEventListener('keydown', _keyDownHandler, false);
+			_listenerAdded = false;
+			//console.dir('remove listener')
 		}
 	}
 
 	function registerControl(accel, elem, action) {
-		var found = _elems.findIndex(c => c.elem === elem);
-		if (found === -1)
-			_elems.push({ elem: elem, accel: accel, action: action });
+		let key = _key++;
+		var found = _elems.find(c => c.accel === accel);
+		if (found)
+			found.handlers.unshift({ key, elem, action });
+		else
+			_elems.push({ accel: accel, handlers: [{ key, elem, action }] });
 		setListeners();
+		return key;
 	}
 
-	function unregisterControl(elem) {
-		var found = _elems.findIndex(c => c.elem === elem);
-		if (found !== -1)
-			_elems.splice(found);
+	function unregisterControl(key) {
+		var found = _elems.findIndex(c => c.handlers.findIndex(x => x.key === key) != -1);
+		if (found == -1) {
+			console.error('Invalid accel handler');
+			return;
+		}
+		let elem1 = _elems[found];
+		elem1.handlers.shift();
+		if (!elem1.handlers.length)
+			_elems.splice(found, 1);
+		setListeners();
 	}
 };
 
@@ -4734,7 +4764,7 @@ app.modules['std:accel'] = function () {
 			if (this.$parent.$registerControl)
 				this.$parent.$registerControl(this);
 			if (this.accel)
-				maccel.registerControl(this.accel, this.$refs.input, 'focus');
+				this._accelKey = maccel.registerControl(this.accel, this.$refs.input, 'focus');
 			if (!this.mask) return;
 			mask.mountElement(this.$refs.input, this.mask);
 		},
@@ -4743,7 +4773,7 @@ app.modules['std:accel'] = function () {
 			if (this.$parent.$unregisterControl)
 				this.$parent.$unregisterControl(this);
 			if (this.accel)
-				maccel.unregisterControl(this.$refs.input);
+				maccel.unregisterControl(this._accelKey);
 			if (!this.mask) return;
 			mask.unmountElement(this.$refs.input, this.mask);
 		},
@@ -8254,6 +8284,31 @@ TODO:
 		}
 	});
 
+})();
+// Copyright © 2021 Alex Kukhtin. All rights reserved.
+
+// 20210502-7773
+// components/accelcommand.js
+
+const maccel = require('std:accel');
+
+(function () {
+	Vue.component('a2-accel-command', {
+		props: {
+			accel: String,
+			command: Function
+		},
+		render() {
+		},
+		mounted() {
+			if (this.accel)
+				this._key = maccel.registerControl(this.accel, this.command, 'func');
+		},
+		beforeDestroy() {
+			if (this.accel)
+				maccel.unregisterControl(this._key);
+		},
+	});
 })();
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 

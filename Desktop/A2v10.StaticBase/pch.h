@@ -7,6 +7,10 @@
 #ifndef PCH_H
 #define PCH_H
 
+#ifdef _DEBUG
+#define _ITERATOR_DEBUG_LEVEL 0
+#endif
+
 // add headers that you want to pre-compile here
 #include "framework.h"
 

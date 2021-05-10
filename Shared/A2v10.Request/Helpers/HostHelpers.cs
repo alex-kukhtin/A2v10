@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -64,13 +64,13 @@ namespace A2v10.Request
 			return File.Exists(touchIconPath) ? "<link rel=\"apple-touch-icon\"  href=\"/touch-icon-iphone.png\">" : null;
 		}
 
-		public static void ReplaceMacros(this IApplicationHost host, StringBuilder sb)
+		public static void ReplaceMacros(this IApplicationHost host, StringBuilder sb, String controllerName = "_shell")
 		{
 			sb.Replace("$(Build)", host.AppBuild);
 			sb.Replace("$(LayoutHead)", host.CustomAppHead());
 			sb.Replace("$(AppleTouchIcon)", host.AppleTouchIcon());
 			sb.Replace("$(LayoutManifest)", host.CustomManifest());
-			sb.Replace("$(AssetsStyleSheets)", host.AppStyleSheetsLink("applink"));
+			sb.Replace("$(AssetsStyleSheets)", host.AppStyleSheetsLink(controllerName));
 			sb.Replace("$(HelpUrl)", host.HelpUrl);
 			sb.Replace("$(Description)", host.AppDescription);
 			var theme = host.Theme;

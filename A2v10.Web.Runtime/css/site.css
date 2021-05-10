@@ -790,6 +790,12 @@
 .ico-logo-nuget:before {
   content: "\ead2";
 }
+.ico-smile:before {
+  content: "\eaca";
+}
+.ico-smile-sad:before {
+  content: "\eacb";
+}
 * {
   box-sizing: border-box;
 }

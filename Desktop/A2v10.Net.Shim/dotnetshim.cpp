@@ -1,4 +1,8 @@
 
+#ifdef _DEBUG
+#define _ITERATOR_DEBUG_LEVEL 0
+#endif
+
 #include "string"
 #include "vector"
 #include "windows.h"

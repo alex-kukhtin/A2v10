@@ -132,6 +132,7 @@ bool CClientSchemeHandler::ProcessRequest(CefRefPtr<CefRequest> request,
 
 void CClientSchemeHandler::CheckLicense(const std::string& url) 
 {
+	/*
 	if (url.find("_page") == std::string::npos)
 		return;
 	int licRC = CDotNetRuntime::VerifyLicense();
@@ -143,6 +144,7 @@ void CClientSchemeHandler::CheckLicense(const std::string& url)
 	msg.LoadString(IDS_LIC_ERROR_BASE + licRC);
 	HWND hFrame = AfxGetApp()->m_pMainWnd->GetSafeHwnd();
 	::MessageBox(hFrame, (LPCWSTR) msg, (LPCWSTR) caption, MB_OK | MB_ICONHAND);
+	*/
 }
 
 // virtual 
