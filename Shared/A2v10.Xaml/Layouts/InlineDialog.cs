@@ -45,6 +45,7 @@ namespace A2v10.Xaml
 			RenderLoadIndicator(context);
 
 			var mc = new TagBuilder("div", "modal-content");
+			MergeAttributes(mc, context, MergeAttrMode.Margin);
 			mc.RenderStart(context);
 			RenderChildren(context);
 			mc.RenderEnd(context);

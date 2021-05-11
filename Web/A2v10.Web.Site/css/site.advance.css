@@ -5707,8 +5707,11 @@ TODO:
   align-self: stretch;
 }
 .stack-panel {
-  display: flex!important;
+  display: flex !important;
   flex-direction: column;
+}
+.stack-panel.inline {
+  display: inline-flex !important;
 }
 .stack-panel.horizontal {
   flex-direction: row;

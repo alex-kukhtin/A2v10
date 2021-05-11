@@ -60,6 +60,20 @@ namespace A2v10.Request.Api
 			return eo;
 		}
 
+		static ExpandoObject FromXml(HttpRequestBase request)
+		{
+			String body = null;
+			if (request.InputStream != null && request.InputStream.Length > 0)
+			{
+				request.InputStream.Seek(0, SeekOrigin.Begin); // ensure
+				using (var tr = new StreamReader(request.InputStream))
+				{
+					body = tr.ReadToEnd();
+				}
+			}
+			throw new NotImplementedException("ApiRequest.FromXml");
+		}
+
 		public static ApiRequest FromHttpRequest(HttpRequestBase request, String pathInfo, Action<ApiRequest> setIdentity)
 		{
 			ExpandoObject body = null;
@@ -67,6 +81,8 @@ namespace A2v10.Request.Api
 				body = FromApplicationJson(request);
 			else if (request.ContentType.StartsWith(MimeTypes.Application.FormData))
 				body = FromFormData(request);
+			else if (request.ContentType.StartsWith(MimeTypes.Application.Xml) || request.ContentType.StartsWith(MimeTypes.Text.Xml))
+				body = FromXml(request);
 
 			var query = new ExpandoObject();
 			foreach (var key in request.QueryString.Keys) {

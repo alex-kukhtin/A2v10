@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -9,7 +9,8 @@ namespace A2v10.Xaml
 	{
 		None,
 		Before,
-		After
+		After,
+		Both
 	}
 
 	[ContentProperty("Content")]
@@ -25,7 +26,7 @@ namespace A2v10.Xaml
 		{
 			if (SkipRender(context))
 				return;
-			if (Space == SpaceMode.Before)
+			if (Space == SpaceMode.Before || Space == SpaceMode.Both)
 				context.Writer.Write("&#160;");
 			var span = new TagBuilder("span", null, IsInGrid);
 			onRender?.Invoke(span);
@@ -49,7 +50,7 @@ namespace A2v10.Xaml
 			if (Content is String)
 				context.Writer.Write(context.LocalizeCheckApostrophe(Content.ToString()));
 			span.RenderEnd(context);
-			if (Space == SpaceMode.After)
+			if (Space == SpaceMode.After || Space == SpaceMode.Both)
 				context.Writer.Write("&#160;");
 		}
 	}

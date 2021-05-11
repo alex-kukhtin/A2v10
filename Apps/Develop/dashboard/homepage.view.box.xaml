@@ -15,7 +15,7 @@
 				<Text>
 					Button Text
 					<Badge Italic="True">23</Badge>
-					<Span Space="Before">bind here</Span>
+					<Span Space="Both">bind here</Span>
 					<Badge Color="Red">77</Badge>
 				</Text>
 			</Button>
@@ -51,6 +51,13 @@
 					</ComboBox>
 					<StaticImage Url="/myImage/image.png" Height="29px" />
 				</Grid>
+				<Block Align="Center">
+				<StackPanel Orientation="Horizontal" Inline="False">
+					<Button>Button 1</Button>
+					<Button>Button 2</Button>
+					<Button>Button 3</Button>
+				</StackPanel>
+				</Block>
 			</Panel>
 			<Code Content="{Bind Root.$text}"></Code>
 		</Grid>
@@ -147,7 +154,7 @@
 			</Block>
 		</Alert>
 	</Block>
-	<InlineDialog Id="Service" Title="Inline dialog title" NoClose="False" ShowWaitCursor="True">
+	<InlineDialog Id="Service" Title="Inline dialog title" NoClose="False" ShowWaitCursor="True" Padding="2rem">
 		<Grid Columns="140,100" Rows="Auto,Auto,Auto,Auto">
 			<Button Block="True" Command="{BindCmd Execute, CommandName='dlgCommand', Argument=1}">Button 1</Button>
 			<Button Block="True" Command="{BindCmd Execute, CommandName='dlgCommand', Argument=2}">Button 2</Button>

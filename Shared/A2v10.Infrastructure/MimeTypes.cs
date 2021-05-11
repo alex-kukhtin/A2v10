@@ -18,6 +18,14 @@ namespace A2v10.Infrastructure
 		{
 			public const String Json = "application/json";
 			public const String FormData = "multipart/form-data";
+			public const String Xml = "application/xml";
+			public const String Pdf = "application/pdf";
+			public const String Excel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+		}
+
+		public static class Text
+		{
+			public const String Xml = "text/xml";
 		}
 	}
 }

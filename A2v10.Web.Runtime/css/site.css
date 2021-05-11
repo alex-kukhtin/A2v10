@@ -5904,6 +5904,9 @@ TODO:
   display: flex!important;
   flex-direction: column;
 }
+.stack-panel.inline {
+  display: inline-flex !important;
+}
 .stack-panel.horizontal {
   flex-direction: row;
   align-items: baseline;

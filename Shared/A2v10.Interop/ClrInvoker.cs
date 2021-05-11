@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.Dynamic;
 using System.Reflection;
 using System.Threading.Tasks;
 using A2v10.Infrastructure;
+
 using Newtonsoft.Json;
 
 namespace A2v10.Interop

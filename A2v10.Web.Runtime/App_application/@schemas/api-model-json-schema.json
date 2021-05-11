@@ -16,7 +16,7 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"enum": [ "sql" ]
+							"enum": [ "sql", "clr" ]
 						},
 						"method": {
 							"type": "string",
@@ -46,6 +46,16 @@
 									"additionalProperties": true
 								},
 								"returns": { "type": "string" }
+							},
+							"additionalProperties": false
+						},
+						"clrCommand": {
+							"type": "object",
+							"properties": {
+								"clrType": {
+									"type": "string",
+									"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
+								}
 							},
 							"additionalProperties": false
 						}

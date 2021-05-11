@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -44,7 +44,7 @@ namespace A2v10.Reports.Actions
 							UserId = UserId,
 							TenantId = TenantId,
 							Id = Id,
-							Mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+							Mime = MimeTypes.Application.Excel,
 							Stream = ms,
 							Name = Path.GetFileNameWithoutExtension(Report)
 						};

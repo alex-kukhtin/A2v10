@@ -42,7 +42,7 @@ namespace A2v10.Reports.Actions
 						UserId = UserId,
 						TenantId = TenantId,
 						Id = Id,
-						Mime = "application/pdf",
+						Mime = MimeTypes.Application.Pdf,
 						Stream = ms,
 						Name = repName
 					};

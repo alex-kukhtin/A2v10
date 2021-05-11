@@ -13,7 +13,8 @@ namespace A2v10.Request.Api
 {
 	public enum ApiV2CommandType
 	{
-		Sql
+		Sql,
+		Clr
 	}
 
 	public enum HttpMethod
@@ -59,6 +60,11 @@ namespace A2v10.Request.Api
 		public String RealId => _id;
 	}
 
+	public class ApiClrCommand
+	{
+		public String clrType { get; set; }
+	}
+
 	public class ApiRequestCommand
 	{
 		private ApiV2RequestModel _model;
@@ -66,6 +72,7 @@ namespace A2v10.Request.Api
 		#region JSON
 		public ApiV2CommandType Type { get; set; }
 		public ApiSqlCommand SqlCommand { get; set; }
+		public ApiClrCommand ClrCommand { get; set; }
 		public HttpMethod Method { get; set; }
 		public String[] ClientId { get; set; }
 		public String AllowOrigin { get; set; }
@@ -91,6 +98,8 @@ namespace A2v10.Request.Api
 			{
 				case ApiV2CommandType.Sql:
 					return new SqlCommandHandler(serviceLocator, SqlCommand, Wrap);
+				case ApiV2CommandType.Clr:
+					return new ClrCommandHandler(serviceLocator, ClrCommand, Wrap);
 			}
 			throw new ApiV2Exception($"invalid command type {Type}");
 		}

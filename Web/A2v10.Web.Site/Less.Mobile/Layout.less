@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 @header-line-height-normal:2.6rem;
 @header-ling-height-compact:2rem;
@@ -7,19 +7,24 @@
 	display: flex;
 	flex-direction: column;
 
+	&.inline {
+		display: inline-flex !important;
+	}
+
 	&.vertical {
 	}
 
 	&.horizontal {
 		flex-direction: row;
-		align-items:baseline;
+		align-items: baseline;
 
 		.control-group {
 			margin: 0;
 		}
 	}
+
 	&.wrap {
-		flex-wrap:wrap;
+		flex-wrap: wrap;
 	}
 }
 

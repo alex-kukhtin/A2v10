@@ -9870,12 +9870,14 @@ Vue.component('a2-panel', {
 		}
 	}
 });
-// Copyright © 2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
-// 20201130-7634
+// 20201130-7773
 // components/inlinedialog.js
 (function () {
 	const eventBus = require('std:eventBus');
+
+	let __inlineStack = []; // for ESC support
 
 	Vue.component('a2-inline-dialog', {
 		template:
@@ -9908,9 +9910,13 @@ Vue.component('a2-panel', {
 			__keyUp(event) {
 				if (this.noClose) return;
 				if (event.which === 27) {
-					eventBus.$emit('inlineDialog', { cmd: 'close', id: this.dialogId });
 					event.stopPropagation();
 					event.preventDefault();
+					if (__inlineStack.length && __inlineStack[0] !== this.dialogId)
+						return;
+					setTimeout(() => {
+						eventBus.$emit('inlineDialog', { cmd: 'close', id: this.dialogId });
+					}, 1);
 				}
 			},
 			__inlineEvent(opts) {
@@ -9919,12 +9925,14 @@ Vue.component('a2-panel', {
 				switch (opts.cmd) {
 					case 'close':
 						if (window.__requestsCount__ > 0) return;
+						__inlineStack.shift();
 						this.open = false;
 						this.visible = false;
 						document.removeEventListener('keyup', this.__keyUp);
 						break;
 					case 'open':
 						this.visible = true;
+						__inlineStack.unshift(this.dialogId);
 						document.addEventListener('keyup', this.__keyUp);
 						setTimeout(() => {
 							this.open = true;
