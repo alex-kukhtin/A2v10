@@ -3811,9 +3811,6 @@ tr:hover .commandbar.visible-hover {
 .tab-panel .tab-item.full-height {
   height: 100%;
 }
-.tab-panel .tab-item.full-height > div {
-  height: 100%;
-}
 .tab-panel .pane-header {
   grid-row: 1;
   grid-column: 2;
@@ -4220,10 +4217,12 @@ ul.news-list > li {
   bottom: 0;
   z-index: 1050;
   overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .modal-stack .modal-wrapper .modal-window {
   position: relative;
-  margin: 70px auto 35px auto;
   width: 500px;
   height: auto;
   background-color: white;
@@ -4241,27 +4240,10 @@ ul.news-list > li {
 }
 .modal-stack .modal-wrapper .modal-window[maximize] {
   width: 98vw;
-  margin: 10px auto;
   height: calc(100vh - 2rem - 20px);
 }
 .modal-stack .modal-wrapper .modal-window[maximize] .modal-header {
   cursor: default;
-}
-.modal-stack .modal-wrapper .modal-window[maximize] .tab-content {
-  overflow: hidden;
-}
-.modal-stack .modal-wrapper .modal-window[maximize] .tab-content .tab-item {
-  height: 100%;
-}
-.modal-stack .modal-wrapper .modal-window[maximize] .dialog-grid-content {
-  overflow: hidden;
-}
-.modal-stack .modal-wrapper .modal-window[maximize] .taskpad {
-  overflow: hidden;
-  padding: 0;
-}
-.modal-stack .modal-wrapper .modal-window[maximize] .taskpad .taskpad-collapse-handle {
-  display: none;
 }
 .modal-stack .modal-wrapper .modal-window.modal-small {
   width: 350px;
@@ -4292,10 +4274,12 @@ ul.news-list > li {
   z-index: 1050;
   overflow: auto;
   background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .inline-modal-wrapper .modal-window {
   position: relative;
-  margin: 70px auto 35px auto;
   width: 500px;
   height: auto;
   background-color: white;
@@ -5684,7 +5668,7 @@ TODO:
 }
 .grid {
   display: grid !important;
-  padding: 0.5rem;
+  padding: 1rem;
   grid-gap: 0.5rem;
   align-items: flex-end;
   grid-template-columns: auto;

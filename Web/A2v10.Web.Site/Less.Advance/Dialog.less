@@ -28,10 +28,12 @@
 		bottom: 0;
 		z-index: @modal-wrapper-index;
 		overflow: auto;
+		display:flex;
+		align-items:center;
+		justify-content:center;
 
 		.modal-window {
 			position: relative;
-			margin: 70px auto 35px auto;
 			width: @modal-width-medium;
 			height: auto;
 			background-color: white;
@@ -51,34 +53,9 @@
 
 			&[maximize] {
 				width: 98vw;
-				margin: 10px auto;
 				height: ~"calc(100vh - 2rem - 20px)"; // @footer-height + 10px * 2
 				.modal-header {
 					cursor: default;
-				}
-
-				.tab-content {
-					overflow: hidden;
-
-					.tab-item {
-						height: 100%;
-					}
-				}
-
-				.dialog-grid-content {
-					overflow: hidden;
-				}
-
-				.taskpad {
-					overflow: hidden;
-					padding: 0;
-
-					.taskpad-body {
-					}
-
-					.taskpad-collapse-handle {
-						display: none; //TODO:??
-					}
 				}
 			}
 		}
@@ -122,10 +99,12 @@
 	z-index: @modal-wrapper-index;
 	overflow: auto;
 	background-color: transparent;
+	display:flex;
+	align-items:center;
+	justify-content:center;
 
 	.modal-window {
 		position: relative;
-		margin: 70px auto 35px auto;
 		width: @modal-width-medium;
 		height: auto;
 		background-color: white;

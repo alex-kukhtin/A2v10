@@ -83,7 +83,8 @@
 			"parse": "csv",
 			"schema": "a2",
 			"locale" : "uk",
-			"model": "ConsumptionGas.Import.Upload"
+			"model": "ConsumptionGas.Import.Upload",
+			"commandTimeout": 600
 		}
 	},
 	"commands": {

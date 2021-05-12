@@ -26,12 +26,12 @@
 	<Grid Height="100%" Rows="Auto,Auto,1*">
 	-->
 		<TabPanel Grid.Row="3" Overflow="True">
-			<Tab Header="Общие">
-				<Grid Columns="1*, 1*" Rows="Auto, 1*, Auto" Height="100%">
+			<Tab Header="Общие" FullHeight="True">
+				<Grid Columns="1*, 1*" Rows="Auto, 1*, Auto" Height="100%" AlignItems="Top">
 					<TextBox Grid.Row="1" Grid.ColSpan="2" Label="Наименование" TabIndex="1"
                          Value="{Bind Agent.Name}"/>
-					<Block Scroll="True" Grid.Row="2" Background="LightYellow" Height="100%" DropShadow="Shadow2">
-						<Block Height="100%"></Block>
+					<Block Scroll="True" Grid.Row="2" Background="LightYellow" DropShadow="Shadow2" Height="100%">
+						<Block Height="400px"></Block>
 					</Block>
 					<DataGrid Grid.Row="2" Grid.Col="2" Height="100%" FixedHeader="True">
 						<DataGridColumn Header="Id"/>
@@ -40,11 +40,11 @@
 						 Value="{Bind Agent.Memo}" Rows="3" Multiline="True" TabIndex="2"/>
 				</Grid>
 			</Tab>
-			<Tab Header="Grid">
-				<Toolbar  Grid.Row="1">
+			<Tab Header="Grid" FullHeight="True">
+				<Toolbar>
 					<Button Icon="Plus" Command="{BindCmd Append, Argument={Bind Countries}}"/>
 				</Toolbar>
-				<Table ItemsSource="{Bind Countries}" Grid.Row="2">
+				<Table ItemsSource="{Bind Countries}">
 					<TableRow>
 						<TableCell Content="{Bind Id}"/>
 						<Selector PanelPlacement="TopLeft">
@@ -54,6 +54,6 @@
 						</Selector>
 					</TableRow>
 				</Table>
-			</Tab>
+		</Tab>
 		</TabPanel>
 </Dialog>
