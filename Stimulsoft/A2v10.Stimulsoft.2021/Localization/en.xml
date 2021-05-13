@@ -386,6 +386,7 @@
     <Create>Create</Create>
     <CreateError>Error while creating report!</CreateError>
     <CreateNewCollection>Create New Collection</CreateNewCollection>
+    <CreateYourTeam>Create your team</CreateYourTeam>
     <CreatingReport>Creating report...</CreatingReport>
     <DashboardWindowTitleNew>New Dashboard</DashboardWindowTitleNew>
     <DeleteFile>Delete File</DeleteFile>
@@ -648,6 +649,7 @@
     <AddRange>Add Range</AddRange>
     <AfterGroupingData>Apply after grouping data</AfterGroupingData>
     <AllowUserDrillDown>Allow User Drill-Down</AllowUserDrillDown>
+	<AllowUserColumnSelection>Allow User Column Selection</AllowUserColumnSelection>
     <AllowUserFiltering>Allow User Filtering</AllowUserFiltering>
     <AllowUserSorting>Allow User Sorting</AllowUserSorting>
     <Blank>(Blank)</Blank>
@@ -921,6 +923,7 @@
   </Errors>
   <ExceptionProvider>
     <Assemblies>Assemblies</Assemblies>
+    <ClickIgnore>Click 'Ignore' to delete all auto-saved files.</ClickIgnore>
     <Exception>Exception</Exception>
     <ExceptionReport>Exception Report</ExceptionReport>
     <Framework>Framework</Framework>
@@ -933,6 +936,8 @@
     <SendErrorSuccess>The error message delivered successfully.</SendErrorSuccess>
     <Source>Source</Source>
     <StackTrace>Stack Trace</StackTrace>
+    <YourPreviousWorkSession>In your previous work session, the program terminated unexpectedly.</YourPreviousWorkSession>
+    <YouCanRestore>You can restore unsaved changes from a backup file.</YouCanRestore>
   </ExceptionProvider>
   <Export>
     <AddPageBreaks>Add Page Breaks</AddPageBreaks>
@@ -4270,7 +4275,8 @@
     <SubReportPage>Sub Report</SubReportPage>
     <Summaries>Summaries</Summaries>
     <Summary>Summary</Summary>
-    <SummaryExpression>Summary Expression</SummaryExpression>
+    <SummaryAlignment>Summary Alignment</SummaryAlignment>
+	<SummaryExpression>Summary Expression</SummaryExpression>
     <SummarySortDirection>Summary Sort Direction</SummarySortDirection>
     <SummaryType>Summary Type</SummaryType>
     <SummaryValues>Summary Values</SummaryValues>

@@ -1,4 +1,4 @@
-﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web;
@@ -66,6 +66,7 @@ namespace A2v10.Web.Mvc.Startup
 				locator.RegisterService<IWorkflowEngine>(workflowEngine);
 				locator.RegisterService<IScriptProcessor>(scriptProcessor);
 				locator.RegisterService<IHttpService>(httpService);
+				locator.RegisterService<IUserLocale>(userLocale);
 				if (tokenProvider != null)
 					locator.RegisterService<ITokenProvider>(tokenProvider);
 

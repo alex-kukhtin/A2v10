@@ -28,14 +28,14 @@
 		</contentFiles>
 		<dependencies>
 			<group targetFramework=".NETFramework4.6.1">
-				<dependency id="Newtonsoft.Json" version="12.0.3" />
-				<dependency id="Microsoft.Owin" version="4.1.1" />
-				<dependency id="Microsoft.Owin.Security" version="4.1.1" />
-				<dependency id="Microsoft.Owin.Security.Cookies" version="4.1.1" />
-				<dependency id="Microsoft.Owin.Security.OAuth" version="4.1.1" />
-				<dependency id="Microsoft.Owin.Host.SystemWeb" version="4.1.1" />
+				<dependency id="Newtonsoft.Json" version="13.0.1" />
+				<dependency id="Microsoft.Owin" version="4.2.0" />
+				<dependency id="Microsoft.Owin.Security" version="4.2.0" />
+				<dependency id="Microsoft.Owin.Security.Cookies" version="4.2.0" />
+				<dependency id="Microsoft.Owin.Security.OAuth" version="4.2.0" />
+				<dependency id="Microsoft.Owin.Host.SystemWeb" version="4.2.0" />
 				<dependency id="Microsoft.AspNet.Identity.Core" version="2.2.3" />
-				<dependency id="System.ValueTuple" version="4.5.0" />
+				<dependency id="System.ValueTuple" version="4.6.0" />
 			</group>
 		</dependencies>
 	</metadata>
