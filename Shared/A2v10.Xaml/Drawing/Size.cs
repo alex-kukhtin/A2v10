@@ -21,8 +21,8 @@ namespace A2v10.Xaml.Drawing
 			var arr = str.Split(',');
 			if (arr.Length > 1)
 			{
-				Width = Int32.Parse(arr[0]);
-				Height = Int32.Parse(arr[1]);
+				Width = Int32.Parse(arr[0], CultureInfo.InvariantCulture);
+				Height = Int32.Parse(arr[1], CultureInfo.InvariantCulture);
 			} else
 			{
 				throw new XamlException($"Invalid point value '{str}'");

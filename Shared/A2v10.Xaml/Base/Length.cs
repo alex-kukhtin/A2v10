@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -64,8 +64,8 @@ namespace A2v10.Xaml
 			else if (strVal.StartsWith("Calc("))
 				return new Length() { Value = strVal };
 			else if (IsValidLength(strVal))
-				return new Length() { Value = strVal };
-			else if (Double.TryParse(strVal, out dblVal))
+				return new Length() { Value = strVal.Replace(" ", "") };
+			else if (Double.TryParse(strVal, NumberStyles.Any, CultureInfo.InvariantCulture, out dblVal))
 				return new Length() { Value = strVal + "px" };
 			throw new XamlException($"Invalid length value '{strVal}'");
 		}
@@ -115,7 +115,7 @@ namespace A2v10.Xaml
 				return new GridLength() { Value = strVal };
 			if (strVal.EndsWith("*"))
 				return new GridLength(strVal.Trim().Replace("*", "fr"));
-			else if (Double.TryParse(strVal, out dblVal))
+			else if (Double.TryParse(strVal, NumberStyles.Any, CultureInfo.InvariantCulture, out dblVal))
 				return new GridLength(strVal + "px");
 			throw new XamlException($"Invalid grid length value '{strVal}'");
 		}

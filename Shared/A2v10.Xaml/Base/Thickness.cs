@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -22,7 +22,7 @@ namespace A2v10.Xaml
 			var elems = str.Split(',');
 			if (elems.Length == 1)
 			{
-				t.Top = Length.FromString(elems[0]);
+				t.Top = Length.FromString(elems[0].Trim());
 				t.Left = t.Top;
 				t.Right = t.Top;
 				t.Bottom = t.Top;

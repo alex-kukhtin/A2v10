@@ -4218,11 +4218,11 @@ ul.news-list > li {
   z-index: 1050;
   overflow: auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .modal-stack .modal-wrapper .modal-window {
   position: relative;
+  margin: auto;
+  /*center at h and v*/
   width: 500px;
   height: auto;
   background-color: white;
@@ -4270,7 +4270,8 @@ ul.news-list > li {
   left: 0;
   top: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0!important;
+  /*disable debug footer*/
   z-index: 1050;
   overflow: auto;
   background-color: transparent;

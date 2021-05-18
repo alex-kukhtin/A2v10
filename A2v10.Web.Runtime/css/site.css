@@ -4389,11 +4389,10 @@ ul.news-list > li {
   z-index: 1050;
   overflow: auto;
   display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .modal-stack .modal-wrapper .modal-window {
   position: relative;
+  margin: auto;
   width: 500px;
   height: auto;
   background-color: white;
