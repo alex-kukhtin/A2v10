@@ -4440,7 +4440,7 @@ ul.news-list > li {
   left: 0;
   top: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0!important;
   z-index: 1050;
   overflow: auto;
   background-color: transparent;

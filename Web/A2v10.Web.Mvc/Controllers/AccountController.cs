@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using System.Web.Helpers;
 using System.Text;
 using System.IO;
+using System.Configuration;
+using System.Dynamic;
+using System.Threading;
 
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -23,9 +26,7 @@ using A2v10.Web.Mvc.Models;
 using A2v10.Data.Interfaces;
 using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
-using System.Configuration;
 using A2v10.Web.Base;
-using System.Dynamic;
 using A2v10.Web.Config;
 
 namespace A2v10.Web.Mvc.Controllers
@@ -157,12 +158,8 @@ namespace A2v10.Web.Mvc.Controllers
 		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> LoginPOST()
 		{
-			LoginViewModel model;
-			using (var tr = new StreamReader(Request.InputStream))
-			{
-				String json = tr.ReadToEnd();
-				model = JsonConvert.DeserializeObject<LoginViewModel>(json);
-			}
+			LoginViewModel model = GetModelFromBody<LoginViewModel>();
+
 			// LOWER CASE!
 			model.Name = model.Name.ToLower();
 			var user = await UserManager.FindByNameAsync(model.Name);
@@ -337,12 +334,7 @@ namespace A2v10.Web.Mvc.Controllers
 				return Json(new { Status = "DISABLED" }); //
 			try
 			{
-				RegisterTenantModel model;
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					model = JsonConvert.DeserializeObject<RegisterTenantModel>(json);
-				}
+				RegisterTenantModel model = GetModelFromBody<RegisterTenantModel>();
 
 				// LOWER case
 				model.Name = model.Name.ToLower();
@@ -368,7 +360,7 @@ namespace A2v10.Web.Mvc.Controllers
 					PersonName = model.PersonName,
 					Tenant = -1,
 					RegisterHost = Request.UrlReferrer.Host,
-					Locale = _userLocale.Locale
+					Locale = _userLocale.Locale ?? Thread.CurrentThread.CurrentUICulture.Name
 				};
 
 				if (String.IsNullOrEmpty(user.Email))
@@ -443,12 +435,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 
-				ConfirmEmailModel model;
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					model = JsonConvert.DeserializeObject<ConfirmEmailModel>(json);
-				}
+				ConfirmEmailModel model = GetModelFromBody<ConfirmEmailModel>();
 
 				if (model.Email == null)
 					throw new SecurityException("Invalid e-Mail");
@@ -516,12 +503,7 @@ namespace A2v10.Web.Mvc.Controllers
 			String status = "Error";
 			try
 			{
-				ConfirmEmailModel model;
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					model = JsonConvert.DeserializeObject<ConfirmEmailModel>(json);
-				}
+				ConfirmEmailModel model = GetModelFromBody<ConfirmEmailModel>();
 				// LOWER CASE!
 				model.Email = model.Email.ToLower();
 				var user = await UserManager.FindByNameAsync(model.Email);
@@ -555,12 +537,7 @@ namespace A2v10.Web.Mvc.Controllers
 			String status;
 			try
 			{
-				ForgotPasswordViewModel model;
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					model = JsonConvert.DeserializeObject<ForgotPasswordViewModel>(json);
-				}
+				ForgotPasswordViewModel model = GetModelFromBody<ForgotPasswordViewModel>();
 				// LOWER CASE!
 				model.EMail = model.EMail.ToLower();
 				var user = await UserManager.FindByNameAsync(model.EMail);
@@ -602,12 +579,8 @@ namespace A2v10.Web.Mvc.Controllers
 			String status = null;
 			try
 			{
-				ResetPasswordViewModel model;
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					model = JsonConvert.DeserializeObject<ResetPasswordViewModel>(json);
-				}
+				ResetPasswordViewModel model = GetModelFromBody<ResetPasswordViewModel>();
+
 				// LOWER CASE!
 				model.EMail = model.EMail.ToLower();
 
@@ -664,12 +637,8 @@ namespace A2v10.Web.Mvc.Controllers
 			String status;
 			try
 			{
-				ChangePasswordViewModel model;
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					model = JsonConvert.DeserializeObject<ChangePasswordViewModel>(json);
-				}
+				ChangePasswordViewModel model = GetModelFromBody<ChangePasswordViewModel>();
+
 				if (User.Identity.GetUserId<Int64>() != model.Id)
 					throw new SecurityException("Invalid User Id");
 				var user = await UserManager.FindByIdAsync(model.Id);
@@ -823,5 +792,14 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 		#endregion
+
+		private T GetModelFromBody<T>()
+		{
+			using (var tr = new StreamReader(Request.InputStream))
+			{
+				String json = tr.ReadToEnd();
+				return JsonConvert.DeserializeObject<T>(json);
+			}
+		}
 	}
 }

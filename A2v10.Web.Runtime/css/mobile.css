@@ -1765,6 +1765,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .modal-stack .modal-window {
   background-color: white;
+  margin: auto;
   width: 100% !important;
   overflow: auto;
 }
@@ -1838,7 +1839,7 @@ table.data-grid > tbody > tr.bold > td {
   left: 0;
   top: 0;
   right: 0;
-  bottom: 0;
+  bottom: 0!important;
   z-index: 1050;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.25);
