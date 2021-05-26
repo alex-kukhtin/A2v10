@@ -11,7 +11,7 @@
 		<AccelCommand Accel="Ctrl+F7" Command="{BindCmd Close}"/>
 		<AccelCommand Accel="Ctrl+S" Command="{BindCmd Save}"/>
 		-->
-		<AccelCommand Accel="Ctrl+Enter" Command="{BindCmd Execute, CommandName=testAccel}"/>
+		<AccelCommand Accel="Shift+Tab" Command="{BindCmd Execute, CommandName=testAccel}"/>
 	</Dialog.AccelCommands>
 	<TabPanel TabPosition="Top">
 		<Tab Header="Общие">
