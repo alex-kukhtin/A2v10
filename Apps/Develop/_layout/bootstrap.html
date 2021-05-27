@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<!--
+A2v10 platform.
+Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+Site: https://a2v10.com
+GitHub: https://github.com/alex-kukhtin/A2v10
+-->
+<html lang="$(Locale)">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="google" content="notranslate" />
+	<meta name="rootUrl" content="$(RootUrl)" />
+	<meta name="helpUrl" content="$(HelpUrl)" />
+	<title></title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+	<div id="shell" v-cloak>
+		<ul>
+			<li v-for="mi in menu" v-text="mi.Name"></li>
+		</ul>
+		<div v-text="version"></div>
+		<div v-text="appData.title"></div>
+		<div class="include" style="min-height:100px;background-color:aliceblue">
+			body here
+		</div>
+		<div>
+			<pre v-text="menu"></pre>
+		</div>
+	</div>
+	<script type="text/javascript" src="/scripts/vue.$(Minify)js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/locale-$(Locale).min.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/bootstrap/main.js"></script>
+	<script type="text/javascript" src="/_shell/script"></script>
+</body>
+</html>

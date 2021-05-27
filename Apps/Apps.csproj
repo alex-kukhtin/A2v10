@@ -130,6 +130,7 @@
     <Content Include="Develop\Workflows\second-mail.html" />
     <Content Include="Develop\_assets\extensioncomponents.js" />
     <Content Include="Develop\_assets\inputmask.js" />
+    <Content Include="Develop\_layout\bootstrap.html" />
     <Content Include="Samples\catalog\agent\model.sql" />
     <Content Include="Samples\catalog\agent\schema.sql" />
     <Content Include="Samples\_sql\schema.sql" />

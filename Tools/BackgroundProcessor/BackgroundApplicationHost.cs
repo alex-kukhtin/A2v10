@@ -31,8 +31,11 @@ namespace BackgroundProcessor
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
 		public String UserAppHost => ConfigurationManager.AppSettings["userAppHost"];
 		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
+
+		public String CustomLayout => throw new NotImplementedException(nameof(CustomLayout));
 		public String AppDescription => throw new NotImplementedException(nameof(AppDescription));
 		public String SupportEmail => throw new NotImplementedException(nameof(SupportEmail));
+
 		public ITheme Theme => throw new NotImplementedException(nameof(Theme));
 		public String HelpUrl => throw new NotImplementedException(nameof(HelpUrl));
 		public String HostingPath => throw new NotImplementedException(nameof(HostingPath));

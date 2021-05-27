@@ -135,13 +135,7 @@ namespace A2v10.Web.Config
 			}
 		}
 
-		public String AppKey
-		{
-			get
-			{
-				return ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
-			}
-		}
+		public String AppKey => ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
 
 		public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"]?.Replace("$(lang)", _userLocale.Language);
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
@@ -149,6 +143,7 @@ namespace A2v10.Web.Config
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];
 		public String UserAppHost => ConfigurationManager.AppSettings["userAppHost"];
 		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
+		public String CustomLayout => ConfigurationManager.AppSettings["layout"];
 
 		public String HostingPath => HostingEnvironment.MapPath("~");
 

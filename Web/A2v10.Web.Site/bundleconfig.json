@@ -282,5 +282,23 @@
 			"enabled": false,
 			"renameLocals": false
 		}
+	},
+	{
+		"outputFileName": "scripts/bootstrap/main.js",
+		"inputFiles": [
+			"app/app.js",
+			"app/services/locale.js",
+			"app/platform/polyfills.js",
+			"app/platform/webvue.js",
+			"app/services/utils.js",
+			"app/services/period.js",
+			"app/services/url.js",
+			"app/platform/routex.js",
+			"app/bootstrap/shell.js"
+		],
+		"minify": {
+			"enabled": false,
+			"renameLocals": false
+		}
 	}
 ]

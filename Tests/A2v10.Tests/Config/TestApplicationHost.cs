@@ -72,6 +72,7 @@ namespace A2v10.Tests.Config
 
 		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
 		public String SmtpConfig => ConfigurationManager.AppSettings["mailSettings"];
+		public String CustomLayout => ConfigurationManager.AppSettings["layout"];
 
 		public String HostingPath { get; set; }
 

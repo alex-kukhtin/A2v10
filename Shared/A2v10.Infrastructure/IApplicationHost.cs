@@ -36,6 +36,7 @@ namespace A2v10.Infrastructure
 		Boolean Embedded { get; }
 		Boolean IsAdminMode { get; }
 		String ScriptEngine { get; }
+		String CustomLayout { get; }
 	
 		Boolean IsDebugConfiguration { get; }
 		Boolean IsProductionEnvironment { get; }

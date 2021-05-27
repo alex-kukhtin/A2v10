@@ -27,8 +27,19 @@ namespace A2v10.Request
 	{
 		public void Layout(TextWriter writer, IDictionary<String, String> prms)
 		{
-			String layout = Admin ? Resources.layoutAdmin :
-				_host.Mobile ? Resources.layoutMobile : Resources.layout;
+			var customLayout = _host.CustomLayout;
+			String layout = null;
+			if (!String.IsNullOrEmpty(customLayout))
+			{
+				var layoutFile = customLayout.Replace("$(lang)", _userLocale.Language) + ".html";
+				layout = _host.ApplicationReader.ReadTextFile("_layout", layoutFile);
+				if (layout == null)
+					throw new RequestModelException($"File not found. [{_host.AppKey}/_layout/{customLayout}.html]");
+			}
+			else
+				layout = Admin ? Resources.layoutAdmin :
+					_host.Mobile ? Resources.layoutMobile : Resources.layout;
+
 			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
 
 			foreach (var p in prms)
