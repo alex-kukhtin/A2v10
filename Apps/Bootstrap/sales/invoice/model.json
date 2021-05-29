@@ -1,0 +1,87 @@
+﻿{
+	"schema": "a2demo",
+	"model": "Invoice",
+	"actions": {
+		"index": {
+			"index": true,
+			"template": "index.template",
+			"view": "index.view"
+		},
+		"edit": {
+			"model": "Document",
+			/*
+      "parameters": {
+        "Kind": "TEST"
+      },*/
+			"view": "invoice.view",
+			"template": "invoice2.template"
+		},
+		"empty": {
+			"model": "Empty",
+			"view": "empty.view",
+			"template": "empty.template"
+		}
+	},
+	"commands": {
+		"createShipment": {
+			"type": "sql",
+			"procedure": "Invoice.CreateShipment"
+		},
+		"fetchCustomer": {
+			"type": "sql",
+			"procedure": "Agent.Fetch"
+		},
+		"testCommand": {
+			"type": "sql",
+			"procedure": "Agent.Fetch",
+			"parameters": {
+				"Kind": "Customer"
+			}
+		}
+	},
+	"dialogs": {
+		"wizard": {
+			"model": "Agent",
+			"view": "demo.wizard",
+			"template": "/Agent/editCustomer.template"
+		},
+		"uploadWizard": {
+			"model": "Upload",
+			"view": "upload.wizard",
+			"template": "upload.template"
+		},
+		"emptyDialog": {
+			"model": "Empty",
+			"view": "empty.dialog"
+		}
+	},
+	"reports": {
+		"invoice": {
+			"type": "stimulsoft",
+			"report22": "invoice",
+			"report": "{{Report.Stream}}",
+			"model": "Document",
+			"name": "@[Invoice] {{Document.No}}"
+		},
+		"testxml": {
+			"type": "xml",
+			"model": "TestXml",
+			"name": "{{Params.Name}}",
+			"xmlSchemas": [ "F0103306", "../common_types" ],
+			"encoding": "windows-1251"
+		}
+	},
+	"uploads": {
+		"uploadFile": {
+			"model": "Test.Upload",
+			"parse": "excel"
+		}
+	},
+	"files": {
+		"uploadCsv": {
+			"model": "",
+			"type": "parse",
+			"parse": "auto"
+		}
+	}
+}

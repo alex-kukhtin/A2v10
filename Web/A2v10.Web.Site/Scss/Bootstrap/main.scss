@@ -1,0 +1,29 @@
+﻿.shell {
+	display:grid;
+	grid-template-areas:
+		"header header"
+		"sidebar content";
+	grid-template-rows:auto 1fr;
+	grid-template-columns:auto 1fr;
+	height:100vh;
+	overflow:hidden;
+}
+
+.main-view {
+	grid-area:content;
+	overflow:auto;
+}
+
+.app-header {
+	grid-area:header;
+	display:flex;
+	background-color:antiquewhite;
+}
+
+.app-side-bar {
+	grid-area:sidebar;
+	background-color:aliceblue;
+	width:250px;
+	overflow:auto;
+}
+

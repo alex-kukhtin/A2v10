@@ -67,6 +67,8 @@
 			"app/controllers/navmenu.js",
 			"app/controllers/navbar.js",
 			"app/controllers/sidebar.js",
+			"app/controllers/appheader.js",
+			"app/controllers/mainview.js",
 			"app/controllers/shell.js",
 			"app/controllers/tests.js"
 		],
@@ -143,6 +145,8 @@
 			"app/controllers/navmenu.js",
 			"app/controllers/navbar.js",
 			"app/controllers/sidebar.js",
+			"app/controllers/appheader.js",
+			"app/controllers/mainview.js",
 			"app/mobile/shell.js",
 			"app/controllers/tests.js"
 		],
@@ -223,6 +227,8 @@
 			"app/controllers/navmenu.js",
 			"app/controllers/navbar.js",
 			"app/controllers/sidebar.js",
+			"app/controllers/appheader.js",
+			"app/controllers/mainview.js",
 			"app/standalone/shell.js"
 		],
 		"minify": {
@@ -293,7 +299,21 @@
 			"app/services/utils.js",
 			"app/services/period.js",
 			"app/services/url.js",
+			"app/services/http.js",
 			"app/platform/routex.js",
+			"app/components/include.js",
+			"app/services/modelinfo.js",
+			"app/services/mask.js",
+			"app/services/html.js",
+			"app/services/validators.js",
+			"app/services/impl/array.js",
+			"app/services/datamodel.js",
+			"app/services/dataservice.js",
+			"app/controllers/base.js",
+			"app/controllers/navmenu.js",
+			"app/bootstrap/appheader.js",
+			"app/bootstrap/sidebar.js",
+			"app/bootstrap/mainview.js",
 			"app/bootstrap/shell.js"
 		],
 		"minify": {

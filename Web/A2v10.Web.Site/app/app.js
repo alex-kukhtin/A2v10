@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190813-7521
+// 20210529-7776
 // app.js
 
 "use strict";
@@ -10,11 +10,13 @@
 	window.app = {
 		modules: {},
 		components: {},
+		templates: {},
 		nextToken: nextToken
 	};
 
 	window.require = require;
 	window.component = component;
+	window.template = template;
 
 	// amd typescript support
 	window.define = define;
@@ -42,6 +44,14 @@
 		if (noerror)
 			return {};
 		throw new Error('component "' + name + '" not found');
+	}
+
+	function template(name, noerror) {
+		if (name in app.templates)
+			return app.templates[name];
+		if (noerror)
+			return {};
+		throw new Error('template "' + name + '" not found');
 	}
 
 	let currentToken = 1603;

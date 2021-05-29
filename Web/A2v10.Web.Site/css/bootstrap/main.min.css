@@ -1,0 +1,1 @@
+﻿.shell{display:grid;grid-template-areas:"header header" "sidebar content";grid-template-rows:auto 1fr;grid-template-columns:auto 1fr;height:100vh;overflow:hidden;}.main-view{grid-area:content;overflow:auto;}.app-header{grid-area:header;display:flex;background-color:#faebd7;}.app-side-bar{grid-area:sidebar;background-color:#f0f8ff;width:250px;overflow:auto;}

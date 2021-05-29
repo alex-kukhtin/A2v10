@@ -1,0 +1,38 @@
+﻿<!-- Demo wizard -->
+<Wizard xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+		Title="Wizard demo" Width="600" Height="400"
+		FinishCommand="{BindCmd SaveAndClose, ValidRequired=True}" HelpUrl="/catalogs/agents">
+	<WizardPage Header="Step # 1" Description="Enter credentials">
+		<Grid Columns="2*, 1*">
+			<GridGroup>
+				<TextBox Grid.Col="1" Label="Name" Value="{Bind Agent.Name}" Description="Name for parnter"/>
+				<Text Grid.VAlign="Middle" Grid.Col="2" Small="True"> There is a parnter name for use in documents, browsers, selectors, etc.</Text>
+			</GridGroup>
+		</Grid>
+	</WizardPage>
+	<WizardPage Header="Step # 2" Description="Choose payment">
+		<Grid>
+			<TextBox Label="Код ЕДРПОУ" Value="{Bind Agent.Code}" Required="True"
+					 Description="Введите сюда код ЕДПРОУ контрагента"/>
+			<Button></Button>
+		</Grid>
+	</WizardPage>
+	<WizardPage Header="Step # 3" Description="Fill Account data" Padding="0, 10">
+		<Paragraph>
+			Paragraph text here
+			<Span Bold="True">Span Bold text</Span>
+			Paragraph text here
+			<Hyperlink>Hyperlink</Hyperlink>
+			<Break />
+			Paragraph text here
+			<Span Italic="True">Span Italic text</Span>
+			<Line/>
+			Paragraph text here
+		</Paragraph>
+		<TextBox Label="Memo" Description="Enter memo for customer here" Value="{Bind Agent.Memo}" Required="True">
+			
+		</TextBox>
+	</WizardPage>
+</Wizard>
+
+    

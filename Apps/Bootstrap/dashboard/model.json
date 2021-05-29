@@ -1,0 +1,11 @@
+﻿/*home*/
+{
+	"$schema": "../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
+	"schema": "a2demo",
+	"actions": {
+		"index": {
+			"view": "HomePage.bootstrap",
+			"template": "homepage.template"
+		}
+	}
+}

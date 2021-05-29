@@ -6,16 +6,16 @@
 			"Develop/_assets/diagram.css"
 		]
   },
-  {
+	{
 		"outputFileName": "Develop/_assets/app.min.js",
 		"minify": {
 			"enabled": true,
 			"termSemicolons": true,
 			"renameLocals": false,
 			"outputMode": "none"
-		},	
-    "inputFiles": [
-      "Develop/_assets/app.js"
-    ]
-  }
+		},
+		"inputFiles": [
+			"Develop/_assets/app.js"
+		]
+	}
 ]

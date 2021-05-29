@@ -20,17 +20,15 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 </head>
 <body>
 	<div id="shell" v-cloak>
+		<a2-app-header :title="title" :subtitle="subtitle" :user-state="userState"
+					:menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
+					person-name="$(PersonName)" client-id="$(ClientId)" :user-is-admin="userIsAdmin">
+		</a2-app-header>
+		<a2-main-view :menu="menu" :period="globalPeriod" :pages="pages" :title="title"></a2-main-view>
 		<ul>
 			<li v-for="mi in menu" v-text="mi.Name"></li>
 		</ul>
 		<div v-text="version"></div>
-		<div v-text="appData.title"></div>
-		<div class="include" style="min-height:100px;background-color:aliceblue">
-			body here
-		</div>
-		<div>
-			<pre v-text="menu"></pre>
-		</div>
 	</div>
 	<script type="text/javascript" src="/scripts/vue.$(Minify)js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/locale-$(Locale).min.js?v=$(Build)"></script>

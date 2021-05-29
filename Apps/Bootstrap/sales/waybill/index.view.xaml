@@ -1,0 +1,138 @@
+<!-- Waybill index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      >
+	<Page.Resources>
+		<sys:String x:Key="OpenUrl">/Sales/Waybill/Edit</sys:String>
+		<Style x:Key="toolBar">
+			<Setter Property="Style" Value="Light"/>
+		</Style>
+	</Page.Resources>
+	<Page.Toolbar>
+		<Toolbar XamlStyle="{StaticResource toolBar}">
+			<Button Style="Green" Icon="Plus" Tip="Создать накладную" Command="{BindCmd Create, Url={StaticResource OpenUrl}}">Создать</Button>
+			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}">Открыть</Button>
+			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='Удалить документ?', Permission=CanEdit}">Удалить</Button>
+			<Button Icon="Workflow1" Command="{BindCmd ExecuteSelected, CommandName='startWorkflow', Argument={Bind Documents}}">Workflow</Button>
+			<Button Icon="Attach" Command="{BindCmd ExecuteSelected, CommandName='attachReport', Argument={Bind Documents}}">Attach report</Button>
+			<Button Icon="ExportExcel" Command="{BindCmd ExecuteSelected, CommandName='attachReport2', Argument={Bind Documents}}">Attach Excel</Button>
+			<Separator />
+			<TextBox Label="Контрагент:" Value="{Bind Parent.Filter.Agent.Name}">
+				<TextBox.AddOns>
+					<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Parent.Filter.Agent}, Url='/Agent/BrowseCustomer', Data={Bind Root.$BrowseData}}"/>
+					<Hyperlink Icon="Clear" Command="{BindCmd Execute, CommandName=clearFilter, Argument={Bind Parent.Filter.Agent}}"/>
+				</TextBox.AddOns>
+			</TextBox>
+			<!--
+			<TextBox Label="text 2">
+				
+			</TextBox>
+			<CheckBox Label="check"/>
+			-->
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+			<Button Icon="MessageOutline" Tip="Подтвердить телефон" Command="{BindCmd Dialog, Action=Show, Url='/sales/waybill/confirmPhone'}">Подтвердить телефон</Button>
+			<!--
+			<Button Icon="Download" Tip="Download"/>
+			<Code Content="{Bind Parent.Filter}"></Code>
+			<CheckBox Label="Show column" Value="{Bind Root.$$ColumnVisible}"/>
+			-->
+			<ComboBox Value="{Bind Parent.Grouping.GroupBy}" Style="Hyperlink" Size="Large">
+				<ComboBoxItem Content="Без группировки" Value=""/>
+				<ComboBoxItem Content="По контрагентам" Value="Agent.Name"/>
+				<ComboBoxItem Content="По датам" Value="Date"/>
+				<ComboBoxItem Content="По контрагентам + по датам" Value="Agent.Name-Date"/>
+			</ComboBox>
+			<!--
+			<Code Content="{Bind Documents.$ModelInfo}"></Code>
+			-->
+			<Button Icon="ArrowOpen" Content="Открыть во фрейме" Command="{BindCmd OpenSelectedFrame, Argument={Bind Documents}, Url='/sales/waybill/edit'}"/>
+			<Button Icon="FileSignature" Content="Подписать" Command="{BindCmd Dialog, Action=Show, Argument={Bind Documents.$selected.Attachments[0]}, Url='/Sales/Waybill/EUSign'}" />
+			<Button Icon="Check" Content="Проверить подпись" Command="{BindCmd Dialog, Action=Show, Argument={Bind Documents.$selected.Attachments[0]}, Url='/Sales/Waybill/CheckEUSign'}" />
+			<Button Icon="TagRed" Content="Test" Command="{BindCmd Execute, CommandName='test', Argument={Bind Documents.$selected}}" />
+			<!--ItemsSource="{Bind Documents}" -->
+			<Selector ListSize="250,200" Size="Default"
+					  Delegate="docToSelect"
+					  Value="{Bind Root.$SelectedDoc}" DisplayProperty="Id" ShowCaret="True" Width="150px">
+				<Selector.ItemsPanel>
+					<DataGrid HeadersVisibility="None" GridLines="Horizontal" Hover="True">
+						<DataGridColumn Header="Id" Content="{Bind Id}"/>
+						<DataGridColumn Header="Date" Content="{Bind Date, DataType=Date}"/>
+					</DataGrid>
+				</Selector.ItemsPanel>
+			</Selector>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Documents}" RunAt="ServerUrl">
+			<CollectionView.Filter>
+				<FilterDescription>
+					<FilterItem Property="Agent" DataType="Object" />
+				</FilterDescription>
+			</CollectionView.Filter>
+		</CollectionView>
+	</Page.CollectionView>
+	<!--="{Bind Parent.GroupBy}  -->
+	<DataGrid XamlStyle="{StyleResource DataGrid}" HeadersVisibility="Column" GridLines="Horizontal"
+				Sort="True" FixedHeader="True" TestId="MyDataGrid" ItemsSource="{Bind Parent.ItemsSource}"
+				DoubleClick="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}}"
+				MarkerStyle="Both" Mark="{Bind $Mark}" GroupBy="{Bind Parent.Grouping.GroupBy}">
+		<DataGridColumn Header="Код" Content="{Bind Id}" Role="Number"
+			Command="{BindCmd Open, Url={StaticResource OpenUrl}}" Icon="{Bind $Icon}"/>
+		<DataGridColumn Header="Дата" Content="{Bind Date, DataType=Date}" Role="Date"
+						Command="{BindCmd Execute, CommandName='clickDate', Permission=CanEdit, Confirm='Are you sure?'}"/>
+		<DataGridColumn Header="Номер" Content="{Bind No}" Role="Number"/>
+		<DataGridColumn Header="Покупатель">
+			<Popover Placement="BottomRight" If="{Bind Agent.Id}"
+				Text="{Bind Agent.Name}" Url="{Bind $AgentPopoverUrl}"/>
+		</DataGridColumn>
+		<DataGridColumn Header="Склад" Content="{Bind DepFrom.Name}" />
+		<DataGridColumn Header="Сумма" Content="{Bind Sum, DataType=Currency, HideZeros=True, Format='# 000.00'}" Role="Number"/>
+		<DataGridColumn Header="Created" Content="{Bind DateCreated, DataType=DateTime}" Role="Date"/>
+		<DataGridColumn Header="Примечание" Fit="True" Wrap="PreWrap">
+			<Span Content="{Bind Memo}" MaxChars="32" Tip="{Bind Memo}"/>
+		</DataGridColumn>
+		<DataGridColumn Header="Sparkline">
+			<Graphics Delegate="drawSparkline" Argument="{Bind}" Watch="Deep"/>
+		</DataGridColumn>
+		<DataGridColumn Header="" Fit="True">
+			<CommandBar If="{Bind !Attachments.$isEmpty}">
+				<Button Icon="Copy" Command="{BindCmd Dialog, Action=Show, Url='/test/1/2/3', Permission=CanEdit, Argument={Bind}}"/>
+				<Button Icon="Clear" Command="{BindCmd DbRemove, Permission=CanEdit, Argument={Bind}}"/>
+				<Repeater ItemsSource="{Bind Attachments}">
+					<Group>
+						<Button Icon="FilePreview" Command="{BindCmd Attachment, Url='/Sales/Waybill/Attachment', Argument={Bind}, Export=False, NewWindow=True}" />
+						<Button Icon="Print" Command="{BindCmd Execute, CommandName=printToPdf, Url='/Sales/Waybill/Attachment', Argument={Bind}}" />
+					</Group>
+				</Repeater>
+				<Button Icon="EllipsisVertical">
+					<Button.DropDown>
+						<DropDownMenu Separate="True">
+							<MenuItem Content="Id plus one" Command="{BindCmd Execute, CommandName=incId, Argument={Bind}}"/>
+							<MenuItem Content="Menu item # 2"/>
+							<MenuItem Content="Menu item # 3"/>
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+			</CommandBar>
+		</DataGridColumn>
+		<!--
+		<DataGridColumn Header="Dynamic" Content="{Bind Memo}" If="{Bind Root.$$ColumnVisible}" />
+		-->
+		<DataGrid.RowDetails>
+			<DataGridRowDetails Visible="{Bind $HasParent}" Activate="Always">
+				<StackPanel Orientation="Horizontal">
+					<Label Margin="0,6,0,0">Основание:</Label>
+					<Hyperlink Icon="FileLink"
+						Command="{BindCmd Open, Url='/Sales/Invoice/Edit', 
+						Argument={Bind ParentDoc}}"
+						Content="{Bind ParentDoc.$Name}" />
+				</StackPanel>
+			</DataGridRowDetails>
+		</DataGrid.RowDetails>
+	</DataGrid>
+	<Page.Pager>
+		<Pager Source="{Bind Parent.Pager}" />
+	</Page.Pager>
+</Page>

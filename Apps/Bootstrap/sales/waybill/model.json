@@ -1,0 +1,196 @@
+﻿{
+	"$schema": "../../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
+	"schema": "a2demo",
+	"model": "Waybill",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "index.view",
+			"template": "index.template",
+			"checkTypes": "index.d.ts",
+			"export": {
+				"format": "xlsx"
+			},
+			"commandTimeout": 400
+		},
+		"edit": {
+			"model": "Document",
+			"view": "waybill.view",
+			"template": "waybill2.template",
+			"checkTypes": "model.d.ts",
+			/*
+			"parameters": {
+				"Kind": "TEST"
+			},
+			*/
+			"merge": {
+				"schema": "a2demo",
+				"model": "Document.Merge"
+			},
+			"events": {
+				"afterSave": {
+					"source": "",
+					"schema": "",
+					"model": "AfterDoc" /* {model}.Metadata, {model}.Update */
+				}
+			}
+		},
+		"export": {
+			"model": "ExportToDbf",
+			"checkTypes": "export.d",
+			"export": {
+				"fileName": "MyFile",
+				"format": "dbf",
+				"encoding": "866"
+			}
+		}
+	},
+	"dialogs": {
+		"confirmPhone": {
+			"model": "ConfirmPhone",
+			"view": "confirm.dialog",
+			"template": "confirm.template"
+		},
+		"euSign": {
+			"view": "eusign.dialog",
+			"model": "EUSign",
+			"template": "eusign.template",
+			"twoPhase": true
+		},
+		"checkEuSign": {
+			"view": "checkeusign.dialog",
+			"model": "EUSign",
+			"template": "checkeusign.template",
+			"twoPhase": true
+		},
+		"showLinks": {
+			"model": "",
+			"template": "links.template",
+			"view": "links.dialog"
+		},
+		"testTime": {
+			"model": "Test.Time"
+		}
+	},
+	"commands": {
+		"sendVerifyCode": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SendVerifyCodeSmsHandler;assembly=A2v10.Web.Mvc",
+			"async": true
+		},
+		"confirmVerifyCode": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Web.Mvc.Hooks.SetPhoneNumberHandler;assembly=A2v10.Web.Mvc",
+			"async": true
+		},
+		"startWorkflow": {
+			"type": "startProcess",
+			"file": "Workflows/TestWorkflow_v1"
+		},
+		"resumeWorkflow": {
+			"type": "resumeProcess"
+		},
+		"attachReport": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Reports.Actions.AttachStiReport;assembly=A2v10.Reports",
+			"async": true,
+			"parameters": {
+				"Report": "sales/waybill/waybill",
+				"Model": "Document",
+				"Schema": "a2demo"
+			}
+		},
+		"attachReportXlsx": {
+			"type": "clr",
+			"clrType": "clr-type:A2v10.Reports.Actions.AttachXlsxReport;assembly=A2v10.Reports",
+			"async": true,
+			"parameters": {
+				"Report": "sales/waybill/waybill",
+				"Model": "Document",
+				"Schema": "a2demo"
+			}
+		},
+		"saveTime": {
+			"type": "sql",
+			"procedure": "SaveDocumentTime"
+		},
+		"fetchCustomer": {
+			"type": "sql",
+			"procedure": "Agent.Fetch"
+		},
+		"serverScript": {
+			"type": "script",
+			"template": "server.template",
+			"model": "Document",
+			"command": "serverProcessAndSave"
+		},
+		"callApi": {
+			"type": "callApi",
+			"model": "GetWeather",
+			"parameters": {
+				"City": "NewMyApirk",
+				"url": "((MyApi.url))/companyInfo/[[Code]]",
+				"method": "get",
+				"headers": {
+					"Authorization": "bearer ((MyApi.apiKey))"
+				},
+				"body": {
+					"weather": {
+						"url": "{{Weather.Url}}",
+						"key": "((openweathermap.appid))"
+					},
+					"prm": "[[Code]]"
+				}
+			}
+		},
+		"getWeather": {
+			"type": "callApi",
+			"model": "GetWeather",
+			//"url": "https://samples.openweathermap.org/data/2.5/weather?q=[[City]]&appid=((openweathermap.appid))",
+			"parameters": {
+				"url": "{{Weather.Url}}?q=[[City]]&appid=((openweathermap.appid))",
+				"method": "get",
+				"City": "NewYork"
+			}
+		},
+		"sendMessage": {
+			"type": "sendMessage",
+			"parameters": {
+				"template2": "workflows/messaging",
+				"key": "FromServer"
+			}
+		},
+		"testPost": {
+			"type": "callApi",
+			"parameters": {
+				"url": "((ProcS.url))/api/process/start",
+				"method": "post",
+				"body": {
+					"processId": "bioprocs/donorpaid",
+					"parameters": {
+						"visitId": "[[Body.visitId]]",
+						"donorId": "[[Body.donorId]]"
+					}
+				}
+			}
+		},
+		"checkTypes": {
+			"type": "sql",
+			"checkTypes": "print.d",
+			"procedure": "Document.Report"
+		}
+	},
+	"reports": {
+		"waybill": {
+			"report": "waybill",
+			"name": "Заголовок отчета",
+			"model": "Document",
+			"checkTypes": "print.d"
+		}
+	},
+	"files": {
+		"default": {
+
+		}
+	}
+}

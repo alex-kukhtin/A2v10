@@ -1,0 +1,9 @@
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
+	Title="Зв'язані документи" Width="980px">
+	<Dialog.Buttons>
+		<Button Content="Закрити" Command="{BindCmd Close}" />
+	</Dialog.Buttons>
+	<Block Background="LightYellow" Height="650px" Scroll="True">
+		<Graphics Delegate="drawLinks" CenterContent="True" />
+	</Block>
+</Dialog>

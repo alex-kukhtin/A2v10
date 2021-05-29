@@ -90,6 +90,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\bootstrap\appheader.js" />
+    <Content Include="app\bootstrap\sidebar.js" />
+    <Content Include="app\bootstrap\mainview.js" />
     <Content Include="app\bootstrap\shell.js" />
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\accelcommand.js" />
@@ -100,7 +103,9 @@
     <Content Include="app\bootstrap\pager.js" />
     <Content Include="app\components\companybutton.js" />
     <Content Include="app\components\waitcursor.js" />
+    <Content Include="app\controllers\mainview.js" />
     <Content Include="app\controllers\iframe.js" />
+    <Content Include="app\controllers\appheader.js" />
     <Content Include="app\controllers\sidebar.js" />
     <Content Include="app\controllers\navmenu.js" />
     <Content Include="app\controllers\navbar.js" />
@@ -172,6 +177,10 @@
     <Content Include="App_application\admin\Identity\User\password.template.js" />
     <Content Include="App_application\Home\controller.js" />
     <Content Include="App_application\Home\index.view.cshtml" />
+    <Content Include="css\bootstrap\bootstrap.css" />
+    <Content Include="css\bootstrap\bootstrap.min.css" />
+    <Content Include="css\bootstrap\main.css" />
+    <Content Include="css\bootstrap\main.min.css" />
     <Content Include="css\default.colorscheme.css" />
     <Content Include="css\default.colorscheme.min.css">
       <DependentUpon>default.colorscheme.css</DependentUpon>
@@ -317,6 +326,7 @@
     <Content Include="Less.Mobile\Upload.less" />
     <Content Include="Less.Mobile\Debug.less" />
     <Content Include="package.json" />
+    <Content Include="Scss\Bootstrap\main.scss" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -515,7 +525,6 @@
     <Folder Include="app.ts\" />
     <Folder Include="app\site.ts\" />
     <Folder Include="scripts\eusign\" />
-    <Folder Include="Scss\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\XamExtensionsSample\XamExtensionsSample.csproj">

@@ -1,0 +1,29 @@
+{
+	"model": {
+		"name": "Invoice",
+		"index": true,
+		"load": true,
+		"update": true,
+		"fields": {
+			"Id": {
+				"type": "bigint",
+				"underline": "Document.Id"
+			},
+			"Agent": {
+				"type": "ref",
+				"refTo": "Agent"
+			}
+		}
+	}
+}
+
+/*
+schema. [ Invoice.Load ]
+
+@UserId,
+@TenantId,
+@Id
+
+	[Invoice!TDocument!Object] = null, [Id!!Id] = Id, [Agent!TAgent!RefId]
+
+*/

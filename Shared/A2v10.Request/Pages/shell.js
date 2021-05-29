@@ -1,9 +1,12 @@
 ﻿
-/*20200602-7670*/
+/*20210529-7776*/
 
 (function () {
 
 	const Shell = component('std:shellController');
+
+	const AppHeader = component('std:appHeader');
+	const MainView = component('std:mainView');
 
 	const menu = $(Menu);
 	const companies = $(Companies);
@@ -13,6 +16,10 @@
 
 	const shell = new Shell({
 		el: '#shell',
+		components: {
+			'a2-app-header': AppHeader,
+			'a2-main-view': MainView
+		},
 		data: {
 			version: '$(AppVersion)',
 			menu: menu.Menu ? menu.Menu[0].Menu : null,

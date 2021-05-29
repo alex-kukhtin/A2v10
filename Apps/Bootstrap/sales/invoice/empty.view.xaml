@@ -1,0 +1,14 @@
+<!-- Invoice empty view -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Close" Toolbar.Align="Right"
+				Command="{BindCmd Close}">@[Close]</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Grid Columns="Auto,Auto">
+		<TextBox Value="{Bind Root.Test}" Label="Test" UpdateTrigger="Input"/>
+		<Static Value="{Bind Root.Test}" Label="Result"/>
+	</Grid>
+</Page>
+

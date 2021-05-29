@@ -1,0 +1,302 @@
+<!-- Waybill view -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Page.Toolbar>
+		<Toolbar Style="Light" Border="BottomShadow">
+			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">Сохранить 2</Button>
+			<Button Icon="SaveClose" Tip="Сохранить изменения и закрыть документ" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
+			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
+			<Button Icon="Bell" Command="{BindCmd Execute, CommandName=setDate, Argument={Bind Document}}" >Set Date</Button>
+			<Separator/>
+			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}}" If="{Bind !Document.Done}"/>
+			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}, SaveRequired=True, Confirm='Отменить проведение документа?'}" If="{Bind Document.Done}"/>
+			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True}" />
+			<Button Icon="Print" Content="PrintDirect" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Print=True}"/>
+			<Button Icon="Download" Content="Download" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Export=True, Format=OpenSheet}"/>
+			<Button Icon="Process" Content="RunServerScript" Command="{BindCmd Execute, CommandName=runServerScript}" />
+			<Button Icon="Call" Content="CallApi" Command="{BindCmd Execute, CommandName=callApi}" />
+			<Button Icon="Cloud" Content="CallApi" Command="{BindCmd Execute, CommandName=getWeather}" />
+			<Button Icon="CloudOutline" Content="Test POST" Command="{BindCmd Execute, CommandName=testPost}" />
+			<Button Icon="SendOutline" Content="SendMessage" Command="{BindCmd Execute, CommandName=sendMessage}" />
+			<Button Icon="Export" Content="Export this" Command="{BindCmd Export, Url='/sales/waybill/export', Argument={Bind Document}, FileName='document.dbf', SaveRequired=True}"  />
+			<Button Icon="AddressBook" Content="CheckTypes" Command="{BindCmd Execute, CommandName=checkTypes}" />
+			<Button Icon="Close" Toolbar.Align="Right"
+                    Command="{BindCmd Close}">Закрыть</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<Page.PrintPage>
+		<PrintPage Orientation="Landscape" Zoom="1"/>
+	</Page.PrintPage>
+	<Page.Taskpad>
+		<Taskpad Width="290" Collapsible="True" Collapsed="{Bind Root.$Collapsed}">
+			<TextBox Accel="Ctrl+F7" Label="Штрих-код" Value="{Bind Root.$BarCode}"/>
+			<ContentControl Content="{Source '../../Document/Info'}"/>
+			<Panel Header="Основание" Icon="Link" If="{Bind Document.$HasParent}" Style="Default" Padding="6" Collapsible="True">
+				<Hyperlink Icon="FileLink"
+                           Content="{Bind Document.ParentDoc.$Name}"
+                           Command="{BindCmd Open, Url='/Sales/Invoice/Edit', Argument={Bind Document.ParentDoc}}"/>
+			</Panel>
+			<Panel If="{Bind Root.$HasInbox}" Header="Workflow" Style="Danger" Padding="10">
+				<TextBox Value="{Bind Root.$Answer}"/>
+				<Button Style="Cyan" Command="{BindCmd Execute, CommandName='resumeWorkflow'}">Продолжить</Button>
+			</Panel>
+			<Hyperlink Icon="EllipsisVertical" HideCaret="True">
+				<Hyperlink.DropDown>
+					<DropDownMenu Background="White">
+						<MenuItem Content="Удалить что-то 1" />
+						<MenuItem Content="Удалить что-то 2" />
+						<MenuItem Content="Удалить что-то 3" />
+					</DropDownMenu>
+				</Hyperlink.DropDown>
+			</Hyperlink>
+			<CommandBar>
+				<Button Icon="EllipsisVertical">
+					<Button.DropDown>
+						<DropDownMenu Separate="True">
+							<MenuItem Content="Menu item # 1"/>
+							<MenuItem Content="Menu item # 2"/>
+							<MenuItem Content="Menu item # 3"/>
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
+			</CommandBar>
+			<Hyperlink Icon="Link" Command="{BindCmd Dialog, Action=Show, Argument={Bind Document}, Url='/sales/waybill/showLinks'}">Show Links</Hyperlink>
+			<Card Header="Карточка" DropShadow="Shadow1"
+				  Hint="Поставте позначку для тих розділів, які використовуються. Якщо зняти позначку, розділ не буде включено до головного меню системи.">
+				<CardBody>
+					Текст карточки внутри с чем-то еще.
+				</CardBody>
+			</Card>
+			<ValidatorLabel Grid.Row="5" Grid.Col="4"  Value="{Bind Document.Agent}"/>
+		</Taskpad>
+	</Page.Taskpad>
+	<Alert Style="Warning" Icon="WarningOutline" If="{Bind Document.Done}">
+		Документ проведено в обліку. Редагування неможливе.
+	</Alert>
+	<TabPanel Header="Document.Date"  Overflow="True">
+		<Tab Header="Документ">
+			<Grid Columns="150, 150, 150, 150, 150, 120, 1*">
+
+				<DatePicker Grid.Row="2" Grid.Col="4" Value="{Bind Document.Date}" Label="Date" TestId="D_P_1"/>
+				<TimePicker Grid.Row="2" Grid.Col="5" Value="{Bind Document.Date}" Label="Time" Placement="BottomRight"/>
+				<Button Content="Save" Command="{BindCmd Execute, CommandName=saveTime}" Grid.Row="2" Grid.Col="6"></Button>
+				<DatePicker Grid.Row="3" Grid.Col="4" Value="{Bind Document.Date}" Label="Date" View="Month"/>
+				<Code Grid.Row="3" Grid.Col="5" Content="{Bind Document.Date}"/>
+				<Header Grid.ColSpan="4" Badge="{Bind Document.Id}" Render="Show">Расходная накладная</Header>
+				<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.$Date}" Render="{Bind 'Document.Id == 164 ? `Show` : `Hide`'}"/>
+				<TextBox Grid.Row="2" Label="Номер" Value="{Bind Document.No}" Align="Right" Number="True"/>
+				<Static Grid.Row="2" Grid.Col="3" Label="Код" Value="{Bind Document.Id}" Align="Right"/>
+				<TextBox Grid.Row="3" Grid.ColSpan="3"
+					Label="Покупатель" Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
+					</TextBox.AddOns>
+				</TextBox>
+				<Selector Size="Large" Label="Selector" Grid.Row="4" Grid.Col="4" Grid.ColSpan="3" 
+						  Value="{Bind Document.Agent}" DisplayProperty="Name" Delegate="fetchAgent" ShowCaret="True">
+					<Selector.AddOns>
+						<Hyperlink Icon="Search" />
+					</Selector.AddOns>
+				</Selector>
+				<ValidatorLabel Grid.Row="5" Grid.Col="4"  Value="{Bind Document.Agent}"/>
+				<ComboBox Grid.Row="4" Grid.ColSpan="3" Label="Склад" ItemsSource="{Bind Warehouses}" Value="{Bind Document.DepFrom}" Style="Hyperlink"/>
+				<Table Grid.Row="5" Grid.ColSpan="3" Background="Rose" Border="False" GridLines="None">
+					<TableRow>
+						<Label>Код документа</Label>
+						<Static Value="{Bind Document.Id}" Align="Right"/>
+					</TableRow>
+					<TableRow>
+						<Label>Номер документа</Label>
+						<TextBox Value="{Bind Document.No}" Align="Right" Number="True"/>
+					</TableRow>
+				</Table>
+				<Block Grid.Row="6" Grid.ColSpan="6">
+					<Toolbar Style="Transparent">
+						<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+						<Button Icon="Add" Content="В начало" Command="{BindCmd Prepend, Argument={Bind Document.Rows}}"/>
+					</Toolbar>
+					<Table ItemsSource="{Bind Document.Rows}"
+                    Width="100%" GridLines="Both" Border="True" Background="Paper"
+                    Columns="Fit,100,Auto,Fit,100,100,100,Fit,Fit,Fit,Fit">
+						<Table.Header>
+							<TableRow VAlign="Middle">
+								<TableCell Wrap="NoWrap"></TableCell>
+								<TableCell>Артикул</TableCell>
+								<TableCell>Товар</TableCell>
+								<TableCell Wrap="NoWrap" VAlign="Top">Ед. изм.</TableCell>
+								<TableCell>Количество</TableCell>
+								<TableCell>Цена</TableCell>
+								<TableCell>Сумма</TableCell>
+								<TableCell/>
+								<TableCell/>
+							</TableRow>
+						</Table.Header>
+						<Table.Footer>
+							<TableRow>
+								<TableCell ColSpan="6">Итого</TableCell>
+								<TableCell Content="{Bind Document.Sum, DataType=Currency}" Align="Right" Bold="True"/>
+								<TableCell />
+								<TableCell ColSpan="3">
+									<ValidatorLabel Grid.Row="5" Grid.Col="4"  Value="{Bind Document.Agent}"/>
+								</TableCell>
+							</TableRow>
+						</Table.Footer>
+						<TableRow>
+							<TableCell Content="P12\nHF8\nFX2" Align="Right" Wrap="PreWrap"/>
+							<TextBox Value="{Bind Entity.Article}"/>
+							<TextBox Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}">
+								<TextBox.AddOns>
+									<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods', Data={Bind $BrowseParams}}"/>
+								</TextBox.AddOns>
+							</TextBox>
+							<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
+							<TextBox Value="{Bind Qty, DataType=Number, HideZeros=True}" Align="Right"/>
+							<TextBox Value="{Bind Price, DataType=Currency, HideZeros=True}" Align="Right"/>
+							<TextBox Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
+							<Static Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right" Wrap="NoWrap"/>
+							<ValidatorLabel Value="{Bind Price}"></ValidatorLabel>
+							<TableCell Content="{Bind Sum, DataType=Number, HideZeros=True}"></TableCell>
+
+							<Group>
+								<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
+								<Hyperlink Size="Small" Icon="ArrowUp" Command="{BindCmd Execute, CommandName=insertAbove, Argument={Bind}}"/>
+								<Hyperlink Size="Small" Icon="ArrowDown" Command="{BindCmd Execute, CommandName=insertBelow, Argument={Bind}}"/>
+							</Group>
+							<TableCell>
+								<CommandBar>
+									<Button Icon="EllipsisVertical">
+										<Button.DropDown>
+											<DropDownMenu Separate="True" Direction="DownLeft">
+												<MenuItem Content="Menu item # 1"/>
+												<MenuItem Content="Menu item # 2"/>
+												<MenuItem Content="Menu item # 3"/>
+											</DropDownMenu>
+										</Button.DropDown>
+									</Button>
+								</CommandBar>
+							</TableCell>
+						</TableRow>
+					</Table>
+				</Block>
+				<TextBox Grid.Row="7" Grid.ColSpan="4" Label="Примечание" Multiline="True"
+					Value="{Bind Document.Memo}" Rows="3"/>
+			</Grid>
+		</Tab>
+		<Tab Header="Протокол">
+			<Grid Columns="Auto,Auto,Auto,Auto">
+				<TextBox Label="Simple" Grid.Row="1" Grid.Col="1">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Save"/>
+						<Hyperlink Icon="Search"/>
+					</TextBox.AddOns>
+				</TextBox>
+				<TextBox Label="Large Bold" Grid.Row="1" Grid.Col="2" Size="Large" Bold="True">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Save"/>
+						<Hyperlink Icon="Search"/>
+					</TextBox.AddOns>
+				</TextBox>
+				<TextBox Label="Simple Drop down" Grid.Row="1" Grid.Col="3">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search">
+							<Hyperlink.DropDown>
+								<DropDownMenu Background="White" Direction="DownLeft">
+									<MenuItem Icon="SaveAs" Content="Save as"/>
+								</DropDownMenu>
+							</Hyperlink.DropDown>
+						</Hyperlink>
+					</TextBox.AddOns>
+				</TextBox>
+				<TextBox Label="Simple" Grid.Row="1" Grid.Col="4">
+				</TextBox>
+				<Selector Label="Simple selector" Grid.Row="2" Grid.Col="1">
+					<Selector.AddOns>
+						<Hyperlink Icon="Search"/>
+					</Selector.AddOns>
+				</Selector>
+				<Selector Value="{Bind Document.Agent}"
+					Label="Large selector" Grid.Row="2" Grid.Col="2" Size="Large" ShowCaret="True" ShowClear="True"
+						  PanelPlacement="TopLeft">
+					<Selector.AddOns>
+						<Hyperlink Icon="FileContent"/>
+					</Selector.AddOns>
+				</Selector>
+				<TextBox Label="Large Drop down" Grid.Row="2" Grid.Col="3" Size="Large">
+					<TextBox.AddOns>
+						<Hyperlink Icon="Search">
+							<Hyperlink.DropDown>
+								<DropDownMenu Background="White" Direction="DownLeft">
+									<MenuItem Icon="SaveAs" Content="Save as"/>
+								</DropDownMenu>
+							</Hyperlink.DropDown>
+						</Hyperlink>
+					</TextBox.AddOns>
+				</TextBox>
+				<ComboBox Label="Combo Simple" Grid.Row="3" Grid.Col="1" Value="{Bind Document.No}">
+					<ComboBoxItem Content="First Elem" Value="1"/>
+				</ComboBox>
+				<ComboBox Label="Combo Large" Grid.Row="3" Grid.Col="2" Size="Large"  Value="{Bind Document.No}">
+					<ComboBoxItem Content="First Elem" Value="1"/>
+					<ComboBoxItem Content="Second Number" Value="2"/>
+				</ComboBox>
+				<DatePicker Label="Date Picker Simple" Grid.Row="4" Grid.Col="1" Value="{Bind Document.Date}">
+
+				</DatePicker>
+				<TimePicker Label="Time Picker Simple" Grid.Row="4" Grid.Col="2" Value="{Bind Document.Date}" />
+				<DatePicker Label="Date Picker Large" Grid.Row="4" Grid.Col="3" Value="{Bind Document.Date}" Size="Large" />
+				<TimePicker Label="Time Picker Large" Grid.Row="4" Grid.Col="4" Value="{Bind Document.Date}" Size="Large" />
+
+				<DatePicker Label="Date Picker End" Grid.Row="6" Grid.Col="3" Value="{Bind Document.$DateEnd}" Size="Large" />
+				<TimePicker Label="Time Picker End" Grid.Row="6" Grid.Col="4" Value="{Bind Document.$DateEnd}" Size="Large" 
+							Placement="BottomRight"/>
+				<Static Label="Interval" Grid.Row="6" Grid.Col="2" Value="{Bind Document.$Interval}"></Static>
+
+
+				<Static Label="Static Simple" Grid.Row="5" Grid.Col="1"></Static>
+				<Static Label="Static Large" Grid.Row="5" Grid.Col="2" Size="Large"></Static>
+			</Grid>
+		</Tab>
+		<Tab Header="FieldSet">
+			<FieldSet Orientation="Vertical">
+				<TextBox>
+				</TextBox>
+				<StackPanel Orientation="Horizontal" JustifyItems="SpaceBetween">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</StackPanel>
+				<FlexList Orientation="Horizontal" JustifyItems="SpaceAround">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="SpaceEvenly">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="SpaceBetween">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="Center">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="Start">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+				<FlexList Orientation="Horizontal" JustifyItems="End">
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+					<TextBox></TextBox>
+				</FlexList>
+			</FieldSet>
+		</Tab>
+	</TabPanel>
+</Page>
+
+    

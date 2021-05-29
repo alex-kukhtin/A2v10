@@ -30,5 +30,9 @@
 	{
 		"outputFile": "Scripts/locale-de.min.js",
 		"inputFile": "app/localization/locale-de.js"
+	},
+	{
+		"outputFile": "css/bootstrap/main.css",
+		"inputFile": "Scss/bootstrap/main.scss"
 	}
 ]

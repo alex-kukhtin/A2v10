@@ -55,6 +55,20 @@
     <None Include="Admin\Identity\User\model.json" />
     <Content Include="%40schemas\model-json-schema.json" />
     <Content Include="%40schemas\sql-json-schema.json" />
+    <None Include="Bootstrap\dashboard\model.json" />
+    <None Include="Bootstrap\sales\assets\model.json" />
+    <None Include="Bootstrap\sales\catalog\model.json" />
+    <None Include="Bootstrap\sales\customer\model.json" />
+    <None Include="Bootstrap\sales\document\model.json" />
+    <None Include="Bootstrap\sales\inbox\model.json" />
+    <None Include="Bootstrap\sales\invoice\define.json" />
+    <None Include="Bootstrap\sales\invoice\index.template.xlsx" />
+    <None Include="Bootstrap\sales\invoice\Invoice.mrt" />
+    <None Include="Bootstrap\sales\invoice\model.json" />
+    <None Include="Bootstrap\sales\invoice\_data.defs.json" />
+    <None Include="Bootstrap\sales\waybill\model.json" />
+    <None Include="Bootstrap\sales\waybill\waybill.mrt" />
+    <None Include="Bootstrap\sales\waybill\waybill.xlsx" />
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
@@ -87,8 +101,41 @@
     <Content Include="App_application\%40sql\platform\source\a2v10system.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10ui.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10workflow.sql" />
+    <Content Include="Bootstrap\dashboard\homepage.bootstrap.html">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Bootstrap\dashboard\homepage.template.js" />
+    <Content Include="Bootstrap\sales\assets\assets.template.js" />
+    <Content Include="Bootstrap\sales\catalog\index.template.js" />
+    <Content Include="Bootstrap\sales\customer\index.template.js" />
+    <Content Include="Bootstrap\sales\customer\testcross.template.js" />
+    <Content Include="Bootstrap\sales\customer\testcross2.template.js" />
+    <Content Include="Bootstrap\sales\inbox\index.template.js" />
+    <Content Include="Bootstrap\sales\invoice\empty.template.js" />
+    <Content Include="Bootstrap\sales\invoice\index.template.js" />
+    <Content Include="Bootstrap\sales\invoice\invoice.template.js" />
+    <Content Include="Bootstrap\sales\invoice\invoice2.template.js" />
+    <Content Include="Bootstrap\sales\invoice\upload.template.js" />
+    <Content Include="Bootstrap\sales\waybill\checkeusign.template.js" />
+    <Content Include="Bootstrap\sales\waybill\confirm.template.js" />
+    <Content Include="Bootstrap\sales\waybill\empty.template.js" />
+    <Content Include="Bootstrap\sales\waybill\eusign.template.js" />
+    <Content Include="Bootstrap\sales\waybill\index.template.js" />
+    <Content Include="Bootstrap\sales\waybill\links.template.js" />
+    <Content Include="Bootstrap\sales\waybill\server.template.js" />
+    <Content Include="Bootstrap\sales\waybill\waybill.template.js" />
+    <Content Include="Bootstrap\_layout\bootstrap.html" />
     <Content Include="Develop\dashboard\server.module.js" />
     <Content Include="App_application\%40types\platform.d.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\invoice\invoice2.template.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\invoice\model.d.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\waybill\elems.d.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\waybill\export.d.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\waybill\index.d.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\waybill\model.d.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\waybill\print.d.ts" />
+    <TypeScriptCompile Include="Bootstrap\sales\waybill\waybill2.template.ts" />
     <TypeScriptCompile Include="Develop\agent\state.d.ts" />
     <TypeScriptCompile Include="Develop\entity\edit.d.ts" />
     <Content Include="Develop\entity\editGoods.template.js" />
@@ -470,6 +517,82 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Admin\Identity\Api\edit.dialog.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Develop\dashboard\homepage.bootstrap.html">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Bootstrap\sales\assets\assets.view.html">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Bootstrap\sales\catalog\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Bootstrap\sales\customer\index.view.html">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Bootstrap\sales\customer\testcross.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\customer\testcross2.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Bootstrap\sales\inbox\index.view.html">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Bootstrap\sales\invoice\demo.wizard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\invoice\empty.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\invoice\empty.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Bootstrap\sales\invoice\index.view.html">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Bootstrap\sales\invoice\invoice.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\invoice\upload.wizard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\waybill\checkeusign.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\waybill\confirm.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\waybill\eusign.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\waybill\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\waybill\links.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Bootstrap\sales\waybill\waybill.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
     <Page Include="Develop\purchase\Supplier\index.view.xaml">

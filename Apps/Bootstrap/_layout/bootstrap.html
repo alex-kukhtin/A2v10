@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<!--
+A2v10 platform.
+Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+Site: https://a2v10.com
+GitHub: https://github.com/alex-kukhtin/A2v10
+-->
+<html lang="$(Locale)">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="google" content="notranslate" />
+	<meta name="rootUrl" content="$(RootUrl)" />
+	<meta name="helpUrl" content="$(HelpUrl)" />
+	<title></title>
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+	<link rel="stylesheet" href="/css/bootstrap/main.css" />
+</head>
+<body>
+	<div id="shell" v-cloak class="shell">
+		<a2-main-view :menu="menu" :period="globalPeriod" :title="title"></a2-main-view>
+		<a2-app-header :title="title" :subtitle="subtitle" :user-state="userState"
+					   :menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
+					   :person-name="'$(PersonName)'" client-id="$(ClientId)" :user-is-admin="userIsAdmin">
+		</a2-app-header>
+		<a2-side-bar :menu="menu"></a2-side-bar>
+	</div>
+	<script type="text/javascript" src="/scripts/vue.$(Minify)js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/locale-$(Locale).min.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/bootstrap/bootstrap.bundle.min.js"></script>
+	<script type="text/javascript" src="/scripts/bootstrap/main.js"></script>
+	<script type="text/javascript" src="/_shell/script"></script>
+</body>
+</html>

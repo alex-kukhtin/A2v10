@@ -1,6 +1,6 @@
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190813-7521
+// 20210529-7776
 // app.js
 
 "use strict";
@@ -10,11 +10,13 @@
 	window.app = {
 		modules: {},
 		components: {},
+		templates: {},
 		nextToken: nextToken
 	};
 
 	window.require = require;
 	window.component = component;
+	window.template = template;
 
 	// amd typescript support
 	window.define = define;
@@ -42,6 +44,14 @@
 		if (noerror)
 			return {};
 		throw new Error('component "' + name + '" not found');
+	}
+
+	function template(name, noerror) {
+		if (name in app.templates)
+			return app.templates[name];
+		if (noerror)
+			return {};
+		throw new Error('template "' + name + '" not found');
 	}
 
 	let currentToken = 1603;
@@ -13045,27 +13055,14 @@ Vue.directive('resize', {
 		tabSideBar: a2TabSideBar
 	};
 })();	
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210428-7771*/
-/* controllers/shell.js */
+/*20210529-7776*/
+/* controllers/appheader.js */
 
 (function () {
 
-	const store = component('std:store');
-	const eventBus = require('std:eventBus');
-	const modal = component('std:modal');
-	const toastr = component('std:toastr');
-	const popup = require('std:popup');
-	const urlTools = require('std:url');
-	const period = require('std:period');
-	const log = require('std:log');
-	const utils = require('std:utils');
 	const locale = window.$$locale;
-	const platform = require('std:platform');
-	const navBar = component('std:navbar');
-	const sideBar = component('std:sidebar');
-	const menu = component('std:navmenu');
 
 	const a2AppHeader = {
 		template: `
@@ -13179,6 +13176,29 @@ Vue.directive('resize', {
 		}
 	};
 
+	app.components['std:appHeader'] = a2AppHeader;
+})();	
+// Copyright © 2021 Alex Kukhtin. All rights reserved.
+
+/*20210529-7776*/
+/* controllers/mainview.js */
+
+(function () {
+
+	const store = component('std:store');
+	const period = require('std:period');
+	const eventBus = require('std:eventBus');
+
+	const modal = component('std:modal');
+	const toastr = component('std:toastr');
+	const utils = require('std:utils');
+
+	const platform = require('std:platform');
+	const navBar = component('std:navbar');
+	const sideBar = component('std:sidebar');
+	const urlTools = require('std:url');
+	const menu = component('std:navmenu');
+
 	const contentView = {
 		render(h) {
 			return h('div', {
@@ -13231,6 +13251,7 @@ Vue.directive('resize', {
 			});
 		}
 	};
+
 
 	const a2MainView = {
 		store,
@@ -13326,7 +13347,7 @@ Vue.directive('resize', {
 			},
 			pendingRequest() { return !this.hasModals && this.requestsCount > 0; },
 			hasModals() { return this.modals.length > 0; },
-			isNavBarMenu() {return this.navBarMode === 'Menu';}
+			isNavBarMenu() { return this.navBarMode === 'Menu'; }
 		},
 		methods: {
 			setupWrapper(dlg) {
@@ -13348,12 +13369,12 @@ Vue.directive('resize', {
 				this.showNavBar = false;
 			eventBus.$on('beginRequest', function () {
 				//if (me.hasModals)
-					//return;
+				//return;
 				me.requestsCount += 1;
 			});
 			eventBus.$on('endRequest', function () {
 				//if (me.hasModals)
-					//return;
+				//return;
 				me.requestsCount -= 1;
 			});
 
@@ -13379,7 +13400,7 @@ Vue.directive('resize', {
 				if (raw)
 					url = urlTools.combine(root, modal, id);
 				url = store.replaceUrlQuery(url, prms.query);
-				let dlg = { title: "dialog", url: url, prms: prms.data, wrap:false, rd: prms.rd };
+				let dlg = { title: "dialog", url: url, prms: prms.data, wrap: false, rd: prms.rd };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
 				});
@@ -13391,7 +13412,7 @@ Vue.directive('resize', {
 			eventBus.$on('modaldirect', function (modal, prms) {
 				let root = window.$$rootUrl;
 				let url = urlTools.combine(root, '/_dialog', modal);
-				let dlg = { title: "dialog", url: url, prms: prms.data, wrap:false };
+				let dlg = { title: "dialog", url: url, prms: prms.data, wrap: false };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
 				});
@@ -13459,7 +13480,7 @@ Vue.directive('resize', {
 				if (dlg.attrs.alwaysOk)
 					result = true;
 
-				if (dlg.attrs.canClose) { 
+				if (dlg.attrs.canClose) {
 					let canResult = dlg.attrs.canClose();
 					//console.dir(canResult);
 					if (canResult === true)
@@ -13548,10 +13569,25 @@ Vue.directive('resize', {
 		}
 	};
 
+	app.components['std:mainView'] = a2MainView;
+})();	
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+
+/*20210529-7776*/
+/* controllers/shell.js */
+
+(function () {
+
+	const store = component('std:store');
+	const eventBus = require('std:eventBus');
+	const popup = require('std:popup');
+	const period = require('std:period');
+	const log = require('std:log');
+	const locale = window.$$locale;
+	const menu = component('std:navmenu');
+
 	const shell = Vue.extend({
 		components: {
-			'a2-main-view': a2MainView,
-			'a2-app-header': a2AppHeader
 		},
 		store,
 		data() {

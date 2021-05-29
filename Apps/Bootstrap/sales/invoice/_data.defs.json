@@ -1,0 +1,40 @@
+{
+	"_shared": {
+		"TSharedDocument": {
+			"_id": "Id",
+			"_name": "Name",
+			"Id": "Number",
+			"Doc": "Date",
+			"Name": "String",
+			"Agent": "TAgent",
+		},
+		"TAgent": {
+			"Id": "Number",
+			"Name": "String",
+			"Code": "String"
+		}
+	},
+	"Invoices": {
+		"TRoot": {
+			"Documents": "TDocument[]"
+		},
+		"TDocument": {
+			"_extends": "TSharedDocument"
+		},
+		"Invoice": {
+			"TRoot": {
+				"Document": "TDocument"
+			},
+			"TDocument": {
+				"_extends": "TSharedDocument",
+				"Rows": "TRow[]"
+			},
+			"TRow": {
+				"Id": "Number",
+				"Qty": "Number",
+				"Price": "Number",
+				"Sum": "Number"
+			}
+		}
+	}
+}
