@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210414-7765*/
+/*20210531-7776*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -84,7 +84,8 @@
 			number: Boolean,
 			spellCheck: { type: Boolean, default: undefined },
 			enterCommand: Function,
-			hasClear: Boolean
+			hasClear: Boolean,
+			filters: Array
 		},
 		computed: {
 			controlType() {
@@ -99,11 +100,14 @@
 			}
 		},
 		methods: {
+			doFilter(value) {
+				return utils.text.applyFilters(this.filters, value);
+			},
 			updateValue(value) {
 				if (this.mask)
-					this.item[this.prop] = mask.getUnmasked(this.mask, value);
+					this.item[this.prop] = mask.getUnmasked(this.mask, this.doFilter(value));
 				else
-					this.item[this.prop] = utils.parse(value, this.dataType);
+					this.item[this.prop] = utils.parse(this.doFilter(value), this.dataType);
 				let mv = this.modelValue;
 				if (this.$refs.input.value !== mv) {
 					this.$refs.input.value = mv;
@@ -157,7 +161,8 @@
 			rows: Number,
 			spellCheck: { type: Boolean, default: undefined },
 			enterCommand: Function,
-			maxHeight: String
+			maxHeight: String,
+			filters: Array
 		},
 		computed: {
 			modelValue2() {
@@ -172,6 +177,7 @@
 		},
 		methods: {
 			updateValue(value) {
+				value = utils.text.applyFilters(this.filters, value);
 				if (this.item[this.prop] === value) return;
 				this.item[this.prop] = value;
 				this.$emit('change', this.item[this.prop]);

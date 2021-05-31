@@ -1,11 +1,14 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210211-7747*/
+/*20210531-7776*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
 
 	const utils = require('std:utils');
+	const platform = require('std:platform');
+
+	const defPropertyGet = utils.func.defPropertyGet;
 
 	return {
 		defineArray,
@@ -82,6 +85,20 @@ app.modules['std:impl:array'] = function () {
 
 
 		addResize(arr);
+		addLoad(arr);
+		addProperties(arr);
+
+		arr.Selected = function (propName) {
+			let sel = this.$selected;
+			return sel ? sel[propName] : null;
+		};
+
+
+		arr.$reload = function () {
+			this.$lock = false;
+			return this.$vm.$reload(this);
+		}
+
 	}
 
 	function addResize(arr) {
@@ -226,6 +243,94 @@ app.modules['std:impl:array'] = function () {
 			}
 			return this;
 		};
+
+	}
+
+	function addLoad(arr) {
+
+		arr.$isLazy = function () {
+			const meta = this.$parent._meta_;
+			if (!meta.$lazy) return false;
+			let prop = utils.model.propFromPath(this._path_);
+			return meta.$lazy.indexOf(prop) !== -1;
+		};
+
+		arr.$resetLazy = function () {
+			this.$lock = false;
+			this.$empty();
+			if (this.$loaded)
+				this.$loaded = false;
+			return this;
+		};
+
+		arr.$loadLazy = function () {
+			if (!this.$isLazy())
+				return;
+			if (this.$lock) return;
+			return new Promise((resolve, _) => {
+				if (!this.$vm) return;
+				if (this.$loaded) { resolve(this); return; }
+				if (!this.$parent) { resolve(this); return; }
+				const meta = this.$parent._meta_;
+				if (!meta.$lazy) { resolve(this); return; }
+				let prop = utils.model.propFromPath(this._path_);
+				if (meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
+			});
+		};
+
+		arr.$load = function () {
+			if (!this.$isLazy()) return;
+			platform.defer(() => this.$loadLazy());
+		};
+
+	}
+
+	function addProperties(arr) {
+		defPropertyGet(arr, "$selected", function () {
+			for (let x of this.$elements) {
+				if (x.$selected) {
+					return x;
+				}
+			}
+			return undefined;
+		});
+
+		defPropertyGet(arr, "$selectedIndex", function () {
+			for (let i = 0; i < this.length; i++) {
+				if (this[i].$selected) return i;
+			}
+			return -1;
+		});
+
+		defPropertyGet(arr, "$elements", function () {
+			function* elems(arr) {
+				for (let i = 0; i < arr.length; i++) {
+					let val = arr[i];
+					yield val;
+					if (val.$items) {
+						yield* elems(val.$items);
+					}
+				}
+			}
+			return elems(this);
+		});
+
+		defPropertyGet(arr, "Count", function () {
+			return this.length;
+		});
+
+		defPropertyGet(arr, "$isEmpty", function () {
+			return !this.length;
+		});
+
+		defPropertyGet(arr, "$checked", function () {
+			return this.filter((el) => el.$checked);
+		});
+
+		defPropertyGet(arr, "$hasSelected", function () {
+			return !!this.$selected;
+		});
 
 	}
 

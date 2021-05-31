@@ -1,15 +1,12 @@
 ﻿/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20210211-7747*/
+/*20210531-7776*/
 // services/datamodel.js
 
 /*
  * TODO: template & validate => /impl
- * arr.$checked => /impl/array
- * arr.$load/lazy => /impl/array
  * treeImpl => /impl/tree
  * ensureType to std:utils
- * try minimize by grunt
  */
 
 (function () {
@@ -69,13 +66,7 @@
 		});
 	}
 
-	function defPropertyGet(trg, prop, get) {
-		Object.defineProperty(trg, prop, {
-			enumerable: true,
-			configurable: true, /* needed */
-			get: get
-		});
-	}
+	const defPropertyGet = utils.func.defPropertyGet;
 
 	function ensureType(type, val) {
 		if (!utils.isDefined(val))
@@ -89,12 +80,7 @@
 		return val;
 	}
 
-	function propFromPath(path) {
-		if (!path)
-			return '';
-		let propIx = path.lastIndexOf('.');
-		return path.substring(propIx + 1);
-	}
+	const propFromPath = utils.model.propFromPath;
 
 	function defSource(trg, source, prop, parent) {
 
@@ -577,100 +563,7 @@
 	function addArrayProps(arr) {
 
 		defineCommonProps(arr);
-
 		arrtool.defineArray(arr);
-
-		defPropertyGet(arr, "$selected", function () {
-			for (let x of this.$elements) {
-				if (x.$selected) {
-					return x;
-				}
-			}
-			return undefined;
-		});
-
-		defPropertyGet(arr, "$selectedIndex", function () {
-			for (let i = 0; i < this.length; i++) {
-				if (this[i].$selected) return i;
-			}
-			return -1;
-		});
-
-		defPropertyGet(arr, "$elements", function () {
-			function* elems(arr) {
-				for (let i = 0; i < arr.length; i++) {
-					let val = arr[i];
-					yield val;
-					if (val.$items) {
-						yield* elems(val.$items);
-					}
-				}
-			}
-			return elems(this);
-		});
-
-		defPropertyGet(arr, "Count", function () {
-			return this.length;
-		});
-
-		defPropertyGet(arr, "$isEmpty", function () {
-			return !this.length;
-		});
-
-		defPropertyGet(arr, "$checked", function () {
-			return this.filter((el) => el.$checked);
-		});
-
-		defPropertyGet(arr, "$hasSelected", function () {
-			return !!this.$selected;
-		});
-
-		arr.Selected = function (propName) {
-			let sel = this.$selected;
-			return sel ? sel[propName] : null;
-		};
-
-		arr.$isLazy = function () {
-			const meta = this.$parent._meta_;
-			if (!meta.$lazy) return false;
-			let prop = propFromPath(this._path_);
-			return meta.$lazy.indexOf(prop) !== -1;
-		};
-
-		arr.$load = function () {
-			if (!this.$isLazy()) return;
-			platform.defer(() => this.$loadLazy());
-		};
-
-		arr.$resetLazy = function () {
-			this.$lock = false;
-			this.$empty();
-			if (this.$loaded)
-				this.$loaded = false;
-			return this;
-		};
-
-		arr.$loadLazy = function () {
-			if (!this.$isLazy())
-				return;
-			if (this.$lock) return;
-			return new Promise((resolve, reject) => {
-				if (!this.$vm) return;
-				if (this.$loaded) { resolve(this); return; }
-				if (!this.$parent) { resolve(this); return; }
-				const meta = this.$parent._meta_;
-				if (!meta.$lazy) { resolve(this); return; }
-				let prop = propFromPath(this._path_);
-				if (meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
-				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
-			});
-		};
-
-		arr.$reload = function () {
-			this.$lock = false;
-			return this.$vm.$reload(this);
-		}
-
 		arr.__fireChange__ = function (opts) {
 			let root = this.$root;
 			let itm = this;
@@ -1262,11 +1155,6 @@
 			xProp[typeName][propName] = pv;
 		}
 		template._props_ = xProp;
-        /*
-        platform.defer(() => {
-            console.dir('end init');
-        });
-        */
 	}
 
 	function setRootRuntimeInfo(runtime) {

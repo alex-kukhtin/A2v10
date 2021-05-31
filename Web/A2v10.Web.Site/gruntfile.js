@@ -11,12 +11,13 @@ module.exports = function (grunt) {
 			},
 			main: {
 				files: {
-					"scripts/main.min.js": ['scripts/main.js']
+					"scripts/main.min.js": ['scripts/main.js'],
+					"scripts/bootstrap/main.min.js": ['scripts/bootstrap/main.js']
 				}
 			},
 		},
 		watch: {
-			files: ["scripts/main.js"],
+			files: ["scripts/main.js", "scripts/bootstrap/main.js"],
 			tasks: ["terser"]
 		}
 });

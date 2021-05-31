@@ -161,7 +161,7 @@
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210414-7765
+// 20210531-7776
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -239,7 +239,8 @@ app.modules['std:utils'] = function () {
 			splitPath,
 			capitalize,
 			maxChars,
-			equalNoCase: stringEqualNoCase
+			equalNoCase: stringEqualNoCase,
+			applyFilters
 		},
 		currency: {
 			round: currencyRound,
@@ -247,9 +248,13 @@ app.modules['std:utils'] = function () {
 		},
 		func: {
 			curry,
-			debounce
+			debounce,
+			defPropertyGet
 		},
-		debounce: debounce
+		debounce: debounce,
+		model: {
+			propFromPath
+		}
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -771,6 +776,27 @@ app.modules['std:utils'] = function () {
 		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
 	}
 
+	function applyFilters(filters, value) {
+		if (!filters || !filters.length)
+			return value;
+		if (!value)
+			return value;
+		value = '' + value;
+		for (let f of filters) {
+			switch (f) {
+				case 'trim':
+					value = value.trim();
+					break;
+				case 'upper':
+					value = value.toUpperCase();
+					break;
+				case 'lower':
+					value = value.toLowerCase();
+			}
+		}
+		return value;
+	}
+
 	function textContains(text, probe) {
 		if (!probe)
 			return true;
@@ -827,6 +853,21 @@ app.modules['std:utils'] = function () {
 		// toFixed = avoid js rounding error
 		let r = Number(Math.round(n.toFixed(12) + `e${digits}`) + `e-${digits}`);
 		return m ? -r : r;
+	}
+
+	function propFromPath(path) {
+		if (!path)
+			return '';
+		let propIx = path.lastIndexOf('.');
+		return path.substring(propIx + 1);
+	}
+
+	function defPropertyGet(trg, prop, get) {
+		Object.defineProperty(trg, prop, {
+			enumerable: true,
+			configurable: true, /* needed */
+			get: get
+		});
 	}
 };
 
@@ -2431,12 +2472,15 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210211-7747*/
+/*20210531-7776*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
 
 	const utils = require('std:utils');
+	const platform = require('std:platform');
+
+	const defPropertyGet = utils.func.defPropertyGet;
 
 	return {
 		defineArray,
@@ -2513,6 +2557,20 @@ app.modules['std:impl:array'] = function () {
 
 
 		addResize(arr);
+		addLoad(arr);
+		addProperties(arr);
+
+		arr.Selected = function (propName) {
+			let sel = this.$selected;
+			return sel ? sel[propName] : null;
+		};
+
+
+		arr.$reload = function () {
+			this.$lock = false;
+			return this.$vm.$reload(this);
+		}
+
 	}
 
 	function addResize(arr) {
@@ -2660,6 +2718,94 @@ app.modules['std:impl:array'] = function () {
 
 	}
 
+	function addLoad(arr) {
+
+		arr.$isLazy = function () {
+			const meta = this.$parent._meta_;
+			if (!meta.$lazy) return false;
+			let prop = utils.model.propFromPath(this._path_);
+			return meta.$lazy.indexOf(prop) !== -1;
+		};
+
+		arr.$resetLazy = function () {
+			this.$lock = false;
+			this.$empty();
+			if (this.$loaded)
+				this.$loaded = false;
+			return this;
+		};
+
+		arr.$loadLazy = function () {
+			if (!this.$isLazy())
+				return;
+			if (this.$lock) return;
+			return new Promise((resolve, _) => {
+				if (!this.$vm) return;
+				if (this.$loaded) { resolve(this); return; }
+				if (!this.$parent) { resolve(this); return; }
+				const meta = this.$parent._meta_;
+				if (!meta.$lazy) { resolve(this); return; }
+				let prop = utils.model.propFromPath(this._path_);
+				if (meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
+				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
+			});
+		};
+
+		arr.$load = function () {
+			if (!this.$isLazy()) return;
+			platform.defer(() => this.$loadLazy());
+		};
+
+	}
+
+	function addProperties(arr) {
+		defPropertyGet(arr, "$selected", function () {
+			for (let x of this.$elements) {
+				if (x.$selected) {
+					return x;
+				}
+			}
+			return undefined;
+		});
+
+		defPropertyGet(arr, "$selectedIndex", function () {
+			for (let i = 0; i < this.length; i++) {
+				if (this[i].$selected) return i;
+			}
+			return -1;
+		});
+
+		defPropertyGet(arr, "$elements", function () {
+			function* elems(arr) {
+				for (let i = 0; i < arr.length; i++) {
+					let val = arr[i];
+					yield val;
+					if (val.$items) {
+						yield* elems(val.$items);
+					}
+				}
+			}
+			return elems(this);
+		});
+
+		defPropertyGet(arr, "Count", function () {
+			return this.length;
+		});
+
+		defPropertyGet(arr, "$isEmpty", function () {
+			return !this.length;
+		});
+
+		defPropertyGet(arr, "$checked", function () {
+			return this.filter((el) => el.$checked);
+		});
+
+		defPropertyGet(arr, "$hasSelected", function () {
+			return !!this.$selected;
+		});
+
+	}
+
 	function defineArrayItemProto(elem) {
 		let proto = elem.prototype;
 
@@ -2692,16 +2838,13 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-/*20210211-7747*/
+/*20210531-7776*/
 // services/datamodel.js
 
 /*
  * TODO: template & validate => /impl
- * arr.$checked => /impl/array
- * arr.$load/lazy => /impl/array
  * treeImpl => /impl/tree
  * ensureType to std:utils
- * try minimize by grunt
  */
 
 (function () {
@@ -2761,13 +2904,7 @@ app.modules['std:impl:array'] = function () {
 		});
 	}
 
-	function defPropertyGet(trg, prop, get) {
-		Object.defineProperty(trg, prop, {
-			enumerable: true,
-			configurable: true, /* needed */
-			get: get
-		});
-	}
+	const defPropertyGet = utils.func.defPropertyGet;
 
 	function ensureType(type, val) {
 		if (!utils.isDefined(val))
@@ -2781,12 +2918,7 @@ app.modules['std:impl:array'] = function () {
 		return val;
 	}
 
-	function propFromPath(path) {
-		if (!path)
-			return '';
-		let propIx = path.lastIndexOf('.');
-		return path.substring(propIx + 1);
-	}
+	const propFromPath = utils.model.propFromPath;
 
 	function defSource(trg, source, prop, parent) {
 
@@ -3269,100 +3401,7 @@ app.modules['std:impl:array'] = function () {
 	function addArrayProps(arr) {
 
 		defineCommonProps(arr);
-
 		arrtool.defineArray(arr);
-
-		defPropertyGet(arr, "$selected", function () {
-			for (let x of this.$elements) {
-				if (x.$selected) {
-					return x;
-				}
-			}
-			return undefined;
-		});
-
-		defPropertyGet(arr, "$selectedIndex", function () {
-			for (let i = 0; i < this.length; i++) {
-				if (this[i].$selected) return i;
-			}
-			return -1;
-		});
-
-		defPropertyGet(arr, "$elements", function () {
-			function* elems(arr) {
-				for (let i = 0; i < arr.length; i++) {
-					let val = arr[i];
-					yield val;
-					if (val.$items) {
-						yield* elems(val.$items);
-					}
-				}
-			}
-			return elems(this);
-		});
-
-		defPropertyGet(arr, "Count", function () {
-			return this.length;
-		});
-
-		defPropertyGet(arr, "$isEmpty", function () {
-			return !this.length;
-		});
-
-		defPropertyGet(arr, "$checked", function () {
-			return this.filter((el) => el.$checked);
-		});
-
-		defPropertyGet(arr, "$hasSelected", function () {
-			return !!this.$selected;
-		});
-
-		arr.Selected = function (propName) {
-			let sel = this.$selected;
-			return sel ? sel[propName] : null;
-		};
-
-		arr.$isLazy = function () {
-			const meta = this.$parent._meta_;
-			if (!meta.$lazy) return false;
-			let prop = propFromPath(this._path_);
-			return meta.$lazy.indexOf(prop) !== -1;
-		};
-
-		arr.$load = function () {
-			if (!this.$isLazy()) return;
-			platform.defer(() => this.$loadLazy());
-		};
-
-		arr.$resetLazy = function () {
-			this.$lock = false;
-			this.$empty();
-			if (this.$loaded)
-				this.$loaded = false;
-			return this;
-		};
-
-		arr.$loadLazy = function () {
-			if (!this.$isLazy())
-				return;
-			if (this.$lock) return;
-			return new Promise((resolve, reject) => {
-				if (!this.$vm) return;
-				if (this.$loaded) { resolve(this); return; }
-				if (!this.$parent) { resolve(this); return; }
-				const meta = this.$parent._meta_;
-				if (!meta.$lazy) { resolve(this); return; }
-				let prop = propFromPath(this._path_);
-				if (meta.$lazy.indexOf(prop) === -1) { resolve(this); return; }
-				this.$vm.$loadLazy(this.$parent, prop).then(() => resolve(this));
-			});
-		};
-
-		arr.$reload = function () {
-			this.$lock = false;
-			return this.$vm.$reload(this);
-		}
-
 		arr.__fireChange__ = function (opts) {
 			let root = this.$root;
 			let itm = this;
@@ -3954,11 +3993,6 @@ app.modules['std:impl:array'] = function () {
 			xProp[typeName][propName] = pv;
 		}
 		template._props_ = xProp;
-        /*
-        platform.defer(() => {
-            console.dir('end init');
-        });
-        */
 	}
 
 	function setRootRuntimeInfo(runtime) {

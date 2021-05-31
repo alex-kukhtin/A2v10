@@ -2,7 +2,7 @@
 
 import { TRoot, TDocument, TRow } from "model";
 import { TRows } from "../invoice/model";
-import { IDocumentModule } from '../../document/commondoc';
+//import { IDocumentModule } from '../document/';
 
 
 const utils = require('std:utils') as Utils;
@@ -10,7 +10,7 @@ const cst = require('std:const');
 const du = utils.date;
 
 // common module
-const cmn = require('document/common2') as IDocumentModule;
+const cmn = require('document/common2'); //as IDocumentModule;
 console.dir(cmn);
 
 const template: Template = {

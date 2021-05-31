@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Esprima, Version=2.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Esprima.2.0.0-beta-1298\lib\net461\Esprima.dll</HintPath>
+      <HintPath>..\packages\Esprima.2.0.0\lib\net461\Esprima.dll</HintPath>
     </Reference>
     <Reference Include="Jint, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
       <HintPath>..\packages\Jint.3.0.0-beta-1828\lib\net461\Jint.dll</HintPath>

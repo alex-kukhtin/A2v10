@@ -19,7 +19,7 @@
 				<TextBox HtmlId="name-editor"
 					Grid.Row="1" Grid.ColSpan="2" Label="Наименование" 
 						 EnterCommand="{BindCmd Execute, CommandName=enterKey}"
-						 Value="{Bind Entity.Name}" TabIndex="1"  ShowClear="True">
+						 Value="{Bind Entity.Name, Filters='Trim, Upper'}" TabIndex="1"  ShowClear="True">
 					<TextBox.AddOns>
 						<Hyperlink Icon="Menu"/>
 						<Hyperlink Icon="Access"/>
@@ -30,9 +30,10 @@
 						 EnterCommand="{BindCmd Execute, CommandName=enterKey}" Accel="Ctrl+A"/>
 				<ComboBox Grid.Row="2" Grid.Col="2" Label="Ед. изм." Value="{Bind Entity.Unit}" ItemsSource="{Bind Units}"/>
 				<TextBox Grid.Row="5" HtmlId="memo-editor"
-						 Grid.ColSpan="2" Label="Примечание" Value="{Bind Entity.Memo}" Rows="3" Multiline="True" TabIndex="3"/>
-				<PeriodPicker Grid.Row="6" Grid.Col="1"/>
-				<DatePicker Grid.Row="6" Grid.Col="2" Value="{Bind Root.$Date}" YearCutOff="+0"/>
+						 Grid.ColSpan="2" Label="Примечание" 
+						 Value="{Bind Entity.Memo, Filters=Upper}" Rows="3" Multiline="True" TabIndex="3"/>
+				<PeriodPicker Grid.Row="6" Grid.Col="1" Placement="TopLeft"/>
+				<DatePicker Grid.Row="6" Grid.Col="2" Value="{Bind Root.$Date, Filters='Trim'}" YearCutOff="+0"/>
 				<TimePicker Grid.Row="7" TabIndex="2" Value="{Bind Root.$Date}"/>
 				<Code Grid.Row="7" Grid.Col="2" Content="{Bind Root.$Date, DataType=DateTime}"/>
 				<Button Content="Full Screen" Command="{BindCmd Execute, CommandName=fullScreen}"/>

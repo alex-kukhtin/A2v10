@@ -79,6 +79,8 @@
     <None Include="localization\en.xml" />
     <None Include="localization\ru.xml" />
     <None Include="localization\uk.xml" />
+    <Content Include="scripts\bootstrap\main.js" />
+    <Content Include="scripts\bootstrap\main.min.js" />
     <Content Include="scripts\d3.min.js" />
     <Content Include="scripts\locale-de.min.js" />
     <Content Include="scripts\locale-en.min.js" />

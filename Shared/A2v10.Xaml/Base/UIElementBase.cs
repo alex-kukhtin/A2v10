@@ -135,6 +135,8 @@ namespace A2v10.Xaml
 				input.MergeAttribute("mask", valBind.Mask);
 			if (valBind.HideZeros)
 				input.MergeAttribute(":hide-zeros", "true");
+			if (valBind.HasFilters)
+				input.MergeAttribute(":filters", valBind.FiltersJS());
 		}
 
 

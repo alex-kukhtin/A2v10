@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210414-7765
+// 20210531-7776
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -78,7 +78,8 @@ app.modules['std:utils'] = function () {
 			splitPath,
 			capitalize,
 			maxChars,
-			equalNoCase: stringEqualNoCase
+			equalNoCase: stringEqualNoCase,
+			applyFilters
 		},
 		currency: {
 			round: currencyRound,
@@ -86,9 +87,13 @@ app.modules['std:utils'] = function () {
 		},
 		func: {
 			curry,
-			debounce
+			debounce,
+			defPropertyGet
 		},
-		debounce: debounce
+		debounce: debounce,
+		model: {
+			propFromPath
+		}
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -610,6 +615,27 @@ app.modules['std:utils'] = function () {
 		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
 	}
 
+	function applyFilters(filters, value) {
+		if (!filters || !filters.length)
+			return value;
+		if (!value)
+			return value;
+		value = '' + value;
+		for (let f of filters) {
+			switch (f) {
+				case 'trim':
+					value = value.trim();
+					break;
+				case 'upper':
+					value = value.toUpperCase();
+					break;
+				case 'lower':
+					value = value.toLowerCase();
+			}
+		}
+		return value;
+	}
+
 	function textContains(text, probe) {
 		if (!probe)
 			return true;
@@ -666,5 +692,20 @@ app.modules['std:utils'] = function () {
 		// toFixed = avoid js rounding error
 		let r = Number(Math.round(n.toFixed(12) + `e${digits}`) + `e-${digits}`);
 		return m ? -r : r;
+	}
+
+	function propFromPath(path) {
+		if (!path)
+			return '';
+		let propIx = path.lastIndexOf('.');
+		return path.substring(propIx + 1);
+	}
+
+	function defPropertyGet(trg, prop, get) {
+		Object.defineProperty(trg, prop, {
+			enumerable: true,
+			configurable: true, /* needed */
+			get: get
+		});
 	}
 };

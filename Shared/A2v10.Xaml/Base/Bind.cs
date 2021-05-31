@@ -1,10 +1,12 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
 using System.ComponentModel;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
@@ -17,6 +19,7 @@ namespace A2v10.Xaml
 		public Boolean HideZeros { get; set; }
 		public String Mask { get; set; }
 		public Boolean NegativeRed { get; set; }
+		public FilterCollection Filters { get; set; }
 
 		private Boolean _wrapped;
 
@@ -76,6 +79,16 @@ namespace A2v10.Xaml
 			return $"$format({realPath}, {opts})";
 		}
 
+
+		public Boolean HasFilters => Filters != null && Filters.Count > 0;
+
+		public String FiltersJS()
+		{
+			if (!HasFilters)
+				return String.Empty;
+			var fStrings = Filters.Select(x => $"'{x.ToString().ToLowerInvariant()}'");
+			return $"[{String.Join(",", fStrings)}]";
+		}
 
 		private static Regex _selectedRegEx = new Regex(@"([\w\.]+)\.Selected\((\w+)\)", RegexOptions.Compiled);
 
