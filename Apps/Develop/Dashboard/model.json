@@ -4,7 +4,7 @@
 	"schema": "a2demo",
 	"actions": {
 		"index": {
-			"view": "HomePage.bootstrap",
+			"view": "HomePage.view",
 			"template": "homepage.template"
 		}
 	},

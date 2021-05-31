@@ -18,6 +18,7 @@
 				<Button Icon="Delete" Command="{BindCmd Execute, CommandName=DeleteFolder, Argument={Bind Agents.$selected}, Confirm='Удалить папку?'}"/>
 				<Button Icon="Disapprove" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross'}"/>
 				<Button Icon="Approve" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testCross2'}"/>
+				<Button Icon="Smile" Command="{BindCmd Command=Dialog, Action=Show, Url='/sales/customer/testGroup'}" Content="Group Report"/>
 			</Toolbar>
 			<TreeView AutoSelect="FirstItem" ExpandFirstItem="True" Indent="True"
 					ItemsSource="{Bind Agents}" FolderSelect="False"

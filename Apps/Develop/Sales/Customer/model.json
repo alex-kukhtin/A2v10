@@ -22,6 +22,12 @@
 			"model": "CrossModelObj",
 			"view": "testcross2.dialog",
 			"template": "testcross2.template"
+		},
+		"testGroup": {
+			"schema": "dbo",
+			"model": "Report.Documents",
+			"view": "testgroup.dialog"
 		}
+
 	}
 }

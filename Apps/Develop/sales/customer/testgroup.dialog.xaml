@@ -1,0 +1,24 @@
+<!-- Test Cross -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		Title="Group Report TEST" Height="40rem" Padding="1rem">
+	<Sheet GridLines="Both" Columns="Fit,Auto,Auto">
+		<Sheet.Header>
+			<SheetRow Style="Header">
+				<SheetCell />
+				<SheetCell Content="Agent/Date"/>
+				<SheetCell Content="Amount"/>
+			</SheetRow>
+			<SheetRow Style="Total">
+				<SheetCell ColSpan="2" Content="Total"/>
+				<SheetCell Content="{Bind ReportData.Amount, DataType=Currency}" Align="Right"/>
+			</SheetRow>
+		</Sheet.Header>
+		<SheetTreeSection ItemsSource="{Bind ReportData.Items}">
+			<SheetRow>
+				<SheetGroupCell/>
+				<SheetCell GroupIndent="True" Content="{Bind $groupName}"/>
+				<SheetCell Content="{Bind Amount, DataType=Currency}" Align="Right"/>
+			</SheetRow>
+		</SheetTreeSection>
+	</Sheet>
+</Dialog>
