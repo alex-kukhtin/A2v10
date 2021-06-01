@@ -56,14 +56,17 @@ namespace A2v10.Web.Mvc.Controllers
 				}
 				else if (pathInfo.Equals("about", StringComparison.InvariantCultureIgnoreCase))
 				{
-					await _baseController.RenderAbout(Response.Output);
-					return;
+					var content = _baseController.RenderAboutLink();
+					await SendPage(_localizer.Localize(null, content));
 				}
+				else
+				{
 
-				String pageContent = _host.ApplicationReader.ReadTextFile("_pages", $"{page}.{CurrentLang}.html");
-				if (pageContent == null)
-					throw new InvalidOperationException($"Application page not found ({page}.{CurrentLang}).");
-				await SendPage(_localizer.Localize(null, pageContent));
+					String pageContent = _host.ApplicationReader.ReadTextFile("_pages", $"{page}.{CurrentLang}.html");
+					if (pageContent == null)
+						throw new InvalidOperationException($"Application page not found ({page}.{CurrentLang}).");
+					await SendPage(_localizer.Localize(null, pageContent));
+				}
 			}
 			catch (Exception ex)
 			{

@@ -34,7 +34,7 @@
 @Dashboard=Dashboard
 ;
 @ResetPassword=Password recovery
-@ResetPasswordMailText=Password recovery code: <b>{0}</b>
+@ResetPasswordBody=Password recovery code: <b>{0}</b>
 @ConfirmEMail=Confirm е-mail
 @ConfirmEMailBody=Email confirmation code: <b>{0}</b>
 @EMailAlreadyConfirmed=Your e-mail already confirmed.

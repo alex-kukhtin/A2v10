@@ -31,6 +31,24 @@ namespace A2v10.Request
 			return Task.CompletedTask;
 		}
 
+		public String RenderAboutLink()
+		{
+			throw new NotImplementedException();
+			/*
+			var aboutHtml = new StringBuilder(_localizer.Localize(null, Resources.about));
+			var appLinkScript = new StringBuilder(Resources.appLinkScript);
+			var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!
+			appLinkScript.Replace("$(PageGuid)", pageGuid);
+
+			appLinkScript.Replace("$(AppData)", GetAppData());
+
+			aboutHtml.Replace("$(PageGuid)", pageGuid);
+			aboutHtml.Replace("$(AboutScript)", appLinkScript.ToString());
+
+			return aboutHtml.ToString();
+			*/
+		}
+
 		Task RenderAppPage(TextWriter writer, String page)
 		{
 			String appPageConetent = _host.ApplicationReader.ReadTextFile("_pages", $"{page}.{_userLocale.Language}.html");

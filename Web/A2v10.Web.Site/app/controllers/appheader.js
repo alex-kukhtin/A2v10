@@ -1,11 +1,12 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210529-7776*/
+/*20210601-7777*/
 /* controllers/appheader.js */
 
 (function () {
 
 	const locale = window.$$locale;
+	const eventBus = require('std:eventBus');
 
 	const a2AppHeader = {
 		template: `

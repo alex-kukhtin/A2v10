@@ -27,7 +27,7 @@
 @Warning=Warnung
 ;
 @ResetPassword=Passwortwiederherstellung
-@ResetPasswordMailText=Code zur Wiederherstellung des Passworts: <b>{0}</b>
+@ResetPasswordBody=Code zur Wiederherstellung des Passworts: <b>{0}</b>
 @ConfirmEMail=E-Mail-Bestätigung
 @ConfirmEMailBody=Bestätigungscode: <b>{0}</b>
 @EMailAlreadyConfirmed=Ihre E-Mail-Adresse wurde bereits bestätigt.
