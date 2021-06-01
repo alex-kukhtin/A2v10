@@ -1,6 +1,6 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210529-7776*/
+/*20210601-7778*/
 /* controllers/mainview.js */
 
 (function () {
@@ -18,6 +18,7 @@
 	const sideBar = component('std:sidebar');
 	const urlTools = require('std:url');
 	const menu = component('std:navmenu');
+	const locale = window.$$locale;
 
 	const contentView = {
 		render(h) {
@@ -338,7 +339,7 @@
 				me.modals.push(dlg);
 				me.setupWrapper(dlg);
 			});
-
+			
 			if (!this.menu) {
 				let dlgData = {
 					promise: null, data: {

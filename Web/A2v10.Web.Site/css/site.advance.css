@@ -2121,6 +2121,7 @@ pre.a2-code {
 }
 .control-group .input-group {
   border: 1px solid #ddd;
+  border-radius: 2px;
   display: flex;
   align-items: stretch;
   background-color: white;

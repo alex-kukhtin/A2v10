@@ -1,12 +1,13 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210601-7777*/
+/*20210601-7778*/
 /* controllers/appheader.js */
 
 (function () {
 
 	const locale = window.$$locale;
 	const eventBus = require('std:eventBus');
+	const menuTools = component('std:navmenu');
 
 	const a2AppHeader = {
 		template: `
@@ -103,7 +104,7 @@
 			root() {
 				let opts = { title: null };
 				let currentUrl = this.$store.getters.url;
-				let menuUrl = this.isSinglePage ? ('/' + this.singlePage) : menu.makeMenuUrl(this.menu, '/', opts);
+				let menuUrl = this.isSinglePage ? ('/' + this.singlePage) : menuTools.makeMenuUrl(this.menu, '/', opts);
 				if (currentUrl === menuUrl) {
 					return; // already in root
 				}

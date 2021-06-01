@@ -188,7 +188,8 @@ as table(
 	[Email] nvarchar(255),
 	[Phone] nvarchar(255),
 	[PersonName] nvarchar(255),
-	[Memo] nvarchar(255)
+	[Memo] nvarchar(255),
+	[Locale] nvarchar(255)
 )
 go
 ------------------------------------------------
@@ -233,10 +234,11 @@ begin
 			target.[Email] = source.Email,
 			target.PhoneNumber = source.Phone,
 			target.Memo = source.Memo,
-			target.PersonName = source.PersonName
+			target.PersonName = source.PersonName,
+			target.[Locale] = isnull(source.[Locale], N'')
 	when not matched by target then
-		insert ([UserName], Email, PhoneNumber, Memo, PersonName, SecurityStamp)
-		values ([Name], Email, Phone, Memo, PersonName, N'')
+		insert ([UserName], Email, PhoneNumber, Memo, PersonName, SecurityStamp, [Locale])
+		values ([Name], Email, Phone, Memo, PersonName, N'', isnull([Locale], N''))
 	output 
 		$action op,
 		inserted.Id id

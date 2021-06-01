@@ -13097,13 +13097,14 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210601-7777*/
+/*20210601-7778*/
 /* controllers/appheader.js */
 
 (function () {
 
 	const locale = window.$$locale;
 	const eventBus = require('std:eventBus');
+	const menuTools = component('std:navmenu');
 
 	const a2AppHeader = {
 		template: `
@@ -13200,7 +13201,7 @@ Vue.directive('resize', {
 			root() {
 				let opts = { title: null };
 				let currentUrl = this.$store.getters.url;
-				let menuUrl = this.isSinglePage ? ('/' + this.singlePage) : menu.makeMenuUrl(this.menu, '/', opts);
+				let menuUrl = this.isSinglePage ? ('/' + this.singlePage) : menuTools.makeMenuUrl(this.menu, '/', opts);
 				if (currentUrl === menuUrl) {
 					return; // already in root
 				}
@@ -13221,7 +13222,7 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210529-7776*/
+/*20210601-7778*/
 /* controllers/mainview.js */
 
 (function () {
@@ -13239,6 +13240,7 @@ Vue.directive('resize', {
 	const sideBar = component('std:sidebar');
 	const urlTools = require('std:url');
 	const menu = component('std:navmenu');
+	const locale = window.$$locale;
 
 	const contentView = {
 		render(h) {
@@ -13559,7 +13561,7 @@ Vue.directive('resize', {
 				me.modals.push(dlg);
 				me.setupWrapper(dlg);
 			});
-
+			
 			if (!this.menu) {
 				let dlgData = {
 					promise: null, data: {

@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using A2v10.Infrastructure;
+using System.Threading;
 
 namespace A2v10.Web.Identity
 {
@@ -46,7 +47,7 @@ namespace A2v10.Web.Identity
 			if (!(identity is ClaimsIdentity user))
 				return null;
 			var value = user.FindFirstValue("Locale");
-			return String.IsNullOrEmpty(value) ? null : value;
+			return String.IsNullOrEmpty(value) ? Thread.CurrentThread.CurrentUICulture.Name : value;
 		}
 
 
