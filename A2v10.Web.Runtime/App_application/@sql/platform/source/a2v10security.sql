@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 29 apr 2021
-module version : 7754
+Last updated : 02 jun 2021
+module version : 7755
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7754;
+exec a2sys.SetVersion N'std:security', 7755;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')

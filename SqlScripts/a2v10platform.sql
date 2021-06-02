@@ -1,6 +1,6 @@
 ﻿/*
-version: 10.0.7670
-generated: 01.06.2021 12:28:03
+version: 10.0.7779
+generated: 02.06.2021 12:26:00
 */
 
 set nocount on;
@@ -19,9 +19,9 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys
 go
 ----------------------------------------------
 if exists(select * from a2sys.Versions where [Module]=N'script:platform')
-	update a2sys.Versions set [Version]=7670, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
+	update a2sys.Versions set [Version]=7779, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
 else
-	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7670, N'a2v10platform.sql', null);
+	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7779, N'a2v10platform.sql', null);
 go
 
 
@@ -383,11 +383,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 29 apr 2021
-module version : 7754
+Last updated : 02 jun 2021
+module version : 7755
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7754;
+exec a2sys.SetVersion N'std:security', 7755;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
