@@ -1,22 +1,16 @@
-﻿
+﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+
+/*20210604-7780*/
+/* bootstrap/appheader.js */
 
 (function () {
 
 	const locale = window.$$locale;
 	const urlTools = require('std:url');
 	const menuTools = component('std:navmenu');
+	const store = component('std:store');
 
 	const a2AppHeader = {
-		template: `
-<div class="app-header">
-	<div v-text=title></div>
-	<div v-text=subtitle></div>
-	<ul v-for="m in menu">
-		<li><a v-text=m.Name href="" @click.stop.prevent=navigate(m)></a></li>
-	</ul>
-	<span v-text=personName></span>
-</div>
-`,
 		props: {
 			title: String,
 			subtitle: String,
@@ -31,6 +25,7 @@
 		},
 		computed: {
 			locale() { return locale; },
+			seg0: () => store.getters.seg0
 		},
 		methods: {
 			isActive(item) {
@@ -52,7 +47,7 @@
 		}
 	};
 
-	app.components['std:appHeader'] = a2AppHeader;
+	app.components['std:appHeaderBase'] = a2AppHeader;
 
 })();
 

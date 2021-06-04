@@ -1,6 +1,6 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210529-7776*/
+/*20210604-7780*/
 /* bootstrap/mainview.js */
 
 (function () {
@@ -73,5 +73,5 @@
 		}
 	};
 
-	app.components['std:mainView'] = contentView;
+	app.components['std:mainViewBase'] = contentView;
 })();

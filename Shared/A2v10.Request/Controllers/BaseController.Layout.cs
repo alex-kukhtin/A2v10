@@ -105,7 +105,7 @@ namespace A2v10.Request
 			if (companies != null || period != null)
 			{
 				String jsonCompanies = JsonConvert.SerializeObject(new { menu = companies, links },
-					JsonHelpers.StandardSerializerSettings);
+					JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 				return new MultiTenantParamJson()
 				{
@@ -150,7 +150,7 @@ namespace A2v10.Request
 			if (companies != null)
 			{
 				String jsonCompanies = JsonConvert.SerializeObject(new { menu = companies, links },
-					JsonHelpers.StandardSerializerSettings);
+					JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 				var currComp = companies?.Find(c => c.Get<Boolean>("Current"));
 				if (currComp == null)
 					throw new InvalidDataException("There is no current company");
@@ -171,6 +171,13 @@ namespace A2v10.Request
 
 		public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, IUserInfo userInfo, Boolean bAdmin, TextWriter writer)
 		{
+			if (!String.IsNullOrEmpty(_host.CustomLayout)) {
+				var customScript = await _host.ApplicationReader.ReadTextFileAsync("_layout", $"{_host.CustomLayout}.js");
+				if (customScript == null)
+					throw new RequestModelException($"File not found. [{_host.AppKey}/_layout/{_host.CustomLayout}.js]");
+				await writer.WriteAsync(customScript);
+			}
+
 			if (!bAdmin && _host.CustomUserMenu != null)
 			{
 				await ShellScript2(setParams, userInfo, writer);
@@ -238,7 +245,7 @@ namespace A2v10.Request
 					throw new InvalidDataException("There is no current company");
 				}
 
-				var menuJson = JsonConvert.SerializeObject(comps);
+				var menuJson = JsonConvert.SerializeObject(comps, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 				macros.Set("Companies", $"{{menu:{menuJson}, links:null}}");
 
 				_userStateManager.SetUserCompanyId(currComp.Get<Int64>("Id"));
@@ -286,6 +293,16 @@ namespace A2v10.Request
 				var txt = _host.ApplicationReader.FileReadAllText(fileName);
 				writer.Write(txt);
 			}
+		}
+
+		public void GetLayoutAppStyles(TextWriter writer)
+		{
+			if (String.IsNullOrEmpty(_host.CustomLayout))
+				return;
+			var stylesText = _host.ApplicationReader.ReadTextFile("_layout", $"{_host.CustomLayout}.css");
+			if (stylesText == null)
+				throw new RequestModelException($"File not found. [{_host.AppKey}/_layout/{_host.CustomLayout}.css]");
+			writer.Write(stylesText);
 		}
 
 		public void GetAppStyleConent(TextWriter writer)

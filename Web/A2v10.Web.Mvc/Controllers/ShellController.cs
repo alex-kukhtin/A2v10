@@ -641,6 +641,8 @@ namespace A2v10.Web.Mvc.Controllers
 				ShellTrace();
 			else if (pathInfo.StartsWith("_shell/appstyles", StringComparison.OrdinalIgnoreCase))
 				ShellAppStyles();
+			else if (pathInfo.StartsWith("_shell/styles", StringComparison.OrdinalIgnoreCase))
+				ShellCustomLayoutStyles();
 			else if (pathInfo.StartsWith("_shell/appscripts", StringComparison.OrdinalIgnoreCase))
 				ShellAppScripts();
 			else if (pathInfo.StartsWith("_shell/savefeedback", StringComparison.OrdinalIgnoreCase))
@@ -684,6 +686,12 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				WriteExceptionStatus(ex);
 			}
+		}
+
+		void ShellCustomLayoutStyles()
+		{
+			Response.ContentType = "text/css";
+			_baseController.GetLayoutAppStyles(Response.Output);
 		}
 
 		void ShellAppStyles()

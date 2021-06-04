@@ -18,10 +18,10 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
-	<link rel="stylesheet" href="/css/bootstrap/main.css" />
+	<link rel="stylesheet" href="/_shell/styles" />
 </head>
 <body>
-	<div id="shell" v-cloak class="shell">
+	<div id="shell" v-cloak class="shell" :class="{'full-page': fullPage}">
 		<a2-main-view :menu="menu" :period="globalPeriod" :title="title"></a2-main-view>
 		<a2-app-header :title="title" :subtitle="subtitle" :user-state="userState"
 					   :menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"

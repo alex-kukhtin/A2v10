@@ -1,2 +1,6 @@
 ﻿[
+	{
+		"outputFile": "Bootstrap/_layout/bootstrap.css",
+		"inputFile": "Bootstrap/_layout/Scss/main.scss"
+	},
 ]

@@ -3,12 +3,10 @@
 (function () {
 
 	const store = component('std:store');
-	const sideBar = component('std:sideBar');
 	const eventBus = require('std:eventBus');
 
 	const shell = Vue.extend({
 		components: {
-			'a2-side-bar': sideBar
 		},
 		store,
 		data() {
@@ -17,6 +15,12 @@
 			};
 		},
 		computed: {
+			seg0: () => store.getters.seg0,
+			seg1: () => store.getters.seg1,
+			fullPage() {
+				let top = this.menu.find(x => x.Url === this.seg0);
+				return !(top && top.Menu !== null && top.Menu.length);
+			}
 		},
 		watch: {
 		},

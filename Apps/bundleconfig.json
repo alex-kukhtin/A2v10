@@ -17,5 +17,14 @@
 		"inputFiles": [
 			"Develop/_assets/app.js"
 		]
+	},
+	{
+		"outputFileName": "Bootstrap/_layout/bootstrap.js",
+		"inputFiles": [
+			"Bootstrap/_layout/app/appheader.js",
+			"Bootstrap/_layout/app/mainview.js",
+			"Bootstrap/_layout/app/sidebar.js"
+		],
+		"minify": { "enabled": false }
 	}
 ]
