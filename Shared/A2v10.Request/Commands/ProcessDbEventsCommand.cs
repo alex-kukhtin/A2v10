@@ -1,4 +1,4 @@
-﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -92,7 +92,7 @@ namespace A2v10.Request
 		public async Task<ServerCommandResult> Execute(RequestCommand cmd, ExpandoObject dataToExec)
 		{
 			await ProcessDbEvents(_dbContext, cmd.CurrentSource, _host.IsAdminMode);
-			return new ServerCommandResult();
+			return new ServerCommandResult("{}"); /* empty result */
 		}
 
 		public static async Task ProcessDbEvents(IDbContext dbContext, String source, bool isAdminMode)

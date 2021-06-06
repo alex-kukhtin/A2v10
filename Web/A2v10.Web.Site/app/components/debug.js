@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210201-7744
+// 20210606-7781
 // components/debug.js*/
 
 (function () {
@@ -149,7 +149,7 @@
 				const url = urlTools.combine(root, '_shell/trace');
 				const that = this;
 				// with skip events
-				http.post(url, null, null, true).then(function (result) {
+				http.post(url, null, false, true).then(function (result) {
 					that.trace.splice(0, that.trace.length);
 					if (!result) return;
 					result.forEach((val) => {

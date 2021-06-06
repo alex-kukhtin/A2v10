@@ -104,6 +104,7 @@
 					<Group>
 						<Button Icon="FilePreview" Command="{BindCmd Attachment, Url='/Sales/Waybill/Attachment', Argument={Bind}, Export=False, NewWindow=True}" />
 						<Button Icon="Print" Command="{BindCmd Execute, CommandName=printToPdf, Url='/Sales/Waybill/Attachment', Argument={Bind}}" />
+						<Button Icon="Download" Command="{BindCmd Attachment, Url='/Sales/Waybill/Attachment', Export=True, Argument={Bind}}" />
 					</Group>
 				</Repeater>
 				<Button Icon="EllipsisVertical">

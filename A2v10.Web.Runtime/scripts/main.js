@@ -1559,15 +1559,13 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210201-7744
+// 20210606-7781
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
-
-	let fc = null;
 
 	return {
 		get,
@@ -1577,65 +1575,53 @@ app.modules['std:http'] = function () {
 		localpost
 	};
 
-	function blob2String(blob, callback) {
-		const fr = new FileReader();
-		fr.addEventListener('loadend', (e) => {
-			const text = fr.result;
-			callback(text);
-		});
-		fr.readAsText(blob);
-	}
-
-	function doRequest(method, url, data, raw, skipEvents) {
-		return new Promise(function (resolve, reject) {
-			let xhr = new XMLHttpRequest();
-
-			xhr.onload = function (response) {
-				if (!skipEvents)
-					eventBus.$emit('endRequest', url);
-				if (xhr.status === 200) {
-					if (raw) {
-						resolve(xhr.response);
-						return;
-					}
-					let ct = xhr.getResponseHeader('content-type') || '';
-					let xhrResult = xhr.responseText;
-					if (ct && ct.indexOf('application/json') !== -1)
-						xhrResult = xhr.responseText ? JSON.parse(xhr.responseText) : '';
-					resolve(xhrResult);
-				}
-				else if (xhr.status === 255) {
-					if (raw) {
-						if (xhr.response instanceof Blob)
-							blob2String(xhr.response, (msg) => reject('server error: ' + msg));
-						else
-							reject(xhr.statusText); // response is blob!
-					}
-					else
-						reject(xhr.responseText || xhr.statusText);
-				} else if (xhr.status === 473 /*non standard */) {
-					if (xhr.statusText === 'Unauthorized') {
+	async function doRequest(method, url, data, raw, skipEvents) {
+		if (!skipEvents)
+			eventBus.$emit('beginRequest', url);
+		try {
+			var response = await fetch(url, {
+				method,
+				mode: 'same-origin',
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+					'Accept': 'application/json, text/html'
+				},
+				body: data
+			});
+			let ct = response.headers.get("content-type");
+			switch (response.status) {
+				case 200:
+					if (raw)
+						return await response.blob();
+					if (ct.startsWith('application/json'))
+						return await response.json();
+					return await response.text();
+					break;
+				case 255:
+					let txt = response.statusText;
+					if (ct.startsWith('text/'))
+						txt = 'server error: ' + await response.text();
+					throw txt;
+				case 473: /*non standard */
+					if (response.statusText === 'Unauthorized') {
 						// go to login page
-						window.location.assign('/');
+						setTimeout(() => {
+							window.location.assign('/');
+						}, 10)
+						throw '__blank__';
 					}
-				}
-				else
-					reject(xhr.statusText);
-			};
-			xhr.onerror = function (response) {
-				if (!skipEvents)
-					eventBus.$emit('endRequest', url);
-				reject(xhr.statusText);
-			};
-			xhr.open(method, url, true);
-			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-			xhr.setRequestHeader('Accept', 'application/json, text/html');
-			if (raw)
-				xhr.responseType = "blob";
+					break;
+				default:
+					throw response.statusText;
+			}
+		}
+		catch (err) {
+			throw err;
+		}
+		finally {
 			if (!skipEvents)
-				eventBus.$emit('beginRequest', url);
-			xhr.send(data);
-		});
+				eventBus.$emit('endRequest', url);
+		}
 	}
 
 	function get(url, raw) {
@@ -10352,7 +10338,7 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210201-7744
+// 20210606-7781
 // components/debug.js*/
 
 (function () {
@@ -10501,7 +10487,7 @@ Vue.component('a2-panel', {
 				const url = urlTools.combine(root, '_shell/trace');
 				const that = this;
 				// with skip events
-				http.post(url, null, null, true).then(function (result) {
+				http.post(url, null, false, true).then(function (result) {
 					that.trace.splice(0, that.trace.length);
 					if (!result) return;
 					result.forEach((val) => {
@@ -11297,7 +11283,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210419-7768*/
+/*20210606-7781*/
 // controllers/base.js
 
 (function () {
@@ -11563,6 +11549,8 @@ Vue.directive('resize', {
 						else
 							throw new Error('Invalid response type for $invoke');
 					}).catch(function (msg) {
+						if (msg === '__blank__')
+							return; // already done
 						if (opts && opts.catchError) {
 							reject(msg);
 						} else {
@@ -13097,7 +13085,7 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210601-7778*/
+/*20210606-7781*/
 /* controllers/appheader.js */
 
 (function () {
@@ -13208,7 +13196,7 @@ Vue.directive('resize', {
 				this.$store.commit('navigate', { url: menuUrl, title: opts.title });
 			},
 			doProfileMenu(itm) {
-				store.commit('navigate', { url: itm.url });
+				this.$store.commit('navigate', { url: itm.url });
 			},
 			clickMenu() {
 				if (this.isNavBarMenu) {

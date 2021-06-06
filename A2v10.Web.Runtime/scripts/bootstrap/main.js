@@ -1405,15 +1405,13 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210201-7744
+// 20210606-7781
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
-
-	let fc = null;
 
 	return {
 		get,
@@ -1423,65 +1421,53 @@ app.modules['std:http'] = function () {
 		localpost
 	};
 
-	function blob2String(blob, callback) {
-		const fr = new FileReader();
-		fr.addEventListener('loadend', (e) => {
-			const text = fr.result;
-			callback(text);
-		});
-		fr.readAsText(blob);
-	}
-
-	function doRequest(method, url, data, raw, skipEvents) {
-		return new Promise(function (resolve, reject) {
-			let xhr = new XMLHttpRequest();
-
-			xhr.onload = function (response) {
-				if (!skipEvents)
-					eventBus.$emit('endRequest', url);
-				if (xhr.status === 200) {
-					if (raw) {
-						resolve(xhr.response);
-						return;
-					}
-					let ct = xhr.getResponseHeader('content-type') || '';
-					let xhrResult = xhr.responseText;
-					if (ct && ct.indexOf('application/json') !== -1)
-						xhrResult = xhr.responseText ? JSON.parse(xhr.responseText) : '';
-					resolve(xhrResult);
-				}
-				else if (xhr.status === 255) {
-					if (raw) {
-						if (xhr.response instanceof Blob)
-							blob2String(xhr.response, (msg) => reject('server error: ' + msg));
-						else
-							reject(xhr.statusText); // response is blob!
-					}
-					else
-						reject(xhr.responseText || xhr.statusText);
-				} else if (xhr.status === 473 /*non standard */) {
-					if (xhr.statusText === 'Unauthorized') {
+	async function doRequest(method, url, data, raw, skipEvents) {
+		if (!skipEvents)
+			eventBus.$emit('beginRequest', url);
+		try {
+			var response = await fetch(url, {
+				method,
+				mode: 'same-origin',
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+					'Accept': 'application/json, text/html'
+				},
+				body: data
+			});
+			let ct = response.headers.get("content-type");
+			switch (response.status) {
+				case 200:
+					if (raw)
+						return await response.blob();
+					if (ct.startsWith('application/json'))
+						return await response.json();
+					return await response.text();
+					break;
+				case 255:
+					let txt = response.statusText;
+					if (ct.startsWith('text/'))
+						txt = 'server error: ' + await response.text();
+					throw txt;
+				case 473: /*non standard */
+					if (response.statusText === 'Unauthorized') {
 						// go to login page
-						window.location.assign('/');
+						setTimeout(() => {
+							window.location.assign('/');
+						}, 10)
+						throw '__blank__';
 					}
-				}
-				else
-					reject(xhr.statusText);
-			};
-			xhr.onerror = function (response) {
-				if (!skipEvents)
-					eventBus.$emit('endRequest', url);
-				reject(xhr.statusText);
-			};
-			xhr.open(method, url, true);
-			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-			xhr.setRequestHeader('Accept', 'application/json, text/html');
-			if (raw)
-				xhr.responseType = "blob";
+					break;
+				default:
+					throw response.statusText;
+			}
+		}
+		catch (err) {
+			throw err;
+		}
+		finally {
 			if (!skipEvents)
-				eventBus.$emit('beginRequest', url);
-			xhr.send(data);
-		});
+				eventBus.$emit('endRequest', url);
+		}
 	}
 
 	function get(url, raw) {
@@ -4380,7 +4366,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210419-7768*/
+/*20210606-7781*/
 // controllers/base.js
 
 (function () {
@@ -4646,6 +4632,8 @@ app.modules['std:impl:array'] = function () {
 						else
 							throw new Error('Invalid response type for $invoke');
 					}).catch(function (msg) {
+						if (msg === '__blank__')
+							return; // already done
 						if (opts && opts.catchError) {
 							reject(msg);
 						} else {
@@ -5839,7 +5827,10 @@ app.modules['std:impl:array'] = function () {
 		isSeparatePage
 	};
 })();	
+// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
+/*20210606-7781*/
+/* bootstrap/appheader.js */
 
 (function () {
 
@@ -5848,16 +5839,6 @@ app.modules['std:impl:array'] = function () {
 	const menuTools = component('std:navmenu');
 
 	const a2AppHeader = {
-		template: `
-<div class="app-header">
-	<div v-text=title></div>
-	<div v-text=subtitle></div>
-	<ul v-for="m in menu">
-		<li><a v-text=m.Name href="" @click.stop.prevent=navigate(m)></a></li>
-	</ul>
-	<span v-text=personName></span>
-</div>
-`,
 		props: {
 			title: String,
 			subtitle: String,
@@ -5872,6 +5853,7 @@ app.modules['std:impl:array'] = function () {
 		},
 		computed: {
 			locale() { return locale; },
+			seg0: () => this.$store.getters.seg0
 		},
 		methods: {
 			isActive(item) {
@@ -5893,14 +5875,14 @@ app.modules['std:impl:array'] = function () {
 		}
 	};
 
-	app.components['std:appHeader'] = a2AppHeader;
+	app.components['std:appHeaderBase'] = a2AppHeader;
 
 })();
 
 
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210529-7776*/
+/*20210604-7780*/
 /* bootstrap/sidebar.js */
 
 (function () {
@@ -5909,71 +5891,7 @@ app.modules['std:impl:array'] = function () {
 	const menuTools = component('std:navmenu');
 	const htmlTools = require('std:html');
 
-	const sideBarTreeItem = {
-		name: 'side-bar-tree-item',
-		template: `
-<li class="side-bar-tree-item" style="margin-left:16px">
-	<a @click.stop.prevent=click href=""><span v-text=item.Name></span></a>
-	<ul v-if=expanded>
-		<side-bar-tree-item v-for="(itm, idx) in item.Menu" :item=itm :key=itm.Id :navigate=navigate></side-bar-tree-item>
-	</ul>
-</li>
-`,
-		props: {
-			item: Object,
-			navigate: Function
-		},
-		data() {
-			return {
-				expanded: true
-			}
-		},
-		computed: {
-			isFolder() {
-				return this.item.Menu && this.item.Menu.length;
-			}
-		},
-		methods: {
-			click() {
-				if (this.isFolder)
-					this.toggle();
-				else
-					this.navigate(this.item);
-			},
-			toggle() {
-				this.expanded = !this.expanded;
-			}
-		}
-
-	}
-
-	const sideBarTree = {
-		template: `
-<ul class="side-bar-tree">
-	<side-bar-tree-item v-for="(itm, idx) in items" :item=itm :key="itm.Id" :navigate=navigate></side-bar-tree-item>
-</ul>
-`,
-		components: {
-			"side-bar-tree-item": sideBarTreeItem
-		},
-		props: {
-			items: Array,
-			navigate: Function
-		}
-	}
-
-
 	const sideBar = {
-		template: `
-<div class="app-side-bar">
-<span v-text=seg0></span>/
-<span v-text=seg1></span>
-<side-bar-tree :items="sideMenu" :navigate=navigate></side-bar-tree>
-</div>
-`,
-		components: {
-			"side-bar-tree": sideBarTree
-		},
 		props: {
 			menu: Array,
 		},
@@ -6023,12 +5941,12 @@ app.modules['std:impl:array'] = function () {
 
 
 
-	app.components['std:sideBar'] = sideBar;
+	app.components['std:sideBarBase'] = sideBar;
 })();
 
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210529-7776*/
+/*20210604-7780*/
 /* bootstrap/mainview.js */
 
 (function () {
@@ -6101,7 +6019,7 @@ app.modules['std:impl:array'] = function () {
 		}
 	};
 
-	app.components['std:mainView'] = contentView;
+	app.components['std:mainViewBase'] = contentView;
 })();
 
 
@@ -6109,12 +6027,10 @@ app.modules['std:impl:array'] = function () {
 (function () {
 
 	const store = component('std:store');
-	const sideBar = component('std:sideBar');
 	const eventBus = require('std:eventBus');
 
 	const shell = Vue.extend({
 		components: {
-			'a2-side-bar': sideBar
 		},
 		store,
 		data() {
@@ -6123,6 +6039,12 @@ app.modules['std:impl:array'] = function () {
 			};
 		},
 		computed: {
+			seg0: () => store.getters.seg0,
+			seg1: () => store.getters.seg1,
+			fullPage() {
+				let top = this.menu.find(x => x.Url === this.seg0);
+				return !(top && top.Menu !== null && top.Menu.length);
+			}
 		},
 		watch: {
 		},

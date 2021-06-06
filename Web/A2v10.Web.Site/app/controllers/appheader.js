@@ -1,6 +1,6 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210601-7778*/
+/*20210606-7781*/
 /* controllers/appheader.js */
 
 (function () {
@@ -111,7 +111,7 @@
 				this.$store.commit('navigate', { url: menuUrl, title: opts.title });
 			},
 			doProfileMenu(itm) {
-				store.commit('navigate', { url: itm.url });
+				this.$store.commit('navigate', { url: itm.url });
 			},
 			clickMenu() {
 				if (this.isNavBarMenu) {

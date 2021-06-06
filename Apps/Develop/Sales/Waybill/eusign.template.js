@@ -72,7 +72,7 @@ async function signFile() {
 			id: att.Id,
 			kind: 'customer',
 			signature: signed.data,
-			info: signed.ownerInfo,
+			ownerInfo: signed.ownerInfo,
 			base: base
 		});
 	} catch (err) {
@@ -85,7 +85,7 @@ async function signFile() {
 async function createContainer() {
 	const att = this.Attachment;
 	const base = '/sales/waybill/attachment';
-	let result = await eusign.loadSignedData(base, att.Id);
+	let result = await eusign.loadSignedData(base, att.Id, att.Token);
 	html.downloadBlob(new Blob([result]), 'test21', 'pdf');
 }
 
@@ -93,10 +93,11 @@ async function verifySignature() {
 	const vm = this.$vm;
 	const att = this.Attachment;
 	const base = '/sales/waybill/attachment';
-	let result = await eusign.loadSignedData(base, att.Id);
+	let result = await eusign.loadSignedData(base, att.Id, att.Token);
 	try {
 		let verify = eusign.verifyData(result);
 		console.dir(verify);
+		alert(verify.ownerInfo.subjCN);
 	} catch (err) {
 		vm.$alert(eusign.getMessage(err));
 	}

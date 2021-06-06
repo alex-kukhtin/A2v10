@@ -52,16 +52,22 @@ function canReadKey() {
 async function verifySignature() {
 	const vm = this.$vm;
 	const att = this.Attachment;
-	const sign = this.Attachment.Signatures[0];
-	eusign.beginRequest();
+	//const sign = this.Attachment.Signatures[0];
 	eusign.beginRequest();
 	try {
+		/*
 		let blob = await eusign.loadAttachment('/sales/waybill/attachment', att.Id, att.Token);
 		console.dir('blob:'); console.dir(blob);
-		let signature = await eusign.loadSignature('/sales/waybill/attachment', sign.Id);
+		let signature = await eusign.loadSignature('/sales/waybill/attachment', sign.Id, sign.Token);
 		console.dir('signature:'); console.dir(signature);
 		let verify = eusign.verifyData(blob, signature);
 		console.dir('verify:'); console.dir(verify);
+		alert('ok');
+		*/
+		let blobs = await eusign.loadSignedData('/sales/waybill/attachment', att.Id, att.Token);
+		console.dir(blobs);
+		let verify = eusign.verifyData(blobs);
+		console.dir(verify);
 		alert('ok');
 	} catch (err) {
 		vm.$alert(eusign.getMessage(err));

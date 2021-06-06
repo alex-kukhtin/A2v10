@@ -1,12 +1,14 @@
-﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2021 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Dynamic;
+
+
+using Newtonsoft.Json;
 using Jint;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
-using Newtonsoft.Json;
-using System.Dynamic;
 
 namespace A2v10.Javascript
 {
@@ -74,7 +76,7 @@ return function(_this) {{
 }})();";
 
 
-			var func = eng.Execute(code).GetCompletionValue();
+			var func = eng.Evaluate(code);
 
 			var result = eng.Invoke(func, Environment());
 

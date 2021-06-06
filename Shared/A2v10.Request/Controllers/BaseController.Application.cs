@@ -1,13 +1,15 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
 using System.Threading.Tasks;
 using System.Web;
-using A2v10.Infrastructure;
-using A2v10.Request.Models;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+
+using A2v10.Infrastructure;
+using A2v10.Request.Models;
 
 namespace A2v10.Request
 {
@@ -21,6 +23,7 @@ namespace A2v10.Request
 					ExpandoObject dataToSet = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 					setParams?.Invoke(dataToSet);
 					await _dbContext.ExecuteExpandoAsync(null, "a2user_state.SetGlobalPeriod", dataToSet);
+					response.Write("{}");
 					break;
 				case "switchtocompany":
 					if (!_host.IsMultiCompany)
@@ -28,6 +31,7 @@ namespace A2v10.Request
 					ExpandoObject dataToExec = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 					setParams?.Invoke(dataToExec);
 					await SwitchToCompany(dataToExec);
+					response.Write("{}");
 					break;
 				default:
 					throw new RequestModelException($"Invalid application command '{command}'");

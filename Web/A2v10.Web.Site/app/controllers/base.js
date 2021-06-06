@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210419-7768*/
+/*20210606-7781*/
 // controllers/base.js
 
 (function () {
@@ -266,6 +266,8 @@
 						else
 							throw new Error('Invalid response type for $invoke');
 					}).catch(function (msg) {
+						if (msg === '__blank__')
+							return; // already done
 						if (opts && opts.catchError) {
 							reject(msg);
 						} else {

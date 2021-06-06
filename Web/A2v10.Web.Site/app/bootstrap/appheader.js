@@ -1,6 +1,6 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210604-7780*/
+/*20210606-7781*/
 /* bootstrap/appheader.js */
 
 (function () {
@@ -8,7 +8,6 @@
 	const locale = window.$$locale;
 	const urlTools = require('std:url');
 	const menuTools = component('std:navmenu');
-	const store = component('std:store');
 
 	const a2AppHeader = {
 		props: {
@@ -25,7 +24,7 @@
 		},
 		computed: {
 			locale() { return locale; },
-			seg0: () => store.getters.seg0
+			seg0: () => this.$store.getters.seg0
 		},
 		methods: {
 			isActive(item) {

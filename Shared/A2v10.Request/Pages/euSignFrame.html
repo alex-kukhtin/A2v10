@@ -10,9 +10,9 @@
 </head>
 <body>
 	<script type="text/javascript" src="/scripts/vue.js?v=2.5.13"></script>
-	<script type="text/javascript" src="/scripts/locale-uk.min.js"></script>
-	<script type="text/javascript" src="/scripts/main.js"></script>
-	<script type="text/javascript" src="/scripts/eusign.js"></script>
+	<script type="text/javascript" src="/scripts/locale-uk.min.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
+	<script type="text/javascript" src="/scripts/eusign.js?v=$(Build)"></script>
 	<div id="iframe-app">
 		<a2-iframe-view></a2-iframe-view>
 	</div>
@@ -23,7 +23,7 @@
 	<script type="text/javascript" src="/Scripts/eusign/euscpt.js"></script>
 	<script type="text/javascript" src="/Scripts/eusign/euscpm.js"></script>
 	<script async type="text/javascript" src="/scripts/eusign/euscp.js"></script>
-	<script type="text/javascript" src="/scripts/iframe.js"></script>
+	<script type="text/javascript" src="/scripts/iframe.js?v=$(Build)"></script>
 	<script type="text/javascript">
 		$(FrameScript)
 	</script>
