@@ -154,7 +154,7 @@ begin
 	set transaction isolation level read uncommitted;
 	if @Parent is null
 		select @Parent = Parent from samples.Agents where Id=@Id;
-	-- родительски объект вернем в виде, как в списке, чтобы меньше возиться с присваиванием
+	-- родительский объект вернем в виде, как в списке, чтобы меньше возиться с присваиванием
 	select [Agent!TAgent!Object] = null, [Id!!Id] = a.Id, [Name!!Name] = a.[Name], a.Code, a.Memo,
 		[ParentFolder.Id!TParentFolder!Id] = a.Parent, [ParentFolder.Name!TParentFolder!Name] = p.[Name]
 	from samples.Agents a left join samples.Agents p on a.Parent = p.Id
@@ -203,6 +203,7 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
+
 	declare @Folder samples.[Agent.Folder.TableType];
 	select [Folder!Folder!Metadata] = null, * from @Folder;
 end
