@@ -191,7 +191,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210531-7776
+// 20210608-7782
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -218,14 +218,10 @@ app.modules['std:utils'] = function () {
 
 	return {
 		isArray: Array.isArray,
-		isFunction: isFunction,
-		isDefined: isDefined,
-		isObject: isObject,
-		isObjectExact: isObjectExact,
-		isDate: isDate,
-		isString: isString,
-		isNumber: isNumber,
-		isBoolean: isBoolean,
+		isFunction, isDefined,
+		isObject, isObjectExact,
+		isDate, isString, isNumber, isBoolean,
+		isPromise,
 		toString: toString,
 		defaultValue: defaultValue,
 		notBlank: notBlank,
@@ -295,6 +291,7 @@ app.modules['std:utils'] = function () {
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
+	function isPromise(v) { return isDefined(v) && isFunction(v.then) && isFunction(v.catch); }
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === platform.File || ctor === Object;
@@ -11312,7 +11309,9 @@ Vue.directive('resize', {
 			eventBus.$emit('modal', url, dlgData);
 			dlgData.promise.then(function (result) {
 				cb(result);
-				resolve(result);
+				return resolve(result);
+			}).catch(function (result) {
+				return reject(result);
 			});
 		});
 	}
@@ -13210,7 +13209,7 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210601-7778*/
+/*20210608-7782*/
 /* controllers/mainview.js */
 
 (function () {
@@ -13434,10 +13433,14 @@ Vue.directive('resize', {
 				let dlg = { title: "dialog", url: url, prms: prms.data, wrap: false, rd: prms.rd };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
-				});
+					dlg.reject = reject;
+				})
+				.then(r => r)
+					.catch(r => { console.dir(r); return dlg.reject(r);});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);
 				me.setupWrapper(dlg);
+				/*debugger; if (!utils.isDefined(r)) throw false; */
 			});
 
 			eventBus.$on('modaldirect', function (modal, prms) {
@@ -13446,6 +13449,7 @@ Vue.directive('resize', {
 				let dlg = { title: "dialog", url: url, prms: prms.data, wrap: false };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
+					dlg.reject = reject;
 				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);
@@ -13490,7 +13494,6 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('modalClose', function (result) {
-
 				if (!me.modals.length) return;
 				// not real! any.
 				if (me.requestsCount > 0) return;
@@ -13500,13 +13503,13 @@ Vue.directive('resize', {
 				function closeImpl(closeResult) {
 					let dlg = me.modals.pop();
 					if (closeResult)
-						dlg.resolve(closeResult);
+						return dlg.resolve(closeResult);
+					else
+						return dlg.reject(closeResult);
 				}
 
-				if (!dlg.attrs) {
-					closeImpl(result);
-					return;
-				}
+				if (!dlg.attrs)
+					return closeImpl(result);
 
 				if (dlg.attrs.alwaysOk)
 					result = true;
@@ -13542,8 +13545,9 @@ Vue.directive('resize', {
 			eventBus.$on('confirm', function (prms) {
 				let dlg = prms.data;
 				dlg.wrap = false;
-				dlg.promise = new Promise(function (resolve) {
+				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
+					dlg.reject = reject;
 				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);

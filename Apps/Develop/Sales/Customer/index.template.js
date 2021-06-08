@@ -24,13 +24,13 @@ const template = {
 
 
 async function addFolder(agents) {
-	const vm = agents.$vm;
-	let data = await vm.$showDialog('/Agent/EditFolder');
-	let item = agents.$selected;
-	let newFolder = item.SubItems.$new(data);
-	newFolder.Icon = 'folder';
-	item.HasSubItems = true;
-	item.SubItems.push(newFolder);
+		const vm = agents.$vm;
+		let data = await vm.$showDialog('/Agent/EditFolder');
+		let item = agents.$selected;
+		let newFolder = item.SubItems.$new(data);
+		newFolder.Icon = 'folder';
+		item.HasSubItems = true;
+		item.SubItems.push(newFolder);
 }
 
 async function addTopFolder(agents) {
@@ -42,10 +42,22 @@ async function addTopFolder(agents) {
 
 async function editFolder(folder) {
 	if (!folder) return;
-	const vm = folder.$vm;
-	let data = await vm.$showDialog('/Agent/EditFolder', folder);
-	folder.Name = data.Name;
-	folder.Memo = data.Memo;
+	try {
+		console.dir('start');
+		const vm = folder.$vm;
+		let data = await vm.$showDialog('/Agent/EditFolder', folder, null, {});
+
+		console.dir('dialog result:' + data);
+		folder.Name = data.Name;
+		console.dir('set memo');
+		//folder.Memo = data.Memo;
+	}
+	catch (x) {
+		console.dir('catch in template:' + x);
+	}
+	finally {
+		console.dir('finally in template');
+	}
 }
 
 

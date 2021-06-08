@@ -68,4 +68,11 @@
 		return exports.default;
 	}
 
+	/*
+	Vue.config.warnHandler = function (msg, vm, trace) {
+		console.warn(msg);
+		return false;
+	};
+	*/
+
 })();

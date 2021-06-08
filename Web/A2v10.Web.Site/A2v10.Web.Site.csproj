@@ -235,6 +235,7 @@
     <Content Include="TestPages\nativeHost.html" />
     <Content Include="TestPages\JasmineTests.html" />
     <Content Include="TestPages\slot.html" />
+    <Content Include="tests\utils.js" />
     <Content Include="tests\datamodelarrays.js" />
     <Content Include="tests\format.js" />
     <Content Include="Less\TabBar.less" />

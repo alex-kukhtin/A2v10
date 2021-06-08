@@ -198,7 +198,7 @@ namespace A2v10.Xaml
 						if (inlineModal != null)
 						return $"$inlineClose('{inlineModal.Id}', false)";
 					}
-					return context.IsDialog ? "$modalClose()" : "$close()";
+					return context.IsDialog ? "$modalClose(false)" : "$close()";
 
 				case CommandType.CloseOk:
 					return context.IsDialog ? "$modalClose(true)" : throw new XamlException("The command 'CloseOk' is allowed for Dialogs only");

@@ -68,6 +68,13 @@
 		return exports.default;
 	}
 
+	/*
+	Vue.config.warnHandler = function (msg, vm, trace) {
+		console.warn(msg);
+		return false;
+	};
+	*/
+
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -191,7 +198,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210531-7776
+// 20210608-7782
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -218,14 +225,10 @@ app.modules['std:utils'] = function () {
 
 	return {
 		isArray: Array.isArray,
-		isFunction: isFunction,
-		isDefined: isDefined,
-		isObject: isObject,
-		isObjectExact: isObjectExact,
-		isDate: isDate,
-		isString: isString,
-		isNumber: isNumber,
-		isBoolean: isBoolean,
+		isFunction, isDefined,
+		isObject, isObjectExact,
+		isDate, isString, isNumber, isBoolean,
+		isPromise,
 		toString: toString,
 		defaultValue: defaultValue,
 		notBlank: notBlank,
@@ -295,6 +298,7 @@ app.modules['std:utils'] = function () {
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
+	function isPromise(v) { return isDefined(v) && isFunction(v.then) && isFunction(v.catch); }
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === platform.File || ctor === Object;

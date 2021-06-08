@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7768 */
+/* Version 10.0.7782 */
 
 
 declare function require(url: string): any;
@@ -246,7 +246,7 @@ interface IController {
 	$save(): Promise<object>;
 	$requery(): void;
 	$reload(args?: any): Promise<void>;
-	$invoke(command: string, arg: object, path?: string, opts?: { catchError: boolean }): Promise<any>;
+	$invoke(command: string, arg?: object, path?: string, opts?: { catchError: boolean }): Promise<any>;
 	$close(): void;
 	$modalClose(result?: any): any;
 	$msg(msg: string, title?: string, style?: CommonStyle): Promise<boolean>;
