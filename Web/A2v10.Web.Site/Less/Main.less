@@ -202,6 +202,12 @@ header, .header {
 
 	&.collapsed {
 		.content-view.partial-page {
+			left: @side-bar-collapsed-width + @side-bar-gap;
+		}
+	}
+
+	&.compact-side-bar.collapsed {
+		.content-view.partial-page {
 			left: @side-bar-compact-collapsed-width + @side-bar-gap;
 		}
 	}

@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 02 jun 2021
-module version : 7755
+Last updated : 08 jun 2021
+module version : 7756
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7755;
+exec a2sys.SetVersion N'std:security', 7756;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -809,6 +809,39 @@ begin
 end
 go
 
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SetPasswordHash')
+	drop procedure a2security.[User.SetPasswordHash]
+go
+------------------------------------------------
+create procedure a2security.[User.SetPasswordHash]
+@UserId bigint,
+@PasswordHash nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2security.ViewUsers set PasswordHash = @PasswordHash where Id=@UserId;
+end
+go
+
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SetSecurityStamp')
+	drop procedure a2security.[User.SetSecurityStamp]
+go
+------------------------------------------------
+create procedure a2security.[User.SetSecurityStamp]
+@UserId bigint,
+@SecurityStamp nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	update a2security.ViewUsers set SecurityStamp = @SecurityStamp where Id=@UserId;
+end
+go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'GetUserGroups')
 	drop procedure a2security.GetUserGroups

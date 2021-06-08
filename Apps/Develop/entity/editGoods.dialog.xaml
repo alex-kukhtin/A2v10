@@ -28,7 +28,8 @@
 				</TextBox>
 				<TextBox Grid.Row="2" Label="Артикул" Value="{Bind Entity.Article}" TabIndex="-1"
 						 EnterCommand="{BindCmd Execute, CommandName=enterKey}" Accel="Ctrl+A"/>
-				<ComboBox Grid.Row="2" Grid.Col="2" Label="Ед. изм." Value="{Bind Entity.Unit}" ItemsSource="{Bind Units}"/>
+				<ComboBox Grid.Row="2" Grid.Col="2" Label="Ед. изм." DisplayProperty="$Name"
+						  Value="{Bind Entity.Unit}" ItemsSource="{Bind Units}"/>
 				<TextBox Grid.Row="5" HtmlId="memo-editor"
 						 Grid.ColSpan="2" Label="Примечание" 
 						 Value="{Bind Entity.Memo, Filters=Upper}" Rows="3" Multiline="True" TabIndex="3"/>
@@ -37,6 +38,18 @@
 				<TimePicker Grid.Row="7" TabIndex="2" Value="{Bind Root.$Date}"/>
 				<Code Grid.Row="7" Grid.Col="2" Content="{Bind Root.$Date, DataType=DateTime}"/>
 				<Button Content="Full Screen" Command="{BindCmd Execute, CommandName=fullScreen}"/>
+
+				<Switch Expression="{Bind Entity.Unit.Id}">
+					<Else>
+						<TagLabel Content="UnitId != 103" Style="Purple"/>
+					</Else>
+					<Case Value="103">
+						<TagLabel Content="UnitId = 103" Style="Gold"/>
+					</Case>
+					<Case Value="101">
+						<TagLabel Content="UnitId = 101" Style="Green"/>
+					</Case>
+				</Switch>
 			</Grid>
 		</Tab>
 		<Tab Header="Картинка">

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210601-7778*/
+/*20210608-7782*/
 /* controllers/mainview.js */
 
 (function () {
@@ -160,6 +160,8 @@
 			cssClass() {
 				let cls = (this.isNavBarMenu ? 'nav-bar-menu ' : '') +
 					'side-bar-position-' + (this.isSideBarTop ? 'top ' : 'left ');
+				if (this.isSideBarCompact)
+					cls += 'compact-side-bar ';
 				if (this.isSideBarTop)
 					cls += !this.sideBarVisible ? 'side-bar-hidden' : '';
 				else

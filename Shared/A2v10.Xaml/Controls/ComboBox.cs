@@ -83,7 +83,7 @@ namespace A2v10.Xaml
 			onRender?.Invoke(combo);
 			combo.MergeAttribute("is", "combobox");
 			combo.MergeAttribute("v-cloak", String.Empty);
-			combo.MergeAttribute("display", DisplayProperty);
+			combo.MergeAttribute("name-prop", DisplayProperty);
 			if (Style != ComboBoxStyle.Default)
 				combo.AddCssClass($"combo-{Style.ToString().ToLowerInvariant()}");
 			MergeAttributes(combo, context);

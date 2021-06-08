@@ -26,6 +26,9 @@ const template = {
 	},
 	delegates: {
 		uploadCsv
+	},
+	commands: {
+		doubleClick
 	}
 };
 
@@ -54,4 +57,7 @@ module.exports = template;
 
 function uploadCsv(x) {
 	console.dir(x);
+}
+function doubleClick(doc) {
+	alert('double click: ' + doc.Id);
 }

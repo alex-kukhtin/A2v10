@@ -1450,6 +1450,9 @@ header .dropdown.separate.show .btn.btn-success,
   top: 40px;
 }
 .side-bar-position-left.collapsed .content-view.partial-page {
+  left: 42px;
+}
+.side-bar-position-left.compact-side-bar.collapsed .content-view.partial-page {
   left: 62px;
 }
 .side-bar-position-top .content-view.partial-page,

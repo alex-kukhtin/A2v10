@@ -40,6 +40,9 @@ namespace A2v10.Xaml
 
 		public UIElement EmptyPanel { get; set; }
 
+		public Command DoubleClick { get; set; }
+
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -60,6 +63,13 @@ namespace A2v10.Xaml
 				ul.MergeAttribute(":selectable", Select.Value.ToString().ToLowerInvariant());
 			ul.AddCssClass(Style.ToString().ToKebabCase());
 			//ul.MergeAttribute(":command", "()=> $navigate()");
+
+			var dblClickBind = GetBindingCommand(nameof(DoubleClick));
+			if (dblClickBind != null)
+			{
+				// Function!
+				ul.MergeAttribute(":doubleclick", "() => " + dblClickBind.GetCommand(context));
+			}
 
 			if (Background != BackgroundStyle.Default)
 				ul.AddCssClass("background-" + Background.ToString().ToKebabCase());

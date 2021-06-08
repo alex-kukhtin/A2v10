@@ -12,7 +12,8 @@ const template = {
 	properties: {
 		'TRoot.$RadioValue': String,
 		'TRoot.$RadioSource': radioSource,
-		'TRoot.$Date': Date
+		'TRoot.$Date': Date,
+		'TUnit.$Name'() { return `${this.Name} [${this.Short}]`;}
 	},
 	validators: {
 		"Entity.Name": 'Введите наименование',
@@ -21,12 +22,12 @@ const template = {
 		"Entity.Memo": [
 			function (item, val) {
 				console.log('function', this);
-				return { msg: 'error from function', severity: 'info' };
+				return true; //{ msg: 'error from function', severity: 'info' };
 			},
 			{
 				valid(item, val) {
 					console.log('valid in object', this);
-					return {msg: 'error from object', severity:'info'};
+					return true; //{msg: 'error from object', severity:'info'};
 				},
 				applyIf(item, val) {
 					console.log('applyIf', this);

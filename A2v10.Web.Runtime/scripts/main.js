@@ -68,6 +68,13 @@
 		return exports.default;
 	}
 
+	/*
+	Vue.config.warnHandler = function (msg, vm, trace) {
+		console.warn(msg);
+		return false;
+	};
+	*/
+
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -8738,7 +8745,7 @@ TODO:
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
 				@mousedown.prevent="select(listItem)" @keydown="keyDown" 
-				ref="li">
+				ref="li" v-on:dblclick.prevent="doDblClick">
 			<span v-if="listItem.__group" v-text="listItem.__group"></span>
 			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
 		</li>
@@ -8763,7 +8770,8 @@ TODO:
 			hover: {
 				type: Boolean, default: true
 			},
-			groupBy: String
+			groupBy: String,
+			doubleclick: Function
 		},
 		computed: {
 			selectedSource() {
@@ -8902,6 +8910,11 @@ TODO:
 				}
 				e.preventDefault();
 				e.stopPropagation();
+			},
+			doDblClick($event) {
+				$event.stopImmediatePropagation();
+				if (this.doubleclick)
+					this.doubleclick();
 			}
 		},
 		created() {
@@ -11309,9 +11322,7 @@ Vue.directive('resize', {
 			eventBus.$emit('modal', url, dlgData);
 			dlgData.promise.then(function (result) {
 				cb(result);
-				return resolve(result);
-			}).catch(function (result) {
-				return reject(result);
+				resolve(result);
 			});
 		});
 	}
@@ -13369,6 +13380,8 @@ Vue.directive('resize', {
 			cssClass() {
 				let cls = (this.isNavBarMenu ? 'nav-bar-menu ' : '') +
 					'side-bar-position-' + (this.isSideBarTop ? 'top ' : 'left ');
+				if (this.isSideBarCompact)
+					cls += 'compact-side-bar ';
 				if (this.isSideBarTop)
 					cls += !this.sideBarVisible ? 'side-bar-hidden' : '';
 				else
@@ -13433,14 +13446,10 @@ Vue.directive('resize', {
 				let dlg = { title: "dialog", url: url, prms: prms.data, wrap: false, rd: prms.rd };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
-					dlg.reject = reject;
-				})
-				.then(r => r)
-					.catch(r => { console.dir(r); return dlg.reject(r);});
+				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);
 				me.setupWrapper(dlg);
-				/*debugger; if (!utils.isDefined(r)) throw false; */
 			});
 
 			eventBus.$on('modaldirect', function (modal, prms) {
@@ -13449,7 +13458,6 @@ Vue.directive('resize', {
 				let dlg = { title: "dialog", url: url, prms: prms.data, wrap: false };
 				dlg.promise = new Promise(function (resolve, reject) {
 					dlg.resolve = resolve;
-					dlg.reject = reject;
 				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);
@@ -13494,6 +13502,7 @@ Vue.directive('resize', {
 			});
 
 			eventBus.$on('modalClose', function (result) {
+
 				if (!me.modals.length) return;
 				// not real! any.
 				if (me.requestsCount > 0) return;
@@ -13503,13 +13512,13 @@ Vue.directive('resize', {
 				function closeImpl(closeResult) {
 					let dlg = me.modals.pop();
 					if (closeResult)
-						return dlg.resolve(closeResult);
-					else
-						return dlg.reject(closeResult);
+						dlg.resolve(closeResult);
 				}
 
-				if (!dlg.attrs)
-					return closeImpl(result);
+				if (!dlg.attrs) {
+					closeImpl(result);
+					return;
+				}
 
 				if (dlg.attrs.alwaysOk)
 					result = true;
@@ -13545,9 +13554,8 @@ Vue.directive('resize', {
 			eventBus.$on('confirm', function (prms) {
 				let dlg = prms.data;
 				dlg.wrap = false;
-				dlg.promise = new Promise(function (resolve, reject) {
+				dlg.promise = new Promise(function (resolve) {
 					dlg.resolve = resolve;
-					dlg.reject = reject;
 				});
 				prms.promise = dlg.promise;
 				me.modals.push(dlg);

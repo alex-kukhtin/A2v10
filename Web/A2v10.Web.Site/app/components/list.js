@@ -20,7 +20,7 @@
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
 				@mousedown.prevent="select(listItem)" @keydown="keyDown" 
-				ref="li">
+				ref="li" v-on:dblclick.prevent="doDblClick">
 			<span v-if="listItem.__group" v-text="listItem.__group"></span>
 			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
 		</li>
@@ -45,7 +45,8 @@
 			hover: {
 				type: Boolean, default: true
 			},
-			groupBy: String
+			groupBy: String,
+			doubleclick: Function
 		},
 		computed: {
 			selectedSource() {
@@ -184,6 +185,11 @@
 				}
 				e.preventDefault();
 				e.stopPropagation();
+			},
+			doDblClick($event) {
+				$event.stopImmediatePropagation();
+				if (this.doubleclick)
+					this.doubleclick();
 			}
 		},
 		created() {
