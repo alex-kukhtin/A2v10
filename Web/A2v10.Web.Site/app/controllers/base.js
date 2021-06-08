@@ -247,7 +247,7 @@
 			},
 
 
-			$invoke(cmd, data, base, opts) {
+			async $invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
 				const routing = require('std:routing');
@@ -255,26 +255,26 @@
 				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
-				return new Promise(function (resolve, reject) {
+				try {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl, data: data });
-					dataservice.post(url, jsonData).then(function (data) {
-						if (self.__destroyed__) return;
-						if (utils.isObject(data))
-							resolve(data);
-						else if (utils.isString(data))
-							resolve(data);
-						else
-							throw new Error('Invalid response type for $invoke');
-					}).catch(function (msg) {
-						if (msg === '__blank__')
-							return; // already done
-						if (opts && opts.catchError) {
-							reject(msg);
-						} else {
-							self.$alertUi(msg);
-						}
-					});
-				});
+					var data = await dataservice.post(url, jsonData);
+					if (self.__destroyed__) return;
+					if (utils.isObject(data))
+						return data;
+					else if (utils.isString(data))
+						return data;
+					else
+						throw new Error('Invalid response type for $invoke');
+				}
+				catch (msg) {
+					if (msg === '__blank__')
+						return; // already done
+					if (opts && opts.catchError) {
+						throw msg;
+					} else {
+						self.$alertUi(msg);
+					}
+				}
 			},
 
 			$asyncValid(cmd, data) {
@@ -302,7 +302,7 @@
 				});
 			},
 
-			$reload(args) {
+			async $reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
@@ -310,12 +310,12 @@
 					let propIx = args._path_.lastIndexOf('.');
 					let prop = args._path_.substring(propIx + 1);
 					args.$loaded = false; // reload
-					return self.$loadLazy(args.$parent, prop);
+					return this.$loadLazy(args.$parent, prop);
 				}
 				let root = window.$$rootUrl;
 				const routing = require('std:routing'); // defer loading
 				let url = `${root}/${routing.dataUrl()}/reload`;
-				let dat = self.$data;
+				let dat = this.$data;
 
 				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
 				if (!args && !mi) {
@@ -328,32 +328,31 @@
 
 				let saveSels = dat._saveSelections();
 
-				return new Promise(function (resolve, reject) {
-					let dataToQuery = { baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi) };
-					if (utils.isDefined(dat.Query)) {
-						// special element -> use url
-						dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
-						let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
-						window.history.replaceState(null, null, newUrl);
+				let dataToQuery = { baseUrl: urltools.replaceUrlQuery(this.$baseUrl, mi) };
+				if (utils.isDefined(dat.Query)) {
+					// special element -> use url
+					dataToQuery.baseUrl = urltools.replaceUrlQuery(this.$baseUrl, dat.Query);
+					let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
+					window.history.replaceState(null, null, newUrl);
+				}
+				let jsonData = utils.toJson(dataToQuery);
+				try {
+					let data = await dataservice.post(url, jsonData);
+					if (this.__destroyed__) return;
+					if (utils.isObject(data)) {
+						dat.$merge(data, true/*checkBindOnce*/);
+						modelInfo.reconcileAll(data.$ModelInfo);
+						dat._setModelInfo_(undefined, data);
+						dat._setRuntimeInfo_(data.$runtime);
+						dat._fireLoad_();
+						dat._restoreSelections(saveSels);
+						return dat;
+					} else {
+						throw new Error('Invalid response type for $reload');
 					}
-					let jsonData = utils.toJson(dataToQuery);
-					dataservice.post(url, jsonData).then(function (data) {
-						if (self.__destroyed__) return;
-						if (utils.isObject(data)) {
-							dat.$merge(data, true/*checkBindOnce*/);
-							modelInfo.reconcileAll(data.$ModelInfo);
-							dat._setModelInfo_(undefined, data);
-							dat._setRuntimeInfo_(data.$runtime);
-							dat._fireLoad_();
-							dat._restoreSelections(saveSels);
-							resolve(dat);
-						} else {
-							throw new Error('Invalid response type for $reload');
-						}
-					}).catch(function (msg) {
-						self.$alertUi(msg);
-					});
-				});
+				} catch (msg) {
+					this.$alertUi(msg);
+				};
 			},
 
 			$requery() {
@@ -381,7 +380,7 @@
 				let item = arr.$selected;
 				if (!item)
 					return;
-				this.$remove(item, confirm);
+				return this.$remove(item, confirm);
 			},
 			$mailto(arg, subject) {
 				let href = 'mailto:' + arg;
@@ -1076,7 +1075,7 @@
 				});
 			},
 
-			$loadLazy(elem, propName) {
+			async $loadLazy(elem, propName) {
 				const routing = require('std:routing'); // defer loading
 				let self = this,
 					root = window.$$rootUrl,
@@ -1102,32 +1101,31 @@
 				//let jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
 				let jsonData = utils.toJson({ baseUrl: newUrl, id: elem.$id, prop: propName });
 
-				return new Promise(function (resolve, reject) {
+				try {
 					let arr = elem[propName];
 					if (arr.$loaded) {
-						resolve(arr);
+						return arr;
 						return;
 					}
-					dataservice.post(url, jsonData).then(function (data) {
-						if (self.__destroyed__) return;
-						if (propName in data) {
-							arr.$empty();
-							for (let el of data[propName])
-								arr.push(arr.$new(el));
-							let rcName = propName + '.$RowCount';
-							if (rcName in data) {
-								arr.$RowCount = data[rcName];
-							}
-							if (data.$ModelInfo)
-								modelInfo.reconcile(data.$ModelInfo[propName]);
-							arr._root_._setModelInfo_(arr, data);
+					let data = await dataservice.post(url, jsonData);
+					if (self.__destroyed__) return;
+					if (propName in data) {
+						arr.$empty();
+						for (let el of data[propName])
+							arr.push(arr.$new(el));
+						let rcName = propName + '.$RowCount';
+						if (rcName in data) {
+							arr.$RowCount = data[rcName];
 						}
-						resolve(arr);
-					}).catch(function (msg) {
-						self.$alertUi(msg);
-					});
-					arr.$loaded = true;
-				});
+						if (data.$ModelInfo)
+							modelInfo.reconcile(data.$ModelInfo[propName]);
+						arr._root_._setModelInfo_(arr, data);
+					}
+					return arr;
+				} catch (msg) {
+					self.$alertUi(msg);
+				}
+				arr.$loaded = true;
 			},
 
 			$delegate(name) {
