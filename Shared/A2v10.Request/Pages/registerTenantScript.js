@@ -1,5 +1,7 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
+// 20210609-7782
+
 "use strict";
 
 (function () {
@@ -10,6 +12,10 @@
 	$(Utils)
 	$(Locale)
 	$(Mask)
+
+	$(AvailableLocales)
+
+	console.dir(avaliableLocales);
 
 	const maskTools = maskTool();
 
@@ -24,6 +30,7 @@
 			phone: '',
 			password: '',
 			confirm: '',
+			userLocale: window.$$locale.$Locale, /*current locale here */
 			processing: false,
 			info: $(PageData),
 			appLinks: $(AppLinks),
@@ -90,6 +97,14 @@
 			},
 			confirmEmailDisabled() {
 				return !this.confirmCode;
+			},
+			localesArray() {
+				if (!avaliableLocales)
+					return [];
+				return avaliableLocales.map(x => { return { id: x, name: this.locale.$AvailableLocales[x] } });
+			},
+			hasLocales() {
+				return avaliableLocales && avaliableLocales.length;
 			}
 		},
 		methods: {
@@ -115,6 +130,9 @@
 							case 'InvalidConfirmCode':
 								that.setError('$InvalidConfirmCode');
 								break;
+							case 'LoggedIn':
+								that.navigate();
+								break;
 							default:
 								alert(result);
 						}
@@ -137,6 +155,7 @@
 					Email: this.email,
 					Phone: this.phone,
 					Password: this.password,
+					Locale: this.userLocale,
 					Referral: this.refer
 				};
 				const that = this;
@@ -200,10 +219,20 @@
 			},
 			getReferUrl: function(url) {
 				return getReferralUrl(url);
+			},
+			__keyUp(event) {
+				if (event.which === 13) {
+					if (this.showConfirm) {
+						this.submitConfirm();
+					} else {
+						this.submitRegister();
+					}
+				}
 			}
 		},
 		mounted: function() {
 			maskTools.mountElement(this.$refs.phoneInput, currentMask);
+			document.addEventListener('keypress', this.__keyUp);
 		}
 	});
 })();

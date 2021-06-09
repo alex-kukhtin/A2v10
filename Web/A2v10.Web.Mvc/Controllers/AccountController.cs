@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -68,6 +69,14 @@ namespace A2v10.Web.Mvc.Controllers
 			_host.StartApplication(false);
 		}
 
+		String AvalableLocales()
+		{
+			var avail = ConfigurationManager.AppSettings["availableLocales"];
+			if (String.IsNullOrEmpty(avail))
+				return String.Empty;
+			return $"const avaliableLocales = [{String.Join(",", avail.Split(',').Select(x => $"'{x.Trim()}'"))}];";
+		}
+
 		void SendPage(String rsrcHtml, String rsrcScript, String serverInfo = null, String errorMessage = null)
 		{
 			try
@@ -94,6 +103,7 @@ namespace A2v10.Web.Mvc.Controllers
 				script.Replace("$(Utils)", ResourceHelper.PageUtils);
 				script.Replace("$(Locale)", ResourceHelper.LocaleLibrary(_userLocale.Language));
 				script.Replace("$(Mask)", ResourceHelper.Mask);
+				script.Replace("$(AvailableLocales)", AvalableLocales());
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode}, registration: {regMode} }}");
 				script.Replace("$(AppLinks)", _localizer.Localize(null, _host.AppLinks()));
@@ -360,7 +370,7 @@ namespace A2v10.Web.Mvc.Controllers
 					PersonName = model.PersonName,
 					Tenant = -1,
 					RegisterHost = Request.UrlReferrer.Host,
-					Locale = _userLocale.Locale ?? Thread.CurrentThread.CurrentUICulture.Name
+					Locale = model.Locale ?? _userLocale.Locale ?? Thread.CurrentThread.CurrentUICulture.Name
 				};
 
 				if (String.IsNullOrEmpty(user.Email))
@@ -380,18 +390,20 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (result.Succeeded)
 				{
-					// email confirmation link?
-					// String confirmCode = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-
+					// and email confirmation link too
+					String emailConfirmLink = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
 					String confirmCode = await UserManager.GenerateTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode);
 
-					//var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = confirmCode }, Request.Url.Scheme);
+					var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = emailConfirmLink }, Request.Url.Scheme);
 
 					String subject = _localizer.Localize(null, "@[ConfirmEMail]");
-					String body = GetEMailBody("confirmemail", "@[ConfirmEMailBody]")
-						.Replace("{0}", confirmCode);
+					StringBuilder sbBody = new StringBuilder(GetEMailBody("confirmemail", "@[ConfirmEMailBody]"));
+					sbBody.Replace("{0}", confirmCode)
+						.Replace("$(EMail)", user.UserName)
+						.Replace("$(SmsCode)", confirmCode)
+						.Replace("$(ConfirmLink)", callbackUrl);
 
-					await UserManager.SendEmailAsync(user.Id, subject, body);
+					await UserManager.SendEmailAsync(user.Id, subject, sbBody.ToString());
 
 					await SaveReferral(user.Id, model.Referral);
 					SaveDDOSTime();
@@ -418,7 +430,6 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			return Json(new { Status = status });
 		}
-
 
 
 		// POST: /Account/ConfirmEmail
@@ -472,11 +483,17 @@ namespace A2v10.Web.Mvc.Controllers
 						status = "Success";
 					}
 				}
+				if (status == "Success")
+				{
+					// user already registered
+					await SignInManager.SignInAsync(user, isPersistent: true, rememberBrowser: true);
+					status = "LoggedIn";
+				}
 			}
 			catch (Exception ex)
 			{
 				// TODO: log error here!
-				status= ex.Message;
+				status = ex.Message;
 			}
 			return Json(new { Status = status });
 		}

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20201120-7732
+// 20210609-7782
 // locale-ru.js
 
 "use strict";
@@ -61,7 +61,14 @@
 		$Continue: 'Продолжить',
 		$ConfirmCode: 'Код подтверждения',
 		$InvalidConfirmCode: 'Неправильный код подтверждения',
-		$EMailAlreadyConfirmed: 'е-mail уже подтвержден'
+		$EMailAlreadyConfirmed: 'е-mail уже подтвержден',
+		$LocaleLabel: 'Язык интерфейса',
+		$AvailableLocales: {
+			"uk-UA": 'Украинский',
+			"ru-RU": 'Русский',
+			"en-US": 'Английский',
+			"de-DE": 'Немецкий'
+		}
 	};
 
 

@@ -5437,7 +5437,7 @@ app.modules['std:impl:array'] = function () {
 	<div class="side-bar-body" v-if="bodyIsVisible">
 		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
-			subitems: 'Menu', expandAll:true,
+			subitems: 'Menu', expandAll:true, xtraClass:'ClassName',
 			icon:'Icon', wrapLabel: true, hasIcon: true}">
 		</tree-view>
 	</div>

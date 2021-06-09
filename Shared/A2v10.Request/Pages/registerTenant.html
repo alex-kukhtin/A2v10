@@ -20,56 +20,64 @@
 			</div>
 		</div>
 		<div v-else>
-				<div class="control-group" :class="{invalid: !validEmail}">
-					<label class="a2-label required" v-text="locale.$Email"></label>
-					<div class="input-group">
-						<input v-focus class="control" type="text" name="email" v-model="email" tabindex="1" autocomplete="email" spellcheck="false" />
-						<div class="validator">
-							<span class="error" v-text="emailError"></span>
-						</div>
+			<div class="control-group" :class="{invalid: !validEmail}">
+				<label class="a2-label required" v-text="locale.$Email"></label>
+				<div class="input-group">
+					<input v-focus class="control" type="text" name="email" v-model="email" tabindex="1" autocomplete="email" spellcheck="false" />
+					<div class="validator">
+						<span class="error" v-text="emailError"></span>
 					</div>
 				</div>
-				<div class="control-group" :class="{invalid: !validName}">
-					<label class="a2-label required" v-text="locale.$Name"></label>
-					<div class="input-group">
-						<input v-focus class="control" type="text" name="name" v-model="name" tabindex="2" autocomplete="off" maxlength="128" />
-						<div class="validator">
-							<span class="error" v-text="locale.$EnterName"></span>
-						</div>
+			</div>
+			<div class="control-group" :class="{invalid: !validName}">
+				<label class="a2-label required" v-text="locale.$Name"></label>
+				<div class="input-group">
+					<input v-focus class="control" type="text" name="name" v-model="name" tabindex="2" autocomplete="off" maxlength="128" />
+					<div class="validator">
+						<span class="error" v-text="locale.$EnterName"></span>
 					</div>
 				</div>
-				<div class="control-group">
-					<label class="a2-label" v-text="locale.$Phone"></label>
-					<div class="input-group">
-						<input class="control" type="text" name="phone" v-model="maskedPhone"
-							   v-on:change="onPhoneChange($event.target.value)"
-							   tabindex="3" autocomplete="tel" ref="phoneInput" placeholder="+38 (000) 000-00-00" />
-						<div class="validator">
-							<span class="error" v-text="locale.$EnterPhone"></span>
-						</div>
+			</div>
+			<div class="control-group">
+				<label class="a2-label" v-text="locale.$Phone"></label>
+				<div class="input-group">
+					<input v-focus class="control" type="text" name="phone" v-model="maskedPhone"
+						   v-on:change="onPhoneChange($event.target.value)"
+						   tabindex="3" autocomplete="tel" ref="phoneInput" placeholder="+38 (000) 000-00-00" />
+					<div class="validator">
+						<span class="error" v-text="locale.$EnterPhone"></span>
 					</div>
 				</div>
-				<div class="control-group" :class="{invalid: !validPassword}">
-					<label class="a2-label required" v-text="locale.$Password"></label>
-					<div class="input-group">
-						<input class="control" v-focus type="password" name="password" v-model="password" tabindex="4" autocomplete="off" />
-						<div class="validator">
-							<span class="error" v-text="passwordError"></span>
-						</div>
+			</div>
+			<div class="control-group" v-if="hasLocales">
+				<label class="a2-label" v-text="locale.$LocaleLabel"></label>
+				<div class="input-group">
+					<select v-focus class="control" name="locale" v-model="userLocale" tabindex="4" style="opacity:1">
+						<option v-for="lang in localesArray" :value="lang.id" v-text="lang.name"/>
+					</select>
+				</div>
+			</div>
+			<div class="control-group" :class="{invalid: !validPassword}">
+				<label class="a2-label required" v-text="locale.$Password"></label>
+				<div class="input-group">
+					<input class="control" v-focus type="password" name="password" v-model="password" tabindex="5" autocomplete="off" />
+					<div class="validator">
+						<span class="error" v-text="passwordError"></span>
 					</div>
 				</div>
-				<div class="control-group" :class="{invalid: !validConfirm}">
-					<label class="a2-label required" v-text="locale.$Confirm"></label>
-					<div class="input-group">
-						<input class="control" v-focus type="password" name="confirm" v-model="confirm" autocomplete="off"
-							   tabindex="5" :title="locale.$PasswordTip" />
-						<div class="validator">
-							<span class="error" v-text="locale.$MatchError"></span>
-						</div>
+			</div>
+			<div class="control-group" :class="{invalid: !validConfirm}">
+				<label class="a2-label required" v-text="locale.$Confirm"></label>
+				<div class="input-group">
+					<input class="control" v-focus type="password" name="confirm" v-model="confirm" autocomplete="off"
+						   tabindex="5" :title="locale.$PasswordTip" />
+					<div class="validator">
+						<span class="error" v-text="locale.$MatchError"></span>
 					</div>
 				</div>
-				<button @click.stop.prevent="submitRegister" tabindex="6" class="btn btn-default" v-text="locale.$Register"></button>
-				<a tabindex="7" :href="getReferUrl('/')" class="a2-hyperlink" v-text="locale.$LoginLink"></a>
+			</div>
+			<button @click.stop.prevent="submitRegister" tabindex="6" class="btn btn-default" v-text="locale.$Register"></button>
+			<a tabindex="7" :href="getReferUrl('/')" class="a2-hyperlink" v-text="locale.$LoginLink"></a>
 		</div>
 	</div>
 </div>

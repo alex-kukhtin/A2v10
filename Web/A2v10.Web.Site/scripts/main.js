@@ -7582,7 +7582,7 @@ Vue.component('popover', {
 		template: `
 <li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick(item)"
 	v-show=isItemVisible
-	:class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
+	:class="[cssClass, {expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}]" >
 	<div :class="{overlay:true, 'no-icons': !options.hasIcon}">
 		<a class="toggle" v-if="isFolder" href @click.stop.prevent=toggle></a>
 		<span v-else class="toggle"/>
@@ -7704,6 +7704,12 @@ Vue.component('popover', {
 			},
 			dataHref() {
 				return this.getHref ? this.getHref(this.item) : '';
+			},
+			cssClass() {
+				if (!this.options) return undefined;
+				let xname = this.options.xtraClass;
+				if (!xname) return undefined;
+				return this.item[xname] || undefined;
 			}
 		},
 		watch: {
@@ -13028,7 +13034,7 @@ Vue.directive('resize', {
 	<div class="side-bar-body" v-if="bodyIsVisible">
 		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
-			subitems: 'Menu', expandAll:true,
+			subitems: 'Menu', expandAll:true, xtraClass:'ClassName',
 			icon:'Icon', wrapLabel: true, hasIcon: true}">
 		</tree-view>
 	</div>

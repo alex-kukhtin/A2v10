@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20201120-7732
+// 20210609-7782
 // locale-uk.js
 
 "use strict";
@@ -45,7 +45,7 @@
 		$InvalidEMailError: 'Неправильний е-mail',
 		$UserLockuotError: 'Користувача заблоковано.\nСпробуйте ще через декілька хвилин',
 		$EmailNotConfirmed: 'Ваш e-mail не підтверджено.\nПеревірте пошту ще через декілька хвилин',
-		$AntiForgery:'Неможливо обробити запит.\nОновіть сторінку та спробуйте ще.\nМожливо в браузері заборонені cookies?',
+		$AntiForgery: 'Неможливо обробити запит.\nОновіть сторінку та спробуйте ще.\nМожливо в браузері заборонені cookies?',
 		$PasswordTip: 'Для підтвердження введіть пароль ще раз',
 		$CheckEMail: 'Через декілька хвилин перевірте пошту.',
 		$ConfirmReset: 'На адресу {0} було відправлено код для відновлення паролю.',
@@ -61,7 +61,14 @@
 		$Continue: 'Продовжити',
 		$ConfirmCode: 'Код підтвердження',
 		$InvalidConfirmCode: 'Неправильний код підтверження',
-		$EMailAlreadyConfirmed: 'е-mail вже підтверджено'
+		$EMailAlreadyConfirmed: 'е-mail вже підтверджено',
+		$LocaleLabel:'Мова інтерфейсу',
+		$AvailableLocales: {
+			"uk-UA": 'Українська',
+			"ru-RU": 'Російська',
+			"en-US": 'Англійська',
+			"de-DE": 'Німецька'
+		}
 	};
 
 
