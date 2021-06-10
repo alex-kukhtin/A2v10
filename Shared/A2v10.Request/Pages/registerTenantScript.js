@@ -15,8 +15,6 @@
 
 	$(AvailableLocales)
 
-	console.dir(avaliableLocales);
-
 	const maskTools = maskTool();
 
 	// TODO: from LOCALE or WEB.CONFIG
@@ -40,7 +38,6 @@
 			showConfirm: false,
 			confirmRegisterText: '',
 			passwordError: '',
-			confirmCode: ''
 		},
 		computed: {
 			locale: function() {
@@ -95,9 +92,6 @@
 				let qs = parseQueryString(window.location.search.toLowerCase());
 				return qs.ref || '';
 			},
-			confirmEmailDisabled() {
-				return !this.confirmCode;
-			},
 			localesArray() {
 				if (!avaliableLocales)
 					return [];
@@ -108,40 +102,6 @@
 			}
 		},
 		methods: {
-			submitConfirm: function () {
-				this.processing = true;
-				let dataToSend = {
-					Code: this.confirmCode,
-					Email: this.email
-				};
-				const that = this;
-				post('/account/confirmemail', dataToSend)
-					.then(function (response) {
-						console.dir(response);
-						that.processing = false;
-						let result = response.Status;
-						switch (result) {
-							case 'Success':
-								that.navigate();
-								break;
-							case 'EMailAlreadyConfirmed':
-								that.setError('$EMailAlreadyConfirmed');
-								break;
-							case 'InvalidConfirmCode':
-								that.setError('$InvalidConfirmCode');
-								break;
-							case 'LoggedIn':
-								that.navigate();
-								break;
-							default:
-								alert(result);
-						}
-					})
-					.catch(function (error) {
-						that.processing = false;
-						alert(error);
-					});
-			},
 			submitRegister: function() {
 				this.submitted = true;
 				this.serverError = '';
@@ -166,7 +126,7 @@
 						if (result === 'Success')
 							that.navigate();
 						else if (result === 'ConfirmSent')
-							that.confirmSent();
+							that.navigate('/account/confirmcode');
 						else if (result === 'AlreadyTaken')
 							that.alreadyTaken();
 						else if (result === 'PhoneNumberAlreadyTaken')
@@ -175,6 +135,10 @@
 							that.setError('$TryLater');
 						else if (result === 'InvalidEmail')
 							that.setError('$InvalidEMailError');
+						else if (result === 'AntiForgery') {
+							alert(that.locale.$ErrorAntiForgery);
+							that.reload();
+						}
 						else
 							alert(result);
 					})
@@ -183,9 +147,8 @@
 						alert(error);
 					});
 			},
-			navigate: function() {
-				let qs = parseQueryString(window.location.search);
-				let url = qs.ReturnUrl || '/';
+			navigate: function (url) {
+				url = url || '/'
 				window.location.assign(url);
 			},
 			confirmSent: function() {
@@ -222,11 +185,7 @@
 			},
 			__keyUp(event) {
 				if (event.which === 13) {
-					if (this.showConfirm) {
-						this.submitConfirm();
-					} else {
-						this.submitRegister();
-					}
+					this.submitRegister();
 				}
 			}
 		},

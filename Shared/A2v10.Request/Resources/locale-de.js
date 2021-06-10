@@ -44,7 +44,7 @@
 		$InvalidLoginError: 'Ungültige E-Mail oder Passwort',
 		$InvalidEMailError: 'Ungültige E-Mail',
 		$UserLockuotError: 'Der Benutzer wurde gesperrt.\nIn wenigen Minuten erneut versuchen',
-		$EmailNotConfirmed: 'Eine E-Mail wurde nicht bestätigt.\nMail in wenigen Minuten prüfen',
+		$EmailNotConfirmed: 'Eine E-Mail wurde nicht bestätigt. Vielleicht ist die Mail in Spam gelandet?',
 		$AntiForgery: 'Die Anfrage konnte nicht bearbeitet werden.\nAktualisieren Sie die Seite und versuchen Sie es erneut.\nWahrscheinlich sind dem Browser keine Cookies erlaubt.',
 		$PasswordTip: 'Zum Bestätigen Passwort erneut eingeben',
 		$CheckEMail: 'Überprüfen Sie Ihre E-Mails',
@@ -63,6 +63,8 @@
 		$InvalidConfirmCode: 'Ungültiger Bestätigungscode',
 		$EMailAlreadyConfirmed: 'E-Mail bereits bestätigt',
 		$LocaleLabel: 'Schnittstellensprache',
+		$SendCodeAgain: 'Code erneut senden',
+		$IHaveCode: 'Ich habe einen Bestätigungscode',
 		$AvailableLocales: {
 			"uk-UA": 'Ukrainisch',
 			"ru-RU": 'Russisch',

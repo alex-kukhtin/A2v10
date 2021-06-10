@@ -21,7 +21,8 @@
 			appLinks: $(AppLinks),
 			submitted: false,
 			serverError: '',
-			emailError: ''
+			emailError: '',
+			enableNotConfirmed: false
 		},
 		computed: {
 			valid: function() {
@@ -65,6 +66,7 @@
 					RememberMe: this.rememberMe
 				};
 				const that = this;
+				that.enableNotConfirmed = false;
 				post('/account/login', dataToSend)
 					.then(function (response) {
 						that.processing = false;
@@ -75,12 +77,36 @@
 							that.failure(that.locale.$InvalidLoginError);
 						else if (result === 'LockedOut')
 							that.failure(that.locale.$UserLockuotError);
-						else if (result === 'EmailNotConfirmed')
-							that.failure(that.locale.$EmailNotConfirmed);
+						else if (result === 'EmailNotConfirmed') {
+							//that.failure(that.locale.$EmailNotConfirmed);
+							that.enableNotConfirmed = true;
+						}
 						else if (result === 'AntiForgery')
 							that.failure(that.locale.$AntiForgery);
 						else
 							alert(result);
+					})
+					.catch(function (error) {
+						that.processing = false;
+						alert(error);
+					});
+			},
+			sendCodeAgain() {
+				this.processing = true;
+				let dataToSend = {
+					Email: this.email
+				};
+				const that = this;
+				post('/account/sendcodeagain', dataToSend)
+					.then(function (response) {
+						that.processing = false;
+						let result = response.Status;
+						switch (result) {
+							case 'Success':
+								break;
+							default:
+								alert(result);
+						}
 					})
 					.catch(function (error) {
 						that.processing = false;

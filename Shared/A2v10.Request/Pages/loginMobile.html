@@ -1,8 +1,13 @@
 ﻿<div class="mobile-page">
 	<h4 class="a2-header" v-text="locale.$LoginPrompt"></h4>
-	<hr class="hline"/>
+	<hr class="hline" />
 	<div v-if="serverError" class="validation-summary">
 		<span class="error" v-text="serverError"></span>
+	</div>
+	<div v-if="enableNotConfirmed" class="summary">
+		<div v-text="locale.$EmailNotConfirmed"></div>
+		<a href="/account/confirmcode" v-text="locale.$IHaveCode"></a>
+		<a href="" @click.stop.prevent="sendCodeAgain" v-text="locale.$SendCodeAgain"></a>
 	</div>
 	<form>
 		<div class="mobile-form">

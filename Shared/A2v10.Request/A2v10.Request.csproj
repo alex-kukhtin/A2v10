@@ -137,6 +137,8 @@
     <Content Include="Pages\initLayoutMobile.html" />
     <Content Include="Pages\layoutMobile.html" />
     <Content Include="Pages\loginMobile.html" />
+    <Content Include="Pages\confirmCode.html" />
+    <Content Include="Pages\confirmCodeScript.js" />
     <Content Include="Pages\standaloneDialogScript.js" />
     <Content Include="Pages\stiReport.html" />
     <Content Include="Pages\initLayout.html" />

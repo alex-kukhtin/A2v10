@@ -186,6 +186,7 @@
     <Content Include="Develop\Workflows\second-mail.html" />
     <Content Include="Develop\_assets\extensioncomponents.js" />
     <Content Include="Develop\_assets\inputmask.js" />
+    <Content Include="Develop\_emails\confirmemail.ru.html" />
     <Content Include="Develop\_layout\bootstrap.html" />
     <Content Include="Samples\catalog\agent\model.sql" />
     <Content Include="Samples\catalog\agent\schema.sql" />
@@ -298,7 +299,7 @@
     <Content Include="Develop\_assets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
-    <Content Include="Develop\_emails_\confirmemail.uk.html" />
+    <Content Include="Develop\_emails\confirmemail.uk.html" />
     <Content Include="Develop\_pages\contacts.uk.html" />
   </ItemGroup>
   <ItemGroup>

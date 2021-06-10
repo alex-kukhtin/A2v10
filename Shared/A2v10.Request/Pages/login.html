@@ -5,6 +5,11 @@
 		<div v-if="serverError" class="validation-summary" style="margin-top:10px">
 			<span class="error" v-text="serverError"></span>
 		</div>
+		<div v-if="enableNotConfirmed" class="summary">
+			<div v-text="locale.$EmailNotConfirmed"></div>
+			<a href="/account/confirmcode" v-text="locale.$IHaveCode"></a>
+			<a href="" @click.stop.prevent="sendCodeAgain" v-text="locale.$SendCodeAgain"></a>
+		</div>
 		<form>
 			<div class="control-group" :class="{invalid: !validEmail}">
 				<label style="grid-row:1; grid-column:1" class="a2-label required" v-text="locale.$Email"></label>
@@ -30,7 +35,7 @@
 			</label>
 			<button @click.stop.prevent="submit" class="btn btn-default" id="submit" tabindex="4" v-text="locale.$Login" ref="submit"></button>
 			<a class="a2-hyperlink" :href="getReferUrl('/account/forgotpassword')" tabindex="6" v-text="locale.$ForgotPassword"></a>
-			<a v-if="info.multiTenant && info.registration" class="a2-hyperlink" :href="getReferUrl('/account/register')" tabindex="5" v-text="locale.$RegisterLink"></a>
+			<a v-if="info.multiTenant && info.registration" class="a2-hyperlink" :href="getReferUrl('/account/register')" tabindex="7" v-text="locale.$RegisterLink"></a>
 		</form>
 	</div>
 </div>

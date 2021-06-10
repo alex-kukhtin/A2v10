@@ -232,6 +232,69 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 
+        ///&lt;div class=&quot;center-page&quot;&gt;
+        ///	&lt;div class=&quot;initial-form&quot;&gt;
+        ///		&lt;h3 class=&quot;a2-header text-center&quot; v-text=&quot;locale.$RegisterPrompt&quot;&gt;&lt;/h3&gt;
+        ///		&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///		&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;margin-top:10px;white-space:normal&quot;&gt;
+        ///			&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///		&lt;/div&gt;
+        ///		&lt;div class=&quot;user-select&quot;&gt;
+        ///			&lt;p v-text=&quot;confirmRegisterText&quot;&gt;&lt;/p&gt;
+        ///
+        ///			&lt;p v-text=&quot;locale.$ConfirmCode&quot;&gt;&lt;/p&gt;
+        ///
+        ///			&lt;div class=&quot;control-group bold&quot; style=&quot;width:15rem;margin:0 auto;&quot; [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string confirmCode {
+            get {
+                return ResourceManager.GetString("confirmCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+        ///
+        ///// 20210609-7782
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	const token = &apos;$(Token)&apos;;
+        ///
+        ///	$(Utils)
+        ///	$(Locale)
+        ///	$(Mask)
+        ///
+        ///	$(AvailableLocales)
+        ///
+        ///	console.dir(avaliableLocales);
+        ///
+        ///	const maskTools = maskTool();
+        ///
+        ///	// TODO: from LOCALE or WEB.CONFIG
+        ///	const currentMask = &apos;+38 (0##) ###-##-##&apos;;
+        ///
+        ///	const vm = new Vue({
+        ///		el: &quot;#app&quot;,
+        ///		data: {
+        ///			email: &apos;&apos;,
+        ///			name: &apos;&apos;,
+        ///			phone: &apos;&apos;,
+        ///			password: &apos;&apos;,
+        ///			confirm: &apos;&apos;,
+        ///			userLocale: window. [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string confirmCodeScript {
+            get {
+                return ResourceManager.GetString("confirmCodeScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;div class=&quot;center-page&quot;&gt;
         ///	&lt;div class=&quot;initial-form&quot;&gt;
         ///		&lt;h3 class=&quot;a2-header text-center&quot; v-text=&quot;locale.$ConfirmEMailPrompt&quot;&gt;&lt;/h3&gt;
@@ -375,8 +438,8 @@ namespace A2v10.Request.Properties {
         ///		&lt;/div&gt;
         ///		&lt;div v-if=&quot;emailVisible&quot;&gt;
         ///			&lt;div class=&quot;control-group&quot; :class=&quot;{invalid: !validEmail}&quot;&gt;
-        ///				&lt;label class=&quot;a2-label required text&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
-        ///				&lt;div [rest of string was truncated]&quot;;.
+        ///				&lt;label class=&quot;a2-label required&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
+        ///				&lt;div clas [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string forgotPassword {
             get {
@@ -561,9 +624,9 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
-        ///// 20201120-7732
+        ///// 20210609-7782
         ///// locale-de.js
         ///
         ///&quot;use strict&quot;;
@@ -592,9 +655,9 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
-        ///// 20201120-7732
+        ///// 20210609-7782
         ///// locale-en.js
         ///
         ///&quot;use strict&quot;;
@@ -624,9 +687,9 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
-        ///// 20201120-7732
+        ///// 20210609-7782
         ///// locale-ru.js
         ///
         ///&quot;use strict&quot;;
@@ -655,9 +718,9 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
-        ///// 20201120-7732
+        ///// 20210609-7782
         ///// locale-uk.js
         ///
         ///&quot;use strict&quot;;
@@ -847,6 +910,8 @@ namespace A2v10.Request.Properties {
         /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
+        ///// 20210609-7782
+        ///
         ///&quot;use strict&quot;;
         ///
         ///(function () {
@@ -857,6 +922,10 @@ namespace A2v10.Request.Properties {
         ///	$(Utils)
         ///	$(Locale)
         ///	$(Mask)
+        ///
+        ///	$(AvailableLocales)
+        ///
+        ///	console.dir(avaliableLocales);
         ///
         ///	const maskTools = maskTool();
         ///
@@ -871,11 +940,7 @@ namespace A2v10.Request.Properties {
         ///			phone: &apos;&apos;,
         ///			password: &apos;&apos;,
         ///			confirm: &apos;&apos;,
-        ///			processing: false,
-        ///			info: $(PageData),
-        ///			appLinks: $(AppLinks),
-        ///			submitted: false,
-        ///			ser [rest of string was truncated]&quot;;.
+        ///			userLocale: window. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string registerTenantScript {
             get {
@@ -885,11 +950,14 @@ namespace A2v10.Request.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 
-        ////*20200602-7670*/
+        ////*20210529-7776*/
         ///
         ///(function () {
         ///
         ///	const Shell = component(&apos;std:shellController&apos;);
+        ///
+        ///	const AppHeader = component(&apos;std:appHeader&apos;);
+        ///	const MainView = component(&apos;std:mainView&apos;);
         ///
         ///	const menu = $(Menu);
         ///	const companies = $(Companies);
@@ -899,14 +967,13 @@ namespace A2v10.Request.Properties {
         ///
         ///	const shell = new Shell({
         ///		el: &apos;#shell&apos;,
+        ///		components: {
+        ///			&apos;a2-app-header&apos;: AppHeader,
+        ///			&apos;a2-main-view&apos;: MainView
+        ///		},
         ///		data: {
         ///			version: &apos;$(AppVersion)&apos;,
-        ///			menu: menu.Menu ? menu.Menu[0].Menu : null,
-        ///			newMenu: menu.NewMenu,
-        ///			settingsMenu: menu.SettingsMenu,
-        ///			companies: companies,
-        ///			initialPeriod: initialPeriod,
-        ///			title: sp.AppTitle || &apos;&apos;,        /// [rest of string was truncated]&quot;;.
+        ///			menu: menu.Menu ?  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string shell {
             get {
@@ -915,29 +982,30 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
-        ////*20201111-7721*/
+        ////*20210529-7776*/
         ///
         ///(function () {
         ///
         ///	const Shell = component(&apos;std:shellController&apos;);
         ///	const locale = window.$$locale;
         ///
+        ///	const AppHeader = component(&apos;std:appHeader&apos;);
+        ///	const MainView = component(&apos;std:mainView&apos;);
+        ///
+        ///
         ///	const menu = $(Menu);
         ///	const menucomp = component(&apos;std:navmenu&apos;);
         ///
         ///	const shell = new Shell({
         ///		el: &apos;#shell&apos;,
-        ///		data: {
-        ///			title: menu.SysParams ? menu.SysParams.AppTitle : &apos;&apos;,
-        ///			subtitle: locale.$Admin,
-        ///			version: &apos;$(AppVersion)&apos;,
-        ///			menu: menu.Menu[0].Menu
+        ///		components: {
+        ///			&apos;a2-app-header&apos;: AppHeader,
+        ///			&apos;a2-main-view&apos;: MainView
         ///		},
-        ///		methods: {
-        ///			root() {
-        ///				let opts = { ti [rest of string was truncated]&quot;;.
+        ///		data: {
+        ///			title: menu. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string shellAdmin {
             get {

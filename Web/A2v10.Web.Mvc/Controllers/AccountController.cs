@@ -45,6 +45,7 @@ namespace A2v10.Web.Mvc.Controllers
 		private readonly IUserLocale _userLocale;
 
 		private const String LOCALE_COOKIE = "_locale";
+		private const String USERNAME_SESSIONKEY = "_username";
 
 		public AccountController()
 		{
@@ -104,6 +105,7 @@ namespace A2v10.Web.Mvc.Controllers
 				script.Replace("$(Locale)", ResourceHelper.LocaleLibrary(_userLocale.Language));
 				script.Replace("$(Mask)", ResourceHelper.Mask);
 				script.Replace("$(AvailableLocales)", AvalableLocales());
+				script.Replace("$(UserEmail)", Session[USERNAME_SESSIONKEY]?.ToString());
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode}, registration: {regMode} }}");
 				script.Replace("$(AppLinks)", _localizer.Localize(null, _host.AppLinks()));
@@ -181,7 +183,10 @@ namespace A2v10.Web.Mvc.Controllers
 				return Json(new { Status = "Failure" });
 
 			if (!user.EmailConfirmed)
+			{
+				Session.Add(USERNAME_SESSIONKEY, user.UserName);
 				return Json(new { Status = "EmailNotConfirmed" });
+			}
 
 			String status = null;
 
@@ -327,6 +332,24 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 
+		async Task SendConfirmCode(AppUser user)
+		{
+			// and email confirmation link too
+			String emailConfirmLink = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+			String confirmCode = await UserManager.GenerateTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode);
+
+			var callbackUrl = Url.Action("confirmemaillink", "account", new { userId = user.Id, code = emailConfirmLink }, Request.Url.Scheme);
+
+			String subject = _localizer.Localize(null, "@[ConfirmEMail]");
+			StringBuilder sbBody = new StringBuilder(GetEMailBody("confirmemail", "@[ConfirmEMailBody]"));
+			sbBody.Replace("{0}", confirmCode)
+				.Replace("$(EMail)", user.UserName)
+				.Replace("$(SmsCode)", confirmCode)
+				.Replace("$(ConfirmLink)", callbackUrl);
+
+			await UserManager.SendEmailAsync(user.Id, subject, sbBody.ToString());
+		}
+
 		// POST: /Register/Login
 		[ActionName("register")]
 		[HttpPost]
@@ -361,6 +384,12 @@ namespace A2v10.Web.Mvc.Controllers
 				checkEO.Set("UserName", model.Name);
 				await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2security.[User.CheckRegister]", checkEO);
 
+				if (!String.IsNullOrEmpty(model.Locale))
+				{
+					Response.Cookies.Add(new HttpCookie(LOCALE_COOKIE, model.Locale));
+					_userLocale.Locale = model.Locale;
+				}
+
 				// create user with tenant
 				var user = new AppUser
 				{
@@ -370,7 +399,7 @@ namespace A2v10.Web.Mvc.Controllers
 					PersonName = model.PersonName,
 					Tenant = -1,
 					RegisterHost = Request.UrlReferrer.Host,
-					Locale = model.Locale ?? _userLocale.Locale ?? Thread.CurrentThread.CurrentUICulture.Name
+					Locale = _userLocale.Locale ?? Thread.CurrentThread.CurrentUICulture.Name
 				};
 
 				if (String.IsNullOrEmpty(user.Email))
@@ -390,24 +419,12 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (result.Succeeded)
 				{
-					// and email confirmation link too
-					String emailConfirmLink = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-					String confirmCode = await UserManager.GenerateTwoFactorTokenAsync(user.Id, AppUserManager.TWOFACTORPROVIDERS.EMailCode);
-
-					var callbackUrl = Url.Action("confirmemail", "account", new { userId = user.Id, code = emailConfirmLink }, Request.Url.Scheme);
-
-					String subject = _localizer.Localize(null, "@[ConfirmEMail]");
-					StringBuilder sbBody = new StringBuilder(GetEMailBody("confirmemail", "@[ConfirmEMailBody]"));
-					sbBody.Replace("{0}", confirmCode)
-						.Replace("$(EMail)", user.UserName)
-						.Replace("$(SmsCode)", confirmCode)
-						.Replace("$(ConfirmLink)", callbackUrl);
-
-					await UserManager.SendEmailAsync(user.Id, subject, sbBody.ToString());
+					await SendConfirmCode(user);
 
 					await SaveReferral(user.Id, model.Referral);
 					SaveDDOSTime();
 
+					Session.Add(USERNAME_SESSIONKEY, user.UserName);
 					status = "ConfirmSent";
 				}
 				else
@@ -432,15 +449,86 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 
+		String GetUserNameFromSession()
+		{
+			var userName = Session[USERNAME_SESSIONKEY];
+			if (userName == null)
+			{
+				return null;
+				//userName = "user25@user.com";
+				//Session.Add(USERNAME_SESSIONKEY, userName);
+			}
+			return userName.ToString();
+		}
+
+		[AllowAnonymous]
+		[HttpPost]
+		[OutputCache(Duration = 0)]
+		public async Task<ActionResult> SendCodeAgain()
+		{
+			String status = "Success";
+			try
+			{
+				var userName = GetUserNameFromSession();
+				var user = await UserManager.FindByNameAsync(userName);
+				if (user == null)
+					status = "UserNotFound";
+				else
+					await SendConfirmCode(user);
+			}
+			catch (Exception ex)
+			{
+				status = ex.Message;
+			}
+			return Json(new { Status = status });
+		}
+
+		[AllowAnonymous]
+		[HttpGet]
+		[OutputCache(Duration = 0)]
+		public async Task<ActionResult> ConfirmCode(Int64? userId)
+		{
+			try
+			{
+				var userName = GetUserNameFromSession();
+				if (userName == null)
+					return RedirectToLocal("~/account/register");
+
+				var user = await UserManager.FindByNameAsync(userName.ToString());
+				if (user == null)
+					return RedirectToLocal("~/account/register");
+				/*
+				if (userId == null)
+				{
+					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
+					return;
+				}
+				var user = await UserManager.FindByIdAsync(userId.Value);
+				if (user.EmailConfirmed)
+				{
+					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript, null, "@[EMailAlreadyConfirmed]");
+					return;
+				}
+				*/
+				SendPage(GetRedirectedPage("confirmCode", ResourceHelper.ConfirmCodeHtml), ResourceHelper.ConfirmCodeScript);
+			}
+			catch (Exception /*ex*/)
+			{
+				// TODO: log error here!
+				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
+			}
+			return new EmptyResult();
+		}
+
 		// POST: /Account/ConfirmEmail
 		[OutputCache(Duration = 0)]
-		[ActionName("confirmemail")]
+		[ActionName("confirmcode")]
 		[HttpPost]
 		[IsAjaxOnly]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
 		[HandlAntiForgeryExecptionAttribute]
-		public async Task<ActionResult> ConfirmEmail()
+		public async Task<ActionResult> ConfirmCodePost()
 		{
 			String status = String.Empty;
 			try
@@ -496,6 +584,55 @@ namespace A2v10.Web.Mvc.Controllers
 				status = ex.Message;
 			}
 			return Json(new { Status = status });
+		}
+
+
+		//
+		// GET: /Account/ConfirmEmail
+		[AllowAnonymous]
+		[HttpGet]
+		[OutputCache(Duration = 0)]
+		public async Task ConfirmEmailLink(Int64? userId, String code)
+		{
+			try
+			{
+				if (userId == null || code == null)
+				{
+					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
+					return;
+				}
+				var user = await UserManager.FindByIdAsync(userId.Value);
+				if (user.EmailConfirmed)
+				{
+					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript, null, "@[EMailAlreadyConfirmed]");
+					return;
+				}
+
+				var result = await UserManager.ConfirmEmailAsync(userId.Value, code);
+				if (result.Succeeded)
+				{
+					user = await UserManager.FindByIdAsync(userId.Value);
+					await UserManager.UpdateUser(user);
+
+					String subject = _localizer.Localize(null, "@[InviteEMail]");
+					String body = GetEMailBody("invite", null);
+					if (!String.IsNullOrEmpty(body))
+					{
+						var inviteCallback = Url.Action("default", "shell", routeValues: null, protocol: Request.Url.Scheme);
+						body = body.Replace("{0}", inviteCallback);
+						await UserManager.SendEmailAsync(user.Id, subject, body);
+					}
+
+					SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
+					return;
+				}
+				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
+			}
+			catch (Exception /*ex*/)
+			{
+				// TODO: log error here!
+				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
+			}
 		}
 
 		[AllowAnonymous]
@@ -744,8 +881,6 @@ namespace A2v10.Web.Mvc.Controllers
 					return null;
 				body = _localizer.Localize(null, dictName);
 			}
-			if (body.IndexOf("{0}") == -1)
-				throw new InvalidProgramException($"Invalid email template for {code}");
 			return body;
 		}
 

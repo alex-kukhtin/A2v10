@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 08 jun 2021
-module version : 7756
+Last updated : 09 jun 2021
+module version : 7758
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7756;
+exec a2sys.SetVersion N'std:security', 7758;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -125,6 +125,17 @@ begin
 	declare @ret nvarchar(32);
 	select @ret = [Value] from a2security.Config where [Key] = N'CurrentSegment';
 	return @ret;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Modules')
+begin
+	create table a2security.Modules
+	(
+		[Id] nvarchar(16) not null constraint PK_Modules primary key,
+		[Name] nvarchar(255) not null,
+		Memo nvarchar(255) null
+	)
 end
 go
 ------------------------------------------------
@@ -392,7 +403,8 @@ begin
 		Id	bigint not null constraint PK_Acl primary key
 			constraint DF_Acl_PK default(next value for a2security.SQ_Acl),
 		[Object] sysname not null,
-		[ObjectId] bigint not null,
+		[ObjectId] bigint null,
+		[ObjectKey] nvarchar(16) null,
 		UserId bigint null 
 			constraint FK_Acl_UserId_Users foreign key references a2security.Users(Id),
 		GroupId bigint null 
@@ -413,14 +425,39 @@ begin
 end
 go
 ------------------------------------------------
-if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'LogCodes')
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Module.Acl')
 begin
-	create table a2security.[LogCodes]
+	-- ACL for Module
+	create table a2security.[Module.Acl]
 	(
-		Code int not null constraint PK_LogCodes primary key,
-		[Name] nvarchar(32) not null
+		Module nvarchar(16) not null 
+			constraint FK_ModuleAcl_Modules foreign key references a2security.Modules(Id),
+		UserId bigint not null 
+			constraint FK_ModuleAcl_UserId_Users foreign key references a2security.Users(Id),
+		CanView bit null,
+		CanEdit bit null,
+		CanDelete bit null,
+		CanApply bit null,
+		[Permissions] as cast(CanView as int) + cast(CanEdit as int) * 2 + cast(CanDelete as int) * 4 + cast(CanApply as int) * 8
+		constraint PK_ModuleAcl primary key(Module, UserId)
 	);
 end
+go
+------------------------------------------------
+if exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Acl' and COLUMN_NAME = N'ObjectId' and IS_NULLABLE=N'NO')
+	alter table a2security.[Acl] alter column [ObjectId] bigint null;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA = N'a2security' and TABLE_NAME = N'Acl' and COLUMN_NAME = N'ObjectKey')
+	alter table a2security.[Acl] add [ObjectKey] nvarchar(16) null;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'LogCodes')
+create table a2security.[LogCodes]
+(
+	Code int not null constraint PK_LogCodes primary key,
+	[Name] nvarchar(32) not null
+);
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Log')
@@ -556,8 +593,9 @@ create procedure a2security.FindUserByName
 as
 begin
 	set nocount on;
-	select * from a2security.ViewUsers with(nolock)
-	where UserName=@UserName;
+	set transaction isolation level read uncommitted;
+
+	select * from a2security.ViewUsers where UserName=@UserName;
 end
 go
 
@@ -571,8 +609,9 @@ create procedure a2security.FindUserByEmail
 as
 begin
 	set nocount on;
-	select * from a2security.ViewUsers with(nolock)
-	where Email=@Email;
+	set transaction isolation level read uncommitted;
+
+	select * from a2security.ViewUsers where Email=@Email;
 end
 go
 ------------------------------------------------
@@ -585,8 +624,9 @@ create procedure a2security.FindUserByPhoneNumber
 as
 begin
 	set nocount on;
-	select * from a2security.ViewUsers with(nolock)
-	where PhoneNumber=@PhoneNumber;
+	set transaction isolation level read uncommitted;
+
+	select * from a2security.ViewUsers where PhoneNumber=@PhoneNumber;
 end
 go
 ------------------------------------------------
@@ -600,10 +640,13 @@ create procedure a2security.[FindUserByLogin]
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	declare @UserId bigint;
+
 	select @UserId = [User] from a2security.UserLogins where LoginProvider = @LoginProvider and ProviderKey = @ProviderKey;
-	select * from a2security.ViewUsers with(nolock)
-	where Id=@UserId;
+
+	select * from a2security.ViewUsers where Id=@UserId;
 end
 go
 ------------------------------------------------
@@ -619,6 +662,7 @@ as
 begin
 	set nocount on;
 	set transaction isolation level read uncommitted;
+
 	if not exists(select * from a2security.UserLogins where [User]=@UserId and LoginProvider=@LoginProvider)
 	begin
 		insert into a2security.UserLogins([User], [LoginProvider], [ProviderKey]) 
@@ -822,6 +866,7 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+
 	update a2security.ViewUsers set PasswordHash = @PasswordHash where Id=@UserId;
 end
 go
@@ -839,6 +884,7 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+
 	update a2security.ViewUsers set SecurityStamp = @SecurityStamp where Id=@UserId;
 end
 go
@@ -1277,7 +1323,7 @@ begin
 	select [Companies!TCompany!Array] = null, Id, [Name], [Current]
 	from a2security.Companies c
 		inner join a2security.UserCompanies uc on uc.Company = c.Id
-	where uc.[User] = @UserId and uc.[Enabled] = 1
+	where uc.[User] = @UserId and uc.[Enabled] = 1 and c.Id <> 0
 	order by Id;
 end
 go
@@ -1327,6 +1373,108 @@ begin
 	return case when 
 		exists(select * from a2security.Tenants where Id = @TenantId and [Admin] = @UserId) then 1 
 	else 0 end;
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_isUserAdmin') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_isUserAdmin;
+go
+------------------------------------------------
+create function a2security.fn_isUserAdmin(@UserId bigint)
+returns bit
+as
+begin
+	return case when 
+		exists(select * from a2security.UserGroups where GroupId=77 /*predefined: admins */ and UserId = @UserId) then 1 
+	else 0 end;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Permissions')
+	drop procedure [a2security].[User.Permissions]
+go
+------------------------------------------------
+create procedure [a2security].[User.Permissions]
+@UserId bigint,
+@CompanyId bigint = 0
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	select Module, [Permissions] from a2security.[Module.Acl] where UserId = @UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateAcl.Module')
+	drop procedure [a2security].[Permission.UpdateAcl.Module]
+go
+------------------------------------------------
+create procedure [a2security].[Permission.UpdateAcl.Module]
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	declare @ModuleTable table (Id varchar(16), UserId bigint, GroupId bigint, 
+		CanView smallint, CanEdit smallint, CanDelete smallint, CanApply smallint);
+
+	insert into @ModuleTable (Id, UserId, GroupId, CanView, CanEdit, CanDelete, CanApply)
+	select m.Id, a.UserId, a.GroupId, a.CanView, a.CanEdit, a.CanDelete, CanApply
+	from a2security.Acl a inner join a2security.Modules m on a.ObjectKey = m.Id
+	where a.[Object] = N'std:module';
+
+	declare @UserTable table (ObjectKey varchar(16), UserId bigint, CanView bit, CanEdit bit, CanDelete bit, CanApply bit);
+
+	with T(ObjectKey, UserId, CanView, CanEdit, CanDelete, CanApply)
+	as
+	(
+		select a.Id, UserId=isnull(ur.UserId, a.UserId), a.CanView, a.CanEdit, a.CanDelete, a.CanApply
+		from @ModuleTable a
+		left join a2security.UserGroups ur on a.GroupId = ur.GroupId
+		where isnull(ur.UserId, a.UserId) is not null
+	)
+	insert into @UserTable(ObjectKey, UserId, CanView, CanEdit, CanDelete, CanApply)
+	select ObjectKey, UserId,
+		_CanView = isnull(case 
+				when min(T.CanView) = -1 then 0
+				when max(T.CanView) = 1 then 1
+				end, 0),
+		_CanEdit = isnull(case
+				when min(T.CanEdit) = -1 then 0
+				when max(T.CanEdit) = 1 then 1
+				end, 0),
+		_CanDelete = isnull(case
+				when min(T.CanDelete) = -1 then 0
+				when max(T.CanDelete) = 1 then 1
+				end, 0),
+		_CanApply = isnull(case
+				when min(T.CanApply) = -1 then 0
+				when max(T.CanApply) = 1 then 1
+				end, 0)
+	from T
+	group by ObjectKey, UserId;
+
+	merge a2security.[Module.Acl] as t
+	using
+	(
+		select ObjectKey, UserId, CanView, CanEdit, CanDelete, CanApply
+		from @UserTable T
+		where CanView = 1
+	) as s(ObjectKey, UserId, CanView, CanEdit, CanDelete, CanApply)
+		on t.Module = s.[ObjectKey] and t.UserId=s.UserId
+	when matched then
+		update set 
+			t.CanView = s.CanView,
+			t.CanEdit = s.CanEdit,
+			t.CanDelete = s.CanDelete,
+			t.CanApply = s.CanApply
+	when not matched by target then
+		insert (Module, UserId, CanView, CanEdit, CanDelete, CanApply)
+			values (s.[ObjectKey], s.UserId, s.CanView, s.CanEdit, s.CanDelete, s.CanApply)
+	when not matched by source then
+		delete;
 end
 go
 ------------------------------------------------

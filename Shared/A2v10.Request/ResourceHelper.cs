@@ -24,6 +24,9 @@ namespace A2v10.Request
 		public static String ErrorHtml => Resources.error;
 		public static String ConfirmEMailHtml => Resources.confirmEMail;
 
+		public static String ConfirmCodeHtml => Resources.confirmCode;
+		public static String ConfirmCodeScript => Resources.confirmCodeScript;
+
 		public static String StiReportHtml => Resources.stiReport;
 
 		public static String PageUtils => Resources.pageUtils;
