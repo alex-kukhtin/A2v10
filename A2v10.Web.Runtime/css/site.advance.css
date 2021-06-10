@@ -1594,6 +1594,13 @@ header .dropdown.separate.show .btn.btn-success,
   width: 60%;
   margin-top: 2em;
 }
+.center-page .initial-form .summary div {
+  white-space: pre-line;
+  line-height: 1.5;
+}
+.center-page .initial-form p {
+  margin-bottom: 2rem;
+}
 .splitter {
   display: grid;
   position: relative;
@@ -6697,7 +6704,7 @@ table > colgroup col.blue {
   padding: 0 10px;
 }
 .a2-new-btn .btn {
-  padding: 4px 7px;
+  padding: 0 1em;
 }
 .super-menu {
   display: grid;

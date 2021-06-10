@@ -68,6 +68,13 @@
 		return exports.default;
 	}
 
+	/*
+	Vue.config.warnHandler = function (msg, vm, trace) {
+		console.warn(msg);
+		return false;
+	};
+	*/
+
 })();
 // Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
@@ -191,7 +198,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210531-7776
+// 20210608-7782
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -218,14 +225,10 @@ app.modules['std:utils'] = function () {
 
 	return {
 		isArray: Array.isArray,
-		isFunction: isFunction,
-		isDefined: isDefined,
-		isObject: isObject,
-		isObjectExact: isObjectExact,
-		isDate: isDate,
-		isString: isString,
-		isNumber: isNumber,
-		isBoolean: isBoolean,
+		isFunction, isDefined,
+		isObject, isObjectExact,
+		isDate, isString, isNumber, isBoolean,
+		isPromise,
 		toString: toString,
 		defaultValue: defaultValue,
 		notBlank: notBlank,
@@ -295,6 +298,7 @@ app.modules['std:utils'] = function () {
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
+	function isPromise(v) { return isDefined(v) && isFunction(v.then) && isFunction(v.catch); }
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === platform.File || ctor === Object;
@@ -7578,7 +7582,7 @@ Vue.component('popover', {
 		template: `
 <li @click.stop.prevent="doClick(item)" :title=title v-on:dblclick.stop.prevent="doDblClick(item)"
 	v-show=isItemVisible
-	:class="{expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}" >
+	:class="[cssClass, {expanded: isExpanded, collapsed:isCollapsed, active:isItemSelected, folder:isFolder, group: isItemGroup}]" >
 	<div :class="{overlay:true, 'no-icons': !options.hasIcon}">
 		<a class="toggle" v-if="isFolder" href @click.stop.prevent=toggle></a>
 		<span v-else class="toggle"/>
@@ -7700,6 +7704,12 @@ Vue.component('popover', {
 			},
 			dataHref() {
 				return this.getHref ? this.getHref(this.item) : '';
+			},
+			cssClass() {
+				if (!this.options) return undefined;
+				let xname = this.options.xtraClass;
+				if (!xname) return undefined;
+				return this.item[xname] || undefined;
 			}
 		},
 		watch: {
@@ -8741,7 +8751,7 @@ TODO:
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
 				@mousedown.prevent="select(listItem)" @keydown="keyDown" 
-				ref="li">
+				ref="li" v-on:dblclick.prevent="doDblClick">
 			<span v-if="listItem.__group" v-text="listItem.__group"></span>
 			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
 		</li>
@@ -8766,7 +8776,8 @@ TODO:
 			hover: {
 				type: Boolean, default: true
 			},
-			groupBy: String
+			groupBy: String,
+			doubleclick: Function
 		},
 		computed: {
 			selectedSource() {
@@ -8905,6 +8916,11 @@ TODO:
 				}
 				e.preventDefault();
 				e.stopPropagation();
+			},
+			doDblClick($event) {
+				$event.stopImmediatePropagation();
+				if (this.doubleclick)
+					this.doubleclick();
 			}
 		},
 		created() {
@@ -13018,7 +13034,7 @@ Vue.directive('resize', {
 	<div class="side-bar-body" v-if="bodyIsVisible">
 		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
-			subitems: 'Menu', expandAll:true,
+			subitems: 'Menu', expandAll:true, xtraClass:'ClassName',
 			icon:'Icon', wrapLabel: true, hasIcon: true}">
 		</tree-view>
 	</div>
@@ -13210,7 +13226,7 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210601-7778*/
+/*20210608-7782*/
 /* controllers/mainview.js */
 
 (function () {
@@ -13370,6 +13386,8 @@ Vue.directive('resize', {
 			cssClass() {
 				let cls = (this.isNavBarMenu ? 'nav-bar-menu ' : '') +
 					'side-bar-position-' + (this.isSideBarTop ? 'top ' : 'left ');
+				if (this.isSideBarCompact)
+					cls += 'compact-side-bar ';
 				if (this.isSideBarTop)
 					cls += !this.sideBarVisible ? 'side-bar-hidden' : '';
 				else
