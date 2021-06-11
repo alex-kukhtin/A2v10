@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210606-7781
+// 20210611-7783
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -41,7 +41,7 @@ app.modules['std:http'] = function () {
 				case 255:
 					let txt = response.statusText;
 					if (ct.startsWith('text/'))
-						txt = 'server error: ' + await response.text();
+						txt = await response.text();
 					throw txt;
 				case 473: /*non standard */
 					if (response.statusText === 'Unauthorized') {
