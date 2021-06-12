@@ -4268,7 +4268,7 @@ ul.news-list > li {
   display: none;
 }
 .modal-stack .modal-body .app-exception {
-  width: 498px;
+  margin: 0;
 }
 .debug .modal-animation-frame {
   bottom: 2rem;

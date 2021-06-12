@@ -1409,7 +1409,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210606-7781
+// 20210612-7783
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1450,7 +1450,7 @@ app.modules['std:http'] = function () {
 				case 255:
 					let txt = response.statusText;
 					if (ct.startsWith('text/'))
-						txt = 'server error: ' + await response.text();
+						txt = await response.text();
 					throw txt;
 				case 473: /*non standard */
 					if (response.statusText === 'Unauthorized') {
@@ -1482,27 +1482,35 @@ app.modules['std:http'] = function () {
 		return doRequest('POST', url, data, raw, skipEvents);
 	}
 
-	function upload(url, data) {
-		return new Promise(function (resolve, reject) {
-			let xhr = new XMLHttpRequest();
-			xhr.onload = function (response) {
-				eventBus.$emit('endRequest', url);
-				if (xhr.status === 200) {
-					let xhrResult = xhr.responseText ? JSON.parse(xhr.responseText) : '';
-					resolve(xhrResult);
-				} else if (xhr.status === 255) {
-					reject(xhr.responseText || xhr.statusText);
-				}
-			};
-			xhr.onerror = function (response) {
-				alert('Error');
-			};
-			xhr.open("POST", url, true);
-			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-			xhr.setRequestHeader('Accept', 'application/json');
-			eventBus.$emit('beginRequest', url);
-			xhr.send(data);
-		});
+	async function upload(url, data) {
+		eventBus.$emit('beginRequest', url);
+		try {
+			var response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+					'Accept': 'application/json'
+				},
+				body: data
+			});
+			let ct = response.headers.get("content-type");
+			switch (response.status) {
+				case 200:
+					if (ct.startsWith('application/json'))
+						return await response.json();
+					return await response.text();
+				case 255:
+					let txt = response.statusText;
+					if (ct.startsWith('text/'))
+						txt = await response.text();
+					throw txt;
+			}
+
+		} catch (err) {
+			alert(err);
+		} finally {
+			eventBus.$emit('endRequest', url);
+		}
 	}
 
 	function load(url, selector, baseUrl) {

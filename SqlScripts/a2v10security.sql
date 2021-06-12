@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 jun 2021
-module version : 7758
+Last updated : 12 jun 2021
+module version : 7759
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7758;
+exec a2sys.SetVersion N'std:security', 7759;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -150,11 +150,14 @@ begin
 		UserName nvarchar(255) not null constraint UNQ_Users_UserName unique,
 		DomainUser nvarchar(255) null,
 		Void bit not null constraint DF_Users_Void default(0),
-		SecurityStamp nvarchar(max)	not null,
-		PasswordHash nvarchar(max)	null,
+		SecurityStamp nvarchar(max) not null,
+		PasswordHash nvarchar(max) null,
+		/*for .net core compatibility*/
+		SecurityStamp2 nvarchar(max) null,
+		PasswordHash2 nvarchar(max) null,
 		ApiUser bit not null constraint DF_Users_ApiUser default(0),
 		TwoFactorEnabled bit not null constraint DF_Users_TwoFactorEnabled default(0),
-		Email nvarchar(255)	null,
+		Email nvarchar(255) null,
 		EmailConfirmed bit not null constraint DF_Users_EmailConfirmed default(0),
 		PhoneNumber nvarchar(255) null,
 		PhoneNumberConfirmed bit not null constraint DF_Users_PhoneNumberConfirmed default(0),
@@ -166,15 +169,24 @@ begin
 		LastLoginDate datetime null, /*UTC*/
 		LastLoginHost nvarchar(255) null,
 		Memo nvarchar(255) null,
-		ChangePasswordEnabled	bit	not null constraint DF_Users_ChangePasswordEnabled default(1),
+		ChangePasswordEnabled bit not null constraint DF_Users_ChangePasswordEnabled default(1),
 		RegisterHost nvarchar(255) null,
 		TariffPlan nvarchar(255) null,
 		[Guid] uniqueidentifier null,
 		Referral bigint null,
 		Segment nvarchar(32) null,
+		Company bigint null,
+			-- constraint FK_Users_Company_Companies foreign key references a2security.Companies(Id)
 		DateCreated datetime null
 			constraint DF_Users_DateCreated default(a2sys.fn_getCurrentDate()),
 	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'SecurityStamp2')
+begin
+	alter table a2security.Users add SecurityStamp2 nvarchar(max) null;
+	alter table a2security.Users add PasswordHash2 nvarchar(max) null;
 end
 go
 ------------------------------------------------
@@ -192,6 +204,12 @@ if exists(select * from sys.default_constraints where name=N'DF_Users_Locale' an
 begin
 	alter table a2security.Users drop constraint DF_Users_Locale;
 	alter table a2security.Users add constraint DF_Users_Locale2 default('uk-UA') for [Locale] with values;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'Company')
+begin
+	alter table a2security.Users add Company bigint null;
 end
 go
 ------------------------------------------------
@@ -545,10 +563,39 @@ as
 		PersonName, Memo, Void, LastLoginDate, LastLoginHost, Tenant, EmailConfirmed,
 		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan, Segment,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined: admins*/ then 1 else 0 end as bit),
-		IsTenantAdmin = cast(case when exists(select * from a2security.Tenants where [Admin] = u.Id) then 1 else 0 end as bit)
+		IsTenantAdmin = cast(case when exists(select * from a2security.Tenants where [Admin] = u.Id) then 1 else 0 end as bit),
+		SecurityStamp2, PasswordHash2, Company
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77 /*predefined: admins*/
 	where Void=0 and Id <> 0 and ApiUser = 0;
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_isUserTenantAdmin') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_isUserTenantAdmin;
+go
+------------------------------------------------
+create function a2security.fn_isUserTenantAdmin(@TenantId int, @UserId bigint)
+returns bit
+as
+begin
+	return case when 
+		exists(select * from a2security.Tenants where Id = @TenantId and [Admin] = @UserId) then 1 
+	else 0 end;
+end
+go
+------------------------------------------------
+if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_isUserAdmin') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+	drop function a2security.fn_isUserAdmin;
+go
+------------------------------------------------
+create function a2security.fn_isUserAdmin(@UserId bigint)
+returns bit
+as
+begin
+	return case when 
+		exists(select * from a2security.UserGroups where GroupId=77 /*predefined: admins */ and UserId = @UserId) then 1 
+	else 0 end;
+end
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'WriteLog')
@@ -850,42 +897,6 @@ begin
 	declare @msg nvarchar(255);
 	set @msg = N'PhoneNumber: ' + @PhoneNumber;
 	exec a2security.[WriteLog] @Id, N'I', 27, /*PhoneNumberConfirmed*/ @msg;
-end
-go
-
-------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SetPasswordHash')
-	drop procedure a2security.[User.SetPasswordHash]
-go
-------------------------------------------------
-create procedure a2security.[User.SetPasswordHash]
-@UserId bigint,
-@PasswordHash nvarchar(max)
-as
-begin
-	set nocount on;
-	set transaction isolation level read committed;
-	set xact_abort on;
-
-	update a2security.ViewUsers set PasswordHash = @PasswordHash where Id=@UserId;
-end
-go
-
-------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SetSecurityStamp')
-	drop procedure a2security.[User.SetSecurityStamp]
-go
-------------------------------------------------
-create procedure a2security.[User.SetSecurityStamp]
-@UserId bigint,
-@SecurityStamp nvarchar(max)
-as
-begin
-	set nocount on;
-	set transaction isolation level read committed;
-	set xact_abort on;
-
-	update a2security.ViewUsers set SecurityStamp = @SecurityStamp where Id=@UserId;
 end
 go
 ------------------------------------------------
@@ -1302,10 +1313,15 @@ begin
 		[Company] bigint not null
 			constraint FK_UserCompanies_Company_Companies foreign key references a2security.Companies(Id),
 		[Enabled] bit,
-		[Current] bit,
+		[Current] bit, -- TODO:// remove it
 		constraint PK_UserCompanies primary key([User], [Company])
 	);
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS where CONSTRAINT_SCHEMA = N'a2security' and CONSTRAINT_NAME = N'FK_Users_Company_Companies')
+	alter table a2security.Users add
+		constraint FK_Users_Company_Companies foreign key (Company) references a2security.Companies(Id);
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Companies')
@@ -1317,13 +1333,29 @@ create procedure a2security.[User.Companies]
 as
 begin
 	set nocount on;
-	set transaction isolation level read uncommitted;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	declare @isadmin bit;
+	declare @company bigint;
+
+	select @isadmin = IsAdmin, @company = Company from a2security.ViewUsers where Id=@UserId;
+	if @company is null
+	begin
+		if @isadmin = 1
+			select top(1) @company = Id from a2security.Companies where Id <> 0;
+		else
+			select top(1) @company = Company from a2security.UserCompanies where Company <> 0 and [Enabled]=1;
+		update a2security.ViewUsers set Company = @company;
+	end
 
 	-- all companies for the current user
-	select [Companies!TCompany!Array] = null, Id, [Name], [Current]
+	select [Companies!TCompany!Array] = null, 
+		Id, [Name], 
+		[Current] = cast(case when Id = @company then 1 else 0 end as bit)
 	from a2security.Companies c
 		inner join a2security.UserCompanies uc on uc.Company = c.Id
-	where uc.[User] = @UserId and uc.[Enabled] = 1 and c.Id <> 0
+	where uc.[User] = @UserId and c.Id <> 0 and (@isadmin = 1 or uc.[Enabled] = 1)
 	order by Id;
 end
 go
@@ -1340,9 +1372,14 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
-	update a2security.UserCompanies set 
-		[Current] = case when Company = @CompanyId then 1 else 0 end
-	where [User] = @UserId;
+	declare @isadmin bit;
+	set @isadmin = a2security.fn_isUserAdmin(@UserId);
+	if not exists(select * from a2security.Companies where Id=@CompanyId)
+		throw 60000, N'There is no such company', 0;
+	if @isadmin = 0 and not exists(
+			select * from a2security.UserCompanies where [User] = @UserId and Company=@CompanyId and [Enabled] = 1)
+		throw 60000, N'There is no such company or it is not allowed', 0;
+	update a2security.Users set Company = @CompanyId where Id = @UserId;
 end
 go
 ------------------------------------------------
@@ -1355,38 +1392,12 @@ create procedure a2security.[User.Company.Load]
 as
 begin
 	set nocount on;
-	set transaction isolation level read committed;
-	set xact_abort on;
-	select [UserCompany!TCompany!Object] = null, Company from a2security.UserCompanies 
-	where [User]=@UserId and [Current]=1
-end
-go
-------------------------------------------------
-if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_isUserTenantAdmin') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-	drop function a2security.fn_isUserTenantAdmin;
-go
-------------------------------------------------
-create function a2security.fn_isUserTenantAdmin(@TenantId int, @UserId bigint)
-returns bit
-as
-begin
-	return case when 
-		exists(select * from a2security.Tenants where Id = @TenantId and [Admin] = @UserId) then 1 
-	else 0 end;
-end
-go
-------------------------------------------------
-if exists (select * from sys.objects where object_id = object_id(N'a2security.fn_isUserAdmin') and type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-	drop function a2security.fn_isUserAdmin;
-go
-------------------------------------------------
-create function a2security.fn_isUserAdmin(@UserId bigint)
-returns bit
-as
-begin
-	return case when 
-		exists(select * from a2security.UserGroups where GroupId=77 /*predefined: admins */ and UserId = @UserId) then 1 
-	else 0 end;
+	set transaction isolation level read uncommitted;
+
+	declare @company bigint;
+	select @company = Company from a2security.ViewUsers where Id=@UserId;
+
+	select [UserCompany!TCompany!Object] = null, Company=@company;
 end
 go
 ------------------------------------------------
@@ -1475,6 +1486,42 @@ begin
 			values (s.[ObjectKey], s.UserId, s.CanView, s.CanEdit, s.CanDelete, s.CanApply)
 	when not matched by source then
 		delete;
+end
+go
+-- .NET CORE SUPPORT
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SetPasswordHash')
+	drop procedure a2security.[User.SetPasswordHash]
+go
+------------------------------------------------
+create procedure a2security.[User.SetPasswordHash]
+@UserId bigint,
+@PasswordHash nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	update a2security.ViewUsers set PasswordHash2 = @PasswordHash where Id=@UserId;
+end
+go
+
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SetSecurityStamp')
+	drop procedure a2security.[User.SetSecurityStamp]
+go
+------------------------------------------------
+create procedure a2security.[User.SetSecurityStamp]
+@UserId bigint,
+@SecurityStamp nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	update a2security.ViewUsers set SecurityStamp2 = @SecurityStamp where Id=@UserId;
 end
 go
 ------------------------------------------------

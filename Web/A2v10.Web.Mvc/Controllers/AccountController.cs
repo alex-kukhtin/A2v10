@@ -240,6 +240,13 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public void Register()
 		{
+			if (User.Identity.IsAuthenticated)
+			{
+				AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+				Response.Redirect("/account/register");
+				return;
+			}
+
 			if (!_host.IsMultiTenant)
 			{
 				Response.Write("Turn on the multiTenant mode");
@@ -251,12 +258,8 @@ namespace A2v10.Web.Mvc.Controllers
 				return;
 			}
 
-			if (User.Identity.IsAuthenticated)
-			{
-				AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-				Session.Abandon();
-				ClearAllCookies();
-			}
+			Session.Abandon();
+			ClearAllCookies();
 
 			String page = GetRedirectedPage("register", ResourceHelper.RegisterTenantHtml);
 			SendPage(page, ResourceHelper.RegisterTenantScript);

@@ -381,7 +381,6 @@ namespace A2v10.Request
 			}
 		}
 
-
 		public void WriteExceptionStatus(Exception ex, HttpResponseBase response, Int32 errorCode = 0)
 		{
 			if (ex.InnerException != null)
