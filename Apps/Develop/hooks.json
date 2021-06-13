@@ -1,0 +1,13 @@
+﻿{
+	"createTenant": {
+		"type": "javascript"
+	},
+	"confirmEmail": {
+
+	},
+	"login": {
+		"source": "Catalog",
+		"path": "/hooks",
+		"command": "userLogin"
+	}
+}

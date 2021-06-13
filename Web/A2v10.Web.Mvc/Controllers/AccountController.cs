@@ -195,6 +195,7 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				case SignInStatus.Success:
 					await UpdateUser(user, success: true);
+					await CallHook("login", user);
 					ClearRVTCookie();
 					status = "Success";
 					break;
@@ -955,6 +956,28 @@ namespace A2v10.Web.Mvc.Controllers
 				String json = tr.ReadToEnd();
 				return JsonConvert.DeserializeObject<T>(json);
 			}
+		}
+
+		private async Task CallHook(String hookName, AppUser user)
+		{
+			var text = _host.ApplicationReader.ReadTextFile("", "hooks.json");
+			if (text == null)
+				return;
+			var eo = JsonConvert.DeserializeObject<ExpandoObject>(text);
+			if (eo == null)
+				return;
+			var hookObj = eo.Eval<ExpandoObject>(hookName);
+			if (hookObj == null)
+				return;
+			/* add record to a2sys.DbEvents */
+			var dbEvent = new ExpandoObject();
+			dbEvent.Set("Path", eo.Eval<String>("path"));
+			dbEvent.Set("Command", eo.Eval<String>("command"));
+			dbEvent.Set("ItemId", user.Id);
+			dbEvent.Set("Source", eo.Eval<String>("source"));
+			//await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2sys.[DbEvent.Add]", dbEvent);
+			/* and handle it */
+			await _host.ProcessDbEvents(_dbContext, _host.CatalogDataSource);
 		}
 	}
 }
