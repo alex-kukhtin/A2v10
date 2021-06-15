@@ -86,7 +86,7 @@ function onFileUpload(result) {
 
 function nameChange(entity, name) {
 	//this.$ctrl.$alert(name);
-	console.dir('name change');
+	console.dir('name change: ' + name);
 	this.$vm.$focus('memo-editor');
 }
 

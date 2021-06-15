@@ -19,7 +19,7 @@
 				<TextBox HtmlId="name-editor"
 					Grid.Row="1" Grid.ColSpan="2" Label="Наименование" 
 						 EnterCommand="{BindCmd Execute, CommandName=enterKey}"
-						 Value="{Bind Entity.Name, Filters='Trim, Upper'}" TabIndex="1"  ShowClear="True">
+						 Value="{Bind Entity.Name, Filters='Barcode'}" TabIndex="1"  ShowClear="True">
 					<TextBox.AddOns>
 						<Hyperlink Icon="Menu"/>
 						<Hyperlink Icon="Access"/>

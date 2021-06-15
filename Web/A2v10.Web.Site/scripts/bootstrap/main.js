@@ -177,7 +177,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210608-7782
+// 20210615-7784
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -190,7 +190,7 @@ app.modules['std:utils'] = function () {
 
 	const dateOptsDate = { timeZone: 'UTC', year: 'numeric', month: _2digit, day: _2digit };
 	const dateOptsTime = { timeZone: 'UTC', hour: _2digit, minute: _2digit };
-
+	
 	const formatDate = new Intl.DateTimeFormat(dateLocale, dateOptsDate).format;
 	const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
 
@@ -789,6 +789,26 @@ app.modules['std:utils'] = function () {
 		return (s1 || '').toLowerCase() === (s2 || '').toLowerCase();
 	}
 
+	function toLatin(v) {
+		v = v.toUpperCase();
+
+		let tbl = {
+			'Й': 'Q', 'Ц': 'W', 'У': 'E', 'К': 'R', 'Е': 'T', 'Н': 'Y', 'Г': 'U', 'Ш': 'I', 'Щ': 'O', 'З': 'P', 'Х': '[', 'Ъ': ']', 'Ї': ']',
+			'Ф': 'A', 'Ы': 'S', 'В': 'D', 'А': 'F', 'П': 'G', 'Р': 'H', 'О': 'J', 'Л': 'K', 'Д': 'L', 'І': 'S', 'Ж': ':', 'Э': '"', 'Є': '"',
+			'Я': 'Z', 'Ч': 'X', 'С': 'C', 'М': 'V', 'И': 'B', 'Т': 'N', 'Ь': 'M', 'Б': '<', 'Ю': '>'
+		};
+		
+		let r = '';
+		for (let i = 0; i < v.length; i++) {
+			let ch = tbl[v[i]];
+			if (ch)
+				r += ch;
+			else
+				r += v[i];
+		}
+		return r;
+	}
+
 	function applyFilters(filters, value) {
 		if (!filters || !filters.length)
 			return value;
@@ -805,6 +825,9 @@ app.modules['std:utils'] = function () {
 					break;
 				case 'lower':
 					value = value.toLowerCase();
+					break;
+				case 'barcode':
+					value = toLatin(value);
 			}
 		}
 		return value;

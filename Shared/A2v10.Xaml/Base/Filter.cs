@@ -12,7 +12,8 @@ namespace A2v10.Xaml
 		None,
 		Trim,
 		Upper,
-		Lower
+		Lower,
+		Barcode
 	}
 
 	[TypeConverter(typeof(FilterColllectionConverter))]
