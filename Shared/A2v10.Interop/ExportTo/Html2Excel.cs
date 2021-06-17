@@ -103,7 +103,8 @@ namespace A2v10.Interop.ExportTo
 					/*date*/     new NumberingFormat() { FormatCode = "dd\\.mm\\.yyyy;@", NumberFormatId = 166 },
 					/*datetime*/ new NumberingFormat() { FormatCode = "dd\\.mm\\.yyyy hh:mm;@", NumberFormatId = 167 },
 					/*currency*/ new NumberingFormat() { FormatCode = "#,##0.00####;[Red]\\-#,##0.00####", NumberFormatId = 169 },
-					/*number*/   new NumberingFormat() { FormatCode = "#,##0.######;[Red]-#,##0.######", NumberFormatId = 170 }
+					/*number*/   new NumberingFormat() { FormatCode = "#,##0.######;[Red]-#,##0.######", NumberFormatId = 170 },
+					/*time*/     new NumberingFormat() { FormatCode = "hh:mm;@", NumberFormatId = 165 }
 				);
 
 			CellFormats cellFormats = new CellFormats(new CellFormat());
@@ -154,6 +155,10 @@ namespace A2v10.Interop.ExportTo
 					break;
 				case DataType.DateTime:
 					cf.NumberFormatId = 167;
+					cf.ApplyNumberFormat = true;
+					break;
+				case DataType.Time:
+					cf.NumberFormatId = 165;
 					cf.ApplyNumberFormat = true;
 					break;
 				case DataType.Number:

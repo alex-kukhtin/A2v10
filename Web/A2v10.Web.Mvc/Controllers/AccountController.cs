@@ -46,6 +46,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		private const String LOCALE_COOKIE = "_locale";
 		private const String USERNAME_SESSIONKEY = "_username";
+		private const String QUERYSTRING_SESSIONKEY = "_querystring";
 
 		public AccountController()
 		{
@@ -157,6 +158,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			Session.Abandon();
 			ClearAllCookies();
+			//SaveQueryString();
 			String page = GetRedirectedPage("login", _host.Mobile ? ResourceHelper.LoginMobileHtml : ResourceHelper.LoginHtml);
 			SendPage(page, ResourceHelper.LoginScript);
 		}
@@ -978,6 +980,20 @@ namespace A2v10.Web.Mvc.Controllers
 			//await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2sys.[DbEvent.Add]", dbEvent);
 			/* and handle it */
 			await _host.ProcessDbEvents(_dbContext, _host.CatalogDataSource);
+		}
+
+		void SaveQueryString()
+		{
+			if (Request.QueryString.Count == 0)
+				return;
+			if (HttpContext.Session[QUERYSTRING_SESSIONKEY] != null)
+				return;
+			else if (Request.QueryString.Count == 1)
+			{
+				if (Request.QueryString.AllKeys.Contains("returnurl"))
+					return;
+			}
+			HttpContext.Session.Add(QUERYSTRING_SESSIONKEY, Request.QueryString.ToString());
 		}
 	}
 }

@@ -10,7 +10,8 @@ namespace A2v10.Interop.ExportTo
 		Currency,
 		Number,
 		Date,
-		DateTime
+		DateTime,
+		Time
 	}
 
 	public enum HorizontalAlign

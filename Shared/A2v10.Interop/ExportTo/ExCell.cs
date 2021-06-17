@@ -39,6 +39,8 @@ namespace A2v10.Interop.ExportTo
 
 		String NormalizeDate(String text)
 		{
+			if (String.IsNullOrEmpty(text))
+				return String.Empty;
 			if (DateTime.TryParseExact(text, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
 				return dt.ToOADate().ToString(CultureInfo.InvariantCulture);
 			throw new InteropException($"Invalid date {text}");
@@ -46,9 +48,23 @@ namespace A2v10.Interop.ExportTo
 
 		String NormalizeDateTime(String text)
 		{
+			if (String.IsNullOrEmpty(text))
+				return String.Empty;
 			if (DateTime.TryParseExact(text, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
 				return dt.ToOADate().ToString(CultureInfo.InvariantCulture);
 			throw new InteropException($"Invalid datetime {text}");
+		}
+
+		String NormalizeTime(String text)
+		{
+			if (String.IsNullOrEmpty(text))
+				return String.Empty;
+			if (DateTime.TryParseExact(text, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+			{
+				DateTime oaBaseDate = new DateTime(1899, 12, 30);
+				return oaBaseDate.Add(dt.TimeOfDay).ToOADate().ToString(CultureInfo.InvariantCulture);
+			}
+			throw new InteropException($"Invalid time {text}");
 		}
 
 		public Style GetStyle(ExRow row, String strClasses)
@@ -97,6 +113,10 @@ namespace A2v10.Interop.ExportTo
 				case "datetime":
 					DataType = DataType.DateTime;
 					Value = NormalizeDateTime(text);
+					break;
+				case "time":
+					DataType = DataType.Time;
+					Value = NormalizeTime(text);
 					break;
 				default:
 					Value = text;

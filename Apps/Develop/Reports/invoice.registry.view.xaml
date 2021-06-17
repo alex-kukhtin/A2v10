@@ -42,6 +42,9 @@
 					<SheetCell Content="{Bind No, DataType=Number, Format='00'}" Align="Right"/>
 					<SheetCell Content="{Bind Sum, DataType=Currency, Format='#,000.0000', NegativeRed=True}" Align="Right"/>
 					<SheetCell Content="{Bind Memo}"/>
+					<SheetCell Content="{Bind DateCreated, DataType=Date}"/>
+					<SheetCell Content="{Bind DateCreated, DataType=DateTime}"/>
+					<SheetCell Content="{Bind DateCreated, DataType=Time}"/>
 				</SheetRow>
 			</SheetSection>
 			<Sheet.Header>
@@ -59,6 +62,8 @@
 					<SheetCell ColSpan="3" Bold="True">Информация</SheetCell>
 					<SheetCell RowSpan="2" Vertical="True">Сума\nс переносом текста\nв три строки</SheetCell>
 					<SheetCell RowSpan="2" VAlign="Top">Примечание</SheetCell>
+					<SheetCell RowSpan="2" VAlign="Top">Date</SheetCell>
+					<SheetCell RowSpan="2" VAlign="Top">Time</SheetCell>
 				</SheetRow>
 				<SheetRow Style="Header" Align="Center">
 					<SheetCell>Id</SheetCell>
@@ -69,11 +74,13 @@
 					<SheetCell ColSpan="3"/>
 					<SheetCell Align="Right">234.55</SheetCell>
 					<SheetCell/>
+					<SheetCell />
+					<SheetCell />
 				</SheetRow>
 			</Sheet.Header>
 			<Sheet.Footer>
 				<SheetRow Style="Footer">
-					<SheetCell ColSpan="5" Bold="True">Длинный текст для футера</SheetCell>
+					<SheetCell ColSpan="7" Bold="True">Длинный текст для футера</SheetCell>
 				</SheetRow>
 				<SheetRow Style="NoBorder">
 					<SheetCell>&#160;</SheetCell>
