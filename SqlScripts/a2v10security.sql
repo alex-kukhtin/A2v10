@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 12 jun 2021
-module version : 7759
+Last updated : 18 jun 2021
+module version : 7760
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7759;
+exec a2sys.SetVersion N'std:security', 7760;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1024,6 +1024,141 @@ begin
 	declare @msg nvarchar(255);
 	set @msg = N'User: ' + @UserName;
 	exec a2security.[WriteLog] @RetId, N'I', 2, /*UserCreated*/ @msg;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check')
+	drop procedure a2security.[Permission.Check]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255),
+	@CanEdit bit = null output,
+	@CanDelete bit = null output,
+	@CanApply bit = null output,
+	@Permissions int = null output
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	declare @_canView bit = 0;
+	declare @_canEdit bit = 0;
+	declare @_canDelete bit = 0;
+	declare @_canApply bit = 0;
+	declare @_permissions int = 0;
+
+
+	select * from a2security.[Module.Acl]
+
+	if 1 = a2security.fn_isUserAdmin(@UserId)
+	begin
+		set @CanEdit = 1;
+		set @CanDelete = 1;
+		set @CanApply = 1;
+		set @Permissions = 15;
+	end
+	else
+	begin
+		select @_canView = CanView, @_canEdit = CanEdit, @_canDelete = CanDelete, @_canApply = CanApply,
+			@_permissions = [Permissions]
+		from a2security.[Module.Acl]
+		where [Module] = @Module and [UserId] = @UserId
+
+		if isnull(@_canView, 0) = 0
+			throw 60000, N'@[UIError.AccessDenied]', 0;
+		else
+		begin
+			set @CanEdit = @_canEdit;
+			set @CanDelete = @_canDelete;
+			set @CanApply = @_canApply;
+			set @Permissions = @_permissions;
+		end
+	end
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check.Apply')
+	drop procedure a2security.[Permission.Check.Apply]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check.Apply]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	declare @_canApply bit;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, @CanApply = @_canApply output;
+	if @_canApply = 0
+		throw 60000, N'@[UIError.AccessDenied]', 0;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check.Edit')
+	drop procedure a2security.[Permission.Check.Edit]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check.Edit]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255),
+	@Permissions int = null output
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	declare @_canEdit bit;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, 
+		@CanEdit = @_canEdit output, @Permissions = @Permissions output;
+	if @_canEdit = 0
+		throw 60000, N'@[UIError.AccessDenied]', 0;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check.Delete')
+	drop procedure a2security.[Permission.Check.Delete]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check.Delete]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	declare @_canDelete bit;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, @CanDelete = @_canDelete output;
+	if @_canDelete = 0
+		throw 60000, N'@[UIError.AccessDenied]', 0;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Get')
+	drop procedure a2security.[Permission.Get]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Get]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	declare @_permissions int = 0;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, @Permissions = @_permissions output;
+	return @_permissions;
 end
 go
 ------------------------------------------------

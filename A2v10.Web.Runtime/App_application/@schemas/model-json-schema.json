@@ -1,8 +1,20 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7765",
+	"$version": "10.0.7785",
 	"title": "JSON Schema for model.json",
 	"type": "object",
+
+	"definitions": {
+		"permissions": {
+			"type": "object",
+			"patternProperties": {
+				".+": {
+					"type": "string",
+					"enum": [ "view", "edit", "delete", "apply" ]
+				}
+			}
+		}
+	},
 
 	"properties": {
 		"$schema": { "type": "string" },
@@ -64,7 +76,8 @@
 							},
 							"additionalProperties": false
 						},
-						"parameters": { "type": "object" }
+						"parameters": { "type": "object" },
+						"permissions": { "$ref": "#/definitions/permissions" }
 					},
 					"additionalProperties": false
 				}
@@ -107,7 +120,8 @@
 							"additionalProperties": false
 						},
 						"twoPhase": { "type": "boolean" },
-						"parameters": { "type": "object" }
+						"parameters": { "type": "object" },
+						"permissions": { "$ref": "#/definitions/permissions" }
 					},
 					"additionalProperties": false
 				}
@@ -170,7 +184,10 @@
 						"parameters": { "type": "object" },
 						"args": { "type": "object" },
 						"file": { "type": "string" },
-						"debugOnly": {"type": "boolean" }
+						"debugOnly": { "type": "boolean" },
+						"permissions": {
+							"$ref": "#/definitions/permissions"
+						}
 					},
 					"additionalProperties": false
 				}

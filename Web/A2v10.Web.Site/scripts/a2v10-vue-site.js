@@ -2080,7 +2080,7 @@ app.modules['std:html'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210612-7783
+// 20210612-7785
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -2109,7 +2109,7 @@ app.modules['std:http'] = function () {
 				},
 				body: data
 			});
-			let ct = response.headers.get("content-type");
+			let ct = response.headers.get("content-type") || '';
 			switch (response.status) {
 				case 200:
 					if (raw)
@@ -2164,7 +2164,7 @@ app.modules['std:http'] = function () {
 				},
 				body: data
 			});
-			let ct = response.headers.get("content-type");
+			let ct = response.headers.get("content-type") || '';
 			switch (response.status) {
 				case 200:
 					if (ct.startsWith('application/json'))
@@ -4864,9 +4864,9 @@ template: `
 })();
 
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200903-7705
+// 20210618-7785
 /*components/include.js*/
 
 (function () {
@@ -4933,7 +4933,10 @@ template: `
 				}, 1);
 			},
 			error(msg) {
-				msg = msg || '';
+				if (msg instanceof Error)
+					msg = msg.message;
+				else
+					msg = msg || '';
 				if (this.insideDialog)
 					eventBus.$emit('modalClose', false);
 				if (msg.indexOf('UI:') === 0) {

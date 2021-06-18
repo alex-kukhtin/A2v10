@@ -50,6 +50,13 @@ namespace A2v10.Web.Identity
 			return String.IsNullOrEmpty(value) ? Thread.CurrentThread.CurrentUICulture.Name : value;
 		}
 
+		public static String GetUserPemissions(this IIdentity identity)
+		{
+			if (!(identity is ClaimsIdentity user))
+				return null;
+			var value = user.FindFirstValue("Permissions");
+			return String.IsNullOrEmpty(value) ? null : value;
+		}
 
 		public static Boolean IsTenantAdmin(this IIdentity identity)
 		{

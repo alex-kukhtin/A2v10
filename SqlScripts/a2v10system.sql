@@ -1,8 +1,8 @@
 ﻿/*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 apr 2021
-module version : 7058
+Last updated : 18 jun 2021
+module version : 7059
 */
 ------------------------------------------------
 set nocount on;
@@ -32,9 +32,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7058);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7059);
 else
-	update a2sys.Versions set [Version] = 7058 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7059 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -190,6 +190,15 @@ begin
 	create type a2sys.[GUID.TableType]
 	as table(
 		Id uniqueidentifier null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'Kind.TableType' and DATA_TYPE=N'table type')
+begin
+	create type a2sys.[Kind.TableType]
+	as table(
+		Kind nchar(4) null
 	);
 end
 go

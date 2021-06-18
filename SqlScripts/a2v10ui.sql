@@ -1,11 +1,11 @@
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 jun 2021
-module version : 7678
+Last updated : 18 jun 2021
+module version : 7679
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:ui', 7678;
+exec a2sys.SetVersion N'std:ui', 7679;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200903-7705
+// 20210618-7785
 /*components/include.js*/
 
 (function () {
@@ -67,7 +67,10 @@
 				}, 1);
 			},
 			error(msg) {
-				msg = msg || '';
+				if (msg instanceof Error)
+					msg = msg.message;
+				else
+					msg = msg || '';
 				if (this.insideDialog)
 					eventBus.$emit('modalClose', false);
 				if (msg.indexOf('UI:') === 0) {

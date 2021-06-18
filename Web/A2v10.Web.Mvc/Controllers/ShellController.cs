@@ -41,6 +41,7 @@ namespace A2v10.Web.Mvc.Controllers
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 		public String UserSegment => User.Identity.GetUserSegment();
 		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
+		public String UserPermissions => User.Identity.GetUserPemissions();
 
 		public String CatalogDataSource => _baseController.Host.CatalogDataSource;
 
@@ -81,6 +82,8 @@ namespace A2v10.Web.Mvc.Controllers
 			// simple routing
 			Response.ContentEncoding = Encoding.UTF8;
 			Response.HeaderEncoding = Encoding.UTF8;
+
+			_baseController.UserPermissions = UserPermissions;
 
 			if (String.IsNullOrEmpty(pathInfo))
 			{

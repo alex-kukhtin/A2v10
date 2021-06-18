@@ -5,7 +5,11 @@
 	"actions": {
 		"index": {
 			"view": "HomePage.view",
-			"template": "homepage.template"
+			"template": "homepage.template",
+			"permissions": {
+				"Module1": "delete",
+				"Module2": "view"
+			}
 		}
 	},
 	"dialogs": {
@@ -14,8 +18,10 @@
 			"source": "kv",
 			"schema": "pm",
 			"view": "editwizard.dialog",
-			"template": "editwizard.template"
-
+			"template": "editwizard.template",
+			"permissions": {
+				"Module1": "view"
+			}
 		}
 	},
 	"files": {
@@ -84,21 +90,25 @@
 			"schema": "a2",
 			"locale" : "uk",
 			"model": "ConsumptionGas.Import.Upload",
-			"commandTimeout": 600
+			"commandTimeout": 600,
 		}
 	},
 	"commands": {
 		"javascript": {
 			"debugOnly": true,
+			"permissions": {
+				"Module1": "apply",
+				"Module2": "edit"
+			},
 			"type": "javascript",
-			"file": "server.module",
-			"args": {
-				"n": 1,
-				"s": "stri\\ssng'with'ap\"os`trophe",
-				"d": 27.33,
-				"b": true
-			}
-		},
+				"file": "server.module",
+				"args": {
+					"n": 1,
+					"s": "stri\\ssng'with'ap\"os`trophe",
+					"d": 27.33,
+					"b": true
+				}
+			},
 		"wait": {
 			"type": "sql",
 			"procedure": "Wait"

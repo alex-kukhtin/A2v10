@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Dynamic;
@@ -15,6 +16,15 @@ using System.Text;
 
 namespace A2v10.Request
 {
+	[Flags]
+	public enum PermissionBits
+	{
+		View = 0x01,
+		Edit = 0x02,
+		Delete = 0x4,
+		Apply = 0x8
+	}
+
 	public sealed class RequestModelException : Exception
 	{
 		public RequestModelException(String message)
@@ -117,6 +127,8 @@ namespace A2v10.Request
 		public String checkTypes;
 		public Boolean processDbEvents;
 		public Int32 commandTimeout;
+
+		public Dictionary<String, PermissionBits> permissions;
 
 		[JsonIgnore]
 		protected RequestModel _parent;
@@ -292,6 +304,41 @@ namespace A2v10.Request
 			if (String.IsNullOrEmpty(invoke))
 				return null;
 			return invoke;
+		}
+
+		public void CheckPermissions(String actual, Boolean debug)
+		{
+			if (String.IsNullOrEmpty(actual))
+				return;
+			if (permissions == null || permissions.Count == 0)
+				return;
+			var modules = actual.Split(';');
+			IDictionary<String, PermissionBits> expected = new Dictionary<String, PermissionBits>();
+			foreach (var m in modules)
+			{
+				var tmp = m.Split(':');
+				var module = tmp[0].Trim();
+				if (Enum.TryParse<PermissionBits>(tmp[1].Trim(), out PermissionBits perm))
+				{
+					expected.Add(module, perm);
+				}
+			}
+			foreach (var p in permissions)
+			{
+				if (expected.TryGetValue(p.Key, out PermissionBits bits))
+				{
+					// found in expected
+					if ((Int32)(bits & p.Value) != 0)
+						return; // success
+				}
+			}
+			if (debug)
+			{
+				var exp = String.Join("; ", permissions.Select(x => $"{x.Key}:{(Int32)x.Value}"));
+				throw new RequestModelException($"UI:Access denied.\nUser: {actual}\nModel: {exp}");
+			}
+			else
+				throw new RequestModelException("UI:Access denied");
 		}
 
 	}

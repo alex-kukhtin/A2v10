@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210612-7783
+// 20210612-7785
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -29,7 +29,7 @@ app.modules['std:http'] = function () {
 				},
 				body: data
 			});
-			let ct = response.headers.get("content-type");
+			let ct = response.headers.get("content-type") || '';
 			switch (response.status) {
 				case 200:
 					if (raw)
@@ -84,7 +84,7 @@ app.modules['std:http'] = function () {
 				},
 				body: data
 			});
-			let ct = response.headers.get("content-type");
+			let ct = response.headers.get("content-type") || '';
 			switch (response.status) {
 				case 200:
 					if (ct.startsWith('application/json'))
