@@ -14,6 +14,7 @@ namespace A2v10.Web.Config
 
 		const String _sessionKey = "_userState_";
 		const String _userCompanyKey = "_userCompany_";
+		const String _permissionsKey = "_pemissions_";
 
 		class UserState
 		{
@@ -88,6 +89,19 @@ namespace A2v10.Web.Config
 				throw new InvalidOperationException("Procedure 'UserCompany.Load' returned '0'.");
 			HttpContext.Current.Session[_userCompanyKey] = userCompany;
 			return userCompany;
+		}
+
+		public void SetUserPermissions(String permissions)
+		{
+			HttpContext.Current.Session[_permissionsKey] = permissions;
+		}
+
+		public String GetUserPermissions()
+		{
+			var s = HttpContext.Current.Session[_permissionsKey];
+			if (s == null)
+				return null;
+			return s.ToString();
 		}
 	}
 }

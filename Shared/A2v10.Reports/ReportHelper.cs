@@ -56,6 +56,7 @@ namespace A2v10.Reports
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
 		private readonly IStimulsoftReportShim _stimulsoftReportShim;
+		private readonly IUserStateManager _userStateManager;
 
 		public ReportHelper()
 		{
@@ -64,6 +65,7 @@ namespace A2v10.Reports
 			_host = locator.GetService<IApplicationHost>();
 			_dbContext = locator.GetService<IDbContext>();
 			_localizer = locator.GetService<ILocalizer>();
+			_userStateManager = locator.GetService<IUserStateManager>();
 			_stimulsoftReportShim = locator.GetService<IStimulsoftReportShim>(sloc =>
 			{
 				var inst = System.Activator.CreateInstance("A2v10.Stimulsoft", "A2v10.Stimulsoft.StimulsoftReportShim");
@@ -86,6 +88,9 @@ namespace A2v10.Reports
 			var ri = new ReportInfo();
 			RequestModel rm = await RequestModel.CreateFromBaseUrl(_host, false, url);
 			var rep = rm.GetReport();
+
+			rep.CheckPermissions(_userStateManager.GetUserPermissions(), _host.IsDebugConfiguration);
+
 			ri.Type = rep.type;
 
 			if (rep.type == RequestReportType.xml)

@@ -69,21 +69,7 @@ namespace A2v10.Request
 
 		String GetAppData()
 		{
-			var appJson = _host.ApplicationReader.ReadTextFile(String.Empty, "app.json");
-			if (appJson != null)
-			{
-				// with validation
-				ExpandoObject app = JsonConvert.DeserializeObject<ExpandoObject>(appJson);
-				app.Set("embedded", _host.Embedded);
-				return _localizer.Localize(null, JsonConvert.SerializeObject(app));
-			}
-
-			ExpandoObject defAppData = new ExpandoObject();
-			defAppData.Set("version", _host.AppVersion);
-			defAppData.Set("title", "A2v10 Web Application");
-			defAppData.Set("copyright", _host.Copyright);
-			defAppData.Set("embedded", _host.Embedded);
-			return JsonConvert.SerializeObject(defAppData);
+			return _host.GetAppData(_localizer);
 		}
 
 		async Task RenderChangePassword(TextWriter writer, ExpandoObject loadPrms)

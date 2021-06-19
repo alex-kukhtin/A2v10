@@ -140,7 +140,7 @@ namespace A2v10.Request
 				loadPrms.Set("Mobile", true);
 
 			IDataModel dm = await _dbContext.LoadModelAsync(_host.TenantDataSource, _host.CustomUserMenu, loadPrms);
-			SetUserStatePermission(dm);
+			await SetUserStatePermission(dm, userInfo.UserId);
 
 			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
 
@@ -230,7 +230,7 @@ namespace A2v10.Request
 			IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);
 
 			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
-			SetUserStatePermission(dm);
+			await SetUserStatePermission(dm, userInfo.UserId);
 
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 			macros.Set("Menu", jsonMenu);
@@ -255,11 +255,16 @@ namespace A2v10.Request
 			writer.Write(shell.ResolveMacros(macros));
 		}
 
-		void SetUserStatePermission(IDataModel model)
+		async Task SetUserStatePermission(IDataModel model, Int64 userId)
 		{
 			if (_userStateManager == null)
 				return;
 			_userStateManager.SetReadOnly(model.Eval<Boolean>("UserState.ReadOnly"));
+			var permissionsLinst = await _dbContext.LoadListAsync<ModulePermission>(_host.TenantDataSource, "[a2security].[User.Permissions]", new { UserId = userId });
+			if (permissionsLinst != null && permissionsLinst.Count > 0)
+			{
+				_userStateManager.SetUserPermissions(ModulePermission.Serialize(permissionsLinst));
+			}
 		}
 
 		String AppScriptsLink

@@ -7,20 +7,20 @@
 			"view": "HomePage.view",
 			"template": "homepage.template",
 			"permissions": {
-				"Module1": "delete",
-				"Module2": "view"
+				"Module1": "apply",
+				"Module2": "edit"
 			}
 		}
 	},
 	"dialogs": {
 		"infDialog": {
 			"model": "Process",
-			"source": "kv",
-			"schema": "pm",
+			//"source": "kv",
+			//"schema": "pm",
 			"view": "editwizard.dialog",
 			"template": "editwizard.template",
 			"permissions": {
-				"Module1": "view"
+				"Module1": "apply"
 			}
 		}
 	},
@@ -91,13 +91,15 @@
 			"locale" : "uk",
 			"model": "ConsumptionGas.Import.Upload",
 			"commandTimeout": 600,
+			"permissions": {
+				"Module1": "edit"
+			}
 		}
 	},
 	"commands": {
 		"javascript": {
 			"debugOnly": true,
 			"permissions": {
-				"Module1": "apply",
 				"Module2": "edit"
 			},
 			"type": "javascript",

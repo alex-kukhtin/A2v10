@@ -47,5 +47,14 @@ namespace A2v10.Runtime
 			return _companyId;
 		}
 		#endregion
-	}
+
+		public void SetUserPermissions(String permissions)
+		{
+		}
+
+		public String GetUserPermissions()
+		{
+			return null;
+		}
+}
 }

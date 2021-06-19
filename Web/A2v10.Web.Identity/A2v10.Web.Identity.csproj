@@ -95,7 +95,6 @@
     <Compile Include="AppUserStore.cs" />
     <Compile Include="IdentityEmailService.cs" />
     <Compile Include="IdentityHelpers.cs" />
-    <Compile Include="ModulePermission.cs" />
     <Compile Include="Security.ApiBasic\ApiBasicAuthenticationOptions.cs" />
     <Compile Include="Security.ApiBasic\ApiBasicAuthenticationProvider.cs" />
     <Compile Include="Security.ApiBasic\ApiBasicValidateIdentityContext.cs" />

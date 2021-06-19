@@ -71,6 +71,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="App_application\%40schemas\api-model-json-schema.json" />
+    <Content Include="App_application\%40schemas\app-json-schema.json" />
     <None Include="localization\de.xml" />
     <Content Include="localization\default.de.txt" />
     <Content Include="localization\default.en.txt" />

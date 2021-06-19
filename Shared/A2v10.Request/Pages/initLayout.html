@@ -28,10 +28,13 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 <body>
 	<div id="app" class="shell" v-cloak>
 		<header class="header">
-			<div class="h-block">
-				<a class="app-title" :href="getReferUrl('/')" v-text="info.title" tabindex="-1"></a>
+			<a class="h-block" :href="getReferUrl('/')" tabindex="-1">
+				<span class="app-logo" v-if=hasLogo>
+					<img :src="logoSrc" />
+				</span>
+				<span class="app-title" v-text="info.title"></span>
 				<span class="app-subtitle" v-text="info.subtitle"></span>
-			</div>
+			</a>
 			<div class="aligner"></div>
 		</header>
 		<div class="main-view">

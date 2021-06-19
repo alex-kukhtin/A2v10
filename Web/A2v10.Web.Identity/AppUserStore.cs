@@ -508,15 +508,8 @@ namespace A2v10.Web.Identity
 					list.Add(new Claim("TenantAdmin", "TenantAdmin"));
 			}
 
-			var permissionsLinst = await _dbContext.LoadListAsync<ModulePermission>(_host.TenantDataSource, "[a2security].[User.Permissions]", new { UserId = user.Id });
-			if (permissionsLinst != null && permissionsLinst.Count > 0)
-			{
-				list.Add(new Claim("Permissions", ModulePermission.Serialize(permissionsLinst)));
-			}
-
 
 			/*
-			list.Add(new Claim("Locale", user.Locale ?? "uk_UA"));
 			list.Add(new Claim("AppKey", user.ComputedAppKey));
 			*/
 

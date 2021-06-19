@@ -32,6 +32,7 @@
 			processing: false,
 			info: $(PageData),
 			appLinks: $(AppLinks),
+			appData: $(AppData),
 			submitted: false,
 			serverError: '',
 			emailError: '',
@@ -40,6 +41,12 @@
 			passwordError: '',
 		},
 		computed: {
+			hasLogo() {
+				return this.appData && this.appData.appLogo;
+			},
+			logoSrc() {
+				return this.appData.appLogo;
+			},
 			locale: function() {
 				return window.$$locale;
 			},

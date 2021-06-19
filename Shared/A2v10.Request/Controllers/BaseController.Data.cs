@@ -326,6 +326,8 @@ namespace A2v10.Request
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
 			var cmd = rm.GetCommand(command);
 
+			cmd.CheckPermissions(_userStateManager.GetUserPermissions(), _host.IsDebugConfiguration);
+
 			if (cmd.debugOnly && !_host.IsDebugConfiguration)
 				throw new RequestModelException($"Invalid environment");
 

@@ -62,25 +62,30 @@ header, .header {
 	}
 
 	.h-block {
+		display: flex;
+		align-items: center;
 		white-space: nowrap;
+		color: inherit;
 
-		a.app-title {
+		&:hover {
+			text-decoration: none;
 			color: inherit;
+		}
+
+		.app-title {
 			font-size: 18px;
+		}
 
-			.ico {
-				font-size: inherit;
-				margin-right: 6px;
-			}
+		.app-logo {
+			padding-right: 12px;
 
-			&:hover {
-				text-decoration: none;
-				color: inherit;
+			> img {
+				display: block;
 			}
 		}
 
 		.app-subtitle {
-			padding-left: 6px;
+			padding-left: 12px;
 		}
 	}
 

@@ -98,6 +98,7 @@
     </Compile>
     <Compile Include="TypeChecker\TypeChecker.cs" />
     <Compile Include="TypeChecker\TypeCheckerException.cs" />
+    <Compile Include="Utils\ModulePermission.cs" />
     <Compile Include="Utils\RedirectModule.cs" />
     <Compile Include="VueDataScripter.cs" />
   </ItemGroup>

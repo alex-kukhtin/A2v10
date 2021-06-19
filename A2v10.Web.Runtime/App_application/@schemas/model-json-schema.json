@@ -141,7 +141,9 @@
 						"template": { "type": "string" },
 						"checkTypes": { "type": "string" },
 						"processDbEvents": { "type": "boolean" },
-						"commandTimeout": { "type": "number" }
+						"commandTimeout": { "type": "number" },
+						"parameters": { "type": "object" },
+						"permissions": { "$ref": "#/definitions/permissions" }
 					},
 					"additionalProperties": false
 				}
@@ -207,7 +209,10 @@
 						"checkTypes": { "type": "string" },
 						"type": {
 							"type": "string",
-							"enum": [ "stimulsoft" ]
+							"enum": [ "stimulsoft", "xml", "json" ]
+						},
+						"permissions": {
+							"$ref": "#/definitions/permissions"
 						}
 					},
 					"additionalProperties": false
@@ -261,6 +266,9 @@
 								},
 								"additionalProperties": false
 							}
+						},
+						"permissions": {
+							"$ref": "#/definitions/permissions"
 						}
 					},
 					"additionalProperties": false

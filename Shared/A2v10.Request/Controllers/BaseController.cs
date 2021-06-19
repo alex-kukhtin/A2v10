@@ -78,8 +78,6 @@ namespace A2v10.Request
 		public IDataScripter Scripter => _scripter;
 		public IUserStateManager UserStateManager => _userStateManager;
 
-		public String UserPermissions { get; set; }
-
 		public Boolean Mobile => _host.Mobile;
 
 		public Boolean Admin => _host.IsAdminMode;
@@ -129,7 +127,7 @@ namespace A2v10.Request
 		{
 			RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, kind, pathInfo);
 			RequestView rw = rm.GetCurrentAction(kind);
-			rw.CheckPermissions(UserPermissions, Host.IsDebugConfiguration);
+			rw.CheckPermissions(_userStateManager.GetUserPermissions(), Host.IsDebugConfiguration);
 			await Render(rw, writer, loadPrms);
 		}
 

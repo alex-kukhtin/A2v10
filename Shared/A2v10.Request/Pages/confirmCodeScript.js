@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210610-7782
+// 20210619-7785
 
 "use strict";
 
@@ -23,6 +23,7 @@
 			processing: false,
 			info: $(PageData),
 			appLinks: $(AppLinks),
+			appData: $(AppData),
 			submitted: false,
 			serverError: '',
 			passwordError: '',
@@ -31,6 +32,12 @@
 			againVisible: true
 		},
 		computed: {
+			hasLogo() {
+				return this.appData && this.appData.appLogo;
+			},
+			logoSrc() {
+				return this.appData.appLogo;
+			},
 			locale: function() {
 				return window.$$locale;
 			},
@@ -55,7 +62,7 @@
 				const that = this;
 				post('/account/confirmcode', dataToSend)
 					.then(function (response) {
-						console.dir(response);
+						//console.dir(response);
 						that.processing = false;
 						let result = response.Status;
 						switch (result) {

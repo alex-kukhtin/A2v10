@@ -6,10 +6,12 @@ using System.IO;
 
 using Newtonsoft.Json;
 
-using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
 using System.Threading.Tasks;
 using System.Text;
+using System.Dynamic;
+
+using A2v10.Data.Interfaces;
+using A2v10.Infrastructure;
 
 namespace A2v10.Request
 {
@@ -38,6 +40,26 @@ namespace A2v10.Request
 				return JsonConvert.SerializeObject(links);
 			}
 			return "[]";
+		}
+
+
+		public static String GetAppData(this IApplicationHost host, ILocalizer localizer)
+		{
+			var appJson = host.ApplicationReader.ReadTextFile(String.Empty, "app.json");
+			if (appJson != null)
+			{
+				// with validation
+				ExpandoObject app = JsonConvert.DeserializeObject<ExpandoObject>(appJson);
+				app.Set("embedded", host.Embedded);
+				return localizer.Localize(null, JsonConvert.SerializeObject(app));
+			}
+
+			ExpandoObject defAppData = new ExpandoObject();
+			defAppData.Set("version", host.AppVersion);
+			defAppData.Set("title", "A2v10 Web Application");
+			defAppData.Set("copyright", host.Copyright);
+			defAppData.Set("embedded", host.Embedded);
+			return JsonConvert.SerializeObject(defAppData);
 		}
 
 		public static String CustomAppHead(this IApplicationHost host)

@@ -13,11 +13,14 @@
 		template: `
 <header class="header">
 	<div class=h-menu v-if=isNavBarMenu @click.stop.prevent=clickMenu><i class="ico ico-grid2"></i></div>
-	<div class=h-block v-if='!isNavBarMenu'>
+	<a class=h-block v-if='!isNavBarMenu' @click.stop.prevent=root href='/'  tabindex="-1">
 		<!--<i class="ico-user"></i>-->
-		<a class=app-title href='/' @click.prevent="root" v-text="title" tabindex="-1"></a>
+		<span class="app-logo" v-if=hasLogo>
+			<img :src="logoSrc" />
+		</span>
+		<span class=app-title v-text="title"></span>
 		<span class=app-subtitle v-text="subtitle"></span>
-	</div>
+	</a>
 	<div v-if=isNavBarMenu class=h-menu-title v-text=seg0text></div>
 	<div class="aligner"></div>
 	<span class="title-notify" v-if="notifyText" v-text="notifyText" :title="notifyText" :class="notifyClass"></span>
@@ -61,7 +64,8 @@
 			feedbackVisible: Boolean,
 			singlePage: String,
 			changePassword: Function,
-			navBarMode: String
+			navBarMode: String,
+			logo: String
 		},
 		computed: {
 			isSinglePage() {
@@ -79,6 +83,12 @@
 			},
 			hasFeedback() {
 				return this.appData && this.appData.feedback;
+			},
+			hasLogo() {
+				return this.appData && this.appData.appLogo;
+			},
+			logoSrc() {
+				return this.hasLogo ? this.appData.appLogo : '';
 			},
 			profileItems() {
 				return this.appData ? this.appData.profileMenu : null;

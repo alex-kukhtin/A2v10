@@ -13,18 +13,25 @@
 	const vm = new Vue({
 		el: "#app",
 		data: {
-			email: '',
+			email: '$(UserEmail)',
 			password: '',
 			rememberMe: false,
 			processing: false,
 			info: $(PageData),
 			appLinks: $(AppLinks),
+			appData: $(AppData),
 			submitted: false,
 			serverError: '',
 			emailError: '',
 			enableNotConfirmed: false
 		},
 		computed: {
+			hasLogo() {
+				return this.appData && this.appData.appLogo;
+			},
+			logoSrc() {
+				return this.appData.appLogo;
+			},
 			valid: function() {
 				if (!this.submitted) return true;
 				return this.validEmail && this.validPassword;

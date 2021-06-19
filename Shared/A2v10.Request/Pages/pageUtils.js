@@ -1,4 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+
+//20210619-7785
 
 Vue.directive('focus', {
 	bind: function(el, binding, vnode) {
@@ -31,30 +33,29 @@ Vue.directive('focus', {
 	}
 });
 
-function post(url, data) {
-	return new Promise(function (resolve, reject) {
-		let xhr = new XMLHttpRequest();
-
-		xhr.onload = function (response) {
-			if (xhr.status === 200) {
-				let xhrResult = JSON.parse(xhr.responseText);
-				resolve(xhrResult);
-			}
-			else if (xhr.status === 255) {
-				reject(xhr.responseText || xhr.statusText);
-			}
-			else
-				reject(xhr.statusText);
-		};
-		xhr.onerror = function (response) {
-			reject(xhr.statusText);
-		};
-		xhr.open('POST', url, true);
-		xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-		xhr.setRequestHeader('Accept', 'application/json;charset=utf-8');
-		xhr.setRequestHeader("__RequestVerificationToken", token);
-		xhr.send(JSON.stringify(data));
-	});
+async function post(url, data) {
+	try {
+		var response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest',
+				'Accept': 'application/json;charset=utf-8',
+				"__RequestVerificationToken": token
+			},
+			body: JSON.stringify(data)
+		});
+		switch (response.status) {
+			case 200:
+				return await response.json();
+			case 255:
+				return await response.text() || response.statusText;
+		}
+	} catch (err) {
+		if (err instanceof Error)
+			throw err.message
+		else
+			throw err;
+	}
 }
 
 function parseQueryString(str) {

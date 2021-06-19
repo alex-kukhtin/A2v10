@@ -1,0 +1,45 @@
+﻿{
+	"$schema": "http://json-schema.org/draft-04/schema",
+	"$version": "10.0.7785",
+	"title": "JSON Schema for model.json",
+	"type": "object",
+
+	"properties": {
+		"$schema": { "type": "string" },
+		"title": { "type": "string" },
+		"version": { "type": "string" },
+		"copyright": { "type": "string" },
+		"appLogo": { "type": "string" },
+		"links": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"title": { "type": "string" },
+					"url": {
+						"type": "string",
+						"pattern": "^\/.+"
+					}
+				},
+				"additionalProperties": false
+			}
+		},
+		"profileMenu": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"title": { "type": "string" },
+					"icon": { "type": "string" },
+					"url": {
+						"type": "string",
+						"pattern": "^\/.+"
+					}
+				},
+				"additionalProperties": false
+			}
+		}
+
+	},
+	"additionalProperties": false
+}

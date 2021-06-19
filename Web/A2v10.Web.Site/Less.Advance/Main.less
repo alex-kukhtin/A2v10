@@ -64,25 +64,29 @@ header, .header {
 	}
 
 	.h-block {
+		display: flex;
+		align-items: center;
 		white-space: nowrap;
+		color: inherit;
 
-		a.app-title {
+		&:hover {
+			text-decoration: none;
 			color: inherit;
+		}
+
+		.app-title {
 			font-size: 18px;
+		}
 
-			.ico {
-				font-size: inherit;
-				margin-right: 6px;
-			}
-
-			&:hover {
-				text-decoration: none;
-				color: inherit;
+		.app-logo {
+			padding-right:12px;
+			> img {
+				display:block;
 			}
 		}
 
 		.app-subtitle {
-			padding-left: 6px;
+			padding-left: 12px;
 		}
 	}
 
@@ -158,8 +162,8 @@ header, .header {
 	}
 
 	.user-name .client-id {
-		padding-left:.3rem;
-		user-select:text;
+		padding-left: .3rem;
+		user-select: text;
 	}
 
 	.company-menu-name {

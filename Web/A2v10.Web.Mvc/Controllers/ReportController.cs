@@ -76,6 +76,8 @@ namespace A2v10.Web.Mvc.Controllers
 				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
 				var rep = rm.GetReport();
 
+				rep.CheckPermissions(_baseController.UserStateManager.GetUserPermissions(), _baseController.Host.IsDebugConfiguration);
+
 				MvcHtmlString result = null;
 				using (var pr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"render: {Rep}"))
 				{

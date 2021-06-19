@@ -185,7 +185,10 @@
 			"report": "waybill",
 			"name": "Заголовок отчета",
 			"model": "Document",
-			"checkTypes": "print.d"
+			"checkTypes": "print.d",
+			"permissions": {
+				"Module1": "edit"
+			}
 		}
 	},
 	"files": {

@@ -21,9 +21,16 @@
 		data: {
 			info: $(PageData),
 			processing: false,
-			appLinks: $(AppLinks)
+			appLinks: $(AppLinks),
+			appData: $(AppData)
 		},
 		computed: {
+			hasLogo() {
+				return this.appData && this.appData.appLogo;
+			},
+			logoSrc() {
+				return this.appData.appLogo;
+			},
 			locale() {
 				return window.$$locale;
 			}

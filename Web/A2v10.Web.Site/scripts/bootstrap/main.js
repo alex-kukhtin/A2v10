@@ -1530,7 +1530,7 @@ app.modules['std:http'] = function () {
 			}
 
 		} catch (err) {
-			alert(err);
+			throw err;
 		} finally {
 			eventBus.$emit('endRequest', url);
 		}
