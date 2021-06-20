@@ -45,8 +45,9 @@ namespace A2v10.Web.Mvc.Controllers
 		private readonly IUserLocale _userLocale;
 
 		private const String LOCALE_COOKIE = "_locale";
+		private const String QUERYSTRING_COOKIE = "_originurl";
+
 		private const String USERNAME_SESSIONKEY = "_username";
-		private const String QUERYSTRING_SESSIONKEY = "_querystring";
 
 		public AccountController()
 		{
@@ -77,6 +78,14 @@ namespace A2v10.Web.Mvc.Controllers
 			if (String.IsNullOrEmpty(avail))
 				return String.Empty;
 			return $"const avaliableLocales = [{String.Join(",", avail.Split(',').Select(x => $"'{x.Trim()}'"))}];";
+		}
+
+		Boolean IsAnalyticsEnabled()
+		{
+			var analytics = ConfigurationManager.AppSettings["analytics"];
+			if (String.IsNullOrEmpty(analytics))
+				return false;
+			return analytics == "enable";
 		}
 
 		void SendPage(String rsrcHtml, String rsrcScript, String serverInfo = null, String errorMessage = null)
@@ -159,8 +168,8 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			Session.Abandon();
 			ClearAllCookies();
-			//SaveQueryString();
 			String page = GetRedirectedPage("login", _host.Mobile ? ResourceHelper.LoginMobileHtml : ResourceHelper.LoginHtml);
+			SetQueryStringCookie();
 			SendPage(page, ResourceHelper.LoginScript);
 		}
 
@@ -173,46 +182,56 @@ namespace A2v10.Web.Mvc.Controllers
 		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> LoginPOST()
 		{
-			LoginViewModel model = GetModelFromBody<LoginViewModel>();
-
-			// LOWER CASE!
-			model.Name = model.Name.ToLower();
-			var user = await UserManager.FindByNameAsync(model.Name);
-
-			// Find by Phone Number
-			// await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", model.Name));
-
-			if (user == null)
-				return Json(new { Status = "Failure" });
-
-			if (!user.EmailConfirmed)
-			{
-				Session.Add(USERNAME_SESSIONKEY, user.UserName);
-				return Json(new { Status = "EmailNotConfirmed" });
-			}
-
 			String status = null;
 
-			var result = await SignInManager.PasswordSignInAsync(userName: model.Name, password: model.Password, isPersistent: model.RememberMe, shouldLockout: true);
-			switch (result)
+			try
 			{
-				case SignInStatus.Success:
-					await UpdateUser(user, success: true);
-					await CallHook("login", user);
-					ClearRVTCookie();
-					status = "Success";
-					break;
-				case SignInStatus.LockedOut:
-					await UpdateUser(model.Name);
-					status = "LockedOut";
-					break;
-				case SignInStatus.RequiresVerification:
-					throw new NotImplementedException("SignInStatus.RequiresVerification");
-				case SignInStatus.Failure:
-				default:
-					await UpdateUser(model.Name);
-					status = "Failure";
-					break;
+				LoginViewModel model = GetModelFromBody<LoginViewModel>();
+
+				// LOWER CASE!
+				model.Name = model.Name.ToLower();
+				var user = await UserManager.FindByNameAsync(model.Name);
+
+				// Find by Phone Number
+				// await UserManager.FindAsync(new UserLoginInfo("PhoneNumber", model.Name));
+
+				if (user == null)
+					return Json(new { Status = "Failure" });
+
+				if (!user.EmailConfirmed)
+				{
+					Session.Add(USERNAME_SESSIONKEY, user.UserName);
+					return Json(new { Status = "EmailNotConfirmed" });
+				}
+
+				var result = await SignInManager.PasswordSignInAsync(userName: model.Name, password: model.Password, isPersistent: model.RememberMe, shouldLockout: true);
+				switch (result)
+				{
+					case SignInStatus.Success:
+						await UpdateUser(user, success: true);
+						await CallHook("loginSuccess", user);
+						ClearRVTCookie();
+						status = "Success";
+						break;
+					case SignInStatus.LockedOut:
+						await UpdateUser(model.Name);
+						await CallHook("loginLockedOut", user);
+						status = "LockedOut";
+						break;
+					case SignInStatus.RequiresVerification:
+						throw new NotImplementedException("SignInStatus.RequiresVerification");
+					case SignInStatus.Failure:
+					default:
+						await UpdateUser(model.Name);
+						status = "Failure";
+						break;
+				}
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				status = ex.Message;
 			}
 			return Json(new { Status = status });
 		}
@@ -224,6 +243,8 @@ namespace A2v10.Web.Mvc.Controllers
 			foreach (var key in Request.Cookies.AllKeys)
 			{
 				if (key == LOCALE_COOKIE)
+					continue;
+				if (key == QUERYSTRING_COOKIE)
 					continue;
 				var c = Response.Cookies[key];
 				if (c != null)
@@ -258,13 +279,14 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			if (!_host.IsRegistrationEnabled)
 			{
-				Response.Write("Registration is disabled in this site");
+				Response.Write("Registration is disabled");
 				return;
 			}
 
 			Session.Abandon();
 			ClearAllCookies();
 
+			SetQueryStringCookie();
 			String page = GetRedirectedPage("register", ResourceHelper.RegisterTenantHtml);
 			SendPage(page, ResourceHelper.RegisterTenantScript);
 		}
@@ -432,6 +454,7 @@ namespace A2v10.Web.Mvc.Controllers
 					SaveDDOSTime();
 
 					Session.Add(USERNAME_SESSIONKEY, user.UserName);
+					await CallHook("registerStart", user);
 					status = "ConfirmSent";
 				}
 				else
@@ -460,11 +483,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			var userName = Session[USERNAME_SESSIONKEY];
 			if (userName == null)
-			{
 				return null;
-				//userName = "user25@user.com";
-				//Session.Add(USERNAME_SESSIONKEY, userName);
-			}
 			return userName.ToString();
 		}
 
@@ -504,19 +523,6 @@ namespace A2v10.Web.Mvc.Controllers
 				var user = await UserManager.FindByNameAsync(userName.ToString());
 				if (user == null)
 					return RedirectToLocal("~/account/register");
-				/*
-				if (userId == null)
-				{
-					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
-					return;
-				}
-				var user = await UserManager.FindByIdAsync(userId.Value);
-				if (user.EmailConfirmed)
-				{
-					SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript, null, "@[EMailAlreadyConfirmed]");
-					return;
-				}
-				*/
 				SendPage(GetRedirectedPage("confirmCode", ResourceHelper.ConfirmCodeHtml), ResourceHelper.ConfirmCodeScript);
 			}
 			catch (Exception /*ex*/)
@@ -566,6 +572,9 @@ namespace A2v10.Web.Mvc.Controllers
 					{
 						user.SetEMailConfirmed();
 						await UserManager.UpdateUser(user);
+
+						await CallHook("registerSuccess", user);
+						await SaveQueryStringAnalytics(user);
 
 						String subject = _localizer.Localize(null, "@[InviteEMail]");
 						String body = GetEMailBody("invite", null);
@@ -620,6 +629,9 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					user = await UserManager.FindByIdAsync(userId.Value);
 					await UserManager.UpdateUser(user);
+
+					await CallHook("registerSuccess", user);
+					await SaveQueryStringAnalytics(user);
 
 					String subject = _localizer.Localize(null, "@[InviteEMail]");
 					String body = GetEMailBody("invite", null);
@@ -964,38 +976,58 @@ namespace A2v10.Web.Mvc.Controllers
 
 		private async Task CallHook(String hookName, AppUser user)
 		{
-			var text = _host.ApplicationReader.ReadTextFile("", "hooks.json");
-			if (text == null)
+			var hooks = ConfigurationManager.AppSettings["accountHooks"];
+			if (hooks == null || hooks != "enable")
 				return;
-			var eo = JsonConvert.DeserializeObject<ExpandoObject>(text);
-			if (eo == null)
+
+			var rm = await RequestModel.CreateFromUrl(_host, false, RequestUrlKind.Simple, "_hooks");
+			if (rm == null)
 				return;
-			var hookObj = eo.Eval<ExpandoObject>(hookName);
-			if (hookObj == null)
+			var cmd = rm.GetCommand(hookName);
+			if (cmd == null)
 				return;
+			var dbEvent = new DbEvent()
+			{
+				Source = _host.CatalogDataSource,
+				ItemId = user.Id,
+				Command = hookName,
+				Path = "/_hooks"
+			};
+
 			/* add record to a2sys.DbEvents */
-			var dbEvent = new ExpandoObject();
-			dbEvent.Set("Path", eo.Eval<String>("path"));
-			dbEvent.Set("Command", eo.Eval<String>("command"));
-			dbEvent.Set("ItemId", user.Id);
-			dbEvent.Set("Source", eo.Eval<String>("source"));
-			//await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2sys.[DbEvent.Add]", dbEvent);
+			await _dbContext.ExecuteAsync<DbEvent>(_host.CatalogDataSource, "a2sys.[DbEvent.Add]", dbEvent);
 			/* and handle it */
 			await _host.ProcessDbEvents(_dbContext, _host.CatalogDataSource);
 		}
 
-		void SaveQueryString()
+
+		void SetQueryStringCookie()
 		{
-			if (Request.QueryString.Count == 0)
+			if (Request.Cookies.Get(QUERYSTRING_COOKIE) != null)
 				return;
-			if (HttpContext.Session[QUERYSTRING_SESSIONKEY] != null)
+			if (!IsAnalyticsEnabled())
 				return;
-			else if (Request.QueryString.Count == 1)
-			{
-				if (Request.QueryString.AllKeys.Contains("returnurl"))
-					return;
-			}
-			HttpContext.Session.Add(QUERYSTRING_SESSIONKEY, Request.QueryString.ToString());
+			if (Request.QueryString.Count == 0 || (Request.QueryString.Count == 1 && Request.QueryString["returnurl"] != null))
+				return;
+			Response.Cookies.Add(new HttpCookie(QUERYSTRING_COOKIE, Request.QueryString.ToString()));
+		}
+
+		async Task SaveQueryStringAnalytics(AppUser user)
+		{
+			if (!IsAnalyticsEnabled())
+				return;
+			var c = Request.Cookies.Get(QUERYSTRING_COOKIE);
+			if (c == null)
+				return;
+			if (String.IsNullOrEmpty(c.Value))
+				return;
+			var qs = HttpUtility.ParseQueryString(c.Value);
+			qs.Remove("returnurl");
+			qs.Remove("lang");
+			var eo = new ExpandoObject();
+			eo.Set("UserId", user.Id);
+			eo.Set("Value", qs.ToString());
+			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2security.SaveAnalytics", eo);
 		}
 	}
 }

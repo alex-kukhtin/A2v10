@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 18 jun 2021
-module version : 7760
+Last updated : 20 jun 2021
+module version : 7761
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7760;
+exec a2sys.SetVersion N'std:security', 7761;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -532,6 +532,19 @@ begin
 		DateCreated	datetime not null
 			constraint DF_Referrals_DateCreated2 default(a2sys.fn_getCurrentDate()),
 		Memo nvarchar(255) null
+	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Analytics')
+begin
+	create table a2security.Analytics
+	(
+		UserId bigint not null constraint PK_Analytics primary key
+			constraint FK_Analytics_UserId_Users foreign key references a2security.Users(Id),
+		[Value] nvarchar(max) null,
+		DateCreated	datetime not null
+			constraint DF_Analytics_DateCreated2 default(a2sys.fn_getCurrentDate()),
 	)
 end
 go
@@ -1536,22 +1549,6 @@ begin
 end
 go
 ------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Permissions')
-	drop procedure [a2security].[User.Permissions]
-go
-------------------------------------------------
-create procedure [a2security].[User.Permissions]
-@UserId bigint,
-@CompanyId bigint = 0
-as
-begin
-	set nocount on;
-	set transaction isolation level read uncommitted;
-
-	select Module, [Permissions] from a2security.[Module.Acl] where UserId = @UserId;
-end
-go
-------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateAcl.Module')
 	drop procedure [a2security].[Permission.UpdateAcl.Module]
 go
@@ -1621,6 +1618,22 @@ begin
 			values (s.[ObjectKey], s.UserId, s.CanView, s.CanEdit, s.CanDelete, s.CanApply)
 	when not matched by source then
 		delete;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'SaveAnalytics')
+	drop procedure a2security.SaveAnalytics
+go
+------------------------------------------------
+create procedure a2security.SaveAnalytics
+@UserId bigint,
+@Value nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	insert into a2security.Analytics(UserId, [Value]) values (@UserId, @Value);
 end
 go
 -- .NET CORE SUPPORT

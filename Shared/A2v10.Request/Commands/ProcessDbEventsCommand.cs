@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using IApplicationHost = A2v10.Infrastructure.IApplicationHost;
+using System.Web;
 
 namespace A2v10.Request
 {
@@ -68,12 +69,12 @@ namespace A2v10.Request
 
 		static async Task ProcessEvent(CancellationToken token, DbEvent evt, Boolean isAdminMode)
 		{
-			IServiceLocator loc = new ServiceLocator();
+			IServiceLocator loc = ServiceLocator.Current;
 			var host = loc.GetService<IApplicationHost>();
 			var dbContext = loc.GetService<IDbContext>();
 			host.SetAdmin(isAdminMode);
 			host.StartApplication(isAdminMode);
-			var ctrl = new BaseController(loc);
+			var ctrl = new BaseController();
 			if (token.IsCancellationRequested)
 				return;
 			try
@@ -100,9 +101,13 @@ namespace A2v10.Request
 			var eventList = await dbContext.LoadListAsync<DbEvent>(source, "a2sys.[DbEvent.Fetch]", null);
 			if (eventList == null || eventList.Count == 0)
 				return;
+			var currentContext = HttpContext.Current;
 			foreach (var evt in eventList)
 			{
-				HostingEnvironment.QueueBackgroundWorkItem(token => ProcessEvent(token, evt, isAdminMode));
+				HostingEnvironment.QueueBackgroundWorkItem(token => {
+					HttpContext.Current = currentContext;
+					return ProcessEvent(token, evt, isAdminMode);
+				});
 			}
 		}
 	}

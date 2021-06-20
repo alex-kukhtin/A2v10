@@ -20,7 +20,6 @@ namespace A2v10.Request
 	{
 		public String Companies { get; set; }
 		public String Period { get; set; }
-
 	}
 
 	public partial class BaseController
@@ -140,7 +139,7 @@ namespace A2v10.Request
 				loadPrms.Set("Mobile", true);
 
 			IDataModel dm = await _dbContext.LoadModelAsync(_host.TenantDataSource, _host.CustomUserMenu, loadPrms);
-			await SetUserStatePermission(dm, userInfo.UserId);
+			SetUserStateFromData(dm);
 
 			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
 
@@ -161,6 +160,8 @@ namespace A2v10.Request
 				String jsonPeriod = JsonConvert.SerializeObject(period, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 				macros.Set("Period", jsonPeriod);
 			}
+			var perm = menuRoot.Eval<List<ExpandoObject>>("Permissions");
+			SetUserStatePermission(perm);
 
 			menuRoot.RemoveKeys("Companies,CompaniesLinks,Period");
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
@@ -230,7 +231,7 @@ namespace A2v10.Request
 			IDataModel dm = await _dbContext.LoadModelAsync(dataSource, proc, loadPrms);
 
 			ExpandoObject menuRoot = dm.Root.RemoveEmptyArrays();
-			await SetUserStatePermission(dm, userInfo.UserId);
+			SetUserStateFromData(dm);
 
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 			macros.Set("Menu", jsonMenu);
@@ -255,17 +256,21 @@ namespace A2v10.Request
 			writer.Write(shell.ResolveMacros(macros));
 		}
 
-		async Task SetUserStatePermission(IDataModel model, Int64 userId)
+		void SetUserStateFromData(IDataModel model)
 		{
 			if (_userStateManager == null)
 				return;
 			_userStateManager.SetReadOnly(model.Eval<Boolean>("UserState.ReadOnly"));
-			var permissionsLinst = await _dbContext.LoadListAsync<ModulePermission>(_host.TenantDataSource, "[a2security].[User.Permissions]", new { UserId = userId });
-			if (permissionsLinst != null && permissionsLinst.Count > 0)
-			{
-				_userStateManager.SetUserPermissions(ModulePermission.Serialize(permissionsLinst));
-			}
 		}
+
+		void SetUserStatePermission(IList<ExpandoObject> list)
+		{
+			if (list == null || list.Count == 0)
+				_userStateManager.SetUserPermissions(String.Empty);
+			else
+				_userStateManager.SetUserPermissions(ModulePermission.FromExpandoList(list));
+		}
+
 
 		String AppScriptsLink
 		{

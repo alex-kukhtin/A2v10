@@ -1,0 +1,23 @@
+﻿{
+	"$schema": "../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
+	"source": "Catalog",
+	"schema": "a2",
+	"commands": {
+		"loginSuccess": {
+			"type": "sql",
+			"procedure": "RunHook"
+		},
+		"loginLockedOut": {
+			"type": "sql",
+			"procedure": "RunHook"
+		},
+		"registerStart": {
+			"type": "sql",
+			"procedure": "RunHook"
+		},
+		"registerSuccess": {
+			"type": "sql",
+			"procedure": "RunHook"
+		}
+	}
+}

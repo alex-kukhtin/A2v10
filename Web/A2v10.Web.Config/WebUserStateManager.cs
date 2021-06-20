@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
@@ -93,12 +93,15 @@ namespace A2v10.Web.Config
 
 		public void SetUserPermissions(String permissions)
 		{
-			HttpContext.Current.Session[_permissionsKey] = permissions;
+			if (String.IsNullOrEmpty(permissions))
+				HttpContext.Current.Session.Remove(_permissionsKey);
+			else
+				HttpContext.Current.Session[_permissionsKey] = permissions;
 		}
 
 		public String GetUserPermissions()
 		{
-			var s = HttpContext.Current.Session[_permissionsKey];
+			var s = HttpContext.Current?.Session[_permissionsKey];
 			if (s == null)
 				return null;
 			return s.ToString();

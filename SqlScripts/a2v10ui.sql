@@ -1,11 +1,11 @@
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 18 jun 2021
-module version : 7679
+Last updated : 20 jun 2021
+module version : 7680
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:ui', 7679;
+exec a2sys.SetVersion N'std:ui', 7680;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -221,6 +221,10 @@ begin
 
 	-- companies
 	exec a2security.[User.Companies] @UserId = @UserId;
+
+	-- permissions
+	select [Permissions!TPerm!Array] = null, [Module], [Permissions]
+	from a2security.[Module.Acl] where UserId = @UserId;
 
 	-- system parameters
 	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode], [NavBarMode], [Pages]

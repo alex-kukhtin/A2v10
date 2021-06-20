@@ -3,6 +3,8 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Dynamic;
+using A2v10.Infrastructure;
 
 namespace A2v10.Request
 {
@@ -15,16 +17,23 @@ namespace A2v10.Request
 		{
 			return String.Join("; ", list.Select(x => $"{x.Module}:{x.Permissions}"));
 		}
+
+		public static String FromExpandoList(IList<ExpandoObject> list)
+		{
+			return String.Join("; ", list.Select(x => $"{x.Eval<String>("Module")}:{x.Eval<Int32>("Permissions")}"));
+		}
 	}
 
 	public class PermissionSet : Dictionary<String, PermissionBits>
 	{
 		public void CheckAllow(String actual, Boolean debug)
 		{
-			if (actual == null)
-				return;
 			if (Count == 0)
 				return;
+
+			if (actual == null)
+				throw new RequestModelException($"UI:Access denied.\nRequired:\t{this}\nActual:\t&lt;empty&gt;");
+
 			var expected = PermissionSet.FromString(actual);
 
 			if (Intersect(expected))

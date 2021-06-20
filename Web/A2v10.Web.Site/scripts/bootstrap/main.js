@@ -1432,7 +1432,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210612-7785
+// 20210620-7785
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1603,35 +1603,28 @@ app.modules['std:http'] = function () {
 		});
 	}
 
-	function localpost(command, data) {
-		return new Promise(function (resolve, reject) {
-			let xhr = new XMLHttpRequest();
-
-			xhr.onload = function (response) {
-				if (xhr.status === 200) {
-					let ct = xhr.getResponseHeader('content-type');
-					let xhrResult = xhr.responseText;
-					if (ct.indexOf('application/json') !== -1)
-						xhrResult = JSON.parse(xhr.responseText);
-					resolve(xhrResult);
-				}
-				else if (xhr.status === 255) {
-					reject(xhr.responseText || xhr.statusText);
-				}
-				else {
-					reject(xhr.statusText);
-				}
-			};
-			xhr.onerror = function (response) {
-				reject(response);
-			};
-			let url = "http://127.0.0.1:64031/" + command;
-			xhr.open("POST", url, true);
-			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-			xhr.setRequestHeader('Accept', 'text/plain');
-			xhr.setRequestHeader('Content-Type', 'text/plain');
-			xhr.send(data);
+	async function localpost(command, data) {
+		let url = "http://127.0.0.1:64031/" + command;
+		let response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest',
+				'Accept': 'text/plain',
+				'Content-Type': 'text/plain'
+			},
+			body: data
 		});
+
+		if (response.status == 200) {
+			let ct = response.headers.get("content-type") || '';
+			if (ct.startsWith('application/json'))
+				return await response.json();
+			return await response.text();
+		} else if (response.status == 255) {
+			throw await response.text() || response.statusText;
+		} else {
+			throw response.statusText;
+		}
 	}
 };
 
