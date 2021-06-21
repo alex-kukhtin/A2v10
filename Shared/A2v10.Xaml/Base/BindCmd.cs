@@ -128,6 +128,8 @@ namespace A2v10.Xaml
 
 		public Permission Permission { get; set; }
 
+		public String Viewer { get; set; }
+
 		public BindCmd()
 		{
 
@@ -372,6 +374,8 @@ namespace A2v10.Xaml
 				sb.Append("newWindow: true,");
 			if (ReloadAfter)
 				sb.Append("reloadAfter: true,");
+			if (!String.IsNullOrEmpty(Viewer))
+				sb.Append($"viewer: '{Viewer.ToLowerInvariant()}',");
 			sb.RemoveTailComma();
 			sb.Append("}");
 			return sb.ToString();

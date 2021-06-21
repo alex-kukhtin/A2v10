@@ -4397,7 +4397,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210606-7781*/
+/*20210621-7785*/
 // controllers/base.js
 
 (function () {
@@ -5243,6 +5243,7 @@ app.modules['std:impl:array'] = function () {
 
 				let cmd = 'show';
 				let fmt = '';
+				let viewer = 'report';
 				if (opts) {
 					if (opts.export) {
 						cmd = 'export';
@@ -5251,6 +5252,8 @@ app.modules['std:impl:array'] = function () {
 						cmd = 'attach';
 					else if (opts.print)
 						cmd = 'print';
+					if (opts.viewer && cmd === 'show')
+						viewer = opts.viewer;
 				}
 
 				const doReport = () => {
@@ -5258,7 +5261,7 @@ app.modules['std:impl:array'] = function () {
 					if (arg && utils.isObject(arg))
 						id = utils.getStringId(arg);
 					const root = window.$$rootUrl;
-					let url = `${root}/report/${cmd}/${id}`;
+					let url = `${root}/${viewer}/${cmd}/${id}`;
 					let reportUrl = urltools.removeFirstSlash(repBaseUrl) || this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					let qry = Object.assign({}, { base: baseUrl, rep: rep }, data);

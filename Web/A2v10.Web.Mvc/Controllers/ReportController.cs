@@ -345,4 +345,9 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 		#endregion
 	}
+
+	public class StimulsoftController : ReportController
+	{
+
+	}
 }
