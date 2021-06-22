@@ -1328,26 +1328,31 @@ header .h-menu-title,
 }
 header .h-block,
 .header .h-block {
+  display: flex;
+  align-items: center;
   white-space: nowrap;
-}
-header .h-block a.app-title,
-.header .h-block a.app-title {
   color: inherit;
-  font-size: 18px;
 }
-header .h-block a.app-title .ico,
-.header .h-block a.app-title .ico {
-  font-size: inherit;
-  margin-right: 6px;
-}
-header .h-block a.app-title:hover,
-.header .h-block a.app-title:hover {
+header .h-block:hover,
+.header .h-block:hover {
   text-decoration: none;
   color: inherit;
 }
+header .h-block .app-title,
+.header .h-block .app-title {
+  font-size: 18px;
+}
+header .h-block .app-logo,
+.header .h-block .app-logo {
+  padding-right: 12px;
+}
+header .h-block .app-logo > img,
+.header .h-block .app-logo > img {
+  display: block;
+}
 header .h-block .app-subtitle,
 .header .h-block .app-subtitle {
-  padding-left: 6px;
+  padding-left: 12px;
 }
 header .h-menu,
 .header .h-menu {
@@ -4556,7 +4561,7 @@ ul.news-list > li {
 .modal-body.confirm > div,
 .modal-body.alert > div,
 .modal-body.info > div {
-  white-space: pre-line;
+  white-space: pre-wrap;
 }
 .modal-content.content-iframe {
   display: flex;

@@ -1,12 +1,12 @@
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 11 apr 2021
-module version : 7763
+Last updated : 19 jin 2021
+module version : 7764
 */
 -- database SEGMENT!
 ------------------------------------------------
-exec a2sys.SetVersion N'std:multitenant', 7763;
+exec a2sys.SetVersion N'std:multitenant', 7764;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'TenantUsers')
@@ -31,6 +31,10 @@ begin
 		constraint PK_TenantUsers primary key nonclustered (TenantId, Id)
 	);
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'TenantUsers' and COLUMN_NAME=N'Locale')
+	alter table a2security.TenantUsers add [Locale] nvarchar(32) not null constraint DF_TenantUsers_Locale default('uk_UA') with values;
 go
 ------------------------------------------------
 create or alter view a2security.[RealTenants]
@@ -162,7 +166,8 @@ create or alter procedure a2security.CreateTenantUser
 @PhoneNumber nvarchar(255) = null,
 @Memo nvarchar(255) = null,
 @TariffPlan nvarchar(255) = null,
-@TenantRoles nvarchar(max) = null
+@TenantRoles nvarchar(max) = null,
+@Locale nvarchar(255)
 as
 begin
 	set nocount on;
@@ -182,10 +187,10 @@ begin
 
 		begin tran;
 
-		insert into a2security.TenantUsers(TenantId, Id, UserName, PersonName, RegisterHost, PhoneNumber, Memo, TariffPlan) 
-			values(@Tenant, @Id, @UserName, @PersonName, @RegisterHost, @PhoneNumber, @Memo, @TariffPlan);
+		insert into a2security.TenantUsers(TenantId, Id, UserName, PersonName, RegisterHost, PhoneNumber, Memo, TariffPlan, Locale) 
+			values(@Tenant, @Id, @UserName, @PersonName, @RegisterHost, @PhoneNumber, @Memo, @TariffPlan, @Locale);
 
-		insert into a2security.Tenants(Id, [Admin]) values (@Tenant, @Id);
+		insert into a2security.Tenants(Id, [Admin], Locale) values (@Tenant, @Id, @Locale);
 
 		if @sql is not null
 			exec sp_executesql @sql, @prms, @Tenant;
@@ -194,15 +199,17 @@ begin
 	end
 	else
 	begin
-	-- add new user to current tenant
+		-- add new user to current tenant
 		begin tran
-		-- inherit RegisterHost, TariffPlan
-		select @RegisterHost = RegisterHost, @TariffPlan=TariffPlan from a2security.Tenants t
-			inner join a2security.TenantUsers u on t.[Admin] = u.Id
+		-- inherit RegisterHost, TariffPlan, Locale
+		declare @TenantLocale nvarchar(32);
+
+		select @RegisterHost = RegisterHost, @TariffPlan=TariffPlan, @TenantLocale=t.Locale 
+		from a2security.Tenants t inner join a2security.TenantUsers u on t.[Admin] = u.Id
 		where t.Id = @Tenant;
 
-		insert into a2security.TenantUsers(TenantId, Id, UserName, PersonName, RegisterHost, PhoneNumber, Memo, TariffPlan) 
-			values(@Tenant, @Id, @UserName, @PersonName, @RegisterHost, @PhoneNumber, @Memo, @TariffPlan);
+		insert into a2security.TenantUsers(TenantId, Id, UserName, PersonName, RegisterHost, PhoneNumber, Memo, TariffPlan, Locale) 
+			values(@Tenant, @Id, @UserName, @PersonName, @RegisterHost, @PhoneNumber, @Memo, @TariffPlan, isnull(@Locale, @TenantLocale));
 		commit tran;
 	end
 end

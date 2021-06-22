@@ -1,8 +1,8 @@
 ﻿/*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 apr 2021
-module version : 7058
+Last updated : 20 jun 2021
+module version : 7060
 */
 ------------------------------------------------
 set nocount on;
@@ -32,9 +32,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7058);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7060);
 else
-	update a2sys.Versions set [Version] = 7058 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7060 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -194,6 +194,15 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'Kind.TableType' and DATA_TYPE=N'table type')
+begin
+	create type a2sys.[Kind.TableType]
+	as table(
+		Kind nchar(4) null
+	);
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'GetVersions')
 	drop procedure a2sys.[GetVersions]
 go
@@ -281,6 +290,24 @@ go
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'DbEvents' and COLUMN_NAME=N'Source')
 begin
 	alter table a2sys.DbEvents add [Source] nvarchar(255);
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'DbEvent.Add')
+	drop procedure a2sys.[DbEvent.Add]
+go
+------------------------------------------------
+create procedure a2sys.[DbEvent.Add]
+@ItemId bigint,
+@Path nvarchar(255),
+@Command nvarchar(255),
+@Source nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	insert into a2sys.DbEvents(ItemId, [Path], Command, [Source]) values
+		(@ItemId, @Path, @Command, @Source);
 end
 go
 ------------------------------------------------

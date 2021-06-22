@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7779
-generated: 15.06.2021 12:26:05
+generated: 22.06.2021 08:35:51
 */
 
 set nocount on;
@@ -31,8 +31,8 @@ go
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 apr 2021
-module version : 7058
+Last updated : 20 jun 2021
+module version : 7060
 */
 ------------------------------------------------
 set nocount on;
@@ -62,9 +62,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7058);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7060);
 else
-	update a2sys.Versions set [Version] = 7058 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7060 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -224,6 +224,15 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'Kind.TableType' and DATA_TYPE=N'table type')
+begin
+	create type a2sys.[Kind.TableType]
+	as table(
+		Kind nchar(4) null
+	);
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'GetVersions')
 	drop procedure a2sys.[GetVersions]
 go
@@ -314,6 +323,24 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'DbEvent.Add')
+	drop procedure a2sys.[DbEvent.Add]
+go
+------------------------------------------------
+create procedure a2sys.[DbEvent.Add]
+@ItemId bigint,
+@Path nvarchar(255),
+@Command nvarchar(255),
+@Source nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	insert into a2sys.DbEvents(ItemId, [Path], Command, [Source]) values
+		(@ItemId, @Path, @Command, @Source);
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'DbEvent.Fetch')
 	drop procedure a2sys.[DbEvent.Fetch]
 go
@@ -383,11 +410,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 12 jun 2021
-module version : 7759
+Last updated : 20 jun 2021
+module version : 7761
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7759;
+exec a2sys.SetVersion N'std:security', 7761;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -917,6 +944,19 @@ begin
 end
 go
 ------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Analytics')
+begin
+	create table a2security.Analytics
+	(
+		UserId bigint not null constraint PK_Analytics primary key
+			constraint FK_Analytics_UserId_Users foreign key references a2security.Users(Id),
+		[Value] nvarchar(max) null,
+		DateCreated	datetime not null
+			constraint DF_Analytics_DateCreated2 default(a2sys.fn_getCurrentDate()),
+	)
+end
+go
+------------------------------------------------
 if exists(select * from sys.default_constraints where name=N'DF_License_UtcDateCreated' and parent_object_id = object_id(N'a2security.Referrals'))
 begin
 	alter table a2security.Referrals drop constraint DF_Referrals_DateCreated;
@@ -1408,6 +1448,141 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check')
+	drop procedure a2security.[Permission.Check]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255),
+	@CanEdit bit = null output,
+	@CanDelete bit = null output,
+	@CanApply bit = null output,
+	@Permissions int = null output
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	declare @_canView bit = 0;
+	declare @_canEdit bit = 0;
+	declare @_canDelete bit = 0;
+	declare @_canApply bit = 0;
+	declare @_permissions int = 0;
+
+
+	select * from a2security.[Module.Acl]
+
+	if 1 = a2security.fn_isUserAdmin(@UserId)
+	begin
+		set @CanEdit = 1;
+		set @CanDelete = 1;
+		set @CanApply = 1;
+		set @Permissions = 15;
+	end
+	else
+	begin
+		select @_canView = CanView, @_canEdit = CanEdit, @_canDelete = CanDelete, @_canApply = CanApply,
+			@_permissions = [Permissions]
+		from a2security.[Module.Acl]
+		where [Module] = @Module and [UserId] = @UserId
+
+		if isnull(@_canView, 0) = 0
+			throw 60000, N'@[UIError.AccessDenied]', 0;
+		else
+		begin
+			set @CanEdit = @_canEdit;
+			set @CanDelete = @_canDelete;
+			set @CanApply = @_canApply;
+			set @Permissions = @_permissions;
+		end
+	end
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check.Apply')
+	drop procedure a2security.[Permission.Check.Apply]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check.Apply]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+
+	declare @_canApply bit;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, @CanApply = @_canApply output;
+	if @_canApply = 0
+		throw 60000, N'@[UIError.AccessDenied]', 0;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check.Edit')
+	drop procedure a2security.[Permission.Check.Edit]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check.Edit]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255),
+	@Permissions int = null output
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	declare @_canEdit bit;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, 
+		@CanEdit = @_canEdit output, @Permissions = @Permissions output;
+	if @_canEdit = 0
+		throw 60000, N'@[UIError.AccessDenied]', 0;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check.Delete')
+	drop procedure a2security.[Permission.Check.Delete]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Check.Delete]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	declare @_canDelete bit;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, @CanDelete = @_canDelete output;
+	if @_canDelete = 0
+		throw 60000, N'@[UIError.AccessDenied]', 0;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Get')
+	drop procedure a2security.[Permission.Get]
+go
+------------------------------------------------
+create procedure a2security.[Permission.Get]
+	@UserId bigint,
+	@CompanyId bigint = 0,
+	@Module nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	declare @_permissions int = 0;
+	exec a2security.[Permission.Check] 
+		@UserId = @UserId, @CompanyId = @CompanyId, @Module = @Module, @Permissions = @_permissions output;
+	return @_permissions;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.ChangePassword.Load')
 	drop procedure a2security.[User.ChangePassword.Load]
 go
@@ -1782,22 +1957,6 @@ begin
 end
 go
 ------------------------------------------------
-if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Permissions')
-	drop procedure [a2security].[User.Permissions]
-go
-------------------------------------------------
-create procedure [a2security].[User.Permissions]
-@UserId bigint,
-@CompanyId bigint = 0
-as
-begin
-	set nocount on;
-	set transaction isolation level read uncommitted;
-
-	select Module, [Permissions] from a2security.[Module.Acl] where UserId = @UserId;
-end
-go
-------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.UpdateAcl.Module')
 	drop procedure [a2security].[Permission.UpdateAcl.Module]
 go
@@ -1867,6 +2026,22 @@ begin
 			values (s.[ObjectKey], s.UserId, s.CanView, s.CanEdit, s.CanDelete, s.CanApply)
 	when not matched by source then
 		delete;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'SaveAnalytics')
+	drop procedure a2security.SaveAnalytics
+go
+------------------------------------------------
+create procedure a2security.SaveAnalytics
+@UserId bigint,
+@Value nvarchar(max)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	insert into a2security.Analytics(UserId, [Value]) values (@UserId, @Value);
 end
 go
 -- .NET CORE SUPPORT
@@ -2142,11 +2317,11 @@ go
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 09 jun 2021
-module version : 7678
+Last updated : 20 jun 2021
+module version : 7680
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:ui', 7678;
+exec a2sys.SetVersion N'std:ui', 7680;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2ui')
@@ -2362,6 +2537,10 @@ begin
 
 	-- companies
 	exec a2security.[User.Companies] @UserId = @UserId;
+
+	-- permissions
+	select [Permissions!TPerm!Array] = null, [Module], [Permissions]
+	from a2security.[Module.Acl] where UserId = @UserId;
 
 	-- system parameters
 	select [SysParams!TParam!Object]= null, [AppTitle], [AppSubTitle], [SideBarMode], [NavBarMode], [Pages]

@@ -1432,7 +1432,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210612-7783
+// 20210620-7785
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1461,7 +1461,7 @@ app.modules['std:http'] = function () {
 				},
 				body: data
 			});
-			let ct = response.headers.get("content-type");
+			let ct = response.headers.get("content-type") || '';
 			switch (response.status) {
 				case 200:
 					if (raw)
@@ -1516,7 +1516,7 @@ app.modules['std:http'] = function () {
 				},
 				body: data
 			});
-			let ct = response.headers.get("content-type");
+			let ct = response.headers.get("content-type") || '';
 			switch (response.status) {
 				case 200:
 					if (ct.startsWith('application/json'))
@@ -1530,7 +1530,7 @@ app.modules['std:http'] = function () {
 			}
 
 		} catch (err) {
-			alert(err);
+			throw err;
 		} finally {
 			eventBus.$emit('endRequest', url);
 		}
@@ -1603,35 +1603,28 @@ app.modules['std:http'] = function () {
 		});
 	}
 
-	function localpost(command, data) {
-		return new Promise(function (resolve, reject) {
-			let xhr = new XMLHttpRequest();
-
-			xhr.onload = function (response) {
-				if (xhr.status === 200) {
-					let ct = xhr.getResponseHeader('content-type');
-					let xhrResult = xhr.responseText;
-					if (ct.indexOf('application/json') !== -1)
-						xhrResult = JSON.parse(xhr.responseText);
-					resolve(xhrResult);
-				}
-				else if (xhr.status === 255) {
-					reject(xhr.responseText || xhr.statusText);
-				}
-				else {
-					reject(xhr.statusText);
-				}
-			};
-			xhr.onerror = function (response) {
-				reject(response);
-			};
-			let url = "http://127.0.0.1:64031/" + command;
-			xhr.open("POST", url, true);
-			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-			xhr.setRequestHeader('Accept', 'text/plain');
-			xhr.setRequestHeader('Content-Type', 'text/plain');
-			xhr.send(data);
+	async function localpost(command, data) {
+		let url = "http://127.0.0.1:64031/" + command;
+		let response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest',
+				'Accept': 'text/plain',
+				'Content-Type': 'text/plain'
+			},
+			body: data
 		});
+
+		if (response.status == 200) {
+			let ct = response.headers.get("content-type") || '';
+			if (ct.startsWith('application/json'))
+				return await response.json();
+			return await response.text();
+		} else if (response.status == 255) {
+			throw await response.text() || response.statusText;
+		} else {
+			throw response.statusText;
+		}
 	}
 };
 
@@ -1805,9 +1798,9 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200903-7705
+// 20210618-7785
 /*components/include.js*/
 
 (function () {
@@ -1874,7 +1867,10 @@ app.modules['std:http'] = function () {
 				}, 1);
 			},
 			error(msg) {
-				msg = msg || '';
+				if (msg instanceof Error)
+					msg = msg.message;
+				else
+					msg = msg || '';
 				if (this.insideDialog)
 					eventBus.$emit('modalClose', false);
 				if (msg.indexOf('UI:') === 0) {
@@ -4401,7 +4397,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210606-7781*/
+/*20210621-7785*/
 // controllers/base.js
 
 (function () {
@@ -5247,6 +5243,7 @@ app.modules['std:impl:array'] = function () {
 
 				let cmd = 'show';
 				let fmt = '';
+				let viewer = 'report';
 				if (opts) {
 					if (opts.export) {
 						cmd = 'export';
@@ -5255,6 +5252,8 @@ app.modules['std:impl:array'] = function () {
 						cmd = 'attach';
 					else if (opts.print)
 						cmd = 'print';
+					if (opts.viewer && cmd === 'show')
+						viewer = opts.viewer;
 				}
 
 				const doReport = () => {
@@ -5262,7 +5261,7 @@ app.modules['std:impl:array'] = function () {
 					if (arg && utils.isObject(arg))
 						id = utils.getStringId(arg);
 					const root = window.$$rootUrl;
-					let url = `${root}/report/${cmd}/${id}`;
+					let url = `${root}/${viewer}/${cmd}/${id}`;
 					let reportUrl = urltools.removeFirstSlash(repBaseUrl) || this.$indirectUrl || this.$baseUrl;
 					let baseUrl = urltools.makeBaseUrl(reportUrl);
 					let qry = Object.assign({}, { base: baseUrl, rep: rep }, data);
