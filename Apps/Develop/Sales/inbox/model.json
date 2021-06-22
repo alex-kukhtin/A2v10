@@ -1,4 +1,5 @@
 ﻿{
+	"$schema": "../../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
 	"schema": "a2demo",
 	"model": "Inbox",
 	"actions": {
@@ -7,12 +8,12 @@
 			"template": "index.template",
 			"view": "index.view"
 		},
-			"open": {
-				"model": "Inbox",
-				"indirect": true,
-				"target": "{{Inbox.Action}}",
-				//"target": "sales/waybill/{{Inbox.Command}}",
-				"targetId": "{{Inbox.ModelId}}"
-			}
+		"open": {
+			"model": "Inbox",
+			"indirect": true,
+			"target": "{{Inbox.Action}}",
+			//"target": "sales/waybill/{{Inbox.Command}}",
+			"targetId": "{{Inbox.ModelId}}"
+		}
 	}
 }
