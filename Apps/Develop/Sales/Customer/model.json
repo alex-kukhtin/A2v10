@@ -27,6 +27,12 @@
 			"schema": "dbo",
 			"model": "Report.Documents",
 			"view": "testgroup.dialog"
+		},
+		"testSubTree": {
+			"schema": "a2test",
+			"source": "Test",
+			"model": "MultiplyTrees",
+			"view": "empty.dialog"
 		}
 
 	}

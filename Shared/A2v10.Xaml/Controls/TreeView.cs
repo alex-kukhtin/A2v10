@@ -42,24 +42,24 @@ namespace A2v10.Xaml
 		{
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)
-				sb.Append($"subitems: '{isBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
+				sb.Append($"subitems: '{isBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var labelBind = GetBinding(nameof(Label));
 			if (labelBind != null)
-				sb.Append($"label: '{labelBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
+				sb.Append($"label: '{labelBind.Path}',"); //GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var tipBind = GetBinding(nameof(Tip));
 			if (tipBind != null)
-				sb.Append($"title: '{tipBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
+				sb.Append($"title: '{tipBind.Path}', "); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var iconBind = GetBinding(nameof(Icon));
 			if (iconBind != null)
-				sb.Append($"hasIcon: true, icon: '{iconBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
+				sb.Append($"hasIcon: true, icon: '{iconBind.Path}',"); //GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			var isFolderBind = GetBinding(nameof(IsFolder));
 			if (isFolderBind != null)
-				sb.Append($"isFolder: '{isFolderBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
+				sb.Append($"isFolder: '{isFolderBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			else if (IsFolder != null)
 				throw new XamlException("The IsFolder property must be a binding");
 			var isGroupBind = GetBinding(nameof(IsGroup));
 			if (isGroupBind != null)
-				sb.Append($"isGroup: '{isGroupBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
+				sb.Append($"isGroup: '{isGroupBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			else if (IsGroup != null)
 				throw new XamlException("The IsGroup property must be a binding");
 
@@ -68,7 +68,7 @@ namespace A2v10.Xaml
 			if (showBind == null)
 				showBind = GetBinding(nameof(If));
 			if (showBind != null)
-				sb.Append($"isVisible: '{showBind.GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
+				sb.Append($"isVisible: '{showBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 		}
 	}
 

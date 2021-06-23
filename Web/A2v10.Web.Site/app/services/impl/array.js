@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210531-7776*/
+/*20210623-7786*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -353,7 +353,7 @@ app.modules['std:impl:array'] = function () {
 				// expand all parent items
 				let p = this._parent_._parent_;
 				while (p) {
-					if (!p || p === this.$root)
+					if (!p || p === this.$root || !utils.isDefined(p.$expanded))
 						break;
 					p.$expanded = true;
 					p = p._parent_._parent_;

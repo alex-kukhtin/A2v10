@@ -281,8 +281,6 @@
 			"app/services/validators.js",
 			"app/services/impl/array.js",
 			"app/services/datamodel.js",
-			"app/server/validate.js",
-			"app/server/invoke.js"
 		],
 		"minify": {
 			"enabled": false,

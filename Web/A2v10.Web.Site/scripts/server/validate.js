@@ -1,17 +1,13 @@
 ﻿
-(function (param) {
+(function () {
 
-	const serverData = $$server();
+	let dm = require('std:datamodel');
 
-	// model from DB
-	var dmDb = serverData.dataModelDb();
-	// model from Request
-	var dbRq = serverData.dataModelRq();
+	app.modules['server:validate'] = {
+		validate
+	};
 
-	let result = dbRq.$forceValidate();
-
-	if (!result || result.length === 0)
-		return null;
-
-	return JSON.stringify(result);
+	function validate(datamodel, template) {
+		console.dir(datamodel);
+	}
 });

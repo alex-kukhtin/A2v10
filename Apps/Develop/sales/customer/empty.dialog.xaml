@@ -1,0 +1,25 @@
+<!-- Empty Dialog -->
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		Title="Empty dialog">
+
+	<Table ItemsSource="{Bind Model}" GridLines="Both">
+		<TableRow>
+			<TableCell Content="{Bind Name}">
+				
+			</TableCell>
+			<TableCell>
+				<TreeView ItemsSource="{Bind Elements}" Description="tree view" Width="20rem"
+					IconFolder="AccountFolder" IconItem="Account" ExpandFirstItem="True" FolderSelect="True">
+					<TreeViewItem ItemsSource="{Bind TreeItems}" Label="{Bind Name}"
+						Tip="Tip for tree item" />
+				</TreeView>
+			</TableCell>
+		</TableRow>
+	</Table>
+
+	<Repeater ItemsSource="{Bind Model}">
+		<TreeView ItemsSource="{Bind Elements}" Width="20rem" IconFolder="Folder" IconItem="File">
+			<TreeViewItem ItemsSource="{Bind TreeItems}" Label="{Bind Name}" />
+		</TreeView>
+	</Repeater>
+</Dialog>

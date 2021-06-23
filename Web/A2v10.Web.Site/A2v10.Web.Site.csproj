@@ -116,7 +116,7 @@
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />
-    <Content Include="app\server\validate.js" />
+    <Content Include="scripts\server\validate.js" />
     <Content Include="app\services\eusign.js" />
     <Content Include="app\services\html.js" />
     <Content Include="app\services\impl\array.js" />
@@ -404,7 +404,6 @@
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />
     <Content Include="scripts\server\library.js" />
-    <Content Include="scripts\server\validate.js" />
     <Content Include="TestPages\diagram.html" />
     <Content Include="TestPages\func.html" />
     <Content Include="TestPages\validators.html" />
