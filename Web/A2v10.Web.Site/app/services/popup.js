@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20171029-7060*/
+/*20210627-7787*/
 /* services/popup.js */
 
 app.modules['std:popup'] = function () {
@@ -40,6 +40,7 @@ app.modules['std:popup'] = function () {
 		document.body.addEventListener('click', closePopups);
 		document.body.addEventListener('contextmenu', closePopups);
 		document.body.addEventListener('keydown', closeOnEsc);
+		document.body.addEventListener("mouseup", closeContextMenus);
 	}
 
 
@@ -49,10 +50,20 @@ app.modules['std:popup'] = function () {
 	}
 
 	function closeAllPopups() {
+		closeContextMenus();
 		__dropDowns__.forEach((el) => {
 			if (el._close)
 				el._close(document);
 		});
+	}
+
+	function closeContextMenus() {
+		let ctxmenus = document.querySelectorAll('.contextmenu');
+		if (ctxmenus != null) {
+			for (let menu of ctxmenus) {
+				menu.classList.remove('show');
+			}
+		}
 	}
 
 	function closeInside(el) {
@@ -68,6 +79,7 @@ app.modules['std:popup'] = function () {
 	}
 
 	function closePopups(ev) {
+		closeContextMenus();
 		if (__dropDowns__.length === 0)
 			return;
 		for (let i = 0; i < __dropDowns__.length; i++) {

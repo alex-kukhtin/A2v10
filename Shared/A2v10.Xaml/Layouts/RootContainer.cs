@@ -79,5 +79,17 @@ namespace A2v10.Xaml
 				ac.RenderElement(context);
 			cmd.RenderEnd(context);
 		}
+
+		private List<Action> _contextMenus = new List<Action>();
+		public void RegisterContextMenu(Action action)
+		{
+			_contextMenus.Add(action);
+		}
+
+		public void RenderContextMenus()
+		{
+			foreach (var a in _contextMenus)
+				a();
+		}
 	}
 }

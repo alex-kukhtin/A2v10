@@ -175,6 +175,7 @@
 		:item="itm" :key="index"
 		:click="click" :doubleclick="doubleclick" :is-active="isActive" :is-group="isGroup" :expand="expand" :root-items="items">
 	</tree-item>
+	<slot name=contextmenu></slot>
 </ul>`,
 		props: {
 			options: Object,

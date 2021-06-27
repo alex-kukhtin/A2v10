@@ -105,6 +105,7 @@ namespace A2v10.Xaml
 			{
 				if (page == null)
 					throw new InvalidProgramException();
+				RenderContextMenus();
 				page.RenderEnd(context);
 			}
 		}

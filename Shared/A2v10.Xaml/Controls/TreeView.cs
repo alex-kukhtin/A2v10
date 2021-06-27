@@ -104,12 +104,21 @@ namespace A2v10.Xaml
 
 		public TreeViewItemCollection Children { get; set; } = new TreeViewItemCollection();
 
+		public DropDownMenu ContextMenu { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
 			var cont = new TagBuilder("tree-view", null, IsInGrid);
 			MergeAttributes(cont, context);
+
+			String contextId = null;
+			if (ContextMenu != null)
+			{
+				contextId = $"ctx-{Guid.NewGuid()}";
+				cont.MergeAttribute("v-contextmenu", $"'{contextId}'");
+			}
 
 			if (Height != null)
 				cont.MergeStyle("height", Height.Value);
@@ -141,6 +150,7 @@ namespace A2v10.Xaml
 			}
 
 			cont.RenderStart(context);
+			RenderContextMenu(ContextMenu, context, contextId);
 			cont.RenderEnd(context);
 		}
 

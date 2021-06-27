@@ -32,12 +32,17 @@ using A2v10.Web.Config;
 
 namespace A2v10.Web.Mvc.Controllers
 {
+	public class ETag
+	{
+		public String Name { get; set; }
+		public String Value { get; set; }
+	}
+
 	[Authorize]
 	[CheckMobileFilter]
 	[ExecutingFilter]
 	public class AccountController : IdentityController, IControllerTenant, IControllerLocale
 	{
-
 		private readonly IApplicationHost _host;
 		private readonly IDbContext _dbContext;
 		private readonly ILocalizer _localizer;
@@ -1024,10 +1029,20 @@ namespace A2v10.Web.Mvc.Controllers
 			var qs = HttpUtility.ParseQueryString(c.Value);
 			qs.Remove("returnurl");
 			qs.Remove("lang");
+			var list = new List<ETag>();
+			for (var i=0; i<qs.Count; i++)
+			{
+				var key = qs.GetKey(i);
+				var val = qs.Get(i);
+				if (key.StartsWith("ET_", StringComparison.InvariantCultureIgnoreCase))
+				{
+					list.Add(new ETag() { Name = key, Value = val });
+				}
+			}
 			var eo = new ExpandoObject();
 			eo.Set("UserId", user.Id);
 			eo.Set("Value", qs.ToString());
-			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2security.SaveAnalytics", eo);
+			await _dbContext.SaveListAsync<ETag>(_host.CatalogDataSource, "a2security.SaveAnalytics", eo, list);
 		}
 	}
 }

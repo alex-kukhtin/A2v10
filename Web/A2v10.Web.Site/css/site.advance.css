@@ -5193,6 +5193,13 @@ TODO:
 .dropdown-menu > .checkbox > span {
   padding-left: 26px;
 }
+.contextmenu {
+  position: absolute;
+  display: block;
+}
+.contextmenu.show .dropdown-menu {
+  display: block;
+}
 .dropdown {
   position: relative;
   overflow: visible;

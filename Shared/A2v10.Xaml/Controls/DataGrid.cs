@@ -73,6 +73,8 @@ namespace A2v10.Xaml
 			set { _groupBy = value; }
 		}
 
+		public DropDownMenu ContextMenu { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -82,6 +84,15 @@ namespace A2v10.Xaml
 			MergeBindingAttributeBool(dataGrid, context, ":compact", nameof(Compact), Compact);
 			MergeAttributes(dataGrid, context, MergeAttrMode.Margin | MergeAttrMode.Visibility);
 			dataGrid.MergeAttribute("key", Guid.NewGuid().ToString()); // disable vue reusing
+
+			String contextId = null;
+			if (ContextMenu != null)
+			{
+				contextId = $"ctx-{Guid.NewGuid()}";
+				dataGrid.MergeAttribute("v-contextmenu", $"'{contextId}'");
+			}
+
+
 			if (Height != null)
 				dataGrid.MergeStyle("height", Height.Value);
 			if (FixedHeader)
@@ -169,6 +180,7 @@ namespace A2v10.Xaml
 			RenderRowDetails(context);
 			RenderEmptyPanel(context);
 			RenderFooter(context);
+			RenderContextMenu(ContextMenu, context, contextId);
 			dataGrid.RenderEnd(context);
 		}
 

@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 20 jun 2021
-module version : 7761
+Last updated : 27 jun 2021
+module version : 7763
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7761;
+exec a2sys.SetVersion N'std:security', 7763;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1064,8 +1064,6 @@ begin
 	declare @_permissions int = 0;
 
 
-	select * from a2security.[Module.Acl]
-
 	if 1 = a2security.fn_isUserAdmin(@UserId)
 	begin
 		set @CanEdit = 1;
@@ -1627,7 +1625,8 @@ go
 ------------------------------------------------
 create procedure a2security.SaveAnalytics
 @UserId bigint,
-@Value nvarchar(max)
+@Value nvarchar(max),
+@Tags a2sys.[NameValue.TableType] readonly
 as
 begin
 	set nocount on;

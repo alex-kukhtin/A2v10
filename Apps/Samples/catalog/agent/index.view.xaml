@@ -34,6 +34,13 @@
 					DoubleClick="{BindCmd Dialog, Action=EditSelected, Argument={Bind Folders}, Url={StaticResource EditFolderUrl}}">
 			<TreeViewItem ItemsSource="{Bind SubItems}" Icon="{Bind Icon}"
 						Label="{Bind Name}" IsGroup="{Bind HasSubItems}" Show="{Bind $IsVisible}"/>
+			<TreeView.ContextMenu>
+				<DropDownMenu>
+					<MenuItem Icon="Edit" Content="Edit" Command="{BindCmd Dialog, Action=EditSelected, Argument={Bind Folders}, Url={StaticResource EditFolderUrl}}"/>
+					<MenuItem Icon="Delete" Content="Delete" Command="{BindCmd Execute, 
+						CommandName=deleteFolder, Argument={Bind Folders.$selected}}"/>
+				</DropDownMenu>
+			</TreeView.ContextMenu>
 		</TreeView>
 		<GridDivider Grid.Col="2" Grid.RowSpan="2"/>
 		<CollectionView Grid.Row="1" Grid.Col="3" Grid.RowSpan="2" 
@@ -66,6 +73,12 @@
 				<DataGrid Grid.Row="2" ItemsSource="{Bind Parent.ItemsSource}" Style="Light"
 							Sort="True" FixedHeader="True" GridLines="Horizontal"
 							DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource EditItemUrl}, Argument={Bind Folders.Selected(Children)}}">
+					<DataGrid.ContextMenu>
+						<DropDownMenu>
+							<MenuItem Icon="Edit" Content="Edit" Command="{BindCmd Execute, CommandName=editItem, Argument={Bind Folders.Selected(Children)}}" />
+							<MenuItem Icon="Delete" Content="Delete" Command="{BindCmd Execute, CommandName=deleteItem, Argument={Bind Folders.Selected(Children)}}"/>
+						</DropDownMenu>
+					</DataGrid.ContextMenu>
 					<DataGridColumn Header="Код" Content="{Bind Id}" Role="Id"/>
 					<DataGridColumn Header="Назва" Content="{Bind Name}"/>
 					<DataGridColumn Header="Код ЄДРПОУ" Content="{Bind Code}" Role="Id"/>

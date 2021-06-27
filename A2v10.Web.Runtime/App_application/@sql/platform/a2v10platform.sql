@@ -1471,9 +1471,6 @@ begin
 	declare @_canApply bit = 0;
 	declare @_permissions int = 0;
 
-
-	select * from a2security.[Module.Acl]
-
 	if 1 = a2security.fn_isUserAdmin(@UserId)
 	begin
 		set @CanEdit = 1;

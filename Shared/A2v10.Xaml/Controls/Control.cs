@@ -165,5 +165,23 @@ namespace A2v10.Xaml
 			}
 			return false;
 		}
+
+		public void RenderContextMenu(DropDownMenu menu, RenderContext context, String contextId)
+		{
+			if (menu == null)
+				return;
+			var page = this.FindParent<RootContainer>();
+			if (page == null)
+				return;
+			page.RegisterContextMenu(() =>
+			{
+				var dd = new TagBuilder("div", "contextmenu");
+				dd.MergeAttribute("id", contextId);
+				dd.RenderStart(context);
+				menu.RenderElement(context);
+				dd.RenderEnd(context);
+			});
+		}
+
 	}
 }

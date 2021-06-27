@@ -3810,9 +3810,9 @@ app.modules['std:impl:array'] = function () {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20171029-7060*/
+/*20210627-7787*/
 /* services/popup.js */
 
 app.modules['std:popup'] = function () {
@@ -3852,6 +3852,7 @@ app.modules['std:popup'] = function () {
 		document.body.addEventListener('click', closePopups);
 		document.body.addEventListener('contextmenu', closePopups);
 		document.body.addEventListener('keydown', closeOnEsc);
+		document.body.addEventListener("mouseup", closeContextMenus);
 	}
 
 
@@ -3861,10 +3862,20 @@ app.modules['std:popup'] = function () {
 	}
 
 	function closeAllPopups() {
+		closeContextMenus();
 		__dropDowns__.forEach((el) => {
 			if (el._close)
 				el._close(document);
 		});
+	}
+
+	function closeContextMenus() {
+		let ctxmenus = document.querySelectorAll('.contextmenu');
+		if (ctxmenus != null) {
+			for (let menu of ctxmenus) {
+				menu.classList.remove('show');
+			}
+		}
 	}
 
 	function closeInside(el) {
@@ -3880,6 +3891,7 @@ app.modules['std:popup'] = function () {
 	}
 
 	function closePopups(ev) {
+		closeContextMenus();
 		if (__dropDowns__.length === 0)
 			return;
 		for (let i = 0; i < __dropDowns__.length; i++) {
@@ -7768,6 +7780,7 @@ Vue.component('popover', {
 		:item="itm" :key="index"
 		:click="click" :doubleclick="doubleclick" :is-active="isActive" :is-group="isGroup" :expand="expand" :root-items="items">
 	</tree-item>
+	<slot name=contextmenu></slot>
 </ul>`,
 		props: {
 			options: Object,
@@ -10909,69 +10922,93 @@ Vue.directive('disable', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210209-7445*/
+/*20210627-7788*/
 /* directives/dropdown.js */
 
+(function () {
 
-Vue.directive('dropdown', {
-	bind(el, binding, vnode) {
+	const popup = require('std:popup');
+	const eventBus = require('std:eventBus');
 
-		const popup = require('std:popup');
-		let me = this;
+	Vue.directive('dropdown', {
+		bind(el, binding, vnode) {
 
-		el._btn = el.querySelector('[toggle]');
-		el.setAttribute('dropdown-top', '');
-		// el.focus(); // ???
-		if (!el._btn) {
-			console.error('DropDown does not have a toggle element');
-		}
+			let me = this;
 
-		popup.registerPopup(el);
-
-		el._close = function (ev) {
-			if (el._hide)
-				el._hide();
-			el.classList.remove('show');
-		};
-
-		el.addEventListener('click', function (event) {
-			let trg = event.target;
-			if (el._btn.disabled) return;
-			while (trg) {
-				if (trg === el._btn) break;
-				if (trg === el) return;
-				trg = trg.parentElement;
+			el._btn = el.querySelector('[toggle]');
+			el.setAttribute('dropdown-top', '');
+			// el.focus(); // ???
+			if (!el._btn) {
+				console.error('DropDown does not have a toggle element');
 			}
-			if (trg === el._btn) {
-				event.preventDefault();
-				event.stopPropagation();
-				let isVisible = el.classList.contains('show');
-				if (isVisible) {
-					if (el._hide)
-						el._hide();
-					el.classList.remove('show');
-				} else {
-					// not nested popup
-					let outer = popup.closest(el, '.popup-body');
-					if (outer) {
-						popup.closeInside(outer);
-					} else {
-						popup.closeAll();
-					}
-					if (el._show)
-						el._show();
-					el.classList.add('show');
+
+			popup.registerPopup(el);
+
+			el._close = function (ev) {
+				if (el._hide)
+					el._hide();
+				el.classList.remove('show');
+			};
+
+			el.addEventListener('click', function (event) {
+				let trg = event.target;
+				if (el._btn.disabled) return;
+				while (trg) {
+					if (trg === el._btn) break;
+					if (trg === el) return;
+					trg = trg.parentElement;
 				}
-			}
-		});
-	},
-	unbind(el) {
-		const popup = require('std:popup');
-		popup.unregisterPopup(el);
-	}
-});
+				if (trg === el._btn) {
+					event.preventDefault();
+					event.stopPropagation();
+					let isVisible = el.classList.contains('show');
+					if (isVisible) {
+						if (el._hide)
+							el._hide();
+						el.classList.remove('show');
+					} else {
+						// not nested popup
+						let outer = popup.closest(el, '.popup-body');
+						if (outer) {
+							popup.closeInside(outer);
+						} else {
+							popup.closeAll();
+						}
+						if (el._show)
+							el._show();
+						el.classList.add('show');
+					}
+				}
+			});
+		},
+		unbind(el) {
+			const popup = require('std:popup');
+			popup.unregisterPopup(el);
+		}
+	});
 
+	Vue.directive('contextmenu', {
+		_contextMenu(ev) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			ev.target.click();
+			let menu = document.querySelector('#' + this._val);
+			let br = menu.parentNode.getBoundingClientRect();
+			let style = menu.style;
+			style.top = (ev.clientY - br.top) + 'px';
+			style.left = (ev.clientX - br.left) + 'px';
+			menu.classList.add('show');
+		},
+		bind(el, binding) {
+			binding._val = binding.value;
+			el.addEventListener('contextmenu', binding.def._contextMenu.bind(binding));
+		},
+		unbind(el, binding) {
+			el.removeEventListener('contextmenu', binding.def._contextMenu.bind(binding));
+		}
+	});
 
+})();
 // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
 
 /*20190721-7507*/
