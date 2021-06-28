@@ -21,6 +21,7 @@ namespace A2v10.Xaml
 		public AlignItems AlignItems { get; set; }
 		public JustifyItems JustifyItems { get; set; }
 		public Length MinWidth { get; set; }
+		public GapSize Gap { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -37,6 +38,10 @@ namespace A2v10.Xaml
 				list.AddCssClass($"border-{BorderStyle.ToString().ToKebabCase()}");
 			if (MinWidth != null)
 				list.MergeStyleUnit("min-width", MinWidth.Value);
+
+			if (Gap != null)
+				list.MergeStyle("gap", Gap.ToString());
+
 			list.RenderStart(context);
 			RenderChildren(context);
 			list.RenderEnd(context);

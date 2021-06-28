@@ -52,11 +52,11 @@
 					<StaticImage Url="/myImage/image.png" Height="29px" />
 				</Grid>
 				<Block Align="Center">
-				<StackPanel Orientation="Horizontal" Inline="False">
+				<Flex Orientation="Horizontal" Gap="20px" Margin="Auto" JustifyItems="Center">
 					<Button>Button 1</Button>
 					<Button>Button 2</Button>
 					<Button>Button 3</Button>
-				</StackPanel>
+				</Flex>
 				</Block>
 			</Panel>
 			<Code Content="{Bind Root.$text}"></Code>
@@ -147,7 +147,7 @@
 				<Text>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.
 				</Text>
 				<Line/>
-				<FlexList Orientation="Horizontal">
+				<FlexList Orientation="Horizontal" Gap="12">
 					<Button Style="Warning" Size="Small">Read More ...</Button>
 					<Button Style="Primary" Size="Small">And more</Button>
 				</FlexList>

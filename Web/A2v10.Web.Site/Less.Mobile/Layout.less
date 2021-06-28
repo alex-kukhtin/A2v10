@@ -384,6 +384,7 @@ iframe.eusign-iframe {
 	margin: 0;
 	padding: 0;
 	list-style: none;
+	gap: @flex-padding;
 
 	.flex-list-item {
 		display: block;
@@ -395,14 +396,6 @@ iframe.eusign-iframe {
 
 	&.horizontal {
 		flex-flow: row wrap;
-
-		.flex-list-item {
-			margin-right: @flex-padding;
-		}
-
-		.flex-list-item:last-child {
-			margin-right: 0;
-		}
 	}
 
 	&.border-top {

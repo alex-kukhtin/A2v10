@@ -2469,8 +2469,7 @@ pre.a2-code {
 .data-grid .control-group {
   margin: 0;
 }
-.hlink-dd-wrapper + .hlink-dd-wrapper,
-.a2-inline + .a2-inline {
+.hlink-dd-wrapper + .hlink-dd-wrapper {
   margin-left: 0.4rem;
 }
 .hlink-dd-wrapper.popover .a2-hyperlink {
@@ -6261,10 +6260,11 @@ iframe.eusign-iframe {
   flex-direction: row;
 }
 .flex-list {
-  display: flex!important;
+  display: flex !important;
   margin: 0;
   padding: 0;
   list-style: none;
+  gap: 1.25rem;
 }
 .flex-list .flex-list-item {
   display: block;
@@ -6277,12 +6277,6 @@ iframe.eusign-iframe {
 }
 .flex-list.horizontal.no-wrap {
   flex-wrap: nowrap;
-}
-.flex-list.horizontal .flex-list-item {
-  margin-right: 1.25rem;
-}
-.flex-list.horizontal .flex-list-item:last-child {
-  margin-right: 0;
 }
 .flex-list.border-top {
   padding-top: 1.25rem;
