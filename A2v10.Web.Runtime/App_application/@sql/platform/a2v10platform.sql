@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7779
-generated: 23.06.2021 12:40:19
+generated: 29.06.2021 15:27:43
 */
 
 set nocount on;
@@ -31,8 +31,8 @@ go
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 20 jun 2021
-module version : 7060
+Last updated : 27 jun 2021
+module version : 7061
 */
 ------------------------------------------------
 set nocount on;
@@ -62,9 +62,9 @@ end
 go
 ------------------------------------------------
 if not exists(select * from a2sys.Versions where Module = N'std:system')
-	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7060);
+	insert into a2sys.Versions (Module, [Version]) values (N'std:system', 7061);
 else
-	update a2sys.Versions set [Version] = 7060 where Module = N'std:system';
+	update a2sys.Versions set [Version] = 7061 where Module = N'std:system';
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys' and TABLE_NAME=N'SysParams')
@@ -220,6 +220,16 @@ begin
 	create type a2sys.[GUID.TableType]
 	as table(
 		Id uniqueidentifier null
+	);
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'NameValue.TableType' and DATA_TYPE=N'table type')
+begin
+	create type a2sys.[NameValue.TableType]
+	as table(
+		[Name] nvarchar(255),
+		[Value] nvarchar(max)
 	);
 end
 go
@@ -410,11 +420,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 20 jun 2021
-module version : 7761
+Last updated : 29 jun 2021
+module version : 7764
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7761;
+exec a2sys.SetVersion N'std:security', 7764;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -629,7 +639,7 @@ begin
 			constraint FK_UserLogins_User_Users foreign key references a2security.Users(Id),
 		[LoginProvider] nvarchar(255) not null,
 		[ProviderKey] nvarchar(max) not null,
-		constraint PK_UserLogins primary key([User], LoginProvider)
+		constraint PK_UserLogins primary key([User], LoginProvider) with (fillfactor = 70)
 	);
 end
 go
@@ -737,7 +747,7 @@ begin
 			constraint FK_UserGroups_UsersId_Users foreign key references a2security.Users(Id),
 		GroupId bigint	not null
 			constraint FK_UserGroups_GroupId_Groups foreign key references a2security.Groups(Id),
-		constraint PK_UserGroups primary key(UserId, GroupId)
+		constraint PK_UserGroups primary key clustered (UserId, GroupId) with (fillfactor = 70)
 	)
 end
 go
@@ -804,7 +814,7 @@ begin
 		Memo nvarchar(255),
 		RedirectUrl nvarchar(255),
 		[DateModified] datetime not null constraint DF_ApiUserLogins_DateModified default(a2sys.fn_getCurrentDate()),
-		constraint PK_ApiUserLogins primary key([User], Mode)
+		constraint PK_ApiUserLogins primary key clustered ([User], Mode) with (fillfactor = 70)
 	);
 end
 go
@@ -865,7 +875,7 @@ begin
 		CanDelete bit null,
 		CanApply bit null,
 		[Permissions] as cast(CanView as int) + cast(CanEdit as int) * 2 + cast(CanDelete as int) * 4 + cast(CanApply as int) * 8
-		constraint PK_ModuleAcl primary key(Module, UserId)
+		constraint PK_ModuleAcl primary key clustered (Module, UserId) with (fillfactor = 70)
 	);
 end
 go
@@ -953,6 +963,19 @@ begin
 		[Value] nvarchar(max) null,
 		DateCreated	datetime not null
 			constraint DF_Analytics_DateCreated2 default(a2sys.fn_getCurrentDate()),
+	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'AnalyticTags')
+begin
+	create table a2security.AnalyticTags
+	(
+		UserId bigint not null
+			constraint FK_AnalyticTags_UserId_Users foreign key references a2security.Users(Id),
+		[Name] nvarchar(255),
+		[Value] nvarchar(max) null,
+			constraint PK_AnalyticTags primary key clustered (UserId, [Name]) with (fillfactor = 70)
 	)
 end
 go
@@ -1471,6 +1494,7 @@ begin
 	declare @_canApply bit = 0;
 	declare @_permissions int = 0;
 
+
 	if 1 = a2security.fn_isUserAdmin(@UserId)
 	begin
 		set @CanEdit = 1;
@@ -1867,7 +1891,7 @@ begin
 			constraint FK_UserCompanies_Company_Companies foreign key references a2security.Companies(Id),
 		[Enabled] bit,
 		[Current] bit, -- TODO:// remove it
-		constraint PK_UserCompanies primary key([User], [Company])
+		constraint PK_UserCompanies primary key clustered ([User], [Company]) with (fillfactor = 70)
 	);
 end
 go
@@ -1899,7 +1923,12 @@ begin
 			select top(1) @company = Id from a2security.Companies where Id <> 0;
 		else
 			select top(1) @company = Company from a2security.UserCompanies where Company <> 0 and [Enabled]=1;
-		update a2security.ViewUsers set Company = @company;
+		update a2security.ViewUsers set Company = @company where Id = @UserId;
+	end
+	else if not exists(select 1 from a2security.UserCompanies where [User]=@UserId and Company=@company and [Enabled] = 1)
+	begin
+		update a2security.ViewUsers set Company = (select top(1) Company from a2security.UserCompanies where [User]=@UserId and [Enabled] = 1)
+		where Id = @UserId;
 	end
 
 	-- all companies for the current user
@@ -1907,9 +1936,10 @@ begin
 		Id, [Name], 
 		[Current] = cast(case when Id = @company then 1 else 0 end as bit)
 	from a2security.Companies c
-		inner join a2security.UserCompanies uc on uc.Company = c.Id
-	where uc.[User] = @UserId and c.Id <> 0 and (@isadmin = 1 or uc.[Enabled] = 1)
-	order by Id;
+		left join a2security.UserCompanies uc on uc.Company = c.Id and uc.[User] = @UserId
+	where c.Id <> 0 and (@isadmin = 1 or 
+		c.Id in (select uc.Company from a2security.UserCompanies uc where uc.[User] = @UserId and uc.[Enabled] = 1))
+	order by c.Id;
 end
 go
 ------------------------------------------------
@@ -2032,13 +2062,25 @@ go
 ------------------------------------------------
 create procedure a2security.SaveAnalytics
 @UserId bigint,
-@Value nvarchar(max)
+@Value nvarchar(max),
+@Tags a2sys.[NameValue.TableType] readonly
 as
 begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+	begin tran;
 	insert into a2security.Analytics(UserId, [Value]) values (@UserId, @Value);
+
+	with T([Name], [Value]) as (
+		select [Name], [Value] = max([Value]) 
+		from @Tags 
+		where [Name] is not null and [Value] is not null 
+		group by [Name]
+	)
+	insert into a2security.AnalyticTags (UserId, [Name], [Value])
+	select @UserId, [Name], [Value] from T;
+	commit tran;
 end
 go
 -- .NET CORE SUPPORT

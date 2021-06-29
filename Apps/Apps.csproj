@@ -595,21 +595,13 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Bootstrap\sales\waybill\index.view.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </None>
     <None Include="Bootstrap\sales\waybill\links.dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </None>
     <None Include="Bootstrap\sales\waybill\waybill.view.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </None>
-    <Page Include="Develop\purchase\Supplier\index.view.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Content Include="Develop\purchase\Supplier\index.view.xaml">
+    </Content>
     <None Include="Develop\purchase\WaybillIn\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -788,14 +780,10 @@
     <None Include="Admin\Identity\User\popover.popup.xaml">
       <SubType>Designer</SubType>
     </None>
-    <Page Include="Develop\entity\browseGoods.dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Develop\entity\editGoods.dialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Content Include="Develop\entity\browseGoods.dialog.xaml">
+    </Content>
+    <Content Include="Develop\entity\editGoods.dialog.xaml">
+    </Content >
     <Content Include="Develop\reports\testcross.view.xaml">
       <SubType>Designer</SubType>
     </Content>

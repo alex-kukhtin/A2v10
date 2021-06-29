@@ -308,6 +308,8 @@ namespace A2v10.Request
 
 		public void CheckPermissions(String actual, Boolean debug)
 		{
+			if (actual == "_admin_")
+				return;
 			if (permissions != null)
 				permissions.CheckAllow(actual, debug);
 		}

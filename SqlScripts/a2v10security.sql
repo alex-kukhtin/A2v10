@@ -221,7 +221,7 @@ begin
 			constraint FK_UserLogins_User_Users foreign key references a2security.Users(Id),
 		[LoginProvider] nvarchar(255) not null,
 		[ProviderKey] nvarchar(max) not null,
-		constraint PK_UserLogins primary key([User], LoginProvider)
+		constraint PK_UserLogins primary key([User], LoginProvider) with (fillfactor = 70)
 	);
 end
 go
@@ -329,7 +329,7 @@ begin
 			constraint FK_UserGroups_UsersId_Users foreign key references a2security.Users(Id),
 		GroupId bigint	not null
 			constraint FK_UserGroups_GroupId_Groups foreign key references a2security.Groups(Id),
-		constraint PK_UserGroups primary key(UserId, GroupId)
+		constraint PK_UserGroups primary key clustered (UserId, GroupId) with (fillfactor = 70)
 	)
 end
 go
@@ -396,7 +396,7 @@ begin
 		Memo nvarchar(255),
 		RedirectUrl nvarchar(255),
 		[DateModified] datetime not null constraint DF_ApiUserLogins_DateModified default(a2sys.fn_getCurrentDate()),
-		constraint PK_ApiUserLogins primary key([User], Mode)
+		constraint PK_ApiUserLogins primary key clustered ([User], Mode) with (fillfactor = 70)
 	);
 end
 go
@@ -457,7 +457,7 @@ begin
 		CanDelete bit null,
 		CanApply bit null,
 		[Permissions] as cast(CanView as int) + cast(CanEdit as int) * 2 + cast(CanDelete as int) * 4 + cast(CanApply as int) * 8
-		constraint PK_ModuleAcl primary key(Module, UserId)
+		constraint PK_ModuleAcl primary key clustered (Module, UserId) with (fillfactor = 70)
 	);
 end
 go
@@ -545,6 +545,19 @@ begin
 		[Value] nvarchar(max) null,
 		DateCreated	datetime not null
 			constraint DF_Analytics_DateCreated2 default(a2sys.fn_getCurrentDate()),
+	)
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'AnalyticTags')
+begin
+	create table a2security.AnalyticTags
+	(
+		UserId bigint not null
+			constraint FK_AnalyticTags_UserId_Users foreign key references a2security.Users(Id),
+		[Name] nvarchar(255),
+		[Value] nvarchar(max) null,
+			constraint PK_AnalyticTags primary key clustered (UserId, [Name]) with (fillfactor = 70)
 	)
 end
 go
@@ -1460,7 +1473,7 @@ begin
 			constraint FK_UserCompanies_Company_Companies foreign key references a2security.Companies(Id),
 		[Enabled] bit,
 		[Current] bit, -- TODO:// remove it
-		constraint PK_UserCompanies primary key([User], [Company])
+		constraint PK_UserCompanies primary key clustered ([User], [Company]) with (fillfactor = 70)
 	);
 end
 go
@@ -1638,7 +1651,18 @@ begin
 	set nocount on;
 	set transaction isolation level read committed;
 	set xact_abort on;
+	begin tran;
 	insert into a2security.Analytics(UserId, [Value]) values (@UserId, @Value);
+
+	with T([Name], [Value]) as (
+		select [Name], [Value] = max([Value]) 
+		from @Tags 
+		where [Name] is not null and [Value] is not null 
+		group by [Name]
+	)
+	insert into a2security.AnalyticTags (UserId, [Name], [Value])
+	select @UserId, [Name], [Value] from T;
+	commit tran;
 end
 go
 -- .NET CORE SUPPORT

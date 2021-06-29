@@ -187,10 +187,12 @@ begin
 
 		begin tran;
 
+		insert into a2security.Tenants(Id, [Admin], Locale) values (@Tenant, @Id, @Locale);
+
 		insert into a2security.TenantUsers(TenantId, Id, UserName, PersonName, RegisterHost, PhoneNumber, Memo, TariffPlan, Locale) 
 			values(@Tenant, @Id, @UserName, @PersonName, @RegisterHost, @PhoneNumber, @Memo, @TariffPlan, @Locale);
-
-		insert into a2security.Tenants(Id, [Admin], Locale) values (@Tenant, @Id, @Locale);
+		/* system user */
+		insert into a2security.TenantUsers(TenantId, Id, UserName) values (@Tenant, 0, N'System');
 
 		if @sql is not null
 			exec sp_executesql @sql, @prms, @Tenant;

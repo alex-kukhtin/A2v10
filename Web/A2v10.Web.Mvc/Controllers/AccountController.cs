@@ -1034,7 +1034,7 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				var key = qs.GetKey(i);
 				var val = qs.Get(i);
-				if (key.StartsWith("ET_", StringComparison.InvariantCultureIgnoreCase))
+				if (key.StartsWith("UTM_", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrEmpty(val))
 				{
 					list.Add(new ETag() { Name = key, Value = val });
 				}

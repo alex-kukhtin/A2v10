@@ -161,7 +161,7 @@ namespace A2v10.Request
 				macros.Set("Period", jsonPeriod);
 			}
 			var perm = menuRoot.Eval<List<ExpandoObject>>("Permissions");
-			SetUserStatePermission(perm);
+			SetUserStatePermission(perm, userInfo.IsAdmin);
 
 			menuRoot.RemoveKeys("Companies,CompaniesLinks,Period");
 			String jsonMenu = JsonConvert.SerializeObject(menuRoot, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
@@ -263,12 +263,14 @@ namespace A2v10.Request
 			_userStateManager.SetReadOnly(model.Eval<Boolean>("UserState.ReadOnly"));
 		}
 
-		void SetUserStatePermission(IList<ExpandoObject> list)
+		void SetUserStatePermission(IList<ExpandoObject> list, bool isAdmin)
 		{
-			if (list == null || list.Count == 0)
-				_userStateManager.SetUserPermissions(String.Empty);
-			else
-				_userStateManager.SetUserPermissions(ModulePermission.FromExpandoList(list));
+			String perm = String.Empty;
+			if (isAdmin)
+				perm = "_admin_";
+			else if (list != null && list.Count > 0)
+				perm = ModulePermission.FromExpandoList(list);
+			_userStateManager.SetUserPermissions(perm);
 		}
 
 
