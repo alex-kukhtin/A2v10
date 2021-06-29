@@ -2,7 +2,7 @@
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Выбор покупателя" Width="70vw" Padding="6" Background="LightYellow">
+        Title="Выбор покупателя2" Width="70vw" Padding="6" Background="LightYellow" Overflow="True">
 	<Dialog.Buttons>
 		<Button Content="Выбрать" Command="{BindCmd Select, Argument={Bind Agents}}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
@@ -34,6 +34,12 @@
 			<DataGridColumn Fit="True">
 				<Hyperlink Icon="Delete" Size="Small" Command="{BindCmd DbRemove, Argument={Bind}, Confirm={StaticResource SureDelete}}"/>
 			</DataGridColumn>
+			<DataGrid.ContextMenu>
+				<DropDownMenu>
+					<MenuItem Icon="ArrowOpen" Content="Select" Command="{BindCmd Select, Argument={Bind Agents}}"/>
+					<MenuItem Icon="Edit" Content="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Agents}}"/>
+				</DropDownMenu>
+			</DataGrid.ContextMenu>
 		</DataGrid>
 		<Pager Source="{Bind Parent.Pager}" />
 	</CollectionView>

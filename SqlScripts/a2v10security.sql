@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 27 jun 2021
-module version : 7763
+Last updated : 29 jun 2021
+module version : 7764
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7763;
+exec a2sys.SetVersion N'std:security', 7764;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1492,7 +1492,12 @@ begin
 			select top(1) @company = Id from a2security.Companies where Id <> 0;
 		else
 			select top(1) @company = Company from a2security.UserCompanies where Company <> 0 and [Enabled]=1;
-		update a2security.ViewUsers set Company = @company;
+		update a2security.ViewUsers set Company = @company where Id = @UserId;
+	end
+	else if not exists(select 1 from a2security.UserCompanies where [User]=@UserId and Company=@company and [Enabled] = 1)
+	begin
+		update a2security.ViewUsers set Company = (select top(1) Company from a2security.UserCompanies where [User]=@UserId and [Enabled] = 1)
+		where Id = @UserId;
 	end
 
 	-- all companies for the current user
@@ -1500,9 +1505,10 @@ begin
 		Id, [Name], 
 		[Current] = cast(case when Id = @company then 1 else 0 end as bit)
 	from a2security.Companies c
-		inner join a2security.UserCompanies uc on uc.Company = c.Id
-	where uc.[User] = @UserId and c.Id <> 0 and (@isadmin = 1 or uc.[Enabled] = 1)
-	order by Id;
+		left join a2security.UserCompanies uc on uc.Company = c.Id and uc.[User] = @UserId
+	where c.Id <> 0 and (@isadmin = 1 or 
+		c.Id in (select uc.Company from a2security.UserCompanies uc where uc.[User] = @UserId and uc.[Enabled] = 1))
+	order by c.Id;
 end
 go
 ------------------------------------------------

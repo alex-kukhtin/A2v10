@@ -122,6 +122,7 @@ namespace A2v10.Xaml
 
 			RenderFooter(context);
 			RenderAccelCommands(context);
+			RenderContextMenus();
 
 			dialog.RenderEnd(context);
 		}
