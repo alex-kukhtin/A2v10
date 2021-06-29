@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Mvc</id>
-		<version>10.0.7788</version>
+		<version>10.0.7789</version>
 		<title>A2v10.Web MVC Libraries</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
@@ -35,7 +35,7 @@
 				<dependency id="Microsoft.Owin.Security.OAuth" version="4.2.0" />
 				<dependency id="Microsoft.Owin.Host.SystemWeb" version="4.2.0" />
 				<dependency id="Microsoft.AspNet.Identity.Core" version="2.2.3" />
-				<dependency id="System.ValueTuple" version="4.6.0" />
+				<dependency id="System.ValueTuple" version="4.5.0" />
 			</group>
 		</dependencies>
 	</metadata>
