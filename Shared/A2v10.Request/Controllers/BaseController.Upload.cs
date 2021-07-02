@@ -30,7 +30,7 @@ namespace A2v10.Request
 			setParams?.Invoke(savePrms);
 			savePrms.AppendIfNotExists(ru.parameters);
 
-			ru.CheckPermissions(_userStateManager.GetUserPermissions(), _host.IsDebugConfiguration);
+			ru.CheckPermissions(_userStateManager?.GetUserPermissions(), _host.IsDebugConfiguration);
 
 			switch (ru.type)
 			{
@@ -262,7 +262,7 @@ namespace A2v10.Request
 			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
 			var ru = rm.GetFile();
 
-			ru.CheckPermissions(_userStateManager.GetUserPermissions(), _host.IsDebugConfiguration);
+			ru.CheckPermissions(_userStateManager?.GetUserPermissions(), _host.IsDebugConfiguration);
 
 			ExpandoObject loadPrms = new ExpandoObject();
 			setParams?.Invoke(loadPrms);

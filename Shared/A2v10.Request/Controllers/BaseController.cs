@@ -127,7 +127,7 @@ namespace A2v10.Request
 		{
 			RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, kind, pathInfo);
 			RequestView rw = rm.GetCurrentAction(kind);
-			rw.CheckPermissions(_userStateManager.GetUserPermissions(), Host.IsDebugConfiguration);
+			rw.CheckPermissions(_userStateManager?.GetUserPermissions(), Host.IsDebugConfiguration);
 			await Render(rw, writer, loadPrms);
 		}
 

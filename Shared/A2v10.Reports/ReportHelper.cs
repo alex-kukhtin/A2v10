@@ -89,7 +89,7 @@ namespace A2v10.Reports
 			RequestModel rm = await RequestModel.CreateFromBaseUrl(_host, false, url);
 			var rep = rm.GetReport();
 
-			rep.CheckPermissions(_userStateManager.GetUserPermissions(), _host.IsDebugConfiguration);
+			rep.CheckPermissions(_userStateManager?.GetUserPermissions(), _host.IsDebugConfiguration);
 
 			ri.Type = rep.type;
 
