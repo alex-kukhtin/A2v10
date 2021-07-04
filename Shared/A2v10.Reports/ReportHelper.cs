@@ -65,7 +65,7 @@ namespace A2v10.Reports
 			_host = locator.GetService<IApplicationHost>();
 			_dbContext = locator.GetService<IDbContext>();
 			_localizer = locator.GetService<ILocalizer>();
-			_userStateManager = locator.GetService<IUserStateManager>();
+			_userStateManager = locator.GetServiceOrNull<IUserStateManager>();
 			_stimulsoftReportShim = locator.GetService<IStimulsoftReportShim>(sloc =>
 			{
 				var inst = System.Activator.CreateInstance("A2v10.Stimulsoft", "A2v10.Stimulsoft.StimulsoftReportShim");

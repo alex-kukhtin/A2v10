@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20201106-7720
+// 20210704-7793
 // components/upload.js
 
 (function () {
@@ -8,6 +8,8 @@
 	const url = require('std:url');
 	const http = require('std:http');
 	const tools = require('std:tools');
+	const utils = require('std:utils');
+
 
 	const locale = window.$$locale;
 
@@ -68,6 +70,8 @@
 			uploadImage(ev) {
 				let root = window.$$rootUrl;
 				let id = this.item[this.prop];
+				if (utils.isObjectExact(id))
+					id = id.$id;
 				let imgUrl = url.combine(root, '_image', this.base, this.prop, id);
 				var fd = new FormData();
 				for (let file of ev.target.files) {
@@ -94,8 +98,14 @@
 								ni[token] = elem.Token;
 							}
 						} else {
-							this.item[this.prop] = result.elems[0].Id;
-							this.item[token] = result.elems[0].Token;
+							let elem = this.item[this.prop];
+							if (utils.isObjectExact(elem)) {
+								elem[elem._meta_.$id] = result.elems[0].Id;
+								elem[elem._meta_.$token] = result.elems[0].Token;
+							} else {
+								this.item[this.prop] = result.elems[0].Id;
+								this.item[token] = result.elems[0].Token;
+							}
 						}
 					}
 				}).catch(msg => {

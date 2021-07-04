@@ -3,7 +3,9 @@
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using System;
+using System.Text;
 using System.Web;
+using System.Web.Security;
 
 namespace A2v10.Web.Config
 {
@@ -14,7 +16,7 @@ namespace A2v10.Web.Config
 
 		const String _sessionKey = "_userState_";
 		const String _userCompanyKey = "_userCompany_";
-		const String _permissionsKey = "_pemissions_";
+		//const String _permissionsKey = "_pemissions_";
 
 		class UserState
 		{
@@ -91,20 +93,25 @@ namespace A2v10.Web.Config
 			return userCompany;
 		}
 
+		const String PermissionCookie = "A2v10.UserInfoCookie";
+		const String PermissionPurpose = "UserInfo";
+
 		public void SetUserPermissions(String permissions)
 		{
-			if (String.IsNullOrEmpty(permissions))
-				HttpContext.Current.Session.Remove(_permissionsKey);
-			else
-				HttpContext.Current.Session[_permissionsKey] = permissions;
+			String perm = permissions ?? String.Empty;
+			var key = MachineKey.Protect(Encoding.UTF8.GetBytes(perm), PermissionPurpose);
+			HttpContext.Current.Response.SetCookie(new HttpCookie(PermissionCookie, Convert.ToBase64String(key)));
 		}
 
 		public String GetUserPermissions()
 		{
-			var s = HttpContext.Current?.Session[_permissionsKey];
+			var s = HttpContext.Current.Request.Cookies[PermissionCookie];
 			if (s == null)
 				return null;
-			return s.ToString();
+			var bytes = MachineKey.Unprotect(Convert.FromBase64String(s.Value), PermissionPurpose);
+			if (bytes == null)
+				return null;
+			return Encoding.UTF8.GetString(bytes);
 		}
 	}
 }

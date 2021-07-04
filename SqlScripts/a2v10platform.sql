@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7779
-generated: 02.07.2021 10:06:17
+generated: 04.07.2021 11:00:11
 */
 
 set nocount on;
@@ -420,11 +420,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 29 jun 2021
-module version : 7764
+Last updated : 04 jul 2021
+module version : 7765
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7764;
+exec a2sys.SetVersion N'std:security', 7765;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1495,7 +1495,7 @@ begin
 	declare @_permissions int = 0;
 
 
-	if 1 = a2security.fn_isUserAdmin(@UserId)
+	if @UserId = 0 or 1 = a2security.fn_isUserAdmin(@UserId)
 	begin
 		set @CanEdit = 1;
 		set @CanDelete = 1;

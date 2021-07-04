@@ -164,6 +164,9 @@
 					</ListItem.CommandBar>
 				</ListItem>
 			</List>
+			<ImageList ItemsSource="{Bind Agent.Attachments}">
+				<Image Base="/agent" Source="{Bind}"/>
+			</ImageList>
 			<UploadFile Url="/Agent/attachment" Delegate="uploadAttachment" Accept="application/pdf,image/*" Limit="100000"/>
 			<Button Command="{BindCmd Command=Attachment, Url=/agent/attachment, Argument=101}" Content="View"/>
 			<Block>

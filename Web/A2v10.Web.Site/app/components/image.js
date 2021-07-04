@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20201119-7731
+// 20210704-7793
 // components/image.js
 
 (function () {
@@ -53,12 +53,10 @@
 				if (this.newItem)
 					return undefined;
 				let root = window.$$rootUrl;
-				let id = this.item[this.prop];
-				if (!id) return undefined;
-				let qry = {};
-				if (this.item._meta_ && this.item._meta_.$token)
-					qry.token = this.item[this.item._meta_.$token];
-				return url.combine(root, '_image', this.base, this.prop, id) + url.makeQueryString(qry);
+				let elem = this.imageOjb;
+				if (!elem || !elem.id)
+					return undefined;
+				return url.combine(root, '_image', this.base, this.prop, elem.id) + url.makeQueryString({ token: elem.token });
 			},
 			tip() {
 				if (this.readOnly) return this.placeholder;
@@ -84,7 +82,16 @@
 				if (this.newItem) return true;
 				if (this.readOnly)
 					return !this.hasImage;
-				return !this.inArray && !this.item[this.prop];
+				return !this.inArray && !this.hasImage;
+			},
+			imageOjb() {
+				let elem = this.item[this.prop];
+				if (!elem)
+					return undefined;
+				if (utils.isObjectExact(elem))
+					return { id: elem.$id, token: elem[elem._meta_.$token] };
+				else
+					return { id: elem, token: this.item[this.item._meta_.$token] };
 			},
 			itemForUpload() {
 				return this.newItem ? this.newElem : this.item;
@@ -94,8 +101,13 @@
 			removeImage: function () {
 				if (this.inArray)
 					this.item.$remove();
-				else
-					this.item[this.prop] = undefined;
+				else {
+					let elem = this.item[this.prop];
+					if (utils.isObjectExact(elem))
+						elem.$empty();
+					else
+						this.item[this.prop] = undefined;
+				}
 			},
 			clickOnImage: function () {
 				//alert('click on image');
