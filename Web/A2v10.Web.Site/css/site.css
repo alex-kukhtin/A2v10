@@ -6918,7 +6918,7 @@ table > colgroup col.blue {
 }
 .debug-panel {
   position: absolute;
-  top: 40px;
+  top: 0;
   bottom: 1.8rem;
   right: 0;
   z-index: 110;
