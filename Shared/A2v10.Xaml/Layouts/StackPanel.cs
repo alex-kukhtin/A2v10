@@ -12,6 +12,7 @@ namespace A2v10.Xaml
 		public AlignItems AlignItems { get; set; }
 		public JustifyItems JustifyItems { get; set; }
 		public Boolean Inline { get; set; }
+		public GapSize Gap { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -27,6 +28,10 @@ namespace A2v10.Xaml
 				div.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
 			if (JustifyItems != JustifyItems.Default)
 				div.AddCssClass("justify-" + JustifyItems.ToString().ToKebabCase());
+
+			if (Gap != null)
+				div.MergeStyle("gap", Gap.ToString());
+
 			div.RenderStart(context);
 			RenderChildren(context);
 			div.RenderEnd(context);

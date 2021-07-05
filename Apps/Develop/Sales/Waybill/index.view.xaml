@@ -123,7 +123,7 @@
 		-->
 		<DataGrid.RowDetails>
 			<DataGridRowDetails Visible="{Bind $HasParent}" Activate="Always">
-				<StackPanel Orientation="Horizontal">
+				<StackPanel Orientation="Horizontal" Gap="5rem">
 					<Label Margin="0,6,0,0">Основание:</Label>
 					<Hyperlink Icon="FileLink"
 						Command="{BindCmd Open, Url='/Sales/Invoice/Edit', 
