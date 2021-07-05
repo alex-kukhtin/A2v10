@@ -105,6 +105,8 @@ namespace A2v10.Web.Config
 
 		public String GetUserPermissions()
 		{
+			if (HttpContext.Current == null)
+				return null;
 			var s = HttpContext.Current.Request.Cookies[PermissionCookie];
 			if (s == null)
 				return null;

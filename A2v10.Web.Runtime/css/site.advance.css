@@ -6867,7 +6867,7 @@ td.vert > .vcell {
 }
 .debug-panel {
   position: absolute;
-  top: 42px;
+  top: 0;
   bottom: 2rem;
   right: 0;
   z-index: 110;
