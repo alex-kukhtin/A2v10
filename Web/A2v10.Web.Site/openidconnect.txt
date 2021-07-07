@@ -1,0 +1,10 @@
+﻿packages:
+
+Microsoft.IdentityModel.Logging
+Microsoft.IdentityModel.Tokens
+Microsoft.IdentityModel.JsonWebTokens
+Microsoft.IdentityModel.Protocols
+System.IdentityModel.Tokens.Jwt
+Microsoft.IdentityModel.Protocols.OpenIdConnect
+Microsoft.Owin.Security.OpenIdConnect
+

@@ -116,6 +116,7 @@
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />
+    <Content Include="openidconnect.txt" />
     <Content Include="scripts\server\validate.js" />
     <Content Include="app\services\eusign.js" />
     <Content Include="app\services\html.js" />
