@@ -190,6 +190,17 @@ namespace A2v10.Web.Config
 			}
 		}
 
+		public String Language2
+		{
+			get
+			{
+				var loc = Locale;
+				if (loc == null)
+					loc = Thread.CurrentThread.CurrentUICulture.Name;
+				return loc.Substring(3, 2).ToLowerInvariant();
+			}
+		}
+
 		private static IEnumerable<String> AvailableLocales()
 		{
 			var avail = ConfigurationManager.AppSettings["availableLocales"];

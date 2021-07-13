@@ -8,5 +8,6 @@ namespace A2v10.Infrastructure
 	{
 		String Locale { get; set; }
 		String Language { get; }
+		String Language2 { get; }
 	}
 }

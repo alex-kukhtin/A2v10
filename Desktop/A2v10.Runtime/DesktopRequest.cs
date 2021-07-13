@@ -21,6 +21,7 @@ namespace A2v10.Runtime
 		public Int64 UserId { get; set; }
 		public Boolean IsAdmin { get; set; }
 		public Boolean IsTenantAdmin { get; set; }
+		public Boolean IsExternalUser { get; set; }
 	}
 
 	public class DesktopRequest
@@ -201,7 +202,7 @@ namespace A2v10.Runtime
 			loadPrms.Append(_controller.CheckPeriod(HttpUtility.ParseQueryString(Search)), toPascalCase: true);
 			SetSqlQueryParams(loadPrms);
 			if (path.StartsWith("app/"))
-				_controller.RenderApplicationKind(kind, path, loadPrms, writer).Wait();
+				_controller.RenderApplicationKind(kind, path, loadPrms, writer, false).Wait();
 			else
 				_controller.RenderElementKind(kind, path, loadPrms, writer).Wait();
 		}

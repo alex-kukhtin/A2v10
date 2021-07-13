@@ -94,7 +94,7 @@ namespace A2v10.Request
 			return _localizer.Localize(null, content);
 		}
 
-		public async Task RenderApplicationKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
+		public async Task RenderApplicationKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer, Boolean isUserOpenId)
 		{
 			var segs = pathInfo.ToLowerInvariant().Split('/');
 			if (segs.Length < 2)
@@ -109,6 +109,8 @@ namespace A2v10.Request
 					await RenderAbout(writer);
 					break;
 				case "changepassword":
+					if (isUserOpenId)
+						throw new RequestModelException($"Unable to change password");
 					if (kind != RequestUrlKind.Dialog)
 						throw new RequestModelException($"Invalid application Url: {pathInfo}");
 					await RenderChangePassword(writer, loadPrms);

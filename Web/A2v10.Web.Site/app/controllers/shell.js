@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210529-7776*/
+/*20210713-7795*/
 /* controllers/shell.js */
 
 (function () {
@@ -39,6 +39,11 @@
 				if (menu.isSeparatePage(this.pages, seg0))
 					return seg0;
 				return undefined;
+			},
+			changePassword() {
+				if (this.userIsExternal)
+					return undefined;
+				return this.doChangePassword;
 			}
 		},
 		watch: {
@@ -90,7 +95,9 @@
 			changeUser() {
 				alert('change user');
 			},
-			changePassword() {
+			doChangePassword() {
+				if (this.userIsExternal)
+					return undefined;
 				if (window.cefHost) {
 					this.$alert(locale.$DesktopNotSupported);
 					return;

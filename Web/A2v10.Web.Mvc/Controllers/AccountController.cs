@@ -18,6 +18,8 @@ using System.Threading;
 
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.OpenIdConnect;
+using Microsoft.Owin.Security;
 
 using Newtonsoft.Json;
 
@@ -29,6 +31,7 @@ using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Web.Base;
 using A2v10.Web.Config;
+using Microsoft.Owin.Security.Cookies;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -157,6 +160,20 @@ namespace A2v10.Web.Mvc.Controllers
 			sb.Append(partialPathText);
 			sb.Append(text.Substring(spIndex));
 			return sb.ToString();
+		}
+
+		// GET: /Account/SignIn
+		[AllowAnonymous]
+		[HttpGet]
+		[OutputCache(Duration = 0)]
+		public void SignIn()
+		{
+			// Send an OpenID Connect sign-in request.
+			if (!Request.IsAuthenticated)
+			{
+				HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties { RedirectUri = "/" },
+					OpenIdConnectAuthenticationDefaults.AuthenticationType);
+			}
 		}
 
 		// GET: /Account/Login
@@ -820,6 +837,10 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (User.Identity.GetUserId<Int64>() != model.Id)
 					throw new SecurityException("Invalid User Id");
+
+				if (User.Identity.IsUserOpenId())
+					throw new SecurityException("Invalid User type (openId?)");
+
 				var user = await UserManager.FindByIdAsync(model.Id);
 				if (user == null)
 					throw new SecurityException("User not found");
@@ -845,15 +866,28 @@ namespace A2v10.Web.Mvc.Controllers
 			return Json(new { Status = status });
 		}
 
+		public String OpenIdSettings => ConfigurationManager.AppSettings["openIdAuthentication"];
 
 		[HttpPost]
 		public ActionResult LogOff()
 		{
-			AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-			Session.Abandon();
-			ClearAllCookies();
-			Response.Cookies.Add(new HttpCookie(LOCALE_COOKIE, _userLocale.Locale));
-			return Redirect("~/");
+			var openIdSettings = OpenIdSettings;
+			if (!String.IsNullOrEmpty(openIdSettings))
+			{
+				var config = OpenIdConfig.FromString(openIdSettings);
+				HttpContext.GetOwinContext().Authentication.SignOut(
+					new AuthenticationProperties { RedirectUri = config.redirectUri },
+					OpenIdConnectAuthenticationDefaults.AuthenticationType, CookieAuthenticationDefaults.AuthenticationType);
+				return new EmptyResult();
+			}
+			else
+			{
+				AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+				Session.Abandon();
+				ClearAllCookies();
+				Response.Cookies.Add(new HttpCookie(LOCALE_COOKIE, _userLocale.Locale));
+				return Redirect("~/");
+			}
 		}
 
 		#region helpers

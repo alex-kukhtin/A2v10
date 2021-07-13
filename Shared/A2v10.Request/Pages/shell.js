@@ -1,5 +1,6 @@
-﻿
-/*20210529-7776*/
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+
+/*20210713-7795*/
 
 (function () {
 
@@ -35,6 +36,7 @@
 			userState: menu.UserState,
 			userIsAdmin: $(Admin),
 			userIsTenantAdmin: $(TenantAdmin),
+			userIsExternal: $(ExternalUser),
 			isDebug: $(Debug),
 			appData: $(AppData)
 		},

@@ -14,6 +14,7 @@ namespace A2v10.Infrastructure
 		Int64 UserId { get; set; }
 		Boolean IsAdmin { get; set; }
 		Boolean IsTenantAdmin { get; set; }
+		Boolean IsExternalUser { get; set; }
 	}
 
 	public struct FullUserInfo

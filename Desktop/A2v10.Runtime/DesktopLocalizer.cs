@@ -44,6 +44,7 @@ namespace A2v10.Runtime
 	{
 		public String Locale { get; set; }
 		public String Language => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
+		public String Language2 => Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
 	}
 
 	public class DesktopLocalizer : BaseLocalizer, IDataLocalizer

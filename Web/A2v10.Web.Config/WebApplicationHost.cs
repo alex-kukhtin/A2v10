@@ -137,7 +137,9 @@ namespace A2v10.Web.Config
 
 		public String AppKey => ConfigurationManager.AppSettings["appKey"] ?? String.Empty;
 
-		public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"]?.Replace("$(lang)", _userLocale.Language);
+		public String HelpUrl => ConfigurationManager.AppSettings["helpUrl"]?
+			.Replace("$(lang)", _userLocale.Language)
+			.Replace("$(lang2)", _userLocale.Language2);
 		public String AppDescription => ConfigurationManager.AppSettings["appDescription"];
 		public String SupportEmail => ConfigurationManager.AppSettings["supportEmail"];
 		public String AppHost => ConfigurationManager.AppSettings["appHost"];

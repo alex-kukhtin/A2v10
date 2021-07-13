@@ -110,6 +110,7 @@
     <Compile Include="Security.ApiKey\ApiKeyValidateIdentityContext.cs" />
     <Compile Include="Security.ApiKey\AppBuilderExtensions.cs" />
     <Compile Include="Security.ApiKey\DbValidateApiKey.cs" />
+    <Compile Include="Security.OpenId\OpenIdConfig.cs" />
     <Compile Include="Services\ExternalLoginManager.cs" />
     <Compile Include="IdentityController.cs" />
     <Compile Include="IdentityExtensions.cs" />

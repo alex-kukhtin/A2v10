@@ -236,7 +236,7 @@ namespace A2v10.Web.Mvc.Controllers
 				{
 					// controller after query string
 					SetUserTenantToParams(loadPrms); // without claims
-					await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output);
+					await _baseController.RenderApplicationKind(kind, pathInfo, loadPrms, Response.Output, User.Identity.IsUserOpenId());
 				}
 				else
 				{

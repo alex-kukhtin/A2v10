@@ -14,6 +14,7 @@ namespace A2v10.Web.Identity
 		public Int64 UserId { get; set; }
 		public Boolean IsAdmin { get; set; }
 		public Boolean IsTenantAdmin { get; set; }
+		public Boolean IsExternalUser { get; set; }
 	}
 
 	public static class IdentityExtensions
@@ -72,6 +73,8 @@ namespace A2v10.Web.Identity
 
 			value = user.FindFirstValue("TenantAdmin");
 			ui.IsTenantAdmin = value == "TenantAdmin";
+			value = user.FindFirstValue("OpenIdIdentifier");
+			ui.IsExternalUser = value != null;
 			return ui;
 		}
 
@@ -94,6 +97,15 @@ namespace A2v10.Web.Identity
 			if (!(identity is ClaimsIdentity user))
 				return null;
 			return user.FindFirstValue("Segment");
+		}
+
+		public static Boolean IsUserOpenId(this IIdentity identity)
+		{
+			if (identity == null)
+				return false;
+			if (!(identity is ClaimsIdentity user))
+				return false;
+			return user.FindFirstValue("OpenIdIdentifier") != null;
 		}
 
 		public static String GetUserClaim(this IIdentity identity, String claim)
