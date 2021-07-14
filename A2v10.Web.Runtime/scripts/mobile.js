@@ -13190,7 +13190,7 @@ Vue.directive('resize', {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210606-7781*/
+/*20210713-7795*/
 /* controllers/appheader.js */
 
 (function () {
@@ -13230,7 +13230,7 @@ Vue.directive('resize', {
 		</button>
 		<div class="dropdown-menu menu down-left">
 			<a v-if="!isSinglePage " v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
-			<a @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> <span v-text="locale.$ChangePassword"></span></a>
+			<a v-if="isChangePasswordEnabled" @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> <span v-text="locale.$ChangePassword"></span></a>
 			<div class="divider"></div>
 			<form id="logoutForm" method="post" action="/account/logoff">
 				<a href="javascript:document.getElementById('logoutForm').submit()" tabindex="-1" class="dropdown-item"><i class="ico ico-exit"></i> <span v-text="locale.$Quit"></span></a>
@@ -13260,6 +13260,9 @@ Vue.directive('resize', {
 		computed: {
 			isSinglePage() {
 				return !!this.singlePage;
+			},
+			isChangePasswordEnabled() {
+				return this.changePassword != undefined;
 			},
 			locale() { return locale; },
 			notifyText() {

@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7779
-generated: 07.07.2021 21:35:52
+generated: 14.07.2021 08:25:29
 */
 
 set nocount on;
@@ -420,11 +420,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 04 jul 2021
-module version : 7765
+Last updated : 13 jul 2021
+module version : 7766
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7765;
+exec a2sys.SetVersion N'std:security', 7766;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1890,7 +1890,6 @@ begin
 		[Company] bigint not null
 			constraint FK_UserCompanies_Company_Companies foreign key references a2security.Companies(Id),
 		[Enabled] bit,
-		[Current] bit, -- TODO:// remove it
 		constraint PK_UserCompanies primary key clustered ([User], [Company]) with (fillfactor = 70)
 	);
 end
@@ -1899,6 +1898,53 @@ go
 if not exists(select * from INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS where CONSTRAINT_SCHEMA = N'a2security' and CONSTRAINT_NAME = N'FK_Users_Company_Companies')
 	alter table a2security.Users add
 		constraint FK_Users_Company_Companies foreign key (Company) references a2security.Companies(Id);
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Companies.Check')
+	drop procedure a2security.[User.Companies.Check]
+go
+------------------------------------------------
+create procedure a2security.[User.Companies.Check]
+@UserId bigint,
+@Error bit,
+@CompanyId bigint output
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	declare @isadmin bit;
+	declare @id bigint;
+
+	select @id = Id, @isadmin = IsAdmin, @CompanyId = Company from a2security.ViewUsers where Id=@UserId;
+	if @id is null
+	begin
+		raiserror (N'UI:No such user', 16, -1) with nowait;
+		return;
+	end
+	if @isadmin = 1
+	begin
+		if @CompanyId is null or @CompanyId = 0 or not exists(select * from a2security.Companies where Id=@CompanyId)
+		begin
+			select top(1) @CompanyId = Id from a2security.Companies where Id <> 0;
+			update a2security.ViewUsers set Company = @CompanyId where Id = @UserId;
+		end
+	end
+	else
+	begin
+		-- not admin
+		if @CompanyId is null or @CompanyId = 0 or not exists(select * from a2security.UserCompanies where [User] = @UserId and Company = @CompanyId)
+		begin
+			select top(1) @CompanyId = Company from a2security.UserCompanies where Company <> 0 and [Enabled]=1 and [User] = @UserId;
+			update a2security.ViewUsers set Company = @CompanyId where Id = @UserId;
+		end
+	end
+	if @Error = 1 and @CompanyId is null
+	begin
+		raiserror (N'UI:No current company', 16, -1) with nowait;
+		return;
+	end
+end
 go
 ------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.Companies')
@@ -1917,19 +1963,6 @@ begin
 	declare @company bigint;
 
 	select @isadmin = IsAdmin, @company = Company from a2security.ViewUsers where Id=@UserId;
-	if @company is null
-	begin
-		if @isadmin = 1
-			select top(1) @company = Id from a2security.Companies where Id <> 0;
-		else
-			select top(1) @company = Company from a2security.UserCompanies where Company <> 0 and [Enabled]=1;
-		update a2security.ViewUsers set Company = @company where Id = @UserId;
-	end
-	else if not exists(select 1 from a2security.UserCompanies where [User]=@UserId and Company=@company and [Enabled] = 1)
-	begin
-		update a2security.ViewUsers set Company = (select top(1) Company from a2security.UserCompanies where [User]=@UserId and [Enabled] = 1)
-		where Id = @UserId;
-	end
 
 	-- all companies for the current user
 	select [Companies!TCompany!Array] = null, 
