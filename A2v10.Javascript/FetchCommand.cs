@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -7,8 +7,9 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-using A2v10.Infrastructure;
 using Newtonsoft.Json;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Javascript
 {
