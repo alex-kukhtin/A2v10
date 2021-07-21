@@ -88,12 +88,12 @@ namespace A2v10.Web.Mvc.Controllers
 			return $"const avaliableLocales = [{String.Join(",", avail.Split(',').Select(x => $"'{x.Trim()}'"))}];";
 		}
 
-		Boolean IsAnalyticsEnabled()
+		String GetAnalyticsMode()
 		{
 			var analytics = ConfigurationManager.AppSettings["analytics"];
 			if (String.IsNullOrEmpty(analytics))
-				return false;
-			return analytics == "enable";
+				return null;
+			return analytics;
 		}
 
 		void SendPage(String rsrcHtml, String rsrcScript, String serverInfo = null, String errorMessage = null)
@@ -1044,7 +1044,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			if (Request.Cookies.Get(QUERYSTRING_COOKIE) != null)
 				return;
-			if (!IsAnalyticsEnabled())
+			if (GetAnalyticsMode() == null)
 				return;
 			if (Request.QueryString.Count == 0 || (Request.QueryString.Count == 1 && Request.QueryString["returnurl"] != null))
 				return;
@@ -1053,7 +1053,8 @@ namespace A2v10.Web.Mvc.Controllers
 
 		async Task SaveQueryStringAnalytics(AppUser user)
 		{
-			if (!IsAnalyticsEnabled())
+			var mode = GetAnalyticsMode();
+			if (mode == null || mode == "disable")
 				return;
 			var c = Request.Cookies.Get(QUERYSTRING_COOKIE);
 			if (c == null)
@@ -1068,11 +1069,18 @@ namespace A2v10.Web.Mvc.Controllers
 			{
 				var key = qs.GetKey(i);
 				var val = qs.Get(i);
-				if (key.StartsWith("UTM_", StringComparison.InvariantCultureIgnoreCase) && !String.IsNullOrEmpty(val))
-				{
+				if (String.IsNullOrEmpty(val))
+					continue;
+				if (mode == "all" || mode == "enable")
 					list.Add(new ETag() { Name = key, Value = val });
+				else if (mode == "utm")
+				{
+					if (key.StartsWith("UTM_", StringComparison.InvariantCultureIgnoreCase))
+						list.Add(new ETag() { Name = key, Value = val });
 				}
 			}
+			if (list.Count == 0)
+				return;
 			var eo = new ExpandoObject();
 			eo.Set("UserId", user.Id);
 			eo.Set("Value", qs.ToString());

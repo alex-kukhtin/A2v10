@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7779
-generated: 14.07.2021 08:25:29
+generated: 21.07.2021 14:22:05
 */
 
 set nocount on;
@@ -420,11 +420,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 13 jul 2021
-module version : 7766
+Last updated : 21 jul 2021
+module version : 7767
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7766;
+exec a2sys.SetVersion N'std:security', 7767;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -2114,6 +2114,81 @@ begin
 	insert into a2security.AnalyticTags (UserId, [Name], [Value])
 	select @UserId, [Name], [Value] from T;
 	commit tran;
+end
+go
+-- .JWT SUPPORT
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'RefreshTokens')
+	create table a2security.RefreshTokens
+	(
+		UserId bigint not null
+			constraint FK_RefreshTokens_UserId_Users foreign key references a2security.Users(Id),
+		[Provider] nvarchar(64) not null,
+		[Token] nvarchar(255) not null,
+		Expires datetime not null,
+		constraint PK_RefreshTokens primary key (UserId, [Provider], Token) with (fillfactor = 70)
+	)
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'AddToken')
+	drop procedure a2security.[AddToken]
+go
+------------------------------------------------
+create procedure a2security.[AddToken]
+@UserId bigint,
+@Provider nvarchar(64),
+@Token nvarchar(255),
+@Expires datetime,
+@Remove nvarchar(255) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+	begin tran;
+	insert into a2security.RefreshTokens(UserId, [Provider], Token, Expires)
+		values (@UserId, @Provider, @Token, @Expires);
+	if @Remove is not null
+		delete from a2security.RefreshTokens 
+		where UserId=@UserId and [Provider] = @Provider and Token = @Remove;
+	commit tran;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'GetToken')
+	drop procedure a2security.[GetToken]
+go
+------------------------------------------------
+create procedure a2security.[GetToken]
+@UserId bigint,
+@Provider nvarchar(64),
+@Token nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+
+	select [Token], UserId, Expires from a2security.RefreshTokens
+	where UserId=@UserId and [Provider] = @Provider and Token = @Token;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'RemoveToken')
+	drop procedure a2security.[RemoveToken]
+go
+------------------------------------------------
+create procedure a2security.[RemoveToken]
+@UserId bigint,
+@Provider nvarchar(64),
+@Token nvarchar(255)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	delete from a2security.RefreshTokens 
+	where UserId=@UserId and [Provider] = @Provider and Token = @Token;
 end
 go
 -- .NET CORE SUPPORT

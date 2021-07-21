@@ -303,6 +303,18 @@ namespace A2v10.Infrastructure
 		}
 
 
+		public static NameValueCollection ToCollection(this ExpandoObject eo)
+		{
+			if (eo == null)
+				return null;
+			var nvc = new NameValueCollection();
+			foreach (var kv in (eo as IDictionary<String, Object>)) {
+				if (kv.Value != null)
+					nvc.Add(kv.Key, kv.Value.ToString());
+			}
+			return nvc;
+		}
+
 		public static Boolean IsNullableType(this Type type)
 		{
 			return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);

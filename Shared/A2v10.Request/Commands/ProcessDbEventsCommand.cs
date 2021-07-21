@@ -52,12 +52,14 @@ namespace A2v10.Request
 			var eo = new ExpandoObject();
 			eo.Set("baseUrl", $"/_simple{evt.Path}");
 			eo.Set("cmd", evt.Command);
-			eo.Set("Id", evt.ItemId);
+			if (evt.ItemId != 0)
+				eo.Set("Id", evt.ItemId);
 			var json = JsonConvert.SerializeObject(eo, JsonHelpers.StandardSerializerSettings);
 			await ctrl.Data("invoke",
 				prms => {
 					prms.Set("UserId", 0 /*system*/);
-					prms.Set("Id", evt.ItemId);
+					if (evt.ItemId != 0)
+						prms.Set("Id", evt.ItemId);
 				},
 				json,
 				null
@@ -69,11 +71,12 @@ namespace A2v10.Request
 
 		static async Task ProcessEvent(CancellationToken token, DbEvent evt, Boolean isAdminMode)
 		{
+			//var loc = new ServiceLocator();
 			IServiceLocator loc = ServiceLocator.Current;
-			var host = loc.GetService<IApplicationHost>();
+			//var host = loc.GetService<IApplicationHost>();
 			var dbContext = loc.GetService<IDbContext>();
-			host.SetAdmin(isAdminMode);
-			host.StartApplication(isAdminMode);
+			//host.SetAdmin(isAdminMode);
+			//host.StartApplication(isAdminMode);
 			var ctrl = new BaseController();
 			if (token.IsCancellationRequested)
 				return;
@@ -101,14 +104,20 @@ namespace A2v10.Request
 			var eventList = await dbContext.LoadListAsync<DbEvent>(source, "a2sys.[DbEvent.Fetch]", null);
 			if (eventList == null || eventList.Count == 0)
 				return;
-			var currentContext = HttpContext.Current;
+			var token = new CancellationToken();
 			foreach (var evt in eventList)
 			{
-				HostingEnvironment.QueueBackgroundWorkItem(token => {
-					HttpContext.Current = currentContext;
-					return ProcessEvent(token, evt, isAdminMode);
-				});
+				await ProcessEvent(token, evt, isAdminMode);
 			}
+			/*
+			var currentContext = HttpContext.Current;
+			//foreach (var evt in eventList)
+			//{
+				HostingEnvironment.QueueBackgroundWorkItem(async token => {
+					HttpContext.Current = currentContext;
+				});
+			//}
+			*/
 		}
 	}
 }

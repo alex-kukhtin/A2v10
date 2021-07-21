@@ -1,11 +1,12 @@
 ﻿
+
 /*
  * server module function
 */
 
-module.exports = function (prms, args) {
+module.exports = function (this: ServerEnvironment, prms: keyable, args: keyable) {
 
-	let v = {};
+	let v: any = {};
 	for (let p in prms)
 		v[p] = prms[p];
 	for (let a in args)
@@ -15,7 +16,7 @@ module.exports = function (prms, args) {
 	//return Object.assign(prms, args, {'5':[1, 2, 3, 4, ...Object.keys(prms)]});
 
 	let r = this.fetch(this.config.appSettings('ProcS').url + '/api/process/start', {
-		method: 'post',
+		method: ServerFetchMethod.post,
 		body: {
 			processId: "bioprocs/donorpaid",
 			parameters: {
@@ -35,7 +36,7 @@ module.exports = function (prms, args) {
 		}
 
 	});
-	return r;
+	//return r;
 
 	let dm = this.executeSql({
 		procedure: "a2demo.[GetWeather.Load]",
@@ -43,9 +44,8 @@ module.exports = function (prms, args) {
 			UserId: prms.UserId
 		}
 	});
-	return dm;
+	//return dm;
 
-	/*
 	try {
 		let dm = this.loadModel({
 			procedure: "a2demo.[Model.For.Server]",
@@ -57,7 +57,6 @@ module.exports = function (prms, args) {
 	} catch (err) {
 		return { catch: true, error: err };
 	}
-	*/
 
 	//return dm.Weather.Url;
 
@@ -72,7 +71,7 @@ module.exports = function (prms, args) {
 		//return url;
 
 		let resp = this.fetch(url, {
-			method: 'GET',
+			method: ServerFetchMethod.get,
 			headers: {
 				ContentType:'application/json',
 			},
