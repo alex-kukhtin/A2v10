@@ -5559,7 +5559,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210402-7760
+// 20210728-7797
 // components/datepicker.js
 
 
@@ -5616,6 +5616,14 @@ Vue.component('validator-control', {
 				}
 				this.isOpen = !this.isOpen;
 			},
+			fitDate(dt) {
+				let du = utils.date;
+				if (dt < du.minDate)
+					dt = du.minDate;
+				else if (dt > du.maxDate)
+					dt = du.maxDate;
+				return dt;
+			},
 			clickInput(ev) {
 				if (this.view === 'month') {
 					this.toggle(ev);
@@ -5635,6 +5643,7 @@ Vue.component('validator-control', {
 				// save time
 				let md = this.modelDate;
 				let nd = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), md.getUTCHours(), md.getUTCMinutes(), 0, 0));
+				nd = this.fitDate(nd);
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
@@ -5676,6 +5685,7 @@ Vue.component('validator-control', {
 				},
 				set(str) {
 					let md = utils.date.parse(str, this.yearCutOff);
+					md = this.fitDate(md);
 					if (utils.date.isZero(md)) {
 						this.item[this.prop] = md;
 						this.isOpen = false;

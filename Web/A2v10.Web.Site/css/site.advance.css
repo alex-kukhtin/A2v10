@@ -4352,7 +4352,9 @@ ul.news-list > li {
 .modal-footer .btn {
   min-width: 6rem;
 }
-.modal-footer .btn + .btn {
+.modal-footer .btn + .btn,
+.modal-footer .btn + .dropdown,
+.modal-footer .dropdown + .btn {
   margin-left: 1rem;
 }
 .modal-footer .btn-help {
