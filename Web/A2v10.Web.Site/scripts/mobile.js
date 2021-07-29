@@ -5926,7 +5926,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210729-7797
+// 20210729-7798
 // components/periodpicker.js
 
 
@@ -6150,12 +6150,15 @@ Vue.component('validator-control', {
 			},
 			startCustom() {
 				this.customMode = true;
-				//alert('start custom')
 			},
 			parseDate(val) {
 				let dat = du.parse(val);
-				if (du.equal(dat, du.minDate) || du.equal(dat, du.maxDate) || du.isZero(dat))
+				if (du.isZero(dat))
 					dat = du.today();
+				else if (dat.getTime() < du.minDate.getTime())
+					dat = du.minDate;
+				else if (dat.getTime() > du.maxDate.getTime())
+					dat = du.maxDate;
 				return dat;
 			}
 		},
