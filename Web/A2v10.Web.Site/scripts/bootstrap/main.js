@@ -907,9 +907,9 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191101-7575*/
+/*20210729-7797*/
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -1037,6 +1037,20 @@ app.modules['std:period'] = function () {
 		this.To = to;
 		return this.normalize();
 	};
+
+	TPeriod.prototype.setFrom = function(from) {
+		this.From = from;
+		if (this.To.getTime() < this.From.getTime())
+			this.To = this.From;
+		return this;
+	}
+
+	TPeriod.prototype.setTo = function(to) {
+		this.To = to;
+		if (this.From.getTime() > this.To.getTime())
+			this.From = this.To;
+		return this;
+	}
 
 	TPeriod.prototype.toJson = function () {
 		return JSON.stringify(this);
@@ -4397,7 +4411,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210621-7785*/
+/*20210729-7797*/
 // controllers/base.js
 
 (function () {
@@ -4569,6 +4583,9 @@ app.modules['std:impl:array'] = function () {
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
+				if (!this.$data.$dirty)
+					return;
+				let mainObjectName = this.$data._meta_.$main;
 				let self = this;
 				let root = window.$$rootUrl;
 				const routing = require('std:routing'); // defer loading
@@ -4596,12 +4613,18 @@ app.modules['std:impl:array'] = function () {
 						// data is a full model. Resolve requires only single element.
 						let dataToResolve;
 						let newId;
-						for (let p in data) {
-							// always first element in the result //TODO:check ????
-							dataToResolve = data[p];
-							newId = self.$data[p].$id; // new element
-							if (dataToResolve)
-								break;
+						if (mainObjectName) {
+							dataToResolve = data[mainObjectName];
+							newId = self.$data[mainObjectName].$id; // new element
+						}
+						else {
+							// mainObject not defined. Use first element in the result
+							for (let p in data) {
+								dataToResolve = data[p];
+								newId = self.$data[p].$id; // new element
+								if (dataToResolve)
+									break;
+							}
 						}
 						if (wasNew && newId) {
 							// assign the new id to the route

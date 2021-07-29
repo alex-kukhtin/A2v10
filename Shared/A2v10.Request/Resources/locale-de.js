@@ -17,7 +17,7 @@
 		$User: 'Benutzer',
 		$Confirm: 'Bestätigung',
 		$LoginPrompt: 'Systemanmeldung',
-		$LoginLink: 'Anmeldungslink',
+		$LoginLink: 'Anmelden',
 		$RegisterPrompt: 'Im System registrieren',
 		$ForgotPrompt: 'Passwort zurücksetzen',
 		$ConfirmEMailPrompt: 'E-mail bestätigen',

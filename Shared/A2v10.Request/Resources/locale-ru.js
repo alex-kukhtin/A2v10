@@ -17,7 +17,7 @@
 		$User: 'Пользователь',
 		$Confirm: 'Подтверждение',
 		$LoginPrompt: 'Вход в систему',
-		$LoginLink: 'На страницу входа',
+		$LoginLink: 'Войти',
 		$RegisterPrompt: 'Регистрация в системе',
 		$ForgotPrompt: 'Восстановление пароля',
 		$ConfirmEMailPrompt: 'Подтверждение е-mail',

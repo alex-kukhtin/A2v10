@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190831-7549
+// 20210729-7797
 // components/periodpicker.js
 
 
@@ -11,6 +11,7 @@
 	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
 	const uPeriod = require('std:period');
+	const du = utils.date;
 
 	const baseControl = component('control');
 	const locale = window.$$locale;
@@ -34,7 +35,12 @@
 			<a2-calendar style="grid-area: 1 / 3; margin-left:6px":show-today="false" pos="right" :model="modelDate" 
 				:set-month="setMonth" :set-day="setDay" :get-day-class="dayClass" :hover="mouseHover"/>
 			<div class="period-footer" style="grid-area: 2 / 2 / auto / span 2">
-				<span class="current-period" v-text="currentText" :class="{processing: selection}"/>
+				<div v-if="customMode" class="custom-period">
+					<div><input type=text v-model.lazy.trim="customStart" v-focus></div>
+					<span> - </span>
+					<div><input type=text v-model.lazy.trim="customEnd" v-focus></div>
+				</div>
+				<a v-else class="current-period" v-text="currentText" :class="{processing: selection}" href="" @click.stop.prevent=startCustom></a>
 				<span class="aligner"></span>
 				<button class="btn btn-primary" @click.stop.prevent="apply" v-text="locale.$Apply" :disabled="applyDisabled"/>
 				<button class="btn btn-default" @click.stop.prevent="close" v-text="locale.$Cancel" />
@@ -58,10 +64,11 @@
 			return {
 				isOpen: false,
 				selection: '',
-				modelDate: utils.date.today(),
+				modelDate: du.today(),
 				currentPeriod: uPeriod.zero(),
-				selectEnd: utils.date.zero(),
-				timerId: null
+				selectEnd: du.zero(),
+				timerId: null,
+				customMode: false
 			};
 		},
 		computed: {
@@ -87,7 +94,7 @@
 				return period;
 			},
 			prevModelDate() {
-				return utils.date.add(this.modelDate, -1, 'month');
+				return du.add(this.modelDate, -1, 'month');
 			},
 			currentText() {
 				return this.currentPeriod.format('Date');
@@ -97,23 +104,51 @@
 			},
 			menu() {
 				return uPeriod.predefined(this.showAll);
+			},
+			customStart: {
+				get() {
+					let dt = this.currentPeriod.From;
+					if (du.equal(dt, du.minDate) || du.equal(dt, du.maxDate))
+						return '';
+					return du.format(dt);
+				},
+				set(val) {
+					let dat = this.parseDate(val);
+					this.currentPeriod.setFrom(dat);
+					this.modelDate = this.currentPeriod.To;
+				}
+			},
+			customEnd: {
+				get() {
+					let dt = this.currentPeriod.To;
+					if (du.equal(dt, du.minDate) || du.equal(dt, du.maxDate))
+						return '';
+					return du.format(dt);
+				},
+				set(val) {
+					let dat = this.parseDate(val);
+					this.currentPeriod.setTo(dat);
+					this.modelDate = this.currentPeriod.To;
+				}
 			}
 		},
 		methods: {
 			dummy() {
 			},
 			setMonth(d, pos) {
+				this.customMode = false;
 				if (pos === 'left')
-					this.modelDate = utils.date.add(d, 1, 'month'); // prev month
+					this.modelDate = du.add(d, 1, 'month'); // prev month
 				else
 					this.modelDate = d;
 			},
 			setDay(d) {
+				this.customMode = false;
 				if (!this.selection) {
 					this.selection = 'start';
 					this.currentPeriod.From = d;
-					this.currentPeriod.To = utils.date.zero();
-					this.selectEnd = utils.date.zero();
+					this.currentPeriod.To = du.zero();
+					this.selectEnd = du.zero();
 				} else if (this.selection === 'start') {
 					this.currentPeriod.To = d;
 					this.currentPeriod.normalize();
@@ -135,6 +170,7 @@
 			},
 			close() {
 				this.isOpen = false;
+				this.customMode = false;
 			},
 			apply() {
 				// apply period here
@@ -142,7 +178,7 @@
 					this.period.assign(this.currentPeriod);
 					this.fireEvent();
 				}
-				this.isOpen = false;
+				this.close();
 			},
 			fireEvent() {
 				if (this.callback)
@@ -157,16 +193,17 @@
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 					this.modelDate = this.period.To; // TODO: calc start month
-					if (this.modelDate.isZero() || this.modelDate.getTime() === utils.date.maxDate.getTime())
-						this.modelDate = utils.date.today();
+					if (this.modelDate.isZero() || this.modelDate.getTime() === du.maxDate.getTime())
+						this.modelDate = du.today();
 					this.currentPeriod.assign(this.period);
 					this.selection = '';
-					this.selectEnd = utils.date.zero();
+					this.selectEnd = du.zero();
+					this.customMode = false;
 				}
 				this.isOpen = !this.isOpen;
 			},
 			__clickOutside() {
-				this.isOpen = false;
+				this.close();
 			},
 			isSelectedMenu(key) {
 				let p = uPeriod.create(key);
@@ -184,6 +221,16 @@
 				this.timerId = setTimeout(() => {
 					this.selectEnd = day;
 				}, DEFAULT_DEBOUNCE);
+			},
+			startCustom() {
+				this.customMode = true;
+				//alert('start custom')
+			},
+			parseDate(val) {
+				let dat = du.parse(val);
+				if (du.equal(dat, du.minDate) || du.equal(dat, du.maxDate) || du.isZero(dat))
+					dat = du.today();
+				return dat;
 			}
 		},
 		mounted() {

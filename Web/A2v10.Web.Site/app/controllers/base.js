@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210621-7785*/
+/*20210729-7797*/
 // controllers/base.js
 
 (function () {
@@ -172,6 +172,9 @@
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
+				if (!this.$data.$dirty)
+					return;
+				let mainObjectName = this.$data._meta_.$main;
 				let self = this;
 				let root = window.$$rootUrl;
 				const routing = require('std:routing'); // defer loading
@@ -199,12 +202,18 @@
 						// data is a full model. Resolve requires only single element.
 						let dataToResolve;
 						let newId;
-						for (let p in data) {
-							// always first element in the result //TODO:check ????
-							dataToResolve = data[p];
-							newId = self.$data[p].$id; // new element
-							if (dataToResolve)
-								break;
+						if (mainObjectName) {
+							dataToResolve = data[mainObjectName];
+							newId = self.$data[mainObjectName].$id; // new element
+						}
+						else {
+							// mainObject not defined. Use first element in the result
+							for (let p in data) {
+								dataToResolve = data[p];
+								newId = self.$data[p].$id; // new element
+								if (dataToResolve)
+									break;
+							}
 						}
 						if (wasNew && newId) {
 							// assign the new id to the route

@@ -1134,9 +1134,9 @@ app.modules['std:url'] = function () {
 
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191101-7575*/
+/*20210729-7797*/
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -1264,6 +1264,20 @@ app.modules['std:period'] = function () {
 		this.To = to;
 		return this.normalize();
 	};
+
+	TPeriod.prototype.setFrom = function(from) {
+		this.From = from;
+		if (this.To.getTime() < this.From.getTime())
+			this.To = this.From;
+		return this;
+	}
+
+	TPeriod.prototype.setTo = function(to) {
+		this.To = to;
+		if (this.From.getTime() > this.To.getTime())
+			this.From = this.To;
+		return this;
+	}
 
 	TPeriod.prototype.toJson = function () {
 		return JSON.stringify(this);

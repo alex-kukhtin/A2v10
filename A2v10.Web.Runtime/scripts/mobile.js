@@ -1164,9 +1164,9 @@ app.modules['std:url'] = function () {
 
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20191101-7575*/
+/*20210729-7797*/
 // services/period.js
 
 app.modules['std:period'] = function () {
@@ -1294,6 +1294,20 @@ app.modules['std:period'] = function () {
 		this.To = to;
 		return this.normalize();
 	};
+
+	TPeriod.prototype.setFrom = function(from) {
+		this.From = from;
+		if (this.To.getTime() < this.From.getTime())
+			this.To = this.From;
+		return this;
+	}
+
+	TPeriod.prototype.setTo = function(to) {
+		this.To = to;
+		if (this.From.getTime() > this.To.getTime())
+			this.From = this.To;
+		return this;
+	}
 
 	TPeriod.prototype.toJson = function () {
 		return JSON.stringify(this);
@@ -5559,7 +5573,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210402-7760
+// 20210728-7797
 // components/datepicker.js
 
 
@@ -5616,6 +5630,14 @@ Vue.component('validator-control', {
 				}
 				this.isOpen = !this.isOpen;
 			},
+			fitDate(dt) {
+				let du = utils.date;
+				if (dt < du.minDate)
+					dt = du.minDate;
+				else if (dt > du.maxDate)
+					dt = du.maxDate;
+				return dt;
+			},
 			clickInput(ev) {
 				if (this.view === 'month') {
 					this.toggle(ev);
@@ -5635,6 +5657,7 @@ Vue.component('validator-control', {
 				// save time
 				let md = this.modelDate;
 				let nd = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), md.getUTCHours(), md.getUTCMinutes(), 0, 0));
+				nd = this.fitDate(nd);
 				this.item[this.prop] = nd;
 			},
 			dayClass(day) {
@@ -5676,6 +5699,7 @@ Vue.component('validator-control', {
 				},
 				set(str) {
 					let md = utils.date.parse(str, this.yearCutOff);
+					md = this.fitDate(md);
 					if (utils.date.isZero(md)) {
 						this.item[this.prop] = md;
 						this.isOpen = false;
@@ -5900,9 +5924,9 @@ Vue.component('validator-control', {
 	});
 })();
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20190831-7549
+// 20210729-7797
 // components/periodpicker.js
 
 
@@ -5913,6 +5937,7 @@ Vue.component('validator-control', {
 	const utils = require('std:utils');
 	const eventBus = require('std:eventBus');
 	const uPeriod = require('std:period');
+	const du = utils.date;
 
 	const baseControl = component('control');
 	const locale = window.$$locale;
@@ -5936,7 +5961,12 @@ Vue.component('validator-control', {
 			<a2-calendar style="grid-area: 1 / 3; margin-left:6px":show-today="false" pos="right" :model="modelDate" 
 				:set-month="setMonth" :set-day="setDay" :get-day-class="dayClass" :hover="mouseHover"/>
 			<div class="period-footer" style="grid-area: 2 / 2 / auto / span 2">
-				<span class="current-period" v-text="currentText" :class="{processing: selection}"/>
+				<div v-if="customMode" class="custom-period">
+					<div><input type=text v-model.lazy.trim="customStart" v-focus></div>
+					<span> - </span>
+					<div><input type=text v-model.lazy.trim="customEnd" v-focus></div>
+				</div>
+				<a v-else class="current-period" v-text="currentText" :class="{processing: selection}" href="" @click.stop.prevent=startCustom></a>
 				<span class="aligner"></span>
 				<button class="btn btn-primary" @click.stop.prevent="apply" v-text="locale.$Apply" :disabled="applyDisabled"/>
 				<button class="btn btn-default" @click.stop.prevent="close" v-text="locale.$Cancel" />
@@ -5960,10 +5990,11 @@ Vue.component('validator-control', {
 			return {
 				isOpen: false,
 				selection: '',
-				modelDate: utils.date.today(),
+				modelDate: du.today(),
 				currentPeriod: uPeriod.zero(),
-				selectEnd: utils.date.zero(),
-				timerId: null
+				selectEnd: du.zero(),
+				timerId: null,
+				customMode: false
 			};
 		},
 		computed: {
@@ -5989,7 +6020,7 @@ Vue.component('validator-control', {
 				return period;
 			},
 			prevModelDate() {
-				return utils.date.add(this.modelDate, -1, 'month');
+				return du.add(this.modelDate, -1, 'month');
 			},
 			currentText() {
 				return this.currentPeriod.format('Date');
@@ -5999,23 +6030,51 @@ Vue.component('validator-control', {
 			},
 			menu() {
 				return uPeriod.predefined(this.showAll);
+			},
+			customStart: {
+				get() {
+					let dt = this.currentPeriod.From;
+					if (du.equal(dt, du.minDate) || du.equal(dt, du.maxDate))
+						return '';
+					return du.format(dt);
+				},
+				set(val) {
+					let dat = this.parseDate(val);
+					this.currentPeriod.setFrom(dat);
+					this.modelDate = this.currentPeriod.To;
+				}
+			},
+			customEnd: {
+				get() {
+					let dt = this.currentPeriod.To;
+					if (du.equal(dt, du.minDate) || du.equal(dt, du.maxDate))
+						return '';
+					return du.format(dt);
+				},
+				set(val) {
+					let dat = this.parseDate(val);
+					this.currentPeriod.setTo(dat);
+					this.modelDate = this.currentPeriod.To;
+				}
 			}
 		},
 		methods: {
 			dummy() {
 			},
 			setMonth(d, pos) {
+				this.customMode = false;
 				if (pos === 'left')
-					this.modelDate = utils.date.add(d, 1, 'month'); // prev month
+					this.modelDate = du.add(d, 1, 'month'); // prev month
 				else
 					this.modelDate = d;
 			},
 			setDay(d) {
+				this.customMode = false;
 				if (!this.selection) {
 					this.selection = 'start';
 					this.currentPeriod.From = d;
-					this.currentPeriod.To = utils.date.zero();
-					this.selectEnd = utils.date.zero();
+					this.currentPeriod.To = du.zero();
+					this.selectEnd = du.zero();
 				} else if (this.selection === 'start') {
 					this.currentPeriod.To = d;
 					this.currentPeriod.normalize();
@@ -6037,6 +6096,7 @@ Vue.component('validator-control', {
 			},
 			close() {
 				this.isOpen = false;
+				this.customMode = false;
 			},
 			apply() {
 				// apply period here
@@ -6044,7 +6104,7 @@ Vue.component('validator-control', {
 					this.period.assign(this.currentPeriod);
 					this.fireEvent();
 				}
-				this.isOpen = false;
+				this.close();
 			},
 			fireEvent() {
 				if (this.callback)
@@ -6059,16 +6119,17 @@ Vue.component('validator-control', {
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 					this.modelDate = this.period.To; // TODO: calc start month
-					if (this.modelDate.isZero() || this.modelDate.getTime() === utils.date.maxDate.getTime())
-						this.modelDate = utils.date.today();
+					if (this.modelDate.isZero() || this.modelDate.getTime() === du.maxDate.getTime())
+						this.modelDate = du.today();
 					this.currentPeriod.assign(this.period);
 					this.selection = '';
-					this.selectEnd = utils.date.zero();
+					this.selectEnd = du.zero();
+					this.customMode = false;
 				}
 				this.isOpen = !this.isOpen;
 			},
 			__clickOutside() {
-				this.isOpen = false;
+				this.close();
 			},
 			isSelectedMenu(key) {
 				let p = uPeriod.create(key);
@@ -6086,6 +6147,16 @@ Vue.component('validator-control', {
 				this.timerId = setTimeout(() => {
 					this.selectEnd = day;
 				}, DEFAULT_DEBOUNCE);
+			},
+			startCustom() {
+				this.customMode = true;
+				//alert('start custom')
+			},
+			parseDate(val) {
+				let dat = du.parse(val);
+				if (du.equal(dat, du.minDate) || du.equal(dat, du.maxDate) || du.isZero(dat))
+					dat = du.today();
+				return dat;
 			}
 		},
 		mounted() {
@@ -11385,7 +11456,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210621-7785*/
+/*20210729-7797*/
 // controllers/base.js
 
 (function () {
@@ -11557,6 +11628,9 @@ Vue.directive('resize', {
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
+				if (!this.$data.$dirty)
+					return;
+				let mainObjectName = this.$data._meta_.$main;
 				let self = this;
 				let root = window.$$rootUrl;
 				const routing = require('std:routing'); // defer loading
@@ -11584,12 +11658,18 @@ Vue.directive('resize', {
 						// data is a full model. Resolve requires only single element.
 						let dataToResolve;
 						let newId;
-						for (let p in data) {
-							// always first element in the result //TODO:check ????
-							dataToResolve = data[p];
-							newId = self.$data[p].$id; // new element
-							if (dataToResolve)
-								break;
+						if (mainObjectName) {
+							dataToResolve = data[mainObjectName];
+							newId = self.$data[mainObjectName].$id; // new element
+						}
+						else {
+							// mainObject not defined. Use first element in the result
+							for (let p in data) {
+								dataToResolve = data[p];
+								newId = self.$data[p].$id; // new element
+								if (dataToResolve)
+									break;
+							}
 						}
 						if (wasNew && newId) {
 							// assign the new id to the route

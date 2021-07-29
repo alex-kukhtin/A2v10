@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7749",
+	"$version": "10.0.7797",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -16,7 +16,7 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"enum": [ "sql", "clr" ]
+							"enum": [ "sql", "clr", "javascript" ]
 						},
 						"method": {
 							"type": "string",
@@ -55,6 +55,21 @@
 								"clrType": {
 									"type": "string",
 									"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
+								},
+								"parameters": {
+									"type": "object",
+									"additionalProperties": true
+								}
+							},
+							"additionalProperties": false
+						},
+						"javascriptCommand": {
+							"type": "object",
+							"properties": {
+								"script": { "type": "string" },
+								"parameters": {
+									"type": "object",
+									"additionalProperties": true
 								}
 							},
 							"additionalProperties": false

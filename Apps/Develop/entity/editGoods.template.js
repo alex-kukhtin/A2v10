@@ -48,6 +48,13 @@ const template = {
 		},
 		testAccel() {
 			alert('accel, id=' + this.Entity.Id);
+		},
+		async testSave() {
+			console.warn('beforeSave');
+			let res = await this.$ctrl.$save();
+			console.warn('afterSave');
+			console.dir(res);
+			console.warn('afterResult');
 		}
 	}
 };

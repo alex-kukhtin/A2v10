@@ -183,7 +183,7 @@
 	}
 
 	.caret {
-		margin:.9em .6em .5em .5em;
+		margin: .9em .6em .5em .5em;
 	}
 
 	.period-menu {
@@ -221,10 +221,32 @@
 
 	.current-period {
 		font-weight: 500;
-		color: #555;
+		border-bottom: 1px dotted currentColor;
 
 		&.processing {
 			animation: blink .5s infinite alternate ease-in-out;
+		}
+	}
+
+	.custom-period {
+		display: inline-flex;
+		align-items: baseline;
+		padding-right: .8em;
+
+		span {
+			padding: 0 .3em;
+		}
+
+		input {
+			padding: 0.3em;
+			border: 1px solid #ddd;
+			text-align: center;
+		}
+
+		.focus {
+			input {
+				border-color: @link-color;
+			}
 		}
 	}
 

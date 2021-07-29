@@ -2821,10 +2821,26 @@ pre.a2-code {
 }
 .period-picker .current-period {
   font-weight: 500;
-  color: #555;
+  border-bottom: 1px dotted currentColor;
 }
 .period-picker .current-period.processing {
   animation: blink 0.5s infinite alternate ease-in-out;
+}
+.period-picker .custom-period {
+  display: inline-flex;
+  align-items: baseline;
+  padding-right: 0.8em;
+}
+.period-picker .custom-period span {
+  padding: 0 0.3em;
+}
+.period-picker .custom-period input {
+  padding: 0.3em;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+.period-picker .custom-period .focus input {
+  border-color: var(--link);
 }
 .period-picker .period-footer {
   display: flex;

@@ -1817,7 +1817,9 @@ table.data-grid > tbody > tr.bold > td {
 .modal-footer .btn {
   min-width: 6rem;
 }
-.modal-footer .btn + .btn {
+.modal-footer .btn + .btn,
+.modal-footer .btn + .dropdown,
+.modal-footer .dropdown + .btn {
   margin-left: 0.75rem;
 }
 .modal-footer .btn-help {

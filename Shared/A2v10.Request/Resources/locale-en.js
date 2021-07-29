@@ -17,7 +17,7 @@
 		$User: 'User',
 		$Confirm: 'Confirm',
 		$LoginPrompt: 'Login to system',
-		$LoginLink: 'Link to login',
+		$LoginLink: 'Log in',
 		$RegisterPrompt: 'Register in the system.',
 		$ForgotPrompt: 'Reset password',
 		$ConfirmEMailPrompt: 'Confirm е-mail',
@@ -64,6 +64,7 @@
 		$EMailAlreadyConfirmed: 'е-mail already confirmed',
 		$LocaleLabel: 'Interface language',
 		$SendCodeAgain: 'Send code again',
+		$ErrorAntiForgery: 'The request has already been executed in another browser window.The page will reload',
 		$IHaveCode:'I have a verification code',
 		$AvailableLocales: {
 			"uk-UA": 'Ukrainian',

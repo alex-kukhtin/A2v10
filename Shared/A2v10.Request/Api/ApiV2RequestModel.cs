@@ -14,7 +14,8 @@ namespace A2v10.Request.Api
 	public enum ApiV2CommandType
 	{
 		Sql,
-		Clr
+		Clr,
+		Javascript
 	}
 
 	public enum HttpMethod
@@ -63,6 +64,13 @@ namespace A2v10.Request.Api
 	public class ApiClrCommand
 	{
 		public String clrType { get; set; }
+		public ExpandoObject Parameters { get; set; }
+	}
+
+	public class ApiScriptCommand
+	{
+		public String Script { get; set; }
+		public ExpandoObject Parameters { get; set; }
 	}
 
 	public class ApiRequestCommand
@@ -73,6 +81,7 @@ namespace A2v10.Request.Api
 		public ApiV2CommandType Type { get; set; }
 		public ApiSqlCommand SqlCommand { get; set; }
 		public ApiClrCommand ClrCommand { get; set; }
+		public ApiScriptCommand JavascriptCommand { get; set; }
 		public HttpMethod Method { get; set; }
 		public String[] ClientId { get; set; }
 		public String AllowOrigin { get; set; }
@@ -100,6 +109,8 @@ namespace A2v10.Request.Api
 					return new SqlCommandHandler(serviceLocator, SqlCommand, Wrap);
 				case ApiV2CommandType.Clr:
 					return new ClrCommandHandler(serviceLocator, ClrCommand, Wrap);
+				case ApiV2CommandType.Javascript:
+					return new JavascriptCommandHandler(serviceLocator, ClrCommand, Wrap);
 			}
 			throw new ApiV2Exception($"invalid command type {Type}");
 		}

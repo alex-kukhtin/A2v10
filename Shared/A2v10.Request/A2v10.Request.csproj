@@ -50,6 +50,7 @@
     <Compile Include="Api\ApiResponse.cs" />
     <Compile Include="Api\ApiV2Exception.cs" />
     <Compile Include="Api\ApiV2RequestModel.cs" />
+    <Compile Include="Api\JavascriptCommandHandler.cs" />
     <Compile Include="Api\ClrCommandHandler.cs" />
     <Compile Include="Api\SqlCommandHandler.cs" />
     <Compile Include="Commands\ExecuteCallApiCommand.cs" />
