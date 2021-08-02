@@ -5886,7 +5886,7 @@ app.modules['std:impl:array'] = function () {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210606-7781*/
+/*20210801-7798*/
 /* bootstrap/appheader.js */
 
 (function () {
@@ -5910,7 +5910,7 @@ app.modules['std:impl:array'] = function () {
 		},
 		computed: {
 			locale() { return locale; },
-			seg0: () => this.$store.getters.seg0
+			seg0() { return this.$store.getters.seg0; }
 		},
 		methods: {
 			isActive(item) {

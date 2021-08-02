@@ -158,6 +158,7 @@ namespace A2v10.Request
 			IDataModel model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2);
 			if (rw.HasMerge)
 			{
+				AddMergeParameters(rw.merge, model, prms2);
 				var mergeModel = await _dbContext.LoadModelAsync(rw.MergeSource, rw.MergeLoadProcedure, prms2);
 				model.Merge(mergeModel);
 			}

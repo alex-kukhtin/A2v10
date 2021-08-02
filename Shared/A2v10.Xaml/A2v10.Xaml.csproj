@@ -117,6 +117,8 @@
     <Compile Include="Drawing\Size.cs" />
     <Compile Include="Drawing\Point.cs" />
     <Compile Include="Drawing\Rectangle.cs" />
+    <Compile Include="Interfaces\IRootContainer.cs" />
+    <Compile Include="Interfaces\IXamlElement.cs" />
     <Compile Include="Layouts\Flex.cs" />
     <Compile Include="Layouts\FlexList.cs" />
     <Compile Include="Layouts\Card.cs" />

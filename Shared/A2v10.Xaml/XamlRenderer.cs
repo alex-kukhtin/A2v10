@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Xaml;
@@ -29,7 +29,7 @@ namespace A2v10.Xaml
 				throw new XamlException("No source for render");
 			IProfileRequest request = _profile.CurrentRequest;
 			String fileName = String.Empty;
-			UIElementBase uiElem = null;
+			IXamlElement uiElem = null;
 			using (request.Start(ProfileAction.Render, $"load: {info.FileTitle}"))
 			{
 				try
@@ -42,11 +42,11 @@ namespace A2v10.Xaml
 
 							RootFileName = info.FileName;
 							ApplicationReader = _host.ApplicationReader;
-							uiElem = XamlServices.Load(fileStream) as UIElementBase;
+							uiElem = XamlServices.Load(fileStream) as IXamlElement;
 						}
 					}
 					else if (!String.IsNullOrEmpty(info.Text))
-						uiElem = XamlServices.Parse(info.Text) as UIElementBase;
+						uiElem = XamlServices.Parse(info.Text) as IXamlElement;
 					else
 						throw new XamlException("Xaml. There must be either a 'FileName' or a 'Text' property");
 					if (uiElem == null)
@@ -61,10 +61,9 @@ namespace A2v10.Xaml
 							{
 								if (!(XamlServices.Load(stylesStream) is Styles styles))
 									throw new XamlException("Xaml. Styles is not 'Styles'");
-								if (uiElem is RootContainer root)
+								if (uiElem is IRootContainer root)
 								{
-									root.Styles = styles;
-									root?.OnSetStyles();
+									root.SetStyles(styles);
 								}
 							}
 						}

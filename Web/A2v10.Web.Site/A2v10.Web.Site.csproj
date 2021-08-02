@@ -527,6 +527,10 @@
     <Folder Include="scripts\eusign\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
+      <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
+      <Name>A2v10.Xaml.Bootstrap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\XamExtensionsSample\XamExtensionsSample.csproj">
       <Project>{228bd9a6-f2d8-46e8-bfc7-a2854382a456}</Project>
       <Name>XamExtensionsSample</Name>

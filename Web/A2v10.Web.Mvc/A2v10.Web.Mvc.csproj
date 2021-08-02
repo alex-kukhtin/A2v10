@@ -333,6 +333,10 @@
       <Project>{76269196-DB55-4299-AE0F-A33A5BAB294F}</Project>
       <Name>A2v10.Workflow</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
+      <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
+      <Name>A2v10.Xaml.Bootstrap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
       <Name>A2v10.Xaml</Name>

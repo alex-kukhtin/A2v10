@@ -92,6 +92,21 @@ namespace A2v10.Infrastructure
 			return sb.ToString();
 		}
 
+		public static StringBuilder TrimRight(this StringBuilder sb)
+		{
+			// TODO: test it
+			if (sb.Length == 0)
+				return sb;
+			int cnt = 0;
+			for (int i=sb.Length - 1; i>=0; --i)
+			{
+				if (sb[i] == ' ')
+					cnt++;
+			}
+			sb.Remove(sb.Length - cnt, cnt);
+			return sb;
+		}
+
 		public static StringBuilder RemoveTailComma(this StringBuilder sb)
 		{
 			if (sb.Length < 1)

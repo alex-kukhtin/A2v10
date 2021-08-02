@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -6,7 +6,7 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml
 {
-	public abstract class UIElementBase : XamlElement
+	public abstract class UIElementBase : XamlElement, IXamlElement
 	{
 		public Boolean? If { get; set; }
 		public Boolean? Show { get; set; }
@@ -88,8 +88,8 @@ namespace A2v10.Xaml
 			// if it's a binding, it will be added via MergeAttribute
 			if (content == null)
 				return;
-			if (content is UIElementBase)
-				(content as UIElementBase).RenderElement(context);
+			if (content is UIElementBase uiBase)
+				uiBase.RenderElement(context);
 			else if (content != null)
 				context.Writer.Write(context.LocalizeCheckApostrophe(content.ToString().Replace("\\n", "<br>")));
 		}

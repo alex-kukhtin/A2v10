@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7786",
+	"$version": "10.0.7798",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -49,7 +49,8 @@
 							"properties": {
 								"source": { "type": "string" },
 								"model": { "type": "string" },
-								"schema": { "type": "string" }
+								"schema": { "type": "string" },
+								"parameters": { "type": "object" }
 							},
 							"additionalProperties": false
 						},
@@ -110,15 +111,10 @@
 						"merge": {
 							"type": "object",
 							"properties": {
-								"source": {
-									"type": "string"
-								},
-								"model": {
-									"type": "string"
-								},
-								"schema": {
-									"type": "string"
-								}
+								"source": { "type": "string" },
+								"model": { "type": "string" },
+								"schema": { "type": "string" },
+								"parameters": { "type": "object" }
 							},
 							"additionalProperties": false
 						},

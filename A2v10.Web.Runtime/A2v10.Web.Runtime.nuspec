@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7797</version>
+		<version>10.0.7798</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
@@ -16,6 +16,7 @@
 		<references>
 			<reference file="A2v10.Web.Mvc.dll" />
 			<reference file="A2v10.Xaml.dll" />
+			<reference file="A2v10.Xaml.Bootstrap.dll" />
 			<reference file="A2v10.Workflow.dll" />
 			<reference file="A2v10.Data.Interfaces.dll" />
 			<reference file="A2v10.Infrastructure.dll" />
@@ -49,6 +50,7 @@
 		<file src="bin/A2v10.Web.Mvc.dll" target="lib/net461" />
 		<file src="bin/A2v10.Workflow.dll" target="lib/net461" />
 		<file src="bin/A2v10.Xaml.dll" target="lib/net461" />
+		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="lib/net461" />
 		<file src="bin/A2v10.Lang.dll" target="lib/net461" />
 		<file src="bin/DocumentFormat.OpenXml.dll" target="lib/net461" />
 		<file src="bin/Microsoft.Activities.Extensions.dll" target="lib/net461" />

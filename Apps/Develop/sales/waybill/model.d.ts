@@ -24,6 +24,7 @@ export interface TMerge extends IElement {
 	Done: boolean;
 	DateCreated: Date;
 	DateModified: Date;
+	X: number;
 }
 
 export interface TRow extends IArrayElement {

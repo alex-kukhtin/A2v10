@@ -81,6 +81,7 @@ namespace A2v10.Request
 		public String model;
 		public String source;
 		public String schema;
+		public ExpandoObject parameters;
 	}
 
 	public class RequestEvent

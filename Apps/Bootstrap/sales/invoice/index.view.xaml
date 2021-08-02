@@ -1,0 +1,21 @@
+<!-- Invoice list view -->
+<Page xmlns="clr-namespace:A2v10.Xaml.Bootstrap;assembly=A2v10.Xaml.Bootstrap" Fluid="True">
+	<Row>
+		<Button Col="4 sm-4 lg-2 lg-2"/>
+		<Button />
+		<Button />
+	</Row>
+	<Row>
+		<Col Size="4 lg-2" Offset="5 lg-3">
+			<Button />
+		</Col>
+		<Button />
+		<Button />
+	</Row>
+	<Row>
+		<Button />
+		<Button />
+		<Button />
+	</Row>
+</Page>
+

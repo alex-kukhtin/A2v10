@@ -22,7 +22,7 @@ namespace A2v10.Xaml
 		}
 	}
 
-	public abstract class RootContainer : Container, IUriContext, IDisposable
+	public abstract class RootContainer : Container, IUriContext, IDisposable, IRootContainer
 	{
 		#region IUriContext
 		public Uri BaseUri { get; set; }
@@ -38,6 +38,16 @@ namespace A2v10.Xaml
 		{
 			if (dispoising)
 				OnDispose();
+		}
+
+		#endregion
+
+
+		#region IRootContainer
+		public void SetStyles(Styles styles)
+		{
+			Styles = styles;
+			OnSetStyles();
 		}
 
 		#endregion

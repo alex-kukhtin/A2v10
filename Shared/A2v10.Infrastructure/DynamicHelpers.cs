@@ -49,6 +49,8 @@ namespace A2v10.Infrastructure
 
 		public static Boolean IsEmpty(this ExpandoObject obj)
 		{
+			if (obj == null)
+				return true;
 			if (!(obj is IDictionary<String, Object> d))
 				return true;
 			return d.Count == 0;

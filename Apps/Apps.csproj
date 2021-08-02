@@ -330,6 +330,10 @@
       <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
       <Name>A2v10.Workflow</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
+      <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
+      <Name>A2v10.Xaml.Bootstrap</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{e0577880-9b04-4a2a-b791-8fdb47caa3bc}</Project>
       <Name>A2v10.Xaml</Name>
@@ -575,8 +579,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
-    <Content Include="Bootstrap\sales\invoice\index.view.html">
-      <Generator>MSBuild:Compile</Generator>
+    <Content Include="Bootstrap\sales\invoice\index.view.xaml">
       <SubType>Designer</SubType>
     </Content>
     <None Include="Bootstrap\sales\invoice\invoice.view.xaml">

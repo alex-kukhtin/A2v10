@@ -25,7 +25,10 @@
 			*/
 			"merge": {
 				"schema": "a2demo",
-				"model": "Document.Merge"
+				"model": "Document.Merge",
+				"parameters": {
+					"X":  "{{Document.Id}}"
+				}
 			},
 			"events": {
 				"afterSave": {

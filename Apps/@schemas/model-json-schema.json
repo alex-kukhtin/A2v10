@@ -33,7 +33,8 @@
 							"properties": {
 								"source": { "type": "string" },
 								"model": { "type": "string" },
-								"schema": { "type": "string" }
+								"schema": { "type": "string" },
+								"parameters": { "type": "object" }
 							},
 							"additionalProperties": false
 						},
@@ -92,15 +93,10 @@
 						"merge": {
 							"type": "object",
 							"properties": {
-								"source": {
-									"type": "string"
-								},
-								"model": {
-									"type": "string"
-								},
-								"schema": {
-									"type": "string"
-								}
+								"source": { "type": "string" },
+								"model": { "type": "string" },
+								"schema": { "type": "string" },
+								"parameters": { "type": "object" }
 							},
 							"additionalProperties": false
 						},

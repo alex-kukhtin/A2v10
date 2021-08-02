@@ -184,6 +184,22 @@ namespace A2v10.Request
 			return rw;
 		}
 
+		void AddMergeParameters(RequestMerge rm, IDataModel model, ExpandoObject prms)
+		{
+			var mp = rm.parameters;
+			if (mp != null && !mp.IsEmpty())
+			{
+				foreach (var kv in mp)
+				{
+					if (kv.Value is String strVal && strVal.StartsWith("{{"))
+						prms.Set(kv.Key, model.Root.Resolve(strVal));
+					else
+						prms.Set(kv.Key, kv.Value);
+				}
+			}
+		}
+
+
 		internal async Task<DataModelAndView> GetDataModelForView(RequestView rw, ExpandoObject initialParams)
 		{
 			var dmv = new DataModelAndView()
@@ -219,6 +235,7 @@ namespace A2v10.Request
 				model = await _dbContext.LoadModelAsync(rw.CurrentSource, loadProc, prms2, rw.commandTimeout);
 				if (rw.HasMerge)
 				{
+					AddMergeParameters(rw.merge, model, prms2);
 					var mergeModel = await _dbContext.LoadModelAsync(rw.MergeSource, rw.MergeLoadProcedure, prms2, rw.commandTimeout);
 					model.Merge(mergeModel);
 				}
