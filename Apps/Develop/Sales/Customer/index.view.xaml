@@ -26,6 +26,11 @@
 					DoubleClick="{BindCmd Execute, CommandName=EditFolder, Argument={Bind Agents.$selected}}">
 				<TreeViewItem ItemsSource="{Bind SubItems}" 
 							 Label="{Bind Name}" Icon="{Bind Icon}" IsGroup="{Bind Id}"/>
+				<TreeView.ContextMenu>
+					<DropDownMenu>
+						<MenuItem Icon="Account" Content="Menu item" Command="{BindCmd Reload}"/>
+					</DropDownMenu>
+				</TreeView.ContextMenu>
 			</TreeView>
 		</Block>
 		<Block Splitter.MinWidth="20%">
@@ -65,6 +70,13 @@
 					<DataGridColumn Header="@[Name]" Content="{Bind Name}"/>
 					<DataGridColumn Header="ЕДРПОУ" Content="{Bind Code}" Align="Right" Fit="True" Wrap="NoWrap"/>
 					<DataGridColumn Header="@[Memo]" Content="{Bind Memo}"/>
+					<DataGrid.ContextMenu>
+						<DropDownMenu>
+							<MenuItem Content="Реестр счетов" Icon="Table"
+								Command="{BindCmd Open, Url='/Reports/InvoiceRegistry', 
+								Argument={Bind Root.$SelectedItem}, CheckArgument=True, NewWindow=True}"/>
+						</DropDownMenu>
+					</DataGrid.ContextMenu>
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"/>
 			</CollectionView>

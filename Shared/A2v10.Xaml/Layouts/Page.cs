@@ -97,6 +97,7 @@ namespace A2v10.Xaml
 			new TagBuilder("div", "page-canvas").MergeAttribute("id", "page-canvas").Render(context);
 			outer.RenderEnd(context);
 
+			RenderContextMenus();
 			RenderAccelCommands(context);
 
 			if (CollectionView != null)
@@ -105,7 +106,6 @@ namespace A2v10.Xaml
 			{
 				if (page == null)
 					throw new InvalidProgramException();
-				RenderContextMenus();
 				page.RenderEnd(context);
 			}
 		}
