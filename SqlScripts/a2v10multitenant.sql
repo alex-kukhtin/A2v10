@@ -1,12 +1,12 @@
 /*
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 19 jin 2021
-module version : 7764
+Last updated : 10 aug 2021
+module version : 7765
 */
 -- database SEGMENT!
 ------------------------------------------------
-exec a2sys.SetVersion N'std:multitenant', 7764;
+exec a2sys.SetVersion N'std:multitenant', 7765;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'TenantUsers')
@@ -167,7 +167,7 @@ create or alter procedure a2security.CreateTenantUser
 @Memo nvarchar(255) = null,
 @TariffPlan nvarchar(255) = null,
 @TenantRoles nvarchar(max) = null,
-@Locale nvarchar(255)
+@Locale nvarchar(255) = null
 as
 begin
 	set nocount on;
@@ -224,14 +224,16 @@ create or alter procedure a2security.UpdateTenantUser
 	@PersonName nvarchar(255),
 	@RegisterHost nvarchar(255) = null,
 	@PhoneNumber nvarchar(255) = null,
-	@Memo nvarchar(255) = null
+	@Memo nvarchar(255) = null,
+	@Locale nvarchar(32) = null
 as
 begin
 	set nocount on;
 	set transaction isolation level read committed;
 
 	update a2security.TenantUsers set 
-		UserName = @UserName, PersonName = @PersonName, PhoneNumber = @PhoneNumber, Memo = @Memo
+		UserName = @UserName, PersonName = @PersonName, PhoneNumber = @PhoneNumber, Memo = @Memo,
+		Locale = @Locale
 	where Id = @Id and TenantId = @Tenant;
 end
 go
