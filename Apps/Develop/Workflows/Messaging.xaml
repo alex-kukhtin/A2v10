@@ -14,5 +14,8 @@
 	<EmailMessage x:Key="FromServer" Subject="SUBJ FROM SERVER"
 			Model="MessageForSend" Schema="a2demo"
 			BodyTemplate="Workflows/second-mail.html" To=" {{Message.To}}">
+		<EmailMessage.Attachments>
+			<MessageAttachment Data=" {{Attachment.Data}}" Name=" {{Attachment.Name}}" Mime=" {{Attachment.Mime}}"/>
+		</EmailMessage.Attachments>
 	</EmailMessage>
 </Template>

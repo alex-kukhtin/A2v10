@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -21,6 +21,8 @@ namespace A2v10.Messaging
 		public MessageAddressCollection CC { get; set; } = new MessageAddressCollection();
 		public MessageAddressCollection Bcc { get; set; } = new MessageAddressCollection();
 
+		public MessageAttachmentCollection Attachments { get; set; } = new MessageAttachmentCollection();
+
 		public async override Task<IMessageForSend> ResolveAndSendAsync(MessageResolver resolver)
 		{
 			var nm = new EmailMessage()
@@ -35,7 +37,25 @@ namespace A2v10.Messaging
 			nm.CC = await ResolveCollectionAsync(CC, resolver);
 			if (From != null)
 				nm.From = new MessageAddress(await resolver.ResolveAsync(this, From.Address), await resolver.ResolveAsync(this, From.DisplayName));
+			if (Attachments != null && Attachments.Count != 0)
+				foreach (var att in Attachments)
+				{
+					var ratt = await ResolveAttachmentAsync(att, resolver);
+					if (ratt.Stream != null)
+						nm.Attachments.Add(ratt);
+				}
 			return nm;
+		}
+
+		async Task<MessageAttachment> ResolveAttachmentAsync(MessageAttachment att, MessageResolver resolver)
+		{
+			var ma = new MessageAttachment()
+			{
+				Name = (await resolver.ResolveAsync(this, att.Name))?.Trim(),
+				Mime = (await resolver.ResolveAsync(this, att.Mime))?.Trim(),
+				Stream = await resolver.ResolveStreamAsync(this, att.Data)
+			};
+			return ma;
 		}
 
 		async Task<MessageAddressCollection> ResolveCollectionAsync(MessageAddressCollection coll, MessageResolver resolver)
@@ -43,7 +63,9 @@ namespace A2v10.Messaging
 			var newColl = new MessageAddressCollection();
 			foreach (var addr in coll)
 			{
-				var na = new MessageAddress(await resolver.ResolveAsync(this, addr.Address), await resolver.ResolveAsync(this, addr.DisplayName));
+				var na = new MessageAddress(
+					await resolver.ResolveAsync(this, addr.Address), 
+					await resolver.ResolveAsync(this, addr.DisplayName));
 				newColl.Add(na);
 			}
 			return newColl;
@@ -60,6 +82,11 @@ namespace A2v10.Messaging
 				info.AddCC(c.Address, c.DisplayName);
 			foreach (var b in Bcc)
 				info.AddBcc(b.Address, b.DisplayName);
+			if (Attachments != null)
+				foreach (var a in Attachments)
+				{
+					info.AddAttachment(a.Stream, a.Name, a.Mime);
+				}
 			await emailService.SendAsync(info);
 		}
 

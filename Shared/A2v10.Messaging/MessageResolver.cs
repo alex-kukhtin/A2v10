@@ -5,6 +5,7 @@ using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -50,6 +51,20 @@ namespace A2v10.Messaging
 			text = ResolveEnvironment(text);
 			text = ResolveParameters(text);
 			return text;
+		}
+
+		public async Task<Stream> ResolveStreamAsync(TemplatedMessage msg, String text)
+		{
+			if (text == null)
+				return null;
+			text = text.Trim();
+			if (text.IndexOf("{{") == -1)
+				return null;
+			var dm = await msg.GetDataModelAsync(_dbContext, _msgParams);
+			var bytes = dm.Root.Eval<Byte[]>(text.Substring(2, text.Length - 4).Trim());
+			if (bytes == null || bytes.Length == 0)
+				return null;
+			return new MemoryStream(bytes);
 		}
 
 		public async Task<String> ResolveDataModelAsync(TemplatedMessage msg, String text)

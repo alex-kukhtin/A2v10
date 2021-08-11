@@ -54,6 +54,7 @@
     <Compile Include="IHttpService.cs" />
     <Compile Include="IJavaScriptEngine.cs" />
     <Compile Include="ILicenseManager.cs" />
+    <Compile Include="IMessageAttachment.cs" />
     <Compile Include="Implementation\NullMessaging.cs" />
     <Compile Include="IQueuedMessage.cs" />
     <Compile Include="IBackgroundProcessing.cs" />

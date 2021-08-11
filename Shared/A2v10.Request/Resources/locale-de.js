@@ -66,10 +66,10 @@
 		$SendCodeAgain: 'Code erneut senden',
 		$IHaveCode: 'Ich habe einen Bestätigungscode',
 		$AvailableLocales: {
-			"uk-UA": 'Ukrainisch',
-			"ru-RU": 'Russisch',
-			"en-US": 'Englisch',
-			"de-DE": 'Deutsche'
+			"de-DE": 'Deutsche',
+			"uk-UA": 'Ukrainisch (Українська)',
+			"en-US": 'Englisch (English)',
+			"ru-RU": 'Russisch (Русский)'
 		}
 	};
 

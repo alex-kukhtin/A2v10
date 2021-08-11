@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace A2v10.Infrastructure
@@ -14,10 +15,12 @@ namespace A2v10.Infrastructure
 		IEnumerable<IMessageAddress> To { get; }
 		IEnumerable<IMessageAddress> CC { get; }
 		IEnumerable<IMessageAddress> Bcc { get; }
+		IEnumerable<IMessageAttachment> Attachments { get; }
 
 		void AddTo(String address, String displayName = null);
 		void AddCC(String address, String displayName = null);
 		void AddBcc(String address, String displayName = null);
+		void AddAttachment(Stream stream, String name, String mime);
 	}
 
 	public interface IMessageService

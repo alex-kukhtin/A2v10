@@ -118,6 +118,14 @@ namespace A2v10.Messaging
 
 						mm.IsBodyHtml = true;
 
+						// attachments
+						if (info.Attachments != null) {
+							foreach (var att in info.Attachments)
+							{
+								//mm.Attachments.Add(new Attachment(att.Stream, new ContentType(att.Mime)));
+								mm.Attachments.Add(new Attachment(att.Stream, att.Name, att.Mime));
+							}
+						}
 						//????
 						//var av = AlternateView.CreateAlternateViewFromString(body, Encoding.UTF8, "text/html");
 						//mm.AlternateViews.Add(av);

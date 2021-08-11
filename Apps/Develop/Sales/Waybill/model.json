@@ -159,8 +159,9 @@
 		"sendMessage": {
 			"type": "sendMessage",
 			"parameters": {
-				"template2": "workflows/messaging",
-				"key": "FromServer"
+				"template": "workflows/messaging",
+				"key": "FromServer",
+				"immediately":  false
 			}
 		},
 		"testPost": {

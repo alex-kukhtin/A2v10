@@ -67,10 +67,10 @@
 		$ErrorAntiForgery: 'The request has already been executed in another browser window.The page will reload',
 		$IHaveCode:'I have a verification code',
 		$AvailableLocales: {
-			"uk-UA": 'Ukrainian',
-			"ru-RU": 'Russian',
 			"en-US": 'English',
-			"de-DE": 'German'
+			"uk-UA": 'Ukrainian (Українська)',
+			"ru-RU": 'Russian (Русский)',
+			"de-DE": 'German (Deutsche)'
 		}
 	};
 

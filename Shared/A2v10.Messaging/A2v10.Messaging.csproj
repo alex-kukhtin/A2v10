@@ -46,6 +46,7 @@
     <Compile Include="IMessageForSend.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageAddress.cs" />
+    <Compile Include="MessageAttachment.cs" />
     <Compile Include="MessageProcessor.cs" />
     <Compile Include="MessageResolver.cs" />
     <Compile Include="MessageSendInfo.cs" />

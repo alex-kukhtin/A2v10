@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using A2v10.Infrastructure;
 
 namespace A2v10.Messaging
@@ -11,12 +12,14 @@ namespace A2v10.Messaging
 		private List<IMessageAddress> _to = null;
 		private List<IMessageAddress> _CC = null;
 		private List<IMessageAddress> _Bcc = null;
+		private List<IMessageAttachment> _attachments = null;
 
 		public string Subject { get; set; }
 		public string Body { get; set; }
 
 		public IEnumerable<IMessageAddress> To => _to;
 		public IEnumerable<IMessageAddress> CC => _CC;
+		public IEnumerable<IMessageAttachment> Attachments => _attachments;
 
 		public IEnumerable<IMessageAddress> Bcc => _Bcc;
 
@@ -39,6 +42,17 @@ namespace A2v10.Messaging
 			if (_Bcc == null)
 				_Bcc = new List<IMessageAddress>();
 			_Bcc.Add(new MessageAddress(address, displayName));
+		}
+
+		public void AddAttachment(Stream stream, String name, String mime)
+		{
+			if (_attachments == null)
+				_attachments = new List<IMessageAttachment>();
+			_attachments.Add(new MessageAttachment() {
+				Stream = stream,
+				Name = name,
+				Mime = mime
+			});
 		}
 	}
 }
