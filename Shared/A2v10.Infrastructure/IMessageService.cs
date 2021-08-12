@@ -12,15 +12,19 @@ namespace A2v10.Infrastructure
 	{
 		String Subject { get; set; }
 		String Body { get; set; }
+
 		IEnumerable<IMessageAddress> To { get; }
 		IEnumerable<IMessageAddress> CC { get; }
 		IEnumerable<IMessageAddress> Bcc { get; }
 		IEnumerable<IMessageAttachment> Attachments { get; }
 
+		IMessageAddress From { get; }
+
 		void AddTo(String address, String displayName = null);
 		void AddCC(String address, String displayName = null);
 		void AddBcc(String address, String displayName = null);
 		void AddAttachment(Stream stream, String name, String mime);
+		void SetFrom(String address, String displayName);
 	}
 
 	public interface IMessageService

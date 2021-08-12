@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,8 @@ namespace A2v10.Messaging
 		public IEnumerable<IMessageAttachment> Attachments => _attachments;
 
 		public IEnumerable<IMessageAddress> Bcc => _Bcc;
+
+		public IMessageAddress From { get; set; }
 
 		public void AddTo(String address, String displayName)
 		{
@@ -48,11 +50,17 @@ namespace A2v10.Messaging
 		{
 			if (_attachments == null)
 				_attachments = new List<IMessageAttachment>();
-			_attachments.Add(new MessageAttachment() {
+			_attachments.Add(new AttachementForSend() {
 				Stream = stream,
 				Name = name,
 				Mime = mime
 			});
+		}
+
+		public void SetFrom(String address, String displayName)
+		{
+			if (address != null)
+				From = new MessageAddress(address, displayName);
 		}
 	}
 }

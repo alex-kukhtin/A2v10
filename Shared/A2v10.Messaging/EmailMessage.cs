@@ -4,12 +4,10 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-using A2v10.Infrastructure;
-
 namespace A2v10.Messaging
 {
 	[ContentProperty("Body")]
-	public class EmailMessage : TemplatedMessage, IMessageForSend
+	public class EmailMessage : TemplatedMessage
 	{
 		public String Subject { get; set; }
 		public String Body { get; set; }
@@ -25,13 +23,14 @@ namespace A2v10.Messaging
 
 		public async override Task<IMessageForSend> ResolveAndSendAsync(MessageResolver resolver)
 		{
-			var nm = new EmailMessage()
+			var nm = new EmailMessageForSend()
 			{
 				Subject = await resolver.ResolveAsync(this, Subject),
 				Body = await resolver.ResolveAsync(this, Body),
-				BodyTemplate = await resolver.ResolveAsync(this, BodyTemplate)
 			};
-			await nm.LoadBodyTemplate(this, resolver);
+			var body = await LoadBodyTemplate(this, resolver);
+			if (body != null)
+				nm.Body = body;
 			nm.To = await ResolveCollectionAsync(To, resolver);
 			nm.Bcc = await ResolveCollectionAsync(Bcc, resolver);
 			nm.CC = await ResolveCollectionAsync(CC, resolver);
@@ -47,9 +46,9 @@ namespace A2v10.Messaging
 			return nm;
 		}
 
-		async Task<MessageAttachment> ResolveAttachmentAsync(MessageAttachment att, MessageResolver resolver)
+		async Task<AttachementForSend> ResolveAttachmentAsync(MessageAttachment att, MessageResolver resolver)
 		{
-			var ma = new MessageAttachment()
+			var ma = new AttachementForSend()
 			{
 				Name = (await resolver.ResolveAsync(this, att.Name))?.Trim(),
 				Mime = (await resolver.ResolveAsync(this, att.Mime))?.Trim(),
@@ -60,6 +59,8 @@ namespace A2v10.Messaging
 
 		async Task<MessageAddressCollection> ResolveCollectionAsync(MessageAddressCollection coll, MessageResolver resolver)
 		{
+			if (coll == null || coll.Count == 0)
+				return null;
 			var newColl = new MessageAddressCollection();
 			foreach (var addr in coll)
 			{
@@ -71,32 +72,13 @@ namespace A2v10.Messaging
 			return newColl;
 		}
 
-		public async Task SendAsync(IMessageService emailService)
-		{
-			var info = emailService.CreateSendInfo();
-			info.Subject = Subject;
-			info.Body = Body;
-			foreach (var t in To)
-				info.AddTo(t.Address, t.DisplayName);
-			foreach (var c in CC)
-				info.AddCC(c.Address, c.DisplayName);
-			foreach (var b in Bcc)
-				info.AddBcc(b.Address, b.DisplayName);
-			if (Attachments != null)
-				foreach (var a in Attachments)
-				{
-					info.AddAttachment(a.Stream, a.Name, a.Mime);
-				}
-			await emailService.SendAsync(info);
-		}
 
-		async Task LoadBodyTemplate(EmailMessage msg, MessageResolver resolver)
+		async Task<String> LoadBodyTemplate(EmailMessage msg, MessageResolver resolver)
 		{
 			if (String.IsNullOrEmpty(BodyTemplate))
-				return;
+				return null;
 			String text = await resolver.ResolveFileAsync(msg, BodyTemplate);
-			if (text != null)
-				Body = text;
+			return text;
 		}
 	}
 }

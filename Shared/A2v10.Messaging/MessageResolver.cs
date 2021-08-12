@@ -46,6 +46,8 @@ namespace A2v10.Messaging
 		{
 			if (text == null)
 				return null;
+			if (text.StartsWith("`"))
+				text = text.Substring(1);
 			var sb = new StringBuilder(text);
 			text = await ResolveDataModelAsync(msg, text);
 			text = ResolveEnvironment(text);
@@ -57,11 +59,12 @@ namespace A2v10.Messaging
 		{
 			if (text == null)
 				return null;
-			text = text.Trim();
+			if (text.StartsWith("`"))
+				text = text.Substring(1);
 			if (text.IndexOf("{{") == -1)
 				return null;
 			var dm = await msg.GetDataModelAsync(_dbContext, _msgParams);
-			var bytes = dm.Root.Eval<Byte[]>(text.Substring(2, text.Length - 4).Trim());
+			var bytes = dm.Root.Eval<Byte[]>(text.Substring(2, text.Length - 4));
 			if (bytes == null || bytes.Length == 0)
 				return null;
 			return new MemoryStream(bytes);

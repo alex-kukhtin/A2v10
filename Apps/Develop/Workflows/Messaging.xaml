@@ -9,13 +9,24 @@
 	-->
 	<EmailMessage x:Key="First" Subject="SUBJECT"
 				Model="MessageForSend" Schema="a2demo"
-				BodyTemplate="Workflows/first-mail.html" To=" {{Message.To}};[[To]]">
+				BodyTemplate="Workflows/first-mail.html" To="`{{Message.To}};[[To]]">
+		<EmailMessage.From>
+			<MessageAddress Address="`{{Message.To}}" DisplayName="From user {{Message.Id}}"/>
+		</EmailMessage.From>
 	</EmailMessage>
 	<EmailMessage x:Key="FromServer" Subject="SUBJ FROM SERVER"
 			Model="MessageForSend" Schema="a2demo"
-			BodyTemplate="Workflows/second-mail.html" To=" {{Message.To}}">
+			BodyTemplate="Workflows/second-mail.html">
+		<EmailMessage.To>
+			<![CDATA[
+				{{Message.To}}
+			]]>
+		</EmailMessage.To>
 		<EmailMessage.Attachments>
-			<MessageAttachment Data=" {{Attachment.Data}}" Name=" {{Attachment.Name}}" Mime=" {{Attachment.Mime}}"/>
+			<MessageAttachment Data="`{{Attachment.Data}}" Name="`{{Attachment.Name}}" Mime="`{{Attachment.Mime}}"/>
 		</EmailMessage.Attachments>
+		<EmailMessage.From>
+			<MessageAddress Address="`{{Message.To}}" DisplayName="From user {{Message.Id}}"/>
+		</EmailMessage.From>
 	</EmailMessage>
 </Template>

@@ -161,7 +161,7 @@
 			"parameters": {
 				"template": "workflows/messaging",
 				"key": "FromServer",
-				"immediately":  false
+				"immediately":  true
 			}
 		},
 		"testPost": {
