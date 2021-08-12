@@ -351,8 +351,21 @@ void CFiscalPrinter_Null::TraceCommand(const wchar_t* command)
 // virtual 
 JsonObject  CFiscalPrinter_Null::FillZReportInfo()
 {
+	TraceINFO(L"TESTPRINTER [%s]. FillZReportInfo()", _id.c_str());
 	JsonObject json;
 	json.Add(L"zno", _nLastZReportNo);
+
+	JsonObject payments;
+	JsonObject taxObj;
+	taxObj.Add(L"sum", __currency::from_units(10000));
+	taxObj.Add(L"return", __currency::from_units(500));
+	taxObj.Add(L"taxSum", __currency::from_units(2000));
+	taxObj.Add(L"taxReturn", __currency::from_units(100));
+	taxObj.Add(L"tax", (long)20);
+	payments.AddArray(&taxObj);
+
+	json.AddArray(L"sums", &payments);
+
 	return json;
 }
 
