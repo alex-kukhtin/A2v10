@@ -61,7 +61,7 @@ const template: Template = {
 			valid(doc: TDocument) { return doc.No > 0; }, msg: 'Invalid document number', severity: cst.SEVERITY.WARNING
 		},
 		'TestValidator'(item, val): templateValidatorResult {
-			return { msg: '', severity: Severity.info };
+			return { msg: 'test error', severity: Severity.info };
 		},
 		'TestValidator2': {
 			valid(item, val): templateValidatorResult {
@@ -99,7 +99,10 @@ const template: Template = {
 		getWeather,
 		testPost,
 		sendMessage,
-		checkTypes
+		checkTypes,
+		testCmd() {
+			alert('test');
+		}
 	},
 	delegates: {
 		fetchAgent

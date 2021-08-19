@@ -2,10 +2,10 @@
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
 	<Page.Toolbar>
 		<Toolbar Style="Light" Border="BottomShadow">
-			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">Сохранить 2</Button>
+			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save, ValidRequired=True}">Сохранить 2</Button>
 			<Button Icon="SaveClose" Tip="Сохранить изменения и закрыть документ" Command="{BindCmd SaveAndClose}">Сохранить и закрыть</Button>
 			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-			<Button Icon="Bell" Command="{BindCmd Execute, CommandName=setDate, Argument={Bind Document}}" >Set Date</Button>
+			<Button Icon="Bell" Command="{BindCmd Execute, CommandName=setDate, Argument={Bind Document}}" Render="Show">Set Date</Button>
 			<Separator/>
 			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}}" If="{Bind !Document.Done}"/>
 			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}, SaveRequired=True, Confirm='Отменить проведение документа?'}" If="{Bind Document.Done}"/>
@@ -88,6 +88,7 @@
 				<TextBox Grid.Row="3" Grid.ColSpan="3"
 					Label="Покупатель" Value="{Bind Document.Agent.Name}" ValidateValue="{Bind Document.Agent}">
 					<TextBox.AddOns>
+						<Hyperlink Icon="Access" Tip="Command" Render="Show" Command="{BindCmd Execute, CommandName=testCmd}"/>
 						<Hyperlink Icon="Search" Tip="Выберите покупателя" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Document.Agent}, Url='/Agent/BrowseCustomer'}"/>
 					</TextBox.AddOns>
 				</TextBox>

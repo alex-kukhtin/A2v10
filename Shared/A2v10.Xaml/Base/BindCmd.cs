@@ -105,7 +105,7 @@ namespace A2v10.Xaml
 		public DialogAction Action { get; set; }
 		public FileAction FileAction { get; set; }
 
-		public String Execute { get; set; }
+		public String Execute { get; set; } /* not used */
 		public String CommandName { get; set; }
 		public String Report { get; set; }
 

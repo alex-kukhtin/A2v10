@@ -2322,7 +2322,7 @@ pre.a2-code {
 .control-group.disabled .input-group {
   background-color: #fafafa;
 }
-.control-group.disabled a {
+.control-group.disabled a:not(.rendershow) {
   pointer-events: none;
   opacity: 0.5;
 }

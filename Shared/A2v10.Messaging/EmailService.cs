@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -124,7 +124,12 @@ namespace A2v10.Messaging
 							foreach (var att in info.Attachments)
 							{
 								//mm.Attachments.Add(new Attachment(att.Stream, new ContentType(att.Mime)));
-								mm.Attachments.Add(new Attachment(att.Stream, att.Name, att.Mime));
+								mm.Attachments.Add(
+									new Attachment(att.Stream, new ContentType(att.Mime))
+									{
+										Name = att.Name
+									}
+								);
 							}
 						}
 						//????

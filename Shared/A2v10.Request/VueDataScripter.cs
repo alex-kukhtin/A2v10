@@ -1,4 +1,4 @@
-﻿// Copyright © 2012-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2012-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+
+using Newtonsoft.Json;
+
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
-using Newtonsoft.Json;
 
 namespace A2v10.Request
 {
@@ -29,18 +31,18 @@ namespace A2v10.Request
 
 		internal const String DATAFUNC =
 		@"
-	function() {
-		$(RequiredModules)
+function() {
+	$(RequiredModules)
 
-		const rawData = $(DataModelText);
-		const template = $(TemplateText);
+	const rawData = $(DataModelText);
+	const template = $(TemplateText);
 
-		$(ModelScript)
+	$(ModelScript)
 		
-		return {
-			dataModel: modelData(template, rawData)
-		};
-	}
+	return {
+		dataModel: modelData(template, rawData)
+	};
+}
 ";
 
 		internal const String DATAFUNC_SERVER =
@@ -99,12 +101,12 @@ const vm = new DataModelController({
 	}
 });
 
-	vm.$data._host_ = {
-		$viewModel: vm,
-		$ctrl: vm.__createController__(vm)
-	};
+vm.$data._host_ = {
+	$viewModel: vm,
+	$ctrl: vm.__createController__(vm)
+};
 
-	vm.__doInit__('$(BaseUrl)');
+vm.__doInit__('$(BaseUrl)');
 
 })();
 </script>
@@ -146,6 +148,17 @@ const vm = new DataModelController({
 
 		String CreateEmptyStript()
 		{
+			return @"
+function modelData(template, data) {
+	const cmn = require('std:datamodel');
+	function TRoot(source, path, parent) { cmn.createObject(this, source, path, parent);}
+	cmn.defineObject(TRoot, { props: { } }, false);
+	cmn.implementRoot(TRoot, template, {TRoot});
+	let root = new TRoot(data);
+	cmn.setModelInfo(root, {}, rawData); 
+	return root;
+}
+";
 			var sb = new StringBuilder();
 			sb.AppendLine("function modelData(template, data) {");
 			sb.AppendLine("const cmn = require('std:datamodel');");

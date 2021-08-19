@@ -31,7 +31,7 @@
 				}
 			},
 			"events": {
-				"afterSave": {
+				"afterSave2": {
 					"source": "",
 					"schema": "",
 					"model": "AfterDoc" /* {model}.Metadata, {model}.Update */

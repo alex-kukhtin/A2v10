@@ -53,7 +53,7 @@ define(["require", "exports"], function (require, exports) {
                 valid(doc) { return doc.No > 0; }, msg: 'Invalid document number', severity: cst.SEVERITY.WARNING
             },
             'TestValidator'(item, val) {
-                return { msg: '', severity: "info" };
+                return { msg: 'test error', severity: "info" };
             },
             'TestValidator2': {
                 valid(item, val) {
@@ -89,7 +89,10 @@ define(["require", "exports"], function (require, exports) {
             getWeather,
             testPost,
             sendMessage,
-            checkTypes
+            checkTypes,
+            testCmd() {
+                alert('test');
+            }
         },
         delegates: {
             fetchAgent
