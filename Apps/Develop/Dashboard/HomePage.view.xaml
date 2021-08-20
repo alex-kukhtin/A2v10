@@ -8,7 +8,7 @@
 		<Block Grid.Row="2" Grid.Col="1">
 			<Span>2.1</Span>
 		</Block>
-		<Button Grid.Row="3" Grid.Col="1" Icon="Approve" Command="{BindCmd Reload}">Button</Button>
+		<Button Grid.Row="3" Grid.Col="1" Icon="EllipsisBottom" Command="{BindCmd Reload}">Button</Button>
 		<Grid Grid.Row="3" Grid.Col="2">
 			<Button Grid.Row="1" Grid.Col="1" Icon="Gear" Style="{Bind Root.$style}" 
 				Content="{Bind Root.$text}" Command="{BindCmd Execute, CommandName='showAlert'}"></Button>

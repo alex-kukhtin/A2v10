@@ -511,7 +511,6 @@
     <Content Include="css\fonts\A2v10.eot" />
     <Content Include="css\fonts\A2v10.ttf" />
     <Content Include="css\fonts\A2v10.woff" />
-    <Content Include="css\fonts\A2v10.woff2" />
     <Content Include="Less\Data_URI.less" />
     <Content Include="handlers\ProxyHandler.ashx" />
     <None Include="Less\Site.magenta.less" />

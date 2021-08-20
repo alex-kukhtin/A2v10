@@ -327,6 +327,9 @@
 .ico-devices:before {
   content: "\e958";
 }
+.ico-ellipsis-bottom:before {
+  content: "\e9b3";
+}
 .ico-ellipsis:before {
   content: "\e9b4";
 }
@@ -2322,7 +2325,7 @@ pre.a2-code {
 .control-group.disabled .input-group {
   background-color: #fafafa;
 }
-.control-group.disabled a {
+.control-group.disabled a:not(.rendershow) {
   pointer-events: none;
   opacity: 0.5;
 }

@@ -107,7 +107,6 @@
     <Content Include="css\fonts\A2v10.eot" />
     <Content Include="css\fonts\A2v10.ttf" />
     <Content Include="css\fonts\A2v10.woff" />
-    <Content Include="css\fonts\A2v10.woff2" />
     <Content Include="Web.config.sample" />
   </ItemGroup>
   <ItemGroup>
