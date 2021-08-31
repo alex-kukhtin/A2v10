@@ -1,6 +1,6 @@
 <!-- Edit Folder -->
 <Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" 
-        Title="Свойства папки" ButtonOnTop="True" Size="Max">
+        Title="Свойства папки" ButtonOnTop="False">
 	<Dialog.Buttons>
 		<Button Content="Сохранить и закрыть" Command="{BindCmd SaveAndClose}"/>
 		<Button Content="Отмена" Command="{BindCmd Close}"/>
@@ -38,11 +38,13 @@
 					</DataGrid>
 					<TextBox Grid.Row="3" Grid.ColSpan="2" Label="Примечание" AutoSize="True"
 						 Value="{Bind Agent.Memo}" Rows="3" Multiline="True" TabIndex="2"/>
-				</Grid>
+				<Button Content="Nested" Command="{BindCmd Dialog, Action=Show, Url='/sales/customer/testgroup'}"/>
+			</Grid>
 			</Tab>
 			<Tab Header="Grid" FullHeight="True">
 				<Toolbar>
-					<Button Icon="Plus" Command="{BindCmd Append, Argument={Bind Countries}}"/>
+				<Button Content="Nested" Command="{BindCmd Dialog, Action=Show, Url='/sales/customer/testgroup'}"/>
+				<Button Icon="Plus" Command="{BindCmd Append, Argument={Bind Countries}}"/>
 				</Toolbar>
 				<Table ItemsSource="{Bind Countries}">
 					<TableRow>

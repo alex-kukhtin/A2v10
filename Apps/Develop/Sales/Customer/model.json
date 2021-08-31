@@ -26,6 +26,7 @@
 		"testGroup": {
 			"schema": "dbo",
 			"model": "Report.Documents",
+			"template": "testgroup.template",
 			"view": "testgroup.dialog"
 		},
 		"testSubTree": {
@@ -34,6 +35,5 @@
 			"model": "MultiplyTrees",
 			"view": "empty.dialog"
 		}
-
 	}
 }

@@ -10,7 +10,6 @@ namespace A2v10.Request.Api
 	public class ClrCommandHandler : ApiCommandHandler
 	{
 		private readonly ApiClrCommand _command;
-		private readonly Boolean _wrap;
 		private readonly IServiceLocator _serviceLocator;
 
 		public ClrCommandHandler(IServiceLocator serviceLocator, ApiClrCommand command, Boolean wrap)

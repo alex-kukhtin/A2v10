@@ -71,6 +71,17 @@ namespace A2v10.Request.Api
 	{
 		public String Script { get; set; }
 		public ExpandoObject Parameters { get; set; }
+		public String Path { get; private set; }
+		public String Id { get; private set; }
+
+		internal void SetPath(String path)
+		{
+			Path = path;
+		}
+		internal void SetId(String id)
+		{
+			Id = id;
+		}
 	}
 
 	public class ApiRequestCommand
@@ -99,6 +110,12 @@ namespace A2v10.Request.Api
 		internal void SetId(String id)
 		{
 			SqlCommand?.SetId(id);
+			JavascriptCommand?.SetId(id);
+		}
+
+		internal void SetPath(String path)
+		{
+			JavascriptCommand?.SetPath(path);
 		}
 
 		public ApiCommandHandler GetHandler(IServiceLocator serviceLocator)
@@ -110,7 +127,7 @@ namespace A2v10.Request.Api
 				case ApiV2CommandType.Clr:
 					return new ClrCommandHandler(serviceLocator, ClrCommand, Wrap);
 				case ApiV2CommandType.Javascript:
-					return new JavascriptCommandHandler(serviceLocator, ClrCommand, Wrap);
+					return new JavascriptCommandHandler(serviceLocator, JavascriptCommand, Wrap);
 			}
 			throw new ApiV2Exception($"invalid command type {Type}");
 		}
@@ -156,14 +173,16 @@ namespace A2v10.Request.Api
 			String id = null;
 			String action = null;
 
-			String filePath = reader.MakeFullPath($"_apiv2/{p1}", "model.json");
+			String relPath = $"_apiv2/{p1}";
+			String filePath = reader.MakeFullPath(relPath, "model.json");
 			if (!reader.FileExists(filePath))
 			{
 				// try to read with id
 				if (len < 3)
 					throw new ApiV2Exception($"invalid path: {path}");
 				p1 = String.Join("/", new ArraySegment<String>(parts, 0, len - 2));
-				filePath = reader.MakeFullPath($"_apiv2/{p1}", "model.json");
+				relPath = $"_apiv2/{p1}";
+				filePath = reader.MakeFullPath(relPath, "model.json");
 				id = parts[len - 1];
 				if (!reader.FileExists(filePath))
 					throw new ApiV2Exception($"path not found: {path}");
@@ -182,6 +201,7 @@ namespace A2v10.Request.Api
 			if (rm.Commands.TryGetValue(action, out ApiRequestCommand cmd))
 			{
 				cmd.SetId(id);
+				cmd.SetPath(relPath);
 				return cmd;
 			}
 			throw new ApiV2Exception($"command '{action}' not found");

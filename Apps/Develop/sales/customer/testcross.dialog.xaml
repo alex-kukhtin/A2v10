@@ -95,7 +95,7 @@
 			</SheetRow>
 		</Sheet.Header>
 		<SheetSection ItemsSource="{Bind RepData}">
-			<SheetRow>
+			<SheetRow Mark="{Bind $Mark}">
 				<SheetCell Content="{Bind Id}" />
 				<SheetCell Content="{Bind S1}" />
 				<SheetCell Content="{Bind N1}" />

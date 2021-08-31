@@ -47,7 +47,13 @@ namespace A2v10.Xaml
 			{
 				if (GetBinding(nameof(Bold)) != null)
 					throw new XamlException("The Bold and Mark bindings cannot be used at the same time");
-				tr.MergeAttribute(":class", markBind.GetPathFormat(context));
+				var class2 = tr.GetAttribute(":class");
+				if (!String.IsNullOrEmpty(class2))
+				{
+					tr.MergeAttribute(":class", $"row.rowCssClass({markBind.GetPathFormat(context)})", replaceExisting:true);
+				}
+				else
+					tr.MergeAttribute(":class", markBind.GetPathFormat(context));
 			}
 			else if (Mark != MarkStyle.Default)
 				tr.AddCssClass(Mark.ToString().ToKebabCase());

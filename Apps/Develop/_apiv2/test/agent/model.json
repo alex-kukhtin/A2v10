@@ -59,6 +59,16 @@
 					"Config": "config.url"
 				}
 			}
+		},
+		"script": {
+			"type": "javascript",
+			"javascriptCommand": {
+				"script": "test",
+				"parameters": {
+					"x": "body.x",
+					"s": "body.string"
+				}
+			}
 		}
 	}
 }

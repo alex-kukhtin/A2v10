@@ -10142,9 +10142,9 @@ Vue.component('a2-panel', {
 	});
 
 })();
-/*! Copyright © 2015-2020 Alex Kukhtin. All rights reserved.*/
+/*! Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
 
-// 20200113-7612
+// 20210831-7801
 // components/sheet.js
 
 (function () {
@@ -10218,8 +10218,8 @@ Vue.component('a2-panel', {
 				return cls;
 			}
 
-			function rowCssClass() {
-				let cls = '';
+			function rowCssClass(mark) {
+				let cls = mark || '';
 				if (this.hasChildren())
 					cls += ' group';
 				if (this.item.$collapsed)

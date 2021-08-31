@@ -181,6 +181,7 @@
     <Content Include="Develop\dashboard\homepage.template.box.js" />
     <Content Include="Develop\pos\pos.template.js" />
     <Content Include="Develop\reports\cross.template.js" />
+    <Content Include="Develop\sales\customer\testgroup.template.js" />
     <Content Include="Develop\sales\customer\testcross2.template.js" />
     <Content Include="Develop\sales\customer\testcross.template.js" />
     <Content Include="Develop\sales\invoice\invoice2.template.js" />
@@ -198,6 +199,7 @@
     <Content Include="Samples\_sql\schema.sql" />
     <Content Include="Samples\_sql\ui.sql" />
     <Content Include="tsconfig.json" />
+    <Content Include="Develop\_apiv2\test\agent\test.js" />
     <None Include="Develop\_apiv2\test\agent\model.json" />
     <None Include="Develop\_hooks\model.json" />
     <None Include="Develop\_tests\Tests.Runner.config" />

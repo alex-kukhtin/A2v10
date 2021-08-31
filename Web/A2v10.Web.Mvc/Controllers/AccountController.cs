@@ -84,7 +84,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			var avail = ConfigurationManager.AppSettings["availableLocales"];
 			if (String.IsNullOrEmpty(avail))
-				return String.Empty;
+				return "const avaliableLocales = null;";
 			return $"const avaliableLocales = [{String.Join(",", avail.Split(',').Select(x => $"'{x.Trim()}'"))}];";
 		}
 

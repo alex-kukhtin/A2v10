@@ -49,7 +49,8 @@ const template = {
 
 		/* свойства для каждого элемента массива */
 		/* итоговое значение Cross1 по строке */
-		'TData.$Cross1Total'() { return this.Cross1.reduce((p, c) => p + c.Val, 0); }
+		'TData.$Cross1Total'() { return this.Cross1.reduce((p, c) => p + c.Val, 0); },
+		'TData.$Mark'() { return 'green'; }
 	}
 }
 

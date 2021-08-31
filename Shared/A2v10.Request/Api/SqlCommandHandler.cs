@@ -14,7 +14,6 @@ namespace A2v10.Request.Api
 	{
 		private readonly IDbContext _dbContext;
 		private readonly ApiSqlCommand _command;
-		private readonly Boolean _wrap;
 		public SqlCommandHandler(IServiceLocator serviceLocator, ApiSqlCommand command, Boolean wrap)
 		{
 			_dbContext = serviceLocator.GetService<IDbContext>();
@@ -76,16 +75,6 @@ namespace A2v10.Request.Api
 			else
 				resp.Body = "{\"success\": true}";
 			return resp;
-		}
-
-		private Object Wrap(Object data)
-		{
-			if (!_wrap)
-				return data;
-			var m = new ExpandoObject();
-			m.Set("success", true);
-			m.Set("data", data);
-			return m;
 		}
 
 		ApiResponse ModelResponse(IDataModel dm)
