@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7779
-generated: 31.08.2021 09:31:29
+generated: 13.09.2021 08:47:50
 */
 
 set nocount on;
@@ -420,11 +420,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2021 Alex Kukhtin
 
-Last updated : 21 jul 2021
-module version : 7767
+Last updated : 12 sep 2021
+module version : 7768
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7767;
+exec a2sys.SetVersion N'std:security', 7768;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1071,6 +1071,8 @@ create procedure a2security.FindUserById
 as
 begin
 	set nocount on;
+	set transaction isolation level read uncommitted;
+
 	select * from a2security.ViewUsers where Id=@Id;
 end
 go

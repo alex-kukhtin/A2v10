@@ -435,6 +435,11 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!appReader.FileExists(fullPath))
 					throw new FileNotFoundException($"File not found '{path}'");
 				Response.ContentType = MimeMapping.GetMimeMapping(path);
+				var cdh = new ContentDispositionHeaderValue("attachment")
+				{
+					FileNameStar = Path.GetFileName(fullPath)
+				};
+				Response.Headers.Add("Content-Disposition", cdh.ToString());
 				using (var stream = appReader.FileStreamFullPathRO(fullPath))
 				{
 					stream.CopyTo(Response.OutputStream);

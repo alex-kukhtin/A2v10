@@ -24,11 +24,12 @@
 			Загрузка объектов учета в базу данных
 			<Span Bold="True">Здесь жирный текст</Span>
 		</Paragraph>
-		<Attachments Url="/Sales/Invoice/uploadFile" Delegate="uploadFile"
+		<UploadFile Url="/Sales/Invoice/uploadFile" Delegate="uploadFile"
 					 Accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
 		<Paragraph>
 			Поддерживаются только файлы формата xlsx (Excel 2007 и выше). Загрузить
 			<Hyperlink Command="{BindCmd Download, Url='/Список товаров.xlsx'}">образец файла</Hyperlink>.
+			<Hyperlink Block="True" Command="{BindCmd File, FileAction=Download, Url='/sales/invoice', Argument=''}">Образец работы с файлом</Hyperlink>
 		</Paragraph>
 	</Block>
 </Dialog>
