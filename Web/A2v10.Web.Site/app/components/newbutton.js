@@ -1,12 +1,11 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20190816-7525*/
+/*20210914-7803*/
 /*components/newbutton.js*/
 
 (function () {
 
 	const store = component('std:store');
-	const urltools = require('std:url');
 	const eventBus = require('std:eventBus');
 
 	const newButtonTemplate =
@@ -77,16 +76,16 @@
 					}
 				}
 				cmd = cmd || '';
-				if (cmd.startsWith('navigate:')) {
+				if (cmd.startsWith('navigate:'))
 					this.navigate(cmd.substring(9));
-				} else if (cmd.startsWith('dialog:')) {
+				else if (cmd.startsWith('dialog:'))
 					this.dialog(cmd.substring(7), requeryAfter);
-				} else {
+				else if (cmd.startsWith('external:'))
+					window.open(cmd.substring(9), '_blank');
+				else
 					alert('invalid command:' + cmd);
-				}
 			},
 			navigate(url) {
-				//let urlToNavigate = urltools.createUrlForNavigate(url);
 				this.$store.commit('navigate', { url: url });
 			},
 			dialog(url, requeryAfter) {

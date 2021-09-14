@@ -5545,7 +5545,7 @@ app.modules['std:impl:array'] = function () {
 })();	
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
 
-/*20210713-7795*/
+/*20210914-7803*/
 /* controllers/appheader.js */
 
 (function () {
@@ -5584,7 +5584,10 @@ app.modules['std:impl:array'] = function () {
 			<span class="caret"></span>
 		</button>
 		<div class="dropdown-menu menu down-left">
-			<a v-if="!isSinglePage " v-for="(itm, itmIndex) in profileItems" @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
+			<template v-if="!isSinglePage " v-for="(itm, itmIndex) in profileItems">
+				<div class="divider" v-if="itm.type === 'separator'"></div>
+				<a v-else @click.prevent="doProfileMenu(itm)" class="dropdown-item" tabindex="-1"><i class="ico" :class="'ico-' + itm.icon"></i> <span v-text="itm.title" :key="itmIndex"></span></a>
+			</template>
 			<a v-if="isChangePasswordEnabled" @click.prevent="changePassword" class="dropdown-item" tabindex="-1"><i class="ico ico-access"></i> <span v-text="locale.$ChangePassword"></span></a>
 			<div class="divider"></div>
 			<form id="logoutForm" method="post" action="/account/logoff">
@@ -5669,12 +5672,31 @@ app.modules['std:impl:array'] = function () {
 				this.$store.commit('navigate', { url: menuUrl, title: opts.title });
 			},
 			doProfileMenu(itm) {
-				this.$store.commit('navigate', { url: itm.url });
+				switch (itm.type || '') {
+					case '':
+					case 'page':
+						this.$store.commit('navigate', { url: itm.url });
+						break;
+					case 'dialog':
+						this.dialog(itm.url);
+						break;
+					case 'external':
+						window.open(itm.url, '_blank');
+						break;
+					default:
+						alert('Unknown profile item type');
+				}
 			},
 			clickMenu() {
 				if (this.isNavBarMenu) {
 					eventBus.$emit('clickNavMenu', true);
 				}
+			},
+			dialog(url) {
+				const dlgData = { promise: null };
+				eventBus.$emit('modaldirect', url, dlgData);
+				dlgData.promise.then(function (r) {
+				});
 			}
 		}
 	};

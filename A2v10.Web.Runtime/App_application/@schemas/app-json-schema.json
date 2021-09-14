@@ -31,9 +31,10 @@
 				"properties": {
 					"title": { "type": "string" },
 					"icon": { "type": "string" },
+					"type": { "type": "string", "enum": ["dialog", "page", "external", "separator"]},
 					"url": {
 						"type": "string",
-						"pattern": "^\/.+"
+						"pattern": "^[\/|http].+"
 					}
 				},
 				"additionalProperties": false
