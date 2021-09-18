@@ -90,7 +90,7 @@ namespace A2v10.Web.Mvc.Controllers
 			script.Replace("$(Locale)", ResourceHelper.LocaleLibrary(_userLocale.Language));
 			script.Replace("$(Utils)", ResourceHelper.PageUtils);
 			script.Replace("$(AppLinks)", _localizer.Localize(null, _host.AppLinks()));
-			script.Replace("$(AppData)", _host.GetAppData(_localizer));
+			script.Replace("$(AppData)", _host.GetAppData(_localizer, _userLocale));
 			layout.Replace("$(PageScript)", script.ToString());
 
 			Response.Write(layout.ToString());

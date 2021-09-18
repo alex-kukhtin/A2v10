@@ -69,7 +69,7 @@ namespace A2v10.Request
 
 		String GetAppData()
 		{
-			return _host.GetAppData(_localizer);
+			return _host.GetAppData(_localizer, _userLocale);
 		}
 
 		async Task RenderChangePassword(TextWriter writer, ExpandoObject loadPrms)

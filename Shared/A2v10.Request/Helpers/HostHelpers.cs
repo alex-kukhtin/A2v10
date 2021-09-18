@@ -43,11 +43,17 @@ namespace A2v10.Request
 		}
 
 
-		public static String GetAppData(this IApplicationHost host, ILocalizer localizer)
+		public static String GetAppData(this IApplicationHost host, ILocalizer localizer, IUserLocale userLocale)
 		{
 			var appJson = host.ApplicationReader.ReadTextFile(String.Empty, "app.json");
 			if (appJson != null)
 			{
+				if (appJson.Contains("$(")) {
+					var sb = new StringBuilder(appJson);
+					sb.Replace("$(lang)", userLocale.Language)
+					  .Replace("$(lang2)", userLocale.Language2);
+					appJson = sb.ToString();
+				}
 				// with validation
 				ExpandoObject app = JsonConvert.DeserializeObject<ExpandoObject>(appJson);
 				app.Set("embedded", host.Embedded);

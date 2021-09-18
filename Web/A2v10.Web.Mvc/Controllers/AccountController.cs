@@ -127,7 +127,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 				script.Replace("$(PageData)", $"{{ version: '{_host.AppVersion}', title: '{appTitle?.AppTitle}', subtitle: '{appTitle?.AppSubTitle}', multiTenant: {mtMode}, registration: {regMode} }}");
 				script.Replace("$(AppLinks)", _localizer.Localize(null, _host.AppLinks()));
-				script.Replace("$(AppData)", _host.GetAppData(_localizer));
+				script.Replace("$(AppData)", _host.GetAppData(_localizer, _userLocale));
 				script.Replace("$(ServerInfo)", serverInfo ?? "null");
 				script.Replace("$(Token)", formToken);
 				layout.Replace("$(PageScript)", script.ToString());

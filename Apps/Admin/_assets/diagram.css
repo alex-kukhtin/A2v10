@@ -1,0 +1,8 @@
+﻿.diagram .action {
+	cursor:pointer;
+}
+
+.diagram .action:hover rect {
+	fill: #fff2cc;
+	stroke: #d6b656;
+}

@@ -69,6 +69,17 @@
     <None Include="Bootstrap\sales\waybill\model.json" />
     <None Include="Bootstrap\sales\waybill\waybill.mrt" />
     <None Include="Bootstrap\sales\waybill\waybill.xlsx" />
+    <Content Include="Admin\_assets\app.css" />
+    <Content Include="Admin\_assets\app.js" />
+    <Content Include="Admin\_assets\app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
+    <Content Include="Admin\_assets\app.min.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
+    <Content Include="Admin\_assets\diagram.css" />
+    <Content Include="Admin\_assets\extensioncomponents.js" />
+    <Content Include="Admin\_assets\inputmask.js" />
     <Content Include="Bootstrap\_layout\bootstrap.css" />
     <Content Include="Bootstrap\_layout\bootstrap.min.css">
       <DependentUpon>bootstrap.css</DependentUpon>

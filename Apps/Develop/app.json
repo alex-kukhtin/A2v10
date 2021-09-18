@@ -40,7 +40,7 @@
 			"type": "external",
 			"title": "External",
 			"icon": "file",
-			"url": "https://docs.a2v10.com"
+			"url": "https://a2v10.com/$(lang)"
 		},
 		{
 			"type": "dialog",
