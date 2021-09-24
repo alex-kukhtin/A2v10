@@ -2094,7 +2094,7 @@ app.modules['std:html'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210620-7785
+// 20210924-7805
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -2137,8 +2137,14 @@ app.modules['std:http'] = function () {
 					if (ct.startsWith('text/'))
 						txt = await response.text();
 					throw txt;
+				case 401: // Unauthorized
+					setTimeout(() => {
+						window.location.assign('/');
+					}, 10);
+					throw '__blank__';
+					break;
 				case 473: /*non standard */
-					if (response.statusText === 'Unauthorized') {
+					if ((response.statusText || (await response.text())) === 'Unauthorized') {
 						// go to login page
 						setTimeout(() => {
 							window.location.assign('/');
@@ -2215,6 +2221,8 @@ app.modules['std:http'] = function () {
 			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
 				.then(function (html) {
+					if (!html)
+						return;
 					if (html.startsWith('<!DOCTYPE')) {
 						// full page - may be login?
 						window.location.assign('/');
@@ -2259,6 +2267,8 @@ app.modules['std:http'] = function () {
 					eventBus.$emit('endLoad');
 				})
 				.catch(function (error) {
+					if (error == '__blank__')
+						return;
 					reject(error);
 					eventBus.$emit('endLoad');
 				});
@@ -5087,11 +5097,10 @@ template: `
 })();
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210729-7797*/
+/*20210924-7805*/
 // controllers/base.js
 
 (function () {
-
 
 	const eventBus = require('std:eventBus');
 	const utils = require('std:utils');
@@ -5106,6 +5115,8 @@ template: `
 
 	const store = component('std:store');
 	const documentTitle = component('std:doctitle', true /*no error*/);
+
+	const __blank__ = "__blank__";
 
 	let __updateStartTime = 0;
 	let __createStartTime = 0;
@@ -5322,6 +5333,8 @@ template: `
 							self.$toast(toast);
 						self.$notifyOwner(newId, toast);
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 					});
 				});
@@ -5362,7 +5375,7 @@ template: `
 						else
 							throw new Error('Invalid response type for $invoke');
 					}).catch(function (msg) {
-						if (msg === '__blank__')
+						if (msg === __blank__)
 							return; // already done
 						if (opts && opts.catchError) {
 							reject(msg);
@@ -5447,6 +5460,8 @@ template: `
 							throw new Error('Invalid response type for $reload');
 						}
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return; // already done
 						self.$alertUi(msg);
 					});
 				});
@@ -5627,6 +5642,8 @@ template: `
 						if (self.__destroyed__) return;
 						elem.$remove(); // without confirm
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 					});
 				}
@@ -6167,6 +6184,8 @@ template: `
 						}
 						resolve(arr);
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 						reject(arr);
 					});
@@ -6223,6 +6242,8 @@ template: `
 						}
 						resolve(arr);
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 					});
 					arr.$loaded = true;

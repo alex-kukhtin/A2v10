@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7798",
+	"$version": "10.0.7804",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -156,13 +156,14 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"enum": [ "sql", "clr", "script", "xml", "startProcess", "resumeProcess", "callApi", "file", "sendMessage", "javascript", "processDbEvents" ]
+							"enum": [ "sql", "clr", "script", "xml", "invokeTarget", "startProcess", "resumeProcess", "callApi", "file", "sendMessage", "javascript", "processDbEvents" ]
 						},
 						"schema": { "type": "string" },
 						"source": { "type": "string" },
 						"model": { "type": "string" },
 						"command": { "type": "string" },
 						"procedure": { "type": "string" },
+						"target": { "type": "string", "pattern": "^(\\w+)\\.(\\w+)$" },
 						"checkTypes": { "type": "string" },
 						"processDbEvents": { "type": "boolean" },
 						"commandTimeout": { "type": "number" },

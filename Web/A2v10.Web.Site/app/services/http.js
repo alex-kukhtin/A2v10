@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210620-7785
+// 20210924-7805
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -43,8 +43,14 @@ app.modules['std:http'] = function () {
 					if (ct.startsWith('text/'))
 						txt = await response.text();
 					throw txt;
+				case 401: // Unauthorized
+					setTimeout(() => {
+						window.location.assign('/');
+					}, 10);
+					throw '__blank__';
+					break;
 				case 473: /*non standard */
-					if (response.statusText === 'Unauthorized') {
+					if ((response.statusText || (await response.text())) === 'Unauthorized') {
 						// go to login page
 						setTimeout(() => {
 							window.location.assign('/');
@@ -121,6 +127,8 @@ app.modules['std:http'] = function () {
 			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
 				.then(function (html) {
+					if (!html)
+						return;
 					if (html.startsWith('<!DOCTYPE')) {
 						// full page - may be login?
 						window.location.assign('/');
@@ -165,6 +173,8 @@ app.modules['std:http'] = function () {
 					eventBus.$emit('endLoad');
 				})
 				.catch(function (error) {
+					if (error == '__blank__')
+						return;
 					reject(error);
 					eventBus.$emit('endLoad');
 				});

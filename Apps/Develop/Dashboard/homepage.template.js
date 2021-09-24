@@ -20,11 +20,20 @@ const template = {
 	commands: {
 		showAlert() {
 			alert('click!');
-		}
+		},
+		invokeTarget
 	}
 };
 
 module.exports = template;
+
+async function invokeTarget() {
+	var res = await this.$vm.$invoke('testInvokeTarget', { Int: 13, String: "str 22", Obj: {xobj: 5, yobj:5 }});
+	alert(JSON.stringify(res));
+	alert(2);
+	res = await this.$vm.$invoke('resumeInvokeTarget', { reply: { xobj: 5, yobj: 5 } });
+	alert(JSON.stringify(res));
+}
 
 console.dir('loaded');
 function drawChart(g, arg, elem) {

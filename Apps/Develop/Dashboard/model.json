@@ -103,20 +103,44 @@
 				"Module2": "edit"
 			},
 			"type": "javascript",
-				"file": "server.module",
-				"args": {
-					"n": 1,
-					"s": "stri\\ssng'with'ap\"os`trophe",
-					"d": 27.33,
-					"b": true
-				}
-			},
+			"file": "server.module",
+			"args": {
+				"n": 1,
+				"s": "stri\\ssng'with'ap\"os`trophe",
+				"d": 27.33,
+				"b": true
+			}
+		},
 		"wait": {
 			"type": "sql",
 			"procedure": "Wait"
 		},
 		"fetchDbEvents": {
 			"type": "processDbEvents"
+		},
+		"testInvokeTarget": {
+			"type": "invokeTarget",
+			"target": "Workflow.Run",
+			"parameters": {
+				"jsonint": 22,
+				"jsonstring": "json_string",
+				"data": {
+					"xdata": 5,
+					"ydata": 8
+				}
+			}
+		},
+		"resumeInvokeTarget": {
+			"type": "invokeTarget",
+			"target": "Workflow.Resume",
+			"parameters": {
+				"jsonint": 22,
+				"jsonstring": "json_string",
+				"data": {
+					"xdata": 5,
+					"ydata": 8
+				}
+			}
 		}
 	}
 }

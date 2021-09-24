@@ -1,10 +1,9 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210729-7797*/
+/*20210924-7805*/
 // controllers/base.js
 
 (function () {
-
 
 	const eventBus = require('std:eventBus');
 	const utils = require('std:utils');
@@ -19,6 +18,8 @@
 
 	const store = component('std:store');
 	const documentTitle = component('std:doctitle', true /*no error*/);
+
+	const __blank__ = "__blank__";
 
 	let __updateStartTime = 0;
 	let __createStartTime = 0;
@@ -235,6 +236,8 @@
 							self.$toast(toast);
 						self.$notifyOwner(newId, toast);
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 					});
 				});
@@ -275,7 +278,7 @@
 						else
 							throw new Error('Invalid response type for $invoke');
 					}).catch(function (msg) {
-						if (msg === '__blank__')
+						if (msg === __blank__)
 							return; // already done
 						if (opts && opts.catchError) {
 							reject(msg);
@@ -360,6 +363,8 @@
 							throw new Error('Invalid response type for $reload');
 						}
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return; // already done
 						self.$alertUi(msg);
 					});
 				});
@@ -540,6 +545,8 @@
 						if (self.__destroyed__) return;
 						elem.$remove(); // without confirm
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 					});
 				}
@@ -1080,6 +1087,8 @@
 						}
 						resolve(arr);
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 						reject(arr);
 					});
@@ -1136,6 +1145,8 @@
 						}
 						resolve(arr);
 					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
 						self.$alertUi(msg);
 					});
 					arr.$loaded = true;

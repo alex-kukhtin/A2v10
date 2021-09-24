@@ -13,6 +13,8 @@ namespace A2v10.Web.Base
 			if (filterContext.HttpContext.Request.HttpMethod == "POST")
 			{
 				filterContext.Result = new HttpStatusCodeResult(473, "Unauthorized");
+				filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+				filterContext.HttpContext.Response.Write("Unauthorized");
 			}
 			else
 			{

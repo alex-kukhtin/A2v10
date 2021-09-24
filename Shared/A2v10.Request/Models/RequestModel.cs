@@ -455,7 +455,9 @@ namespace A2v10.Request
 		resumeProcess,
 		callApi,
 		sendMessage,
-		processDbEvents
+		processDbEvents,
+		// core
+		invokeTarget
 	}
 
 	public class RequestCommand : RequestBase
