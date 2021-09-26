@@ -335,6 +335,8 @@ namespace A2v10.Request
 		public String targetId;
 		public TargetModel targetModel;
 
+		public List<String> scripts;
+
 		public String GetView(Boolean mobile)
 		{
 			if (mobile && !String.IsNullOrEmpty(viewMobile))

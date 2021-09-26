@@ -91,6 +91,7 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <None Include="Develop\agent\model.json" />
+    <None Include="Develop\bpmn\catalog\model.json" />
     <None Include="Develop\common\Entity\model.json" />
     <None Include="Develop\dashboard\model.json" />
     <None Include="Develop\entity\model.json" />
@@ -151,6 +152,7 @@
     </Content>
     <TypeScriptCompile Include="Develop\dashboard\javascript.d.ts" />
     <TypeScriptCompile Include="Develop\dashboard\server2.module.ts" />
+    <Content Include="Develop\bpmn\catalog\edit.view.html" />
     <Content Include="Develop\dashboard\server.module.js" />
     <Content Include="App_application\%40types\platform.d.ts" />
     <TypeScriptCompile Include="Bootstrap\sales\invoice\invoice2.template.ts" />
@@ -809,6 +811,12 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Develop\purchase\Goods\test.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\bpmn\catalog\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

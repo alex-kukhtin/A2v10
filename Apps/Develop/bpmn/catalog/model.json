@@ -1,0 +1,15 @@
+﻿{
+  "schema": "a2demo",
+  "model": "",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "index.view"
+		},
+		"edit": {
+			"model": "",
+			"view": "edit.view",
+			"scripts": ["/scripts/bpmn.js"]
+		}
+	}
+}

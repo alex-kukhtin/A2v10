@@ -2077,6 +2077,7 @@ begin
 		(10, 1,   N'Продажи',     N'sales',      null,    10, '/help/sales'),
 		(20, 1,   N'Закупки',     N'purchase',   null,    20, '/help/purchase'),
 		(30, 1,   N'Закупки 2',   N'purchase2',  null,    30, null),
+		(40, 1,   N'BPMN',    N'bpmn',       null,    40, null),
 		(31, 10,  N'Документы',   null,		     null,    10, null),
 		(32, 10,  N'Справочники', null,		     null,    20, null),
 		(33, 20,  N'Документы',   null,		     null,    10, null),
@@ -2103,7 +2104,10 @@ begin
 		(120, 2,  N'Грошові кошти',   N'money',	N'currency-uah',    30, null),
 		(1200, 120,  N'Платежі',   N'payments',	N'file',    30, null),
 		(1205, 120,  N'Каса',		N'cash',	N'currency-uah',    30, null),
-		(125, 2,  N'Довідники', N'catalog',	 N'menu',    40, null);
+		(125, 2,  N'Довідники', N'catalog',	 N'menu',    40, null),
+		(400, 40,  N'Catalog', N'catalog',	 N'items',    10, null),
+		(401, 40,  N'Workflow', N'workflow',	 N'workflow1',    20, null),
+		(402, 40,  N'Instance', N'instance',	 N'queue',    30, null);
 	merge a2ui.Menu as target
 	using @menu as source
 	on target.Id=source.id and target.Id >= 1 and target.Id < 2000

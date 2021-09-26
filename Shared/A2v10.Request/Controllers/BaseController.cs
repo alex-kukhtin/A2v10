@@ -12,6 +12,7 @@ using A2v10.Data.Interfaces;
 using System.Threading;
 using System.Web;
 using A2v10.Request.Properties;
+using System.Collections.Generic;
 
 namespace A2v10.Request
 {
@@ -288,6 +289,27 @@ namespace A2v10.Request
 
 			var typeChecker = _host.CheckTypes(rw.Path, rw.checkTypes, model);
 
+			List<Tuple<String, Boolean>> externalScripts = new List<Tuple<String, Boolean>>();
+
+			if (rwArg.scripts != null && rwArg.scripts.Count > 0)
+			{
+				foreach (var s in rwArg.scripts)
+				{
+					String scriptFile = Path.ChangeExtension(s, "js");
+					if (scriptFile.StartsWith("/scripts/"))
+					{
+						externalScripts.Add(Tuple.Create(scriptFile, true));
+					}
+					else
+					{
+						String scriptPath = _host.ApplicationReader.MakeFullPath(rw.Path, scriptFile);
+						if (!_host.ApplicationReader.FileExists(scriptPath))
+							throw new RequestModelException($"File not found '{scriptPath}'");
+						externalScripts.Add(Tuple.Create(scriptPath, false));
+					}
+				}
+			}
+
 			var msi = new ModelScriptInfo()
 			{
 				DataModel = model,
@@ -359,6 +381,13 @@ namespace A2v10.Request
 			}
 			await ProcessDbEvents(rw);
 			writer.Write(modelScript);
+			foreach (var ss in externalScripts)
+			{
+				if (ss.Item2 /*external*/)
+				{
+					writer.Write("<script type=\"text\"")
+				}
+			}
 		}
 
 		public Task ProcessDbEvents(RequestBase rb)
