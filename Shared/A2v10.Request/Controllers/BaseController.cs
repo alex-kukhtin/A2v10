@@ -385,7 +385,7 @@ namespace A2v10.Request
 			{
 				if (ss.Item2 /*external*/)
 				{
-					writer.Write("<script type=\"text\"")
+					writer.Write($"<script type=\"text/javascript\" src=\"{ss.Item1}\"></script>");
 				}
 			}
 		}
