@@ -233,7 +233,7 @@ namespace A2v10.Runtime
 					{ "$(Minify)", _controller.IsDebugConfiguration ? String.Empty : "min." },
 					{ "$(Description)", _controller.Host.AppDescription }
 				};
-			_controller.Layout(writer, prms);
+			_controller.Layout(writer, prms, null);
 		}
 
 		public void Report(String url, DesktopResponse dr)

@@ -116,7 +116,13 @@
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />
+    <Content Include="css\bpmn\bpmn-font\bpmn.css" />
+    <Content Include="css\bpmn\bpmn-js-properties-panel.css" />
+    <Content Include="css\bpmn\diagram-js.css" />
+    <Content Include="css\bpmn\editor.css" />
+    <Content Include="css\bpmn\font\bpmn.svg" />
     <Content Include="openidconnect.txt" />
+    <Content Include="scripts\bpmn\editor.js" />
     <Content Include="scripts\server\validate.js" />
     <Content Include="app\services\eusign.js" />
     <Content Include="app\services\html.js" />
@@ -318,6 +324,10 @@
     <Content Include="Less.Advance\Variables.less" />
     <Content Include="Less.Advance\WaitCursor.less" />
     <Content Include="Less.Advance\Wizard.less" />
+    <Content Include="css\bpmn\font\bpmn.eot" />
+    <Content Include="css\bpmn\font\bpmn.ttf" />
+    <Content Include="css\bpmn\font\bpmn.woff" />
+    <Content Include="css\bpmn\font\bpmn.woff2" />
     <None Include="Less.Advance\_Default.colorscheme.less" />
     <Content Include="css\blue.colorscheme" />
     <Content Include="Less.Advance\_ColorSchemes.less" />

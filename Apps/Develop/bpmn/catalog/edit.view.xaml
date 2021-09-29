@@ -1,0 +1,10 @@
+﻿<!-- BMPN Catalog index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" CssClass="root">
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Save" Content="@[Save]"/>
+		</Toolbar>
+	</Page.Toolbar>
+	<Block HtmlId="canvas" />
+	<Block HtmlId="js-properties-panel" CssClass="properties-panel-parent"/>
+</Page>

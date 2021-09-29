@@ -207,7 +207,7 @@ namespace A2v10.Web.Mvc.Controllers
 					{ "$(Locale)", _baseController.CurrentLang },
 					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." }
 				};
-				_baseController.Layout(Response.Output, prms);
+				_baseController.Layout(Response.Output, prms, Request.Url.LocalPath);
 			}
 			catch (Exception ex)
 			{

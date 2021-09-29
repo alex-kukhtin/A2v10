@@ -336,6 +336,7 @@ namespace A2v10.Request
 		public TargetModel targetModel;
 
 		public List<String> scripts;
+		public List<String> styles;
 
 		public String GetView(Boolean mobile)
 		{
@@ -422,6 +423,30 @@ namespace A2v10.Request
 	{
 		[JsonProperty("export")]
 		public RequestExport Export { get; set; }
+
+		public String GetModelScripts()
+		{
+			if (scripts == null)
+				return null;
+			var sb = new StringBuilder();
+			foreach (var s in scripts)
+			{
+				sb.Append($"<script type=\"text/javascript\" src=\"{s}\"></script>\n");
+			}
+			return sb.ToString();
+		}
+
+		public String GetModelStyles()
+		{
+			if (styles == null)
+				return null;
+			var sb = new StringBuilder();
+			foreach (var s in styles)
+			{
+				sb.Append($"<link  href=\"{s}\" rel=\"stylesheet\" />\n");
+			}
+			return sb.ToString();
+		}
 	}
 
 	public class RequestDialog : RequestView
@@ -959,6 +984,26 @@ namespace A2v10.Request
 		}
 
 		static readonly Lazy<RedirectModule> _redirect = new Lazy<RedirectModule>(() => new RedirectModule(), isThreadSafe: true);
+
+		public static RequestAction GetActionFromUrl(IApplicationHost host, Boolean bAdmin, String normalizedUrl)
+		{
+			String[] urlParts = normalizedUrl.Split('/');
+			Int32 len = urlParts.Length;
+			if (len < 3)
+			{
+				return null;
+			}
+			var pathArr = new ArraySegment<String>(urlParts, 0, len - 2);
+			String action = urlParts[len - 2].ToLowerInvariant();
+			var pathForLoad = String.Join("/", pathArr).ToLowerInvariant();
+			String jsonText = host.ApplicationReader.ReadTextFile(pathForLoad, "model.json");
+			if (jsonText == null)
+				return null;
+			var rm = JsonConvert.DeserializeObject<RequestModel>(jsonText);
+			if (rm.Actions.TryGetValue(action, out RequestAction requestAction))
+				return requestAction;
+			return null;
+		}
 
 		public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, Boolean bAdmin, RequestUrlKind kind, String normalizedUrl)
 		{

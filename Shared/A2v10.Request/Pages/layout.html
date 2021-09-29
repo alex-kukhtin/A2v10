@@ -23,15 +23,16 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 	$(AssetsStyleSheets)
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	$(ModelStyles)
 	$(AppleTouchIcon)
 	$(LayoutManifest)
 </head>
 <body>
 	<div id="shell" class="shell $(Release)" v-cloak>
 		<a2-app-header :title="title" :subtitle="subtitle" :user-state="userState" :single-page="singlePage"
-				:menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
-				person-name="$(PersonName)" client-id="$(ClientId)" :user-is-admin="userIsAdmin" :show-feedback="showFeedback"
-				:feedback-visible="feedbackVisible" :change-password="changePassword" :nav-bar-mode=navBarMode>
+					   :menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
+					   person-name="$(PersonName)" client-id="$(ClientId)" :user-is-admin="userIsAdmin" :show-feedback="showFeedback"
+					   :feedback-visible="feedbackVisible" :change-password="changePassword" :nav-bar-mode=navBarMode>
 			$(CompanyButton)
 		</a2-app-header>
 		<a2-main-view :menu="menu" :side-bar-mode="sideBarMode" :nav-bar-mode=navBarMode :period="globalPeriod" :pages="pages" :title="title"></a2-main-view>
@@ -76,6 +77,7 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 	<script type="text/javascript" src="/scripts/locale-$(Locale).min.js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/main.$(Minify)js?v=$(Build)"></script>
 	$(AssetsScripts)
+	$(ModelScripts)
 	<script type="text/javascript" src="/_shell/script"></script>
 	$(LayoutScripts)
 </body>

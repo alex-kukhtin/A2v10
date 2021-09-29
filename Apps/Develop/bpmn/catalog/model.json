@@ -1,6 +1,7 @@
 ﻿{
-  "schema": "a2demo",
-  "model": "",
+	"$schema": "../../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
+	"schema": "a2demo",
+	"model": "",
 	"actions": {
 		"index": {
 			"index": true,
@@ -9,7 +10,14 @@
 		"edit": {
 			"model": "",
 			"view": "edit.view",
-			"scripts": ["/scripts/bpmn.js"]
+			"template": "edit.template",
+			"scripts": [ "/scripts/bpmn/bpmn-editor.js" ],
+			"styles": [
+				"/css/bpmn/diagram-js.css",
+				"/css/bpmn/bpmn-font/bpmn.css",
+				"/css/bpmn/bpmn-js-properties-panel.css",
+				"/css/bpmn/editor.css"
+			]
 		}
 	}
 }

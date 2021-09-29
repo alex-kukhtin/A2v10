@@ -24,7 +24,7 @@ namespace A2v10.Request
 
 	public partial class BaseController
 	{
-		public void Layout(TextWriter writer, IDictionary<String, String> prms)
+		public void Layout(TextWriter writer, IDictionary<String, String> prms, String localUrl)
 		{
 			var customLayout = _host.CustomLayout;
 			String layout = null;
@@ -44,9 +44,13 @@ namespace A2v10.Request
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
 
+			var action = RequestModel.GetActionFromUrl(_host, _host.IsAdminMode, localUrl.RemoveHeadSlash());
+
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
 			sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");
+			sb.Replace("$(ModelScripts)", action?.GetModelScripts());
+			sb.Replace("$(ModelStyles)", action?.GetModelStyles());
 			_host.ReplaceMacros(sb);
 			writer.Write(sb.ToString());
 		}

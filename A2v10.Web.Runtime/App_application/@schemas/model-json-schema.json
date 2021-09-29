@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7804",
+	"$version": "10.0.7805",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -81,7 +81,15 @@
 							"additionalProperties": false
 						},
 						"parameters": { "type": "object" },
-						"permissions": { "$ref": "#/definitions/permissions" }
+						"permissions": { "$ref": "#/definitions/permissions" },
+						"scripts": {
+							"type": "array",
+							"items": { "type": "string" }
+						},
+						"styles": {
+							"type": "array",
+							"items": {"type": "string"}
+						}
 					},
 					"additionalProperties": false
 				}

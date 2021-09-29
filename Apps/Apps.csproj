@@ -152,6 +152,11 @@
     </Content>
     <TypeScriptCompile Include="Develop\dashboard\javascript.d.ts" />
     <TypeScriptCompile Include="Develop\dashboard\server2.module.ts" />
+    <Content Include="Develop\bpmn\catalog\edit.template.js" />
+    <Page Include="Develop\bpmn\catalog\edit.view.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Content Include="Develop\bpmn\catalog\edit.view.html" />
     <Content Include="Develop\dashboard\server.module.js" />
     <Content Include="App_application\%40types\platform.d.ts" />
