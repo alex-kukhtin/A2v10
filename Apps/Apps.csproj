@@ -150,6 +150,14 @@
     <Content Include="..\A2v10.Web.Runtime\App_application\%40types\server.d.ts">
       <Link>App_application\%40types\server.d.ts</Link>
     </Content>
+    <None Include="Develop\purchase\testguids\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\purchase\testguids\edit.dialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
     <TypeScriptCompile Include="Develop\dashboard\javascript.d.ts" />
     <TypeScriptCompile Include="Develop\dashboard\server2.module.ts" />
     <Content Include="Develop\bpmn\catalog\edit.template.js" />
@@ -172,6 +180,7 @@
     <TypeScriptCompile Include="Develop\entity\edit.d.ts" />
     <Content Include="Develop\entity\editGoods.template.js" />
     <TypeScriptCompile Include="Develop\purchase\Goods\index.d.ts" />
+    <None Include="Develop\purchase\testguids\model.json" />
     <None Include="Develop\purchase\Supplier\index.view.html_">
       <Generator>XamlIntelliSenseFileGenerator</Generator>
       <SubType>Designer</SubType>

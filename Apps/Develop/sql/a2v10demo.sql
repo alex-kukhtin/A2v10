@@ -2088,6 +2088,7 @@ begin
 		(44, 33,  N'Накладные',	  N'waybillin',  N'file', 10, null),
 		(45, 34,  N'Поставщики',  N'supplier',   N'user', 10, null),
 		(46, 34,  N'Товары',      N'goods',      N'steps',20, null),
+		(47, 34,  N'Test GUID',   N'testguids',  N'items',30, null),
 		(61, 30,  N'Счета',		  N'invoice',    N'file', 10, null),
 		(62, 30,  N'Накладные',	  N'waybill',    N'file', 20, null),
 		(63, 30,  N'Покупатели',  N'customer',   N'user', 30, null),
@@ -2510,6 +2511,96 @@ as
 begin
 	set nocount on;
 	select [Message!TMessage!Object] = null, Id=@TargetId, [Text]=N'I am the message text', ProcessId = @ProcessId, InboxId = @InboxId;
+end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2demo' and TABLE_NAME=N'GuidIdItem')
+begin
+	create table a2demo.GuidIdItem
+	(
+		Id uniqueidentifier not null 
+			constraint PK_GuidIdItem primary key
+			constraint DF_GuidIdItem default (newid()),
+		[Name] nvarchar(255) null,
+		Memo nvarchar(255) null,
+		DateCreated datetime not null constraint DF_GuidIdItem_DateCreated default(getutcdate()),
+	);
+end
+go
+------------------------------------------------
+create or alter procedure a2demo.[TestGuid.Index]
+@UserId bigint
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select[Items!TItem!Array] = null, [Id!!Id] = Id, [Name], [Memo],
+		[DateCreated!!Utc] = DateCreated
+	from a2demo.GuidIdItem;
+end
+go
+------------------------------------------------
+create or alter procedure a2demo.[TestGuid.Load]
+@UserId bigint,
+@Id uniqueidentifier = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select[Item!TItem!Object] = null, [Id!!Id] = Id, [Name], [Memo],
+		[DateCreated!!Utc] = DateCreated
+	from a2demo.GuidIdItem where Id=@Id;
+end
+go
+------------------------------------------------
+drop procedure if exists a2demo.[TestGuid.Update];
+drop type if exists a2demo.[GuidIdItem.TableType];
+go
+------------------------------------------------
+create type a2demo.[GuidIdItem.TableType]
+as table(
+	Id uniqueidentifier null,
+	[Name] nvarchar(255),
+	[Memo] nvarchar(255)
+)
+go
+------------------------------------------------
+create or alter procedure a2demo.[TestGuid.Metadata]
+as
+begin
+	declare @Item a2demo.[GuidIdItem.TableType];
+	select [Item!Item!Metadata] = null, * from @Item;
+end
+go
+------------------------------------------------
+create or alter procedure a2demo.[TestGuid.Update]
+@UserId bigint,
+@Item a2demo.[GuidIdItem.TableType] readonly,
+@RetId uniqueidentifier = null output 
+as
+begin
+	set nocount on;
+	
+	declare @output table(op sysname, id uniqueidentifier);
+
+	merge a2demo.GuidIdItem as target
+	using @Item as source
+	on (target.Id = source.Id)
+	when matched then
+		update set 
+			target.[Name] = source.[Name],
+			target.[Memo] = source.Memo
+	when not matched by target then 
+		insert ([Name], [Memo])
+		values ([Name], [Memo])
+	output
+		$action op,
+		inserted.Id id
+	into @output(op, id);
+
+	select top(1) @RetId = id from @output;
+
+	exec a2demo.[TestGuid.Load] @UserId, @RetId;
 end
 go
 ------------------------------------------------

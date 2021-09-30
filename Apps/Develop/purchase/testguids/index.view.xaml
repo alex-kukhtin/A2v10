@@ -1,0 +1,24 @@
+<!-- Goods index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib">
+	<Page.Resources>
+		<sys:String x:Key="OpenUrl">/purchase/testguids/edit</sys:String>
+	</Page.Resources>
+	<Page.Toolbar>
+		<Toolbar>
+			<Button Icon="Add" Tip="Create" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Items}}">Create</Button>
+			<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Items}}">Edit</Button>
+			<Separator />
+			<Button Icon="Reload" Command="{BindCmd Reload}">Refresh</Button>
+		</Toolbar>
+	</Page.Toolbar>
+	<DataGrid ItemsSource="{Bind Items}" Hover="True" HeadersVisibility="Column"
+				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True" 
+				DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Items}}">
+		<DataGridColumn Header="Id" Content="{Bind Id}" Role="Id"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
+		<DataGridColumn Header="Name" Content="{Bind Name}"/>
+		<DataGridColumn Header="Memo" Content="{Bind Memo}"/>
+		<DataGridColumn Header="DateCreated" Content="{Bind DateCreated, DataType=DateTime}"/>
+	</DataGrid>
+</Page>

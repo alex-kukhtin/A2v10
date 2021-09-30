@@ -1,0 +1,15 @@
+﻿{
+  "schema": "a2demo",
+  "model": "TestGuid",
+	"actions": {
+		"index": {
+			"index": true,
+			"view": "index.view"
+		}
+	},
+	"dialogs": {
+		"edit": {
+			"view": "edit.dialog"
+		}
+	}
+}
