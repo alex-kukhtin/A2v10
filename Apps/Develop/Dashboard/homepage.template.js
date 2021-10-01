@@ -1,6 +1,8 @@
 ﻿
 /* index template */
 
+const du = require('std:utils').date;
+
 const template = {
     properties: {
         'TRoot.$style': String,
@@ -21,7 +23,12 @@ const template = {
 		showAlert() {
 			alert('click!');
 		},
-		invokeTarget
+		invokeTarget,
+		async javascript() {
+			let r = await this.$ctrl.$invoke('javascript', { Id: 77, StrVal: 'string value', DateVal: du.today(), NumVal: 55.32 });
+			console.dir(r);
+			alert(JSON.stringify(r));
+		},
 	}
 };
 

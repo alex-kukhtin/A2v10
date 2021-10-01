@@ -37,6 +37,7 @@
 						<ComboBoxItem Content="Success" Value="success"/>
 						<ComboBoxItem Content="Green" Value="green"/>
 					</ComboBox>
+					<Button Style="Red" Size="Large" Command="{BindCmd Execute, CommandName=javascript}">JAVASCRIPT</Button>
 				</Grid>
 			</Panel>
 			<Code Content="{Bind Root.$text}"></Code>
