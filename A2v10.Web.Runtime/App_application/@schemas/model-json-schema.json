@@ -164,7 +164,22 @@
 					"properties": {
 						"type": {
 							"type": "string",
-							"enum": [ "sql", "clr", "script", "xml", "invokeTarget", "startProcess", "resumeProcess", "callApi", "file", "sendMessage", "javascript", "processDbEvents" ]
+							"enum": [
+								"sql",
+								"clr",
+								"script",
+								"xml",
+								"invokeTarget",
+								"startProcess",
+								"resumeProcess",
+								"callApi",
+								"file",
+								"sendMessage",
+								"javascript",
+								"processDbEvents",
+								"startBpmn",
+								"resumeBpmn"
+							]
 						},
 						"schema": { "type": "string" },
 						"source": { "type": "string" },
