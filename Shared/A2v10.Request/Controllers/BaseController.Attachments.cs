@@ -65,7 +65,7 @@ namespace A2v10.Request
 	{
 		public async Task<AttachmentInfo> DownloadAttachment(String pathInfo, Action<ExpandoObject> setParams, String suffix = "Load")
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			// [{source}].[{schema}].[{base}.{key}.Load]
 			ExpandoObject prms = new ExpandoObject();
 			setParams?.Invoke(prms);
@@ -85,7 +85,7 @@ namespace A2v10.Request
 
 		public async Task<SignatureInfo> DownloadSignature(String pathInfo, Action<ExpandoObject> setParams)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			// [{source}].[{schema}].[{base}.{key}.LoadSignature]
 			ExpandoObject prms = new ExpandoObject();
 			setParams?.Invoke(prms);
@@ -98,7 +98,7 @@ namespace A2v10.Request
 
 		public async Task<ReturnSignatureInfo> SaveSignature(String pathInfo, ExpandoObject prms)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			// [{source}].[{schema}].[{base}.{key}.SaveSignature]
 			String key = rm.ModelAction.ToPascalCase();
 			prms.Set("Id", rm._id);
@@ -109,7 +109,7 @@ namespace A2v10.Request
 
 		public async Task<IList<AttachmentUpdateIdToken>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			String key = rm.ModelAction.ToPascalCase();
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
@@ -144,7 +144,7 @@ namespace A2v10.Request
 
 		public async Task<IList<AttachmentUpdateIdToken>> SaveAttachmentsMime(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			String key = rm.ModelAction.ToPascalCase();
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
@@ -181,7 +181,7 @@ namespace A2v10.Request
 		{
 			if (factor < 0 || factor > 100)
 				throw new ArgumentOutOfRangeException(nameof(factor), $"Invalid factor value: {factor}. Expected [0..100]");
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			String key = rm.ModelAction.ToPascalCase();
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
@@ -218,7 +218,7 @@ namespace A2v10.Request
 		{
 			if (factor < 0 || factor > 100)
 				throw new ArgumentOutOfRangeException(nameof(factor), $"Invalid factor value: {factor}. Expected [0..100]");
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			String key = rm.ModelAction.ToPascalCase();
 			String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";

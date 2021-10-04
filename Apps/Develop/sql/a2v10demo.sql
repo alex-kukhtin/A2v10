@@ -2605,6 +2605,37 @@ end
 go
 ------------------------------------------------
 begin
+	-- create admin menu
+	declare @menu table(id bigint, p0 bigint, [name] nvarchar(255), [url] nvarchar(255), icon nvarchar(255), [order] int);
+	insert into @menu(id, p0, [name], [url], icon, [order])
+	values
+		(900, null,	N'Admin',       null,			null,		0),
+		(901, 900,	N'@[Users]',	N'identity',	null,		10),
+		(902, 900,	N'BPMN',	    N'bpmn',	null,		10),
+		(910, 901,	N'@[Users]',	N'user',		N'user',	10),
+		(911, 901,	N'@[Groups]',	N'group',		N'users',	20),
+		(912, 901,	N'@[Roles]',	N'role',		N'users',	30),
+		(913, 901,	N'@[ApiUsers]',	N'api',			N'external',40),
+		(920, 902,	N'Catalog',	    N'catalog',		N'items',	10);
+			
+	merge a2ui.Menu as target
+	using @menu as source
+	on target.Id=source.id and target.Id >= 900 and target.Id < 1000
+	when matched then
+		update set
+			target.Id = source.id,
+			target.[Name] = source.[name],
+			target.[Url] = source.[url],
+			target.[Icon] = source.icon,
+			target.[Order] = source.[order]
+	when not matched by target then
+		insert(Id, Parent, [Name], [Url], Icon, [Order]) values (id, p0, [name], [url], icon, [order])
+	when not matched by source and target.Id >= 900 and target.Id < 1000 then 
+		delete;
+end
+go
+------------------------------------------------
+begin
 	set nocount on;
 	grant execute on schema ::a2demo to public;
 end

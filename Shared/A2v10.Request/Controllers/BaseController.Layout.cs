@@ -44,7 +44,10 @@ namespace A2v10.Request
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
 
-			var action = RequestModel.GetActionFromUrl(_host, _host.IsAdminMode, localUrl.RemoveHeadSlash());
+			var actionUrl = localUrl.RemoveHeadSlash();
+			if (_host.IsAdminMode)
+				actionUrl = actionUrl.Remove(0, 6); // remove 'admin/';
+			var action = RequestModel.GetActionFromUrl(_host, actionUrl);
 
 			sb.Replace("$(AssetsScripts)", AppScriptsLink);
 			sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());

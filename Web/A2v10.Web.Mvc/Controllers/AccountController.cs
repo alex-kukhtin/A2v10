@@ -1019,7 +1019,7 @@ namespace A2v10.Web.Mvc.Controllers
 			if (hooks == null || hooks != "enable")
 				return;
 
-			var rm = await RequestModel.CreateFromUrl(_host, false, RequestUrlKind.Simple, "_hooks");
+			var rm = await RequestModel.CreateFromUrl(_host, RequestUrlKind.Simple, "_hooks");
 			if (rm == null)
 				return;
 			var cmd = rm.GetCommand(hookName);

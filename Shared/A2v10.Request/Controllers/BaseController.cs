@@ -128,7 +128,7 @@ namespace A2v10.Request
 
 		public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
 		{
-			RequestModel rm = await RequestModel.CreateFromUrl(_host, Admin, kind, pathInfo);
+			RequestModel rm = await RequestModel.CreateFromUrl(_host, kind, pathInfo);
 			RequestView rw = rm.GetCurrentAction(kind);
 			rw.CheckPermissions(_userStateManager?.GetUserPermissions(), Host.IsDebugConfiguration);
 			await Render(rw, writer, loadPrms);
@@ -144,7 +144,7 @@ namespace A2v10.Request
 				if (String.IsNullOrEmpty(rw.targetId))
 					throw new RequestModelException("targetId must be specified for indirect action");
 				targetUrl += "/" + innerModel.Root.Resolve(rw.targetId);
-				var rm = await RequestModel.CreateFromUrl(_host, Admin, rw.CurrentKind, targetUrl);
+				var rm = await RequestModel.CreateFromUrl(_host, rw.CurrentKind, targetUrl);
 				rw = rm.GetCurrentAction();
 				String loadProc = rw.LoadProcedure;
 				if (loadProc != null)
@@ -444,7 +444,7 @@ namespace A2v10.Request
 
 		public async Task Server(String command, String baseUrl, Int64 userId, HttpResponseBase response)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 			RequestView rw = rm.GetCurrentAction();
 			String loadProc = rw.LoadProcedure;
 			if (loadProc == null)

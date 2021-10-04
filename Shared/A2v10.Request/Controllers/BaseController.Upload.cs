@@ -21,7 +21,7 @@ namespace A2v10.Request
 	{
 		public async Task SaveFiles(String pathInfo, HttpFileCollectionBase files, Action<ExpandoObject> setParams, TextWriter writer)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			ExpandoObject prms = new ExpandoObject();
 			var ru = rm.GetFile();
 
@@ -259,7 +259,7 @@ namespace A2v10.Request
 
 		public async Task<AttachmentInfo> LoadFileGet(String pathInfo, Action<ExpandoObject> setParams)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			var ru = rm.GetFile();
 
 			ru.CheckPermissions(_userStateManager?.GetUserPermissions(), _host.IsDebugConfiguration);

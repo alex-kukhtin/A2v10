@@ -985,7 +985,7 @@ namespace A2v10.Request
 
 		static readonly Lazy<RedirectModule> _redirect = new Lazy<RedirectModule>(() => new RedirectModule(), isThreadSafe: true);
 
-		public static RequestAction GetActionFromUrl(IApplicationHost host, Boolean bAdmin, String normalizedUrl)
+		public static RequestAction GetActionFromUrl(IApplicationHost host, String normalizedUrl)
 		{
 			String[] urlParts = normalizedUrl.Split('/');
 			Int32 len = urlParts.Length;
@@ -1005,7 +1005,7 @@ namespace A2v10.Request
 			return null;
 		}
 
-		public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, Boolean bAdmin, RequestUrlKind kind, String normalizedUrl)
+		public static async Task<RequestModel> CreateFromUrl(IApplicationHost host, RequestUrlKind kind, String normalizedUrl)
 		{
 			var mi = GetModelInfo(kind, normalizedUrl);
 			String pathForLoad = _redirect.Value.Redirect(mi.path);
@@ -1032,12 +1032,12 @@ namespace A2v10.Request
 		public static async Task<RequestModel> CreateFromApiUrl(IApplicationHost host, String apiUrl)
 		{
 			//apiUrl = apiUrl.ToLowerInvariant();
-			var rm = await CreateFromUrl(host, false, RequestUrlKind.Api, apiUrl + "/0" /*id*/);
+			var rm = await CreateFromUrl(host, RequestUrlKind.Api, apiUrl + "/0" /*id*/);
 			rm._kind = RequestUrlKind.Api;
 			return rm;
 		}
 
-		public static async Task<RequestModel> CreateFromBaseUrl(IApplicationHost host, Boolean bAdmin, String baseUrl)
+		public static async Task<RequestModel> CreateFromBaseUrl(IApplicationHost host, String baseUrl)
 		{
 			//baseUrl = baseUrl.ToLowerInvariant();
 			RequestUrlKind kind;
@@ -1091,7 +1091,7 @@ namespace A2v10.Request
 				// default : page
 				kind = RequestUrlKind.Page;
 			}
-			var rm = await CreateFromUrl(host, bAdmin, kind, baseUrl);
+			var rm = await CreateFromUrl(host, kind, baseUrl);
 			rm._kind = kind;
 			return rm;
 		}

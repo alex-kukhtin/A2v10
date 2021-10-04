@@ -19,7 +19,7 @@ namespace A2v10.Request
 	{
 		public async Task Export(String path, Int32 TenantId, Int64 UserId, ExpandoObject prms, HttpResponseBase response)
 		{
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, path);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, path);
 			var action = rm.CurrentAction;
 			var export = action.Export;
 			if (export == null)

@@ -37,7 +37,7 @@ namespace A2v10.Request
 		public async Task RenderEUSignIFrame(TextWriter writer, String pathInfo, ExpandoObject loadPrms)
 		{
 			String dialogPath = pathInfo.Replace("/_iframe/", "/_dialog/");
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, dialogPath);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, dialogPath);
 			rm.Phase2 = true;
 			var dlg = rm.CurrentDialog;
 			var euSignFrameHtml = new StringBuilder(_localizer.Localize(null, Resources.euSignFrame));

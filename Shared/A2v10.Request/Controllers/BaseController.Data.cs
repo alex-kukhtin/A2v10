@@ -73,7 +73,7 @@ namespace A2v10.Request
 			if (NormalizeBaseUrl != null)
 				baseUrl = NormalizeBaseUrl(baseUrl);
 			ExpandoObject data = dataToSave.Get<ExpandoObject>("data");
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 			RequestView rw = rm.GetCurrentAction();
 			var prms = new ExpandoObject();
 			setParams?.Invoke(prms);
@@ -136,7 +136,7 @@ namespace A2v10.Request
 			if (baseUrl == null)
 				throw new RequestModelException("There are not base url for command 'reload'");
 
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 			RequestView rw = rm.GetCurrentAction();
 			String loadProc = rw.LoadProcedure;
 			if (loadProc == null)
@@ -173,7 +173,7 @@ namespace A2v10.Request
 			String baseUrl = jsonData.Get<String>("baseUrl");
 			Object id = jsonData.Get<Object>("id");
 			String propName = jsonData.Get<String>("prop");
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 			var action = rm.GetCurrentAction();
 			if (action == null)
 				throw new RequestModelException("There are no current action");
@@ -236,7 +236,7 @@ namespace A2v10.Request
 			ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 			String baseUrl = jsonData.Get<String>("baseUrl");
 			Object id = jsonData.Get<Object>("id");
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 			var action = rm.GetCurrentAction();
 			if (action == null)
 				throw new RequestModelException("There are no current action");
@@ -260,7 +260,7 @@ namespace A2v10.Request
 			AddParamsFromUrl(execPrms, baseUrl);
 			Object id = jsonData.Get<Object>("id");
 			String propName = jsonData.Get<String>("prop");
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 			var action = rm.GetCurrentAction();
 			if (action == null)
 				throw new RequestModelException("There are no current action");
@@ -324,7 +324,7 @@ namespace A2v10.Request
 			if (dataToExec == null)
 				dataToExec = new ExpandoObject();
 			setParams?.Invoke(dataToExec);
-			var rm = await RequestModel.CreateFromBaseUrl(_host, Admin, baseUrl);
+			var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 			var cmd = rm.GetCommand(command);
 
 			cmd.CheckPermissions(_userStateManager?.GetUserPermissions(), _host.IsDebugConfiguration);

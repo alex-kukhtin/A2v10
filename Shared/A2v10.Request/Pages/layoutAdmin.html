@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <!--
 A2v10 platform.
-Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 Site: https://a2v10.com
 GitHub: https://github.com/alex-kukhtin/A2v10
 -->
@@ -19,6 +19,7 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 	$(AssetsStyleSheets)
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 	<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+	$(ModelStyles)
 </head>
 <body>
 	<div id="shell" class="shell shell-admin $(Release)">
@@ -79,6 +80,7 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 	<script type="text/javascript" src="/scripts/locale-$(Locale).min.js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/main.js?v=$(Build)"></script>
 	$(AssetsScripts)
+	$(ModelScripts)
 	<script type="text/javascript" src="/_shell/scriptadmin"></script>
 </body>
 </html>

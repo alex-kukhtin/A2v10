@@ -73,7 +73,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, url);
+				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, url);
 				var rep = rm.GetReport();
 
 				rep.CheckPermissions(_baseController.UserStateManager.GetUserPermissions(), _baseController.Host.IsDebugConfiguration);

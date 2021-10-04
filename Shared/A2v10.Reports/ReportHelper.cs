@@ -86,7 +86,7 @@ namespace A2v10.Reports
 		{
 			var appReader = _host.ApplicationReader;
 			var ri = new ReportInfo();
-			RequestModel rm = await RequestModel.CreateFromBaseUrl(_host, false, url);
+			RequestModel rm = await RequestModel.CreateFromBaseUrl(_host, url);
 			var rep = rm.GetReport();
 
 			rep.CheckPermissions(_userStateManager?.GetUserPermissions(), _host.IsDebugConfiguration);

@@ -49,6 +49,7 @@
     <Content Include="Admin\A2v10.Web.Admin.nuspec">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Admin\bpmn\catalog\model.json" />
     <None Include="Admin\Identity\Api\model.json" />
     <None Include="Admin\Identity\Group\model.json" />
     <None Include="Admin\Identity\Role\model.json" />
@@ -69,6 +70,8 @@
     <None Include="Bootstrap\sales\waybill\model.json" />
     <None Include="Bootstrap\sales\waybill\waybill.mrt" />
     <None Include="Bootstrap\sales\waybill\waybill.xlsx" />
+    <Content Include="Admin\bpmn\catalog\edit.template.js" />
+    <Content Include="Admin\bpmn\catalog\edit.view.html" />
     <Content Include="Admin\_assets\app.css" />
     <Content Include="Admin\_assets\app.js" />
     <Content Include="Admin\_assets\app.min.css">
@@ -161,6 +164,14 @@
     <TypeScriptCompile Include="Develop\dashboard\javascript.d.ts" />
     <TypeScriptCompile Include="Develop\dashboard\server2.module.ts" />
     <Content Include="Develop\bpmn\catalog\edit.template.js" />
+    <Page Include="Admin\bpmn\catalog\edit.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <None Include="Admin\bpmn\catalog\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
     <Page Include="Develop\bpmn\catalog\edit.view.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -1,0 +1,4 @@
+<!-- BMPN Catalog index -->
+<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" Padding="1rem">
+	<Button Content="Open" Command="{BindCmd Open, Url='/admin/bpmn/catalog/edit', Argument=0, NewWindow=True}"/>
+</Page>

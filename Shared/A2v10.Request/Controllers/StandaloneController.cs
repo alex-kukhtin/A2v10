@@ -85,7 +85,7 @@ namespace A2v10.Request
 
 		public async Task<ViewInfo> Dialog(String pathInfo, Int64 userId)
 		{
-			var requestModel = await RequestModel.CreateFromBaseUrl(_baseController.Host, false, pathInfo);
+			var requestModel = await RequestModel.CreateFromBaseUrl(_baseController.Host, pathInfo);
 			var rw = requestModel.CurrentDialog;
 			ViewInfo viewInfo = new ViewInfo()
 			{

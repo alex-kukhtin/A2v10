@@ -62,7 +62,7 @@ namespace A2v10.Request
 		async Task<ViewInfo> LoadViewKind(String pathInfo, RequestUrlKind kind)
 		{
 			var host = _baseController.Host;
-			var rm = await RequestModel.CreateFromUrl(host, false, kind, NormalizeUrl(pathInfo));
+			var rm = await RequestModel.CreateFromUrl(host, kind, NormalizeUrl(pathInfo));
 			var rw = rm.GetCurrentAction();
 			var pageId = $"el{Guid.NewGuid()}";
 			var dmrw = await _baseController.GetDataModelForView(rw, CreateParams());
@@ -95,7 +95,7 @@ namespace A2v10.Request
 		public async Task Render(String pathInfo, HttpResponseBase Response)
 		{
 			var host = _baseController.Host;
-			var rm = await RequestModel.CreateFromBaseUrl(host, false, pathInfo);
+			var rm = await RequestModel.CreateFromBaseUrl(host, pathInfo);
 			var rw = rm.GetCurrentAction();
 			var layoutText = host.ApplicationReader.ReadTextFile(String.Empty, "layout.html");
 			if (layoutText == null)
