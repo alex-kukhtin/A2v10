@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210924-7805*/
+/*20211004-7806*/
 // controllers/base.js
 
 (function () {
@@ -15,6 +15,7 @@
 	const modelInfo = require('std:modelInfo');
 	const platform = require('std:platform');
 	const htmlTools = require('std:html', true /*no error*/);
+	const httpTools = require('std:http');
 
 	const store = component('std:store');
 	const documentTitle = component('std:doctitle', true /*no error*/);
@@ -440,6 +441,24 @@
 				const root = window.$$rootUrl;
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
+			},
+
+			async $upload(url, accept) {
+				let root = window.$$rootUrl;
+				try {
+					let file = await htmlTools.uploadFile(accept, url);
+					var dat = new FormData();
+					dat.append('file', file, file.name);
+					let uploadUrl = urltools.combine(root, '_file', url);
+					uploadUrl = urltools.createUrlForNavigate(uploadUrl);
+					return await httpTools.upload(uploadUrl, dat);
+				} catch (err) {
+					err = err || 'unknown error';
+					if (err.indexOf('UI:') === 0)
+						this.$alert(err);
+					else
+						alert(err);
+				}
 			},
 
 			$file(url, arg, opts) {
@@ -1271,7 +1290,8 @@
 					$setFilter: this.$setFilter,
 					$expand: this.$expand,
 					$focus: this.$focus,
-					$report: this.$report
+					$report: this.$report,
+					$upload: this.$upload
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

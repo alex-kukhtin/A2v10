@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20200713-7685
+// 20201004-7806
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -15,7 +15,8 @@ app.modules['std:html'] = function () {
 		openUrl,
 		printDirect,
 		removePrintFrame,
-		updateDocTitle
+		updateDocTitle,
+		uploadFile
 	};
 
 	function getColumnsWidth(elem) {
@@ -124,6 +125,22 @@ app.modules['std:html'] = function () {
 		if (document.title === title)
 			return;
 		document.title = title;
+	}
+
+	function uploadFile(accept) {
+		return new Promise(function (resolve, reject) {
+			let input = document.createElement('input');
+			input.setAttribute("type", "file");
+			if (accept)
+				input.setAttribute('accept', accept);
+			input.style = "display:none";
+			input.addEventListener('change', ev => {
+				resolve(ev.target.files[0]);
+			});
+			document.body.appendChild(input); // FF!
+			input.click();
+			document.body.removeChild(input);
+		});
 	}
 };
 

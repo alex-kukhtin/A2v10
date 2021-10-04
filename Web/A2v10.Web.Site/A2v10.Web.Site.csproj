@@ -122,7 +122,6 @@
     <Content Include="css\bpmn\editor.css" />
     <Content Include="css\bpmn\font\bpmn.svg" />
     <Content Include="openidconnect.txt" />
-    <Content Include="scripts\bpmn\editor.js" />
     <Content Include="scripts\server\validate.js" />
     <Content Include="app\services\eusign.js" />
     <Content Include="app\services\html.js" />
@@ -533,6 +532,7 @@
   <ItemGroup>
     <Folder Include="app.ts\" />
     <Folder Include="app\site.ts\" />
+    <Folder Include="scripts\bpmn\" />
     <Folder Include="scripts\eusign\" />
   </ItemGroup>
   <ItemGroup>

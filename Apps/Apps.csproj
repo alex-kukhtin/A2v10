@@ -70,6 +70,7 @@
     <None Include="Bootstrap\sales\waybill\model.json" />
     <None Include="Bootstrap\sales\waybill\waybill.mrt" />
     <None Include="Bootstrap\sales\waybill\waybill.xlsx" />
+    <Content Include="Admin\bpmn\catalog\index.template.js" />
     <Content Include="Admin\bpmn\catalog\edit.template.js" />
     <Content Include="Admin\bpmn\catalog\edit.view.html" />
     <Content Include="Admin\_assets\app.css" />

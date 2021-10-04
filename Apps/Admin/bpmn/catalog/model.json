@@ -5,6 +5,7 @@
 	"actions": {
 		"index": {
 			"index": true,
+			"template": "index.template",
 			"view": "index.view"
 		},
 		"edit": {
@@ -18,6 +19,12 @@
 				"/css/bpmn/bpmn-js-properties-panel.css",
 				"/css/bpmn/editor.css"
 			]
+		}
+	},
+	"files": {
+		"uploadWorkflow": {
+			"type": "sql",
+			"model": "Catalog.Workflow"
 		}
 	}
 }
