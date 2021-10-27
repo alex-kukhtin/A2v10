@@ -928,9 +928,9 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20190411-7483*/
+/*20211027-7807*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -1112,6 +1112,9 @@ app.modules['std:url'] = function () {
 				urlId = 'new';
 		}
 		if (url.endsWith('new') && urlId === 'new')
+			urlId = '';
+		// special behaviour for main menu urls
+		if (url.split('/').length === 3 && urlId === 'new')
 			urlId = '';
 		return combine(url, urlId) + qs;
 	}
