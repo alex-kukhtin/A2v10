@@ -38,7 +38,7 @@
 			emailError: '',
 			showConfirm: false,
 			confirmRegisterText: '',
-			passwordError: '',
+			passwordError: ''
 		},
 		computed: {
 			hasLogo() {
@@ -109,12 +109,15 @@
 			}
 		},
 		methods: {
-			submitRegister: function() {
+			submitRegister: function () {
+				if (this.processing)
+					return;
 				this.submitted = true;
 				this.serverError = '';
 				this.email = this.email.trim();
-				if (!this.valid)
+				if (!this.valid) {
 					return;
+				}
 				this.processing = true;
 				let dataToSend = {
 					Name: this.email, // !!!!

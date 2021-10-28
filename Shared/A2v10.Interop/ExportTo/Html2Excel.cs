@@ -18,11 +18,18 @@ namespace A2v10.Interop.ExportTo
 {
 	public class Html2Excel
 	{
+		private readonly IFormatProvider _currentFormat;
+
+		public Html2Excel(String locale)
+		{
+			_currentFormat = System.Globalization.CultureInfo.CreateSpecificCulture(locale);
+		}
+
 		List<String> _mergeCells = new List<String>();
 
 		public Stream ConvertHtmlToExcel(String html)
 		{
-			HtmlReader rdr = new HtmlReader();
+			HtmlReader rdr = new HtmlReader(_currentFormat);
 			var sheet = rdr.ReadHtmlSheet(html);
 			return SheetToExcel(sheet);
 		}

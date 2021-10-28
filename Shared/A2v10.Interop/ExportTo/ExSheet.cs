@@ -14,6 +14,14 @@ namespace A2v10.Interop.ExportTo
 		public IList<ExColumn> Columns { get; } = new List<ExColumn>();
 		public StylesDictionary Styles { get; } = new StylesDictionary();
 
+		private readonly IFormatProvider _currentFormat;
+
+		public ExSheet(IFormatProvider currentFormat)
+		{
+			_currentFormat = currentFormat;
+		}
+
+
 		public ExRow GetRow(Int32 rowNo, RowKind kind)
 		{
 			IList<ExRow> _rows = null;
@@ -42,7 +50,7 @@ namespace A2v10.Interop.ExportTo
 			var row = GetRow(rowNo, exRow.Kind);
 			var (cell, index) = row.AddCell();
 			cell.Span = span;
-			cell.SetValue(value, dataType);
+			cell.SetValue(value, dataType, _currentFormat);
 			cell.StyleIndex = Styles.GetOrCreate(cell.GetStyle(row, cellClass));
 			if (span.Col == 0 && span.Row == 0)
 				return cell;

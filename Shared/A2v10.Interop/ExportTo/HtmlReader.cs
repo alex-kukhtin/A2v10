@@ -1,4 +1,4 @@
-﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Text.RegularExpressions;
@@ -11,9 +11,16 @@ namespace A2v10.Interop.ExportTo
 	{
 		ExSheet _sheet;
 
+		private readonly IFormatProvider _currentFormat;
+
+		public HtmlReader(IFormatProvider currentFormat)
+		{
+			_currentFormat = currentFormat;
+		}
+
 		public ExSheet ReadHtmlSheet(String html)
 		{
-			_sheet = new ExSheet();
+			_sheet = new ExSheet(_currentFormat);
 			var doc = GetXmlFromHtml(html);
 			var table = doc.FirstChild;
 			if (table.Name != "table")

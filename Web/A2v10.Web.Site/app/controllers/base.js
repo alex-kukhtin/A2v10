@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20211004-7806*/
+/*20211028-7807*/
 // controllers/base.js
 
 (function () {
@@ -702,6 +702,12 @@
 				eventBus.$emit('inlineDialog', { cmd: 'close', id: id, result: result });
 			},
 
+			$inlineDepth() {
+				let opts = { count: 0 };
+				eventBus.$emit('inlineDialogCount', opts);
+				return opts.count;
+			},
+
 			$dialog(command, url, arg, query, opts) {
 				if (this.$isReadOnly(opts))
 					return;
@@ -1279,6 +1285,7 @@
 					$showDialog: this.$showDialog,
 					$inlineOpen: this.$inlineOpen,
 					$inlineClose: this.$inlineClose,
+					$inlineDepth: this.$inlineDepth,
 					$saveModified: this.$saveModified,
 					$asyncValid: this.$asyncValid,
 					$toast: this.$toast,

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210512-7774
+// 20211028-7807
 // components/modal.js
 
 
@@ -95,17 +95,17 @@
 				if (!opts.down)
 					return;
 				// flex centered window
-				let dx = (event.pageX - opts.offset.x) * 2;
-				let dy = (event.pageY - opts.offset.y) * 2;
+				let dx = (event.pageX - opts.offset.x);
+				let dy = (event.pageY - opts.offset.y);
 				let mx = opts.init.x + dx;
 				let my = opts.init.y + dy;
 				// fit
 				let maxX = window.innerWidth - opts.init.cx;
-				let maxY = window.innerHeight - opts.init.cy - 24 /*footer height*/;
+				//let maxY = window.innerHeight - opts.init.cy - 24 /*footer height*/;
 				//if (my < 0) my = 0;
-				if (mx < -maxX) mx = -maxX;
+				if (mx < 0) mx = 0;
 				if (mx > maxX) mx = maxX;
-				if (my < -maxY) my = -maxY;
+				if (my < 0) my = 0;
 				//if (my > maxY) my = maxY; // any value available
 				//console.warn(`dx:${dx}, dy:${dy}, mx:${mx}, my:${my}, cx:${opts.init.cx}`);
 				mw.style.marginLeft = mx + 'px';

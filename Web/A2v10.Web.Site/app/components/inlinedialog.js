@@ -1,6 +1,6 @@
 ﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
-// 20201130-7773
+// 20211028-7807
 // components/inlinedialog.js
 (function () {
 	const eventBus = require('std:eventBus');
@@ -66,16 +66,24 @@
 							this.open = true;
 						}, 50); // same as shell
 						break;
+					case 'count':
+						opts.count = __inlineStack.length;
+						break;
 					default:
 						console.error(`invalid inline command '${opts.cmd}'`);
 				}
+			},
+			__inlineCount(opts) {
+				opts.count = __inlineStack.length;
 			}
 		},
 		created() {
 			eventBus.$on('inlineDialog', this.__inlineEvent);
+			eventBus.$on('inlineDialogCount', this.__inlineCount);
 		},
 		beforeDestroy() {
 			eventBus.$off('inlineDialog', this.__inlineEvent);
+			eventBus.$off('inlineDialogCount', this.__inlineCount);
 		}
 	});
 

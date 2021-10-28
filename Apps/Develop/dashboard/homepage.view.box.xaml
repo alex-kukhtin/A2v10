@@ -19,13 +19,15 @@
 					<Badge Color="Red">77</Badge>
 				</Text>
 			</Button>
-			<Button Grid.Row="4" Grid.Col="3" Command="{BindCmd Dialog, Action=Show, Url='/dashboard/infdialog', Argument={Bind Root.$Arg142}}">InfinityDialog</Button>
+			<Button Grid.Row="4" Grid.Col="3" 
+					Command="{BindCmd Dialog, Action=Show, Url='/dashboard/infdialog', Argument={Bind Root.$Arg142}}">InfinityDialog</Button>
 			<Hyperlink Content="POS TERMINAL" Command="{BindCmd Navigate, Url='/pos'}"/>
 			<Button Style="Red" Size="Large" Command="{BindCmd Execute, CommandName=javascript}">JAVASCRIPT</Button>
 			<Button Style="Cyan" Size="Large" Command="{BindCmd Execute, CommandName=fetchdbevents}">DB Events</Button>
 			<UploadFile Url="/dashboard/upload" Delegate="onUpload" Argument="0"/>
 			<Button Content="BildUpload"/>
 			<UploadFile Url="/dashboard/parseCSV" Delegate="onUpload"/>
+			<Span Content="{Bind Root.$InlineDepth}"></Span>
 			<Panel Header="Cut panel" Collapsible="True" Grid.Col="3" Style="Cut">
 				<Grid Columns="Auto,Auto" Gap="0,10" Padding="0">
 					<TextBox Label="Договір"></TextBox>
@@ -162,6 +164,8 @@
 			<TextBox></TextBox>
 			<Code Multiline="True" Content="{Bind $data.$ready}"></Code>
 			<Button Style="Red" Size="Large" Command="{BindCmd Execute, CommandName=wait}">Wait</Button>
+			<Span Content="{Bind Root.$InlineDepth}"></Span>
+			<Button Command="{BindCmd Execute, CommandName='testDepth'}" Content="Inline Depth" Size="Large" Style="Orange"/>
 		</Grid>
 		<InlineDialog.Buttons>
 			<Button Content="Close" Command="{BindCmd Close}"/>
@@ -172,6 +176,8 @@
 		<Grid>
 			<Button Block="True">Button 3</Button>
 			<TextBox></TextBox>
+			<Span Content="{Bind Root.$InlineDepth}"></Span>
+			<Button Command="{BindCmd Execute, CommandName='testDepth'}" Content="Inline Depth" Size="Large" Style="Orange"/>
 		</Grid>
 		<InlineDialog.Buttons>
 			<Button Content="Command" Command="{BindCmd Execute, CommandName=dlgCommand, Argument='0', Confirm='Sure?'}"/>

@@ -40,7 +40,7 @@
 					<SheetCell Content="{Bind Id, DataType=String}" Align="Center" />
 					<SheetCell Content="{Bind Date, DataType=DateTime}" Align="Center"/>
 					<SheetCell Content="{Bind No, DataType=Number, Format='00'}" Align="Right"/>
-					<SheetCell Content="{Bind Sum, DataType=Currency, Format='#,000.0000', NegativeRed=True}" Align="Right"/>
+					<SheetCell Content="{Bind Sum, DataType=Currency, NegativeRed=True}" Align="Right"/>
 					<SheetCell Content="{Bind Memo}"/>
 					<SheetCell Content="{Bind DateCreated, DataType=Date}"/>
 					<SheetCell Content="{Bind DateCreated, DataType=DateTime}"/>

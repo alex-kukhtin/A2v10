@@ -9,6 +9,7 @@ const template = {
 		'TRoot.$text'() {
 			return 'button text';
 		},
+		'TRoot.$InlineDepth'() { console.dir(this.$vm); return this.$vm ? this.$vm.$inlineDepth() : 0; },
 		'TRoot.$Arg142'() { return { Id: 142 };}
 	},
 	methods: {
@@ -45,6 +46,9 @@ const template = {
 		},
 		fetchdbevents() {
 			this.$ctrl.$invoke('fetchDbEvents');
+		},
+		testDepth() {
+			alert(this.$ctrl.$inlineDepth());
 		}
 	}
 };

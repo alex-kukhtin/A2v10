@@ -283,7 +283,7 @@ namespace A2v10.Request
 			//Double zoom = jsonData.Get<Double>("zoom");
 			try
 			{
-				var h = new Html2Excel();
+				var h = new Html2Excel(_userLocale.Locale);
 				using (var s = h.ConvertHtmlToExcel(jsonData.Get<String>("html"))) {
 					s.Seek(0, SeekOrigin.Begin);
 					s.CopyTo(response.OutputStream);

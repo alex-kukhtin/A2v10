@@ -29,8 +29,10 @@ namespace A2v10.Interop.ExportTo
 		public DataType DataType { get; set; }
 		public UInt32 StyleIndex { get; set; }
 
-		String NormalizeNumber(String number)
+		String NormalizeNumber(String number, IFormatProvider format)
 		{
+			if (Decimal.TryParse(number, NumberStyles.Number, format, out Decimal result))
+				return result.ToString(CultureInfo.InvariantCulture);
 			if (number.IndexOf(".") != -1)
 				return new Regex(@"[\s,]").Replace(number, String.Empty);
 			else
@@ -86,7 +88,7 @@ namespace A2v10.Interop.ExportTo
 			};
 		}
 
-		public void SetValue(String text, String dataType)
+		public void SetValue(String text, String dataType, IFormatProvider format)
 		{
 			if (text.Contains("\n"))
 				dataType = "string";
@@ -100,11 +102,11 @@ namespace A2v10.Interop.ExportTo
 					break;
 				case "currency":
 					DataType = DataType.Currency;
-					Value = NormalizeNumber(text);
+					Value = NormalizeNumber(text, format);
 					break;
 				case "number":
 					DataType = DataType.Number;
-					Value = NormalizeNumber(text);
+					Value = NormalizeNumber(text, format);
 					break;
 				case "date":
 					DataType = DataType.Date;

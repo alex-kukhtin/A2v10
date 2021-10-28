@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7806 */
+/* Version 10.0.7807 */
 
 
 declare function require(url: string): any;
@@ -255,6 +255,7 @@ interface IController {
 	$showDialog(url: string, data?: object, query?: object): Promise<any>;
 	$inlineOpen(id: string): void;
 	$inlineClose(id: string, result?: any): void;
+	$inlineDepth(): number;
 	$saveModified(msg?: string, title?: string): boolean;
 	$asyncValid(cmd: string, arg: object): any | Promise<any>;
 	$toast(text: string, style?: CommonStyle): void;
