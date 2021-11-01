@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttachmentHelper.cs" />
     <Compile Include="EmailMessage.cs" />
     <Compile Include="EmailMessageForSend.cs" />
     <Compile Include="EmailService.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="MessageAddress.cs" />
     <Compile Include="MessageAttachment.cs" />
     <Compile Include="MessageProcessor.cs" />
+    <Compile Include="MessageReport.cs" />
     <Compile Include="MessageResolver.cs" />
     <Compile Include="MessageSendInfo.cs" />
     <Compile Include="MessagingException.cs" />
@@ -65,6 +67,10 @@
     <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\A2v10.Reports\A2v10.Reports.csproj">
+      <Project>{0562c1fe-b4b7-4ee2-bf83-1808ebd63d05}</Project>
+      <Name>A2v10.Reports</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using A2v10.Reports;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -19,12 +20,14 @@ namespace A2v10.Messaging
 		private readonly IDataModel _msgModel;
 		private readonly IApplicationHost _host;
 		private readonly ExpandoObject _msgParams;
+		private readonly ReportHelper _reportHelper;
 
 		public MessageResolver(IApplicationHost host, IDbContext dbContext, IDataModel msgModel)
 		{
 			_host = host;
 			_dbContext = dbContext;
 			_msgModel = msgModel;
+			_reportHelper = new ReportHelper();
 			if (_msgModel == null) return;
 			_msgParams = new ExpandoObject();
 			var trgId = msgModel.Eval<Int64>("Message.TargetId");
@@ -68,6 +71,21 @@ namespace A2v10.Messaging
 			if (bytes == null || bytes.Length == 0)
 				return null;
 			return new MemoryStream(bytes);
+		}
+
+		public async Task<Stream> ResolveStreamStringAsync(TemplatedMessage msg, String text)
+		{
+			if (text == null)
+				return null;
+			if (text.StartsWith("`"))
+				text = text.Substring(1);
+			if (text.IndexOf("{{") == -1)
+				return null;
+			var dm = await msg.GetDataModelAsync(_dbContext, _msgParams);
+			var data = dm.Root.Eval<String>(text.Substring(2, text.Length - 4));
+			if (String.IsNullOrEmpty(data))
+				return null;
+			return new MemoryStream(Encoding.UTF8.GetBytes(data));
 		}
 
 		public async Task<String> ResolveDataModelAsync(TemplatedMessage msg, String text)
@@ -136,6 +154,33 @@ namespace A2v10.Messaging
 			if (fileText == null)
 				throw new MessagingException($"File not found '{fileName}'");
 			return ResolveAsync(msg, fileText);
+		}
+
+		public async Task<Stream> ResolveReportAsync(TemplatedMessage msg, MessageReport rep)
+		{
+			if (rep == null)
+				return null;
+			var dm = await msg.GetDataModelAsync(_dbContext, _msgParams);
+			// get report source
+			using (Stream input = await ResolveStreamStringAsync(msg, rep.Report))
+			{
+				if (input == null)
+					throw new MessagingException($"ReportStream not found ({rep.Report}).");
+				// get report datamodel
+				IDataModel repDataModel = null;
+				if (rep.Model != null)
+				{
+					var repPrms = new ExpandoObject();
+					if (rep.Model.Parameters != null)
+						foreach (var p in rep.Model.Parameters)
+							repPrms.Set(p.Key, await ResolveAsync(msg, p.Value?.Value));
+					repDataModel = await _dbContext.LoadModelAsync(rep.Model.Source, $"[{rep.Model.Schema}].[{rep.Model.Model}.Load]", repPrms);
+				}
+				var ms = new MemoryStream();
+				var repName = await _reportHelper.ExportDocumentAsync(input, repDataModel, ms);
+				ms.Seek(0, SeekOrigin.Begin);
+				return ms;
+			}
 		}
 	}
 }

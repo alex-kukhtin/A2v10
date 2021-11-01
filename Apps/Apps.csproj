@@ -228,6 +228,7 @@
     <Content Include="Develop\sales\waybill\links.template.js" />
     <Content Include="Develop\sales\waybill\server.template.js" />
     <Content Include="Develop\include.module.js" />
+    <Content Include="Develop\Workflows\mail_with_report.html" />
     <Content Include="Develop\Workflows\second-mail.html" />
     <Content Include="Develop\_assets\extensioncomponents.js" />
     <Content Include="Develop\_assets\inputmask.js" />

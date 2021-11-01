@@ -1,8 +1,11 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Markup;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Messaging
 {
@@ -20,6 +23,7 @@ namespace A2v10.Messaging
 		public MessageAddressCollection Bcc { get; set; } = new MessageAddressCollection();
 
 		public MessageAttachmentCollection Attachments { get; set; } = new MessageAttachmentCollection();
+		public MessageReportCollection Reports { get; set; } = new MessageReportCollection();
 
 		public async override Task<IMessageForSend> ResolveAndSendAsync(MessageResolver resolver)
 		{
@@ -43,6 +47,13 @@ namespace A2v10.Messaging
 					if (ratt.Stream != null)
 						nm.Attachments.Add(ratt);
 				}
+			if (Reports != null && Reports.Count != 0)
+				foreach (var rep in Reports)
+				{
+					var ratt = await ResolveReportAsync(rep, resolver);
+					if (ratt.Stream != null)
+						nm.Attachments.Add(ratt);
+				}
 			return nm;
 		}
 
@@ -53,6 +64,21 @@ namespace A2v10.Messaging
 				Name = (await resolver.ResolveAsync(this, att.Name))?.Trim(),
 				Mime = (await resolver.ResolveAsync(this, att.Mime))?.Trim(),
 				Stream = await resolver.ResolveStreamAsync(this, att.Data)
+			};
+			return ma;
+		}
+
+		async Task<AttachementForSend> ResolveReportAsync(MessageReport rep, MessageResolver resolver)
+		{
+			var repName = await resolver.ResolveAsync(this, rep.Name);
+			if (repName == null)
+				repName = "report";
+			repName = Path.ChangeExtension(repName.Trim(), ".pdf");
+			var ma = new AttachementForSend()
+			{
+				Name = repName,
+				Mime = MimeTypes.Application.Pdf,
+				Stream = await resolver.ResolveReportAsync(this, rep)
 			};
 			return ma;
 		}

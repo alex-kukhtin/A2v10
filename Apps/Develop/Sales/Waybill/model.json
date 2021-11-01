@@ -7,7 +7,7 @@
 			"index": true,
 			"view": "index.view",
 			"template": "index.template",
-			"checkTypes": "index.d.ts",
+			"checkTypes2": "index.d.ts",
 			"export": {
 				"format": "xlsx"
 			},
@@ -17,13 +17,13 @@
 			"model": "Document",
 			"view": "waybill.view",
 			"template": "waybill2.template",
-			"checkTypes": "model.d.ts",
+			"checkTypes2": "model.d.ts",
 			/*
 			"parameters": {
 				"Kind": "TEST"
 			},
 			*/
-			"merge": {
+			"merge2": {
 				"schema": "a2demo",
 				"model": "Document.Merge",
 				"parameters": {
@@ -160,8 +160,9 @@
 			"type": "sendMessage",
 			"parameters": {
 				"template": "workflows/messaging",
-				"key": "FromServer",
-				"immediately":  true
+				"key_": "FromServer",
+				"key": "WithReport",
+				"immediately": true
 			}
 		},
 		"testPost": {

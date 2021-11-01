@@ -47,7 +47,7 @@ namespace A2v10.Messaging
 			return false;
 		}
 
-		public override Object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, Object value, Type destinationType)
+		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 		{
 			if (value == null)
 				return null;

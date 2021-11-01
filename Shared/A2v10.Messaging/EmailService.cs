@@ -125,11 +125,15 @@ namespace A2v10.Messaging
 							{
 								//mm.Attachments.Add(new Attachment(att.Stream, new ContentType(att.Mime)));
 								mm.Attachments.Add(
+									AttachmentHelper.CreateAttachment(att.Stream, att.Name, new ContentType(att.Mime))
+								);
+								/*
 									new Attachment(att.Stream, new ContentType(att.Mime))
 									{
-										Name = att.Name
+										Name = Convert.ToBase64String(Encoding.UTF8.GetBytes(att.Name))
 									}
 								);
+								*/
 							}
 						}
 						//????

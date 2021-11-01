@@ -7,6 +7,7 @@
 	Parameters [[]] - все параметры, переданные в сообщение из Workflow (записаны в a2messaging.Parameters)
 	Environment: (()) - ProcessId, InboxId, Host (ProcessId, InboxId - из табицы a2messaging.Environment, Host из web.config)
 	-->
+	<!--
 	<EmailMessage x:Key="First" Subject="SUBJECT"
 				Model="MessageForSend" Schema="a2demo"
 				BodyTemplate="Workflows/first-mail.html" To="`{{Message.To}};[[To]]">
@@ -28,5 +29,18 @@
 		<EmailMessage.From>
 			<MessageAddress Address="`{{Message.To}}" DisplayName="From user {{Message.Id}}"/>
 		</EmailMessage.From>
+	</EmailMessage>
+	-->
+	<EmailMessage x:Key="WithReport" Subject="SUBJ FROM SERVER"
+			Model="MessageForSend" Schema="a2demo"
+			BodyTemplate="Workflows/mail_with_report.html"
+			To="`{{Message.To}}" From="`{{Message.From}}">
+		<EmailMessage.Reports>
+			<MessageReport Report="`{{Message.ReportStream}}" Name="счет на сплату за спожиті послуги за перше півріччя дві тисячі двадцять першого року">
+				<MessageReportModel Model="Document" Schema="a2demo">
+					<MessageReportParam x:Key="Id" Value="`{{Message.DocumentId}}"/>
+				</MessageReportModel>
+			</MessageReport>
+		</EmailMessage.Reports>
 	</EmailMessage>
 </Template>
