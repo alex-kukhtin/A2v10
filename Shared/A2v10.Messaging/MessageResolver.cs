@@ -160,6 +160,7 @@ namespace A2v10.Messaging
 		{
 			if (rep == null)
 				return null;
+			_reportHelper.SetupLicense();
 			var dm = await msg.GetDataModelAsync(_dbContext, _msgParams);
 			// get report source
 			using (Stream input = await ResolveStreamStringAsync(msg, rep.Report))

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -66,6 +66,7 @@ namespace BackgroundProcessor
 				var workflow = new WorkflowEngine(host, dbContext, null);
 				var emailService = new EmailService(logger, host);
 				var messaging = new MessageProcessor(host, dbContext, emailService, logger);
+				var userLocale = new BackgroundUserLocale();
 
 				loc.RegisterService<IProfiler>(profiler);
 				loc.RegisterService<ILocalizer>(localizer);
@@ -74,6 +75,7 @@ namespace BackgroundProcessor
 				loc.RegisterService<IApplicationHost>(host);
 				loc.RegisterService<IWorkflowEngine>(workflow);
 				loc.RegisterService<IMessaging>(messaging);
+				loc.RegisterService<IUserLocale>(userLocale);
 			};
 
 			ServiceLocator.GetCurrentLocator = () =>
