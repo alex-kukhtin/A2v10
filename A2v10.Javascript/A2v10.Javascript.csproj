@@ -39,7 +39,7 @@
       <HintPath>..\packages\Esprima.2.0.3\lib\net461\Esprima.dll</HintPath>
     </Reference>
     <Reference Include="Jint, Version=3.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
-      <HintPath>..\packages\Jint.3.0.0-beta-2034\lib\net461\Jint.dll</HintPath>
+      <HintPath>..\packages\Jint.3.0.0-beta-2036\lib\net461\Jint.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

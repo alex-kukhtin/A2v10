@@ -24,7 +24,8 @@ namespace UploadApp
 			{
 				var uploader = new AppUploader(cnnString, Path.GetFullPath(dir));
 				uploader.Run();
-			} catch (Exception ex)
+			}
+			catch (Exception ex)
 			{
 				Console.WriteLine(ex.ToString());
 			}

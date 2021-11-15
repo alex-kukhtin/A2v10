@@ -174,7 +174,7 @@ namespace A2v10.Messaging
 					if (rep.Model.Parameters != null)
 						foreach (var p in rep.Model.Parameters)
 							repPrms.Set(p.Key, await ResolveAsync(msg, p.Value?.Value));
-					repDataModel = await _dbContext.LoadModelAsync(rep.Model.Source, $"[{rep.Model.Schema}].[{rep.Model.Model}.Load]", repPrms);
+					repDataModel = await _dbContext.LoadModelAsync(rep.Model.Source, $"[{rep.Model.Schema}].[{rep.Model.Model}.Report]", repPrms);
 				}
 				var ms = new MemoryStream();
 				var repName = await _reportHelper.ExportDocumentAsync(input, repDataModel, ms);

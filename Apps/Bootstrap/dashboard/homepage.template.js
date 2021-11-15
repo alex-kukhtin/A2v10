@@ -20,6 +20,9 @@ const template = {
 	commands: {
 		showAlert() {
 			alert('click!');
+		}, 
+		testCommand() {
+			alert('test!');
 		}
 	}
 };
