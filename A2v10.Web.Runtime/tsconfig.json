@@ -15,7 +15,7 @@
 	},
 	"include": [
 		"./**/*.ts",
-		"@types/platfrom.d.ts", "../JavaScriptTests/tests/DateUtils.js"
+		"@types/platfrom.d.ts"
 	],
 	"exclude": [
 		"./packages/**/*.ts"
