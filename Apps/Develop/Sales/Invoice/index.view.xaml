@@ -71,7 +71,7 @@
 	<Page.Pager>
 		<Pager Source="{Bind Parent.Pager}" Style="Rounded"/>
 	</Page.Pager>
-	<Block Padding="0, 0, 0, 20" If="False">
+	<Block Padding="0, 0, 0, 20" If="True">
 		<Button Style="Green" Icon="Plus" Content="Create new">
 			<Button.DropDown>
 				<DropDownMenu Direction="DownLeft">

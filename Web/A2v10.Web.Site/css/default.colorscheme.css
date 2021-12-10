@@ -6,6 +6,7 @@
   --themePrimary: #dd2c5e;
   --themeDark: #c5204f;
   --themeDarker: #af1d46;
+  --themeLight: #e82c62;
   --neutralLight: #edebe9;
   --neutralLighterAlt: #faf9f8;
   --neutralSecondary: #605e5c;
@@ -18,4 +19,5 @@
   --activeBk: #f0c1c5;
   --hoverBkLight: #edebe9;
   --activeBkLight: #f0c1c5;
+  --dialogHeaderBkColor: #fcf374;
 }

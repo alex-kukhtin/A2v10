@@ -4322,7 +4322,7 @@ ul.news-list > li {
   height: 100%;
 }
 .modal-header {
-  background-color: #fcf374;
+  background-color: var(--dialogHeaderBkColor);
   padding: 0.5em 0.5em 0.5em 1rem;
   cursor: move;
   font-weight: 600;
@@ -6056,7 +6056,7 @@ iframe.eusign-iframe {
   padding: 0 1.25rem;
   border-bottom: 1px solid #ddd;
   font-weight: 500;
-  color: #9ab3e0;
+  color: var(--themeLight);
   font-size: 14px;
   line-height: 2.6rem;
   text-align: left;
@@ -6911,7 +6911,7 @@ td.vert > .vcell {
   box-shadow: 5px 0 10px 0 rgba(0, 0, 0, 0.2);
 }
 .debug-panel .debug-pane-header {
-  background-color: #fcf374;
+  background-color: var(--dialogHeaderBkColor);
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
@@ -6929,8 +6929,7 @@ td.vert > .vcell {
 }
 .debug-panel .debug-pane-header a.btn:hover {
   color: #555;
-  background-color: #fdf7a6;
-  border-color: #e5c365;
+  background-color: var(--dialogHeaderBkColorDark);
 }
 .debug-panel .toolbar {
   min-height: 3rem;
@@ -7001,7 +7000,7 @@ td.vert > .vcell {
   flex-direction: column;
 }
 .feedback-panel .feedback-pane-header {
-  background-color: #fcf374;
+  background-color: var(--dialogHeaderBkColor);
   padding: 2px 2px 2px 6px;
   border-bottom: 1px solid #ddd;
 }
@@ -7016,7 +7015,7 @@ td.vert > .vcell {
 }
 .feedback-panel .feedback-pane-header a.btn:hover {
   color: #555;
-  background-color: #fdf7a6;
+  background-color: var(--dialogHeaderBkColorDark);
   border-color: #e5c365;
 }
 .feedback-panel .feedback-body {

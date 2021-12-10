@@ -164,6 +164,7 @@
 					</ListItem.CommandBar>
 				</ListItem>
 			</List>
+			<
 			<ImageList ItemsSource="{Bind Agent.Attachments}">
 				<Image Base="/agent" Source="{Bind}"/>
 			</ImageList>

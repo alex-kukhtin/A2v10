@@ -9,131 +9,130 @@
 @debug-info-color: #478fb1;
 
 .debug-panel {
-	position: absolute;
-	right: 0;
-	//top: @header-height;
-	top:0;
-	bottom: @footer-height;
-	right: 0;
-	z-index: @debug-index;
-	background-color: @debug-pane-bg-color;
-	border-left: 1px solid @default-brd-color;
-	width: @debug-pane-width;
-	box-shadow: -5px 0 10px 0 rgba(0,0,0, 0.2);
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
+    position: absolute;
+    right: 0;
+    //top: @header-height;
+    top: 0;
+    bottom: @footer-height;
+    right: 0;
+    z-index: @debug-index;
+    background-color: @debug-pane-bg-color;
+    border-left: 1px solid @default-brd-color;
+    width: @debug-pane-width;
+    box-shadow: -5px 0 10px 0 rgba(0,0,0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
-	.a2-code {
-		font-size: 12px;
-	}
+    .a2-code {
+        font-size: 12px;
+    }
 
-	&.left {
-		left: 0;
-		right: auto;
-		border-left: none;
-		border-right: 1px solid @default-brd-color;
-		box-shadow: 5px 0 10px 0 rgba(0,0,0, 0.2);
-	}
+    &.left {
+        left: 0;
+        right: auto;
+        border-left: none;
+        border-right: 1px solid @default-brd-color;
+        box-shadow: 5px 0 10px 0 rgba(0,0,0, 0.2);
+    }
 
-	.debug-pane-header {
-		background-color: @dialog-header-bg-color;
-		//padding: .4rem .4rem .4rem 1rem;
-		border-bottom: 1px solid @default-brd-color;
-		display:flex;
-		align-items:center;
+    .debug-pane-header {
+        background-color: @dialog-header-bg-color;
+        //padding: .4rem .4rem .4rem 1rem;
+        border-bottom: 1px solid @default-brd-color;
+        display: flex;
+        align-items: center;
 
-		.debug-pane-title {
-			font-size: @font-size-small;
-			display:inline-block;
-			padding:0.5rem;
-			flex-grow:1;
-		}
-		// TODO: JOIN WITH FEEDBACK
-		a.btn {
-			padding: .2rem .4rem;
-			border: 1px solid transparent;
-			margin: 0 4px;
+        .debug-pane-title {
+            font-size: @font-size-small;
+            display: inline-block;
+            padding: 0.5rem;
+            flex-grow: 1;
+        }
+        // TODO: JOIN WITH FEEDBACK
+        a.btn {
+            padding: .2rem .4rem;
+            border: 1px solid transparent;
+            margin: 0 4px;
 
-			&:hover {
-				color: #555;
-				background-color: lighten(@dialog-header-bg-color, 10%);
-				border-color: @tb-hover-brd-color;
-			}
-		}
-	}
+            &:hover {
+                color: #555;
+                background-color: @dialog-header-bg-color-dark;
+            }
+        }
+    }
 
-	.toolbar {
-		min-height: 3rem;
-		border-bottom: 1px solid @light-brd-color;
-	}
+    .toolbar {
+        min-height: 3rem;
+        border-bottom: 1px solid @light-brd-color;
+    }
 
-	.debug-body {
-		overflow: auto;
-		background-color: @debug-pane-bg-color;
-		user-select: text;
-	}
+    .debug-body {
+        overflow: auto;
+        background-color: @debug-pane-bg-color;
+        user-select: text;
+    }
 
-	.debug-model {
-		pre {
-			max-height: none;
-		}
-	}
+    .debug-model {
+        pre {
+            max-height: none;
+        }
+    }
 
-	.debug-trace {
-		padding: 6px, 0;
-		font-family: @monospace-font;
-		font-size: 12px;
+    .debug-trace {
+        padding: 6px, 0;
+        font-family: @monospace-font;
+        font-size: 12px;
 
-		.rq-title {
-			display: flex;
+        .rq-title {
+            display: flex;
 
-			.elapsed {
-				font-weight: bold;
-				white-space: nowrap;
-				margin-right: 6px;
-			}
-		}
+            .elapsed {
+                font-weight: bold;
+                white-space: nowrap;
+                margin-right: 6px;
+            }
+        }
 
-		.trace-item-body {
-			padding-left: 6px;
+        .trace-item-body {
+            padding-left: 6px;
 
-			.badge {
-				padding: .15rem .25rem;
-				margin-left: .2rem;
-				border-radius: .15rem;
-				background-color: @debug-info-color;
-			}
+            .badge {
+                padding: .15rem .25rem;
+                margin-left: .2rem;
+                border-radius: .15rem;
+                background-color: @debug-info-color;
+            }
 
-			.title {
-				color: @debug-info-color;
-			}
+            .title {
+                color: @debug-info-color;
+            }
 
-			&.exception {
-				.badge {
-					background-color: @danger-txt-color;
-				}
+            &.exception {
+                .badge {
+                    background-color: @danger-txt-color;
+                }
 
-				.title {
-					color: @danger-txt-color;
-				}
-			}
-		}
+                .title {
+                    color: @danger-txt-color;
+                }
+            }
+        }
 
-		ul {
-			margin: 0 5px 0 10px;
-			padding: 0;
+        ul {
+            margin: 0 5px 0 10px;
+            padding: 0;
 
-			li {
-				list-style-type: none;
-			}
-		}
+            li {
+                list-style-type: none;
+            }
+        }
 
-		ul.a2-debug-trace {
-			> li {
-				border-bottom: 1px dotted #ccc;
-				padding: 2px 0;
-			}
-		}
-	}
+        ul.a2-debug-trace {
+            > li {
+                border-bottom: 1px dotted #ccc;
+                padding: 2px 0;
+            }
+        }
+    }
 }

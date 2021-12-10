@@ -156,6 +156,9 @@
 			</Block>
 		</Alert>
 	</Block>
+	<Card Header="Simple Card">
+		<CardBody>I am card body</CardBody>
+	</Card>
 	<InlineDialog Id="Service" Title="Inline dialog title" NoClose="False" ShowWaitCursor="True" Padding="2rem">
 		<Grid Columns="140,100" Rows="Auto,Auto,Auto,Auto">
 			<Button Block="True" Command="{BindCmd Execute, CommandName='dlgCommand', Argument=1}">Button 1</Button>

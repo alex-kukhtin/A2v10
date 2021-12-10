@@ -11496,7 +11496,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20211028-7807*/
+/*20211210-7812*/
 // controllers/base.js
 
 (function () {
@@ -12202,6 +12202,10 @@ Vue.directive('resize', {
 				let opts = { count: 0 };
 				eventBus.$emit('inlineDialogCount', opts);
 				return opts.count;
+			},
+
+			$closeAllPopups() {
+				eventBus.$emit('closeAllPopups');
 			},
 
 			$dialog(command, url, arg, query, opts) {

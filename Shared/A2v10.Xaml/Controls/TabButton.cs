@@ -52,7 +52,7 @@ namespace A2v10.Xaml
 			if (valuePath != null)
 			{
 				btn.MergeAttribute(":class", $"{{'active': {activeValueArg} == {valuePath}}}");
-				btn.MergeAttribute("@click.stop.prevent", $"{valuePath}={activeValueArg}");
+				btn.MergeAttribute("@click.stop.prevent", $"$closeAllPopups(); {valuePath}={activeValueArg}");
 			}
 
 			btn.RenderStart(context);

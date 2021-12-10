@@ -59,6 +59,8 @@
     <Content Include="App_application\%40sql\platform\source\a2v10system.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10ui.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10workflow.sql" />
+    <Content Include="css\blue.colorscheme.css" />
+    <Content Include="css\blue.colorscheme.min.css" />
     <Content Include="css\default.colorscheme.css" />
     <Content Include="css\default.colorscheme.min.css" />
     <Content Include="css\fonts\A2v10.svg" />

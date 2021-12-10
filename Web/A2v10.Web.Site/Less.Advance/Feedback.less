@@ -8,56 +8,56 @@
 
 
 .feedback-panel {
-	position: absolute;
-	right: 0;
-	top: @header-height;
-	bottom: @footer-height;
-	right: 0;
-	z-index: @debug-index;
-	background-color: @feedback-pane-bg-color;
-	border-left: 1px solid @feedback-brd-color;
-	width: @debug-pane-width;
-	box-shadow: -5px 0 10px 0 rgba(0,0,0, 0.2);
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: @header-height;
+    bottom: @footer-height;
+    right: 0;
+    z-index: @debug-index;
+    background-color: @feedback-pane-bg-color;
+    border-left: 1px solid @feedback-brd-color;
+    width: @debug-pane-width;
+    box-shadow: -5px 0 10px 0 rgba(0,0,0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
-	.feedback-pane-header {
-		background-color: @dialog-header-bg-color;
-		padding: 2px 2px 2px 6px;
-		border-bottom: 1px solid @feedback-brd-color;
+    .feedback-pane-header {
+        background-color: @dialog-header-bg-color;
+        padding: 2px 2px 2px 6px;
+        border-bottom: 1px solid @feedback-brd-color;
 
-		.feedback-pane-title {
-			font-size: .95rem;
-		}
-		// TODO: JOIN WITH DEBUG
-		a.btn {
-			float: right;
-			padding: 0 2px;
-			color: #aaa;
-			border: 1px solid transparent;
+        .feedback-pane-title {
+            font-size: .95rem;
+        }
+        // TODO: JOIN WITH DEBUG
+        a.btn {
+            float: right;
+            padding: 0 2px;
+            color: #aaa;
+            border: 1px solid transparent;
 
-			&:hover {
-				color: #555;
-				background-color: lighten(@dialog-header-bg-color, 10%);
-				border-color: @tb-hover-brd-color;
-			}
-		}
-	}
+            &:hover {
+                color: #555;
+                background-color: @dialog-header-bg-color-dark;
+                border-color: @tb-hover-brd-color;
+            }
+        }
+    }
 
 
-	.feedback-body {
-		overflow: hidden;
-		user-select: text;
-		padding: 10px;
+    .feedback-body {
+        overflow: hidden;
+        user-select: text;
+        padding: 10px;
 
-		.btn {
-			margin: 0.5rem 0;
-			display: block;
-		}
+        .btn {
+            margin: 0.5rem 0;
+            display: block;
+        }
 
-		.thanks {
-			margin:0.5rem 0 1rem 0;
-		}
-	}
+        .thanks {
+            margin: 0.5rem 0 1rem 0;
+        }
+    }
 }
