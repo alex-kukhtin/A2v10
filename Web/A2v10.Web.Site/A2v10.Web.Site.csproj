@@ -341,6 +341,7 @@
     <Content Include="Less.Mobile\Upload.less" />
     <Content Include="Less.Mobile\Debug.less" />
     <Content Include="package.json" />
+    <Content Include="libman.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

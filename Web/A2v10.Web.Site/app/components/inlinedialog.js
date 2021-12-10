@@ -1,6 +1,6 @@
 ﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
 
-// 20211028-7807
+// 20211210-7812
 // components/inlinedialog.js
 (function () {
 	const eventBus = require('std:eventBus');
@@ -82,6 +82,7 @@
 			eventBus.$on('inlineDialogCount', this.__inlineCount);
 		},
 		beforeDestroy() {
+			document.removeEventListener('keyup', this.__keyUp);
 			eventBus.$off('inlineDialog', this.__inlineEvent);
 			eventBus.$off('inlineDialogCount', this.__inlineCount);
 		}

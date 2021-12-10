@@ -7,7 +7,8 @@ module.exports = function (grunt) {
 		terser: {
 			options: {
 				ecma: '2016',
-				mangle: false
+				mangle: false,
+				compress: false
 			},
 			main: {
 				files: {

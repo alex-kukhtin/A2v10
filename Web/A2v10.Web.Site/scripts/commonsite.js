@@ -1573,7 +1573,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-// 20210924-7805
+// 20211210-7812
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1692,8 +1692,8 @@ app.modules['std:http'] = function () {
 				ve.$el.remove();
 				ve.$el = null;
 				fc.__vue__ = null;
+				selector.innerHTML = '';
 			}
-			selector.innerHTML = '';
 		}
 
 		return new Promise(function (resolve, reject) {
@@ -1729,8 +1729,8 @@ app.modules['std:http'] = function () {
 							document.body.appendChild(newScript).parentNode.removeChild(newScript);
 						}
 					}
-					if (selector.firstElementChild && selector.firstElementChild.__vue__) {
-						let fec = selector.firstElementChild;
+					let fec = selector.firstElementChild;
+					if (fec && fec.__vue__) {
 						let ve = fec.__vue__;
 						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
