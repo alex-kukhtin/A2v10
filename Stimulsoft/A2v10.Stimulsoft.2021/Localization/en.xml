@@ -120,7 +120,8 @@
     <MoveToResource>Move to Resource</MoveToResource>
     <No>&amp;No</No>
     <Ok>&amp;OK</Ok>
-    <Open>Open</Open>
+    <Open>Open</Open>    
+    <OpenContainingFolder>Open Containing Folder</OpenContainingFolder>
     <Print>Print</Print>
     <Publish>Publish</Publish>
     <QuickPrint>Quick Print</QuickPrint>
@@ -3345,7 +3346,7 @@
     <StiTextQualityWysiwyg>Wysiwyg</StiTextQualityWysiwyg>
     <StiTextSizeModeFit>Fit</StiTextSizeModeFit>
     <StiTextSizeModeTrimming>Trimming</StiTextSizeModeTrimming>
-    <StiTextSizeModeWordWrap>WordWrap</StiTextSizeModeWordWrap>
+    <StiTextSizeModeWordWrap>Word Wrap</StiTextSizeModeWordWrap>
     <StiTimeDateStepDay>Day</StiTimeDateStepDay>
     <StiTimeDateStepHour>Hour</StiTimeDateStepHour>
     <StiTimeDateStepMinute>Minute</StiTimeDateStepMinute>
@@ -4107,9 +4108,10 @@
     <OnDataManipulation>On Data Manipulation</OnDataManipulation>
     <OnHover>On Hover</OnHover>
     <OnlyText>Only Text</OnlyText>
+	<Opacity>Opacity</Opacity>
     <OpenValues>Open Values</OpenValues>
     <Operation>Operation</Operation>
-	  <Options3D>Options 3D</Options3D>
+	<Options3D>Options 3D</Options3D>
     <Options>Options</Options>
     <Orientation>Orientation</Orientation>
     <OthersText>Others Text</OthersText>
