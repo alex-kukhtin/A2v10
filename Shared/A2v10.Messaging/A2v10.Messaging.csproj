@@ -54,6 +54,7 @@
     <Compile Include="MessageResolver.cs" />
     <Compile Include="MessageSendInfo.cs" />
     <Compile Include="MessagingException.cs" />
+    <Compile Include="SmsMessage.cs" />
     <Compile Include="SmtpConfig.cs" />
     <Compile Include="Template.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

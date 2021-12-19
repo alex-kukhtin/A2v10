@@ -20,13 +20,15 @@ namespace A2v10.Messaging
 		readonly private IApplicationHost _host;
 		readonly private IDbContext _dbContext;
 		readonly private IMessageService _emailService;
+        readonly private ISmsService _smsService;
 		readonly private ILogger _logger;
 
-		public MessageProcessor(IApplicationHost host, IDbContext dbContext, IMessageService emailService, ILogger logger)
+		public MessageProcessor(IApplicationHost host, IDbContext dbContext, IMessageService emailService, ISmsService smsService, ILogger logger)
 		{
 			_host = host;
 			_dbContext = dbContext;
 			_emailService = emailService;
+            _smsService = smsService;
 			_logger = logger;
 		}
 

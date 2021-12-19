@@ -82,6 +82,7 @@ namespace A2v10.Request
 				DataModel = viewInfo.DataModel,
 				RootId = pageId,
 				IsDialog = rw.IsDialog,
+                IsIndex = rw.index,
 				Template = rw.template,
 				Path = rw.Path,
 				BaseUrl = rw.ParentModel.BasePath

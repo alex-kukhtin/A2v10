@@ -43,6 +43,7 @@
     <Compile Include="DbApplicationReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -63,6 +64,10 @@
     <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
       <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Interop\A2v10.Interop.csproj">
+      <Project>{39661034-47aa-4bdf-9b19-c835b614b545}</Project>
+      <Name>A2v10.Interop</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Messaging\A2v10.Messaging.csproj">
       <Project>{D83666A0-ACF5-47E6-94CF-732DDDABBEA2}</Project>

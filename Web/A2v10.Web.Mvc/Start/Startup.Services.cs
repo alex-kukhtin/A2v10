@@ -40,11 +40,11 @@ namespace A2v10.Web.Mvc.Start
 					tokenProvider);
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger, host);
-				IMessaging messaging = new MessageProcessor(host, dbContext, emailService, logger);
+                ISmsService smsService = new SmsService(dbContext, logger);
+                IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
 				IRenderer renderer = new XamlRenderer(profiler, host);
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
-				ISmsService smsService = new SmsService(dbContext, logger);
 				IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
 				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
 				IExternalDataProvider dataProvider = new ExternalDataContext();

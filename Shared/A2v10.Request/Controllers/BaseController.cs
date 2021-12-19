@@ -50,6 +50,7 @@ namespace A2v10.Request
 		{
 			public IDataModel Model;
 			public RequestView RequestView;
+            public Boolean Index;
 		}
 
 		//public const String NO_VIEW = "\b_NO_VIEW_\b";
@@ -205,7 +206,8 @@ namespace A2v10.Request
 		{
 			var dmv = new DataModelAndView()
 			{
-				RequestView = rw
+				RequestView = rw,
+                Index = rw.index
 			};
 			String loadProc = rw.LoadProcedure;
 
@@ -295,6 +297,7 @@ namespace A2v10.Request
 				DataModel = model,
 				RootId = rootId,
 				IsDialog = rw.IsDialog,
+                IsIndex = rw.index,
 				Template = rw.template,
 				Path = rw.Path,
 				BaseUrl = rw.ParentModel.BasePath

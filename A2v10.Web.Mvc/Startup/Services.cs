@@ -48,8 +48,8 @@ namespace A2v10.Web.Mvc.Startup
 				IDataScripter scripter = new VueDataScripter(host, localizer);
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger, host);
-				IMessaging messaging = new MessageProcessor(host, dbContext, emailService, logger);
-				ISmsService smsService = new SmsService(dbContext, logger);
+                ISmsService smsService = new SmsService(dbContext, logger);
+                IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
 				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();

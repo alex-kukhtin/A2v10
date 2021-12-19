@@ -89,6 +89,7 @@ const vm = new DataModelController({
 	el:'#$(RootId)',
 	props: {
 		inDialog: {type: Boolean, default: $(IsDialog)},
+        isIndex: {type: Boolean, default: $(IsIndex)},
 		pageTitle: {type: String}
 	},
 	data: currentModule().dataModel,
@@ -541,6 +542,7 @@ function modelData(template, data) {
 			footer.Replace("$(RootId)", msi.RootId);
 			footer.Replace("$(BaseUrl)", msi.BaseUrl);
 			footer.Replace("$(IsDialog)", msi.IsDialog.ToString().ToLowerInvariant());
+            footer.Replace("$(IsIndex)", msi.IsIndex.ToString().ToLowerInvariant());
 			output.Append(footer);
 			result.Script = output.ToString();
 
