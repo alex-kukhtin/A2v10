@@ -6096,6 +6096,8 @@ app.modules['std:impl:array'] = function () {
 			$saveModified(message, title) {
 				if (!this.$isDirty)
 					return true;
+				if (this.isIndex)
+					return true;
 				let self = this;
 				let dlg = {
 					message: message || locale.$ElementWasChanged,

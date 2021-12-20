@@ -29,7 +29,7 @@ namespace A2v10.Messaging
 
 		public List<AttachementForSend> Attachments { get; set; } = new List<AttachementForSend>();
 
-		public async Task SendAsync(IMessageService emailService)
+		public async Task SendAsync(IMessageService emailService, ISmsService smsService)
 		{
 			var info = emailService.CreateSendInfo();
 			info.Subject = Subject;

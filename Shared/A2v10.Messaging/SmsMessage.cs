@@ -2,18 +2,25 @@
 
 using System;
 using System.Threading.Tasks;
+
 using System.Windows.Markup;
 
 namespace A2v10.Messaging
 {
-    [ContentProperty("Text")]
+    [ContentProperty("Message")]
     public class SmsMessage : TemplatedMessage
     {
-        public String Text { get; set; }
+        public String Phone { get; set; }
+        public String Message { get; set; }
+        public String ExternalId { get; set; }
 
-        public override Task<IMessageForSend> ResolveAndSendAsync(MessageResolver resolver)
+        public async override Task<IMessageForSend> ResolveAndSendAsync(MessageResolver resolver)
         {
-            throw new NotImplementedException();
+            return new SmsMessageForSend(
+                await resolver.ResolveAsync(this, Phone),
+                await resolver.ResolveAsync(this, Message),
+                await resolver.ResolveAsync(this, ExternalId)
+            );
         }
     }
 }

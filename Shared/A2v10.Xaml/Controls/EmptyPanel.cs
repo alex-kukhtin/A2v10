@@ -16,7 +16,7 @@ namespace A2v10.Xaml
 			if (SkipRender(context))
 				return;
 
-			var block = new TagBuilder("div", "empty-panel");
+			var block = new TagBuilder("div", "empty-panel", IsInGrid);
 			onRender?.Invoke(block);
 
 			MergeAttributes(block, context);

@@ -107,8 +107,8 @@ namespace A2v10.Messaging
 		public async Task SendMessageAsync(Int64 msgId)
 		{
 			var msgModel = await _dbContext.LoadModelAsync(String.Empty, "a2messaging.[Message.Queue.Load]", new { Id = msgId });
-			IMessageForSend msg = await ResolveMessageAsync(msgModel);
-			await msg.SendAsync(_emailService);
+			IMessageForSend msg = await ResolveMessageAsync(msgModel);            
+			await msg.SendAsync(_emailService, _smsService);
 		}
 
 		Task<IMessageForSend> ResolveMessageAsync(IDataModel dm)

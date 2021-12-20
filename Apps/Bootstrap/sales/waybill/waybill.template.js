@@ -126,6 +126,8 @@ function barCodeChange(el, val) {
 async function sendMessage() {
 	const ctrl = this.$ctrl;
 	const doc = this.Document;
-	let r = await ctrl.$invoke('sendMessage', { Id: doc.Id });// //, To: 'xxxx@ffff.com' });
+	alert(1);
+	const cmdName = 'sendSms'; /*sendMessage*/
+	let r = await ctrl.$invoke(cmdName, { Id: doc.Id });// //, To: 'xxxx@ffff.com' });
 	alert(JSON.stringify(r));
 }

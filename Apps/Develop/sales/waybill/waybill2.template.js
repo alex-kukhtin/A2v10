@@ -192,7 +192,8 @@ define(["require", "exports"], function (require, exports) {
     async function sendMessage() {
         const ctrl = this.$ctrl;
         const doc = this.Document;
-        let r = await ctrl.$invoke('sendMessage', { Id: doc.Id });
+        const cmdName = 'sendSms';
+        let r = await ctrl.$invoke(cmdName, { Id: doc.Id });
         alert(JSON.stringify(r));
     }
     async function checkTypes() {

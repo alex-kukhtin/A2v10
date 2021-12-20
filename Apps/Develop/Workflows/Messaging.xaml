@@ -43,4 +43,6 @@
 			</MessageReport>
 		</EmailMessage.Reports>
 	</EmailMessage>
+	<SmsMessage x:Key="SmsMessage" Model="SmsForSend" Schema="a2demo"
+		Phone="`{{Message.Phone}}" Message="`{{Message.Message}} ({{Message.Id}})"/>
 </Template>
