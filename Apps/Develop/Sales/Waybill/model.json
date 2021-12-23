@@ -88,7 +88,8 @@
     },
     "startWorkflow": {
       "type": "startProcess",
-      "file": "Workflows/TestWorkflow_v1"
+      "file2": "Workflows/TestWorkflow_v1",
+      "file": "Workflows/SendMessageWorkflow"
     },
     "resumeWorkflow": {
       "type": "resumeProcess"

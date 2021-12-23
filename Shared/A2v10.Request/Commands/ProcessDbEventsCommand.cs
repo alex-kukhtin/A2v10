@@ -4,14 +4,12 @@ using System;
 using System.Dynamic;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Hosting;
 
 using Newtonsoft.Json;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using IApplicationHost = A2v10.Infrastructure.IApplicationHost;
-using System.Web;
 
 namespace A2v10.Request
 {

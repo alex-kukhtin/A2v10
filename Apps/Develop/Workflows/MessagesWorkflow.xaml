@@ -1,0 +1,9 @@
+<!-- Messaging template -->
+<Template xmlns="clr-namespace:A2v10.Messaging;assembly=A2v10.Messaging"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<EmailMessage x:Key="Key1" Subject="SUBJ FROM SERVER"
+			Model="MessageForSend" Schema="a2demo"
+			To="`{{Message.To}}" From="`{{Message.From}}">
+		I am the message text
+	</EmailMessage>
+</Template>

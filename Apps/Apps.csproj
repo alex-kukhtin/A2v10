@@ -162,6 +162,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <None Include="Develop\Workflows\SendMessageWorkflow.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Develop\Workflows\MessagesWorkflow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
     <TypeScriptCompile Include="Develop\dashboard\javascript.d.ts" />
     <TypeScriptCompile Include="Develop\dashboard\server2.module.ts" />
     <Content Include="Develop\bpmn\catalog\edit.template.js" />

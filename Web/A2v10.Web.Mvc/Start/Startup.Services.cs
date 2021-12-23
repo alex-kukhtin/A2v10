@@ -1,6 +1,5 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-using System;
 using System.Web;
 
 using A2v10.Data;
@@ -22,6 +21,8 @@ namespace A2v10.Web.Mvc.Start
 {
 	public static partial class Startup
 	{
+        private static IServiceLocator _currentLocator;
+
 		public static void StartServices()
 		{
 			// DI ready
@@ -76,14 +77,23 @@ namespace A2v10.Web.Mvc.Start
 					HttpContext.Current.Items.Add("ServiceLocator", locator);
 			};
 
+            IServiceLocator GetOrCreateStatic()
+            {
+                if (_currentLocator == null)
+                    _currentLocator = new ServiceLocator();
+                return _currentLocator;
+            }
+
 			ServiceLocator.GetCurrentLocator = () =>
 			{
 				if (HttpContext.Current == null)
-					throw new InvalidProgramException("There is no http context");
+                {
+                    return GetOrCreateStatic();
+                }
 				var currentContext = HttpContext.Current;
 				var locator = currentContext.Items["ServiceLocator"];
 				if (locator == null)
-					new ServiceLocator();
+					return GetOrCreateStatic();
 				return HttpContext.Current.Items["ServiceLocator"] as IServiceLocator;
 			};
 		}

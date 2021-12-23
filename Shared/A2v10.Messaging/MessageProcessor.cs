@@ -69,7 +69,7 @@ namespace A2v10.Messaging
 			Int64 msgId = md.Eval<Int64>("Result.Id");
 			if (message.Immediately)
 			{
-				FireAndForget(SendMessageAsync(msgId));
+                FireAndForget(SendMessageAsync(msgId));
 			}
 			return msgId;
 		}
