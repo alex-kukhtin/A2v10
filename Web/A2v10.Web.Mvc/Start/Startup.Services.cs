@@ -16,6 +16,7 @@ using A2v10.Xaml;
 using A2v10.Web.Script;
 using A2v10.Web.Base;
 using A2v10.Javascript;
+using System;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -92,8 +93,13 @@ namespace A2v10.Web.Mvc.Start
                 }
 				var currentContext = HttpContext.Current;
 				var locator = currentContext.Items["ServiceLocator"];
-				if (locator == null)
-					return GetOrCreateStatic();
+                if (locator == null)
+                {
+                    var loc = new ServiceLocator(); // side effects
+                    var fromHttp = HttpContext.Current.Items["ServiceLocator"] as IServiceLocator;
+                    if (loc != fromHttp)
+                        throw new InvalidOperationException("Invalid service locator");
+                }
 				return HttpContext.Current.Items["ServiceLocator"] as IServiceLocator;
 			};
 		}
