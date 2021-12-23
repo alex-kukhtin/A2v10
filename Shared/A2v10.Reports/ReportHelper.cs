@@ -62,13 +62,15 @@ namespace A2v10.Reports
 		{
 			// DI ready
 			IServiceLocator locator = ServiceLocator.Current;
-			_host = locator.GetService<IApplicationHost>();
-			_dbContext = locator.GetService<IDbContext>();
-			_localizer = locator.GetService<ILocalizer>();
-			_userStateManager = locator.GetServiceOrNull<IUserStateManager>();
+			_host = locator.GetService<IApplicationHost>() ?? throw new ArgumentNullException(nameof(_host));
+			_dbContext = locator.GetService<IDbContext>() ?? throw new ArgumentNullException(nameof(_dbContext));
+			_localizer = locator.GetService<ILocalizer>() ?? throw new ArgumentNullException(nameof(_localizer));
+			_userStateManager = locator.GetServiceOrNull<IUserStateManager>() ?? throw new ArgumentNullException(nameof(_userStateManager));
 			_stimulsoftReportShim = locator.GetService<IStimulsoftReportShim>(sloc =>
 			{
 				var inst = System.Activator.CreateInstance("A2v10.Stimulsoft", "A2v10.Stimulsoft.StimulsoftReportShim");
+                if (inst == null)
+                    throw new ArgumentNullException("A2v10.Stimulsoft");
 				var instUnwrap = inst.Unwrap();
 				var ass = Assembly.GetAssembly(instUnwrap.GetType());
 

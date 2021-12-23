@@ -69,7 +69,8 @@ namespace A2v10.Messaging
 			Int64 msgId = md.Eval<Int64>("Result.Id");
 			if (message.Immediately)
 			{
-                FireAndForget(SendMessageAsync(msgId));
+                SendMessageAsync(msgId).Wait();
+                //FireAndForget(SendMessageAsync(msgId));
 			}
 			return msgId;
 		}
@@ -104,7 +105,7 @@ namespace A2v10.Messaging
 			msg.Set(name, arr);
 		}
 
-		public async Task SendMessageAsync(Int64 msgId)
+        public async Task SendMessageAsync(Int64 msgId)
 		{
 			var msgModel = await _dbContext.LoadModelAsync(String.Empty, "a2messaging.[Message.Queue.Load]", new { Id = msgId });
 			IMessageForSend msg = await ResolveMessageAsync(msgModel);            
@@ -131,5 +132,5 @@ namespace A2v10.Messaging
 				return tm.ResolveAndSendAsync(resolver);
 			}
 		}
-	}
+    }
 }

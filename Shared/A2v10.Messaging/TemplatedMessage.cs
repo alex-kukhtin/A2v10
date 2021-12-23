@@ -16,7 +16,7 @@ namespace A2v10.Messaging
 
 		public abstract Task<IMessageForSend> ResolveAndSendAsync(MessageResolver resolver);
 
-		private IDataModel _dataModel;
+        private IDataModel _dataModel;
 
 		public async Task<IDataModel> GetDataModelAsync(IDbContext dbContext, ExpandoObject prms)
 		{
@@ -28,5 +28,5 @@ namespace A2v10.Messaging
 			}
 			return _dataModel;
 		}
-	}
+    }
 }

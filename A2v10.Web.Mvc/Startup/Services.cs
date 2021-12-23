@@ -11,6 +11,7 @@ using A2v10.Request;
 using A2v10.Web.Base;
 using A2v10.Web.Config;
 using A2v10.Web.Identity;
+using A2v10.Web.Mvc.Config;
 using A2v10.Web.Script;
 using A2v10.Workflow;
 
@@ -53,8 +54,10 @@ namespace A2v10.Web.Mvc.Startup
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
 				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();
+                IUserStateManager userStateManager = new EmptyUserStateManager();
 
-				locator.RegisterService<IDbContext>(dbContext);
+
+                locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
 				locator.RegisterService<IApplicationHost>(host);
 				locator.RegisterService<ILocalizer>(localizer);
@@ -67,6 +70,7 @@ namespace A2v10.Web.Mvc.Startup
 				locator.RegisterService<IScriptProcessor>(scriptProcessor);
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IUserLocale>(userLocale);
+                locator.RegisterService<IUserStateManager>(userStateManager);
 				if (tokenProvider != null)
 					locator.RegisterService<ITokenProvider>(tokenProvider);
 
