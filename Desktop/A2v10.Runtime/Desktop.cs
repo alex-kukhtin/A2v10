@@ -152,7 +152,7 @@ namespace A2v10RuntimeNet
 			ServiceLocator.Start = (IServiceLocator service) =>
 			{
 				IProfiler profiler = new DesktopProfiler();
-				DesktopApplicationHost host = new DesktopApplicationHost(profiler);
+				DesktopApplicationHost host = new DesktopApplicationHost(profiler, service);
 				IUserLocale userLocale = new DesktopUserLocale();
 				ILocalizer localizer = new DesktopLocalizer(host, userLocale);
 				ITokenProvider tokenProvider = new DesktopTokenProvider();

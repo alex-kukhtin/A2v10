@@ -22,14 +22,18 @@ namespace BackgroundProcessor
 	public class BackgroundApplicationHost : IApplicationHost, IDataConfiguration
 	{
 		private readonly IProfiler _profiler;
+        private readonly IServiceLocator _locator;
 
-		public BackgroundApplicationHost(IProfiler profiler)
+		public BackgroundApplicationHost(IProfiler profiler, IServiceLocator locator)
 		{
 			_profiler = profiler;
-		}
+            _locator = locator;
+
+        }
 
 		#region IApplicationHost
 		public IProfiler Profiler => _profiler;
+        public IServiceLocator Locator => _locator;
 		public Boolean Mobile => false;
 		public Boolean IsAdminMode => false;
 		public Boolean Embedded => false;

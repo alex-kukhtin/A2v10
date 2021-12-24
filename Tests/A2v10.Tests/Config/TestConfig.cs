@@ -22,7 +22,7 @@ namespace A2v10.Tests.Config
 			ServiceLocator.Start = (IServiceLocator service) =>
 			{
 				var profiler = new NullProfiler();
-				var host = new TestApplicationHost(profiler)
+				var host = new TestApplicationHost(profiler, service)
 				{
 					HostingPath = Path.GetFullPath("../../../../Web/A2v10.Web.Site")
 				};

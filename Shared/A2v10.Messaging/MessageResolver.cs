@@ -22,12 +22,13 @@ namespace A2v10.Messaging
 		private readonly ExpandoObject _msgParams;
 		private readonly ReportHelper _reportHelper;
 
+
 		public MessageResolver(IApplicationHost host, IDbContext dbContext, IDataModel msgModel)
 		{
 			_host = host;
 			_dbContext = dbContext;
 			_msgModel = msgModel;
-			_reportHelper = new ReportHelper();
+			_reportHelper = new ReportHelper(_host);
 			if (_msgModel == null) return;
 			_msgParams = new ExpandoObject();
 			var trgId = msgModel.Eval<Int64>("Message.TargetId");

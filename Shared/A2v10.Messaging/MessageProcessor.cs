@@ -30,7 +30,7 @@ namespace A2v10.Messaging
 			_emailService = emailService;
             _smsService = smsService;
 			_logger = logger;
-		}
+        }
 
 		public IQueuedMessage CreateQueuedMessage()
 		{

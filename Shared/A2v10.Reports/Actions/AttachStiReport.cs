@@ -23,7 +23,7 @@ namespace A2v10.Reports.Actions
 			_host = host;
 			_dbContext = dbContext;
 			_tokenProvider = tokenProvider;
-			_reportHelper = new ReportHelper();
+			_reportHelper = new ReportHelper(_host);
 		}
 
 		public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Report, String Model, String Schema)

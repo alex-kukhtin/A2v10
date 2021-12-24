@@ -21,17 +21,19 @@ namespace A2v10.Runtime
 
 	public class DesktopApplicationHost : IApplicationHost, ITenantManager, IDataConfiguration, ISupportUserInfo
 	{
-		readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
+        readonly IDictionary<String, String> _cnnStrings = new Dictionary<String, String>();
 		private Boolean _admin;
 
-		public DesktopApplicationHost(IProfiler profiler)
+		public DesktopApplicationHost(IProfiler profiler, IServiceLocator locator)
 		{
 			Profiler = profiler;
-			Profiler.Enabled = IsDebugConfiguration;
+            Locator = locator;
+            Profiler.Enabled = IsDebugConfiguration;
 		}
 
 		public Boolean Embedded => true;
 		public IProfiler Profiler { get; }
+        public IServiceLocator Locator { get; }
 		public Boolean Mobile => false;
 		public Boolean IsAdminMode => _admin;
 

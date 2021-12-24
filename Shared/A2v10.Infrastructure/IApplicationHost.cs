@@ -21,6 +21,7 @@ namespace A2v10.Infrastructure
 	public interface IApplicationHost
 	{
 		IProfiler Profiler { get; }
+        IServiceLocator Locator { get; }
 
 		String AppPath { get; }
 		String AppKey { get; }

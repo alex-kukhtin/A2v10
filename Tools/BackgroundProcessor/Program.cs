@@ -60,7 +60,7 @@ namespace BackgroundProcessor
 			{
 				var profiler = new NullProfiler();
 				var localizer = new NullLocalizer();
-				var host = new BackgroundApplicationHost(profiler);
+				var host = new BackgroundApplicationHost(profiler, loc);
 				var dbContext = new SqlDbContext(profiler, host, localizer);
 				var logger = new BackgroundLogger(dbContext);
 				var workflow = new WorkflowEngine(host, dbContext, null);

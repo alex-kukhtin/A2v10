@@ -58,11 +58,11 @@ namespace A2v10.Reports
 		private readonly IStimulsoftReportShim _stimulsoftReportShim;
 		private readonly IUserStateManager _userStateManager;
 
-		public ReportHelper()
+        public ReportHelper(IApplicationHost host)
 		{
-			// DI ready
-			IServiceLocator locator = ServiceLocator.Current;
-			_host = locator.GetService<IApplicationHost>() ?? throw new ArgumentNullException(nameof(_host));
+            // DI ready
+            _host = host;
+            IServiceLocator locator = host.Locator;
 			_dbContext = locator.GetService<IDbContext>() ?? throw new ArgumentNullException(nameof(_dbContext));
 			_localizer = locator.GetService<ILocalizer>() ?? throw new ArgumentNullException(nameof(_localizer));
 			_userStateManager = locator.GetServiceOrNull<IUserStateManager>() ?? throw new ArgumentNullException(nameof(_userStateManager));

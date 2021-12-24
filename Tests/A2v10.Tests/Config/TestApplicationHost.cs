@@ -13,10 +13,14 @@ namespace A2v10.Tests.Config
 	{
 
 		readonly IProfiler _profiler;
-		public TestApplicationHost(IProfiler profiler)
+        private readonly IServiceLocator _locator;
+		public TestApplicationHost(IProfiler profiler, IServiceLocator locator)
 		{
 			_profiler = profiler;
-		}
+            _locator = locator;
+        }
+
+        public IServiceLocator Locator => _locator;
 
 		public String ConnectionString(String source)
 		{

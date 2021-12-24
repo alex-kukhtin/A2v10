@@ -53,31 +53,33 @@ namespace A2v10.Web.Config
 		public String ColorScheme { get; }
 	}
 
-	public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
-	{
-		private readonly IProfiler _profiler;
-		private readonly Boolean _emulateBox;
-		private Boolean _admin;
-		private readonly Boolean _debug;
-		private readonly String _environment;
-		private readonly IUserLocale _userLocale;
+    public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
+    {
+        private readonly Boolean _emulateBox;
+        private Boolean _admin;
+        private readonly Boolean _debug;
+        private readonly String _environment;
+        private readonly IUserLocale _userLocale;
 
-		public WebApplicationHost(IProfiler profiler, IUserLocale userLocale)
-		{
-			_profiler = profiler;
-			_userLocale = userLocale;
-			_emulateBox = IsAppSettingsIsTrue("emulateBox");
+        public WebApplicationHost(IProfiler profiler, IUserLocale userLocale, IServiceLocator locator)
+        {
+            Profiler = profiler;
+            Locator = locator;
 
-			var conf = ConfigurationManager.AppSettings["configuration"];
-			_debug = String.IsNullOrEmpty(conf) || conf == "debug";
+            _userLocale = userLocale;
+            _emulateBox = IsAppSettingsIsTrue("emulateBox");
 
-			// after _debug!
-			_profiler.Enabled = _debug;
+            var conf = ConfigurationManager.AppSettings["configuration"];
+            _debug = String.IsNullOrEmpty(conf) || conf == "debug";
 
-			_environment = ConfigurationManager.AppSettings["environment"];
-		}
+            // after _debug!
+            Profiler.Enabled = _debug;
 
-		public IProfiler Profiler => _profiler;
+            _environment = ConfigurationManager.AppSettings["environment"];
+        }
+
+        public IServiceLocator Locator { get; }
+		public IProfiler Profiler { get; }
 
 		public Boolean Mobile { get; private set; }
 		public Boolean Embedded => false;

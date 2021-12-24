@@ -42,12 +42,13 @@ namespace A2v10.Web.Mvc.Controllers
 	public class ReportController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
-		ReportHelper _reportHelper = new ReportHelper();
+        ReportHelper _reportHelper;
 
 		public ReportController()
 		{
 			_baseController.Host.StartApplication(false);
-		}
+             _reportHelper = new ReportHelper(_baseController.Host);
+        }
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();

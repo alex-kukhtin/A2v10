@@ -36,7 +36,7 @@ namespace A2v10.Web.Mvc.Startup
 
 				IProfiler profiler = startOptions.Profiler ?? new WebProfiler();
 				IUserLocale userLocale = new WebUserLocale();
-				IApplicationHost host = new WebApplicationHost(profiler, userLocale);
+				IApplicationHost host = new WebApplicationHost(profiler, userLocale, locator);
 				ILocalizer localizer = new WebLocalizer(host, userLocale);
 
 				ITokenProvider tokenProvider = startOptions.TokenProvider;
@@ -50,11 +50,11 @@ namespace A2v10.Web.Mvc.Startup
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger, host);
                 ISmsService smsService = new SmsService(dbContext, logger);
+                IUserStateManager userStateManager = new EmptyUserStateManager();
                 IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
 				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();
-                IUserStateManager userStateManager = new EmptyUserStateManager();
 
 
                 locator.RegisterService<IDbContext>(dbContext);

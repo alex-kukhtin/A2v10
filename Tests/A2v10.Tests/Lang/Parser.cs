@@ -15,7 +15,7 @@ namespace A2v10.Tests.Lang
 		{
 			var profiler = new NullProfiler();
 			var userLocale = new WebUserLocale();
-			var host = new WebApplicationHost(profiler, userLocale);
+			var host = new WebApplicationHost(profiler, userLocale, null);
 			host.StartApplication(false);
 			var parser = new TSDefParser(host.ApplicationReader, "typescript");
 			parser.Parse("model.d.ts");

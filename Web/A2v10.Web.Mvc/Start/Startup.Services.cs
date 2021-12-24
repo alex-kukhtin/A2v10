@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
+using System;
 using System.Web;
 
 using A2v10.Data;
@@ -16,7 +17,6 @@ using A2v10.Xaml;
 using A2v10.Web.Script;
 using A2v10.Web.Base;
 using A2v10.Javascript;
-using System;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -31,7 +31,7 @@ namespace A2v10.Web.Mvc.Start
 			{
 				IProfiler profiler = new WebProfiler();
 				IUserLocale userLocale = new WebUserLocale();
-				IApplicationHost host = new WebApplicationHost(profiler, userLocale);
+				IApplicationHost host = new WebApplicationHost(profiler, userLocale, locator);
 				ILocalizer localizer = new WebLocalizer(host, userLocale);
 				ITokenProvider tokenProvider = new WebTokenProvider();
 				IDbContext dbContext = new SqlDbContext(
@@ -43,13 +43,13 @@ namespace A2v10.Web.Mvc.Start
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger, host);
                 ISmsService smsService = new SmsService(dbContext, logger);
-                IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
 				IRenderer renderer = new XamlRenderer(profiler, host);
-				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
 				IDataScripter scripter = new VueDataScripter(host, localizer);
 				IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
 				IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
-				IExternalDataProvider dataProvider = new ExternalDataContext();
+                IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
+                IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
+                IExternalDataProvider dataProvider = new ExternalDataContext();
 				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();
 				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, host);

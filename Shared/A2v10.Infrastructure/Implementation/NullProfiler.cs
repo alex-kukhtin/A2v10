@@ -17,7 +17,7 @@ namespace A2v10.Infrastructure
 		}
 	}
 
-	public class NullProfiler : IProfiler, IDataProfiler
+	public sealed class NullProfiler : IProfiler, IDataProfiler
 	{
 		readonly IProfileRequest _request = new NullRequest();
 		
