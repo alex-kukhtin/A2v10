@@ -5055,7 +5055,7 @@ Vue.component('validator-control', {
 */
 // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
 
-/*20210531-7776*/
+/*20220110-7819*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -5077,6 +5077,7 @@ Vue.component('validator-control', {
 				v-on:keypress="onKey($event)"
 				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
+		<a class="a2-hyperlink add-on a2-inline" href="" @click.stop.prevent="dummy" v-if=hasFilter><i class="ico ico-filter-outline"></i></a>
 		<a class="a2-hyperlink add-on a2-inline" tabindex="-1" href="" @click.stop.prevent="clear" v-if="clearVisible"><i class="ico ico-clear"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -5140,6 +5141,7 @@ Vue.component('validator-control', {
 			spellCheck: { type: Boolean, default: undefined },
 			enterCommand: Function,
 			hasClear: Boolean,
+			hasFilter: Boolean,
 			filters: Array
 		},
 		computed: {
@@ -5192,6 +5194,9 @@ Vue.component('validator-control', {
 			},
 			clear() {
 				this.item[this.prop] = '';
+			},
+			dummy() {
+
 			}
 		}
 	};

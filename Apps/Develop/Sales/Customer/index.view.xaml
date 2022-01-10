@@ -41,11 +41,7 @@
 				<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Agents.Selected(Children)}}" />
 				<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Agents.Selected(Children)}, Confirm='Удалить покупателя?'}"/>
 				<Separator />
-				<TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" Placeholder="фрагмент имени или кода" Width="240">
-					<TextBox.AddOns>
-						<Hyperlink Icon="Search" />
-					</TextBox.AddOns>
-				</TextBox>
+				<TextBox Label="Поиск:" Value="{Bind Parent.Filter.Fragment}" Placeholder="фрагмент имени или кода" Width="240" ShowClear="True" ShowFilter="True"/>
 				<Button Icon="Reload" Command="{BindCmd Reload, Argument={Bind Agents.Selected(Children)}}" Tip="Обновить данные"/>
 				<Button Content="Отчеты" Icon="FileLink" Toolbar.Align="Right" Disabled="{Bind !Root.$SelectedItem}">
 					<Button.DropDown>

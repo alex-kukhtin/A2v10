@@ -31,6 +31,7 @@ namespace A2v10.Xaml
 
 		public Accel Accel { get; set; }
 		public Boolean ShowClear { get; set; }
+        public Boolean ShowFilter { get; set; }
 
 		protected virtual String TagName => Multiline ? "a2-textarea" : "textbox";
 
@@ -67,6 +68,8 @@ namespace A2v10.Xaml
 				input.MergeAttribute(":enter-command", $"() => {enterCmd.GetCommand(context)}"); // FUNCTION!!!
 			if (ShowClear)
 				input.MergeAttribute(":has-clear", "true");
+            if (ShowFilter)
+                input.MergeAttribute(":has-filter", "true");
 			MergeAlign(input, context, Align);
 			MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
 			MergeValue(input, context);
