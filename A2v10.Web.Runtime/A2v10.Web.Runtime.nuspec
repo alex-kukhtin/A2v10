@@ -10,7 +10,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Platform Runtime</description>
 		<releaseNotes>Current NUGET release</releaseNotes>
-		<copyright>Copyright © 2015-2021 Oleksandr Kukhtin</copyright>
+		<copyright>Copyright © 2015-2022 Oleksandr Kukhtin</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
 		<references>
@@ -21,6 +21,7 @@
 			<reference file="A2v10.Data.Interfaces.dll" />
 			<reference file="A2v10.Infrastructure.dll" />
 			<reference file="A2v10.Messaging.dll" />
+			<reference file="A2v10.Reports.dll" />
 		</references>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net461" />
