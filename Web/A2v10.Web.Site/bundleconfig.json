@@ -155,7 +155,6 @@
 			"renameLocals": false
 		}
 	},
-	/*
 	{
 		"outputFileName": "scripts/vue.min.js",
 		"inputFiles": [
@@ -179,7 +178,6 @@
 		],
 		"minify": { "enabled": false }
 	},
-	*/
 	{
 		"outputFileName": "scripts/eusign.js",
 		"inputFiles": [

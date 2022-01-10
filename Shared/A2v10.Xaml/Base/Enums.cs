@@ -339,6 +339,7 @@ namespace A2v10.Xaml
 		FileWarning,
 		Filter,
 		FilterOutline,
+        Flame,
 		Folder,
 		FolderOutline,
 		FolderQuery,

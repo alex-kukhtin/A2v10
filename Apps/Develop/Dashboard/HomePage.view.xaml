@@ -42,7 +42,7 @@
 			</Panel>
 			<Code Content="{Bind Root.$text}"></Code>
 		</Grid>
-		<StateCard DropShadow="Shadow1" Style="Yellow" Grid.Row="1" Grid.Col="1" Header="ТЕНАНТИ" Icon="Database" Text="14534">
+		<StateCard DropShadow="Shadow1" Style="Yellow" Grid.Row="1" Grid.Col="1" Header="ТЕНАНТИ" Icon="Flame" Text="14534">
 			<StateCard.Footer>
 				<Text>
 					<Badge Bold="True">245</Badge> за сьогодні

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <!--
 A2v10 platform.
-Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 Site: https://a2v10.com
 GitHub: https://github.com/alex-kukhtin/A2v10
 -->
@@ -21,8 +21,8 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 <body>
 	<div id="shell" v-cloak>
 		<a2-app-header :title="title" :subtitle="subtitle" :user-state="userState"
-					:menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
-					person-name="$(PersonName)" client-id="$(ClientId)" :user-is-admin="userIsAdmin">
+					   :menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
+					   person-name="$(PersonName)" client-id="$(ClientId)" :user-is-admin="userIsAdmin">
 		</a2-app-header>
 		<a2-main-view :menu="menu" :period="globalPeriod" :pages="pages" :title="title"></a2-main-view>
 		<ul>

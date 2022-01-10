@@ -20,6 +20,7 @@ namespace A2v10.Xaml
 		public String Title { get; set; }
 		public String HelpUrl { get; set; }
 		public String TestId { get; set; }
+        public String SaveEvent { get; set; }
 
 		public UIElementBase TitleInfo { get; set; }
 
@@ -46,14 +47,16 @@ namespace A2v10.Xaml
 
 		String GetControllerAttributes()
 		{
-			if (String.IsNullOrEmpty(CanCloseDelegate) && !AlwaysOk)
+			if (String.IsNullOrEmpty(CanCloseDelegate) && !AlwaysOk && String.IsNullOrEmpty(SaveEvent))
 				return null;
 			var opts = new StringBuilder("{");
 			if (!String.IsNullOrEmpty(CanCloseDelegate))
 				opts.Append($"'canClose': '{CanCloseDelegate}',");
 			if (AlwaysOk)
 				opts.Append("'alwaysOk': true,");
-			opts.RemoveTailComma();
+            if (!String.IsNullOrEmpty(SaveEvent))
+                opts.Append($"'saveEvent': '{SaveEvent}',");
+            opts.RemoveTailComma();
 			opts.Append("}");
 			return opts.ToString();
 		}

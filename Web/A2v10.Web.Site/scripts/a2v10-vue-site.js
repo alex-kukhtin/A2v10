@@ -5115,9 +5115,9 @@ template: `
 		}
 	});
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20211210-7812*/
+/*20220110-7819*/
 // controllers/base.js
 
 (function () {
@@ -5195,7 +5195,8 @@ template: `
 				__baseQuery__: {},
 				__requestsCount__: 0,
 				__lockQuery__: true,
-				__testId__: null
+				__testId__: null,
+				__saveEvent__: null
 			};
 		},
 
@@ -5317,6 +5318,8 @@ template: `
 						if (self.__destroyed__) return;
 						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
+						if (self.__saveEvent__)
+							self.$caller.$data.$emit(self.__saveEvent__, self.$data);
 						self.$data.$setDirty(false);
 						// data is a full model. Resolve requires only single element.
 						let dataToResolve;
@@ -6459,6 +6462,9 @@ template: `
 				}
 				if (json.alwaysOk)
 					result.alwaysOk = true;
+				if (json.saveEvent) {
+					this.__saveEvent__ = json.saveEvent;
+				}
 				return result;
 			},
 			__isModalRequery() {

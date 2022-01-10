@@ -2,8 +2,8 @@
 	"$schema": "../../a2v10.web.runtime/app_application/@schemas/app-json-schema.json#",
 	/* comment here */
 	"title": "Демонстрационное приложение для отладки",
-	"version": "10.0.7734",
-	"copyright": "Copyright © 2015-2020 Alex Kukhtin",
+	"version": "10.0.7819",
+	"copyright": "Copyright © 2015-2022 Oleksandr Kukhtin",
 	"appLogo": "/test-logo.svg",
 	"links": [
 		{

@@ -162,6 +162,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Develop\purchase\testguids\index.template.js" />
     <None Include="Develop\Workflows\SendMessageWorkflow.xaml">
       <SubType>Designer</SubType>
     </None>

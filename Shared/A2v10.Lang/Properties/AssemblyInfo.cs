@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("A2v10.Lang")]
-[assembly: AssemblyCopyright("Copyright © 2019-2021 AlexKukhtin. All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2019-2022 Oleksandr Kukhtin. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

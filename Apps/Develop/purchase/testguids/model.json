@@ -3,7 +3,8 @@
   "model": "TestGuid",
 	"actions": {
 		"index": {
-			"index": true,
+          "index": true,
+          "template": "index.template",
 			"view": "index.view"
 		}
 	},
