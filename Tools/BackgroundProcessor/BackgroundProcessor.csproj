@@ -41,6 +41,7 @@
     <Compile Include="BackgroundApplicationHost.cs" />
     <Compile Include="BackgroundLogger.cs" />
     <Compile Include="DbApplicationReader.cs" />
+    <Compile Include="EmptyUserStateManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SmsService.cs" />

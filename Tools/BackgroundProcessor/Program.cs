@@ -68,6 +68,7 @@ namespace BackgroundProcessor
                 var smsService = new SmsService(dbContext, logger);
                 var messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
 				var userLocale = new BackgroundUserLocale();
+                var userStateManager = new EmptyUserStateManager();
 
 				loc.RegisterService<IProfiler>(profiler);
 				loc.RegisterService<ILocalizer>(localizer);
@@ -77,6 +78,7 @@ namespace BackgroundProcessor
 				loc.RegisterService<IWorkflowEngine>(workflow);
 				loc.RegisterService<IMessaging>(messaging);
 				loc.RegisterService<IUserLocale>(userLocale);
+                loc.RegisterService<IUserStateManager>(userStateManager);
 			};
 
 			ServiceLocator.GetCurrentLocator = () =>
