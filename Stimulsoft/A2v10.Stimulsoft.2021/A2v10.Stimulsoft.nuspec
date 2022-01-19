@@ -10,7 +10,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Stimulsoft Shim</description>
 		<releaseNotes>Current NUGET release</releaseNotes>
-		<copyright>Copyright © 2021 Oleksandr Kukhtin</copyright>
+		<copyright>Copyright © 2021-2022 Oleksandr Kukhtin</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
 		<references>
@@ -20,10 +20,10 @@
 		<contentFiles>
 		</contentFiles>
 		<dependencies>
-			<group targetFramework=".NETFramework4.6.1"/>
+			<group targetFramework=".NETFramework4.8"/>
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin/release/A2v10.Stimulsoft.dll" target="lib/net461" />
+		<file src="bin/release/A2v10.Stimulsoft.dll" target="lib/net48" />
 	</files>
 </package>

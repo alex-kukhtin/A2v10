@@ -10,11 +10,11 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Platform Runtime</description>
 		<releaseNotes>Current NUGET release</releaseNotes>
-		<copyright>Copyright © 2015-2021 Oleksandr Kukhtin</copyright>
+		<copyright>Copyright © 2015-2022 Oleksandr Kukhtin</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
 		<references>
-			<group targetFramework=".NETFramework4.6.1">
+			<group targetFramework=".NETFramework4.8">
 				<reference file="A2v10.Web.Mvc.dll" />
 				<reference file="A2v10.Data.Interfaces.dll" />
 				<reference file="A2v10.Infrastructure.dll" />
@@ -27,7 +27,7 @@
 		<contentFiles>
 		</contentFiles>
 		<dependencies>
-			<group targetFramework=".NETFramework4.6.1">
+			<group targetFramework=".NETFramework4.8">
 				<dependency id="Newtonsoft.Json" version="13.0.1" />
 				<dependency id="Microsoft.Owin" version="4.2.0" />
 				<dependency id="Microsoft.Owin.Security" version="4.2.0" />
@@ -40,26 +40,26 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin/Release/A2v10.Data.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Data.Interfaces.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Infrastructure.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Messaging.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Reports.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Request.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Interop.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Script.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Web.Base.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Web.Config.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Web.Identity.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Web.Script.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Workflow.dll" target="lib/net461" />
-		<file src="bin/Release/A2v10.Web.Mvc.dll" target="ref/net461" />
-		<file src="bin/Release/A2v10.Data.Interfaces.dll" target="ref/net461" />
-		<file src="bin/Release/A2v10.Reports.dll" target="ref/net461" />
-		<file src="bin/Release/A2v10.Request.dll" target="ref/net461" />
-		<file src="bin/Release/A2v10.Web.Identity.dll" target="ref/net461" />
-		<file src="bin/Release/A2v10.Web.Base.dll" target="ref/net461" />
-		<file src="bin/Release/A2v10.Infrastructure.dll" target="ref/net461" />
+		<file src="bin/Release/A2v10.Data.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Data.Interfaces.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Infrastructure.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Messaging.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Reports.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Request.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Interop.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Script.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Web.Base.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Web.Config.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Web.Identity.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Web.Script.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Workflow.dll" target="lib/net48" />
+		<file src="bin/Release/A2v10.Web.Mvc.dll" target="ref/net48" />
+		<file src="bin/Release/A2v10.Data.Interfaces.dll" target="ref/net48" />
+		<file src="bin/Release/A2v10.Reports.dll" target="ref/net48" />
+		<file src="bin/Release/A2v10.Request.dll" target="ref/net48" />
+		<file src="bin/Release/A2v10.Web.Identity.dll" target="ref/net48" />
+		<file src="bin/Release/A2v10.Web.Base.dll" target="ref/net48" />
+		<file src="bin/Release/A2v10.Infrastructure.dll" target="ref/net48" />
 
 		<file src="D:/Git/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
 		<file src="D:/Git/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>

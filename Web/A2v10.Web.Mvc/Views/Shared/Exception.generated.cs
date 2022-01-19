@@ -42,16 +42,12 @@ namespace ASP
             
             #line 3 "..\..\Views\Shared\Exception.cshtml"
   
-    Layout = null;
- 
-
+	Layout = null;
 
             
             #line default
             #line hidden
-WriteLiteral("<!DOCTYPE html>\r\n");
-
-WriteLiteral("<html>\r\n<head>\r\n    <meta");
+WriteLiteral("\r\n\r\n<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <meta");
 
 WriteLiteral(" charset=\"utf-8\"");
 
@@ -120,12 +116,6 @@ WriteLiteral("        ");
             #line hidden
 WriteLiteral("\r\n    </p>\r\n</body>\r\n</html>\r\n");
 
-            
-            #line 45 "..\..\Views\Shared\Exception.cshtml"
-
-            
-            #line default
-            #line hidden
         }
     }
 }

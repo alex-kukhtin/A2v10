@@ -62,7 +62,7 @@ namespace A2v10.Xaml.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;defs&gt;
-        ///	&lt;marker id=&quot;arrow&quot; markerWidth=&quot;10&quot; markerHeight=&quot;10&quot; refX=&quot;7&quot; refY=&quot;3&quot; orient=&quot;auto&quot; markerUnits=&quot;strokeWidth&quot;&gt;
+        ///	&lt;marker id=&quot;arrow-end&quot; markerWidth=&quot;10&quot; markerHeight=&quot;10&quot; refX=&quot;7&quot; refY=&quot;3&quot; orient=&quot;auto&quot; markerUnits=&quot;strokeWidth&quot;&gt;
         ///		&lt;path d=&quot;M0,6 L9,3 L0,0 L3,3 z&quot; fill=&quot;#000&quot; /&gt;
         ///	&lt;/marker&gt;
         ///	&lt;marker id=&quot;arrow-start&quot; markerWidth=&quot;10&quot; markerHeight=&quot;10&quot; refX=&quot;3&quot; refY=&quot;3&quot; orient=&quot;auto&quot; markerUnits=&quot;strokeWidth&quot;&gt;
@@ -70,7 +70,7 @@ namespace A2v10.Xaml.Properties {
         ///	&lt;/marker&gt;
         ///	&lt;filter xmlns=&quot;http://www.w3.org/2000/svg&quot; id=&quot;dropShadow&quot;&gt;
         ///		&lt;feGaussianBlur in=&quot;SourceAlpha&quot; stdDeviation=&quot;1.7&quot; result=&quot;blur&quot; /&gt;
-        ///		&lt;feOffse [rest of string was truncated]&quot;;.
+        ///		&lt;feO [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string svgdefs {
             get {

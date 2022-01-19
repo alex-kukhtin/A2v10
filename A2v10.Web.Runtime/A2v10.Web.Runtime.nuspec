@@ -24,55 +24,54 @@
 			<reference file="A2v10.Reports.dll" />
 		</references>
 		<frameworkAssemblies>
-			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net461" />
-			<frameworkAssembly assemblyName="System.Activities" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net48" />
+			<frameworkAssembly assemblyName="System.Activities" targetFramework="net48" />
 		</frameworkAssemblies>
 		<contentFiles>
 		</contentFiles>
 		<dependencies>
-			<group targetFramework=".NETFramework4.6.1"/>
+			<group targetFramework=".NETFramework4.8"/>
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="bin/A2v10.Data.dll" target="lib/net461" />
-		<file src="bin/A2v10.Data.Interfaces.dll" target="lib/net461" />
-		<file src="bin/A2v10.Data.Providers.dll" target="lib/net461" />
-		<file src="bin/A2v10.Infrastructure.dll" target="lib/net461" />
-		<file src="bin/A2v10.Interop.dll" target="lib/net461" />
-		<file src="bin/A2v10.Messaging.dll" target="lib/net461" />
-		<file src="bin/A2v10.Reports.dll" target="lib/net461" />
-		<file src="bin/A2v10.Request.dll" target="lib/net461" />
-		<file src="bin/A2v10.Script.dll" target="lib/net461" />
-		<file src="bin/A2v10.Javascript.dll" target="lib/net461" />
-		<file src="bin/A2v10.Web.Base.dll" target="lib/net461" />
-		<file src="bin/A2v10.Web.Config.dll" target="lib/net461" />
-		<file src="bin/A2v10.Web.Identity.dll" target="lib/net461" />
-		<file src="bin/A2v10.Web.Script.dll" target="lib/net461" />
-		<file src="bin/A2v10.Web.Mvc.dll" target="lib/net461" />
-		<file src="bin/A2v10.Workflow.dll" target="lib/net461" />
-		<file src="bin/A2v10.Xaml.dll" target="lib/net461" />
-		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="lib/net461" />
-		<file src="bin/A2v10.Lang.dll" target="lib/net461" />
-		<file src="bin/DocumentFormat.OpenXml.dll" target="lib/net461" />
-		<file src="bin/Microsoft.Activities.Extensions.dll" target="lib/net461" />
-		<file src="bin/Microsoft.AspNet.Identity.Core.dll" target="lib/net461" />
-		<file src="bin/Microsoft.AspNet.Identity.Owin.dll" target="lib/net461" />
-		<file src="bin/Microsoft.Owin.dll" target="lib/net461" />
-		<file src="bin/Microsoft.Owin.Host.SystemWeb.dll" target="lib/net461" />
-		<file src="bin/Microsoft.Owin.Security.Cookies.dll" target="lib/net461" />
-		<file src="bin/Microsoft.Owin.Security.dll" target="lib/net461" />
-		<file src="bin/Microsoft.Owin.Security.OAuth.dll" target="lib/net461" />
-		<file src="bin/Microsoft.Web.Infrastructure.dll" target="lib/net461" />
-		<file src="bin/System.ValueTuple.dll" target="lib/net461" />
-		<file src="bin/System.Web.Mvc.dll" target="lib/net461" />
-		<file src="bin/System.Web.Razor.dll" target="lib/net461" />
-		<file src="bin/System.Web.WebPages.dll" target="lib/net461" />
-		<file src="bin/System.Web.WebPages.Razor.dll" target="lib/net461" />
-		<file src="bin/System.Web.WebPages.Deployment.dll" target="lib/net461"/>
-		<file src="bin/Newtonsoft.Json.dll" target="lib/net461" />
-		<file src="bin/Owin.dll" target="lib/net461" />
-		<file src="bin/Jint.dll" target="lib/net461" />
-		<file src="bin/Esprima.dll" target="lib/net461" />
+		<file src="bin/A2v10.Data.dll" target="lib/net48" />
+		<file src="bin/A2v10.Data.Interfaces.dll" target="lib/net48" />
+		<file src="bin/A2v10.Data.Providers.dll" target="lib/net48" />
+		<file src="bin/A2v10.Infrastructure.dll" target="lib/net48" />
+		<file src="bin/A2v10.Interop.dll" target="lib/net48" />
+		<file src="bin/A2v10.Messaging.dll" target="lib/net48" />
+		<file src="bin/A2v10.Reports.dll" target="lib/net48" />
+		<file src="bin/A2v10.Request.dll" target="lib/net48" />
+		<file src="bin/A2v10.Script.dll" target="lib/net48" />
+		<file src="bin/A2v10.Javascript.dll" target="lib/net48" />
+		<file src="bin/A2v10.Web.Base.dll" target="lib/net48" />
+		<file src="bin/A2v10.Web.Config.dll" target="lib/net48" />
+		<file src="bin/A2v10.Web.Identity.dll" target="lib/net48" />
+		<file src="bin/A2v10.Web.Script.dll" target="lib/net48" />
+		<file src="bin/A2v10.Web.Mvc.dll" target="lib/net48" />
+		<file src="bin/A2v10.Workflow.dll" target="lib/net48" />
+		<file src="bin/A2v10.Xaml.dll" target="lib/net48" />
+		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="lib/net48" />
+		<file src="bin/A2v10.Lang.dll" target="lib/net48" />
+		<file src="bin/DocumentFormat.OpenXml.dll" target="lib/net48" />
+		<file src="bin/Microsoft.Activities.Extensions.dll" target="lib/net48" />
+		<file src="bin/Microsoft.AspNet.Identity.Core.dll" target="lib/net48" />
+		<file src="bin/Microsoft.AspNet.Identity.Owin.dll" target="lib/net48" />
+		<file src="bin/Microsoft.Owin.dll" target="lib/net48" />
+		<file src="bin/Microsoft.Owin.Host.SystemWeb.dll" target="lib/net48" />
+		<file src="bin/Microsoft.Owin.Security.Cookies.dll" target="lib/net48" />
+		<file src="bin/Microsoft.Owin.Security.dll" target="lib/net48" />
+		<file src="bin/Microsoft.Owin.Security.OAuth.dll" target="lib/net48" />
+		<file src="bin/Microsoft.Web.Infrastructure.dll" target="lib/net48" />
+		<file src="bin/System.Web.Mvc.dll" target="lib/net48" />
+		<file src="bin/System.Web.Razor.dll" target="lib/net48" />
+		<file src="bin/System.Web.WebPages.dll" target="lib/net48" />
+		<file src="bin/System.Web.WebPages.Razor.dll" target="lib/net48" />
+		<file src="bin/System.Web.WebPages.Deployment.dll" target="lib/net48"/>
+		<file src="bin/Newtonsoft.Json.dll" target="lib/net48" />
+		<file src="bin/Owin.dll" target="lib/net48" />
+		<file src="bin/Jint.dll" target="lib/net48" />
+		<file src="bin/Esprima.dll" target="lib/net48" />
 
 
 		<file src="D:/Git/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>

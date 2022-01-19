@@ -39,43 +39,47 @@ namespace ASP
         }
         public override void Execute()
         {
-WriteLiteral("<!DOCTYPE html>\r\n<html>\r\n<head>\r\n    <meta");
+WriteLiteral("<!DOCTYPE html>\r\n<html");
+
+WriteLiteral(" lang=\"uk\"");
+
+WriteLiteral(">\r\n<head>\r\n\t<meta");
 
 WriteLiteral(" charset=\"utf-8\"");
 
-WriteLiteral(" />\r\n    <meta");
+WriteLiteral(" />\r\n\t<meta");
 
 WriteLiteral(" name=\"viewport\"");
 
 WriteLiteral(" content=\"width=device-width, initial-scale=1.0\"");
 
-WriteLiteral(">\r\n    <meta");
+WriteLiteral(">\r\n\t<meta");
 
 WriteLiteral(" http-equiv=\"X-UA-Compatible\"");
 
 WriteLiteral(" content=\"IE=edge\"");
 
-WriteLiteral(" />\r\n    <title>A2:Web</title>\r\n    <link");
+WriteLiteral(" />\r\n\t<title>A2:Web</title>\r\n\t<link");
 
 WriteLiteral(" href=\"/css/site.min.css\"");
 
 WriteLiteral(" rel=\"stylesheet\"");
 
-WriteLiteral(" />\r\n</head>\r\n<body>\r\n    <div");
+WriteLiteral(" />\r\n</head>\r\n<body>\r\n\t<div");
 
 WriteLiteral(" id=\"app\"");
 
 WriteLiteral(" class=\"shell\"");
 
-WriteLiteral(">\r\n        <header");
+WriteLiteral(">\r\n\t\t<header");
 
 WriteLiteral(" class=\"header\"");
 
-WriteLiteral(">\r\n            <div");
+WriteLiteral(">\r\n\t\t\t<div");
 
 WriteLiteral(" class=\"h-block\"");
 
-WriteLiteral(">\r\n                <!--<i class=\"ico-user\"></i>-->\r\n                <a");
+WriteLiteral(">\r\n\t\t\t\t<!--<i class=\"ico-user\"></i>-->\r\n\t\t\t\t<a");
 
 WriteLiteral(" class=\"app-title\"");
 
@@ -85,27 +89,27 @@ WriteLiteral(" v-on:click.prevent=\"root\"");
 
 WriteLiteral(" v-text=\"title\"");
 
-WriteLiteral("></a>\r\n                <span");
+WriteLiteral("></a>\r\n\t\t\t\t<span");
 
 WriteLiteral(" class=\"app-subtitle\"");
 
 WriteLiteral(" v-text=\"subtitle\"");
 
-WriteLiteral("></span>\r\n            </div>\r\n            <div");
+WriteLiteral("></span>\r\n\t\t\t</div>\r\n\t\t\t<div");
 
 WriteLiteral(" class=\"aligner\"");
 
-WriteLiteral("></div>\r\n        </header>\r\n        <div");
+WriteLiteral("></div>\r\n\t\t</header>\r\n\t\t<div");
 
 WriteLiteral(" class=\"main-view\"");
 
-WriteLiteral(">\r\n            <div");
+WriteLiteral(">\r\n\t\t\t<div");
 
 WriteLiteral(" class=\"content-view full-view\"");
 
 WriteLiteral(">\r\n");
 
-WriteLiteral("                ");
+WriteLiteral("\t\t\t\t");
 
             
             #line 22 "..\..\Views\Shared\_Layout.cshtml"
@@ -114,27 +118,27 @@ WriteLiteral("                ");
             
             #line default
             #line hidden
-WriteLiteral("\r\n            </div>\r\n        </div>\r\n        <footer");
+WriteLiteral("\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t\t<footer");
 
 WriteLiteral(" class=\"footer\"");
 
-WriteLiteral(">\r\n            <div");
+WriteLiteral(">\r\n\t\t\t<div");
 
 WriteLiteral(" :class=\"{spinner: true, active:processing}\"");
 
-WriteLiteral("></div>\r\n            version: <span");
+WriteLiteral("></div>\r\n\t\t\tversion: <span");
 
 WriteLiteral(" v-text=\"version\"");
 
-WriteLiteral("></span>\r\n        </footer>\r\n    </div>\r\n    <script");
+WriteLiteral("></span>\r\n\t\t</footer>\r\n\t</div>\r\n\t<script");
 
 WriteLiteral(" type=\"text/javascript\"");
 
-WriteLiteral(" src=\"/scripts/vue.min.js?v=2.4.2\"");
+WriteLiteral(" src=\"/scripts/vue.min.js?v=2.5.16\"");
 
 WriteLiteral("></script>\r\n");
 
-WriteLiteral("    ");
+WriteLiteral("\t");
 
             
             #line 31 "..\..\Views\Shared\_Layout.cshtml"

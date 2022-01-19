@@ -17,8 +17,8 @@
 	<system.web>
 		<globalization uiCulture="uk-UA" />
 		<authentication mode="None" />
-		<compilation debug="true" targetFramework="4.6.1" />
-		<httpRuntime targetFramework="4.6.1" />
+		<compilation debug="true" targetFramework="4.8" />
+		<httpRuntime targetFramework="4.8" />
 	</system.web>
 	<system.net>
 		<mailSettings>
@@ -69,10 +69,6 @@
 			<dependentAssembly>
 				<assemblyIdentity name="Newtonsoft.Json" culture="neutral" publicKeyToken="30ad4fe6b2a6aeed" />
 				<bindingRedirect oldVersion="0.0.0.0-13.0.0.0" newVersion="13.0.0.0" />
-			</dependentAssembly>
-			<dependentAssembly>
-				<assemblyIdentity name="System.Value.Tuple" culture="neutral" publicKeyToken="cc7b13ffcd2ddd51" />
-				<bindingRedirect oldVersion="0.0.0.0-4.6.0.0" newVersion="4.6.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.IdentityModel.Tokens" publicKeyToken="31bf3856ad364e35" />

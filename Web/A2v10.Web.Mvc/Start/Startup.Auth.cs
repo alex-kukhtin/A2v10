@@ -68,14 +68,21 @@ namespace A2v10.Web.Mvc.Start
 				context.Response.Redirect(url);
 			};
 
-			app.UseCookieAuthentication(new CookieAuthenticationOptions
-			{
-				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-				LoginPath = new PathString("/account/login"),
-				ReturnUrlParameter = "returnurl",
-				Provider = authProvider,
-				CookieName = GetApplicationCookieName(),
-			});
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+                LoginPath = new PathString("/account/login"),
+                ReturnUrlParameter = "returnurl",
+                Provider = authProvider,
+                CookieName = GetApplicationCookieName(),
+                // new values
+                CookieSameSite = Microsoft.Owin.SameSiteMode.None,
+                CookieSecure = CookieSecureOption.Always,
+                /*
+                ExpireTimeSpan = TimeSpan.FromSeconds(20),
+                CookieDomain = "thishost:81"
+                */
+            });
 
 			String GetApplicationCookieName()
 			{

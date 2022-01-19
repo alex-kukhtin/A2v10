@@ -437,7 +437,9 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (!String.IsNullOrEmpty(model.Locale))
 				{
-					Response.Cookies.Add(new HttpCookie(LOCALE_COOKIE, model.Locale));
+                    var cookie = new HttpCookie(LOCALE_COOKIE, model.Locale);
+                    cookie.SameSite = SameSiteMode.Strict;
+                    Response.Cookies.Add(cookie);
 					_userLocale.Locale = model.Locale;
 				}
 

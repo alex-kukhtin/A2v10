@@ -13,8 +13,8 @@
 	<system.web>
 		<globalization uiCulture="uk-UA" />
 		<authentication mode="None" />
-		<compilation debug="true" targetFramework="4.6.1" />
-		<httpRuntime targetFramework="4.6.1" />
+		<compilation debug="true" targetFramework="4.8" />
+		<httpRuntime targetFramework="4.8" />
 	</system.web>
 	
 	<system.webServer>
