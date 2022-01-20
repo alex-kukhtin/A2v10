@@ -9,5 +9,9 @@
 		<TextBox Label="Name" Value="{Bind Item.Name}"/>
 		<TextBox Label="Memo" Value="{Bind Item.Memo}"/>
 		<Static Label="DateCreated" Value="{Bind Item.DateCreated, DataType=DateTime}"/>
+
+		<ComboBox ItemsSource="{Bind Root.$Elements}" Value="{Bind Root.$Selected}">
+			<ComboBoxItem Content="{Bind Name}" Value="{Bind Value}"/>
+		</ComboBox>
 	</Grid>
 </Dialog>

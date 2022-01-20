@@ -9,8 +9,9 @@
 		}
 	},
 	"dialogs": {
-		"edit": {
-			"view": "edit.dialog"
-		}
+	  "edit": {
+		"template": "edit.template",
+		"view": "edit.dialog"
+	  }
 	}
 }
