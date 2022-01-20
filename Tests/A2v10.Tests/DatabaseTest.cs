@@ -7,9 +7,6 @@ using System.Dynamic;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 using A2v10.Infrastructure;
 using A2v10.Tests.Config;
 using A2v10.Data;

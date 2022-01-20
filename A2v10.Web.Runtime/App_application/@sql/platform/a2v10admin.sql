@@ -1,12 +1,12 @@
 /*
 ------------------------------------------------
-Copyright © 2008-2021 Alex Kukhtin
+Copyright © 2008-2022 Alex Kukhtin
 
-Last updated : 27 apr 2021
-module version : 7751
+Last updated : 06 jan 2022
+module version : 7752
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:admin', 7751;
+exec a2sys.SetVersion N'std:admin', 7752;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -91,10 +91,13 @@ begin
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
-	set @Asc = N'asc'; set @Desc = N'desc';
+	declare @Fr nvarchar(255);
+	set @Fr = @Fragment;
+	set @Asc = N'asc';
+	set @Desc = N'desc';
 	set @Dir = isnull(@Dir, @Asc);
-	if @Fragment is not null
-		set @Fragment = N'%' + upper(@Fragment) + N'%';
+	if @Fr is not null
+		set @Fr = N'%' + upper(@Fr) + N'%';
 
 	-- list of users
 	with T([Id!!Id], [Name!!Name], [Phone!!Phone], Email, PersonName, Memo, IsAdmin, [LastLoginDate!!UtcDate], LastLoginHost, [!!RowNumber])
@@ -117,9 +120,9 @@ begin
 				case when @Order=N'Memo' and @Dir = @Desc then u.Memo end desc
 			)
 		from a2security.ViewUsers u
-		where @Fragment is null or upper(u.UserName) like @Fragment or upper(u.PersonName) like @Fragment
-			or upper(u.Email) like @Fragment or upper(u.PhoneNumber) like @Fragment 
-			or cast(u.Id as nvarchar) like @Fragment or upper(u.Memo) like @Fragment
+		where @Fr is null or upper(u.UserName) like @Fr or upper(u.PersonName) like @Fr
+			or upper(u.Email) like @Fr or upper(u.PhoneNumber) like @Fr 
+			or cast(u.Id as nvarchar) like @Fr or upper(u.Memo) like @Fr
 	)
 	select [Users!TUser!Array]=null, *, [!!RowCount] = (select count(1) from T)
 	from T
@@ -334,12 +337,14 @@ begin
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
+	declare @Fr nvarchar(255);
+	set @Fr = @Fragment;
 	set @Asc = N'asc'; set @Desc = N'desc';
 	set @Dir = isnull(@Dir, @Asc);
 
 	set @Dir = isnull(@Dir, @Asc);
-	if @Fragment is not null
-		set @Fragment = N'%' + upper(@Fragment) + N'%';
+	if @Fr is not null
+		set @Fr = N'%' + upper(@Fr) + N'%';
 
 	-- list of groups
 	with T([Id!!Id], [Name!!Name], [Key], [Memo], [UserCount], [!!RowNumber]) 
@@ -359,8 +364,8 @@ begin
 				case when @Order=N'Memo' and @Dir = @Desc then g.Memo end desc
 			)
 		from a2security.Groups g
-		where g.Void = 0 and (@Fragment is null or upper(g.[Name]) like @Fragment or upper(g.[Key]) like @Fragment
-			or upper(g.Memo) like @Fragment or cast(g.Id as nvarchar) like @Fragment)
+		where g.Void = 0 and (@Fr is null or upper(g.[Name]) like @Fr or upper(g.[Key]) like @Fr
+			or upper(g.Memo) like @Fr or cast(g.Id as nvarchar) like @Fr)
 	)
 
 	select [Groups!TGroup!Array]=null, *, [!!RowCount] = (select count(1) from T) 
@@ -579,12 +584,14 @@ begin
 	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
 
 	declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
+	declare @Fr nvarchar(255);
+	set @Fr = @Fragment;
 	set @Asc = N'asc'; set @Desc = N'desc';
 	set @Dir = isnull(@Dir, @Asc);
 
 	set @Dir = isnull(@Dir, @Asc);
-	if @Fragment is not null
-		set @Fragment = N'%' + upper(@Fragment) + N'%';
+	if @Fr is not null
+		set @Fr = N'%' + upper(@Fr) + N'%';
 
 	-- list of roles
 	with T([Id!!Id], [Name!!Name], [Key], [Memo], [ElemCount], [!!RowNumber]) 
@@ -604,8 +611,8 @@ begin
 				case when @Order=N'Memo' and @Dir = @Desc then r.Memo end desc
 			)
 		from a2security.Roles r
-		where r.Void = 0 and (@Fragment is null or upper(r.[Name]) like @Fragment or upper(r.[Key]) like @Fragment
-			or upper(r.Memo) like @Fragment or cast(r.Id as nvarchar) like @Fragment)
+		where r.Void = 0 and (@Fr is null or upper(r.[Name]) like @Fr or upper(r.[Key]) like @Fr
+			or upper(r.Memo) like @Fr or cast(r.Id as nvarchar) like @Fr)
 	)
 
 	select [Roles!TRole!Array]=null, *, [!!RowCount] = (select count(1) from T) 
@@ -813,87 +820,6 @@ begin
 		delete;
 
 	exec a2admin.[Role.Load] @TenantId, @UserId, @RetId;
-end
-go
-------------------------------------------------
-create or alter procedure a2admin.[Process.Index]
-	@TenantId int = null,
-	@UserId bigint,
-	@Order nvarchar(255) = N'Id',
-	@Dir nvarchar(255) = N'desc',
-	@Offset int = 0,
-	@PageSize int = 20,
-	@Fragment nvarchar(255) = null
-as
-begin
-	set nocount on;
-	set transaction isolation level read uncommitted;
-
-	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
-
-	--declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
-	--set @Asc = N'asc'; set @Desc = N'desc';
-	--set @Dir = isnull(@Dir, @Asc);
-	--if @Fragment is not null
-	--	set @Fragment = N'%' + upper(@Fragment) + N'%';
-
-	-- list of processes
-	with T([Id!!Id], [Kind!!Name], Base, [Owner], DateCreated, DateModified, [!!RowNumber])
-	as(
-		select p.Id, p.Kind, p.ActionBase, u.UserName, p.DateCreated, p.DateModified
-			,[!!RowNumber] = row_number() over (order by p.Id desc)
-		from a2workflow.Processes p
-			left join a2security.Users u on p.[Owner]=u.Id
-	)
-	select [Processes!TProcess!Array]=null, *, [!!RowCount] = (select count(1) from T)
-	from T
-	where [!!RowNumber] > @Offset and [!!RowNumber] <= @Offset + @PageSize
-	order by [!!RowNumber];
-
-	select [!$System!] = null, [!Processes!PageSize] = @PageSize, 
-		[!Processes!SortOrder] = @Order, [!Processes!SortDir] = @Dir,
-		[!Processes!Offset] = @Offset, [!Processes.Fragment!Filter] = @Fragment;
-end
-go
-------------------------------------------------
-create or alter procedure a2admin.[Inbox.Index]
-	@TenantId int = null,
-	@UserId bigint,
-	@Order nvarchar(255) = N'Id',
-	@Dir nvarchar(255) = N'desc',
-	@Offset int = 0,
-	@PageSize int = 20,
-	@Fragment nvarchar(255) = null
-as
-begin
-	set nocount on;
-	set transaction isolation level read uncommitted;
-
-	exec a2admin.[Ensure.Admin]  @TenantId, @UserId;
-
-	--declare @Asc nvarchar(10), @Desc nvarchar(10), @RowCount int;
-	--set @Asc = N'asc'; set @Desc = N'desc';
-	--set @Dir = isnull(@Dir, @Asc);
-	--if @Fragment is not null
-	--	set @Fragment = N'%' + upper(@Fragment) + N'%';
-
-	-- list of inboxes
-	with T([Id!!Id], [Bookmark!!Name], ProcessId, [Role], [User], [Text], DateCreated, DateRemoved, [!!RowNumber])
-	as(
-		select i.Id, i.Bookmark, i.ProcessId, i.[For], u.UserName, i.[Text], i.DateCreated, i.DateRemoved
-			,[!!RowNumber] = row_number() over (order by i.Id desc)
-		from a2workflow.Inbox i
-			left join a2security.Users u on i.ForId=u.Id
-		where @Fragment is null or i.ProcessId=try_cast(@Fragment as bigint)
-	)
-	select [Inboxes!TInbox!Array]=null, *, [!!RowCount] = (select count(1) from T)
-	from T
-	where [!!RowNumber] > @Offset and [!!RowNumber] <= @Offset + @PageSize
-	order by [!!RowNumber];
-
-	select [!$System!] = null, [!Inboxes!PageSize] = @PageSize, 
-		[!Inboxes!SortOrder] = @Order, [!Inboxes!SortDir] = @Dir,
-		[!Inboxes!Offset] = @Offset, [!Inboxes.Fragment!Filter] = @Fragment;
 end
 go
 ------------------------------------------------

@@ -4,7 +4,6 @@
 	"name": "Test Application",
 	"scope": "/",
 	"display": "fullscreen",
-	"start_url": "http://localhost:56358/",
 	"short_name": "TestApplication",
 	"theme_color": "#dd2c5e",
 	"description": "",
