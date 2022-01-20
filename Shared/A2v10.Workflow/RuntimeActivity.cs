@@ -12,7 +12,7 @@ namespace A2v10.Workflow
 {
 	internal static class RuntimeActivity
 	{
-		static IDictionary<String, Type> _cache = new ConcurrentDictionary<String, Type>();
+		static readonly IDictionary<String, Type> _cache = new ConcurrentDictionary<String, Type>();
 
 		static void CacheType(String key, Type type)
 		{

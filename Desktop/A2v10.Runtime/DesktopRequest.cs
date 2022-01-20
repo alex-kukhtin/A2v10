@@ -228,6 +228,7 @@ namespace A2v10.Runtime
 					{ "$(PersonName)", userName },
 					{ "$(CompanyButton)", GetCompanyButton()},
 					{ "$(Theme)", theme },
+					{ "$(ThemeTimeStamp)", _controller.Host.AppBuild},
 					{ "$(Build)", _controller.Host.AppBuild },
 					{ "$(Locale)", locale },
 					{ "$(Minify)", _controller.IsDebugConfiguration ? String.Empty : "min." },

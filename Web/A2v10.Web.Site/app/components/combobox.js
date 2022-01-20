@@ -1,10 +1,9 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20200618-7674*/
-/*components/combobox.js*/
+/*20220120-7820*/
+/*components/combobox.js */
 
 (function () {
-
 
 	const utils = require('std:utils');
 
@@ -58,6 +57,10 @@
 		computed: {
 			cmbValue: {
 				get() {
+					if (this.itemsSource.length === 0 && this.item) {
+						if (this.item[this.prop].$empty)
+							this.item[this.prop].$empty();
+					}
 					return this.getComboValue();
 				},
 				set(value) {
@@ -94,10 +97,12 @@
 					return val;
 				}
 				// always return value from ItemsSource
-				return this.itemsSource.find(x => x[vProp] === val[vProp]);
+				return this.itemsSource.find(x => x[vProp] === val[vProp]) || null;
 			},
 			getText() {
 				let cv = this.getComboValue();
+				if (!cv)
+					return '';
 				if (utils.isObjectExact(cv))
 					return this.getName(cv);
 				if (this.itemsSource && this.itemsSource.length) {

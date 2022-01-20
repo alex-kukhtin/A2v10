@@ -1,6 +1,9 @@
 <!-- Test index -->
-<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" SaveEvent="guid.saved">
+<Dialog xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml" SaveEvent="guid.saved"
+		Overflow="True">
 	<Dialog.Buttons>
+		<Button Content="No elements" Command="{BindCmd Execute, CommandName=clear}"/>
+		<Separator />
 		<Button Content="OK" Command="{BindCmd SaveAndClose}"/>
 		<Button Content="Cancel" Command="{BindCmd Close}"/>
 	</Dialog.Buttons>
@@ -10,8 +13,8 @@
 		<TextBox Label="Memo" Value="{Bind Item.Memo}"/>
 		<Static Label="DateCreated" Value="{Bind Item.DateCreated, DataType=DateTime}"/>
 
-		<ComboBox ItemsSource="{Bind Root.$Elements}" Value="{Bind Root.$Selected}">
-			<ComboBoxItem Content="{Bind Name}" Value="{Bind Value}"/>
+		<ComboBox ItemsSource="{Bind Root.$Elements}" Value="{Bind Item.Elem}">
+			<ComboBoxItem Content="{Bind Name}" Value="{Bind}"/>
 		</ComboBox>
 	</Grid>
 </Dialog>

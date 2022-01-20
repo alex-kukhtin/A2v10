@@ -285,7 +285,7 @@ namespace A2v10.Request
 						return ai;
 					}
 				default:
-					throw new InvalidOperationException($"Invalid type for file: '{ru.type.ToString()}'");
+					throw new InvalidOperationException($"Invalid type for file: '{ru.type}'");
 			}
 		}
 	}

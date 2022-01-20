@@ -104,6 +104,7 @@ namespace A2v10.Request
 			var theme = host.Theme;
 			sb.Replace("$(ColorScheme)", theme?.ColorScheme ?? null);
 			sb.Replace("$(Theme)", theme?.FileName ?? null);
+			sb.Replace("$(ThemeTimeStamp)", theme?.ThemeTimeStamp ?? null);
 		}
 
 

@@ -6,7 +6,7 @@
 		<sys:String x:Key="OpenUrl">/purchase/testguids/edit</sys:String>
 	</Page.Resources>
 	<Page.Toolbar>
-		<Toolbar>
+		<Toolbar Style="Light" Padding="0" Margin=".5rem,0">
 			<Button Icon="Add" Tip="Create" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Items}}">Create</Button>
 			<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Items}}">Edit</Button>
 			<Separator />

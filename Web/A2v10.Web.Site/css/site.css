@@ -4345,7 +4345,7 @@ tr:hover .commandbar.visible-hover {
   align-self: flex-start;
 }
 .chat-item {
-  padding: 0.25rem;
+  padding: 0.5rem / 2;
   display: block;
   text-align: left;
 }
@@ -4698,7 +4698,7 @@ ul.news-list > li {
   position: absolute;
   top: 0;
   left: -10px;
-  border: 19px solid transparent;
+  border: 38px / 2 solid transparent;
   border-color: inherit;
   border-right-width: 0;
   border-left-color: transparent;
@@ -4710,7 +4710,7 @@ ul.news-list > li {
   position: absolute;
   top: 0;
   left: 100%;
-  border: 19px solid transparent;
+  border: 38px / 2 solid transparent;
   border-right-width: 0;
   border-left-color: inherit;
   border-left-width: 10px;
@@ -6268,7 +6268,7 @@ iframe.eusign-iframe {
 }
 .card.compact .card-header,
 .card.compact .card-footer {
-  padding: 0 0.625rem;
+  padding: 0 1.25rem / 2;
   font-size: 13px;
   line-height: 2rem;
 }

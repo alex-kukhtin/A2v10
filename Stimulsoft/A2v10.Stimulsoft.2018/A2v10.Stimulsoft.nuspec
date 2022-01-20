@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Stimulsoft</id>
-		<version>2018.3.1003</version>
+		<version>2018.3.1004</version>
 		<title>A2v10.Stimulsoft</title>
 		<authors>AlexKukhtin</authors>
 		<owners>AlexKukhtin</owners>
@@ -10,7 +10,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Stimulsoft Shim.</description>
 		<releaseNotes>Current NUGET release</releaseNotes>
-		<copyright>Copyright © 2022 Oleksandr Kukhtin</copyright>
+		<copyright>Copyright © 2021-2022 Oleksandr Kukhtin</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
 		<references>

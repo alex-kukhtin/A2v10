@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -39,6 +39,10 @@ namespace A2v10.Web.Config
 			if (!String.IsNullOrEmpty(Name))
 				FileName += $".{Name.ToLowerInvariant()}";
 
+			var cssPath = Path.Combine(hostingPath, "css", $"{FileName}.min.css");
+			var cssDateTime = File.GetLastWriteTimeUtc(cssPath);
+			ThemeTimeStamp = cssDateTime.ToString("yyyyMMddhhmmss");
+
 			if (!String.IsNullOrEmpty(schemeName))
 			{
 				var schemePath = Path.Combine(hostingPath, "css", $"{schemeName}.colorscheme.min.css");
@@ -51,6 +55,7 @@ namespace A2v10.Web.Config
 		public String Name { get; }
 		public String FileName { get; }
 		public String ColorScheme { get; }
+		public String ThemeTimeStamp { get; }
 	}
 
     public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenantManager, IDataConfiguration
@@ -303,7 +308,7 @@ namespace A2v10.Web.Config
 		}
 
 
-		private static Lazy<Regex> _checkMobileRegEx = new Lazy<Regex>(() =>
+		private static readonly Lazy<Regex> _checkMobileRegEx = new Lazy<Regex>(() =>
 		{
 			var checkMobile = ConfigurationManager.AppSettings["mobileRegEx"];
 			if (!String.IsNullOrEmpty(checkMobile))

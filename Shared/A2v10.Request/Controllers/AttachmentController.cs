@@ -15,7 +15,7 @@ namespace A2v10.Request
 {
 	public class AttachmentController
 	{
-		BaseController _baseController = new BaseController();
+		private readonly BaseController _baseController = new BaseController();
 
 
 		public IApplicationHost Host => _baseController.Host;

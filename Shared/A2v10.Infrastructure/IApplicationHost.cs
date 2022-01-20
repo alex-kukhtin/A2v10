@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -16,6 +16,7 @@ namespace A2v10.Infrastructure
 		String Name { get; }
 		String FileName { get; }
 		String ColorScheme { get; }
+		String ThemeTimeStamp { get; }
 	}
 
 	public interface IApplicationHost

@@ -16,13 +16,13 @@ namespace A2v10.Infrastructure
 		public static T Get<T>(this ExpandoObject obj, String name)
 		{
 			if (!(obj is IDictionary<String, Object> d))
-				return default(T);
+				return default;
 			if (d.TryGetValue(name, out Object result))
 			{
-				if (result is T)
-					return (T)result;
+				if (result is T tResult)
+					return tResult;
 			}
-			return default(T);
+			return default;
 		}
 
 
@@ -240,15 +240,15 @@ namespace A2v10.Infrastructure
 			return eo;
 		}
 
-		public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default(T), Boolean throwIfError = false)
+		public static T Eval<T>(this ExpandoObject root, String expression, T fallback = default, Boolean throwIfError = false)
 		{
 			if (expression == null)
 				return fallback;
 			Object result = root.EvalExpression(expression, throwIfError);
 			if (result == null)
 				return fallback;
-			if (result is T)
-				return (T)result;
+			if (result is T tResult)
+				return tResult;
 			return fallback;
 		}
 

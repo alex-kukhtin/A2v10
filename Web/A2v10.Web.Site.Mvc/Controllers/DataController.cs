@@ -6,7 +6,7 @@ namespace A2v10.Web.Site.Mvc.Controllers
 {
     public class DataController : Controller
     {
-        A2v10.Request.SiteController _siteController;
+        private readonly A2v10.Request.SiteController _siteController;
 
         public Int64 UserId => 99;
 

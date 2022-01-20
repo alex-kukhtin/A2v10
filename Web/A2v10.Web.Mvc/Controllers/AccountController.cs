@@ -313,7 +313,7 @@ namespace A2v10.Web.Mvc.Controllers
 			SendPage(page, ResourceHelper.RegisterTenantScript);
 		}
 
-		static ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
+		static readonly ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
 
 		public Int32 IsDDOS()
 		{
