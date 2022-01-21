@@ -30,7 +30,7 @@ namespace A2v10.Workflow
 		{
 			if (Params == null)
 				throw new WorkflowException("There are no Params in RequestResult");
-			return Params.Eval<T>(Expression, default(T), throwIfError: true);
+			return Params.Eval<T>(Expression, default, throwIfError: true);
 		}
 
 		public String Resolve(String expr)

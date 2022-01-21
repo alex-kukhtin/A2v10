@@ -84,7 +84,7 @@ namespace A2v10.Xaml
 					return t;
 				p = p.Parent;
 			}
-			return default(T);
+			return default;
 		}
 
 

@@ -146,7 +146,7 @@ BOOL CA2FormView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 		return __super::OnSetCursor(this, HTCLIENT, message);
 
 
-	if (CFormTool::s_currentShape != CFormItem::_pointer)
+	if (CFormTool::s_currentShape != CFormItem::Shape::_pointer)
 		return __super::OnSetCursor(this, HTCLIENT, message);
 
 	int cnt = m_selection.GetCount();

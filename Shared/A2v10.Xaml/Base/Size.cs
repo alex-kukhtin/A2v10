@@ -45,7 +45,7 @@ namespace A2v10.Xaml
 			if (Width == Height)
 				return Width.ToString();
 			else
-				return $"{Width.ToString()} {Height.ToString()}";
+				return $"{Width} {Height}";
 		}
 	}
 

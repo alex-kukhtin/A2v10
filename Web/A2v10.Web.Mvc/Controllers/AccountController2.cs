@@ -30,7 +30,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
 			var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
-			var rm = rememberMe != null ? rememberMe.Value : false;
+			var rm = rememberMe != null && rememberMe.Value;
 			return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rm });
 		}
 

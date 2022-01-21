@@ -18,10 +18,10 @@ namespace A2v10.Xaml
 		internal static T GetAttached<T>(IDictionary<Object, T> dict, Object obj)
 		{
 			if (dict == null)
-				return default(T);
+				return default;
 			if (dict.TryGetValue(obj, out T val))
 				return val;
-			return default(T);
+			return default;
 		}
 	}
 }

@@ -313,7 +313,7 @@ namespace A2v10.Web.Mvc.Controllers
 				return;
 			if (result is String)
 			{
-				_logger.LogApi($"response: {result.ToString()}", Request.UserHostAddress, apiGuid);
+				_logger.LogApi($"response: {result}", Request.UserHostAddress, apiGuid);
 				writer.Write(result.ToString());
 			}
 			else if (result is XDocument xDoc)

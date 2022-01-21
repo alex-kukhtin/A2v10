@@ -58,7 +58,7 @@ CFormItem* CFormItem::CreateNode(LPCWSTR szClassName)
 {
 	if ((szClassName == nullptr) || (*szClassName == NULL_CHR) || (*szClassName == L'#'))
 		return nullptr;
-	CItemRegisterMap& sMap = Register(NULL, NULL, CFormItem::_undefined);
+	CItemRegisterMap& sMap = Register(NULL, NULL, CFormItem::Shape::_undefined);
 	CRuntimeClass* pRuntimeClass = NULL;
 	if (!sMap.m_str2RC.Lookup(szClassName, pRuntimeClass))
 		return nullptr;
@@ -76,9 +76,9 @@ CFormItem* CFormItem::CreateNode(LPCWSTR szClassName)
 CFormItem* CFormItem::CreateElement(CFormItem::Shape shape, CFormItem* pParent)
 {
 	ATLASSERT(pParent);
-	if (shape == CFormItem::_pointer)
+	if (shape == CFormItem::Shape::_pointer)
 		return nullptr;
-	CItemRegisterMap& sMap = Register(NULL, NULL, CFormItem::_undefined);
+	CItemRegisterMap& sMap = Register(NULL, NULL, CFormItem::Shape::_undefined);
 	CRuntimeClass* pRuntimeClass = NULL;
 	if (!sMap.m_shape2RC.Lookup(shape, pRuntimeClass))
 		return nullptr;

@@ -28,7 +28,7 @@ struct PAYMENT_INFO {
 	PAYMENT_INFO() {}
 };
 
-enum PAYMENT_MODE {
+enum class PAYMENT_MODE {
 	_pay_cash,
 	_pay_card
 };

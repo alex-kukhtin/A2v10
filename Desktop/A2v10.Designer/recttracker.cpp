@@ -21,9 +21,10 @@ CRectTrackerEx::CRectTrackerEx(LPCRECT lpSrcRect, UINT nStyle, CFormItem* pItem 
 }
 
 CRectTrackerEx::CRectTrackerEx(bool bPartial /*= false*/)
-	: CRectTracker(), m_bPartial(bPartial), m_pItem(nullptr)
+	: CRectTracker(), m_bPartial(bPartial), m_pItem(nullptr), m_pDC(nullptr), m_pOffset(nullptr)
 {
 	m_nHandleSize = CX_HANDLE_SIZE;
+	m_dwDrawStyle = RTRE_ALL;
 }
 
 UINT CRectTrackerEx::GetHandleMask() const

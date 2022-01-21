@@ -13,7 +13,7 @@ static LPCWSTR LANG_OPTIONS_ENTRY = L"UI Language";
 
 struct TBSTRUCT
 {
-	TRACE_TYPE			tt;
+	TRACE_TYPE	tt;
 	TRACE_CATEGORY	tc;
 	CString	strText;
 	CString strFile;

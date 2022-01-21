@@ -74,6 +74,11 @@ public:
 	CString search;
 	bool error;
 
+	CParsedUrl() 
+	: error(false) 
+	{
+	}
+
 	static CParsedUrl CreateFrom(LPCSTR szUrl);
 
 };

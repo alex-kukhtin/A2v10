@@ -120,11 +120,11 @@ static IL_DEF ilDefs[CTheme::ImageListCount] =
 };
 
 // static 
-CImageList* CTheme::GetImageList(ImageListType type /*= ImageList16x16*/)
+CImageList* CTheme::GetImageList(CTheme::ImageListType type /*= ImageList16x16*/)
 {
 	ATLASSERT(type >= 0 && type <= ImageListLast);
-	CImageList* pList = &m_imageLists[type];
-	if (pList->GetSafeHandle() == NULL) 
+	CImageList* pList = &m_imageLists[(int) type];
+	if (pList->GetSafeHandle() == nullptr) 
 	{
 		IL_DEF& id = ilDefs[type];
 		CBitmap bmp;
@@ -132,7 +132,7 @@ CImageList* CTheme::GetImageList(ImageListType type /*= ImageList16x16*/)
 		VERIFY(pList->Create(id.iWidth, id.iHeight, ILC_COLOR24 | ILC_MASK, 0, 0));
 		pList->Add(&bmp, id.clrMask);
 	}
-	ATLASSERT(pList->GetSafeHandle() != NULL);
+	ATLASSERT(pList->GetSafeHandle() != nullptr);
 	return pList;
 }
 

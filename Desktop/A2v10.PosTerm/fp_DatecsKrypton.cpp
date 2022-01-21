@@ -866,10 +866,10 @@ void CFiscalPrinter_DatecsKrypton::Payment(PAYMENT_MODE mode, long sum)
 	std::wstring info;
 	switch (mode)
 	{
-	case _pay_cash:
+	case PAYMENT_MODE::_pay_cash:
 		Payment(_payModeCash, sum, info);
 		break;
-	case _pay_card:
+	case PAYMENT_MODE::_pay_card:
 		Payment(_payModeCard, sum, info);
 		break;
 	}

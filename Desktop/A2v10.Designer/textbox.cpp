@@ -9,7 +9,7 @@
 
 IMPLEMENT_DYNCREATE(CTextBoxElement, CFormItem)
 
-CItemRegister textbox(L"TextBox", RUNTIME_CLASS(CTextBoxElement), CFormItem::_textbox);
+CItemRegister textbox(L"TextBox", RUNTIME_CLASS(CTextBoxElement), CFormItem::Shape::_textbox);
 
 // virtual 
 void CTextBoxElement::Draw(const RENDER_INFO& ri)

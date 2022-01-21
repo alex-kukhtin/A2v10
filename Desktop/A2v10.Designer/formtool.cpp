@@ -15,7 +15,7 @@
 // static 
 CList<CFormTool*> CFormTool::s_toolsList;
 // static 
-CFormItem::Shape CFormTool::s_currentShape = CFormItem::_pointer;
+CFormItem::Shape CFormTool::s_currentShape = CFormItem::Shape::_pointer;
 
 UINT CFormTool::s_currentId = ID_TOOLBOX_POINTER;
 
@@ -26,15 +26,15 @@ CFormTool::CFormTool(CFormItem::Shape shape, UINT nID)
 }
 
 static CFormSelectTool selectTool;
-static CFormTool buttonTool  (CFormItem::_button, ID_TOOLBOX_BUTTON);
-static CFormTool textBoxTool (CFormItem::_textbox, ID_TOOLBOX_TEXTBOX);
-static CFormTool checkBoxTool(CFormItem::_checkbox, ID_TOOLBOX_CHECK);
-static CFormTool radioTool   (CFormItem::_radio, ID_TOOLBOX_RADIO);
-static CFormTool comboBoxTool(CFormItem::_combobox, ID_TOOLBOX_COMBOBOX);
-static CFormTool dataGridTool(CFormItem::_datagrid, ID_TOOLBOX_DATAGRID);
+static CFormTool buttonTool  (CFormItem::Shape::_button, ID_TOOLBOX_BUTTON);
+static CFormTool textBoxTool (CFormItem::Shape::_textbox, ID_TOOLBOX_TEXTBOX);
+static CFormTool checkBoxTool(CFormItem::Shape::_checkbox, ID_TOOLBOX_CHECK);
+static CFormTool radioTool   (CFormItem::Shape::_radio, ID_TOOLBOX_RADIO);
+static CFormTool comboBoxTool(CFormItem::Shape::_combobox, ID_TOOLBOX_COMBOBOX);
+static CFormTool dataGridTool(CFormItem::Shape::_datagrid, ID_TOOLBOX_DATAGRID);
 
-static CFormTool canvasTool(CFormItem::_canvas, ID_TOOLBOX_CANVAS);
-static CFormTool gridTool(CFormItem::_grid, ID_TOOLBOX_GRID);
+static CFormTool canvasTool(CFormItem::Shape::_canvas, ID_TOOLBOX_CANVAS);
+static CFormTool gridTool(CFormItem::Shape::_grid, ID_TOOLBOX_GRID);
 
 // static 
 void CFormTool::SetShape(UINT nID)
@@ -49,7 +49,7 @@ void CFormTool::SetShape(UINT nID)
 		}
 	}
 	s_currentId = 0;
-	s_currentShape = CFormItem::_undefined;
+	s_currentShape = CFormItem::Shape::_undefined;
 }
 
 // static 
@@ -136,7 +136,7 @@ void CFormTool::OnCancel()
 
 
 CFormSelectTool::CFormSelectTool()
-	: CFormTool(CFormItem::_pointer, ID_TOOLBOX_POINTER)
+	: CFormTool(CFormItem::Shape::_pointer, ID_TOOLBOX_POINTER)
 {
 }
 

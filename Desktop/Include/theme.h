@@ -26,7 +26,7 @@ public:
 		FontTypeCount = FontTypeLast + 1,
 	};
 
-	enum ImageListType {
+	enum ImageListType{
 		ImageList16x16 = 0,
 		ImageList10x10 = 1,
 		ImageList12x12 = 2,

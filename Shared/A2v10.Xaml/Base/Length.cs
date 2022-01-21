@@ -109,7 +109,7 @@ namespace A2v10.Xaml
 					throw new XamlException($"Invalid grid length value '{strVal}'");
 				GridLength gl1 = GridLength.FromString(match.Groups[1].Value);
 				GridLength gl2 = GridLength.FromString(match.Groups[2].Value);
-				return new GridLength($"minmax({gl1.ToString()},{gl2.ToString()})");
+				return new GridLength($"minmax({gl1},{gl2})");
 			}
 			else if (Length.IsValidLength(strVal))
 				return new GridLength() { Value = strVal };

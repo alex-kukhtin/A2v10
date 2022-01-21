@@ -18,7 +18,7 @@
 const char* CURRENCY_CODE = "980";
 const int TIMEOUT = 30000; // ms
 
-enum AcqResult {
+enum class AcqResult {
 	EQ_ERROR,
 	EQ_CONFIRM,
 	EQ_DECLINE,

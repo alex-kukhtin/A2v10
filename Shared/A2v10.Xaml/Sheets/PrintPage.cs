@@ -31,9 +31,9 @@ namespace A2v10.Xaml
 			var sb = new StringBuilder("{");
 			sb.Append($"orientation:'{Orientation.ToString().ToLowerInvariant()}',");
 			if (Margin != null)
-				sb.Append($"margin: '{Margin.ToString()}',");
+				sb.Append($"margin: '{Margin}',");
 			if (Zoom != null)
-				sb.Append($"zoom: '{Zoom.ToString()}',");
+				sb.Append($"zoom: '{Zoom}',");
 			sb.RemoveTailComma();
 			sb.Append("}");
 			return sb.ToString();

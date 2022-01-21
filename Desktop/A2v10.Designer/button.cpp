@@ -10,7 +10,7 @@
 
 IMPLEMENT_DYNCREATE(CButtonElement, CFormItem)
 
-CItemRegister button(L"Button", RUNTIME_CLASS(CButtonElement), CFormItem::_button);
+CItemRegister button(L"Button", RUNTIME_CLASS(CButtonElement), CFormItem::Shape::_button);
 
 // virtual 
 void CButtonElement::Draw(const RENDER_INFO& ri)

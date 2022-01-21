@@ -29,7 +29,7 @@ namespace A2v10.Web.Base
 				scriptText.Replace("$(BaseUrl)", viewInfo.BaseUrl);
 				scriptText.Replace("$(Params)", viewInfo.Params);
 
-				sb.Append($"<script type=\"text/javascript\">{scriptText.ToString()}</script>");
+				sb.Append($"<script type=\"text/javascript\">{scriptText}</script>");
 			}
 			else if (!String.IsNullOrEmpty(viewInfo?.Scripts?.Script))
 			{

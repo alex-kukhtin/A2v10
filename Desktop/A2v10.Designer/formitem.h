@@ -57,7 +57,7 @@ protected:
 
 public:
 
-	enum Shape {
+	enum class Shape {
 		_undefined = -1,
 		_pointer = 0,
 		_button = 1,

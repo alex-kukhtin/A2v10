@@ -13,7 +13,7 @@ public:
 	CConsoleWnd();
 	virtual ~CConsoleWnd();
 
-	enum ConsoleMsgType {
+	enum class ConsoleMsgType {
 		Log = WMI_CONSOLE_LOG,
 		Warn = WMI_CONSOLE_WARN,
 		Info = WMI_CONSOLE_INFO,

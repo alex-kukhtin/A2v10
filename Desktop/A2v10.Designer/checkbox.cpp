@@ -9,7 +9,7 @@
 
 IMPLEMENT_DYNCREATE(CCheckBoxElement, CFormItem)
 
-CItemRegister checkBox(L"CheckBox", RUNTIME_CLASS(CCheckBoxElement), CFormItem::_checkbox);
+CItemRegister checkBox(L"CheckBox", RUNTIME_CLASS(CCheckBoxElement), CFormItem::Shape::_checkbox);
 
 // virtual 
 void CCheckBoxElement::Draw(const RENDER_INFO& ri)

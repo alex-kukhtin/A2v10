@@ -1,9 +1,7 @@
 ﻿namespace ChakraHost.Hosting
 {
     using System;
-    using System.Runtime.Serialization;
 
-#pragma warning disable IDE0049    
 	/// <summary>
 	///     A fatal exception occurred.
 	/// </summary>
@@ -39,5 +37,4 @@
         {
         }
     }
-#pragma warning restore IDE0049
 }

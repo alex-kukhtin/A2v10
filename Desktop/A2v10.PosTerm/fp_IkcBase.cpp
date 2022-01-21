@@ -824,10 +824,10 @@ void CFiscalPrinter_IkcBase::Payment(PAYMENT_MODE mode, long sum)
 {
 	switch (mode)
 	{
-	case _pay_cash:
+	case PAYMENT_MODE::_pay_cash:
 		Payment(sum, PAY_TYPE::FP_PAYTYPE_CASH, true);
 		break;
-	case _pay_card:
+	case PAYMENT_MODE::_pay_card:
 		Payment(sum, PAY_TYPE::FP_PAYTYPE_CARD, true);
 		break;
 	}
