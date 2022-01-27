@@ -12,9 +12,10 @@ module.exports = function (prms, args) {
 		v[a] = args[a];
 	v.FROM_SCRIPT = `aa2\\2\"33\'444`;
 
+	
 	//return Object.assign(prms, args, {'5':[1, 2, 3, 4, ...Object.keys(prms)]});
 
-	let r = this.fetch(this.config.appSettings('ProcS').url + '/api/process/start', {
+	//let r = this.fetch(this.config.appSettings('ProcS').url + '/api/process/start', {
 		method: 'post',
 		body: {
 			processId: "bioprocs/donorpaid",
@@ -35,15 +36,17 @@ module.exports = function (prms, args) {
 		}
 
 	});
-	return r;
+	//return r;
 
+/*
 	let dm = this.executeSql({
 		procedure: "a2demo.[GetWeather.Load]",
 		parameters: {
 			UserId: prms.UserId
 		}
 	});
-	return dm;
+	*/
+	//return dm;
 
 	/*
 	try {

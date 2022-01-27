@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220120-7820*/
+/*20220127-7822*/
 /*components/combobox.js */
 
 (function () {
@@ -58,8 +58,9 @@
 			cmbValue: {
 				get() {
 					if (this.itemsSource.length === 0 && this.item) {
-						if (this.item[this.prop].$empty)
-							this.item[this.prop].$empty();
+						let itemval = this.item[this.prop];
+						if (itemval && itemval.$empty)
+							itemval.$empty();
 					}
 					return this.getComboValue();
 				},

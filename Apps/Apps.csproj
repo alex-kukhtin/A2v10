@@ -163,6 +163,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Develop\dashboard\server3.module.js" />
     <Content Include="Develop\purchase\testguids\edit.template.js" />
     <Content Include="Develop\purchase\testguids\index.template.js" />
     <None Include="Develop\Workflows\SendMessageWorkflow.xaml">
