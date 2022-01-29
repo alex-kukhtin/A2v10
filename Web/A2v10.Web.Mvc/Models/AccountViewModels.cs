@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Dynamic;
 
 namespace A2v10.Web.Mvc.Models
 {
@@ -59,6 +60,8 @@ namespace A2v10.Web.Mvc.Models
 		public String Phone { get; set; }
 		public String Referral { get; set; }
 		public String Locale { get; set; }
+
+		public ExpandoObject ExtraData { get; set; }
 	}
 
 	public class ConfirmEmailModel

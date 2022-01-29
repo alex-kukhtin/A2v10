@@ -475,6 +475,14 @@ namespace A2v10.Web.Mvc.Controllers
 					await SendConfirmCode(user);
 
 					await SaveReferral(user.Id, model.Referral);
+
+					if (model.ExtraData != null && !model.ExtraData.IsEmpty())
+                    {
+						var prm = model.ExtraData.Clone(null);
+						prm.Set("UserId", user.Id);
+						await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2security.[SaveExtraData]", prm);
+                    }
+
 					SaveDDOSTime();
 
 					Session.Add(USERNAME_SESSIONKEY, user.UserName);

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+	<metadata>
+		<id>A2v10.Web.Runtime.Interfaces</id>
+		<version>10.0.7822</version>
+		<title>A2v10.Web Runtime Interfaces</title>
+		<authors>Oleksandr Kukhtin</authors>
+		<owners>Oleksandr Kukhtin</owners>
+		<projectUrl>https://a2v10.com</projectUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>A2v10 Platform Runtime Interfaces</description>
+		<releaseNotes>Current NUGET release</releaseNotes>
+		<copyright>Copyright © 2015-2022 Oleksandr Kukhtin</copyright>
+		<tags>A2v10 Platform Business WebApp</tags>
+		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
+		<references>
+			<reference file="A2v10.Data.Interfaces.dll" />
+			<reference file="A2v10.Infrastructure.dll" />
+		</references>
+		<frameworkAssemblies>
+		</frameworkAssemblies>
+		<contentFiles>
+		</contentFiles>
+		<dependencies>
+			<group targetFramework=".NETFramework4.8"/>
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin/A2v10.Data.Interfaces.dll" target="lib/net48" />
+		<file src="bin/A2v10.Infrastructure.dll" target="lib/net48" />
+	</files>
+</package>
