@@ -203,6 +203,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Data.Tests", "..\A2v1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.Web.Runtime.Interfaces", "A2v10.Web.Runtime.Interfaces\A2v10.Web.Runtime.Interfaces.csproj", "{BB9D6805-7FA2-47D7-A853-8216C466E91A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A2v10.App.Runtime", "A2v10.App.Runtime\A2v10.App.Runtime.csproj", "{D4076EB8-827D-4552-94CF-65FA245E7896}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -834,6 +836,18 @@ Global
 		{BB9D6805-7FA2-47D7-A853-8216C466E91A}.Release|x64.Build.0 = Release|Any CPU
 		{BB9D6805-7FA2-47D7-A853-8216C466E91A}.Release|x86.ActiveCfg = Release|Any CPU
 		{BB9D6805-7FA2-47D7-A853-8216C466E91A}.Release|x86.Build.0 = Release|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Debug|x64.Build.0 = Debug|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Debug|x86.Build.0 = Debug|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Release|x64.ActiveCfg = Release|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Release|x64.Build.0 = Release|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Release|x86.ActiveCfg = Release|Any CPU
+		{D4076EB8-827D-4552-94CF-65FA245E7896}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
