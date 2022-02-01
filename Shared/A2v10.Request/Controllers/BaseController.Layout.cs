@@ -27,7 +27,7 @@ namespace A2v10.Request
 		public void Layout(TextWriter writer, IDictionary<String, String> prms, String localUrl)
 		{
 			var customLayout = _host.CustomLayout;
-			String layout = null;
+			String layout;
 			if (!String.IsNullOrEmpty(customLayout))
 			{
 				var layoutFile = customLayout.Replace("$(lang)", _userLocale.Language) + ".html";

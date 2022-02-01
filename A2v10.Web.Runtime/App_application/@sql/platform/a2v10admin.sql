@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2022 Alex Kukhtin
 
-Last updated : 06 jan 2022
-module version : 7752
+Last updated : 30 jan 2022
+module version : 7753
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:admin', 7752;
+exec a2sys.SetVersion N'std:admin', 7753;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2admin')
@@ -880,7 +880,7 @@ go
 create procedure a2admin.[ApiUser.Load]
 @TenantId int = null,
 @UserId bigint,
-@Id bigint
+@Id bigint = null
 as
 begin
 	set nocount on;

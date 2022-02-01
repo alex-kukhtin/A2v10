@@ -104,6 +104,7 @@
     <Content Include="App_application\%40schemas\model-json-schema.json" />
     <Content Include="App_application\%40schemas\sql-json-schema.json" />
     <Content Include="tsconfig.json" />
+    <None Include="README.md" />
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

@@ -233,7 +233,7 @@ namespace A2v10.Infrastructure
 			var eo = new ExpandoObject();
 			foreach (var v in elem as IDictionary<String, Object>)
 			{
-				if (exclude.Contains(v.Key))
+				if (exclude != null && exclude.Contains(v.Key))
 					continue;
 				eo.Set(v.Key, v.Value);
 			}
@@ -275,7 +275,6 @@ namespace A2v10.Infrastructure
 		{
 			if (obj == null)
 				return null;
-			var e = new ExpandoObject();
 			var d =  new Dictionary<String, Object>();
 			foreach (var pi in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
 			{

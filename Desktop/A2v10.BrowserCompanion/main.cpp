@@ -15,12 +15,12 @@
 int main(int argc, char *argv[], char *envp[])
 {
 	const size_t MAX_LEN = 65536;
-	char buf[MAX_LEN];
+	char* buf = new char[MAX_LEN];
 
 	union nativeInt {
 		int _len;
 		unsigned char _b[4];
-	} len;
+	} len {0};
 
 
 	PosCreateMonitor();
@@ -61,4 +61,5 @@ int main(int argc, char *argv[], char *envp[])
 		}
 	}
 	PosShutDown();
+	delete[] buf;
 }

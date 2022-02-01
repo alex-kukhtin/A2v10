@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20210609-7782
+// 20220101-7823
 
 "use strict";
 
@@ -128,6 +128,11 @@
 					Locale: this.userLocale,
 					Referral: this.refer
 				};
+				if (typeof window.__beforeSubmit__ === 'function') {
+					let xdata = window.__beforeSubmit__();
+					if (xdata)
+						dataToSend.ExtraData = xdata;
+				}
 				const that = this;
 				post('/account/register', dataToSend)
 					.then(function (response) {

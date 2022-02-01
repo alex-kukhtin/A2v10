@@ -204,7 +204,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> LoginPOST()
 		{
-			String status = null;
+			String status;
 
 			try
 			{
@@ -575,7 +575,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> ConfirmCodePost()
 		{
-			String status = String.Empty;
+			String status;
 			try
 			{
 
@@ -706,7 +706,7 @@ namespace A2v10.Web.Mvc.Controllers
 		[HandlAntiForgeryExecptionAttribute]
 		public async Task<ActionResult> ForgotPasswordCode()
 		{
-			String status = "Error";
+			String status;
 			try
 			{
 				ConfirmEmailModel model = GetModelFromBody<ConfirmEmailModel>();
