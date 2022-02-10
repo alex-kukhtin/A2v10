@@ -1,12 +1,12 @@
 ﻿/*
 ------------------------------------------------
-Copyright © 2008-2021 Alex Kukhtin
+Copyright © 2008-2022 Alex Kukhtin
 
-Last updated : 12 sep 2021
-module version : 7768
+Last updated : 10 feb 2022
+module version : 7770
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7768;
+exec a2sys.SetVersion N'std:security', 7770;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1055,6 +1055,50 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'CreateUserSimple')
+	drop procedure a2security.CreateUserSimple
+go
+------------------------------------------------
+create procedure a2security.CreateUserSimple
+@Tenant int = null,
+@UserName nvarchar(255),
+@Email nvarchar(255) = null,
+@PhoneNumber nvarchar(255) = null,
+@PersonName nvarchar(255) = null,
+@Memo nvarchar(255) = null,
+@Locale nvarchar(255) = null,
+@RetId bigint output
+as
+begin
+	-- from CreateTenantUserHandler only
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	declare @rtable table(id bigint);
+	declare @userId bigint;
+	declare @segment bigint;
+	select @segment = u.Segment, @Locale=isnull(@Locale, u.Locale) from 
+		a2security.Users u inner join a2security.Tenants  t on t.[Admin] = u.Id
+	where t.Id = @Tenant;
+
+	begin tran;
+	insert into a2security.Users(Tenant, UserName, Email, PersonName, PhoneNumber, Memo, Locale, EmailConfirmed, SecurityStamp, 
+		PasswordHash, Segment)
+	output inserted.Id into @rtable(id)
+	values (@Tenant, @UserName, @Email, @PersonName, @PhoneNumber, @Memo, isnull(@Locale, N''), 1, N'', N'', @segment);
+	select @userId = id from @rtable;
+	insert into a2security.UserGroups(UserId, GroupId) values (@userId, 1 /*all users*/);
+	commit tran;
+
+	declare @msg nvarchar(255);
+	set @msg = N'User: ' + @UserName;
+	exec a2security.[WriteLog] @RetId, N'I', 2, /*UserCreated*/ @msg;
+
+	set @RetId = @userId;
+end
+go
+------------------------------------------------
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'Permission.Check')
 	drop procedure a2security.[Permission.Check]
 go
@@ -1809,6 +1853,23 @@ begin
 	set xact_abort on;
 
 	update a2security.ViewUsers set SecurityStamp2 = @SecurityStamp where Id=@UserId;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2security' and ROUTINE_NAME=N'User.SetPhoneNumberConfirmed')
+	drop procedure a2security.[User.SetPhoneNumberConfirmed]
+go
+------------------------------------------------
+create procedure a2security.[User.SetPhoneNumberConfirmed]
+@UserId bigint,
+@Confirmed bit
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	set xact_abort on;
+
+	update a2security.ViewUsers set PhoneNumberConfirmed = @Confirmed where Id=@UserId;
 end
 go
 ------------------------------------------------
