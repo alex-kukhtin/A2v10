@@ -362,13 +362,17 @@ namespace A2v10.Interop
 					if (isNillable && dVal3 == 0)
 						return null;
 					return String.Format(CultureInfo.InvariantCulture, "{0:0.000}", dVal3); ;
-				case "DGdecimal6":
 				case "Decimal6Column":
+					var dVal6c = Convert.ToDecimal(val);
+					if (isNillable && dVal6c == 0)
+						return null;
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.000000}", dVal6c);
+				case "DGdecimal6":
 				case "Decimal6Column_R":
 					var dVal6 = Convert.ToDecimal(val);
 					if (isNillable && dVal6 == 0)
 						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.0#####}", dVal6); ;
+					return String.Format(CultureInfo.InvariantCulture, "{0:0.0#####}", dVal6);
 				case "Decimal12Column_R":
 					var dVal12 = Convert.ToDecimal(val);
 					if (isNillable && dVal12 == 0)
