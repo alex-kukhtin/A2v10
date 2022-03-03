@@ -17,12 +17,14 @@ namespace A2v10.Javascript
 		private readonly IDbContext _dbContext;
 		private readonly Engine _engine;
 		private readonly ScriptConfig _config;
+		private readonly ISmsService _smsService;
 
-		public ScriptEnvironment(Engine engine, IDbContext dbContext, IApplicationHost host)
+		public ScriptEnvironment(Engine engine, IDbContext dbContext, IApplicationHost host, ISmsService smsService)
 		{
 			_engine = engine;
 			_dbContext = dbContext;
 			_config = new ScriptConfig(host);
+			_smsService = smsService;
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -106,6 +108,24 @@ namespace A2v10.Javascript
 			try
 			{
 				return new FetchCommand().Execute(url, prms);
+			}
+			catch (Exception ex)
+			{
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				var js = new JsString(ex.Message);
+				throw new JavaScriptException(js);
+			}
+		}
+
+
+#pragma warning disable IDE1006 // Naming Styles
+		public SendSmsResponse sendSms(String phone, String message, String extId)
+#pragma warning restore IDE1006 // Naming Styles
+		{
+			try
+			{
+				return new SendSmsCommand(_smsService).Execute(phone, message, extId);
 			}
 			catch (Exception ex)
 			{

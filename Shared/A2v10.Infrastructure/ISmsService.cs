@@ -9,5 +9,6 @@ namespace A2v10.Infrastructure
 	public interface ISmsService
 	{
 		Task SendSmsAsync(String phone, String message, String extId);
+		void SendSms(String phone, String message, String extId);
 	}
 }

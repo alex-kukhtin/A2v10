@@ -1,5 +1,5 @@
 ﻿
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -72,6 +72,40 @@ namespace A2v10.Interop
 					using (var ms = new StreamReader(rss))
 					{
 						String xmlResponse = await ms.ReadToEndAsync();
+						var result = ParseResult(xmlResponse);
+						return result;
+					}
+				}
+			}
+		}
+
+		public Object SendSms(String phoneNumber, String message, String extId)
+		{
+
+			var config = GetConfig();
+
+			var wr = WebRequest.Create(config.requestUrl);
+			wr.Method = "POST";
+			wr.ContentType = "text/xml";
+
+			String encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("UTF-8").GetBytes(config.login + ":" + config.password));
+			wr.Headers.Add("Authorization", "Basic " + encoded);
+			// TODO: extId
+			String xmlRequest = CreateXml(phoneNumber, message, extId, config.alpha);
+			var bytes = Encoding.GetEncoding("UTF-8").GetBytes(xmlRequest);
+			wr.ContentLength = bytes.Length;
+
+			using (var rqs = wr.GetRequestStream())
+			{
+				rqs.Write(bytes, 0, bytes.Length);
+			}
+			using (var rsp = wr.GetResponse())
+			{
+				using (var rss = rsp.GetResponseStream())
+				{
+					using (var ms = new StreamReader(rss))
+					{
+						String xmlResponse = ms.ReadToEnd();
 						var result = ParseResult(xmlResponse);
 						return result;
 					}

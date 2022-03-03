@@ -59,6 +59,7 @@
     <Compile Include="JavaScriptEngine.cs" />
     <Compile Include="ScriptConfig.cs" />
     <Compile Include="ScriptEnvironment.cs" />
+    <Compile Include="SendSmsCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

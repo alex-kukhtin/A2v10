@@ -35,6 +35,15 @@ namespace A2v10.Web.Identity
 				throw new InvalidProgramException($"SendSms error. Error='{result.Error ?? "unknown"}'");
 		}
 
+		public void SendSms(String phone, String message, String extId)
+		{
+			if (!(_smsApi.SendSms(phone, message, extId) is Ip2SmsResponse result))
+				throw new InvalidProgramException("SendSms error");
+
+			if (result.State?.ToLower(CultureInfo.InvariantCulture) != "accepted")
+				throw new InvalidProgramException($"SendSms error. Error='{result.Error ?? "unknown"}'");
+		}
+
 		public Task SendAsync(IdentityMessage message)
 		{
 			String userId = null;

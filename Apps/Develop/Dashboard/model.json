@@ -103,7 +103,7 @@
 				"Module2": "edit"
 			},
 			"type": "javascript",
-			"file": "server3.module",
+			"file": "server4.module",
 			"args": {
 				"n": 1,
 				"s": "stri\\ssng'with'ap\"os`trophe",
