@@ -20,6 +20,7 @@ using A2v10.Request;
 using A2v10.Interop;
 using A2v10.Web.Identity;
 using System.Security.Claims;
+using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -51,10 +52,12 @@ namespace A2v10.Web.Mvc.Controllers
 	{
 		private readonly A2v10.Request.BaseController _baseController = new BaseController();
 		private readonly ILogger _logger;
+		private readonly IDbContext _dbContext;
 
 		public ApiController()
 		{
 			_logger = ServiceLocator.Current.GetService<ILogger>();
+			_dbContext = ServiceLocator.Current.GetService<IDbContext>();
 			_baseController.Host.StartApplication(false);
 		}
 
@@ -93,6 +96,19 @@ namespace A2v10.Web.Mvc.Controllers
 			return true;
 		}
 
+		Boolean ValidHosts(RequestCommand ac)
+		{
+			if (String.IsNullOrEmpty(ac.AllowHostForCheck))
+				return true;
+			var refer = Request.UrlReferrer;
+			if (refer == null || !ac.AllowHostForCheck.Contains(refer.Host))
+			{
+				Response.StatusCode = 403; // forbidden
+				return false;
+			}
+			return true;
+		}
+
 		[HttpGet]
 		[ActionName("Default")]
 		public async Task DefaultGET(String pathInfo)
@@ -114,6 +130,8 @@ namespace A2v10.Web.Mvc.Controllers
 					throw new RequestModelException($"Method 'get' is required for '{ac.command}' command");
 
 				if (!ValidAllowAddress(ac))
+					return;
+				if (!ValidHosts(ac))
 					return;
 
 				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
@@ -240,6 +258,9 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!ValidAllowAddress(ac))
 					return;
 
+				if (!ValidHosts(ac))
+					return;
+
 				if (!ac.IsPost())
 					throw new RequestModelException($"Method 'post' is required for '{ac.command}' command");
 
@@ -292,6 +313,12 @@ namespace A2v10.Web.Mvc.Controllers
 				case CommandType.clr:
 					await ExecuteClrCommand(cmd, dataToInvoke, apiGuid);
 					break;
+				case CommandType.sql:
+					await ExecuteSqlCommand(cmd, dataToInvoke, apiGuid);
+					break;
+				case CommandType.javascript:
+					await ExecuteJavaScriptCommand(cmd, dataToInvoke, apiGuid);
+					break;
 			}
 		}
 
@@ -330,6 +357,28 @@ namespace A2v10.Web.Mvc.Controllers
 				_logger.LogApi($"response: {json}", Request.UserHostAddress, apiGuid);
 				writer.Write(json);
 			}
+		}
+
+		async Task ExecuteSqlCommand(RequestCommand cmd, ExpandoObject dataToInvoke, Guid apiGuid)
+		{
+			var jscmd = ServerCommandRegistry.GetCommand(ServiceLocator.Current, CommandType.sql);
+			var result = await jscmd.Execute(cmd, dataToInvoke);
+			if (result != null)
+			{
+				Response.ContentType = result.ContentType;
+				Response.Write(result.Data);
+			}
+		}
+
+		async Task ExecuteJavaScriptCommand(RequestCommand cmd, ExpandoObject dataToInvoke, Guid apiGuid)
+		{
+			var jscmd = ServerCommandRegistry.GetCommand(ServiceLocator.Current, CommandType.javascript);
+			var result = await jscmd.Execute(cmd, dataToInvoke);
+			if (result != null)
+            {
+				Response.ContentType = result.ContentType;
+				Response.Write(result.Data);
+            }
 		}
 	}
 }

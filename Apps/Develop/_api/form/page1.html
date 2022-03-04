@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+	<meta http-equiv=Content-Type content="text/html; charset=UTF-8">
+</head>
+<body>
+	<div id="app">
+		<h1>HEADER1</h1>
+		<form method="post" action="$(ServerUrl)/api/form/command1">
+			<div>
+				<label for="Name">Name</label>
+				<input name="Name" v-model="Name"/>
+			</div>
+			<div>
+				<button @click.stop.prevent="submit">Submit</button>
+			</div>
+			<div>
+				<span v-text="test"></span>
+				<span v-text="Tenant"></span>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="$(ServerUrl)/scripts/vue.min.js"></script>
+	<script>
+		(function () {
+			new Vue({
+				el: "#app",
+				data() {
+					return {
+						Name: '',
+						Tenant: 0
+					}
+				},
+				computed: {
+					test() { return this.Name; }
+				},
+				methods: {
+					async submit() {
+						let res = await fetch('$(ServerUrl)/api/form/command2', {
+							method:'POST',
+							body: JSON.stringify(this.$data),
+						});
+						if (res.status === 200) {
+							console.dir(res);
+							let j = await res.json();
+							console.dir(j);
+							alert(JSON.stringify(j));
+						}
+						else
+							alert(await res.text());
+					}
+				},
+				mounted() {
+					let sp = new URLSearchParams(window.location.search);
+					this.Tenant = sp.get('tenant');
+				}
+			});
+		})();
+	</script>
+</body>
+</html>

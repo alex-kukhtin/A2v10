@@ -242,6 +242,8 @@
     <Content Include="Develop\include.module.js" />
     <Content Include="Develop\Workflows\mail_with_report.html" />
     <Content Include="Develop\Workflows\second-mail.html" />
+    <Content Include="Develop\_api\form\page1.html" />
+    <Content Include="Develop\_api\form\server.js" />
     <Content Include="Develop\_assets\extensioncomponents.js" />
     <Content Include="Develop\_assets\inputmask.js" />
     <Content Include="Develop\_emails\confirmemail.ru.html" />
@@ -253,6 +255,7 @@
     <Content Include="tsconfig.json" />
     <Content Include="Develop\_apiv2\test\agent\test.js" />
     <None Include="Develop\_apiv2\test\agent\model.json" />
+    <None Include="Develop\_api\form\model.json" />
     <None Include="Develop\_hooks\model.json" />
     <None Include="Develop\_tests\Tests.Runner.config" />
     <None Include="Samples\catalog\agent\model.json" />

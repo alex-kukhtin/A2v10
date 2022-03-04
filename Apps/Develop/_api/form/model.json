@@ -1,0 +1,27 @@
+﻿{
+  "$schema": "../../../../a2v10.app.runtime/app_application/@schemas/model-json-schema.json#",
+  "allowAddress": "::1 ::2",
+  "allowOrigin": "*",
+  "allowHost": "localhost",
+  "commands": {
+    "page1": {
+      "type": "file",
+      "file": "page1",
+    },
+    "command1": {
+      "type": "sql",
+      "schema": "a2demo",
+      "procedure": "TestApiSql",
+      "parameters": {
+
+      }
+    },
+    "command2": {
+      "type": "javascript",
+      "file": "server.js",
+      "parameters": {
+
+      }
+    }
+  }
+}

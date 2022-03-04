@@ -7,5 +7,5 @@
         }
     });
 
-    return this.sendSms('+380504708206', "message from js", "");
+    return this.sendSms('+38000000000', "message from js", "");
 };

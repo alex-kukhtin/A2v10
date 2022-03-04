@@ -509,6 +509,7 @@ namespace A2v10.Request
 
 		// for api
 		public String allowOrigin;
+		public String allowHost;
 		public String allowAddress;
 		public String method;
 		public Boolean authorize;
@@ -556,6 +557,16 @@ namespace A2v10.Request
 				if (String.IsNullOrEmpty(allowOrigin))
 					return _parent.allowOrigin;
 				return allowOrigin;
+			}
+		}
+		[JsonIgnore]
+		public String AllowHostForCheck
+		{
+			get
+			{
+				if (String.IsNullOrEmpty(allowHost))
+					return _parent.allowHost;
+				return allowHost;
 			}
 		}
 
@@ -732,6 +743,7 @@ namespace A2v10.Request
 		// for API
 		public String allowAddress;
 		public String allowOrigin;
+		public String allowHost;
 
 		[JsonProperty("actions")]
 		public Dictionary<String, RequestAction> Actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.OrdinalIgnoreCase);
