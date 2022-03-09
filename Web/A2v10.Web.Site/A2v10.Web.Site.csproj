@@ -26,7 +26,7 @@
     <IISExpressSSLPort />
     <TargetFrameworkProfile />
     <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -542,6 +542,7 @@
     <Content Include="Less\Toastr.less" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include=".well-known\" />
     <Folder Include="app.ts\" />
     <Folder Include="app\site.ts\" />
     <Folder Include="scripts\bpmn\" />

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -18,6 +18,7 @@ namespace A2v10.Web.Mvc.Start
 			routes.IgnoreRoute("fonts/{resource}/{*pathInfo}");
 			routes.IgnoreRoute("*.ico");
 			routes.IgnoreRoute("*.png");
+			routes.IgnoreRoute(".well-known/{*pathInfo}");
 			routes.IgnoreRoute("robots.txt");
 			routes.IgnoreRoute("manifest.json");
 
