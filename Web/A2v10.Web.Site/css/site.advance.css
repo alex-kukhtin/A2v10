@@ -4523,7 +4523,7 @@ ul.news-list > li {
   position: absolute;
   top: 0;
   left: -10px;
-  border: 38px / 2 solid transparent;
+  border: 19px solid transparent;
   border-color: inherit;
   border-right-width: 0;
   border-left-color: transparent;
@@ -4535,7 +4535,7 @@ ul.news-list > li {
   position: absolute;
   top: 0;
   left: 100%;
-  border: 38px / 2 solid transparent;
+  border: 19px solid transparent;
   border-right-width: 0;
   border-left-color: inherit;
   border-left-width: 10px;
