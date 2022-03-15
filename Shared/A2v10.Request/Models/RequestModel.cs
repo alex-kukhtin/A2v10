@@ -1,7 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Dynamic;
@@ -999,6 +998,8 @@ namespace A2v10.Request
 
 		public static RequestAction GetActionFromUrl(IApplicationHost host, String normalizedUrl)
 		{
+			if (normalizedUrl == null)
+				return null;
 			String[] urlParts = normalizedUrl.Split('/');
 			Int32 len = urlParts.Length;
 			if (len < 3)

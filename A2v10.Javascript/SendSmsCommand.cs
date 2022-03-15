@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -12,7 +12,7 @@ namespace A2v10.Javascript
 
     public class SendSmsCommand
     {
-        ISmsService _smsService;
+        private readonly ISmsService _smsService;
         public SendSmsCommand(ISmsService smsService)
         {
             _smsService = smsService;
