@@ -1,5 +1,8 @@
 ﻿@import "Variables.less";
 
+@separator-gap: 8px;
+@separator-color: var(--neutralBkDarker);
+
 .side-bar {
 	position: absolute;
 	left: 0;
@@ -13,6 +16,18 @@
 
 	.side-bar-body, .tree-view {
 		height: 100%;
+
+		li.border-top {
+			border-top: 1px solid @separator-color;
+			padding-top: @separator-gap;
+			margin-top: @separator-gap;
+		}
+
+		li.border-bottom {
+			border-bottom: 1px solid @separator-color;
+			padding-bottom: @separator-gap;
+			margin-bottom: @separator-gap;
+		}
 	}
 
 	.side-bar-body .tree-view li > ul {

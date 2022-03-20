@@ -171,6 +171,12 @@
 .ico-flame:before {
   content: "\ea1a";
 }
+.ico-truck:before {
+  content: "\ea1b";
+}
+.ico-cart:before {
+  content: "\ea1c";
+}
 .ico-camera:before {
   content: "\e9a1";
 }
@@ -4698,7 +4704,7 @@ ul.news-list > li {
   position: absolute;
   top: 0;
   left: -10px;
-  border: 38px / 2 solid transparent;
+  border: 19px solid transparent;
   border-color: inherit;
   border-right-width: 0;
   border-left-color: transparent;
@@ -4710,7 +4716,7 @@ ul.news-list > li {
   position: absolute;
   top: 0;
   left: 100%;
-  border: 38px / 2 solid transparent;
+  border: 19px solid transparent;
   border-right-width: 0;
   border-left-color: inherit;
   border-left-width: 10px;

@@ -11,6 +11,17 @@
 			<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Items}}">Edit</Button>
 			<Separator />
 			<Button Icon="Reload" Command="{BindCmd Reload}">Refresh</Button>
+			<Button Content="Drop Down">
+				<Button.DropDown>
+					<DropDownMenu>
+						<MenuItem Content="Menu item #1"/>
+						<MenuItem Content="Menu item #1"/>
+						<Separator/>
+						<MenuItem Content="Menu item #1"/>
+						<MenuItem Content="Menu item #1"/>
+					</DropDownMenu>
+				</Button.DropDown>
+			</Button>
 		</Toolbar>
 	</Page.Toolbar>
 	<DataGrid ItemsSource="{Bind Items}" Hover="True" HeadersVisibility="Column"

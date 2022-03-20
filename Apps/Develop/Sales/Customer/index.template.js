@@ -18,6 +18,17 @@ const template = {
 		},
 		'EditFolder': {
 			exec: editFolder
+		},
+		DeleteFolder: {
+			exec: deleteFolder
+		}
+	},
+	events: {
+		'Agents[].Children.load'(x) {
+			console.log('Agents[].Children.load', this, x);
+		},
+		'Agents[].SubItems[].Children.load'(x) {
+			console.log('Agents[].SubItems[].Children.load', this, x);
 		}
 	}
 };
@@ -60,6 +71,10 @@ async function editFolder(folder) {
 	}
 }
 
+
+function deleteFolder(folder) {
+	folder.$remove();
+}
 
 module.exports = template;
 

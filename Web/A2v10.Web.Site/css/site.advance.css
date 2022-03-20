@@ -171,6 +171,12 @@
 .ico-flame:before {
   content: "\ea1a";
 }
+.ico-truck:before {
+  content: "\ea1b";
+}
+.ico-cart:before {
+  content: "\ea1c";
+}
 .ico-camera:before {
   content: "\e9a1";
 }
@@ -3439,8 +3445,8 @@ table.data-grid > tbody > tr.bold > td {
   background-color: #fcfcfc;
 }
 .toolbar.light .dropdown.show .btn {
-  background: white;
-  border: 1px dotted #ccc;
+  background-color: white;
+  outline: 1px dotted #ccc !important;
 }
 .toolbar > .dropdown > .btn-caret {
   border-left-color: #ccc;
@@ -3490,7 +3496,7 @@ table.data-grid > tbody > tr.bold > td {
   min-width: 0;
 }
 .btn-tb:focus {
-  outline: 1px dotted #777;
+  outline: 1px dotted #ccc;
   outline-offset: -2px;
 }
 .btn-tb:hover {
@@ -5207,6 +5213,7 @@ TODO:
   bottom: auto;
   text-align: left;
   min-width: 100%;
+  padding: 3px;
 }
 .dropdown-menu > .checkbox {
   float: left;
@@ -6590,6 +6597,18 @@ table > colgroup col.blue {
 .side-bar .tree-view {
   height: 100%;
 }
+.side-bar .side-bar-body li.border-top,
+.side-bar .tree-view li.border-top {
+  border-top: 1px solid var(--neutralBkDarker);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+.side-bar .side-bar-body li.border-bottom,
+.side-bar .tree-view li.border-bottom {
+  border-bottom: 1px solid var(--neutralBkDarker);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
 .side-bar .side-bar-body .tree-view li > ul {
   padding: 0;
 }
@@ -6758,8 +6777,8 @@ table > colgroup col.blue {
   grid-template-columns: auto;
 }
 .a2-company-btn {
-  border-left: 1px solid #d96888;
-  border-right: 1px solid #d96888;
+  border-left: 1px solid var(--themeLight);
+  border-right: 1px solid var(--themeLight);
   height: 100%;
   display: inline-flex;
 }

@@ -11508,7 +11508,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220110-7819*/
+/*20220320-7828*/
 // controllers/base.js
 
 (function () {
@@ -11552,6 +11552,12 @@ Vue.directive('resize', {
 			}
 		}
 		return ra.length ? ra : null;
+	}
+
+	function treeNormalPath(path) {
+		if (!path) return;
+		path = '' + path;
+		return [... new Set(path.split('.'))].join('.');
 	}
 
 	function isPermissionsDisabled(opts, arg) {
@@ -12684,6 +12690,8 @@ Vue.directive('resize', {
 							if (data.$ModelInfo)
 								modelInfo.reconcile(data.$ModelInfo[propName]);
 							arr._root_._setModelInfo_(arr, data);
+							let eventName = treeNormalPath(arr._path_) + '.load';
+							self.$data.$emit(eventName, arr);
 						}
 						resolve(arr);
 					}).catch(function (msg) {

@@ -155,6 +155,12 @@
 .ico-flame:before {
   content: "\ea1a";
 }
+.ico-truck:before {
+  content: "\ea1b";
+}
+.ico-cart:before {
+  content: "\ea1c";
+}
 .ico-camera:before {
   content: "\e9a1";
 }
@@ -1317,7 +1323,7 @@ kbd {
 }
 .menu-container {
   width: 72%;
-  padding: 0.35rem;
+  padding: 0.7rem / 2;
   background-color: #9ab3e0;
   color: white;
   position: fixed;
@@ -2711,7 +2717,7 @@ label.checkbox.small span:after {
   align-self: flex-start;
 }
 .chat-item {
-  padding: 0.25rem;
+  padding: 0.5rem / 2;
   display: block;
   text-align: left;
 }
@@ -3713,7 +3719,7 @@ iframe.eusign-iframe {
 }
 .card.compact .card-header,
 .card.compact .card-footer {
-  padding: 0 0.35rem;
+  padding: 0 0.7rem / 2;
   font-size: 13px;
   line-height: 2rem;
 }
