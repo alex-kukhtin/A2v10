@@ -85,13 +85,13 @@
 	box-shadow: rgba(0, 0, 0, 0.22) 0px 25.6px 57.6px 0px, rgba(0, 0, 0, 0.18) 0px 4.8px 14.4px 0px;
 	transform-origin: left top;
 	transform: scale(.8,.8);
-	opacity:0;
+	opacity: 0;
 	transition: transform .14s ease, opacity 0.1s ease;
-	padding-bottom:@footer-height;
+	padding-bottom: @footer-height;
 
 	&.show {
-		transform:scale(1, 1);
-		opacity:1;
+		transform: scale(1, 1);
+		opacity: 1;
 	}
 
 	.menu-navbar-back {
@@ -136,6 +136,18 @@
 		&::-webkit-scrollbar-thumb {
 			background-color: #ccc;
 			border-radius: 2rem;
+		}
+
+		li.border-top {
+			padding-top: @menu-separator-gap;
+			margin-top: @menu-separator-gap;
+			border-top: 1px solid @menu-separator-color;
+		}
+
+		li.border-bottom {
+			padding-bottom: @menu-separator-gap;
+			margin-bottom: @menu-separator-gap;
+			border-bottom: 1px solid @menu-separator-color;
 		}
 	}
 

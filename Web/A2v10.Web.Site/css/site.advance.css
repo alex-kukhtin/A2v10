@@ -1486,6 +1486,16 @@ header .dropdown.separate.show .btn.btn-success,
   background-color: #ccc;
   border-radius: 2rem;
 }
+.menu-navbar .menu-navbar-list li.border-top {
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 1px solid var(--neutralBkDarker);
+}
+.menu-navbar .menu-navbar-list li.border-bottom {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--neutralBkDarker);
+}
 .menu-navbar .menu-navbar-link {
   padding: 8px 12px;
   line-height: 20px;
