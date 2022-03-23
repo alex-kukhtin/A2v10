@@ -20,7 +20,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7819') format('woff'), url('/css/fonts/A2v10.ttf?v=7819') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7830') format('woff'), url('/css/fonts/A2v10.ttf?v=7830') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -176,6 +176,9 @@
 }
 .ico-cart:before {
   content: "\ea1c";
+}
+.ico-shopping:before {
+  content: "\ea1d";
 }
 .ico-camera:before {
   content: "\e9a1";
@@ -1485,6 +1488,16 @@ header .dropdown.separate.show .btn.btn-success,
 .menu-navbar .menu-navbar-list::-webkit-scrollbar-thumb {
   background-color: #ccc;
   border-radius: 2rem;
+}
+.menu-navbar .menu-navbar-list li.border-top {
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 1px solid var(--neutralBkDarker);
+}
+.menu-navbar .menu-navbar-list li.border-bottom {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--neutralBkDarker);
 }
 .menu-navbar .menu-navbar-link {
   padding: 8px 12px;

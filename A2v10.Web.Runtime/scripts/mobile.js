@@ -13039,9 +13039,9 @@ Vue.directive('resize', {
 		isSeparatePage
 	};
 })();	
-// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
 
-/*20210428-7771*/
+/*20220320-7830*/
 /* controllers/navbar.js */
 
 (function () {
@@ -13146,7 +13146,7 @@ Vue.directive('resize', {
 	<h2 v-text=title></h2>
 </div>
 <ul class=menu-navbar-list>
-	<li v-for="(item, index) in menu" :key=index>
+	<li v-for="(item, index) in menu" :key=index :class='item.ClassName' >
 		<a class="menu-navbar-link" :href="itemHref(item)" @click.prevent="navigate(item)" :class="{active : isActive(item)}">
 			<i class="ico" :class=icoClass(item)></i>
 			<span v-text="item.Name"></span>
