@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -96,6 +96,7 @@ namespace A2v10.Tests.Config
 		public Int32? TenantId { get; set; }
 		public Int64? UserId { get; set; }
 		public String UserSegment { get; set; }
+		public String UserName { get; set; }
 		public String CatalogDataSource => null;
 		public String TenantDataSource => null;
 

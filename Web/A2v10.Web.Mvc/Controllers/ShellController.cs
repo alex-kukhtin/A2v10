@@ -73,6 +73,7 @@ namespace A2v10.Web.Mvc.Controllers
 			host.TenantId = TenantId;
 			host.UserId = UserId;
 			host.UserSegment = UserSegment;
+			host.UserName = User.Identity.Name;
 		}
 		#endregion
 

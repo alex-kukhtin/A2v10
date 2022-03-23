@@ -57,6 +57,7 @@ namespace A2v10.Infrastructure
 		Int32? TenantId { get; set; }
 		Int64? UserId { get; set; }
 		String UserSegment { get; set; }
+		String UserName { get; set; }
 
 		IApplicationReader ApplicationReader { get; }
 

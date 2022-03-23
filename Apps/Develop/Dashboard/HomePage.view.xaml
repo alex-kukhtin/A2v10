@@ -10,7 +10,7 @@
 		</Block>
 		<Button Grid.Row="3" Grid.Col="1" Icon="EllipsisBottom" Command="{BindCmd Reload}">Button</Button>
 		<Grid Grid.Row="3" Grid.Col="2" AlignItems="Top">
-			<Button Grid.Row="1" Grid.Col="1" Icon="Cart" Style="{Bind Root.$style}" 
+			<Button Grid.Row="1" Grid.Col="1" Icon="Shopping" Style="{Bind Root.$style}" 
 				Content="{Bind Root.$text}" Command="{BindCmd Execute, CommandName='showAlert'}"></Button>
 			<Button Grid.Row="2" Grid.Col="1" Icon="GearOutline" Style="Red" 
 				Content="Call Invoke Target" Command="{BindCmd Execute, CommandName='invokeTarget'}"/>

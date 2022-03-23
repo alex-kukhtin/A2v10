@@ -71,7 +71,9 @@ namespace A2v10.Request
 		public static String CustomAppHead(this IApplicationHost host)
 		{
 			String head = host.ApplicationReader.ReadTextFile("_layout", "_head.html");
-			return head != null ? host.GetAppSettings(head) : String.Empty;
+			if (head == null)
+				return String.Empty;
+			return head.Replace("$(UserName)", host.UserName);
 		}
 
 		public static String CustomAppScripts(this IApplicationHost host)

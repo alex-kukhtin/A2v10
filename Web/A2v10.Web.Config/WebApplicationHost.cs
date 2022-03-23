@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -211,6 +211,7 @@ namespace A2v10.Web.Config
 
 		public Int64? UserId { get; set; }
 		public String UserSegment { get; set; }
+		public String UserName { get; set; }
 
 		public String CatalogDataSource => IsMultiTenant ? "Catalog" : null;
 		public String TenantDataSource => String.IsNullOrEmpty(UserSegment) ? null : UserSegment;

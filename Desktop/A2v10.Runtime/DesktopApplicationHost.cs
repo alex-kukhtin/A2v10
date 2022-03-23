@@ -110,6 +110,7 @@ namespace A2v10.Runtime
 		public Int32? TenantId { get; set; } 
 		public Int64? UserId { get; set; }
 		public String UserSegment { get; set; }
+		public String UserName { get; set; }
 		public String CatalogDataSource => "Catalog";
 		public String TenantDataSource => null;
 		public String CustomSecuritySchema => null;
