@@ -60,7 +60,7 @@ namespace A2v10.Request
 						Byte[] bytes = File.ReadAllBytes(rep.ResultFile);
 						if (bytes == null || bytes.Length == 0)
 							throw new RequestModelException("There are no bytes to send");
-						SetResponseInfo(response, export);
+						SetResponseInfo(response, export, dm);
 						response.BinaryWrite(bytes);
 						stream.Close();
 					}
@@ -73,18 +73,19 @@ namespace A2v10.Request
 						if (extDataProvider == null)
 							throw new RequestModelException($"There is no data provider for '{fmt}' files");
 						extDataProvider.Write(response.OutputStream);
-						SetResponseInfo(response, export);
+						SetResponseInfo(response, export, dm);
 					}
 					break;
 			}
 		}
 
-		void SetResponseInfo(HttpResponseBase response, RequestExport export)
+		void SetResponseInfo(HttpResponseBase response, RequestExport export, IDataModel model)
 		{
 			response.ContentType = MimeMapping.GetMimeMapping(export.format.ToString());
+			var fn = model.ResolveDataModel(export.fileName);
 			var cdh = new ContentDispositionHeaderValue("attachment")
 			{
-				FileNameStar = _localizer.Localize(null, export.fileName) + '.' + export.format.ToString()
+				FileNameStar = _localizer.Localize(null, fn) + '.' + export.format.ToString()
 			};
 			response.Headers.Add("Content-Disposition", cdh.ToString());
 		}
