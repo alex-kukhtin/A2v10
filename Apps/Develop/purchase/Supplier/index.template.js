@@ -17,7 +17,8 @@ const template = {
 			exec() { alert('command'); },
 			canExec() { return this.Agents.$selected; }
 		},
-		runTest
+		runTest,
+		clearFilter 
 	}
 };
 
@@ -38,4 +39,8 @@ function onKeyPress() {
 function runTest() {
 	var args = { target: 'datagrid', testId:'SupplierDataGrid', action:'selectRow', id:'126', result:'fail'};
 	window.__tests__.$invoke(args);
+}
+
+function clearFilter() {
+	this.$ctrl.$clearFilter(this.Agents);
 }

@@ -20,13 +20,14 @@
             </TextBox>
             <Separator />
             <Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
-        </Toolbar>
+			<Button Icon="Clear" Command="{BindCmd Execute, CommandName=clearFilter}" />
+		</Toolbar>
     </Page.Toolbar>
     <Page.CollectionView>
         <CollectionView ItemsSource="{Bind Agents}" RunAt="ServerUrl" Filter="Fragment"/>
     </Page.CollectionView>
     <Page.Pager>
-        <Pager Source="{Bind Parent.Pager}" />
+        <Pager Source="{Bind Parent.Pager}" CssClass="my-pager"/>
     </Page.Pager>
     <DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column" Height="50%"
 				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="False" TestId="SupplierDataGrid"
@@ -44,7 +45,8 @@
 		<Hyperlink Icon="CloudOutline" Content="RunTest" Command="{BindCmd Execute, CommandName='runTest'}"></Hyperlink>
 	</FlexList>
 	<Block Width="250" Border="True" Background="White">
-		<List ItemsSource="{Bind Parent.ItemsSource}" Style="Chat" MaxHeight="200">
+		<List ItemsSource="{Bind Parent.ItemsSource}" Style="List" MaxHeight="200">
+			<!--
 			<ChatItem Content="{Bind Name}" User="{Bind Memo}" Time="{Bind Id}">
 				<ChatItem.AddOns>
 					<Hyperlink Icon="EllipsisVertical">
@@ -57,6 +59,10 @@
 					</Hyperlink>
 				</ChatItem.AddOns>
 			</ChatItem>
+			-->
+			<ListItemSimple Content="{Bind Name}" Icon="Steps" Tip="I am the name">
+				
+			</ListItemSimple>
 			<List.EmptyPanel>
 				<Text Color="LightGray">
 					<SpanIcon Icon="CommentOutline" Size="2rem" Block="True" Margin=".5rem,0"/>

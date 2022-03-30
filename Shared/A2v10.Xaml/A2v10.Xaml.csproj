@@ -96,6 +96,7 @@
     <Compile Include="Controls\DatePicker.cs" />
     <Compile Include="Controls\EmptyPanel.cs" />
     <Compile Include="Controls\GridDivider.cs" />
+    <Compile Include="Controls\ListItemSimple.cs" />
     <Compile Include="Controls\PeriodPicker.cs" />
     <Compile Include="Controls\StateCard.cs" />
     <Compile Include="Controls\TabButton.cs" />

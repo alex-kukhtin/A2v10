@@ -196,9 +196,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20210615-7784
+// 20220330-7833
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -229,22 +229,24 @@ app.modules['std:utils'] = function () {
 		isObject, isObjectExact,
 		isDate, isString, isNumber, isBoolean,
 		isPromise,
-		toString: toString,
-		defaultValue: defaultValue,
-		notBlank: notBlank,
-		toJson: toJson,
+		toString,
+		toBoolean,
+		defaultValue,
+		notBlank,
+		toJson,
 		fromJson: JSON.parse,
 		isPrimitiveCtor: isPrimitiveCtor,
-		isDateCtor: isDateCtor,
-		isEmptyObject: isEmptyObject,
+		isDateCtor,
+		isEmptyObject,
 		defineProperty: defProperty,
 		eval: evaluate,
 		simpleEval: simpleEval,
 		format: format,
-		toNumber: toNumber,
+		toNumber,
 		parse: parse,
-		getStringId: getStringId,
-		isEqual: isEqual,
+		getStringId,
+		isEqual,
+		ensureType,
 		date: {
 			today: dateToday,
 			now: dateNow,
@@ -347,6 +349,14 @@ app.modules['std:utils'] = function () {
 		}, 2);
 	}
 
+	function toBoolean(obj) {
+		if (!obj) return false;
+		let val = obj.toString().toLowerCase();
+		if (val === 'true' || val === '1')
+			return true;
+		return false;
+	}
+
 	function toString(obj) {
 		if (!isDefined(obj))
 			return '';
@@ -355,6 +365,21 @@ app.modules['std:utils'] = function () {
 		else if (isObject(obj))
 			return toJson(obj);
 		return '' + obj;
+	}
+
+	function ensureType(type, val) {
+		if (typeof val === type) return val;
+		if (!isDefined(val))
+			val = defaultValue(type);
+		if (type === Number)
+			return toNumber(val);
+		else if (type === String)
+			return toString(val);
+		else if (type === Boolean)
+			return toBoolean(val);
+		else if (type === Date && !isDate(val))
+			return dateParse('' + val);
+		return val;
 	}
 
 	function defaultValue(type) {
@@ -2883,15 +2908,14 @@ app.modules['std:impl:array'] = function () {
 	}
 };
 
-/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-/*20210531-7776*/
+/*20220330-7833*/
 // services/datamodel.js
 
 /*
  * TODO: template & validate => /impl
  * treeImpl => /impl/tree
- * ensureType to std:utils
  */
 
 (function () {
@@ -2952,18 +2976,6 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	const defPropertyGet = utils.func.defPropertyGet;
-
-	function ensureType(type, val) {
-		if (!utils.isDefined(val))
-			val = utils.defaultValue(type);
-		if (type === Number)
-			return utils.toNumber(val);
-		else if (type === String)
-			return utils.toString(val);
-		else if (type === Date && !utils.isDate(val))
-			return utils.date.parse('' + val);
-		return val;
-	}
 
 	const propFromPath = utils.model.propFromPath;
 
@@ -3026,7 +3038,7 @@ app.modules['std:impl:array'] = function () {
 					ctor = ctor.type;
 				}
 				if (!isjson) {
-					val = ensureType(ctor, val);
+					val = utils.ensureType(ctor, val);
 				}
 				if (val === this._src_[prop])
 					return;
@@ -4226,9 +4238,9 @@ app.modules['std:popup'] = function () {
 app.components['std:store'] = {
 };
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20200505-7654
+// 20220327-7832
 // components/collectionview.js
 
 /*
@@ -4722,7 +4734,11 @@ TODO:
 				if (period.isPeriod(props.value))
 					this.filter[props.prop].assign(props.value);
 				else
-					this.Filter[props.prop] = props.value;
+					this.filter[props.prop] = props.value;
+			},
+			__clearFilter(props) {
+				if (this.ItemsSource !== props.source) return;
+				this.filter = this.initialFilter;
 			}
 		},
 		created() {
@@ -4745,9 +4761,11 @@ TODO:
 			this.$on('sort', this.doSort);
 
 			eventBus.$on('setFilter', this.__setFilter);
+			eventBus.$on('clearFilter', this.__clearFilter);
 		},
 		beforeDestroy() {
 			eventBus.$off('setFilter', this.__setFilter);
+			eventBus.$off('clearFilter', this.__clearFilter);
 		}
 	});
 
@@ -5117,7 +5135,7 @@ template: `
 })();
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220320-7828*/
+/*20220327-7832*/
 // controllers/base.js
 
 (function () {
@@ -6094,6 +6112,9 @@ template: `
 				eventBus.$emit('setFilter', { source: obj, prop: prop, value: val });
 			},
 
+			$clearFilter(obj) {
+				eventBus.$emit('clearFilter', {source: obj});
+			},
 			$modalSelect(array, opts) {
 				if (!('$selected' in array)) {
 					console.error('Invalid array for $modalSelect');
@@ -6429,6 +6450,7 @@ template: `
 					$navigate: this.$navigate,
 					$defer: platform.defer,
 					$setFilter: this.$setFilter,
+					$clearFilter: this.$clearFilter,
 					$expand: this.$expand,
 					$focus: this.$focus,
 					$report: this.$report,

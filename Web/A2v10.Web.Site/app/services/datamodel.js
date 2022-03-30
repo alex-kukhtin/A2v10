@@ -1,12 +1,11 @@
-﻿/* Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
+﻿/* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-/*20210531-7776*/
+/*20220330-7833*/
 // services/datamodel.js
 
 /*
  * TODO: template & validate => /impl
  * treeImpl => /impl/tree
- * ensureType to std:utils
  */
 
 (function () {
@@ -67,18 +66,6 @@
 	}
 
 	const defPropertyGet = utils.func.defPropertyGet;
-
-	function ensureType(type, val) {
-		if (!utils.isDefined(val))
-			val = utils.defaultValue(type);
-		if (type === Number)
-			return utils.toNumber(val);
-		else if (type === String)
-			return utils.toString(val);
-		else if (type === Date && !utils.isDate(val))
-			return utils.date.parse('' + val);
-		return val;
-	}
 
 	const propFromPath = utils.model.propFromPath;
 
@@ -141,7 +128,7 @@
 					ctor = ctor.type;
 				}
 				if (!isjson) {
-					val = ensureType(ctor, val);
+					val = utils.ensureType(ctor, val);
 				}
 				if (val === this._src_[prop])
 					return;

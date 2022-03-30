@@ -28,5 +28,25 @@ describe("Utilities", function () {
 		expect(utils.isObject(d)).toBe(true);
 	});
 
+	it("ensure type (number)", function () {
+		expect(utils.ensureType(Number, undefined)).toBe(0);
+		expect(utils.ensureType(Number, "23455")).toBe(23455);
+	});
+
+	it("ensure type (string)", function () {
+		expect(utils.ensureType(String, undefined)).toBe('');
+		expect(utils.ensureType(String, "S")).toBe("S");
+		expect(utils.ensureType(String, 234)).toBe("234");
+	});
+
+	it("ensure type (boolean)", function () {
+		expect(utils.ensureType(Boolean, undefined)).toBe(false);
+		expect(utils.ensureType(Boolean, true)).toBe(true);
+		expect(utils.ensureType(Boolean, 'true')).toBe(true);
+		expect(utils.ensureType(Boolean, '1')).toBe(true);
+		expect(utils.ensureType(Boolean, false)).toBe(false);
+		expect(utils.ensureType(Boolean, 1)).toBe(true);
+		expect(utils.ensureType(Boolean, 'false')).toBe(false);
+	});
 });
 

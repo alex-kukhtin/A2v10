@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220320-7828*/
+/*20220327-7832*/
 // controllers/base.js
 
 (function () {
@@ -977,6 +977,9 @@
 				eventBus.$emit('setFilter', { source: obj, prop: prop, value: val });
 			},
 
+			$clearFilter(obj) {
+				eventBus.$emit('clearFilter', {source: obj});
+			},
 			$modalSelect(array, opts) {
 				if (!('$selected' in array)) {
 					console.error('Invalid array for $modalSelect');
@@ -1312,6 +1315,7 @@
 					$navigate: this.$navigate,
 					$defer: platform.defer,
 					$setFilter: this.$setFilter,
+					$clearFilter: this.$clearFilter,
 					$expand: this.$expand,
 					$focus: this.$focus,
 					$report: this.$report,

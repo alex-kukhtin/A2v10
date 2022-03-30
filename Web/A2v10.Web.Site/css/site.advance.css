@@ -4138,57 +4138,19 @@ tr:hover .commandbar.visible-hover {
   text-align: center;
   padding: 8px;
 }
-.generic-list-item {
-  display: inline-grid;
-  grid-template-rows: auto auto;
-  grid-template-columns: auto 1fr auto;
-  width: 100%;
-  line-height: 1.1;
+.list-item-simple {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
 }
-.generic-list-item .list-item-icon {
-  display: block;
-  grid-row: 1 / span 2;
-  grid-column: 1;
-  align-self: start;
-  font-size: 1.7rem;
-  margin-right: 12px;
-  margin-top: 2px;
-  color: #999;
-  /*
-        padding:4px;
-        background-color:blue;
-        color:white;
-        */
+.list-item-simple .list-item-simple-icon {
+  color: var(--neutralSecondary);
+  font-size: 1.2rem;
+  min-width: 2rem;
 }
-.generic-list-item .list-item-header {
-  display: block;
-  grid-row: 1;
-  grid-column: 2;
-  margin-bottom: 4px;
-  font-size: 1.05rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-bottom: 3px;
-  /*for 'g' letters */
-}
-.generic-list-item .list-item-footer {
-  display: block;
-  grid-row: 3;
-  grid-column: 2;
-  margin-top: 4px;
-  font-size: 0.925rem;
-  color: #999;
-}
-.generic-list-item .list-item-body {
-  grid-row: 2;
-  grid-column: 2;
-  font-size: 0.925rem;
-  color: #999;
-}
-.generic-list-item .list-item-commands {
-  grid-row: 1 / span 2;
-  grid-column: 3;
-  align-self: flex-start;
+.list-item-simple .list-item-body {
+  padding: 7px 0;
+  color: inherit;
 }
 .chat-item {
   padding: 0.5rem / 2;

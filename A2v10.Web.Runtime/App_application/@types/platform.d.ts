@@ -1,6 +1,6 @@
 ﻿
-/* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7807 */
+/* Copyright © 2019-2022 Alex Kukhtin. All rights reserved. */
+/* Version 10.0.7832 */
 
 
 declare function require(url: string): any;
@@ -264,6 +264,7 @@ interface IController {
 	$navigate(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
 	$defer(handler: () => void): void;
 	$setFilter(target: any, prop: string, value: any): void;
+	$clearFilter(target: any): void;
 	$expand(elem: ITreeElement, prop: string, value: boolean): Promise<any>;
 	$focus(htmlid: string): void;
 	$report(report: string, arg: object, opts?: { export?: Boolean, attach?: Boolean, print?: Boolean, format?: ReportFormat }, url?: string, data?: object): void;
