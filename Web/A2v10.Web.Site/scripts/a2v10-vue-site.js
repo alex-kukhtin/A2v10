@@ -5135,7 +5135,7 @@ template: `
 })();
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220327-7832*/
+/*20220404-7834*/
 // controllers/base.js
 
 (function () {
@@ -5312,6 +5312,12 @@ template: `
 					url = urltools.combine('_dialog', url);
 				this.$data.__baseUrl__ = url;
 				eventBus.$emit('modalSetBase', url);
+			},
+			$emitCaller(event, ...arr) {
+				if (this.$caller)
+					this.$caller.$data.$emit(event, ...arr);
+				else
+					log.error('There is no caller here');
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -6454,7 +6460,8 @@ template: `
 					$expand: this.$expand,
 					$focus: this.$focus,
 					$report: this.$report,
-					$upload: this.$upload
+					$upload: this.$upload,
+					$emitCaller: this.$emitCaller
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

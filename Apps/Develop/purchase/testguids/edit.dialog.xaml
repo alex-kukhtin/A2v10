@@ -3,6 +3,7 @@
 		Overflow="True">
 	<Dialog.Buttons>
 		<Button Content="No elements" Command="{BindCmd Execute, CommandName=clear}"/>
+		<Button Content="Emit caller" Command="{BindCmd Execute, CommandName=emitCall}"/>
 		<Separator />
 		<Button Content="OK" Command="{BindCmd SaveAndClose}"/>
 		<Button Content="Cancel" Command="{BindCmd Close}"/>
@@ -15,6 +16,12 @@
 
 		<ComboBox ItemsSource="{Bind Root.$Elements}" Value="{Bind Item.Elem}">
 			<ComboBoxItem Content="{Bind Name}" Value="{Bind}"/>
+		</ComboBox>
+
+		<ComboBox Value="{Bind Item.Value}">
+			<ComboBoxItem Content="Empty" Value=""/>
+			<ComboBoxItem Content="First" Value="1"/>
+			<ComboBoxItem Content="Second" Value="2"/>
 		</ComboBox>
 	</Grid>
 </Dialog>

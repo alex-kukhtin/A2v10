@@ -2,7 +2,8 @@
 let template = {
 	events: {
 		"Model.load": loaded,
-		"guid.saved": saved
+		"guid.saved": saved,
+		'from.dialog': fromChild
 	}
 };
 
@@ -15,4 +16,9 @@ function loaded() {
 function saved(elem) {
 	console.dir(elem);
 	alert(elem.Item.Memo);
+}
+
+function fromChild(data, data2, data3) {
+	alert(JSON.stringify(data));
+	alert(data2 + data3);
 }

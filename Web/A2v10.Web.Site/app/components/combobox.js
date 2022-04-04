@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220127-7822*/
+/*20220404-7834*/
 /*components/combobox.js */
 
 (function () {
@@ -102,7 +102,7 @@
 			},
 			getText() {
 				let cv = this.getComboValue();
-				if (!cv)
+				if (cv === null)
 					return '';
 				if (utils.isObjectExact(cv))
 					return this.getName(cv);
