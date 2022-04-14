@@ -4050,7 +4050,6 @@ app.modules['std:impl:array'] = function () {
 
 	function setRootRuntimeInfo(runtime) {
 		if (!runtime || !runtime.$cross) return;
-
 		function ensureCrossSize(elem, cross) {
 			if (!elem._elem_ || !elem.$cross) return;
 			for (let crstp in cross) {
@@ -4072,7 +4071,7 @@ app.modules['std:impl:array'] = function () {
 			if (p.startsWith("$") || p.startsWith('_')) continue;
 			let ta = this[p];
 			ensureCrossSize(ta, runtime.$cross);
-			if (ta._meta_?.$items) {
+			if (ta._meta_ && ta._meta_.$items) {
 				ta = ta[ta._meta_.$items];
 				ensureCrossSize(ta, runtime.$cross);
 			}
