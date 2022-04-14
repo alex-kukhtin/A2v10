@@ -267,8 +267,9 @@ function modelData(template, data) {
 				sb.Append($"{c.Key}: [");
 				if (c.Value != null)
 					sb.Append(String.Join(",", c.Value.Select(s =>  $"'{s}'")));
-				sb.Append("]");
+				sb.Append("],");
 			}
+			sb.RemoveTailComma();
 			sb.AppendLine("}");
 			return sb.ToString();
 		}
