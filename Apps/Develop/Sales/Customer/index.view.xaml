@@ -76,6 +76,9 @@
 				</DataGrid>
 				<Pager Source="{Bind Parent.Pager}"/>
 			</CollectionView>
+			<CollectionView ItemsSource="{Bind Root}" Filter="Fragment" RunAt="Server">
+				<TextBox Label="Filter2" Value="{Bind Parent.Filter.Fragment}"/>
+			</CollectionView>
 		</Block>
 	</Splitter>
 </Page>

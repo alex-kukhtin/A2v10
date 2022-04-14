@@ -27,7 +27,7 @@
 		<PrintPage Orientation="Landscape" Zoom="1"/>
 	</Page.PrintPage>
 	<Page.Taskpad>
-		<Taskpad Width="290" Collapsible="True" Collapsed="{Bind Root.$Collapsed}">
+		<Taskpad Width="290" Collapsible="True" Collapsed="{Bind Root.$Collapsed}" Background="WhiteSmoke">
 			<TextBox Accel="Ctrl+F7" Label="Штрих-код" Value="{Bind Root.$BarCode}"/>
 			<ContentControl Content="{Source '../../Document/Info'}"/>
 			<Panel Header="Основание" Icon="Link" If="{Bind Document.$HasParent}" Style="Default" Padding="6" Collapsible="True">

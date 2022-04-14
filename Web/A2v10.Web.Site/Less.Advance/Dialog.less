@@ -219,16 +219,18 @@
 
 .modal-content {
 	flex-grow: 2;
-	overflow:auto;
-	position:relative;
+	overflow: auto;
+	position: relative;
 
 
 	&.overflow {
-		overflow:visible;
+		overflow: visible;
+
 		.tab-panel {
-			overflow:visible;
+			overflow: visible;
+
 			.tab-item {
-				overflow:visible;
+				overflow: visible;
 			}
 		}
 	}
@@ -240,6 +242,10 @@
 		grid-gap: 0;
 		height: 100%;
 	}
+}
+
+.dialog-grid-content {
+	overflow: auto;
 }
 
 .button-on-top {

@@ -2138,7 +2138,7 @@ app.modules['std:accel'] = function () {
 })();
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220327-7832
+// 20220414-7835
 // components/collectionview.js
 
 /*
@@ -2363,7 +2363,7 @@ TODO:
 </div>
 `,
 		props: {
-			ItemsSource: Array,
+			ItemsSource: [Array, Object],
 			initialFilter: Object,
 			persistentFilter: Array
 		},
@@ -2526,7 +2526,7 @@ TODO:
 </div>
 `,
 		props: {
-			ItemsSource: Array,
+			ItemsSource: [Array, Object],
 			initialFilter: Object,
 			initialGroup: Object
 		},

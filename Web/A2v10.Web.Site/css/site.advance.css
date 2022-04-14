@@ -929,7 +929,7 @@ a:active {
 pre {
   font-family: Consolas, 'Courier New', Courier, monospace;
   font-size: 0.85em;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   padding: 6px;
   white-space: pre-wrap;
   word-break: break-all;
@@ -1654,7 +1654,7 @@ header .dropdown.separate.show .btn.btn-success,
   pointer-events: none;
 }
 .splitter .spl-handle:hover {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 .splitter.vertical .spl-handle {
   border-left: 1px solid var(--neutralLight);
@@ -1699,7 +1699,7 @@ header .dropdown.separate.show .btn.btn-success,
   text-decoration: none;
 }
 .taskpad .taskpad-collapse-handle:hover {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 .taskpad.no-collapsible .taskpad-collapse-handle {
   display: none;
@@ -1711,13 +1711,13 @@ header .dropdown.separate.show .btn.btn-success,
   content: "\e9ad";
 }
 .taskpad.collapsed {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 .taskpad.collapsed .taskpad-collapse-handle:before {
   content: "\e9ab";
 }
 .taskpad .taskpad-title {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   white-space: nowrap;
   height: 100%;
   cursor: pointer;
@@ -2193,7 +2193,7 @@ pre.a2-code {
   margin: 0.9em 0.2em 0 0.5em;
 }
 .control-group .input-group.static {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   user-select: text;
 }
 .control-group .input-group.static > span {
@@ -2995,7 +2995,7 @@ pre.a2-code {
   padding: 4px;
   display: block;
   border-top: 1px solid #ddd;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 .control-group.selector-hyperlink .input-group {
   border: none;
@@ -3765,7 +3765,7 @@ tr:hover .commandbar.visible-hover {
   padding-top: 6px;
   align-self: stretch;
   overflow: auto;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   grid-gap: 0;
   align-items: stretch;
   height: 100%;
@@ -3817,7 +3817,7 @@ tr:hover .commandbar.visible-hover {
   grid-row: 1;
 }
 .tab-panel .tab-header {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   margin: 0;
   padding: 0 6px 0;
   grid-column: 1;
@@ -3994,7 +3994,7 @@ tr:hover .commandbar.visible-hover {
 .a2-tab-bar.tab-bar-tab {
   border-bottom: 1px solid #ddd;
   border-top: 0.3rem solid transparent;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   margin: 0;
 }
 .a2-tab-bar.tab-bar-tab .a2-tab-bar-item {
@@ -4219,6 +4219,53 @@ ul.news-list {
 ul.news-list > li {
   margin: 0.5rem 0;
 }
+.generic-list-item {
+  display: inline-grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: auto 1fr auto;
+  width: 100%;
+  line-height: 1.25;
+}
+.generic-list-item .list-item-icon {
+  display: block;
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  align-self: start;
+  font-size: 200%;
+  margin-right: 12px;
+  margin-top: 2px;
+  color: #999;
+}
+.generic-list-item .list-item-header {
+  display: block;
+  grid-row: 1;
+  grid-column: 2;
+  margin-bottom: 4px;
+  font-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 4px;
+  /*for 'g' letters */
+}
+.generic-list-item .list-item-footer {
+  display: block;
+  grid-row: 3;
+  grid-column: 2;
+  margin-top: 4px;
+  font-size: 0.925rem;
+  color: #999;
+}
+.generic-list-item .list-item-body {
+  grid-row: 2;
+  grid-column: 2;
+  font-size: 0.925rem;
+  color: #999;
+}
+.generic-list-item .list-item-commands {
+  grid-row: 1 / span 2;
+  grid-column: 3;
+  align-self: flex-start;
+}
 .modal-stack {
   position: fixed;
   z-index: 100;
@@ -4416,6 +4463,9 @@ ul.news-list > li {
   grid-gap: 0;
   height: 100%;
 }
+.dialog-grid-content {
+  overflow: auto;
+}
 .button-on-top .modal-content {
   order: 2;
 }
@@ -4471,7 +4521,7 @@ ul.news-list > li {
   list-style: none;
   display: flex;
   grid-row: 1;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 .wizard-header li {
   padding: 0 0.7rem;
@@ -4607,7 +4657,7 @@ table tr.bold > td {
   font-weight: 600;
 }
 table td.gray {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 table tr.overline {
   border-top: 2px solid #ddd;
@@ -4855,7 +4905,7 @@ table.hover > tbody > tr.active:hover {
   background-color: #fff8f8;
 }
 .a2-table.bk-white-smoke {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 .a2-table.bk-white {
   background-color: white;
@@ -5004,7 +5054,7 @@ input[type="radio"]:disabled + span {
 input[type="checkbox"]:disabled + span::before,
 input[type="radio"]:disabled + span::before {
   border-color: #aaa;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 input[type="checkbox"]:disabled + span::after,
 input[type="radio"]:disabled + span::after {
@@ -5085,11 +5135,11 @@ label.checkbox.small span:after {
 }
 .a2-pager button[disabled] {
   color: #ccc;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   cursor: not-allowed;
 }
 .a2-pager button[disabled]:hover {
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
 }
 .a2-pager button.active {
   background-color: var(--activeBk);
@@ -5965,6 +6015,7 @@ TODO:
 }
 .a2-include.full-height {
   height: 100%;
+  overflow: hidden;
 }
 .a2-include.full-height .partial {
   height: 100%;
@@ -5983,7 +6034,7 @@ TODO:
   background-color: #e9e9e9 !important;
 }
 .background-white-smoke {
-  background-color: #f9f9f9 !important;
+  background-color: var(--neutralBkLight) !important;
 }
 .background-light-yellow {
   background-color: ivory!important;
@@ -6988,7 +7039,7 @@ td.vert > .vcell {
   bottom: 2rem;
   right: 0;
   z-index: 110;
-  background-color: #f9f9f9;
+  background-color: var(--neutralBkLight);
   border-left: 1px solid #ddd;
   width: 390px;
   box-shadow: -5px 0 10px 0 rgba(0, 0, 0, 0.2);

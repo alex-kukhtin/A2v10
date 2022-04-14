@@ -47,7 +47,9 @@
     <Content Include="App_application\%40schemas\app-json-schema.json" />
     <Content Include="App_application\%40schemas\model-json-schema.json" />
     <Content Include="App_application\%40schemas\sql-json-schema.json" />
-    <Content Include="tsconfig.json" />
+    <Content Include="tsconfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_application\%40sql\platform\a2v10admin.sql" />
