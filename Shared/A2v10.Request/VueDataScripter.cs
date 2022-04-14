@@ -116,8 +116,8 @@ vm.__doInit__('$(BaseUrl)');
 
 	public class VueDataScripter : IDataScripter
 	{
-		IApplicationHost _host;
-		ILocalizer _localizer;
+		private readonly IApplicationHost _host;
+		private readonly ILocalizer _localizer;
 		public VueDataScripter(IApplicationHost host, ILocalizer localizer)
 		{
 			_host = host;

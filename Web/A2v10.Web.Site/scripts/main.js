@@ -2639,7 +2639,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-/*20220330-7833*/
+/*20220414-7837*/
 // services/datamodel.js
 
 /*
@@ -3784,26 +3784,32 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function setRootRuntimeInfo(runtime) {
-		if (!runtime) return;
-		if (runtime.$cross) {
-			for (let p in this) {
-				if (p.startsWith("$") || p.startsWith('_')) continue;
-				let ta = this[p];
-				if (ta._elem_ && ta.$cross) {
-					for (let x in runtime.$cross) {
-						if (ta._elem_.name != x) continue;
-						let t = ta.$cross;
-						let s = runtime.$cross[x];
-						for (let p in t) {
-							let ta = t[p];
-							let sa = s[p];
-							if (ta && sa)
-								ta.splice(0, ta.length, ...sa);
-							else if (ta && !sa)
-								ta.splice(0, ta.length);
-						}
-					}
+		if (!runtime || !runtime.$cross) return;
+
+		function ensureCrossSize(elem, cross) {
+			if (!elem._elem_ || !elem.$cross) return;
+			for (let crstp in cross) {
+				if (elem._elem_.name !== crstp) continue;
+				let t = elem.$cross;
+				let s = cross[crstp];
+				for (let p in t) {
+					let ta = t[p];
+					let sa = s[p];
+					if (ta && sa)
+						ta.splice(0, ta.length, ...sa);
+					else if (ta && !sa)
+						ta.splice(0, ta.length);
 				}
+			}
+		}
+
+		for (let p in this) {
+			if (p.startsWith("$") || p.startsWith('_')) continue;
+			let ta = this[p];
+			ensureCrossSize(ta, runtime.$cross);
+			if (ta._meta_?.$items) {
+				ta = ta[ta._meta_.$items];
+				ensureCrossSize(ta, runtime.$cross);
 			}
 		}
 	}
