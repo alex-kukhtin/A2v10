@@ -32,6 +32,14 @@ namespace A2v10.Xaml
 				var enumVal = converter.ConvertFromString(Value.ToString());
 				prop.SetValue(elem, enumVal);
 			}
+			else if (prop.PropertyType.IsClass)
+            {
+				var converter = TypeDescriptor.GetConverter(prop.PropertyType);
+				if (converter == null)
+					throw new XamlException($"Could not find converter for '{prop.PropertyType}'");
+				var classVal = converter.ConvertFromString(Value.ToString());
+				prop.SetValue(elem, classVal);
+			}
 			else
 			{
 				var propType = prop.PropertyType;

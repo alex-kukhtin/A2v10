@@ -9,4 +9,7 @@
 		<Setter Property="ItemsSource" Value="{Bind Parent.ItemsSource}"/>
 		<Setter Property="UserSelect" Value="True"/>
 	</Style>
+	<Style x:Key="TestToolbar">
+		<Setter Property="Padding" Value="1rem,1rem" />
+	</Style>
 </Styles>

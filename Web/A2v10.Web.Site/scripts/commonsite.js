@@ -1,6 +1,6 @@
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20210529-7776
+// 20220416-7838
 // app.js
 
 "use strict";
@@ -168,7 +168,7 @@
 
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220330-7833
+// 20220416-7838
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -259,7 +259,8 @@ app.modules['std:utils'] = function () {
 		debounce: debounce,
 		model: {
 			propFromPath
-		}
+		},
+		mergeTemplate
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -919,6 +920,19 @@ app.modules['std:utils'] = function () {
 			enumerable: true,
 			configurable: true, /* needed */
 			get: get
+		});
+	}
+
+	function mergeTemplate(src, tml) {
+		function assign(s, t) {
+			return Object.assign({}, s || {}, t || {});
+		}
+		return assign(src, {
+			properties: assign(src.properties, tml.properties),
+			validators: assign(src.validators, tml.validators),
+			events: assign(src.events, tml.events),
+			defaults: assign(src.defaults, tml.defaults),
+			commands: assign(src.commands, tml.commands)
 		});
 	}
 };

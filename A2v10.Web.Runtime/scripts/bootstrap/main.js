@@ -1,6 +1,6 @@
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20210529-7776
+// 20220416-7838
 // app.js
 
 "use strict";
@@ -177,7 +177,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220330-7833
+// 20220416-7838
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -268,7 +268,8 @@ app.modules['std:utils'] = function () {
 		debounce: debounce,
 		model: {
 			propFromPath
-		}
+		},
+		mergeTemplate
 	};
 
 	function isFunction(value) { return typeof value === 'function'; }
@@ -928,6 +929,19 @@ app.modules['std:utils'] = function () {
 			enumerable: true,
 			configurable: true, /* needed */
 			get: get
+		});
+	}
+
+	function mergeTemplate(src, tml) {
+		function assign(s, t) {
+			return Object.assign({}, s || {}, t || {});
+		}
+		return assign(src, {
+			properties: assign(src.properties, tml.properties),
+			validators: assign(src.validators, tml.validators),
+			events: assign(src.events, tml.events),
+			defaults: assign(src.defaults, tml.defaults),
+			commands: assign(src.commands, tml.commands)
 		});
 	}
 };
@@ -5099,7 +5113,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220404-7834*/
+/*20220404-7838*/
 // controllers/base.js
 
 (function () {
@@ -5276,6 +5290,10 @@ app.modules['std:impl:array'] = function () {
 					url = urltools.combine('_dialog', url);
 				this.$data.__baseUrl__ = url;
 				eventBus.$emit('modalSetBase', url);
+			},
+			$emitSaveEvent() {
+				if (this.__saveEvent__)
+					this.$caller.$data.$emit(this.__saveEvent__, this.$data);
 			},
 			$emitCaller(event, ...arr) {
 				if (this.$caller)
@@ -6425,7 +6443,8 @@ app.modules['std:impl:array'] = function () {
 					$focus: this.$focus,
 					$report: this.$report,
 					$upload: this.$upload,
-					$emitCaller: this.$emitCaller
+					$emitCaller: this.$emitCaller,
+					$emitSaveEvent: this.$emitSaveEvent
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

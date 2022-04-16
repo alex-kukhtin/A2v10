@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2022 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7834 */
+/* Version 10.0.7838 */
 
 
 declare function require(url: string): any;
@@ -270,7 +270,7 @@ interface IController {
 	$report(report: string, arg: object, opts?: { export?: Boolean, attach?: Boolean, print?: Boolean, format?: ReportFormat }, url?: string, data?: object): void;
 	$upload(url: string, accept?: string): Promise<any>;
 	$emitCaller(event: string, ...params: any[]): void;
-
+	$emitSaveEvent(): void;
 }
 
 interface IMessage {
@@ -400,6 +400,8 @@ interface Utils {
 
 	eval(obj: any, path: string, dataType: DataType, opts?: FormatOptions, skipFormat?: boolean): any;
 	simpleEval(obj: any, path: string): any;
+
+	mergeTemplate(tml1: Template, tml2: Template): Template;
 
 	readonly date: UtilsDate;
 	readonly text: UtilsText;

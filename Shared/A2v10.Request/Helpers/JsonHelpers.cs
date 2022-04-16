@@ -1,5 +1,6 @@
 ﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
 
+using A2v10.Javascript;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -37,7 +38,10 @@ namespace A2v10.Request
 				DateFormatHandling = DateFormatHandling.IsoDateFormat,
 				DateTimeZoneHandling = DateTimeZoneHandling.Utc,
 				NullValueHandling = NullValueHandling.Ignore,
-				DefaultValueHandling = DefaultValueHandling.Include
+				DefaultValueHandling = DefaultValueHandling.Include,
+				Converters = new JsonConverter[] {
+					new JsonDoubleConverter()
+				}
 			};
 
 		public static readonly JsonSerializerSettings CamelCaseSerializerSettings =

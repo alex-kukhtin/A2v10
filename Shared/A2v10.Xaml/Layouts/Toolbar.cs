@@ -21,6 +21,14 @@ namespace A2v10.Xaml
 		BottomShadow
 	}
 
+	public class ToolbarAligner : UIElementBase
+    {
+        public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+        {
+			new TagBuilder("div", "aligner").Render(context);
+        }
+    }
+
 	//[AttachedProperties("Align")]
 	public class Toolbar : Container
 	{
@@ -80,7 +88,15 @@ namespace A2v10.Xaml
 		{
 			if (_attachedPart == null)
 			{
-				base.RenderChildren(context);
+				bool bFirstButton = true;
+				base.RenderChildren(context, tag =>
+                {
+					if (bFirstButton && tag.TagName != "template")
+					{
+						tag.AddCssClass("first-elem");
+						bFirstButton = false;
+					}
+				});
 				return;
 			}
 			List<UIElementBase> rightList = new List<UIElementBase>();

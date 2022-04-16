@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Text;
@@ -180,6 +180,7 @@ namespace A2v10.Xaml
 				span.RenderEnd(context);
 			}
 			var close = new TagBuilder("button", "btnclose");
+			close.MergeAttribute("tabindex", "-1");
 			close.MergeAttribute("@click.prevent", "$modalClose(false)");
 			close.SetInnerText("&#x2715;");
 			close.Render(context);

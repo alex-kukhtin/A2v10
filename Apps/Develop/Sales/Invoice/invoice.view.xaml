@@ -3,7 +3,7 @@
 	  xmlns:myControls="clr-namespace:XamExtensionsSample;assembly=XamExtensionsSample"
       Title="{Bind Document.Id, Format='@[Reload] [{0}]'}">
 	<Page.Toolbar>
-		<Toolbar>
+		<Toolbar XamlStyle="{StyleResource TestToolbar}">
 			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">@[Save]</Button>
 			<Button Icon="SaveClose" Tip="Сохранить изменения и закрыть документ" 
 				Command="{BindCmd SaveAndClose}">@[SaveAndClose]</Button>
@@ -13,7 +13,8 @@
 			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}}" If="{Bind Document.Done}"/>
 			<Button Icon="Print" Content="@[Print]" Command="{BindCmd Report, Report='Invoice', Argument={Bind Document}, SaveRequired=True}"/>
 			<Button Icon="Download" Content="@[Export]" Command="{BindCmd Report, Export=True, Report='Invoice', Argument={Bind Document}, SaveRequired=True}"/>
-			<Button Icon="Close" Toolbar.Align="Right"
+			<ToolbarAligner />
+			<Button Icon="Close"
 				Command="{BindCmd Close}">@[Close]</Button>
 		</Toolbar>
 	</Page.Toolbar>

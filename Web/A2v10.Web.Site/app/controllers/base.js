@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220404-7834*/
+/*20220404-7838*/
 // controllers/base.js
 
 (function () {
@@ -177,6 +177,10 @@
 					url = urltools.combine('_dialog', url);
 				this.$data.__baseUrl__ = url;
 				eventBus.$emit('modalSetBase', url);
+			},
+			$emitSaveEvent() {
+				if (this.__saveEvent__)
+					this.$caller.$data.$emit(this.__saveEvent__, this.$data);
 			},
 			$emitCaller(event, ...arr) {
 				if (this.$caller)
@@ -1326,7 +1330,8 @@
 					$focus: this.$focus,
 					$report: this.$report,
 					$upload: this.$upload,
-					$emitCaller: this.$emitCaller
+					$emitCaller: this.$emitCaller,
+					$emitSaveEvent: this.$emitSaveEvent
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

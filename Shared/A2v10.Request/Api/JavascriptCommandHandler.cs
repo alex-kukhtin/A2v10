@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 using A2v10.Infrastructure;
 using System.Dynamic;
+using A2v10.Javascript;
 
 namespace A2v10.Request.Api
 {
@@ -39,7 +40,16 @@ namespace A2v10.Request.Api
 				args.Set("query", request.Query);
 			if (!String.IsNullOrEmpty(_command.Id))
 				args.Set("id", _command.Id);
-			var obj = _script.Execute(code, _command.Parameters, args);
+
+			var prms = _command.Parameters.Clone(null);
+			if (request.UserId != 0)
+				prms.Set("UserId", request.UserId);
+			if (request.TenantId != null)
+				prms.Set("TenantId", request.TenantId);
+			if (!String.IsNullOrEmpty(request.Segment))
+				prms.Set("Segment", request.Segment);
+
+			var obj = _script.Execute(code, prms, args);
 
 			return new ApiResponse()
 			{

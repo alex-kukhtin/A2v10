@@ -231,6 +231,8 @@ namespace A2v10.Infrastructure
 		public static ExpandoObject Clone(this ExpandoObject elem, String[] exclude)
 		{
 			var eo = new ExpandoObject();
+			if (elem == null)
+				return eo;
 			foreach (var v in elem as IDictionary<String, Object>)
 			{
 				if (exclude != null && exclude.Contains(v.Key))

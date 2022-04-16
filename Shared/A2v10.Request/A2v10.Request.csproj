@@ -110,6 +110,10 @@
       <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
       <Name>A2v10.Data.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\A2v10.Javascript\A2v10.Javascript.csproj">
+      <Project>{8900D48C-D909-4EBF-8AFE-E2F152972BBF}</Project>
+      <Name>A2v10.Javascript</Name>
+    </ProjectReference>
     <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
