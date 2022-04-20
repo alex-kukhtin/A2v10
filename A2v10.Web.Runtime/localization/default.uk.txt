@@ -29,7 +29,7 @@
 @ResetPassword=Відновлення пароля
 @ResetPasswordBody=Код підтверження для відновлення пароля: <b>{0}</b>
 @ConfirmEMail=Підтвердження е-mail
-@ConfirmEMailBody=Код підтверждення: <b>{0}</b>
+@ConfirmEMailBody=Введіть код підтверждення <b>{0}</b> або клацніть <a href="{1}">посилання</a>
 @EMailAlreadyConfirmed=Ваш e-mail вже підтверджено.
 @SetNewPassword=Встановлення паролю
 @InviteEMail=Ласкаво просимо!

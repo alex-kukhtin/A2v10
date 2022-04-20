@@ -51,6 +51,8 @@ namespace A2v10.Infrastructure
 		Boolean IsMultiTenant { get; }
 		Boolean IsMultiCompany { get; }
 		String CustomSecuritySchema { get; }
+		String ActualSecuritySchema { get; }
+
 		Boolean IsUsePeriodAndCompanies { get; }
 		String CustomUserMenu { get; }
 

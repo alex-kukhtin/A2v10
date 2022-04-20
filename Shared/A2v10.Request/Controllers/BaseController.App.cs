@@ -76,7 +76,7 @@ namespace A2v10.Request
 		{
 			try
 			{
-				var dm = await _dbContext.LoadModelAsync(_host.CatalogDataSource, "a2security.[User.ChangePassword.Load]", loadPrms);
+				var dm = await _dbContext.LoadModelAsync(_host.CatalogDataSource, $"{_host.ActualSecuritySchema}.[User.ChangePassword.Load]", loadPrms);
 				var changeHtml = new StringBuilder(_localizer.Localize(null, Resources.changePassword));
 				var changeScript = new StringBuilder();
 				var pageGuid = $"el{Guid.NewGuid()}"; // starts with letter!

@@ -29,7 +29,7 @@
 @ResetPassword=Passwortwiederherstellung
 @ResetPasswordBody=Code zur Wiederherstellung des Passworts: <b>{0}</b>
 @ConfirmEMail=E-Mail-Bestätigung
-@ConfirmEMailBody=Bestätigungscode: <b>{0}</b>
+@ConfirmEMailBody=Geben Sie den Bestätigungscode <b>{0}</b> ein oder folgen <a href="{1}">Sie den Links</a>
 @EMailAlreadyConfirmed=Ihre E-Mail-Adresse wurde bereits bestätigt.
 @SetNewPassword=Passwortfestlegung
 @InviteEMail=Willkommen!

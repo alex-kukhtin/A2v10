@@ -57,6 +57,7 @@
     <None Include="Admin\Identity\User\model.json" />
     <Content Include="%40schemas\model-json-schema.json" />
     <Content Include="%40schemas\sql-json-schema.json" />
+    <None Include="app.config" />
     <None Include="Bootstrap\dashboard\model.json" />
     <None Include="Bootstrap\sales\assets\model.json" />
     <None Include="Bootstrap\sales\catalog\model.json" />
@@ -177,18 +178,9 @@
     <TypeScriptCompile Include="Develop\dashboard\javascript.d.ts" />
     <TypeScriptCompile Include="Develop\dashboard\server2.module.ts" />
     <Content Include="Develop\bpmn\catalog\edit.template.js" />
-    <Page Include="Admin\bpmn\catalog\edit.view.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <None Include="Admin\bpmn\catalog\index.view.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </None>
-    <Page Include="Develop\bpmn\catalog\edit.view.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Content Include="Admin\bpmn\catalog\edit.view.xaml" />
+    <Content Include="Admin\bpmn\catalog\index.view.xaml" />
+    <Content Include="Develop\bpmn\catalog\edit.view.xaml" />
     <Content Include="Develop\bpmn\catalog\edit.view.html" />
     <Content Include="Develop\dashboard\server.module.js" />
     <Content Include="App_application\%40types\platform.d.ts" />
@@ -362,7 +354,7 @@
     <Content Include="Develop\_assets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
-    <Content Include="Develop\_emails\confirmemail.uk.html" />
+    <None Include="Develop\_emails\confirmemail.uk.html_" />
     <Content Include="Develop\_pages\contacts.uk.html" />
   </ItemGroup>
   <ItemGroup>
@@ -859,6 +851,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\bpmn\catalog\index.view.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\sales\invoice\includeinfo.partial.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

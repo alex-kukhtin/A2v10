@@ -90,6 +90,7 @@ const vm = new DataModelController({
 	props: {
 		inDialog: {type: Boolean, default: $(IsDialog)},
         isIndex: {type: Boolean, default: $(IsIndex)},
+		isSkipDataStack: {type: Boolean, default: $(IsSkipDataStack)},
 		pageTitle: {type: String}
 	},
 	data: currentModule().dataModel,
@@ -544,6 +545,7 @@ function modelData(template, data) {
 			footer.Replace("$(BaseUrl)", msi.BaseUrl);
 			footer.Replace("$(IsDialog)", msi.IsDialog.ToString().ToLowerInvariant());
             footer.Replace("$(IsIndex)", msi.IsIndex.ToString().ToLowerInvariant());
+			footer.Replace("$(IsSkipDataStack)", msi.IsSkipDataStack.ToString().ToLowerInvariant());
 			output.Append(footer);
 			result.Script = output.ToString();
 

@@ -5113,7 +5113,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220404-7838*/
+/*20220420-7840*/
 // controllers/base.js
 
 (function () {
@@ -6514,7 +6514,8 @@ app.modules['std:impl:array'] = function () {
 		},
 		created() {
 			let out = { caller: null };
-			eventBus.$emit('registerData', this, out);
+			if (!this.isSkipDataStack)
+				eventBus.$emit('registerData', this, out);
 			this.$caller = out.caller;
 			this.__destroyed__ = false;
 
@@ -6537,7 +6538,8 @@ app.modules['std:impl:array'] = function () {
 		destroyed() {
 			//console.dir('base.js has been destroyed');
 			this.$caller = null;
-			eventBus.$emit('registerData', null);
+			if (!this.isSkipDataStack)
+				eventBus.$emit('registerData', null);
 			eventBus.$off('beginRequest', this.__beginRequest);
 			eventBus.$off('endRequest', this.__endRequest);
 			eventBus.$off('queryChange', this.__queryChange);

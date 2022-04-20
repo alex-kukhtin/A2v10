@@ -1,0 +1,5 @@
+<!-- partial block -->
+<PartialBlock xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Header Content="{Bind Agent.Name}"></Header>
+</PartialBlock>
+

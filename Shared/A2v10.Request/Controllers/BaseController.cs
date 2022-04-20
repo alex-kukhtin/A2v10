@@ -297,7 +297,8 @@ namespace A2v10.Request
 				DataModel = model,
 				RootId = rootId,
 				IsDialog = rw.IsDialog,
-                IsIndex = rw.index,
+				IsIndex = rw.index,
+				IsSkipDataStack = rw.skipDataStack,
 				Template = rw.template,
 				Path = rw.Path,
 				BaseUrl = rw.ParentModel.BasePath

@@ -2392,7 +2392,6 @@ pre.a2-code {
 }
 .a2-label {
   display: block;
-  font-size: 0.95rem;
   color: #999;
   align-self: center;
 }
@@ -4397,15 +4396,14 @@ ul.news-list > li {
   border-top: 1px solid var(--neutralBkDark);
   display: flex;
   justify-content: flex-end;
-  align-items: flex-start;
+  align-items: start;
+  gap: 1rem;
 }
 .modal-footer .btn {
   min-width: 6rem;
 }
-.modal-footer .btn + .btn,
-.modal-footer .btn + .dropdown,
-.modal-footer .dropdown + .btn {
-  margin-left: 1rem;
+.modal-footer .control-group {
+  margin: 0;
 }
 .modal-footer .btn-help {
   cursor: pointer;
@@ -4820,7 +4818,6 @@ table.hover > tbody > tr.active:hover {
   background-color: rgba(208, 208, 208, 0.15);
 }
 .a2-table.compact {
-  font-size: 0.95rem;
   line-height: normal;
 }
 .a2-table.compact > tbody > tr > td,

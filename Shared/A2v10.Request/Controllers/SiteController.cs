@@ -83,6 +83,7 @@ namespace A2v10.Request
 				RootId = pageId,
 				IsDialog = rw.IsDialog,
                 IsIndex = rw.index,
+				IsSkipDataStack = rw.skipDataStack,
 				Template = rw.template,
 				Path = rw.Path,
 				BaseUrl = rw.ParentModel.BasePath

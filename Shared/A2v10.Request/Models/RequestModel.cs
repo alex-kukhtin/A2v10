@@ -117,6 +117,7 @@ namespace A2v10.Request
 		public String schema; // or parent
 		public String source; // or parent
 		public Boolean index;
+		public Boolean skipDataStack;
 		public Boolean copy;
 		public String template;
 		public String script;

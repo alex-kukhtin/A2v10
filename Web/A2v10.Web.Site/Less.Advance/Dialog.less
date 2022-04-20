@@ -169,14 +169,15 @@
 	border-top: 1px solid @modal-border-color;
 	display: flex;
 	justify-content: flex-end;
-	align-items: flex-start;
+	align-items: start;
+	gap: @modal-padding;
 
 	.btn {
 		min-width: 6rem;
 	}
 
-	.btn + .btn, .btn + .dropdown, .dropdown + .btn {
-		margin-left: @modal-padding;
+	.control-group {
+		margin: 0;
 	}
 
 	.btn-help {

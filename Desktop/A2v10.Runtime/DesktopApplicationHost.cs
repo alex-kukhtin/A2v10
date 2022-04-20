@@ -114,6 +114,7 @@ namespace A2v10.Runtime
 		public String CatalogDataSource => "Catalog";
 		public String TenantDataSource => null;
 		public String CustomSecuritySchema => null;
+		public String ActualSecuritySchema => CustomSecuritySchema ?? "a2security";
 
 		public String AppVersion => AppInfo.MainAssembly.Version;
 		public String AppBuild => AppInfo.MainAssembly.Build;

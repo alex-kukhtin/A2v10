@@ -52,6 +52,7 @@ namespace BackgroundProcessor
 		public String HelpUrl => throw new NotImplementedException(nameof(HelpUrl));
 		public String HostingPath => throw new NotImplementedException(nameof(HostingPath));
 		public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
+		public String ActualSecuritySchema => CustomSecuritySchema ?? "a2security";
 
 		public Boolean IsDebugConfiguration
 		{

@@ -13,15 +13,20 @@
 				"fileName": "FILE: {{Params.FileName}}"
 			}
 		},
-		"edit": {
-			"model": "Document",
-			/*
+	  "edit": {
+		"model": "Document",
+		/*
       "parameters": {
         "Kind": "TEST"
       },*/
-			"view": "invoice.view",
-			"template": "invoice2.template"
-		},
+		"view": "invoice.view",
+		"template": "invoice2.template"
+	  },
+	  "includeinfo": {
+		"skipDataStack": true,
+		"model": "Agent",
+		"view": "includeinfo.partial"
+	  },
 		"empty": {
 			"model": "Empty",
 			"view": "empty.view",

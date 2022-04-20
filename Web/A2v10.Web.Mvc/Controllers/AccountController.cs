@@ -394,6 +394,7 @@ namespace A2v10.Web.Mvc.Controllers
 			String subject = _localizer.Localize(null, "@[ConfirmEMail]");
 			StringBuilder sbBody = new StringBuilder(GetEMailBody("confirmemail", "@[ConfirmEMailBody]"));
 			sbBody.Replace("{0}", confirmCode)
+				.Replace("{1}", callbackUrl)
 				.Replace("$(EMail)", user.UserName)
 				.Replace("$(SmsCode)", confirmCode)
 				.Replace("$(ConfirmLink)", callbackUrl);

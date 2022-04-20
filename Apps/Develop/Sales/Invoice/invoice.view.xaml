@@ -1,7 +1,9 @@
 <!-- Invoice index -->
 <Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml"
-	  xmlns:myControls="clr-namespace:XamExtensionsSample;assembly=XamExtensionsSample"
       Title="{Bind Document.Id, Format='@[Reload] [{0}]'}">
+	<!--
+	  <xmlns:myControls="clr-namespace:XamExtensionsSample;assembly=XamExtensionsSample"
+	-->
 	<Page.Toolbar>
 		<Toolbar XamlStyle="{StyleResource TestToolbar}">
 			<Button Icon="Save" Tip="Сохранить изменения" Command="{BindCmd Save}">@[Save]</Button>
@@ -47,6 +49,9 @@
 					Command="{BindCmd Execute, CommandName='createPayment', Argument={Bind Document}, Confirm='Создать документ оплаты?'}" 
 					Padding="6" Block="True"/>
 			</Panel>
+			<Panel Header="TestInclude">
+				<Include Source="/sales/invoice/includeinfo" Argument="{Bind Document.Agent.Id}"/>
+			</Panel>
 		</Taskpad>
 	</Page.Taskpad>
 	<Grid Columns="12rem, 12rem, 150, 1*">
@@ -73,9 +78,11 @@
 				<Hyperlink Content="Static"/>
 			</Static.Link>
 		</Static>
+		<!--
 		<myControls:TextBoxWithMask Grid.Row="2" Grid.Col="4" Mask="###-###-###"
 				Label="InputMask" Value="{Bind Document.Memo}">
 		</myControls:TextBoxWithMask>
+		-->
 		<!--
 		-->
 		<Selector Grid.Row="3" Grid.ColSpan="3" Placeholder="Выберите покупателя"
