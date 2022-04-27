@@ -2,7 +2,7 @@
 	"name": "a2v10.site",
 	"version": "10.0.0",
 	"devDependencies": {
-		"grunt": "^1.4.0",
+		"grunt": "^1.5.2",
 		"grunt-terser": "1.0.0",
 		"grunt-contrib-watch": "^1.1.0"
 	}
