@@ -3433,6 +3433,9 @@ table.data-grid > tbody > tr.bold > td {
   border-bottom: none !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
+.toolbar > .control-group.first-elem {
+  margin-left: 0 !important;
+}
 .toolbar > .control-group.first-elem label {
   margin-left: 6px;
 }
@@ -5968,6 +5971,20 @@ TODO:
 .panel.panel-cut .panel-content {
   overflow: visible;
 }
+.panel.panel-transparent {
+  background-color: transparent;
+  border: none;
+}
+.panel.panel-transparent .panel-header {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  color: var(--themeLight);
+  font-size: 115%;
+}
+.panel.panel-transparent .panel-header .panel-collapse-handle {
+  color: inherit;
+}
 .field-set {
   margin: 0;
   padding: 0.4rem 0.6rem 0.6rem 0.6rem;
@@ -6396,6 +6413,22 @@ table > colgroup col.blue {
 		margin: @page-margin;
 	}
 	*/
+}
+.sheet.grid-vertical > tbody > tr > td,
+.sheet.grid-both > tbody > tr > td,
+.sheet.grid-vertical > thead > tr > td,
+.sheet.grid-both > thead > tr > td,
+.sheet.grid-vertical > tfoot > tr > td,
+.sheet.grid-both > tfoot > tr > td {
+  border-left: 1px solid #ddd;
+}
+.sheet.grid-horizontal > tbody > tr > td,
+.sheet.grid-both > tbody > tr > td,
+.sheet.grid-horizontal > thead > tr > td,
+.sheet.grid-both > thead > tr > td,
+.sheet.grid-horizontal > tfoot > tr > td,
+.sheet.grid-both > tfoot > tr > td {
+  border-top: 1px solid #ddd;
 }
 .app-exception {
   margin: 50px auto;

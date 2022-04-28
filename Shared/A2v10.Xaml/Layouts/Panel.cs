@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -17,7 +17,8 @@ namespace A2v10.Xaml
 		Cyan,
 		Red,
 		Yellow,
-		Cut
+		Cut,
+		Transparent
 	}
 
 	public class Panel : Container, ITableControl

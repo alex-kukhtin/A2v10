@@ -298,3 +298,15 @@ table > colgroup {
 	}
 	*/
 }
+
+.sheet.grid-vertical, .sheet.grid-both {
+	> tbody > tr > td, > thead > tr > td, > tfoot > tr > td {
+		border-left: 1px solid @a2-table-brd-color;
+	}
+}
+
+.sheet.grid-horizontal, .sheet.grid-both {
+	> tbody > tr > td, > thead > tr > td, > tfoot > tr > td {
+		border-top: 1px solid @a2-table-brd-color;
+	}
+}
