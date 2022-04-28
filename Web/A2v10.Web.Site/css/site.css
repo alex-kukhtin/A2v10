@@ -1715,6 +1715,7 @@ header .dropdown.separate.show .btn.btn-success,
 .page.partial {
   height: auto;
   min-height: 100%;
+  position: relative;
 }
 .page.inital-page {
   overflow: auto;

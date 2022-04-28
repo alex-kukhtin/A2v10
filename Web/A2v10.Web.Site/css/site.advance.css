@@ -1586,6 +1586,7 @@ header .dropdown.separate.show .btn.btn-success,
 .page.partial {
   height: auto;
   min-height: 100%;
+  position: relative;
 }
 .page.inital-page {
   overflow: auto;
@@ -5354,7 +5355,7 @@ TODO:
 }
 .dropdown.show > .btn-caret {
   border-left-style: none;
-  padding-left: 7px;
+  padding-left: 9px;
 }
 .hlink-dd-wrapper {
   /*

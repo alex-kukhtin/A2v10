@@ -18,6 +18,7 @@ namespace A2v10.Xaml
 
 			page.RenderStart(context);
 			RenderChildren(context);
+			RenderContextMenus();
 			RenderAccelCommands(context);
 			page.RenderEnd(context);
 		}
