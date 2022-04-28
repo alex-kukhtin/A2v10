@@ -416,6 +416,9 @@
 .ico-folder-outline:before {
   content: "\e95a";
 }
+.ico-folders-outline:before {
+  content: "\e959";
+}
 .ico-folder-query:before {
   content: "\ea24";
   color: #dcb67a;
@@ -1715,6 +1718,7 @@ header .dropdown.separate.show .btn.btn-success,
 .page.partial {
   height: auto;
   min-height: 100%;
+  position: relative;
 }
 .page.inital-page {
   overflow: auto;

@@ -343,6 +343,7 @@ namespace A2v10.Xaml
         Flame,
 		Folder,
 		FolderOutline,
+		FoldersOutline,
 		FolderQuery,
 		Gear,
 		GearOutline,
