@@ -41,6 +41,10 @@ namespace A2v10.Xaml
 		public TableBackgroundStyle Background { get; set; }
 		public CellSpacingMode CellSpacing { get; set; }
 
+		public Boolean StickyHeaders { get; set; }
+		public Length Height { get; set; }
+
+
 		public TableRowCollection Header
 		{
 			get
@@ -91,9 +95,31 @@ namespace A2v10.Xaml
 		{
 			if (SkipRender(context))
 				return;
-			var table = new TagBuilder("table", "a2-table", IsInGrid);
+			if (StickyHeaders)
+            {
+				var outTag = new TagBuilder("div", "a2-sticky-container", IsInGrid);
+				MergeAttributes(outTag, context, MergeAttrMode.Visibility);
+				if (Height != null)
+					outTag.MergeStyle("height", Height.Value);
+				outTag.RenderStart(context);
+				RenderTable(context, "a2-table sticky", false, false, null);
+				outTag.RenderEnd(context);
+				var sb = new TagBuilder("div", "a2-sticky-bottom");
+				if (Width != null)
+					sb.MergeStyle("width", Width.Value);
+				sb.Render(context);
+			}
+			else
+            {
+				RenderTable(context, "a2-table", IsInGrid, true, onRender);
+            }
+		}
+		private void RenderTable(RenderContext context, String tblClass, Boolean inGrid, Boolean mergeAttrs, Action<TagBuilder> onRender)
+		{ 
+			var table = new TagBuilder("table", tblClass, inGrid);
 			onRender?.Invoke(table);
-			MergeAttributes(table, context);
+			if (mergeAttrs)
+				MergeAttributes(table, context);
 			if (Background != TableBackgroundStyle.None)
 				table.AddCssClass("bk-" + Background.ToString().ToKebabCase());
 			if (CellSpacing != CellSpacingMode.None)

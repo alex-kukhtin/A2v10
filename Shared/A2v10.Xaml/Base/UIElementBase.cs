@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 
 using System;
@@ -139,6 +139,14 @@ namespace A2v10.Xaml
 				input.MergeAttribute(":filters", valBind.FiltersJS());
 		}
 
+		protected void AddBindingCssClass(TagBuilder tag, RenderContext context, String propValue)
+		{
+			var cssBind = GetBinding("CssClass");
+			if (cssBind != null)
+				tag.MergeAttribute(":class", cssBind.GetPath(context));
+			else
+				tag.AddCssClass(propValue);
+		}
 
 		protected void MergeValidateValueItemProp(TagBuilder input, RenderContext context, String valueName)
 		{

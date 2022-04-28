@@ -50,7 +50,10 @@
 					Padding="6" Block="True"/>
 			</Panel>
 			<Panel Header="TestInclude">
-				<Include Source="/sales/invoice/includeinfo" Argument="{Bind Document.Agent.Id}"/>
+				<Grid Columns="1*,1*">
+					<Include Source="/sales/invoice/includeinfo" Grid.Col="2"
+							 Argument="{Bind Document.Agent.Id}" CssClass="italic"/>
+				</Grid>
 			</Panel>
 		</Taskpad>
 	</Page.Taskpad>
@@ -61,7 +64,7 @@
 				<Popover Placement="BottomRight">I am the popover for hyperlink</Popover>
 			</Hyperlink.Hint>
 		</Hyperlink>
-		
+
 		<Header Grid.ColSpan="4" Badge="{Bind Document.Id}">Счет покупателю</Header>
 		<DatePicker Grid.Row="2" Label="Дата" Value="{Bind Document.Date}">
 			<DatePicker.Link>
@@ -110,53 +113,60 @@
 		<Block Grid.Row="4" Grid.ColSpan="4">
 			<TabPanel Overflow="True">
 				<Tab Header="Test Tab with scroll">
-			<Toolbar Style="Transparent">
-				<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
-			</Toolbar>
-			<Table ItemsSource="{Bind Document.Rows}" CellSpacing="None"
-              Width="100%" GridLines="Both" Border="True" Background="Paper"
-              Columns="Fit,100,Auto,Fit,100,100,100,Fit">
-				<Table.Header>
-					<TableRow>
-						<TableCell Wrap="NoWrap">№ п.п.</TableCell>
-						<TableCell>Артикул</TableCell>
-						<TableCell>Товар</TableCell>
-						<TableCell Wrap="NoWrap">Ед. изм.</TableCell>
-						<TableCell>@[Qty]</TableCell>
-						<TableCell>@[Price]</TableCell>
-						<TableCell>@[Sum]</TableCell>
-						<TableCell/>
-					</TableRow>
-				</Table.Header>
-				<Table.Footer>
-					<TableRow>
-						<TableCell ColSpan="6">Итого</TableCell>
-						<TableCell Content="{Bind Document.Sum, DataType=Currency}" Align="Right" Bold="True"/>
-						<TableCell />
-					</TableRow>
-				</Table.Footer>
-				<TableRow Mark="{Bind $RowMark}">
-					<TableCell Content="{Bind RowNo}" Align="Right"/>
-					<TextBox Value="{Bind Entity.Article}"/>
+					<Toolbar Style="Transparent">
+						<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+					</Toolbar>
+					<Table ItemsSource="{Bind Document.Rows}"
+              Width="100%" GridLines="Both" Background="Paper" Compact="True"
+              Columns="Fit,100,Auto,Fit,100,100,100,Fit" StickyHeaders="True" Height="300px">
+						<Table.Header>
+							<TableRow>
+								<TableCell Wrap="NoWrap" RowSpan="2">№ п.п.</TableCell>
+								<TableCell ColSpan="2">Товар</TableCell>
+								<TableCell Wrap="NoWrap" RowSpan="2">Ед. изм.</TableCell>
+								<TableCell ColSpan="3">@[Qty] @[Price] @[Sum]</TableCell>
+								<TableCell ColSpan="2" RowSpan="2"/>
+							</TableRow>
+							<TableRow>
+								<TableCell FirstInRow="False">Артикул</TableCell>
+								<TableCell>Товар</TableCell>
+								<TableCell>@[Qty]</TableCell>
+								<TableCell>@[Price]</TableCell>
+								<TableCell>@[Sum]</TableCell>
+							</TableRow>
+						</Table.Header>
+						<Table.Footer>
+							<TableRow>
+								<TableCell ColSpan="6" RowSpan="2">Итого</TableCell>
+								<TableCell Content="{Bind Document.Sum, DataType=Currency}" Align="Right" Bold="True"/>
+								<TableCell RowSpan="2" ColSpan="2"/>
+							</TableRow>
+							<TableRow>
+								<TableCell FirstInRow="False" Content="{Bind Document.Sum, DataType=Currency}" Align="Right"/>
+							</TableRow>
+						</Table.Footer>
+						<TableRow Mark="{Bind $RowMark}">
+							<TableCell Content="{Bind RowNo}" Align="Right"/>
+							<TextBox Value="{Bind Entity.Article}"/>
 							<Selector Value="{Bind Entity.Name}" ValidateValue="{Bind Entity}" Delegate="fetchCustomers">
-						<Selector.AddOns>
-							<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods'}"/>
-						</Selector.AddOns>
-					</Selector>
-					<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
-					<TextBox Value="{Bind Qty, DataType=Number, Format='0'}" Align="Right" Number="True">
-						<TextBox.AddOns>
-							<Popover Icon="History">
-								I am the popover
-							</Popover>
-						</TextBox.AddOns>
-					</TextBox>
-					<TextBox Value="{Bind Price, DataType=Currency}" Align="Right"/>
-					<TextBox Value="{Bind Sum, DataType=Currency}" Align="Right"/>
-					<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
-					<Label Content="{Bind Qty}"></Label>
-				</TableRow>
-			</Table>
+								<Selector.AddOns>
+									<Hyperlink Icon="Search" Command="{BindCmd Dialog, Action=Browse, Argument={Bind Entity}, Url='/Entity/browseGoods'}"/>
+								</Selector.AddOns>
+							</Selector>
+							<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
+							<TextBox Value="{Bind Qty, DataType=Number, Format='0'}" Align="Right" Number="True">
+								<TextBox.AddOns>
+									<Popover Icon="History">
+										I am the popover
+									</Popover>
+								</TextBox.AddOns>
+							</TextBox>
+							<TextBox Value="{Bind Price, DataType=Currency}" Align="Right"/>
+							<TextBox Value="{Bind Sum, DataType=Currency}" Align="Right"/>
+							<Hyperlink Size="Small" Icon="Delete" Command="{BindCmd Remove, Argument={Bind}, Confirm='Действительно удалить строку?'}"/>
+							<Label Content="{Bind Qty}"></Label>
+						</TableRow>
+					</Table>
 				</Tab>
 			</TabPanel>
 		</Block>

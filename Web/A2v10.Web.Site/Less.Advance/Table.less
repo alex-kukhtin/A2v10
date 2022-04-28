@@ -4,10 +4,11 @@
 
 @a2-table-brd-color: #ddd;
 
-@compact-ctrl-height:1.67rem;
+@compact-ctrl-height:1.67em;
+
+@cell-vert-padding: 6px;
 
 table {
-
 	th {
 		border: 1px solid @table-brd-color;
 	}
@@ -64,29 +65,37 @@ table.hover {
 }
 
 .grid-vertical, .grid-both {
-	> tbody > tr > td, > thead > tr > td, > tfoot > tr > td {
-		border-left:1px solid @a2-table-brd-color;
-		border-right:1px solid @a2-table-brd-color;
+	td {
+		border-right: 1px solid @a2-table-brd-color;
+	}
+
+	td:first-child:not(.no-first) {
+		border-left: 1px solid @a2-table-brd-color;
 	}
 }
 
 .grid-horizontal, .grid-both {
-	> tbody > tr > td, > thead > tr > td, > tfoot > tr > td {
-		border-bottom:1px solid @a2-table-brd-color;
-		border-top:1px solid @a2-table-brd-color;
+	td {
+		border-bottom: 1px solid @a2-table-brd-color;
+	}
+
+	thead > tr:first-child > td, tfoot > tr:first-child > td {
+		border-top: 1px solid @a2-table-brd-color;
 	}
 }
 
 .grid-horizontal, .grid-vertical, .grid-both {
 	td > .control-group > .input-group {
 		border-color:transparent;
-		margin:.1px 0; // fix chrome bug
 	}
 }
 
 
 
 .a2-table {
+	border-collapse: separate;
+	border-spacing: 0;
+	line-height:1.8;
 
 	&.striped > tbody > tr:nth-of-type(even) {
 		background-color: @alter-bg-color;
@@ -95,7 +104,6 @@ table.hover {
 	&.bordered {
 		margin: 1px;
 		outline: 1px solid @a2-table-brd-color;
-		max-width: ~"calc(100% - 2px)";
 	}
 
 	> tbody > tr {
@@ -103,8 +111,9 @@ table.hover {
 	}
 
 	> tbody > tr > td {
-		padding: 4px 6px;
+		padding: 0 6px;
 		border-color: @a2-table-brd-color;
+
 		label {
 			display: inline-block;
 		}
@@ -118,19 +127,23 @@ table.hover {
 		}
 	}
 
+	> thead, > tfoot {
+		line-height:2;
+	}
+
 	> thead > tr, > tfoot > tr {
 		vertical-align: middle;
 	}
 
 	> thead > tr > td, > tfoot > tr > td {
-		padding: @table-cell-padding;
+		padding: 0 @cell-vert-padding;
 		background-color: @table-hdr-bg-color;
 		border-color: @a2-table-brd-color;
 	}
 
 	td.ctrl {
 		padding: 0;
-		vertical-align:top;
+		vertical-align: top;
 
 		.checkbox, .radio {
 			margin: 0 6px;
@@ -222,32 +235,54 @@ table.hover {
 			background-color: @alter-bg-color;
 		}
 	}
+
+	.control-group .input-group {
+		line-height: inherit;
+
+		a {
+			line-height: inherit;
+		}
+
+		.popover-title {
+			line-height: inherit;
+		}
+	}
+}
+
+.a2-sticky-bottom {
+	height:1px;
+	background-color:white;
+	position:relative;
+	top:-1px;
 }
 
 .a2-table.compact {
 	//TODO: may be .small-font ????
 	line-height: normal;
+	line-height: 1.52;
 
-	> tbody > tr > td, thead > tr > td, tfoot > tr > td {
-		padding: 2px 4px;
-		//height:23px;
+	> thead, > tfoot {
+		line-height: @compact-ctrl-height;
+	}
+
+	input, select {
+		height: @compact-ctrl-height;
+	}
+
+	td {
+		padding: 0 4px;
+
 		.input-group {
 			padding: 0;
 		}
 
 		.input-group input {
-			height: @compact-ctrl-height;
 		}
 
 		.input-group.static > span {
 			line-height: @compact-ctrl-height;
 			min-height: @compact-ctrl-height;
 			height: @compact-ctrl-height;
-		}
-
-		&.row-divider {
-			padding: 0;
-			height: 1px;
 		}
 
 		&.ctrl {
@@ -264,10 +299,6 @@ table.hover {
 				> span {
 					padding-left: 18px;
 				}
-			}
-
-			.control-group .input-group > a {
-				line-height: @compact-ctrl-height;
 			}
 		}
 	}
@@ -316,5 +347,24 @@ table.hover {
 		tr > td:first-child {
 			border-left-style:none;
 		}
+	}
+}
+
+.a2-sticky-container {
+	overflow:auto;
+}
+
+table.a2-table.sticky {
+	thead, tfoot {
+		position: sticky;
+		z-index: @sticky-index;
+	}
+
+	thead {
+		top: 0;
+	}
+
+	tfoot {
+		bottom: 0;
 	}
 }

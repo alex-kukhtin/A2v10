@@ -23,6 +23,8 @@ namespace A2v10.Xaml
 		public Boolean? Italic { get; set; }
 		public Boolean Gray { get; set; }
 
+		public Boolean? FirstInRow { get; set; }
+
 		//public Boolean Validate { get; set; }
 
 		public Object ItemsSource { get; set; }
@@ -33,6 +35,8 @@ namespace A2v10.Xaml
 				return;
 			var td = new TagBuilder("td");
 			onRender?.Invoke(td);
+			if (FirstInRow.HasValue && !FirstInRow.Value)
+				td.AddCssClass("no-first");
 
 			Bind isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)

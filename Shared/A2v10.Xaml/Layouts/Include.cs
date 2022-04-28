@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 
@@ -12,12 +12,18 @@ namespace A2v10.Xaml
 
 		public Boolean FullHeight { get; set; }
 
+		public String CssClass { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
-			var div = new TagBuilder("a2-include");
+			var div = new TagBuilder("a2-include", null, IsInGrid);
+
 			MergeAttributes(div, context);
+
+			AddBindingCssClass(div, context, CssClass);
+
 			var src = GetBinding(nameof(Source));
 			if (src != null)
 				div.MergeAttribute(":source", src.GetPathFormat(context));

@@ -6,8 +6,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Markup;
 
-using A2v10.Infrastructure;
-
 namespace A2v10.Xaml
 {
 
