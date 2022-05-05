@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   viewBox="0 0 1000 1000"
+   height="1000"
+   width="1000"
+   id="svg4751"
+   version="1.1">
+  <metadata
+     id="metadata4757">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4755" />
+  <path
+     id="rect14500"
+     d="M 0 0 L 0 1000 L 1000 1000 L 1000 0 L 0 0 z M 785.83594 159.5293 C 787.33656 159.51983 788.83569 159.53208 790.33203 159.56641 C 795.69379 159.5665 801.05646 159.71813 806.4082 160.04883 C 850.47418 162.14897 899.19352 180.19026 918.80078 222.77148 C 941.74162 274.32148 926.40139 335.86931 894.46875 380.13672 C 854.01363 429.70442 812.20317 478.18183 771.20703 527.31445 L 932.30859 527.31445 L 932.30859 607.88281 L 687.09375 607.88281 L 653.54297 532.50195 C 703.00938 471.27566 752.475 410.04857 801.94141 348.82227 C 820.64217 326.29773 842.37505 300.44667 837.53711 269.18359 C 833.17204 244.55206 804.30144 237.79238 783.01172 240.61719 C 757.13853 242.74647 740.18228 267.96761 738.79297 292.32227 C 709.0409 293.03374 677.96704 292.42342 647.70703 292.62695 C 649.29495 268.31746 655.28057 243.93628 667.6582 222.78906 C 691.16115 181.14663 739.31651 159.82272 785.83594 159.5293 z M 391.2207 159.56641 L 658.55664 720 L 932.30859 720 L 932.30859 840.43359 L 574.14258 840.43359 L 389.7832 448.75195 L 260.65625 720 L 438.3125 720 L 494.58008 840.43359 L 67.691406 840.43359 L 391.2207 159.56641 z "
+     style="opacity:1;fill:#dd2c5e;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:20;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke" />
+  <g
+     transform="matrix(0.91644457,0,0,0.93969565,44.381476,30.586347)"
+     style="fill:#fffffe;fill-opacity:1;stroke-width:1.07758939"
+     id="g13566" />
+</svg>
