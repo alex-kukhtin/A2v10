@@ -69,7 +69,8 @@
 			"de-DE": 'Deutsche',
 			"uk-UA": 'Ukrainisch (Українська)',
 			"en-US": 'Englisch (English)',
-			"ru-RU": 'Russisch (Русский)'
+			"ru-RU": 'Russisch (Русский)',
+			"pl-PL": 'Polnische (Polski)'
 		}
 	};
 

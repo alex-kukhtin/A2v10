@@ -278,7 +278,7 @@
 			"app/services/modelinfo.js",
 			"app/services/validators.js",
 			"app/services/impl/array.js",
-			"app/services/datamodel.js",
+			"app/services/datamodel.js"
 		],
 		"minify": {
 			"enabled": false,

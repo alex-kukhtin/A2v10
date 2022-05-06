@@ -84,6 +84,7 @@
     <None Include="localization\de.xml" />
     <Content Include="localization\default.de.txt" />
     <Content Include="localization\default.en.txt" />
+    <Content Include="localization\default.pl.txt" />
     <Content Include="localization\default.ru.txt" />
     <Content Include="localization\default.uk.txt" />
     <None Include="localization\en.xml" />
@@ -94,6 +95,7 @@
     <Content Include="scripts\d3.min.js" />
     <Content Include="scripts\locale-de.min.js" />
     <Content Include="scripts\locale-en.min.js" />
+    <Content Include="scripts\locale-pl.min.js" />
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />
     <Content Include="scripts\main.js" />

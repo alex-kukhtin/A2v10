@@ -3493,7 +3493,6 @@ table.data-grid > tbody > tr.bold > td {
 .toolbar > .control-group {
   display: inline-flex;
   background-color: transparent;
-  margin: 0 4px !important;
 }
 .toolbar > .control-group .input-group {
   height: 2.2em;
@@ -3505,6 +3504,12 @@ table.data-grid > tbody > tr.bold > td {
   margin: 0 0.5rem;
   font-size: 100%;
   white-space: nowrap;
+}
+.toolbar > .control-group:not(:last-child) {
+  margin-right: 4px;
+}
+.toolbar > .control-group:not(:first-child) {
+  margin-left: 4px;
 }
 .toolbar .control-group + .control-group {
   margin-left: 6px;
@@ -4670,17 +4675,20 @@ table tr.overline {
 table td.wrap {
   word-break: break-word;
 }
-.table-separate-border {
+.a2-table.table-separate-border {
   border-collapse: separate;
 }
-.table-cell-spacing-small {
+.a2-table.table-cell-spacing-small {
   border-spacing: 2px;
+  border-collapse: separate;
 }
-.table-cell-spacing-medium {
+.a2-table.table-cell-spacing-medium {
   border-spacing: 6px;
+  border-collapse: separate;
 }
-.table-cell-spacing-large {
+.a2-table.table-cell-spacing-large {
   border-spacing: 10px;
+  border-collapse: separate;
 }
 table.hover > tbody > tr:hover {
   background-color: var(--hoverBk) !important;
@@ -6021,6 +6029,9 @@ TODO:
   top: 0;
   right: 0;
   bottom: 0;
+}
+.full-height {
+  height: 100%;
 }
 .full-height-panel {
   display: grid;

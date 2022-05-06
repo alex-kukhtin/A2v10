@@ -118,6 +118,7 @@
     <Content Include="app\controllers\tests.js" />
     <Content Include="app\directives\pageorient.js" />
     <Content Include="app\localization\locale-de.js" />
+    <Content Include="app\localization\locale-pl.js" />
     <Content Include="app\mobile\shell.js" />
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
@@ -130,7 +131,9 @@
     <Content Include="css\bpmn\diagram-js.css" />
     <Content Include="css\bpmn\editor.css" />
     <Content Include="css\bpmn\font\bpmn.svg" />
+    <Content Include="Localization\default.pl.txt" />
     <Content Include="openidconnect.txt" />
+    <Content Include="scripts\locale-pl.min.js" />
     <Content Include="scripts\server\validate.js" />
     <Content Include="app\services\eusign.js" />
     <Content Include="app\services\html.js" />

@@ -162,6 +162,7 @@
     <Content Include="Pages\shellAdmin.js" />
     <Content Include="Pages\shell.js" />
     <Content Include="Resources\locale-de.js" />
+    <None Include="Resources\locale-pl.js" />
     <Content Include="Resources\locale-ru.js" />
     <Content Include="Resources\locale-en.js" />
     <Content Include="Resources\locale-uk.js" />

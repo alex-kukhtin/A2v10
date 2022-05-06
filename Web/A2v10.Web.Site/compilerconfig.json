@@ -52,5 +52,11 @@
     "inputFile": "app/localization/locale-de.js",
     "sourceMap": false,
     "useNodeSass": false
+  },
+  {
+    "outputFile": "Scripts/locale-pl.min.js",
+    "inputFile": "app/localization/locale-pl.js",
+    "sourceMap": false,
+    "useNodeSass": false
   }
 ]

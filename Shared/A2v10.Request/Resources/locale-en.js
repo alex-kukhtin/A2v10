@@ -70,7 +70,8 @@
 			"en-US": 'English',
 			"uk-UA": 'Ukrainian (Українська)',
 			"ru-RU": 'Russian (Русский)',
-			"de-DE": 'German (Deutsche)'
+			"de-DE": 'German (Deutsche)',
+			"pl-PL": 'Polish (Polski)'
 		}
 	};
 

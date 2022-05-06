@@ -19,7 +19,7 @@ namespace A2v10.Request.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -378,11 +378,11 @@ namespace A2v10.Request.Properties {
         ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
         ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
         ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///	&lt;link href=&quot;/css/$(Theme).min.css?v=$(Build)&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///	&lt;link href=&quot;/css/$(Theme).min.css?v=$(ThemeTimeStamp)&quot; rel=&quot;stylesheet&quot; /&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
         ///	&lt;script type=&quot;text/javascript&quot; src=&quot;/scripts/vue.js?v=2.5.13&quot;&gt;&lt;/script&gt;
-        ///	&lt;script typ [rest of string was truncated]&quot;;.
+        ///	&lt;s [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string euSignFrame {
             get {
@@ -680,6 +680,36 @@ namespace A2v10.Request.Properties {
         /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
+        ///// 20220506-7744
+        ///// locale-pl.js
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///	const locale = {
+        ///		$Locale: &apos;pl-PL&apos;,
+        ///		$Ok: &apos;OK&apos;,
+        ///		$Cancel: &apos;Anuluj&apos;,
+        ///		$Error: &apos;Błąd&apos;,
+        ///		$Login: &apos;Logowanie&apos;,
+        ///		$User: &apos;Użytkownik&apos;,
+        ///		$Confirm: &apos;Potwierdzenie&apos;,
+        ///		$LoginPrompt: &apos;Zaloguj sie&apos;,
+        ///		$LoginLink: &apos;Logowanie&apos;,
+        ///		$RegisterPrompt: &apos;Rejestracja w systemie&apos;,
+        ///		$ForgotPrompt: &apos;Odzyskiwanie hasła&apos;,
+        ///		$ConfirmEMailPrompt: &apos;Potwierdzenie e-mail&apos;,
+        ///		$Version:  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string locale_pl {
+            get {
+                return ResourceManager.GetString("locale_pl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+        ///
         ///// 20210609-7782
         ///// locale-ru.js
         ///
@@ -902,9 +932,9 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
         ///
-        ///// 20210609-7782
+        ///// 20220101-7823
         ///
         ///&quot;use strict&quot;;
         ///
