@@ -6,21 +6,27 @@ namespace A2v10.Xaml
 {
 	public class PartialBlock : RootContainer
 	{
+		public Boolean FullHeight { get; set; }
+		public Length Height { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
 				return;
-			var page = new TagBuilder("div", "partial-block");
-			page.MergeAttribute("id", context.RootId);
-			MergeAttributes(page, context, MergeAttrMode.Margin);
+			var block = new TagBuilder("div", "partial-block");
+			block.MergeAttribute("id", context.RootId);
+			MergeAttributes(block, context, MergeAttrMode.Margin);
+			if (Height != null)
+				block.MergeStyle("height", Height.Value);
 
-			page.AddCssClass(CssClass);
+			block.AddCssClass(CssClass);
+			block.AddCssClassBool(FullHeight, "full-height");
 
-			page.RenderStart(context);
+			block.RenderStart(context);
 			RenderChildren(context);
 			RenderContextMenus();
 			RenderAccelCommands(context);
-			page.RenderEnd(context);
+			block.RenderEnd(context);
 		}
 	}
 }

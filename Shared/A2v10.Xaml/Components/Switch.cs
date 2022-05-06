@@ -15,8 +15,46 @@ namespace A2v10.Xaml
 
 		public void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
+			var parentGrid = FindParent<Grid>();
+			if (parentGrid != null)
+			{
+				foreach (var c in Children)
+				{
+					c.IsInGrid = true;
+					using (context.GridContext(c))
+					{
+						c.RenderElement(context);
+					}
+				}
+			}
+			else
+			{
+				foreach (var c in Children)
+				{
+					c.RenderElement(context);
+				}
+			}
+		}
+
+        public override void OnSetStyles()
+        {
+            base.OnSetStyles();
 			foreach (var c in Children)
-				c.RenderElement(context);
+				c.OnSetStyles();
+		}
+
+        protected override void OnEndInit()
+        {
+            base.OnEndInit();
+			foreach (var c in Children)
+				c.SetParent(this);
+		}
+
+        public override void OnDispose()
+        {
+            base.OnDispose();
+			foreach (var c in Children)
+				c.OnDispose();
 		}
 	}
 
@@ -49,7 +87,7 @@ namespace A2v10.Xaml
 			for (var i=0; i<cases.Count; i++)
 			{
 				var itm = cases[i];
-				var t = new TagBuilder("template");
+				var t = new TagBuilder("template", null);
 				var ifKey = (i == 0) ? "v-if " : "v-else-if";
 				if (itm is Else)
 				{
@@ -64,6 +102,27 @@ namespace A2v10.Xaml
 				itm.RenderElement(context);
 				t.RenderEnd(context);
 			}
+		}
+
+        public override void OnSetStyles()
+        {
+            base.OnSetStyles();
+			foreach (var c in Cases)
+				c.OnSetStyles();
+        }
+
+        protected override void OnEndInit()
+        {
+            base.OnEndInit();
+			foreach (var c in Cases)
+				c.SetParent(this);
+		}
+
+        public override void OnDispose()
+        {
+            base.OnDispose();
+			foreach (var c in Cases)
+				c.OnDispose();
 		}
 	}
 }

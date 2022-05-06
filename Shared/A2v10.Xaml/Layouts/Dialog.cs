@@ -39,6 +39,8 @@ namespace A2v10.Xaml
 
 		public UIElementCollection Buttons { get; set; } = new UIElementCollection();
 
+		public CollectionView CollectionView { get; set; }
+
 		protected virtual void OnCreateContent(TagBuilder tag)
 		{
 		}
@@ -87,10 +89,14 @@ namespace A2v10.Xaml
 					.MergeAttribute(":ready", "$data.$ready")
 					.Render(context, TagRenderMode.Normal);
 
+			if (CollectionView != null)
+				CollectionView.RenderStart(context, tag =>
+				{
+					tag.AddCssClass("cw-dialog");
+				});
 
 			RenderHeader(context);
 			RenderLoadIndicator(context);
-
 			
 			var content = new TagBuilder("div", "modal-content");
 			OnCreateContent(content);
@@ -124,6 +130,10 @@ namespace A2v10.Xaml
 			content.RenderEnd(context);
 
 			RenderFooter(context);
+
+			if (CollectionView != null)
+				CollectionView.RenderEnd(context);
+
 			RenderAccelCommands(context);
 			RenderContextMenus();
 
@@ -251,8 +261,31 @@ namespace A2v10.Xaml
 		protected override void OnEndInit()
 		{
 			base.OnEndInit();
+			CollectionView?.SetParent(this);
 			if (Size == DialogSize.Max)
 				Maximize = true;
+		}
+
+		public override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			CollectionView?.OnSetStyles();
+		}
+
+		public override void OnDispose()
+		{
+			base.OnDispose();
+			CollectionView?.OnDispose();
+		}
+		protected override T FindInside<T>()
+		{
+			if (this is T elemT)
+				return elemT;
+			else if (CollectionView is T collectionView)
+				return collectionView;
+			else if (Taskpad is T taskpad)
+				return taskpad;
+			return null;
 		}
 	}
 }

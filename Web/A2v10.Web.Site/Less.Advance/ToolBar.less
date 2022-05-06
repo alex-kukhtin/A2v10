@@ -6,7 +6,7 @@
 @toolbar-txt-color: @text-color;
 
 @tb-item-height: 2.2em;
-@tb-item-margin: 0 4px;
+@tb-item-margin: 4px;
 
 .toolbar {
 	display: flex;
@@ -123,7 +123,6 @@
 	> .control-group {
 		display: inline-flex;
 		background-color: transparent;
-		margin: @tb-item-margin !important;
 
 		.input-group {
 			height: @tb-item-height;
@@ -138,6 +137,14 @@
 			font-size: 100%;
 			white-space: nowrap;
 		}
+	}
+
+	> .control-group:not(:last-child) {
+		margin-right: @tb-item-margin;
+	}
+
+	> .control-group:not(:first-child) {
+		margin-left: @tb-item-margin;
 	}
 
 	.control-group + .control-group {

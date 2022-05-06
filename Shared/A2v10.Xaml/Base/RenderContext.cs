@@ -177,6 +177,12 @@ namespace A2v10.Xaml
 			Writer.Write("&#xa;");
 		}
 
+		public GridContext GridContext(Object elem)
+		{
+			var rowCol = new GridRowCol(Grid.GetRow(elem), Grid.GetCol(elem), Grid.GetRowSpan(elem), Grid.GetColSpan(elem), Grid.GetVAlign(elem));
+			return new GridContext(this, rowCol);
+		}
+
 		public GridContext GridContext(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, AlignItem? vAlign)
 		{
 			var rowCol = new GridRowCol(row, col, rowSpan, colSpan, vAlign);
