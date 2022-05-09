@@ -85,7 +85,7 @@ namespace A2v10.Javascript
 				AddAuthorization(httpWebRequest, prms?.Get<ExpandoObject>("authorization"));
 				SetHeaders(httpWebRequest, prms?.Get<ExpandoObject>("headers"));
 
-				if (mtd == "POST") {
+				if (mtd == "POST" || mtd == "PUT") {
 					httpWebRequest.Method = mtd;
 					var bodyObj = prms?.Get<Object>("body");
 					String bodyStr = null;
