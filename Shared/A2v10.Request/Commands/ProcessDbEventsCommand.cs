@@ -24,6 +24,8 @@ namespace A2v10.Request
 		public String Path { get; set; }
 		public String Command { get; set; }
 		public String Source { get; set; }
+
+		public String JsonParams { get; set; }
 	}
 
 	public class DbEventError : DbEventBase
@@ -52,6 +54,9 @@ namespace A2v10.Request
 			eo.Set("cmd", evt.Command);
 			if (evt.ItemId != 0)
 				eo.Set("Id", evt.ItemId);
+			if (!String.IsNullOrEmpty(evt.JsonParams))
+				eo.Set("data", JsonConvert.DeserializeObject<ExpandoObject>(evt.JsonParams));
+
 			var json = JsonConvert.SerializeObject(eo, JsonHelpers.StandardSerializerSettings);
 			await ctrl.Data("invoke",
 				prms => {
