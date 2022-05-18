@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20210131-7744*/
+/*20220518-7847*/
 // components/treeview.js
 
 (function () {
@@ -162,6 +162,10 @@
 					}
 				}
 			}
+		},
+		created() {
+			if (this.options.initialExpand)
+			platform.set(this.item, '$expanded', true);
 		}
 	};
 

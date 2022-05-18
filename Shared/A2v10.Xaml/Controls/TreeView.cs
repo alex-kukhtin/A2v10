@@ -20,7 +20,8 @@ namespace A2v10.Xaml
         staticIcons: [String, String], //[Folder, Item]
         folderSelect: Boolean || Function,
         wrapLabel: Boolean,
-        hasIcon: Boolean
+        hasIcon: Boolean,
+		initialExpand: Boolean
     }
     */
 
@@ -30,8 +31,9 @@ namespace A2v10.Xaml
 		public Object ItemsSource { get; set; }
 		public Icon Icon { get; set; }
 		public String Label { get; set; }
-		public Boolean? IsFolder { get; set; }
+		public Boolean? IsFolder { get => IsGroup; set => IsGroup = value; }
 		public Boolean? IsGroup { get; set; }
+		public Boolean InitialExpand { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -52,17 +54,13 @@ namespace A2v10.Xaml
 			var iconBind = GetBinding(nameof(Icon));
 			if (iconBind != null)
 				sb.Append($"hasIcon: true, icon: '{iconBind.Path}',"); //GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
-			var isFolderBind = GetBinding(nameof(IsFolder));
-			if (isFolderBind != null)
-				sb.Append($"isFolder: '{isFolderBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
-			else if (IsFolder != null)
-				throw new XamlException("The IsFolder property must be a binding");
 			var isGroupBind = GetBinding(nameof(IsGroup));
 			if (isGroupBind != null)
 				sb.Append($"isGroup: '{isGroupBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 			else if (IsGroup != null)
 				throw new XamlException("The IsGroup property must be a binding");
-
+			if (InitialExpand)
+				sb.Append("initialExpand: true,");
 			// visible => if or show
 			var showBind = GetBinding(nameof(Show));
 			if (showBind == null)

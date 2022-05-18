@@ -7749,9 +7749,9 @@ Vue.component('popover', {
 	}
 });
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20210131-7744*/
+/*20220518-7847*/
 // components/treeview.js
 
 (function () {
@@ -11254,9 +11254,9 @@ Vue.directive('settabindex', {
 	}
 });
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
 
-/*20220518-7847*/
+/*20180227-7121*/
 /* directives/lazy.js */
 
 (function () {
