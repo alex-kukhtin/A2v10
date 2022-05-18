@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -113,9 +113,8 @@ namespace A2v10.Xaml
 		{
 			if (ItemsPanel == null)
 				return;
-			if (!(ItemsPanel is DataGrid))
+			if (!(ItemsPanel is DataGrid dg))
 				throw new XamlException("Only DataGrid panel is supported");
-			var dg = ItemsPanel as DataGrid;
 			var tml = new TagBuilder("template");
 			tml.MergeAttribute("slot", "pane");
 			tml.MergeAttribute("slot-scope", "root");
@@ -143,6 +142,19 @@ namespace A2v10.Xaml
 			base.OnEndInit();
 			if (Style == SelectorStyle.ComboBox && !ShowCaret.HasValue)
 				ShowCaret = true;
+			ItemsPanel?.SetParent(this);
+		}
+
+		public override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			ItemsPanel?.OnSetStyles();
+		}
+
+		public override void OnDispose()
+		{
+			base.OnDispose();
+			ItemsPanel?.OnDispose();
 		}
 	}
 }

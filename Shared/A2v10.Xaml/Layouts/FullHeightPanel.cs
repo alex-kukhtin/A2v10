@@ -48,6 +48,8 @@ namespace A2v10.Xaml
 
 		#endregion
 
+		public AlignItems AlignItems { get; set; }
+
 		public Length MinWidth { get; set; }
 
 		String GetRows()
@@ -76,6 +78,8 @@ namespace A2v10.Xaml
 			MergeAttributes(panel, context);
 			if (MinWidth != null)
 				panel.MergeStyleUnit("min-width", MinWidth.Value);
+			if (AlignItems != AlignItems.Default)
+				panel.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
 			panel.MergeStyle("grid-template-rows", GetRows());
 			panel.RenderStart(context);
 			RenderChildren(context);

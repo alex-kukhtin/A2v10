@@ -179,8 +179,6 @@ namespace A2v10.Xaml
 		protected (String Path, String Prop) SplitToPathProp(String path)
 		{
 			var result = (Path: "", Prop: "");
-			String itemPath = String.Empty;
-			String itemProp = String.Empty;
 			if (String.IsNullOrEmpty(path))
 				return result;
 			Int32 ix = path.LastIndexOf('.');

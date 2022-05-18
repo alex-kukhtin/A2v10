@@ -308,6 +308,7 @@ namespace A2v10.Xaml
 		Ellipsis,
 		EllipsisBottom,
 		EllipsisVertical,
+		Energy,
 		Error,
 		ErrorOutline,
 		Exit,

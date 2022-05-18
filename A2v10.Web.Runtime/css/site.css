@@ -20,7 +20,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7830') format('woff'), url('/css/fonts/A2v10.ttf?v=7830') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7847') format('woff'), url('/css/fonts/A2v10.ttf?v=7847') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -179,6 +179,9 @@
 }
 .ico-shopping:before {
   content: "\ea1d";
+}
+.ico-energy:before {
+  content: "\ea1e";
 }
 .ico-camera:before {
   content: "\e9a1";

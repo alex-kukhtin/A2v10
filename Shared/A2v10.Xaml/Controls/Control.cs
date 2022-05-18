@@ -22,7 +22,7 @@ namespace A2v10.Xaml
 		public UIElement Link { get; set; }
 		public ControlSize Size { get; set; }
 
-		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
+		readonly Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
 
 		public UIElementCollection AddOns { get { return _addOns.Value; } }
 

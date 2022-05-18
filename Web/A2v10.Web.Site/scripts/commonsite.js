@@ -1610,15 +1610,17 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20211210-7812
+// 20220518-7847
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
+
+	let currentUrl = '';
 
 	return {
 		get,
@@ -1735,12 +1737,16 @@ app.modules['std:http'] = function () {
 			}
 		}
 
+		currentUrl = url;
 		return new Promise(function (resolve, reject) {
 			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
 				.then(function (html) {
 					if (!html)
 						return;
+					if (url !== currentUrl) {
+						return;
+					}
 					if (html.startsWith('<!DOCTYPE')) {
 						// full page - may be login?
 						window.location.assign('/');
