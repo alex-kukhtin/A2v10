@@ -1,3 +1,4 @@
+
 app.components['std:appHeader'] = {
 
 	extends: component('std:appHeaderBase'),

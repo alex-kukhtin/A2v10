@@ -11254,9 +11254,9 @@ Vue.directive('settabindex', {
 	}
 });
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20180227-7121*/
+/*20220518-7847*/
 /* directives/lazy.js */
 
 (function () {
