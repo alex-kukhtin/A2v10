@@ -42,10 +42,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionHandler.cs" />
     <Compile Include="TextBoxWithMask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
+      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
+      <Name>A2v10.Data.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+      <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
+      <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
       <Project>{e0577880-9b04-4a2a-b791-8fdb47caa3bc}</Project>
       <Name>A2v10.Xaml</Name>

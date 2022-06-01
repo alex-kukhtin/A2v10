@@ -98,6 +98,7 @@
     </None>
     <None Include="Develop\agent\model.json" />
     <None Include="Develop\bpmn\catalog\model.json" />
+    <None Include="Develop\bpmn\instance\model.json" />
     <None Include="Develop\common\Entity\model.json" />
     <None Include="Develop\dashboard\model.json" />
     <None Include="Develop\entity\model.json" />
@@ -164,6 +165,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Develop\dashboard\server.common.js" />
     <Content Include="Develop\dashboard\server4.module.js" />
     <Content Include="Develop\dashboard\server3.module.js" />
     <Content Include="Develop\purchase\testguids\edit.template.js" />
@@ -197,10 +199,10 @@
     <Content Include="Develop\entity\editGoods.template.js" />
     <TypeScriptCompile Include="Develop\purchase\Goods\index.d.ts" />
     <None Include="Develop\purchase\testguids\model.json" />
-    <None Include="Develop\purchase\Supplier\index.view.html_">
+    <Content Include="Develop\purchase\Supplier\index.view.html">
       <Generator>XamlIntelliSenseFileGenerator</Generator>
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <None Include="Develop\reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <Content Include="Develop\sales\catalog\index.template.js" />
@@ -657,8 +659,7 @@
     </None>
     <None Include="Bootstrap\sales\waybill\waybill.view.xaml">
     </None>
-    <Content Include="Develop\purchase\Supplier\index.view.xaml">
-    </Content>
+    <None Include="Develop\purchase\Supplier\index.view.xaml_" />
     <None Include="Develop\purchase\WaybillIn\index.view.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

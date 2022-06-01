@@ -115,6 +115,13 @@
 				<Tab Header="Test Tab with scroll">
 					<Toolbar Style="Transparent">
 						<Button Icon="Add" Content="Добавить строку" Command="{BindCmd Append, Argument={Bind Document.Rows}}"/>
+						<Button Content="Menu">
+							<Button.DropDown>
+								<DropDownMenu>
+									<MenuItem Content="Menu" />
+								</DropDownMenu>
+							</Button.DropDown>
+						</Button>
 					</Toolbar>
 					<Table ItemsSource="{Bind Document.Rows}"
               Width="100%" GridLines="Both" Background="Paper" Compact="True"

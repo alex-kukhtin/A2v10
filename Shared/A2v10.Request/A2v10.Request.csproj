@@ -77,6 +77,7 @@
     <Compile Include="Controllers\BaseController.Attachments.cs" />
     <Compile Include="Controllers\BaseController.Application.cs" />
     <Compile Include="Controllers\BaseController.Upload.cs" />
+    <Compile Include="Controllers\HtmlRenderer.cs" />
     <Compile Include="Controllers\SimpleTypes.cs" />
     <Compile Include="Controllers\SiteController.cs" />
     <Compile Include="Controllers\StandaloneController.cs" />
@@ -162,6 +163,7 @@
     <Content Include="Pages\shellAdmin.js" />
     <Content Include="Pages\shell.js" />
     <Content Include="Resources\locale-de.js" />
+    <None Include="app.config" />
     <None Include="Resources\locale-pl.js" />
     <Content Include="Resources\locale-ru.js" />
     <Content Include="Resources\locale-en.js" />

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220518-7847*/
+/*20220601-7848*/
 // components/treeview.js
 
 (function () {
@@ -154,6 +154,8 @@
 		},
 		updated(x) {
 			// close expanded when reloaded
+			if (this.options.initialExpand)
+				this.item.$expanded = true;
 			if (this.item.$expanded) {
 				if (this.item.$hasChildren) {
 					let arr = this.item[this.options.subitems];

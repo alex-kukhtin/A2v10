@@ -1,5 +1,9 @@
 ﻿module.exports = function (prms, args) {
 
+    let ex = this.require('server.common.js', prms, args);
+
+    return ex.toCall(prms, args);
+
     let dm = this.executeSql({
         procedure: "a2demo.[GetWeather.Load]",
         parameters: {
@@ -7,5 +11,6 @@
         }
     });
 
-    return this.sendSms('+38000000000', "message from js", "");
+    // return this.sendSms('+38000000000', "message from js", "");
+    return {};
 };

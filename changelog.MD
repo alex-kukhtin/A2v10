@@ -1,6 +1,11 @@
-﻿### Change Log
+﻿#### Change Log
 
-Full version history is available on [docs.a2v10.com](https://docs.a2v10.com/whatsnew/index) (russian).
+##### 01-jun-2022 build 7848
+
+* **javascript (server) environment**: New ```require(fileName, prms, args)``` method is added.
+* **model.json**: Added new ```IRenderer``` implementation. Now you can specify clr-type in the ```view``` property. 
+* Bug fixes and other minor improvements.
+
 
 ##### 06-jun-2020 build 7672
 

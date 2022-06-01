@@ -45,7 +45,7 @@ namespace A2v10.Javascript
 		public ScriptEnvironment Environment()
 		{
 			if (_env == null)
-				_env = new ScriptEnvironment(_engine.Value, _dbContext, _host, _smsService);
+				_env = new ScriptEnvironment(_engine.Value, _dbContext, _host, _smsService, _currentDirectory);
 			return _env;
 		}
 

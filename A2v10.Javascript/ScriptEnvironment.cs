@@ -18,13 +18,17 @@ namespace A2v10.Javascript
 		private readonly Engine _engine;
 		private readonly ScriptConfig _config;
 		private readonly ISmsService _smsService;
+		private readonly IApplicationHost _host;
+		private readonly String _currentDir;
 
-		public ScriptEnvironment(Engine engine, IDbContext dbContext, IApplicationHost host, ISmsService smsService)
+		public ScriptEnvironment(Engine engine, IDbContext dbContext, IApplicationHost host, ISmsService smsService, String currentDir)
 		{
 			_engine = engine;
 			_dbContext = dbContext;
 			_config = new ScriptConfig(host);
 			_smsService = smsService;
+			_host = host;
+			_currentDir = currentDir;
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -134,6 +138,25 @@ namespace A2v10.Javascript
 				var js = new JsString(ex.Message);
 				throw new JavaScriptException(js);
 			}
+		}
+
+#pragma warning disable IDE1006 // Naming Styles
+		public JsValue require(String fileName, ExpandoObject prms, ExpandoObject args)
+#pragma warning restore IDE1006 // Naming Styles
+		{
+			var script = _host.ApplicationReader.ReadTextFile(_currentDir, fileName);
+
+			String code = $@"
+return (function(prms, args) {{
+const module = {{exports:null }};
+{script};
+const __exp__ = module.exports;
+return function(_this) {{
+	return __exp__.call(_this, prms, args);
+}};
+}})(prms, args);";
+			var func = _engine.Evaluate(code);
+			return _engine.Invoke(func, this, prms, args);
 		}
 	}
 }

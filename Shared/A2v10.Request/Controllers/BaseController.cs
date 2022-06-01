@@ -1,18 +1,17 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using System.Net;
+using System.Reflection;
 
 using A2v10.Infrastructure;
-using System.Net;
 using A2v10.Data.Interfaces;
-using System.Threading;
-using System.Web;
 using A2v10.Request.Properties;
-using System.Collections.Generic;
 
 namespace A2v10.Request
 {
@@ -29,6 +28,13 @@ namespace A2v10.Request
 		public IDataModel DataModel;
 
 		public String Params;
+	}
+
+	public class RendererInfo
+	{
+		public IRenderer Renderer;
+		public String FileName;
+		public String FilePath;
 	}
 
 	public partial class BaseController
@@ -277,6 +283,44 @@ namespace A2v10.Request
 			return dmv;
 		}
 
+		private RendererInfo FindRenderer(RequestView rw)
+		{
+			var view = rw.GetView(_host.Mobile);
+			if (view != null && view.StartsWith("clr-type:"))
+			{
+				return new RendererInfo()
+				{
+					Renderer = ClrHelpers.LoadObjectDI<IRenderer>(rw.view)
+				};
+			}
+			String fileName = view + ".xaml";
+
+			String filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
+			if (_host.ApplicationReader.FileExists(filePath))
+			{
+				// xamlRenderer
+				return new RendererInfo()
+				{
+					Renderer = _renderer,
+					FileName = fileName,
+					FilePath = filePath
+				};
+			}
+			fileName = view + ".html";
+			filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
+			if (_host.ApplicationReader.FileExists(filePath))
+			{
+				// xamlRenderer
+				return new RendererInfo()
+				{
+					Renderer = new HtmlRenderer(_localizer, _host),
+					FileName = fileName,
+					FilePath = filePath
+				};
+			}
+			return null;
+		}
+
 		protected internal async Task Render(RequestView rwArg, TextWriter writer, ExpandoObject loadPrms, Boolean secondPhase = false)
 		{
 			var dmAndView = await GetDataModelForView(rwArg, loadPrms);
@@ -306,24 +350,20 @@ namespace A2v10.Request
 			var si = await _scripter.GetModelScript(msi);
 
 			String modelScript = si.Script;
-			// TODO: use view engines
-			// try xaml
-			String fileName = rw.GetView(_host.Mobile) + ".xaml";
-			String basePath = rw.ParentModel.BasePath;
-
-			String filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
 
 			Boolean bRendered = false;
-			if (_host.ApplicationReader.FileExists(filePath))
+			String basePath = rw.ParentModel.BasePath;
+
+			RendererInfo rendererInfo = FindRenderer(rw);
+			if (rendererInfo != null)
 			{
-				// render XAML
 				using (var strWriter = new StringWriter())
 				{
 					var ri = new RenderInfo()
 					{
 						RootId = rootId,
-						FileName = filePath,
-						FileTitle = fileName,
+						FileName = rendererInfo.FilePath,
+						FileTitle = rendererInfo.FileName,
 						Path = basePath,
 						Writer = strWriter,
 						DataModel = model,
@@ -333,32 +373,13 @@ namespace A2v10.Request
 						IsDebugConfiguration = _host.IsDebugConfiguration,
 						SecondPhase = secondPhase
 					};
-					_renderer.Render(ri);
+					rendererInfo.Renderer.Render(ri);
 					// write markup
 					writer.Write(strWriter.ToString());
 					bRendered = true;
 				}
 			}
-			else
-			{
-				// try html
-				fileName = rw.GetView(_host.Mobile) + ".html";
-				filePath = _host.ApplicationReader.MakeFullPath(rw.Path, fileName);
-				if (_host.ApplicationReader.FileExists(filePath))
-				{
-					using (_host.Profiler.CurrentRequest.Start(ProfileAction.Render, $"render: {fileName}"))
-					{
-						using (var tr = new StreamReader(filePath))
-						{
-							String htmlText = await tr.ReadToEndAsync();
-							htmlText = htmlText.Replace("$(RootId)", rootId);
-							htmlText = _localizer.Localize(null, htmlText, false);
-							writer.Write(htmlText);
-							bRendered = true;
-						}
-					}
-				}
-			}
+
 			if (!bRendered)
 			{
 				throw new RequestModelException($"The view '{rw.GetView(_host.Mobile)}' was not found. The following locations were searched:\n{rw.GetRelativePath(".xaml", _host.Mobile)}\n{rw.GetRelativePath(".html", _host.Mobile)}");

@@ -1,0 +1,12 @@
+﻿{
+	"$schema": "../../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
+	"schema": "a2demo",
+	"model": "",
+	"actions": {
+		"index": {
+			"index": true,
+			"view2": "index.view",
+			"view": "clr-type:XamExtensionsSample.ActionHandler;assembly=XamExtensionsSample"
+		}
+	}
+}

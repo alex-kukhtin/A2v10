@@ -3420,7 +3420,7 @@ table.data-grid > tbody > tr.bold > td {
   padding: 4px;
   overflow: visible;
   background-color: var(--neutralBk);
-  z-index: 1;
+  z-index: 8;
 }
 .toolbar input,
 .toolbar select {
@@ -3457,7 +3457,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .toolbar.transparent .dropdown.show .btn {
   background: white;
-  border: 1px dotted #ccc;
+  outline: 1px dotted #ccc !important;
 }
 .toolbar.light {
   background-color: white;
@@ -4936,6 +4936,9 @@ table.hover > tbody > tr.active:hover {
 }
 .a2-sticky-container {
   overflow: auto;
+}
+table.a2-table.sticky {
+  width: 100%;
 }
 table.a2-table.sticky thead,
 table.a2-table.sticky tfoot {
