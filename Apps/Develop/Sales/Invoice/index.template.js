@@ -9,6 +9,7 @@ const template = {
 	},
 	properties: {
 		'TRoot.$Combo': String,
+		'TRoot.$ComboId': Number,
 		'TRoot.$ForCreate'() { return { AgentId: 11 }; },
 		'TRoot.$tabIndex': Number,
 		'TDocument.$Mark': mark,

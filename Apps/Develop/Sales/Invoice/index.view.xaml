@@ -7,14 +7,14 @@
 	</Page.Resources>
 	<Page.Toolbar>
 		<Block>
-		<StackPanel Orientation="Horizontal" Margin="5">
-			<Button Icon="Plus" Content="Створити новий елемент" Style="Orange" Command="{BindCmd Reload}">
-				<Button.DropDown>
-					<DropDownMenu Direction="DownRight" Separate="True">
-						<MenuItem Content="Drop down item with top and bottom and 1" Icon="Package"></MenuItem>
-					</DropDownMenu>
-				</Button.DropDown>
-			</Button>
+			<StackPanel Orientation="Horizontal" Margin="5">
+				<Button Icon="Plus" Content="Створити новий елемент" Style="Orange" Command="{BindCmd Reload}">
+					<Button.DropDown>
+						<DropDownMenu Direction="DownRight" Separate="True">
+							<MenuItem Content="Drop down item with top and bottom and 1" Icon="Package"></MenuItem>
+						</DropDownMenu>
+					</Button.DropDown>
+				</Button>
 				<Button Content="File" Style="Primary">
 					<Button.DropDown>
 						<DropDownMenu Direction="DownRight">
@@ -24,35 +24,40 @@
 					</Button.DropDown>
 				</Button>
 			</StackPanel>
-		<Toolbar Style="Default" CssClass="my-toolbar">
-			<Button Icon="Add" Tip="Создать счет" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
-			<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
-			<Button Icon="EyeDisabled" Command="{BindCmd OpenSelected, Url='/Sales/Invoice/Empty', Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
-			<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='@[ConfirmDeleteDocument]'}">@[Delete]</Button>
-			<Button Icon="Download" Content="Експорт" Command="{BindCmd Export, Url='/sales/invoice/index', 
+			<Toolbar Style="Default" CssClass="my-toolbar">
+				<Button Icon="Add" Tip="Создать счет" Command="{BindCmd Create, Url={StaticResource OpenUrl}, Argument={Bind Root.$ForCreate}}">@[Create]</Button>
+				<Button Icon="ArrowOpen" Command="{BindCmd OpenSelected, Url={StaticResource OpenUrl}, Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
+				<Button Icon="EyeDisabled" Command="{BindCmd OpenSelected, Url='/Sales/Invoice/Empty', Argument={Bind Documents}, NewWindow=False}">Открыть</Button>
+				<Button Icon="Delete" Command="{BindCmd DbRemoveSelected, Argument={Bind Documents}, Confirm='@[ConfirmDeleteDocument]'}">@[Delete]</Button>
+				<Button Icon="Download" Content="Експорт" Command="{BindCmd Export, Url='/sales/invoice/index', 
 				Argument={Bind Documents.$selected}}"/>
-			<Separator />
-			<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
-			<Button Icon="Plus" Command="{BindCmd Reload}" Content="Додати">
-				<Button.DropDown>
-					<DropDownMegaMenu ItemsSource="{Bind Documents}" Separate="True" Columns="2" GroupBy="Agent.Name">
-						<MenuItem Content="Drop down item" Icon="Package"></MenuItem>
-					</DropDownMegaMenu>
-				</Button.DropDown>
-			</Button>
-			<DatePicker Value="{Bind Parent.Filter.Period.From}"/>
-			<Button Icon="DashboardOutline" Content="Wizard" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/Wizard'}"/>
-			<Button Icon="UserPlus" Content="Empty" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/EmptyDialog'}"/>
-			<Button Icon="FileLink" Content="XML" Command="{BindCmd Report, Report='TestXml', Export=True, Argument={Bind Documents.$selected}}"/>
-			<Radio Value="{Bind Documents.Count}" CheckedValue="4" Label="Radio 1" Disabled="True"/>
-			<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
-			<PeriodPicker Value="{Bind Parent.Filter.Period}" Placement="BottomLeft" Toolbar.Align="Right" Style="Hyperlink" Size="Large" ShowAllData="True" Display="NameDate" Bold="True"/>
-				<ComboBox Value="{Bind Root.$Combo}" Size="Large" Style="Hyperlink" Toolbar.Align="Right" Bold="True" Disabled="False">
+				<Separator />
+				<Button Icon="Reload" Command="{BindCmd Reload}">@[Refresh]</Button>
+				<Button Icon="Plus" Command="{BindCmd Reload}" Content="Додати">
+					<Button.DropDown>
+						<DropDownMegaMenu ItemsSource="{Bind Documents}" Separate="True" Columns="2" GroupBy="Agent.Name">
+							<MenuItem Content="Drop down item" Icon="Package"></MenuItem>
+						</DropDownMegaMenu>
+					</Button.DropDown>
+				</Button>
+				<DatePicker Value="{Bind Parent.Filter.Period.From}"/>
+				<Button Icon="DashboardOutline" Content="Wizard" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/Wizard'}"/>
+				<Button Icon="UserPlus" Content="Empty" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/EmptyDialog'}"/>
+				<Button Icon="FileLink" Content="XML" Command="{BindCmd Report, Report='TestXml', Export=True, Argument={Bind Documents.$selected}}"/>
+				<Radio Value="{Bind Documents.Count}" CheckedValue="4" Label="Radio 1" Disabled="True"/>
+				<PeriodPicker Value="{Bind Parent.Filter.Period}" Width="15rem" Placement="BottomRight" Toolbar.Align="Right"/>
+				<PeriodPicker Value="{Bind Parent.Filter.Period}" 
+							  Placement="BottomLeft" Toolbar.Align="Right" Style="Hyperlink" ShowAllData="True" Display="NameDate" Bold="True"/>
+				<ComboBox Value="{Bind Root.$Combo}" Style="Hyperlink" Toolbar.Align="Right" Bold="True" Disabled="False">
 					<ComboBoxItem Content="First element" Value=""></ComboBoxItem>
 					<ComboBoxItem Content="Second element" Value="S"></ComboBoxItem>
 				</ComboBox>
-			<Button Icon="Upload" Content="Upload" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/UploadWizard'}"/>
-		</Toolbar>
+				<Button Icon="Upload" Content="Upload" Command="{BindCmd Dialog, Action=Show, Url='/Sales/Invoice/UploadWizard'}"/>
+				<ComboBox Label="GroupBy" ItemsSource="{Bind Documents}" Value="{Bind Root.$ComboId}">
+					<ComboBoxItem Content="{Bind Agent.Name}" Value="{Bind Id}"/>
+				</ComboBox>
+				<Label Content="{Bind Root.$ComboId}"/>
+			</Toolbar>
 		</Block>
 	</Page.Toolbar>
 	<Page.CollectionView>
@@ -127,23 +132,23 @@
 		<DataGrid.RowDetails>
 			<DataGridRowDetails Visible="{Bind $HasDetails}" Activate="Cell">
 				<Group>
-				<StackPanel Orientation="Horizontal">
-					<Label Margin="0,6,0,0">Отгрузки:</Label>
-					<StackPanel Orientation="Vertical">
-						<Repeater ItemsSource="{Bind $Shipment}">
-							<Hyperlink Icon="FileLink" 
+					<StackPanel Orientation="Horizontal">
+						<Label Margin="0,6,0,0">Отгрузки:</Label>
+						<StackPanel Orientation="Vertical">
+							<Repeater ItemsSource="{Bind $Shipment}">
+								<Hyperlink Icon="FileLink" 
 								Command="{BindCmd Open, Url='/Sales/Waybill/Edit', Argument={Bind}}"
 								Content="{Bind $DocName}" />
-						</Repeater>
+							</Repeater>
+						</StackPanel>
 					</StackPanel>
-				</StackPanel>
-				<PropertyGrid ItemsSource="{Bind $Shipment}">
+					<PropertyGrid ItemsSource="{Bind $Shipment}">
 						<PropertyGridItem Name="Отгрузка:">
 							<Hyperlink Icon="FileLink" 
 								Command="{BindCmd Open, Url='/Sales/Waybill/Edit', Argument={Bind}}"
 								Content="{Bind $DocName}" />
 						</PropertyGridItem>
-				</PropertyGrid>
+					</PropertyGrid>
 				</Group>
 			</DataGridRowDetails>
 		</DataGrid.RowDetails>
@@ -170,7 +175,7 @@
 		<Case Value="1">Case 1</Case>
 		<Case Value="2">Case 2</Case>
 	</Switch>
-	
+
 	<TabBar Value="{Bind Root.$tabIndex}" DropShadow="None" Style="Wizard">
 		<TabButton ActiveValue="0">Вихідні</TabButton>
 		<TabButton ActiveValue="1">Вхідні</TabButton>
@@ -210,6 +215,8 @@
 				<Radio Label="Option 2" CheckedValue="2"/>
 			</Grid>
 		</FieldSet>
-		<Text>CheckedValue: <Span>Option 1</Span></Text>
+		<Text>CheckedValue:
+			<Span>Option 1</Span>
+		</Text>
 	</Grid>
 </Page>

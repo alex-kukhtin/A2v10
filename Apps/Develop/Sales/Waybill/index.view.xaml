@@ -56,7 +56,7 @@
 					  Delegate="docToSelect"
 					  Value="{Bind Root.$SelectedDoc}" DisplayProperty="Id" ShowCaret="True" Width="150px">
 				<Selector.ItemsPanel>
-					<DataGrid HeadersVisibility="None" GridLines="Horizontal" Hover="True">
+					<DataGrid HeadersVisibility="None" GridLines="Horizontal" GroupBy="Date">
 						<DataGridColumn Header="Id" Content="{Bind Id}"/>
 						<DataGridColumn Header="Date" Content="{Bind Date, DataType=Date}"/>
 					</DataGrid>

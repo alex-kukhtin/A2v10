@@ -2280,6 +2280,7 @@ pre.a2-code {
 }
 .control-group.combo-hyperlink .input-group {
   border-style: none;
+  background-color: transparent;
 }
 .control-group.combo-hyperlink .input-group .select-wrapper {
   right: auto;
@@ -2887,13 +2888,13 @@ pre.a2-code {
 }
 .period-picker.pp-hyperlink .input-group {
   border-style: none;
+  background-color: transparent;
 }
 .period-picker.pp-hyperlink .input-group .period-text {
   min-height: auto;
   border-bottom: 1px dotted var(--link);
   color: var(--link);
   padding: 0;
-  line-height: normal;
 }
 .period-picker.pp-hyperlink .input-group .caret {
   display: none;
@@ -3002,6 +3003,10 @@ pre.a2-code {
   display: block;
   border-top: 1px solid #ddd;
   background-color: var(--neutralBkLight);
+}
+.input-group > .selector-pane table.data-grid tr.dg-row > td {
+  line-height: 1;
+  padding: 0.6rem;
 }
 .control-group.selector-hyperlink .input-group {
   border: none;
@@ -3421,6 +3426,7 @@ table.data-grid > tbody > tr.bold > td {
   overflow: visible;
   background-color: var(--neutralBk);
   z-index: 8;
+  row-gap: 4px;
 }
 .toolbar input,
 .toolbar select {
@@ -3496,6 +3502,7 @@ table.data-grid > tbody > tr.bold > td {
 .toolbar > .control-group {
   display: inline-flex;
   background-color: transparent;
+  margin-bottom: 0;
 }
 .toolbar > .control-group .input-group {
   height: 2.2em;
@@ -6262,11 +6269,11 @@ table.sheet tr.row-title td:last-child {
   padding-right: 0;
 }
 table.sheet tr.row-no-border td {
-  border-style: none;
-  background-color: white;
+  border-style: none!important;
+  background-color: white!important;
 }
 table.sheet tr.row-no-border td.underline {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd !important;
   height: 30px;
 }
 table.sheet tr.row-page-header td {
