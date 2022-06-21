@@ -96,6 +96,8 @@
 		<TagLabel Style="Seagreen">Seagreen</TagLabel>
 		<TagLabel Style="Tan">Tan</TagLabel>
 		<TagLabel Style="Magenta">Magenta</TagLabel>
+		<TagLabel Style="Olive">Olive</TagLabel>
+		<TagLabel Style="Teal">Teal</TagLabel>
 	</Block>
 	<DataGrid ItemsSource="{Bind Parent.ItemsSource}" Hover="True" HeadersVisibility="Column"
 				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="False" Style="Light"

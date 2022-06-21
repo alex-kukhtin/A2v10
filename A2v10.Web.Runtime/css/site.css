@@ -1143,6 +1143,12 @@ td.vert > .vcell {
 .tag-label.lightgray {
   background-color: #ccc;
 }
+.tag-label.olive {
+  background-color: #b5cc18;
+}
+.tag-label.teal {
+  background-color: #00b5ad;
+}
 .tag-label.hidden {
   display: none;
 }

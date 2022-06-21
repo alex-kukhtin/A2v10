@@ -1012,6 +1012,12 @@ h5,
 .tag-label.lightgray {
   background-color: #ccc;
 }
+.tag-label.olive {
+  background-color: #b5cc18;
+}
+.tag-label.teal {
+  background-color: #00b5ad;
+}
 .tag-label.hidden {
   display: none;
 }
@@ -1576,6 +1582,12 @@ header .dropdown.separate.show .btn.btn-success,
   background-color: #e3e3e3;
   padding: 0;
 }
+.page.page-grid.taskpad-left .page-taskpad {
+  grid-column: 1;
+}
+.page.page-grid.taskpad-left .page-content {
+  grid-column: 2;
+}
 .partial-page .page.page-grid .page-toolbar {
   border-bottom-style: none;
 }
@@ -1676,15 +1688,11 @@ header .dropdown.separate.show .btn.btn-success,
 /*see: taskpad.js*/
 .taskpad {
   overflow: visible;
-  border-left: 1px solid #ddd;
   position: relative;
-  padding-top: 12px;
 }
 .taskpad .taskpad-body {
   overflow: auto;
   height: 100%;
-  padding-left: 12px;
-  padding-right: 12px;
 }
 .taskpad.overflow .taskpad-body {
   overflow: visible;
@@ -1693,15 +1701,14 @@ header .dropdown.separate.show .btn.btn-success,
   position: absolute;
   display: block;
   top: 50%;
-  left: -10px;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   color: var(--link);
   border: 1px solid var(--link);
   border-radius: 50%;
   background-color: white;
   text-align: center;
-  line-height: 19px;
+  line-height: 22px;
   z-index: 20;
   text-decoration: none;
 }
@@ -1715,13 +1722,13 @@ header .dropdown.separate.show .btn.btn-success,
   margin-left: 0;
 }
 .taskpad.expanded .taskpad-collapse-handle:before {
-  content: "\e9ad";
+  content: "\e9a3";
 }
 .taskpad.collapsed {
   background-color: var(--neutralBkLight);
 }
 .taskpad.collapsed .taskpad-collapse-handle:before {
-  content: "\e9ab";
+  content: "\e9a5";
 }
 .taskpad .taskpad-title {
   background-color: var(--neutralBkLight);
@@ -1737,6 +1744,30 @@ header .dropdown.separate.show .btn.btn-success,
   display: block;
   padding-left: 10px;
   transform: rotate(90deg);
+}
+.taskpad.position-right {
+  border-left: 1px solid #ddd;
+}
+.taskpad.position-right .taskpad-collapse-handle {
+  left: -12px;
+}
+.taskpad.position-right.expanded .taskpad-collapse-handle:before {
+  content: "\e9a5";
+}
+.taskpad.position-right.collapsed .taskpad-collapse-handle:before {
+  content: "\e9a3";
+}
+.taskpad.position-left {
+  border-right: 1px solid #ddd;
+}
+.taskpad.position-left .taskpad-collapse-handle {
+  right: -12px;
+}
+.taskpad.position-left.expanded .taskpad-collapse-handle:before {
+  content: "\e9ab";
+}
+.taskpad.position-left.collapsed .taskpad-collapse-handle:before {
+  content: "\e9ad";
 }
 .a2-image {
   display: flex;
@@ -4482,6 +4513,10 @@ ul.news-list > li {
   padding: 0;
   grid-gap: 0;
   height: 100%;
+}
+.modal-content .dialog-grid .dialog-grid-content,
+.modal-content .dialog-grid .taskpad {
+  grid-row: 1;
 }
 .dialog-grid-content {
   overflow: auto;

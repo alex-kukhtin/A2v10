@@ -2,22 +2,17 @@
 
 @taskpad-collapsed-bg-color: var(--neutralBkLight);
 @taskpad-brd-color: @light-gray-color;
-@taskpad-gap: 12px;
 @taskpad-collapsed-width: 36px; /*see: taskpad.js*/
 
 @handle-size: 24px;
 
 .taskpad {
 	overflow: visible;
-	border-left: 1px solid @taskpad-brd-color;
 	position: relative;
-	padding-top: 12px;
 
 	.taskpad-body {
 		overflow: auto;
 		height: 100%;
-		padding-left: @taskpad-gap; // ???
-		padding-right: @taskpad-gap; // ???
 	}
 
 	&.overflow {
@@ -30,15 +25,14 @@
 		position: absolute;
 		display: block;
 		top: 50%;
-		left: -10px;
-		width: 20px;
-		height: 20px;
+		width: @handle-size;
+		height: @handle-size;
 		color: @link-color;
 		border: 1px solid @link-color;
 		border-radius: 50%;
 		background-color: white;
 		text-align: center;
-		line-height: 19px;
+		line-height: (@handle-size - 2);
 		z-index: 20;
 		text-decoration: none;
 
@@ -63,7 +57,7 @@
 		.taskpad-collapse-handle {
 
 			&:before {
-				content: "\e9ad"; // chevron-double-right
+				content: "\e9a3"; // chevron-left
 			}
 		}
 	}
@@ -73,7 +67,7 @@
 
 		.taskpad-collapse-handle {
 			&:before {
-				content: "\e9ab"; // chevron-double-left
+				content: "\e9a5"; // chevron-right
 			}
 		}
 	}
@@ -92,6 +86,54 @@
 			display: block;
 			padding-left: 10px;
 			transform: rotate(90deg);
+		}
+	}
+}
+
+.taskpad.position-right {
+	border-left: 1px solid @taskpad-brd-color;
+
+	.taskpad-collapse-handle {
+		left: -(@handle-size / 2);
+	}
+
+	&.expanded {
+		.taskpad-collapse-handle {
+			&:before {
+				content: "\e9a5"; // chevron-right
+			}
+		}
+	}
+
+	&.collapsed {
+		.taskpad-collapse-handle {
+			&:before {
+				content: "\e9a3"; // chevron-left
+			}
+		}
+	}
+}
+
+.taskpad.position-left {
+	border-right: 1px solid @taskpad-brd-color;
+
+	.taskpad-collapse-handle {
+		right: -(@handle-size/2);
+	}
+
+	&.expanded {
+		.taskpad-collapse-handle {
+			&:before {
+				content: "\e9ab"; // chevron-double-left
+			}
+		}
+	}
+
+	&.collapsed {
+		.taskpad-collapse-handle {
+			&:before {
+				content: "\e9ad"; // chevron-double-right
+			}
 		}
 	}
 }

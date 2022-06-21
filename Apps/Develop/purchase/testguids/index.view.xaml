@@ -6,7 +6,7 @@
 		<sys:String x:Key="OpenUrl">/purchase/testguids/edit</sys:String>
 	</Page.Resources>
 	<Page.Toolbar>
-		<Toolbar Style="Light" Padding="0" Margin=".5rem,0">
+		<Toolbar Style="Light" Padding="0">
 			<Button Icon="Add" Tip="Create" Command="{BindCmd Dialog, Action=Append, Url={StaticResource OpenUrl}, Argument={Bind Items}}">Create</Button>
 			<Button Icon="Edit" Command="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Items}}">Edit</Button>
 			<Separator />
@@ -22,11 +22,16 @@
 					</DropDownMenu>
 				</Button.DropDown>
 			</Button>
+			<CheckBox Value="{Bind Root.Checked}" />
+			<Label Content="{Bind Root.Checked}"></Label>
 		</Toolbar>
 	</Page.Toolbar>
 	<DataGrid ItemsSource="{Bind Items}" Hover="True" HeadersVisibility="Column"
 				Striped="True" Sort="True" GridLines="Vertical" FixedHeader="True" 
 				DoubleClick="{BindCmd Dialog, Action=EditSelected, Url={StaticResource OpenUrl}, Argument={Bind Items}}">
+		<DataGridColumn Fit="True">
+			<CheckBox Value="{Bind Checked}"/>
+		</DataGridColumn>
 		<DataGridColumn Header="Id" Content="{Bind Id}" Role="Id"  Command="{BindCmd Dialog, Action=Edit, Url={StaticResource OpenUrl}, Argument={Bind}}"/>
 		<DataGridColumn Header="Name" Content="{Bind Name}"/>
 		<DataGridColumn Header="Memo" Content="{Bind Memo}"/>

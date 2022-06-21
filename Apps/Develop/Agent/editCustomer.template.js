@@ -17,7 +17,7 @@ const template = {
 			return this.$Bit1 ? '000 000 000' : '+38 (000) 000-00-00';
 		},
 		'TAgent.$MapUrl'() {
-			return 'https://www.google.com/maps/embed/v1/place?key=@{AppSettings.GoogleMapsApiKey}&q=Eiffel+Tower,Paris+France&language=uk&region=UA';
+			return "https://www.google.com/maps/embed/v1/place?key=@{AppSettings.GoogleMapsApiKey}&q=Eiffel+Tower,Paris+France";
 		}
 	},
 	events: {

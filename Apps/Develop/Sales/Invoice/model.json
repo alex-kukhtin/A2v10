@@ -1,4 +1,5 @@
 ﻿{
+	"$schema": "../../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
 	"schema": "a2demo",
 	"model": "Invoice",
 	"actions": {
@@ -6,27 +7,29 @@
 			"index": true,
 			"template": "index.template",
 			"view": "index.view",
+			"commandTimeout": 1,
 			"export": {
-				"format": "xlsx",
+				"format": "csv",
+				"encoding": "1251",
 				"template": "index.template",
 				"template22": "{{Stream.Data}}",
 				"fileName": "FILE: {{Params.FileName}}"
 			}
 		},
-	  "edit": {
-		"model": "Document",
-		/*
+		"edit": {
+			"model": "Document",
+			/*
       "parameters": {
         "Kind": "TEST"
       },*/
-		"view": "invoice.view",
-		"template": "invoice2.template"
-	  },
-	  "includeinfo": {
-		"skipDataStack": true,
-		"model": "Agent",
-		"view": "includeinfo.partial"
-	  },
+			"view": "invoice.view",
+			"template": "invoice2.template"
+		},
+		"includeinfo": {
+			"skipDataStack": true,
+			"model": "Agent",
+			"view": "includeinfo.partial"
+		},
 		"empty": {
 			"model": "Empty",
 			"view": "empty.view",

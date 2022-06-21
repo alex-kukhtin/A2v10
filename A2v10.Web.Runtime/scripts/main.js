@@ -10019,9 +10019,9 @@ TODO:
 		}
 	});
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20200111-7611
+// 20200111-7850
 // components/taskpad.js
 
 Vue.component("a2-taskpad", {
@@ -10039,7 +10039,8 @@ Vue.component("a2-taskpad", {
 `,
 	props: {
 		title: String,
-		initialCollapsed: Boolean
+		initialCollapsed: Boolean,
+		position: String
 	},
 	data() {
 		return {
@@ -10050,7 +10051,9 @@ Vue.component("a2-taskpad", {
 	computed: {
 		cssClass() {
 			let cls = "taskpad";
+			cls += ' position-' + this.position;
 			if (this.expanded) cls += ' expanded'; else cls += ' collapsed';
+
 			return cls;
 		},
 		tasksText() {
@@ -10064,8 +10067,12 @@ Vue.component("a2-taskpad", {
 			let topStyle = this.$el.parentElement.style;
 			if (this.expanded)
 				topStyle.gridTemplateColumns = this.__savedCols;
-			else
-				topStyle.gridTemplateColumns = "1fr 36px"; // TODO: ???
+			else {
+				if (this.position === 'left')
+					topStyle.gridTemplateColumns = "36px 1fr"; // TODO: ???
+				else
+					topStyle.gridTemplateColumns = "1fr 36px"; // TODO: ???
+			}
 		},
 		toggle() {
 			this.setExpanded(!this.expanded);

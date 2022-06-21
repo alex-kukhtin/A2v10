@@ -28,7 +28,7 @@ namespace A2v10.Request
 				prms.Append(action.parameters);
 				prms.SetIfNotExists("Id", action.Id);
 			}
-			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms);
+			IDataModel dm = await _dbContext.LoadModelAsync(action.CurrentSource, action.ExportProcedure, prms, action.commandTimeout);
 
 			_host.CheckTypes(action.Path, action.checkTypes, dm);
 

@@ -6,6 +6,12 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml
 {
+	public enum TaskpadPosition
+	{
+		Right,
+		Left,
+	}
+
 	[ContentProperty("Children")]
 	public class Taskpad : Container
 	{
@@ -17,6 +23,8 @@ namespace A2v10.Xaml
 		public Boolean Overflow { get; set; }
 		public Boolean Collapsed { get; set; }
 
+		public TaskpadPosition Position { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -26,12 +34,14 @@ namespace A2v10.Xaml
 			MergeAttributes(tag, context);
 			MergeBindingAttributeString(tag, context, "title", nameof(Title), Title);
 			tag.AddCssClassBool(Overflow, "overflow");
+			tag.MergeStyle("grid-column", Position == TaskpadPosition.Left ? "1" : "2");
 
 			if (Background != BackgroundStyle.Default)
 				tag.AddCssClass("background-" + Background.ToString().ToKebabCase());
 
 			tag.AddCssClassBoolNo(Collapsible, "collapsible");
 
+			tag.MergeAttribute("position", Position.ToString().ToLowerInvariant());
 			var colBind = GetBinding(nameof(Collapsed));
 			if (colBind != null)
 				tag.MergeAttribute(":initial-collapsed", colBind.GetPath(context));

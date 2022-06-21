@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -26,7 +26,9 @@ namespace A2v10.Xaml
 		Seagreen,
 		Tan,
 		Magenta,
-		LightGray
+		LightGray,
+		Olive,
+		Teal
 	}
 
 	[ContentProperty("Content")]

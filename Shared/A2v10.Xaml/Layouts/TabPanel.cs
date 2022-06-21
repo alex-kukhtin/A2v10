@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -25,6 +25,7 @@ namespace A2v10.Xaml
 		public Length MinHeight { get; set; }
 		public Boolean Overflow { get; set; }
 
+		public Length Width { get; set; }
 		public TabPosition TabPosition { get; set; }
 
 		public TabCollection Tabs { get; set; } = new TabCollection();
@@ -49,6 +50,9 @@ namespace A2v10.Xaml
 
 			if (MinHeight != null)
 				panel.MergeStyleUnit("min-height", MinHeight.Value);
+
+			if (Width != null)
+				panel.MergeStyle("width", Width.Value);
 
 			var isBind = GetBinding(nameof(ItemsSource));
 			if (isBind != null)

@@ -111,11 +111,22 @@ namespace A2v10.Xaml
 			content.RenderStart(context);
 			if (Taskpad != null)
 			{
+				var gridContent = new TagBuilder("div", "dialog-grid-content");
 				var grid = new TagBuilder("div", "dialog-grid");
 				if (Taskpad is Taskpad tp && tp.Width != null)
-					grid.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
+				{
+					if (tp.Position == TaskpadPosition.Left)
+					{
+						grid.MergeStyle("grid-template-columns", $"{tp.Width.Value} 1fr");
+						gridContent.MergeStyle("grid-column", "2");
+					}
+					else
+					{
+						grid.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
+						gridContent.MergeStyle("grid-column", "1");
+					}
+				}
 				grid.RenderStart(context);
-				var gridContent = new TagBuilder("div", "dialog-grid-content");
 				gridContent.RenderStart(context);
 				RenderChildren(context);
 				gridContent.RenderEnd(context);

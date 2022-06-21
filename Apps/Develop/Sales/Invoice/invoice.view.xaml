@@ -21,9 +21,10 @@
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.Taskpad>
-		<Taskpad Width="290" Background="WhiteSmoke">
+		<Taskpad Width="290" Background="LightYellow" Position="Left">
+			<Flex Gap="6px" Orientation="Vertical" Padding="1rem">
 			<ContentControl Content="{Source Path='../../Document/Info'}"/>
-			<Panel Header="Отгрузки" Padding="6" Icon="Link"
+			<Panel Header="Отгрузки" Padding="6" Icon="Link" DropShadow="Shadow4"
 					Style="Yellow" Collapsible="True" If="{Bind Document.Done}">
 				<Table If="{Bind !Document.$canShipment}" Compact="True" Width="100%" 
 					GridLines="Horizontal"
@@ -49,12 +50,13 @@
 					Command="{BindCmd Execute, CommandName='createPayment', Argument={Bind Document}, Confirm='Создать документ оплаты?'}" 
 					Padding="6" Block="True"/>
 			</Panel>
-			<Panel Header="TestInclude">
+			<Panel Header="TestInclude" DropShadow="Shadow3">
 				<Grid Columns="1*,1*">
 					<Include Source="/sales/invoice/includeinfo" Grid.Col="2"
 							 Argument="{Bind Document.Agent.Id}" CssClass="italic"/>
 				</Grid>
 			</Panel>
+			</Flex>
 		</Taskpad>
 	</Page.Taskpad>
 	<Grid Columns="12rem, 12rem, 150, 1*">

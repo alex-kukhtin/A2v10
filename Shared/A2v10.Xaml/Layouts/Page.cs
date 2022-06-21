@@ -40,7 +40,13 @@ namespace A2v10.Xaml
 				{
 					if (Taskpad is Taskpad tp && tp.Width != null)
 					{
-						tag.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
+						if (tp.Position == TaskpadPosition.Left)
+						{
+							tag.AddCssClass("taskpad-left");
+							tag.MergeStyle("grid-template-columns", $"{tp.Width.Value} 1fr");
+						}
+						else
+							tag.MergeStyle("grid-template-columns", $"1fr {tp.Width.Value}");
 					}
 				}
 			}
