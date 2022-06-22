@@ -168,7 +168,7 @@
 
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220416-7838
+// 20220416-7851
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -845,6 +845,22 @@ app.modules['std:utils'] = function () {
 					break;
 				case 'barcode':
 					value = toLatin(value);
+					break;
+				case 'fract3':
+					value = currencyRound(toNumber(value), 3);
+					break;
+				case 'fract2':
+					value = currencyRound(toNumber(value), 2);
+					break;
+				case 'eval':
+					if (value.startsWith('=')) {
+						try {
+							value = eval(value.replace(/[^0-9\s\+\-\*\/\,\.\,]/g, '').replaceAll(',', '.'));
+						} catch (err) {
+							value = '';
+						}
+					}
+					break;
 			}
 		}
 		return value;

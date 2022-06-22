@@ -7,7 +7,7 @@
 			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">Обновить</Button>
 			<Button Icon="Bell" Command="{BindCmd Execute, CommandName=setDate, Argument={Bind Document}}" Render="Show">Set Date</Button>
 			<Separator/>
-			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}}" If="{Bind !Document.Done}"/>
+			<Button Icon="GearOutline" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}}" If="{Bind !Document.Done}"/>
 			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}, SaveRequired=True, Confirm='Отменить проведение документа?'}" If="{Bind Document.Done}"/>
 			<Button Icon="Print" Content="Печать" Command="{BindCmd Report, Viewer='Stimulsoft', Report='Waybill', Argument={Bind Document}, SaveRequired=True}" />
 			<Button Icon="Print" Content="PrintDirect" Command="{BindCmd Report, Report='Waybill', Argument={Bind Document}, SaveRequired=True, Print=True}"/>
@@ -150,8 +150,8 @@
 								</TextBox.AddOns>
 							</TextBox>
 							<TableCell Content="{Bind Entity.Unit.Short}" Align="Center"/>
-							<TextBox Value="{Bind Qty, DataType=Number, HideZeros=True}" Align="Right"/>
-							<TextBox Value="{Bind Price, DataType=Currency, HideZeros=True}" Align="Right"/>
+							<TextBox Value="{Bind Qty, DataType=Number, HideZeros=True, Filters='Eval, Fract2'}" Align="Right"/>
+							<TextBox Value="{Bind Price, DataType=Currency, HideZeros=True, Filters='Fract3'}" Align="Right"/>
 							<TextBox Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right"/>
 							<Static Value="{Bind Sum, DataType=Currency, HideZeros=True}" Align="Right" Wrap="NoWrap"/>
 							<ValidatorLabel Value="{Bind Price}"></ValidatorLabel>

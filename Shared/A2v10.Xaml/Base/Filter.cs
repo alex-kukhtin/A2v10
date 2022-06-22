@@ -1,4 +1,4 @@
-﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,10 @@ namespace A2v10.Xaml
 		Trim,
 		Upper,
 		Lower,
-		Barcode
+		Barcode,
+		Fract3,
+		Fract2,
+		Eval
 	}
 
 	[TypeConverter(typeof(FilterColllectionConverter))]
