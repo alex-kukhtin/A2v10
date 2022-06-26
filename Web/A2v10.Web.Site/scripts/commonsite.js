@@ -953,9 +953,9 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20211027-7807*/
+/*20220626-7852*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -979,7 +979,8 @@ app.modules['std:url'] = function () {
 		helpHref,
 		replaceSegment,
 		removeFirstSlash,
-		isNewPath
+		isNewPath,
+		splitCommand
 	};
 
 	function normalize(elem) {
@@ -1184,6 +1185,15 @@ app.modules['std:url'] = function () {
 		if (isDialogPath(url) && url.endsWith('/0'))
 			return true;
 		return false;
+	}
+
+	function splitCommand(url) {
+		let seg = url.split('/');
+		let action = seg.pop();
+		return {
+			action,
+			url: seg.join('/')
+		};
 	}
 };
 

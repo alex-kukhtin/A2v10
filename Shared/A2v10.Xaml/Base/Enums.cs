@@ -450,6 +450,7 @@ namespace A2v10.Xaml
 		UserImage,
 		UserMinus,
 		UserPlus,
+		UserRole,
 		Users,
 		Waiting,
 		WaitingOutline,

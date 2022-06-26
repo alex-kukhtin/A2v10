@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20210127-7744*/
+/*20220626-7852*/
 // components/selector.js
 
 /*TODO*/
@@ -69,7 +69,8 @@
 			placement: String,
 			caret: Boolean,
 			hasClear: Boolean,
-			mode: String
+			mode: String,
+			fetchCommand: String
 		},
 		data() {
 			return {
@@ -362,13 +363,18 @@
 				}
 			},
 			fetchData(text, all) {
-				if (!this.fetch)
-					console.error('Selector. Fetch not defined');
 				all = all || false;
 				let elem = this.item[this.prop];
 				if (elem && !('$vm' in elem))
 					elem.$vm = this.$root; // plain object hack
-				return this.fetch.call(this.item.$root, elem, text, all);
+				if (this.fetch) {
+					return this.fetch.call(this.item.$root, elem, text, all);
+				} else if (this.fetchCommand) {
+					let fc = this.fetchCommand.split('/');
+					let action = fc.pop();
+					return elem.$vm.$invoke(action, {Text: text}, fc.join('/'));
+				}
+				console.error('Selector. Fetch or Delegate not defined');
 			},
 			doNew() {
 				this.isOpen = false;

@@ -1,0 +1,26 @@
+﻿{
+	"schema": "a2demo",
+	"commands": {
+		"apply": {
+			"type": "sql",
+			"procedure": "Document.Apply"
+		},
+		"unapply": {
+			"type": "sql",
+			"procedure": "Document.UnApply"
+		}
+	},
+	"uploads": {
+		"uploadFile": {
+			"model": "Test.Upload",
+			"parse": "excel"
+		}
+	},
+	"files": {
+		"uploadCsv": {
+			"model": "",
+			"type": "parse",
+			"parse": "auto"
+		}
+	}
+}

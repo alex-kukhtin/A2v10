@@ -32,9 +32,7 @@ const template: Template = {
 		'Document.No.change': docNoChanged
 	},
 	commands: {
-		apply: function (this:TRoot, doc: TDocument) {
-			alert('apply');
-		},
+		apply: cmn.docApply,
 		unApply() {},
 		createShipment() {},
 		createPayment() {},

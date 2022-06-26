@@ -12,7 +12,12 @@
 			<Button Icon="Reload" Command="{BindCmd Reload}" Tip="Обновить данные">@[Reload]</Button>
 			<Separator/>
 			<Button Icon="Gear" Content="Провести" Command="{BindCmd Execute, CommandName='apply', Argument={Bind Document}}" If="{Bind !Document.Done}"/>
-			<Button Icon="UnlockOutline" Content="Отменить проведение" Command="{BindCmd Execute, CommandName='unApply', Argument={Bind Document}}" If="{Bind Document.Done}"/>
+			<Button Icon="GearOutline" Content="Провести (2)" 
+					Command="{BindCmd Invoke, Url='/document/apply', Argument={Bind Document}, 
+						SaveRequired=True, ValidRequired=True, Confirm='Are you sure?', RequeryAfter=True}" 
+				If="{Bind !Document.Done}"/>
+			<Button Icon="UnlockOutline" Content="Отменить проведение (2)"
+					Command="{BindCmd Invoke, Url='/document/unapply', Argument={Bind Document}, Confirm='Are you sure?', RequeryAfter=True}" If="{Bind Document.Done}"/>
 			<Button Icon="Print" Content="@[Print]" Command="{BindCmd Report, Report='Invoice', Argument={Bind Document}, SaveRequired=True}"/>
 			<Button Icon="Download" Content="@[Export]" Command="{BindCmd Report, Export=True, Report='Invoice', Argument={Bind Document}, SaveRequired=True}"/>
 			<ToolbarAligner />
@@ -21,7 +26,7 @@
 		</Toolbar>
 	</Page.Toolbar>
 	<Page.Taskpad>
-		<Taskpad Width="290" Background="LightYellow" Position="Left">
+		<Taskpad Width="290" Background="LightYellow" Position="Right">
 			<Flex Gap="6px" Orientation="Vertical" Padding="1rem">
 			<ContentControl Content="{Source Path='../../Document/Info'}"/>
 			<Panel Header="Отгрузки" Padding="6" Icon="Link" DropShadow="Shadow4"
@@ -89,11 +94,12 @@
 		</myControls:TextBoxWithMask>
 		-->
 		<!--
+		Delegate="fetchCustomers"
 		-->
 		<Selector Grid.Row="3" Grid.ColSpan="3" Placeholder="Выберите покупателя"
 			Label="@[Purchaser]" Value="{Bind Document.Agent}"  TextValue="{Bind Document.Memo}"
 				CreateNewCommand="{BindCmd Execute, CommandName='createNewCustomer'}"
-				Delegate="fetchCustomers" DisplayProperty="Name" ShowCaret="True" ShowClear="True">
+				Fetch="/sales/invoice/fetchCustomer" DisplayProperty="Name" ShowCaret="True" ShowClear="True">
 			<Selector.Link>
 				<Hyperlink Content="Зберегти цей рахунок"/>
 			</Selector.Link>

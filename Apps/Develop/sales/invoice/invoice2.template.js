@@ -31,9 +31,7 @@ define(["require", "exports"], function (require, exports) {
             'Document.No.change': docNoChanged
         },
         commands: {
-            apply: function (doc) {
-                alert('apply');
-            },
+            apply: cmn.docApply,
             unApply() { },
             createShipment() { },
             createPayment() { },

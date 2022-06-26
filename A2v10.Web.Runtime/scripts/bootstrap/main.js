@@ -1263,9 +1263,9 @@ app.modules['std:period'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20211027-7807*/
+/*20220626-7852*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -1289,7 +1289,8 @@ app.modules['std:url'] = function () {
 		helpHref,
 		replaceSegment,
 		removeFirstSlash,
-		isNewPath
+		isNewPath,
+		splitCommand
 	};
 
 	function normalize(elem) {
@@ -1494,6 +1495,15 @@ app.modules['std:url'] = function () {
 		if (isDialogPath(url) && url.endsWith('/0'))
 			return true;
 		return false;
+	}
+
+	function splitCommand(url) {
+		let seg = url.split('/');
+		let action = seg.pop();
+		return {
+			action,
+			url: seg.join('/')
+		};
 	}
 };
 
@@ -5135,7 +5145,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220420-7840*/
+/*20220626-7852*/
 // controllers/base.js
 
 (function () {
@@ -5276,6 +5286,27 @@ app.modules['std:impl:array'] = function () {
 				}
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
+			},
+
+			async $invokeServer(url, arg, confirm, opts) {
+				if (this.$isReadOnly(opts)) return;
+				if (this.$isLoading) return;
+				const root = this.$data;
+				if (confirm)
+					await this.$confirm(confirm);
+				if (opts && opts.saveRequired && this.$isDirty)
+					await this.$save();
+				if (opts && opts.validRequired && root.$invalid) { 
+					this.$alert(locale.$MakeValidFirst);
+					return;
+				}
+				let data = { Id: arg.$id };
+				let cmd = urltools.splitCommand(url);
+				await this.$invoke(cmd.action, data, cmd.url);
+				if (opts && opts.requeryAfter)
+					await this.$requery();
+				else if (opts && opts.reloadAfter)
+					await this.$reload();
 			},
 
 			$toJson(data) {

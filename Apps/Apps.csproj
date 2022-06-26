@@ -101,6 +101,7 @@
     <None Include="Develop\bpmn\instance\model.json" />
     <None Include="Develop\common\Entity\model.json" />
     <None Include="Develop\dashboard\model.json" />
+    <None Include="Develop\document\model.json" />
     <None Include="Develop\entity\model.json" />
     <None Include="Develop\links.json" />
     <None Include="Develop\catalog\Buildings\model.json" />
