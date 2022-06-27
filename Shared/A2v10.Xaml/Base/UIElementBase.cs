@@ -187,6 +187,11 @@ namespace A2v10.Xaml
 				result.Prop = path.Substring(ix + 1);
 				result.Path = path.Substring(0, ix);
 			}
+			else
+			{
+				result.Prop = path;
+				result.Path = "$data";
+			}
 			return result;
 		}
 

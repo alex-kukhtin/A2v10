@@ -71,14 +71,14 @@
 
 		.dropdown.show {
 			.btn {
-				background: white;
-				outline: 1px dotted #ccc!important;
+				background: @background-color;
+				outline: 1px dotted #ccc !important;
 			}
 		}
 	}
 
 	&.light {
-		background-color: white;
+		background-color: @background-color;
 
 		> .divider {
 			border-right-color: lighten(#ddd, 6%);
@@ -87,7 +87,7 @@
 
 		.dropdown.show {
 			.btn {
-				background-color: white;
+				background-color: @background-color;
 				outline: 1px dotted #ccc !important;
 			}
 		}
@@ -124,7 +124,7 @@
 	> .control-group {
 		display: inline-flex;
 		background-color: transparent;
-		margin-bottom:0;
+		margin-bottom: 0;
 
 		.input-group {
 			height: @tb-item-height;

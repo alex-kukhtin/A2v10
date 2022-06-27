@@ -1,6 +1,6 @@
-﻿/*! Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
+﻿/*! Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-// 20210831-7801
+// 20220627-7853
 // components/sheet.js
 
 (function () {
@@ -32,8 +32,10 @@
 				let elem = arr[i];
 				elem.$level = lev;
 				yield elem;
-				if (!elem.$collapsed)
-					yield* traverse(elem, prop, lev + 1);
+				if (!elem.$collapsed) {
+					let newprop = elem._meta_.$items || prop;
+					yield* traverse(elem, newprop, lev + 1);
+				}
 			}
 		}
 	}
@@ -88,7 +90,8 @@
 			}
 
 			function hasChildren() {
-				let chElems = this.item[prop];
+				let np = this.item._meta_.$items || prop;
+				let chElems = this.item[np];
 				return chElems && chElems.length > 0;
 			}
 

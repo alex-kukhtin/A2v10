@@ -1,8 +1,10 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
+@import "Variables.less";
+
 @table-hdr-bg-color: #f5f5f5;
 
-@a2-table-brd-color: #ddd;
+@a2-table-brd-color: @table-brd-color;
 
 @compact-ctrl-height:1.67em;
 
@@ -253,10 +255,10 @@ table.hover {
 }
 
 .a2-sticky-bottom {
-	height:1px;
-	background-color:white;
-	position:relative;
-	top:-1px;
+	height: 1px;
+	background-color: @background-color;
+	position: relative;
+	top: -1px;
 }
 
 .a2-table.compact {
@@ -328,7 +330,7 @@ table.hover {
 }
 
 .a2-table.bk-white {
-	background-color: white;
+	background-color: @background-color;
 }
 
 

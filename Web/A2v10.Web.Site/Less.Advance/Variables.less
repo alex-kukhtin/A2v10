@@ -9,11 +9,12 @@
 
 @border-light: var(--neutralLight);
 @text-color:var(--text);
+@background-color: var(--background);
 @text-color-opacity40:rgba(2,2,2,0.4);
 @gray-text-color: #ccc;
 @dark-gray-text-color:#999;
 
-@default-brd-color: #ddd; //#bdc5d8;
+@default-brd-color: var(--neutralBkDarker); //#bdc5d8;
 @light-brd-color: #e1dfdd;
 @light-brd-color2: #ddd;
 
@@ -112,7 +113,7 @@
 @tb-active-bg-color: #fff29d;
 @tb-hover-brd-color: #e5c365;
 /* table */
-@table-brd-color: #ddd; // #e5e8eb;
+@table-brd-color: @default-brd-color;
 @table-hdr-brd-color: #ddd; //#cbcdda;
 @table-cell-padding-v: 4px;
 @table-cell-padding-h: 6px;

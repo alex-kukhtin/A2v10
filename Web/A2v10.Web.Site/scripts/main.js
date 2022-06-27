@@ -7789,7 +7789,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220601-7848*/
+/*20220627-7853*/
 // components/treeview.js
 
 (function () {
@@ -7832,6 +7832,11 @@ Vue.component('popover', {
 			getHref: Function,
 			doubleclick: Function
 		},
+		data() { 
+			return {
+				_toggling: false
+			};
+		},
 		methods: {
 			isFolderSelect(item) {
 				let fs = this.options.folderSelect;
@@ -7863,10 +7868,14 @@ Vue.component('popover', {
 				eventBus.$emit('closeAllPopups');
 				if (!this.isFolder)
 					return;
+				this._toggling = true;
 				this.expandItem(!this.item.$expanded);
 				if (this.expand) {
 					this.expand(this.item, this.options.subitems);
 				}
+				this.$nextTick(() => {
+					this._toggling = false;
+				})
 			},
 			expandItem(val) {
 				platform.set(this.item, '$expanded', val);
@@ -7942,8 +7951,8 @@ Vue.component('popover', {
 			}
 		},
 		updated(x) {
-			// close expanded when reloaded
-			if (this.options.initialExpand)
+			// open expanded when reloaded
+			if (!this._toggling && this.options.initialExpand)
 				this.item.$expanded = true;
 			if (this.item.$expanded) {
 				if (this.item.$hasChildren) {
@@ -10280,9 +10289,9 @@ Vue.component('a2-panel', {
 	});
 
 })();
-/*! Copyright © 2015-2021 Alex Kukhtin. All rights reserved.*/
+/*! Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-// 20210831-7801
+// 20220627-7853
 // components/sheet.js
 
 (function () {
@@ -10314,8 +10323,10 @@ Vue.component('a2-panel', {
 				let elem = arr[i];
 				elem.$level = lev;
 				yield elem;
-				if (!elem.$collapsed)
-					yield* traverse(elem, prop, lev + 1);
+				if (!elem.$collapsed) {
+					let newprop = elem._meta_.$items || prop;
+					yield* traverse(elem, newprop, lev + 1);
+				}
 			}
 		}
 	}
@@ -10370,7 +10381,8 @@ Vue.component('a2-panel', {
 			}
 
 			function hasChildren() {
-				let chElems = this.item[prop];
+				let np = this.item._meta_.$items || prop;
+				let chElems = this.item[np];
 				return chElems && chElems.length > 0;
 			}
 
