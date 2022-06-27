@@ -11,7 +11,6 @@ namespace A2v10.Xaml
 	{
 		public String Content { get; set; }
 		public Object Value { get; set; }
-
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -58,6 +57,7 @@ namespace A2v10.Xaml
 		public Boolean ShowValue { get; set; }
 		public TextAlign Align { get; set; }
 		public ComboBoxStyle Style { get; set; }
+		public String GroupBy { get; set; }
 
 		ComboBoxItems _children;
 
@@ -86,6 +86,8 @@ namespace A2v10.Xaml
 			combo.MergeAttribute("name-prop", DisplayProperty);
 			if (Style != ComboBoxStyle.Default)
 				combo.AddCssClass($"combo-{Style.ToString().ToLowerInvariant()}");
+			if (!String.IsNullOrEmpty(GroupBy))
+				combo.MergeAttribute("groupby", GroupBy);
 			MergeAttributes(combo, context);
 			MergeAlign(combo, context, Align);
 			MergeBoolAttribute(combo, context, nameof(ShowValue), ShowValue);

@@ -1,4 +1,5 @@
-﻿
+﻿@import "Variables.less";
+
 * {
 	box-sizing: border-box;
 }
@@ -104,6 +105,14 @@ input::-webkit-input-placeholder, input:focus::-webkit-input-placeholder, textar
 
 select {
 	padding: 0 @select-padding;
+
+	option {
+		color: @text-color;
+	}
+
+	optgroup {
+		color: @dark-gray-text-color;
+	}
 }
 
 textarea {

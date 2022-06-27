@@ -814,6 +814,22 @@
 .ico-smile-sad:before {
   content: "\eacb";
 }
+/* controls */
+/* header-footer */
+/* nav bar */
+/* side bar */
+/* data grid */
+/* toolbar */
+/* table */
+/* tree-view*/
+/* dialog */
+/* z-index */
+/*
+@hover-open-index: auto;
+@invalid-index: auto;
+@focus-index: auto;
+@hover-index: auto;
+*/
 * {
   box-sizing: border-box;
 }
@@ -911,6 +927,12 @@ textarea:focus::-webkit-input-placeholder {
 }
 select {
   padding: 0 2px;
+}
+select option {
+  color: var(--text);
+}
+select optgroup {
+  color: #999;
 }
 textarea {
   resize: none;
@@ -6693,22 +6715,6 @@ table > colgroup col.blue {
   word-break: break-word;
   white-space: pre-line;
 }
-/* controls */
-/* header-footer */
-/* nav bar */
-/* side bar */
-/* data grid */
-/* toolbar */
-/* table */
-/* tree-view*/
-/* dialog */
-/* z-index */
-/*
-@hover-open-index: auto;
-@invalid-index: auto;
-@focus-index: auto;
-@hover-index: auto;
-*/
 .side-bar {
   position: absolute;
   left: 0;
