@@ -370,6 +370,10 @@
       <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
       <Name>A2v10.Data.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\A2v10.Pdf.Report\A2v10.Pdf.Xaml\A2v10.Pdf.Xaml.csproj">
+      <Project>{8d88e1b6-eefa-4d4b-8f2d-8acb9c3bf6cf}</Project>
+      <Name>A2v10.Pdf.Xaml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
       <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
       <Name>A2v10.Infrastructure</Name>
@@ -859,6 +863,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Develop\sales\invoice\includeinfo.partial.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\sales\invoice\invoice.report.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Develop\sales\waybill\invoice.report.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>

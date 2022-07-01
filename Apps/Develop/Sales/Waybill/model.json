@@ -195,15 +195,17 @@
     }
   },
 	"reports": {
-		"waybill": {
-			"report": "waybill",
-			"name": "Заголовок отчета {{Document.Id}}",
-			"model": "Document",
-			"checkTypes": "print.d",
-			"permissions": {
-				"Module1": "edit"
-			}
-		}
+        "waybill": {
+            "report22": "waybill",
+            "report": "invoice.report",
+            "type": "pdf",
+            "name": "Заголовок_отчета_{{Document.Id}}",
+            "model": "Document",
+            "checkTypes": "print.d",
+            "permissions": {
+                "Module1": "edit"
+            }
+        }
 	},
 	"files": {
 		"default": {

@@ -1,10 +1,9 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 
 using System;
 using System.Threading.Tasks;
 using System.Dynamic;
-using System.IO;
 using System.Text;
 using System.Web.Mvc;
 using System.Web;
@@ -20,6 +19,7 @@ using A2v10.Reports;
 using A2v10.Web.Identity;
 using A2v10.Interop;
 using A2v10.Web.Base;
+using A2v10.Pdf.ReportBuilder;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -70,17 +70,42 @@ namespace A2v10.Web.Mvc.Controllers
 		[HttpGet]
 		public async Task Show(String Base, String Rep, String id)
 		{
+			var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
+
+
+			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, url);
+			var rep = rm.GetReport();
+			switch (rep.type)
+			{
+				case RequestReportType.stimulsoft:
+					ShowStimulsoft(rep, Rep);
+					break;
+				case RequestReportType.pdf:
+					ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
+					await ShowPdf(ri, Rep);
+					break;
+			}
+		}
+
+		async Task ShowPdf(ReportInfo ri, String repName)
+		{
+			Response.ContentType = MimeTypes.Application.Pdf;
+			var pdf = new PdfBuilder(ri.ReportPath, ri.DataModel.Root);
+			using (var ms = pdf.Build())
+			{
+				await ms.CopyToAsync(Response.OutputStream);
+			}
+		}
+
+		void ShowStimulsoft(RequestReport rep, String repName)
+		{ 
 			_reportHelper.SetupLicense();
 			try
 			{
-				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, url);
-				var rep = rm.GetReport();
-
 				rep.CheckPermissions(_baseController.UserStateManager.GetUserPermissions(), _baseController.Host.IsDebugConfiguration);
 
 				MvcHtmlString result = null;
-				using (var pr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"render: {Rep}"))
+				using (var pr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"render: {repName}"))
 				{
 					result  = _reportHelper.ShowViewer(this);
 				}
@@ -88,7 +113,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var sb = new StringBuilder(ResourceHelper.StiReportHtml);
 				sb.Replace("$(StiReport)", result.ToHtmlString());
 				sb.Replace("$(Lang)", _baseController.CurrentLang);
-				sb.Replace("$(Title)", _baseController.Localize(rep.name ?? Rep)); 
+				sb.Replace("$(Title)", _baseController.Localize(rep.name ?? repName)); 
 
 				Response.Output.Write(sb.ToString());
 			}
@@ -139,7 +164,6 @@ namespace A2v10.Web.Mvc.Controllers
 		public async Task ExportDesktop(DesktopReport rep, HttpResponseBase response)
 		{
 			// TODO: query string ???
-			_reportHelper.SetupLicense();
 			try
 			{
 				using (var rr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"export: {rep.Report}"))
@@ -150,6 +174,7 @@ namespace A2v10.Web.Mvc.Controllers
 					switch (ri.Type)
 					{
 						case RequestReportType.stimulsoft:
+							_reportHelper.SetupLicense();
 							err = await _reportHelper.ExportStiReportStreamAsync(ri, rep.Format, response.OutputStream);
 							break;
 						case RequestReportType.xml:
@@ -186,7 +211,6 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public async Task<ActionResult> Export(String Base, String Rep, String id, String Format)
 		{
-			_reportHelper.SetupLicense();
 			try
 			{
 				using (var rr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"export: {Rep}"))
@@ -197,7 +221,10 @@ namespace A2v10.Web.Mvc.Controllers
 					switch (ri.Type)
 					{
 						case RequestReportType.stimulsoft:
+							_reportHelper.SetupLicense();
 							return _reportHelper.ExportStiReport(ri, Format, saveFile: true);
+						case RequestReportType.pdf:
+							return ExportPdfReport(ri, saveFile: true);
 						case RequestReportType.xml:
 							return ExportXmlReport(ri);
 						case RequestReportType.json:
@@ -221,7 +248,6 @@ namespace A2v10.Web.Mvc.Controllers
 		[OutputCache(Duration = 0)]
 		public async Task<ActionResult> Print(String Base, String Rep, String id, String Format)
 		{
-			_reportHelper.SetupLicense();
 			try
 			{
 				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
@@ -230,7 +256,10 @@ namespace A2v10.Web.Mvc.Controllers
 				switch (ri.Type)
 				{
 					case RequestReportType.stimulsoft:
+						_reportHelper.SetupLicense();
 						return _reportHelper.ExportStiReport(ri, Format, saveFile: false);
+					case RequestReportType.pdf:
+						return ExportPdfReport(ri, saveFile: false);
 					default:
 						throw new NotImplementedException("ReportController.Print. ri.Type");
 				}
@@ -244,6 +273,20 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.Write(ex.Message);
 			}
 			return new EmptyResult();
+		}
+
+		ActionResult ExportPdfReport(ReportInfo ri, Boolean saveFile)
+		{
+			if (saveFile) {
+				var cdh = new ContentDispositionHeaderValue("attachment")
+				{
+					FileNameStar = _baseController.Localize(ri.Name) + ".pdf"
+				};
+				Response.Headers.Add("Content-Disposition", cdh.ToString());
+			}
+			var pdfrep = new PdfBuilder(ri.ReportPath, ri.DataModel.Root);
+			var stream = pdfrep.Build();
+			return new FileStreamResult(stream, MimeTypes.Application.Pdf);
 		}
 
 		ActionResult ExportJsonReport(ReportInfo ri)

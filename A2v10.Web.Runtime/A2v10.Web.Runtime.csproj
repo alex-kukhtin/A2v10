@@ -117,6 +117,14 @@
     <Content Include="Web.config.sample" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\A2v10.Pdf.Report\A2v10.Pdf.Report\A2v10.Pdf.Report.csproj">
+      <Project>{8c3d6471-882a-4628-a619-2922c990cdf9}</Project>
+      <Name>A2v10.Pdf.Report</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\A2v10.Pdf.Report\A2v10.Pdf.Xaml\A2v10.Pdf.Xaml.csproj">
+      <Project>{8d88e1b6-eefa-4d4b-8f2d-8acb9c3bf6cf}</Project>
+      <Name>A2v10.Pdf.Xaml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
       <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
       <Name>A2v10.Workflow</Name>

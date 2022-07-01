@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7840",
+	"$version": "10.0.7854",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -233,7 +233,7 @@
 						"checkTypes": { "type": "string" },
 						"type": {
 							"type": "string",
-							"enum": [ "stimulsoft", "xml", "json" ]
+							"enum": [ "stimulsoft", "xml", "json", "pdf" ]
 						},
 						"permissions": {
 							"$ref": "#/definitions/permissions"

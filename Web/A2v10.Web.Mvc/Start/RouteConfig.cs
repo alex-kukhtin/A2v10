@@ -37,7 +37,7 @@ namespace A2v10.Web.Mvc.Start
 				defaults: new { controller = "ApiV2", action = "Default" }
 			);
 
-			foreach (var name in new String[] { "Report", "Attachment", "EUSign", "Stimulsoft" })
+			foreach (var name in new String[] { "Report", "Attachment", "EUSign", "Stimulsoft"})
 			{
 				routes.MapRoute(
 					name: name,

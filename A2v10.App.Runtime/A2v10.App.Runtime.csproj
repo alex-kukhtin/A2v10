@@ -77,6 +77,10 @@
     <Content Include="App_application\%40types\server.d.ts" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\A2v10.Pdf.Report\A2v10.Pdf.Xaml\A2v10.Pdf.Xaml.csproj">
+      <Project>{8d88e1b6-eefa-4d4b-8f2d-8acb9c3bf6cf}</Project>
+      <Name>A2v10.Pdf.Xaml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
       <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
       <Name>A2v10.Xaml.Bootstrap</Name>
@@ -88,22 +92,5 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v17.0\WebApplications\Microsoft.WebApplication.targets" />
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
-        <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:53047/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
-        </WebProjectProperties>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
+  <ProjectExtensions />
 </Project>

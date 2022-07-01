@@ -143,7 +143,7 @@ namespace A2v10.Reports
 					throw new InvalidDataException($"Expression '{rep.ReportName}'  is null");
 			}
 			else if (rep.HasPath)
-				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + ".mrt");
+				ri.ReportPath = appReader.MakeFullPath(rep.Path, rep.ReportName + rep.GetExtension());
 
 			return ri;
 		}

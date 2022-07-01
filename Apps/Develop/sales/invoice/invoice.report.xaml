@@ -1,0 +1,4 @@
+<Report xmlns="clr-namespace:A2v10.Pdf.Xaml;assembly=A2v10.Pdf.Report"
+		Title="{Bind Expression='Рахунок №{Document.Name} від {FormatDate(Document.Date)}'}">
+
+</Report>

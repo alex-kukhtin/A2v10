@@ -1,0 +1,35 @@
+﻿<Report xmlns="clr-namespace:A2v10.Pdf.Xaml;assembly=A2v10.Pdf.Xaml"
+		Title="Title from XAML">
+	<Column>
+		<Table>
+			<Table.Columns>
+				<TableColumn />
+				<TableColumn />
+			</Table.Columns>
+			<TableRow>
+				<TableCell>Видаткова накладна</TableCell>
+				<TableCell Content="{Bind Document.No}"/>
+			</TableRow>
+		</Table>
+		<Table ItemsSource="{Bind Document.Rows}">
+			<Table.Columns>
+				<TableColumn />
+				<TableColumn />
+				<TableColumn />
+			</Table.Columns>
+			<Table.Header>
+				<TableRow>
+					<TableCell Content="{Bind Qty}"/>
+					<TableCell Content="{Bind Price}"/>
+					<TableCell Content="{Bind Sum}"/>
+				</TableRow>
+			</Table.Header>
+			<TableRow>
+
+			</TableRow>
+		</Table>
+		<Table>
+
+		</Table>
+	</Column>
+</Report>

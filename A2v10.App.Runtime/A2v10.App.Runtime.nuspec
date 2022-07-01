@@ -16,6 +16,7 @@
 		<references>
 			<reference file="A2v10.Xaml.dll" />
 			<reference file="A2v10.Xaml.Bootstrap.dll" />
+			<reference file="A2v10.Pfd.Xaml.dll" />
 		</references>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net48" />
@@ -26,6 +27,7 @@
 	</metadata>
 	<files>
 		<file src="bin/A2v10.Xaml.dll" target="lib/net48" />
+		<file src="bin/A2v10.Pdf.Xaml.dll" target="lib/net48" />
 		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="lib/net48" />
 		<file src="D:/Git/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
 		<file src="D:/Git/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>

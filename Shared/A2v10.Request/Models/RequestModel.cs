@@ -591,7 +591,8 @@ namespace A2v10.Request
 	{
 		stimulsoft,
 		xml,
-		json
+		json,
+		pdf
 	}
 
 	public class RequestReport : RequestBase
@@ -622,7 +623,17 @@ namespace A2v10.Request
 		}
 
 		[JsonIgnore]
-		public Boolean HasPath => type == RequestReportType.stimulsoft;
+		public Boolean HasPath => type == RequestReportType.stimulsoft || type == RequestReportType.pdf;
+
+		public String GetExtension() {
+			switch (type) {
+				case RequestReportType.stimulsoft:
+					return ".mrt";
+				case RequestReportType.pdf:
+					return ".xaml";
+			}
+			return "";
+		}
 
 		[JsonIgnore]
 		public Boolean ReportFromDataModel => ReportName != null && ReportName.Contains("{{");
