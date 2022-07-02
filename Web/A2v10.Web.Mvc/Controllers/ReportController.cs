@@ -49,7 +49,6 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			_baseController.Host.StartApplication(false);
 			_reportInfo = new ReportHelperInfo(_baseController.Host);
-
 		}
 
 		private ReportHelper ReportHelper
@@ -99,10 +98,19 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+		IReportLocalizer CreatePdfLocalizer()
+		{
+			IServiceLocator locator = _baseController.Host.Locator;
+			var localizer = locator.GetService<ILocalizer>() ?? throw new ArgumentNullException("Localizer");
+			var userLocale = locator.GetServiceOrNull<IUserLocale>() ?? throw new ArgumentNullException("UserStateManager");
+			return new PdfReportLocalizer(userLocale.Locale, localizer);
+		}
+
 		async Task ShowPdf(ReportInfo ri, String repName)
 		{
 			Response.ContentType = MimeTypes.Application.Pdf;
-			var pdf = new PdfBuilder(ri.ReportPath, ri.DataModel.Root);
+			var loc = CreatePdfLocalizer();
+			var pdf = new PdfBuilder(loc, ri.ReportPath, ri.DataModel.Root);
 			using (var ms = pdf.Build())
 			{
 				await ms.CopyToAsync(Response.OutputStream);
@@ -296,7 +304,8 @@ namespace A2v10.Web.Mvc.Controllers
 				};
 				Response.Headers.Add("Content-Disposition", cdh.ToString());
 			}
-			var pdfrep = new PdfBuilder(ri.ReportPath, ri.DataModel.Root);
+			var loc = CreatePdfLocalizer();
+			var pdfrep = new PdfBuilder(loc, ri.ReportPath, ri.DataModel.Root);
 			var stream = pdfrep.Build();
 			return new FileStreamResult(stream, MimeTypes.Application.Pdf);
 		}
