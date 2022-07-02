@@ -1,4 +1,4 @@
-﻿<Report xmlns="clr-namespace:A2v10.Pdf.Xaml;assembly=A2v10.Pdf.Xaml"
+﻿<Report xmlns="clr-namespace:A2v10.Xaml.Report;assembly=A2v10.Xaml.Report"
 		Title="Title from XAML">
 	<Column>
 		<Table>
@@ -19,13 +19,15 @@
 			</Table.Columns>
 			<Table.Header>
 				<TableRow>
-					<TableCell Content="{Bind Qty}"/>
-					<TableCell Content="{Bind Price}"/>
-					<TableCell Content="{Bind Sum}"/>
+					<TableCell Content="Qty"/>
+					<TableCell Content="Price"/>
+					<TableCell Content="Sum"/>
 				</TableRow>
 			</Table.Header>
 			<TableRow>
-
+				<TableCell Content="{Bind Qty}"/>
+				<TableCell Content="{Bind Price}"/>
+				<TableCell Content="{Bind Sum}"/>
 			</TableRow>
 		</Table>
 		<Table>

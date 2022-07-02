@@ -65,6 +65,7 @@
     <Compile Include="IStimulsoftReportShim.cs" />
     <Compile Include="ReportHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportHelperInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">

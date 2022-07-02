@@ -77,9 +77,9 @@
     <Content Include="App_application\%40types\server.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\A2v10.Pdf.Report\A2v10.Pdf.Xaml\A2v10.Pdf.Xaml.csproj">
-      <Project>{8d88e1b6-eefa-4d4b-8f2d-8acb9c3bf6cf}</Project>
-      <Name>A2v10.Pdf.Xaml</Name>
+    <ProjectReference Include="..\..\A2v10.Pdf.Report\A2v10.Xaml.Report\A2v10.Xaml.Report.csproj">
+      <Project>{982b4b91-2299-4c8d-bd6a-50a95f663dfd}</Project>
+      <Name>A2v10.Xaml.Report</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
       <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>

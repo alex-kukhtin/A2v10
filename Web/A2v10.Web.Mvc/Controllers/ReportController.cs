@@ -19,7 +19,7 @@ using A2v10.Reports;
 using A2v10.Web.Identity;
 using A2v10.Interop;
 using A2v10.Web.Base;
-using A2v10.Pdf.ReportBuilder;
+using A2v10.Pdf.Report;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -42,13 +42,25 @@ namespace A2v10.Web.Mvc.Controllers
 	public class ReportController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
-        ReportHelper _reportHelper;
+        ReportHelper _reportHelper = null;
+		private ReportHelperInfo _reportInfo;
 
 		public ReportController()
 		{
 			_baseController.Host.StartApplication(false);
-             _reportHelper = new ReportHelper(_baseController.Host);
-        }
+			_reportInfo = new ReportHelperInfo(_baseController.Host);
+
+		}
+
+		private ReportHelper ReportHelper
+		{
+			get
+			{
+				if (_reportHelper == null)
+					_reportHelper = new ReportHelper(_baseController.Host);
+				return _reportHelper;
+			}
+		}
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
@@ -99,7 +111,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		void ShowStimulsoft(RequestReport rep, String repName)
 		{ 
-			_reportHelper.SetupLicense();
+			ReportHelper.SetupLicense();
 			try
 			{
 				rep.CheckPermissions(_baseController.UserStateManager.GetUserPermissions(), _baseController.Host.IsDebugConfiguration);
@@ -107,7 +119,7 @@ namespace A2v10.Web.Mvc.Controllers
 				MvcHtmlString result = null;
 				using (var pr = Profiler.CurrentRequest.Start(ProfileAction.Report, $"render: {repName}"))
 				{
-					result  = _reportHelper.ShowViewer(this);
+					result  = ReportHelper.ShowViewer(this);
 				}
 
 				var sb = new StringBuilder(ResourceHelper.StiReportHtml);
@@ -134,7 +146,7 @@ namespace A2v10.Web.Mvc.Controllers
 			};
 			if (_baseController.Host.IsMultiCompany)
 				rc.CompanyId = CompanyId;
-			return await _reportHelper.GetReportInfo(rc, url, id, prms);
+			return await _reportInfo.GetReportInfo(rc, url, id, prms);
 		}
 
 		async Task<ReportInfo> GetReportInfoDesktop(DesktopReport dr, String url, ExpandoObject prms)
@@ -146,7 +158,7 @@ namespace A2v10.Web.Mvc.Controllers
 			};
 			if (_baseController.Host.IsMultiCompany)
 				rc.CompanyId = dr.CompanyId;
-			return await _reportHelper.GetReportInfo(rc, url, dr.Id, prms);
+			return await _reportInfo.GetReportInfo(rc, url, dr.Id, prms);
 		}
 
 		ExpandoObject CreateParamsFromQueryString()
@@ -174,8 +186,8 @@ namespace A2v10.Web.Mvc.Controllers
 					switch (ri.Type)
 					{
 						case RequestReportType.stimulsoft:
-							_reportHelper.SetupLicense();
-							err = await _reportHelper.ExportStiReportStreamAsync(ri, rep.Format, response.OutputStream);
+							ReportHelper.SetupLicense();
+							err = await ReportHelper.ExportStiReportStreamAsync(ri, rep.Format, response.OutputStream);
 							break;
 						case RequestReportType.xml:
 							throw new NotImplementedException("ExportDesktop. RequestReportType.xml");
@@ -221,8 +233,8 @@ namespace A2v10.Web.Mvc.Controllers
 					switch (ri.Type)
 					{
 						case RequestReportType.stimulsoft:
-							_reportHelper.SetupLicense();
-							return _reportHelper.ExportStiReport(ri, Format, saveFile: true);
+							ReportHelper.SetupLicense();
+							return ReportHelper.ExportStiReport(ri, Format, saveFile: true);
 						case RequestReportType.pdf:
 							return ExportPdfReport(ri, saveFile: true);
 						case RequestReportType.xml:
@@ -256,8 +268,8 @@ namespace A2v10.Web.Mvc.Controllers
 				switch (ri.Type)
 				{
 					case RequestReportType.stimulsoft:
-						_reportHelper.SetupLicense();
-						return _reportHelper.ExportStiReport(ri, Format, saveFile: false);
+						ReportHelper.SetupLicense();
+						return ReportHelper.ExportStiReport(ri, Format, saveFile: false);
 					case RequestReportType.pdf:
 						return ExportPdfReport(ri, saveFile: false);
 					default:
@@ -320,7 +332,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			try
 			{
-				var vrp = _reportHelper.GetViewerRequestParams();
+				var vrp = ReportHelper.GetViewerRequestParams();
 				var Rep = vrp.Param("Rep");
 				var Base = vrp.Param("Base");
 				var id = vrp.Route("Id");
@@ -338,7 +350,7 @@ namespace A2v10.Web.Mvc.Controllers
 				var path = ri.ReportPath;
 				using (var stream = ri.GetStream(_baseController.Host.ApplicationReader))
 				{
-					return _reportHelper.CreateReportResult(stream, ri);
+					return ReportHelper.CreateReportResult(stream, ri);
 				}
 			}
 			catch (Exception ex)
@@ -353,22 +365,22 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public ActionResult ViewerEvent()
 		{
-			return _reportHelper.ViewerEvent();
+			return ReportHelper.ViewerEvent();
 		}
 
 		public ActionResult PrintReport()
 		{
-			return _reportHelper.PrintReport();
+			return ReportHelper.PrintReport();
 		}
 
 		public ActionResult ExportReport()
 		{
-			return _reportHelper.ExportReport();
+			return ReportHelper.ExportReport();
 		}
 
 		public ActionResult Interaction()
 		{
-			return _reportHelper.Interaction();
+			return ReportHelper.Interaction();
 		}
 
 		#region IControllerTenant
