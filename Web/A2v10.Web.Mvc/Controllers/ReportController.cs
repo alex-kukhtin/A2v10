@@ -19,7 +19,6 @@ using A2v10.Reports;
 using A2v10.Web.Identity;
 using A2v10.Interop;
 using A2v10.Web.Base;
-using A2v10.Pdf.Report;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -43,6 +42,7 @@ namespace A2v10.Web.Mvc.Controllers
 	{
 		A2v10.Request.BaseController _baseController = new BaseController();
         ReportHelper _reportHelper = null;
+		PdfReportHelper _pdfReportHelper = null;
 		private ReportHelperInfo _reportInfo;
 
 		public ReportController()
@@ -58,6 +58,16 @@ namespace A2v10.Web.Mvc.Controllers
 				if (_reportHelper == null)
 					_reportHelper = new ReportHelper(_baseController.Host);
 				return _reportHelper;
+			}
+		}
+
+		private PdfReportHelper PdfReportHelper
+		{
+			get
+			{
+				if (_pdfReportHelper == null)
+					_pdfReportHelper = new PdfReportHelper(_baseController.Host);
+				return _pdfReportHelper;
 			}
 		}
 
@@ -81,37 +91,39 @@ namespace A2v10.Web.Mvc.Controllers
 		[HttpGet]
 		public async Task Show(String Base, String Rep, String id)
 		{
-			var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
-
-
-			RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, url);
-			var rep = rm.GetReport();
-			switch (rep.type)
+			try
 			{
-				case RequestReportType.stimulsoft:
-					ShowStimulsoft(rep, Rep);
-					break;
-				case RequestReportType.pdf:
-					ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
-					await ShowPdf(ri, Rep);
-					break;
-			}
-		}
+				var url = $"/_report/{Base.RemoveHeadSlash()}/{Rep}/{id}";
 
-		IReportLocalizer CreatePdfLocalizer()
-		{
-			IServiceLocator locator = _baseController.Host.Locator;
-			var localizer = locator.GetService<ILocalizer>() ?? throw new ArgumentNullException("Localizer");
-			var userLocale = locator.GetServiceOrNull<IUserLocale>() ?? throw new ArgumentNullException("UserStateManager");
-			return new PdfReportLocalizer(userLocale.Locale, localizer);
+
+				RequestModel rm = await RequestModel.CreateFromBaseUrl(_baseController.Host, url);
+				var rep = rm.GetReport();
+				switch (rep.type)
+				{
+					case RequestReportType.stimulsoft:
+						ShowStimulsoft(rep, Rep);
+						break;
+					case RequestReportType.pdf:
+						ReportInfo ri = await GetReportInfo(url, id, CreateParamsFromQueryString());
+						await ShowPdf(ri, Rep);
+						break;
+				}
+			} 
+			catch (Exception ex)
+			{
+				Response.ContentType = "text/html";
+				Response.ContentEncoding = Encoding.UTF8;
+				if (ex.InnerException != null)
+					ex = ex.InnerException;
+				Response.Write(ex.Message);
+			}
 		}
 
 		async Task ShowPdf(ReportInfo ri, String repName)
 		{
 			Response.ContentType = MimeTypes.Application.Pdf;
-			var loc = CreatePdfLocalizer();
-			var pdf = new PdfBuilder(loc, ri.ReportPath, ri.DataModel.Root);
-			using (var ms = pdf.Build())
+
+			using (var ms = PdfReportHelper.Build(ri.ReportPath, ri.DataModel.Root))
 			{
 				await ms.CopyToAsync(Response.OutputStream);
 			}
@@ -304,9 +316,7 @@ namespace A2v10.Web.Mvc.Controllers
 				};
 				Response.Headers.Add("Content-Disposition", cdh.ToString());
 			}
-			var loc = CreatePdfLocalizer();
-			var pdfrep = new PdfBuilder(loc, ri.ReportPath, ri.DataModel.Root);
-			var stream = pdfrep.Build();
+			var stream = PdfReportHelper.Build(ri.ReportPath, ri.DataModel.Root);
 			return new FileStreamResult(stream, MimeTypes.Application.Pdf);
 		}
 

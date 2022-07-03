@@ -54,6 +54,7 @@
     <Compile Include="ILicenseManager.cs" />
     <Compile Include="IMessageAttachment.cs" />
     <Compile Include="Implementation\NullMessaging.cs" />
+    <Compile Include="IPdfReportShim.cs" />
     <Compile Include="IQueuedMessage.cs" />
     <Compile Include="IBackgroundProcessing.cs" />
     <Compile Include="IBackgroundTasksManager.cs" />
