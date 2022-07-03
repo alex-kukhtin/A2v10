@@ -552,6 +552,10 @@
     <Folder Include="scripts\eusign\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\A2v10.Pdf.Report\A2v10.Xaml.Report\A2v10.Xaml.Report.csproj">
+      <Project>{982b4b91-2299-4c8d-bd6a-50a95f663dfd}</Project>
+      <Name>A2v10.Xaml.Report</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
       <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
       <Name>A2v10.Xaml.Bootstrap</Name>
