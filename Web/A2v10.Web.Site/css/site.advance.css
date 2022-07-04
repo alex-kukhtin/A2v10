@@ -4474,7 +4474,7 @@ ul.news-list > li {
   border-top: 1px solid var(--neutralBkDark);
   display: flex;
   justify-content: flex-end;
-  align-items: start;
+  align-items: center;
   gap: 1rem;
 }
 .modal-footer .btn {

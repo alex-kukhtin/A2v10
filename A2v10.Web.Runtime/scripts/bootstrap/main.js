@@ -5145,7 +5145,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220626-7852*/
+/*20220626-7866*/
 // controllers/base.js
 
 (function () {
@@ -6073,7 +6073,7 @@ app.modules['std:impl:array'] = function () {
 			$report(rep, arg, opts, repBaseUrl, data) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
-
+				eventBus.$emit('closeAllPopups');
 				let cmd = 'show';
 				let fmt = '';
 				let viewer = 'report';
