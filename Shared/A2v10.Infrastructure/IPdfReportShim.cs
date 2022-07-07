@@ -10,5 +10,6 @@ namespace A2v10.Infrastructure
 	{
 		void Inject(ILocalizer localizer, IUserLocale userLocale);
 		Stream Build(String path, ExpandoObject data);
+		Stream Build(Stream stream, ExpandoObject data);
 	}
 }
