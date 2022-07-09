@@ -43,7 +43,7 @@ namespace A2v10.Web.Mvc.Controllers
 		readonly A2v10.Request.BaseController _baseController = new BaseController();
         ReportHelper _reportHelper = null;
 		PdfReportHelper _pdfReportHelper = null;
-		private ReportHelperInfo _reportInfo;
+		private readonly ReportHelperInfo _reportInfo;
 
 		public ReportController()
 		{

@@ -531,12 +531,10 @@ namespace A2v10.Web.Mvc.Controllers
 					try
 					{
 						var token = Request.QueryString["token"];
-						if (token == null)
-							throw new InvalidOperationException("There is no access token for image");
-						var ai = await _baseController.LoadFileGet(url, SetQueryStringAndSqlQueryParams);
+						var ai = await _baseController.LoadFileGet(url, SetQueryStringAndSqlQueryParams, token);
 						if (ai == null)
 							throw new InvalidOperationException($"Not found. Url='{url}'");
-						if (!_baseController.IsTokenValid(Response, ai.Token, token))
+						if (ai.CheckToken && !_baseController.IsTokenValid(Response, ai.Token, token))
 							return;
 						Response.ContentType = ai.Mime;
 						if (Request.QueryString["export"] != null)

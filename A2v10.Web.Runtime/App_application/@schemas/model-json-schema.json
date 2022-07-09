@@ -258,11 +258,11 @@
 						"schema": { "type": "string" },
 						"type": {
 							"type": "string",
-							"enum": [ "parse", "clr", "sql", "azureBlob" ]
+							"enum": [ "parse", "clr", "sql", "azureBlob", "json" ]
 						},
 						"parse": {
 							"type": "string",
-							"enum": [ "excel", "xlsx", "csv", "dbf", "xml", "auto" ]
+							"enum": [ "excel", "xlsx", "csv", "dbf", "xml", "auto", "json" ]
 						},
 						"commandTimeout": { "type": "number" },
 						"async": { "type": "boolean" },
@@ -272,6 +272,7 @@
 						},
 						"locale": { "type": "string" },
 						"container": { "type": "string" },
+						"outputFileName": { "type": "string" },
 						"azureSource": { "type": "string" },
 						"imageCompress": {
 							"type": "object",

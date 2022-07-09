@@ -14,6 +14,7 @@ using A2v10.Infrastructure;
 using A2v10.Interop;
 using A2v10.Interop.AzureStorage;
 using System.Globalization;
+using System.Text;
 
 namespace A2v10.Request
 {
@@ -68,6 +69,9 @@ namespace A2v10.Request
 									case ".xml":
 										dm = await SaveFlat("xml", ru, files[0].InputStream, savePrms);
 										break;
+									case ".json":
+										dm = await SaveJson(ru, files[0].InputStream, savePrms);
+										break;
 									default:
 										throw new RequestModelException($"'{ext}' file not yet supported");
 								}
@@ -84,6 +88,9 @@ namespace A2v10.Request
 								break;
 							case RequestFileParseType.xml:
 								dm = await SaveFlat("xml", ru, files[0].InputStream, savePrms);
+								break;
+							case RequestFileParseType.json:
+								dm = await SaveJson(ru, files[0].InputStream, savePrms);
 								break;
 						}
 						if (dm != null)
@@ -144,6 +151,16 @@ namespace A2v10.Request
 					});
 					return dm?.Root;
 				}
+			}
+		}
+
+		async Task<ExpandoObject> SaveJson(RequestFile rf, Stream stream, ExpandoObject prms)
+		{
+			using (var sr = new StreamReader(stream)) {
+				String json = sr.ReadToEnd();
+				var data = JsonConvert.DeserializeObject<ExpandoObject>(json);
+				var res = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, data, prms);
+				return res.Root;
 			}
 		}
 
@@ -257,7 +274,7 @@ namespace A2v10.Request
 			return resultList;
 		}
 
-		public async Task<AttachmentInfo> LoadFileGet(String pathInfo, Action<ExpandoObject> setParams)
+		public async Task<AttachmentInfo> LoadFileGet(String pathInfo, Action<ExpandoObject> setParams, String token)
 		{
 			var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 			var ru = rm.GetFile();
@@ -271,9 +288,21 @@ namespace A2v10.Request
 
 			switch (ru.type)
 			{
+				case RequestFileType.json:
+					var dm = await _dbContext.LoadModelAsync(ru.CurrentSource, ru.LoadProcedure, loadPrms);
+					var json = JsonConvert.SerializeObject(dm.Root, JsonHelpers.StandardSerializerSettings);
+					return new AttachmentInfo()
+					{
+						SkipToken = true,
+						Mime = MimeTypes.Application.Json,
+						Stream = Encoding.UTF8.GetBytes(json),
+						Name = ru.outputFileName
+					};
 				case RequestFileType.sql:
 				case RequestFileType.azureBlob:
 					{
+						if (token == null)
+							throw new InvalidOperationException("There is no access token for image");
 						var ai = await _dbContext.LoadAsync<AttachmentInfo>(ru.CurrentSource, ru.FileProcedureLoad, loadPrms);
 						if (!String.IsNullOrEmpty(ai.BlobName))
 						{

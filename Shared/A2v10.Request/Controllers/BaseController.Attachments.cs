@@ -22,6 +22,9 @@ namespace A2v10.Request
 		public Guid Token { get; set; }
 		public Byte[] Stream { get; set; }
 		public String BlobName { get; set; }
+
+		public Boolean SkipToken { get; set; }
+		public Boolean CheckToken => !SkipToken;
 	}
 
 	public class AttachmentUpdateInfo

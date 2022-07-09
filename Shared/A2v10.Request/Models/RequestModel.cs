@@ -649,7 +649,8 @@ namespace A2v10.Request
 		csv,
 		dbf,
 		xml,
-		auto
+		auto,
+		json
 	}
 
 	public enum RequestFileType
@@ -657,7 +658,8 @@ namespace A2v10.Request
 		sql,
 		clr,
 		parse,
-		azureBlob
+		azureBlob,
+		json
 	}
 
 
@@ -705,6 +707,7 @@ namespace A2v10.Request
 		public String azureSource;
 		public ImageSettings imageCompress;
 		public String locale;
+		public String outputFileName;
 
 		public List<RequestFileAvaliModel> availableModels;
 		[JsonIgnore]

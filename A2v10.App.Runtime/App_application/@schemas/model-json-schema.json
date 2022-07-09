@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7854",
+	"$version": "10.0.7869",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -231,6 +231,11 @@
 						"name": { "type": "string" },
 						"report": { "type": "string" },
 						"checkTypes": { "type": "string" },
+						"encoding": { "type": "string" },
+						"xmlSchemas": {
+							"type": "array",
+							"items": { "type": "string" }
+						},
 						"type": {
 							"type": "string",
 							"enum": [ "stimulsoft", "xml", "json", "pdf" ]
@@ -253,11 +258,11 @@
 						"schema": { "type": "string" },
 						"type": {
 							"type": "string",
-							"enum": [ "parse", "clr", "sql", "azureBlob" ]
+							"enum": [ "parse", "clr", "sql", "azureBlob", "json" ]
 						},
 						"parse": {
 							"type": "string",
-							"enum": [ "excel", "xlsx", "csv", "dbf", "xml", "auto" ]
+							"enum": [ "excel", "xlsx", "csv", "dbf", "xml", "auto", "json" ]
 						},
 						"commandTimeout": { "type": "number" },
 						"async": { "type": "boolean" },
@@ -267,6 +272,7 @@
 						},
 						"locale": { "type": "string" },
 						"container": { "type": "string" },
+						"outputFileName": { "type": "string" },
 						"azureSource": { "type": "string" },
 						"imageCompress": {
 							"type": "object",
