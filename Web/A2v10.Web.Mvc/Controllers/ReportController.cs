@@ -40,7 +40,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[CheckMobileFilter]
 	public class ReportController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
-		A2v10.Request.BaseController _baseController = new BaseController();
+		readonly A2v10.Request.BaseController _baseController = new BaseController();
         ReportHelper _reportHelper = null;
 		PdfReportHelper _pdfReportHelper = null;
 		private ReportHelperInfo _reportInfo;
@@ -322,8 +322,15 @@ namespace A2v10.Web.Mvc.Controllers
 
 		ActionResult ExportJsonReport(ReportInfo ri)
 		{
-			String json = JsonConvert.SerializeObject(ri.DataModel.Root, Formatting.Indented);
-			return Content(json, "application/json", Encoding.UTF8);
+			String json = JsonConvert.SerializeObject(ri.DataModel.Root, Formatting.Indented,
+				new JsonSerializerSettings()
+				{
+					NullValueHandling = NullValueHandling.Ignore,
+				});
+			if (!String.IsNullOrEmpty(ri.Name))
+				return File(Encoding.UTF8.GetBytes(json), MimeTypes.Application.Json, $"{ri.Name}.json");
+			else
+				return Content(json, "application/json", Encoding.UTF8);
 		}
 
 		ActionResult ExportXmlReport(ReportInfo ri)
