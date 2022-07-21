@@ -27,7 +27,7 @@ namespace A2v10.Request.Api
 			_wrap = wrap;
 		}
 
-		public override async Task<ApiResponse> ExecuteAsync(ApiRequest request)
+		public override async Task<IApiResponse> ExecuteAsync(IApiRequest request)
 		{
 			if (String.IsNullOrEmpty(_command.Script))
 				throw new RequestModelException($"'script' must be specified for script command");

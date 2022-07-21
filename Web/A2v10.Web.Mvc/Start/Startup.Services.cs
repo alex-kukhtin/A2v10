@@ -1,7 +1,9 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web;
+
+using Owin;
 
 using A2v10.Data;
 using A2v10.Data.Interfaces;
@@ -17,6 +19,7 @@ using A2v10.Xaml;
 using A2v10.Web.Script;
 using A2v10.Web.Base;
 using A2v10.Javascript;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -24,7 +27,7 @@ namespace A2v10.Web.Mvc.Start
 	{
         private static IServiceLocator _currentLocator;
 
-		public static void StartServices()
+		public static void StartServices(IAppBuilder app)
 		{
 			// DI ready
 			ServiceLocator.Start = (IServiceLocator locator) =>
@@ -73,6 +76,9 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IJavaScriptEngine>(javaScriptEngine);
 				locator.RegisterService<ITokenProvider>(tokenProvider);
+
+				IDataProtectionProvider dataProtection = app.GetDataProtectionProvider();
+				locator.RegisterService<IDataProtectionProvider>(dataProtection);
 
 				if (HttpContext.Current != null)
 					HttpContext.Current.Items.Add("ServiceLocator", locator);

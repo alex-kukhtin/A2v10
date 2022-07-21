@@ -25,6 +25,7 @@ using A2v10.Web.Identity.ApiKey;
 using A2v10.Web.Identity.ApiBasic;
 using A2v10.Infrastructure;
 using A2v10.Data.Interfaces;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace A2v10.Web.Mvc.Start
 {

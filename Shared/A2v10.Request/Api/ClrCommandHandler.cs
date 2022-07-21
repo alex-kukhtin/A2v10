@@ -1,4 +1,4 @@
-﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -19,13 +19,10 @@ namespace A2v10.Request.Api
 			_wrap = wrap;
 		}
 
-		public override Task<ApiResponse> ExecuteAsync(ApiRequest request)
+		public override async Task<IApiResponse> ExecuteAsync(IApiRequest request)
 		{
-			var (assembly, type) = ClrHelpers.ParseClrType(_command.clrType);
-
-			//IApiClrHandler handler = Activator.CreateInstance<IApiClrHandler>(assembly, type, _serviceLocator);
-
-			throw new NotImplementedException();
+			var handler = ClrHelpers.LoadObjectSP<IApiClrHandler>(_command.clrType);
+			return await handler.HandleAsync(request);
 		}
 	}
 }

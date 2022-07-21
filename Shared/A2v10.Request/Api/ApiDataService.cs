@@ -64,7 +64,7 @@ namespace A2v10.Request.Api
 			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "[a2api].[WriteLog]", eo);
 		}
 
-		private async Task WriteLogResponse(ApiResponse resp)
+		private async Task WriteLogResponse(IApiResponse resp)
 		{
 			var eo = new ExpandoObject();
 
@@ -76,7 +76,7 @@ namespace A2v10.Request.Api
 			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "[a2api].[WriteLog]", eo);
 		}
 
-		public async Task<ApiResponse> ProcessRequest(ApiRequest request)
+		public async Task<IApiResponse> ProcessRequest(ApiRequest request)
 		{
 			_userId = request.UserId;
 			try

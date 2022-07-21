@@ -21,7 +21,7 @@ namespace A2v10.Request.Api
 			_wrap = wrap;
 		}
 
-		public override Task<ApiResponse> ExecuteAsync(ApiRequest request)
+		public override Task<IApiResponse> ExecuteAsync(IApiRequest request)
 		{
 			switch (_command.Action)
 			{
@@ -35,7 +35,7 @@ namespace A2v10.Request.Api
 			throw new ApiV2Exception($"invalid sql action {_command.Action}");
 		}
 
-		private async Task<ApiResponse> LoadModelAsync(ApiRequest request)
+		private async Task<IApiResponse> LoadModelAsync(IApiRequest request)
 		{ 
 			var sql = $"[{_command.RealSchema}].[{_command.Model}.Load]";
 
@@ -45,7 +45,7 @@ namespace A2v10.Request.Api
 			return ModelResponse(dm);
 		}
 
-		private async Task<ApiResponse> UpdateModelAsync(ApiRequest request)
+		private async Task<IApiResponse> UpdateModelAsync(IApiRequest request)
 		{
 			var sql = $"[{_command.RealSchema}].[{_command.Model}.Update]";
 
@@ -56,7 +56,7 @@ namespace A2v10.Request.Api
 		}
 
 
-		private async Task<ApiResponse> ExecuteSqlAsync(ApiRequest request)
+		private async Task<IApiResponse> ExecuteSqlAsync(IApiRequest request)
 		{
 			var sql = $"[{_command.RealSchema}].[{_command.Procedure}]";
 			var prms = CreateParameters(request);
@@ -90,7 +90,7 @@ namespace A2v10.Request.Api
 			};
 		}
 
-		ExpandoObject CreateParameters(ApiRequest request)
+		ExpandoObject CreateParameters(IApiRequest request)
 		{
 			var rq = new ExpandoObject();
 			rq.Set("id", _command.RealId);

@@ -10,7 +10,7 @@ namespace A2v10.Web.Mvc.Start
 	{
 		public static void Configuration(IAppBuilder app)
 		{
-			StartServices();
+			StartServices(app);
 			ConfigureAuth(app);
 		}
 	}

@@ -26,6 +26,14 @@ namespace A2v10.Infrastructure
 		}
 
 
+		public static ExpandoObject Add(this ExpandoObject obj, String name, Object value)
+		{
+			if (!(obj is IDictionary<String, Object> d))
+				return obj;
+			d.Add(name, value);
+			return obj;
+		}
+
 		public static Object GetObject(this ExpandoObject obj, String name)
 		{
 			if (!(obj is IDictionary<String, Object> d))
@@ -228,7 +236,7 @@ namespace A2v10.Infrastructure
 			return root.Eval<Object>(expression, null, true);
 		}
 
-		public static ExpandoObject Clone(this ExpandoObject elem, String[] exclude)
+		public static ExpandoObject Clone(this ExpandoObject elem, String[] exclude = null)
 		{
 			var eo = new ExpandoObject();
 			if (elem == null)

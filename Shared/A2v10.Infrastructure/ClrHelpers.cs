@@ -22,6 +22,22 @@ namespace A2v10.Infrastructure
 			return (assemblyName, typeName);
 		}
 
+		public static T LoadObjectSP<T>(String clrType)
+		{
+			var (assembly, type) = ClrHelpers.ParseClrType(clrType);
+			var ass = Assembly.Load(assembly);
+			var handlerType = ass.GetType(type);
+			var ctors = handlerType.GetConstructors();
+			if (ctors.Length != 1)
+				throw new ArgumentException($"Object '{type}' must have only one ctor");
+			var ctor = ctors[0];
+			var currSL = ServiceLocator.Current;
+			var res = ctor.Invoke(new Object[] { currSL });
+			if (res is T resT)
+				return resT;
+			throw new ArgumentException($"Object '{type}' does not implement {typeof(T).Name}");
+		}
+
 		public static T LoadObjectDI<T>(String clrType)
 		{
 			var (assembly, type) = ClrHelpers.ParseClrType(clrType);

@@ -1,4 +1,4 @@
-﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
@@ -11,7 +11,7 @@ namespace A2v10.Request.Api
 	public abstract class ApiCommandHandler
 	{
 		protected Boolean _wrap { get; set; }
-		public abstract Task<ApiResponse> ExecuteAsync(ApiRequest request);
+		public abstract Task<IApiResponse> ExecuteAsync(IApiRequest request);
 
 		protected Object Wrap(Object data)
 		{

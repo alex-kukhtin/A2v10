@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -32,6 +32,9 @@ using A2v10.Web.Identity;
 using A2v10.Web.Base;
 using A2v10.Web.Config;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin.Security.DataProtection;
+using System.Globalization;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -51,6 +54,7 @@ namespace A2v10.Web.Mvc.Controllers
 		private readonly ILocalizer _localizer;
 		private readonly IUserStateManager _userStateManager;
 		private readonly IUserLocale _userLocale;
+		private readonly IDataProtectionProvider _dataProtectionProvider;
 
 		private const String LOCALE_COOKIE = "_locale";
 		private const String QUERYSTRING_COOKIE = "_originurl";
@@ -66,6 +70,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_localizer = serviceLocator.GetService<ILocalizer>();
 			_userStateManager = serviceLocator.GetService<IUserStateManager>();
 			_userLocale = serviceLocator.GetService<IUserLocale>();
+			_dataProtectionProvider = serviceLocator.GetService<IDataProtectionProvider>();
 			_host.StartApplication(false);
 		}
 
@@ -973,6 +978,35 @@ namespace A2v10.Web.Mvc.Controllers
 					return Redirect("~/");
 			}
 			return new HttpStatusCodeResult(404);
+		}
+
+
+		[AllowAnonymous]
+		public async Task<ActionResult> LoginExt(String token)
+		{
+			try
+			{
+				var decoded = Base64UrlEncoder.DecodeBytes(token);
+				var dp = _dataProtectionProvider.Create("ExternalLogin");
+				var decBytes = dp.Unprotect(decoded);
+				var strResult = Encoding.UTF8.GetString(decBytes);
+				var xdata = strResult.Split('\b');
+				if (xdata.Length != 2)
+					return new HttpStatusCodeResult(400);
+				var user = await UserManager.FindAsync(new UserLoginInfo("ExternalId", xdata[0].ToUpperInvariant()));
+				if (user == null)
+					return new HttpStatusCodeResult(400);
+				if (!DateTime.TryParseExact(xdata[1], "o", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date))
+					return new HttpStatusCodeResult(400);
+				if ((DateTime.UtcNow - date).TotalSeconds > 300) // 5 minutes
+					return new HttpStatusCodeResult(400);
+				await SignInManager.SignInAsync(user, true, true);
+				return RedirectToLocal("~/");
+			} 
+			catch (Exception ex)
+			{
+				return new HttpStatusCodeResult(400);
+			}
 		}
 
 		#endregion

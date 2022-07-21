@@ -157,13 +157,16 @@
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\RequestExtensions.cs" />
     <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
+    <Compile Include="Hooks\ClrApiHandlerBase.cs" />
     <Compile Include="Hooks\CompanyModels.cs" />
+    <Compile Include="Hooks\LoginTenantUserHandler.cs" />
     <Compile Include="Hooks\CreateTenantUserHandler.cs" />
     <Compile Include="Hooks\GenerateApiKey.cs" />
     <Compile Include="Hooks\GetOAuthUrl.cs" />
     <Compile Include="Hooks\UpdateTenantCompanyHandler.cs" />
     <Compile Include="Hooks\DeleteTenantCompanyHandler.cs" />
     <Compile Include="Hooks\DeleteTenantUserHandler.cs" />
+    <Compile Include="Hooks\CreateTenantHandler.cs" />
     <Compile Include="Hooks\UpdateTenantUserHandler.cs" />
     <Compile Include="Hooks\CreateUserHandler.cs" />
     <Compile Include="Hooks\SetPasswordHandler.cs" />

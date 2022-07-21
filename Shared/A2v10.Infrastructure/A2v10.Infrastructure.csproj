@@ -47,6 +47,7 @@
     <Compile Include="CollectionHelpers.cs" />
     <Compile Include="DynamicHelpers.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="IApiClrHandler.cs" />
     <Compile Include="IApplicationReader.cs" />
     <Compile Include="IControllerLocale.cs" />
     <Compile Include="IHttpService.cs" />

@@ -11,7 +11,7 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Request.Api
 {
-	public class ApiRequest
+	public class ApiRequest : IApiRequest
 	{
 		public String HttpMethod { get; set; }
 		public String Host { get; set; }

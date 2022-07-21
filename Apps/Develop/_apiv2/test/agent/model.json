@@ -69,6 +69,26 @@
 					"s": "body.string"
 				}
 			}
+		},
+		"callClr": {
+			"type": "clr",
+			"clrCommand": {
+				"clrType": "clr-type:MyClr;assembly=MyClr.Assembly"
+			}
+		},
+		"create": {
+			"type": "clr",
+			"method": "post",
+			"clrCommand": {
+				"clrType": "clr-type:A2v10.Web.Mvc.Hooks.CreateTenantHandler;assembly=A2v10.Web.Mvc"
+			}
+		},
+		"login": {
+			"type": "clr",
+			"method": "post",
+			"clrCommand": {
+				"clrType": "clr-type:A2v10.Web.Mvc.Hooks.LoginTenantUserHandler;assembly=A2v10.Web.Mvc"
+			}
 		}
 	}
 }
