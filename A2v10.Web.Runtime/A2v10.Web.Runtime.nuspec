@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7870</version>
+		<version>10.0.7872</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -72,6 +72,9 @@
 		<file src="bin/System.Web.WebPages.dll" target="lib/net48" />
 		<file src="bin/System.Web.WebPages.Razor.dll" target="lib/net48" />
 		<file src="bin/System.Web.WebPages.Deployment.dll" target="lib/net48"/>
+		<file src="bin/Microsoft.IdentityModel.Tokens.dll" target="lib/net48" />
+		<file src="bin/Microsoft.IdentityModel.Logging.dll" target="lib/net48" />
+		<file src="bin/Microsoft.IdentityModel.Abstractions.dll" target="lib/net48" />		
 		<file src="bin/Newtonsoft.Json.dll" target="lib/net48" />
 		<file src="bin/Owin.dll" target="lib/net48" />
 		<file src="bin/Jint.dll" target="lib/net48" />
