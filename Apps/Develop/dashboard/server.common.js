@@ -3,14 +3,16 @@
  * server module common
 */
 
-module.exports = function (prms, args) {
+module.exports = function(p, a) {
 	return {
-		toCall: function () {
+		toCall: function() {
 			return {
 				fromServer: 'FROM common',
-				prms,
-				args
+				prms:p,
+				args:a
 			};
-		}
+		},
+		prms: p,
+		args: a
 	};
 };

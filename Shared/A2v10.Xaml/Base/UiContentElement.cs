@@ -31,5 +31,19 @@ namespace A2v10.Xaml
 			base.OnDispose();
 			(Content as XamlElement)?.OnDispose();
 		}
+
+		public override void OnSetStyles()
+		{
+			base.OnSetStyles();
+			if (Content is XamlElement xamlCont)
+				xamlCont.OnSetStyles();
+		}
+
+		protected override void OnEndInit()
+		{
+			base.OnEndInit();
+			if (Content is XamlElement xamlCont)
+				xamlCont.SetParent(this);
+		}
 	}
 }

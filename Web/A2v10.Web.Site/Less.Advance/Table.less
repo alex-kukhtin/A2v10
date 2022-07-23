@@ -11,10 +11,6 @@
 @cell-vert-padding: 6px;
 
 table {
-	th {
-		border: 1px solid @table-brd-color;
-	}
-
 	col.fit {
 		width: .1%;
 	}
@@ -70,21 +66,29 @@ table.hover {
 }
 
 .grid-vertical, .grid-both {
-	td {
-		border-right: 1px solid @a2-table-brd-color;
+	> tbody, > thead, > tfoot {
+		> tr {
+			td, th {
+				border-right: 1px solid @a2-table-brd-color;
+			}
+		}
 	}
 
-	td:first-child:not(.no-first) {
+	> tbody > td:first-child:not(.no-first) {
 		border-left: 1px solid @a2-table-brd-color;
 	}
 }
 
 .grid-horizontal, .grid-both {
-	td {
-		border-bottom: 1px solid @a2-table-brd-color;
+	> tbody, > thead, > tfoot {
+		> tr {
+			td, th {
+				border-bottom: 1px solid @a2-table-brd-color;
+			}
+		}
 	}
 
-	thead > tr:first-child > td, tfoot > tr:first-child > td {
+	> thead > tr:first-child > td, tfoot > tr:first-child > td {
 		border-top: 1px solid @a2-table-brd-color;
 	}
 }

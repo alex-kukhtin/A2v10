@@ -4,7 +4,6 @@ using System;
 using System.Dynamic;
 
 using Jint;
-using Jint.Runtime;
 using Jint.Native;
 
 using A2v10.Data.Interfaces;
@@ -39,63 +38,33 @@ namespace A2v10.Javascript
 		public ExpandoObject loadModel(ExpandoObject prms)
 #pragma warning restore IDE1006 // Naming Styles
 		{
-			try
-			{
-				String source = prms.Get<String>("source");
-				String command = prms.Get<String>("procedure");
-				ExpandoObject dmParams = prms.Get<ExpandoObject>("parameters");
-				var dm = _dbContext.LoadModel(source, command, dmParams);
-				return dm.Root;
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				var js = new JsString(ex.Message);
-				throw new JavaScriptException(js);
-			}
+			String source = prms.Get<String>("source");
+			String command = prms.Get<String>("procedure");
+			ExpandoObject dmParams = prms.Get<ExpandoObject>("parameters");
+			var dm = _dbContext.LoadModel(source, command, dmParams);
+			return dm.Root;
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
 		public ExpandoObject saveModel(ExpandoObject prms)
 #pragma warning restore IDE1006 // Naming Styles
 		{
-			try
-			{
-				String source = prms.Get<String>("source");
-				String command = prms.Get<String>("procedure");
-				ExpandoObject data = prms.Get<ExpandoObject>("data");
-				ExpandoObject dmParams = prms.Get<ExpandoObject>("parameters");
-				var dm = _dbContext.SaveModel(source, command, data, dmParams);
-				return dm.Root;
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				var js = new JsString(ex.Message);
-				throw new JavaScriptException(js);
-			}
+			String source = prms.Get<String>("source");
+			String command = prms.Get<String>("procedure");
+			ExpandoObject data = prms.Get<ExpandoObject>("data");
+			ExpandoObject dmParams = prms.Get<ExpandoObject>("parameters");
+			var dm = _dbContext.SaveModel(source, command, data, dmParams);
+			return dm.Root;
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
 		public ExpandoObject executeSql(ExpandoObject prms)
 #pragma warning restore IDE1006 // Naming Styles
 		{
-			try
-			{
-				String source = prms.Get<String>("source");
-				String command = prms.Get<String>("procedure");
-				ExpandoObject dmParams = prms.Get<ExpandoObject>("parameters");
-				return _dbContext.ExecuteAndLoadExpando(source, command, dmParams);
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				var js = new JsString(ex.Message);
-				throw new JavaScriptException(js);
-			}
+			String source = prms.Get<String>("source");
+			String command = prms.Get<String>("procedure");
+			ExpandoObject dmParams = prms.Get<ExpandoObject>("parameters");
+			return _dbContext.ExecuteAndLoadExpando(source, command, dmParams);
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -109,17 +78,7 @@ namespace A2v10.Javascript
 		public FetchResponse fetch(String url, ExpandoObject prms)
 #pragma warning restore IDE1006 // Naming Styles
 		{
-			try
-			{
-				return new FetchCommand().Execute(url, prms);
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				var js = new JsString(ex.Message);
-				throw new JavaScriptException(js);
-			}
+			return new FetchCommand().Execute(url, prms);
 		}
 
 
@@ -127,17 +86,7 @@ namespace A2v10.Javascript
 		public SendSmsResponse sendSms(String phone, String message, String extId)
 #pragma warning restore IDE1006 // Naming Styles
 		{
-			try
-			{
-				return new SendSmsCommand(_smsService).Execute(phone, message, extId);
-			}
-			catch (Exception ex)
-			{
-				if (ex.InnerException != null)
-					ex = ex.InnerException;
-				var js = new JsString(ex.Message);
-				throw new JavaScriptException(js);
-			}
+			return new SendSmsCommand(_smsService).Execute(phone, message, extId);
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -147,14 +96,14 @@ namespace A2v10.Javascript
 			var script = _host.ApplicationReader.ReadTextFile(_currentDir, fileName);
 
 			String code = $@"
-return (function(prms, args) {{
+return (function() {{
 const module = {{exports:null }};
 {script};
 const __exp__ = module.exports;
-return function(_this) {{
+return function(_this, prms, args) {{
 	return __exp__.call(_this, prms, args);
 }};
-}})(prms, args);";
+}})();";
 			var func = _engine.Evaluate(code);
 			return _engine.Invoke(func, this, prms, args);
 		}
