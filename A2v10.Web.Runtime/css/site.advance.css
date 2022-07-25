@@ -4727,9 +4727,6 @@ ul.news-list > li {
 .toastr-stack .list-leave-active {
   position: absolute;
 }
-table th {
-  border: 1px solid var(--neutralBkDarker);
-}
 table col.fit {
   width: 0.1%;
 }
@@ -4766,20 +4763,40 @@ table.hover > tbody > tr:hover {
 table.hover > tbody > tr.active:hover {
   background-color: var(--activeBk) !important;
 }
-.grid-vertical td,
-.grid-both td {
+.grid-vertical > tbody > tr td,
+.grid-both > tbody > tr td,
+.grid-vertical > thead > tr td,
+.grid-both > thead > tr td,
+.grid-vertical > tfoot > tr td,
+.grid-both > tfoot > tr td,
+.grid-vertical > tbody > tr th,
+.grid-both > tbody > tr th,
+.grid-vertical > thead > tr th,
+.grid-both > thead > tr th,
+.grid-vertical > tfoot > tr th,
+.grid-both > tfoot > tr th {
   border-right: 1px solid var(--neutralBkDarker);
 }
-.grid-vertical td:first-child:not(.no-first),
-.grid-both td:first-child:not(.no-first) {
+.grid-vertical > tbody > td:first-child:not(.no-first),
+.grid-both > tbody > td:first-child:not(.no-first) {
   border-left: 1px solid var(--neutralBkDarker);
 }
-.grid-horizontal td,
-.grid-both td {
+.grid-horizontal > tbody > tr td,
+.grid-both > tbody > tr td,
+.grid-horizontal > thead > tr td,
+.grid-both > thead > tr td,
+.grid-horizontal > tfoot > tr td,
+.grid-both > tfoot > tr td,
+.grid-horizontal > tbody > tr th,
+.grid-both > tbody > tr th,
+.grid-horizontal > thead > tr th,
+.grid-both > thead > tr th,
+.grid-horizontal > tfoot > tr th,
+.grid-both > tfoot > tr th {
   border-bottom: 1px solid var(--neutralBkDarker);
 }
-.grid-horizontal thead > tr:first-child > td,
-.grid-both thead > tr:first-child > td,
+.grid-horizontal > thead > tr:first-child > td,
+.grid-both > thead > tr:first-child > td,
 .grid-horizontal tfoot > tr:first-child > td,
 .grid-both tfoot > tr:first-child > td {
   border-top: 1px solid var(--neutralBkDarker);
