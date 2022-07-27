@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Web.Mvc;
@@ -25,7 +25,6 @@ using A2v10.Request.Models;
 using System.Net.Http.Headers;
 using System.Linq;
 using A2v10.Web.Base;
-using A2v10.Web.Config;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -35,7 +34,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[CheckMobileFilter]
 	public class ShellController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
-		A2v10.Request.BaseController _baseController = new BaseController();
+		private readonly A2v10.Request.BaseController _baseController = new BaseController();
 
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();

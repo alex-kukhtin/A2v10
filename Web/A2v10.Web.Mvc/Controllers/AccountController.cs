@@ -15,11 +15,16 @@ using System.IO;
 using System.Configuration;
 using System.Dynamic;
 using System.Threading;
+using System.Globalization;
+using System.Net;
 
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security.OpenIdConnect;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Owin.Security.DataProtection;
 
 using Newtonsoft.Json;
 
@@ -31,10 +36,6 @@ using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Web.Base;
 using A2v10.Web.Config;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Owin.Security.DataProtection;
-using System.Globalization;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -443,8 +444,10 @@ namespace A2v10.Web.Mvc.Controllers
 
 				if (!String.IsNullOrEmpty(model.Locale))
 				{
-                    var cookie = new HttpCookie(LOCALE_COOKIE, model.Locale);
-                    cookie.SameSite = SameSiteMode.Strict;
+					var cookie = new HttpCookie(LOCALE_COOKIE, model.Locale)
+					{
+						SameSite = SameSiteMode.Strict
+					};
                     Response.Cookies.Add(cookie);
 					_userLocale.Locale = model.Locale;
 				}
@@ -1005,7 +1008,7 @@ namespace A2v10.Web.Mvc.Controllers
 			} 
 			catch (Exception ex)
 			{
-				return new HttpStatusCodeResult(400);
+				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
 		}
 
