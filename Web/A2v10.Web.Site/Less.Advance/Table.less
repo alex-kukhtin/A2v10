@@ -68,21 +68,23 @@ table.hover {
 .grid-vertical, .grid-both {
 	> tbody, > thead, > tfoot {
 		> tr {
-			td, th {
+			> td, > th {
 				border-right: 1px solid @a2-table-brd-color;
 			}
 		}
 	}
 
-	> tbody > td:first-child:not(.no-first) {
-		border-left: 1px solid @a2-table-brd-color;
+	> tbody, > thead, > tfoot {
+		> tr > td:first-child:not(.no-first), > tr > th:first-child:not(.no-first) {
+			border-left: 1px solid @a2-table-brd-color;
+		}
 	}
 }
 
 .grid-horizontal, .grid-both {
 	> tbody, > thead, > tfoot {
 		> tr {
-			td, th {
+			> td, > th {
 				border-bottom: 1px solid @a2-table-brd-color;
 			}
 		}

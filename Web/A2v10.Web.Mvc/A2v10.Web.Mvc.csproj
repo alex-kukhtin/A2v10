@@ -163,6 +163,7 @@
     <Compile Include="Hooks\CreateTenantUserHandler.cs" />
     <Compile Include="Hooks\GenerateApiKey.cs" />
     <Compile Include="Hooks\GetOAuthUrl.cs" />
+    <Compile Include="Hooks\CreateTenantCompanyHandler.cs" />
     <Compile Include="Hooks\UpdateTenantCompanyHandler.cs" />
     <Compile Include="Hooks\DeleteTenantCompanyHandler.cs" />
     <Compile Include="Hooks\DeleteTenantUserHandler.cs" />

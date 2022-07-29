@@ -358,22 +358,36 @@ void CFiscalPrinter_DatecsKrypton::GetTaxRates()
 			taxKey.tax = (long)std::round(atof(vatPercent.c_str()) * 100.0);
 			taxKey.nested = nested;
 			long taxIndex = (long) std::round(atof(vatPercent.c_str()) * 100.0);
-			_taxChars[taxKey.key] = L'0' + i;
+			if (_taxChars.count(taxKey.key) == 0)
+				_taxChars[taxKey.key] = L'0' + i;
 		}
 	}
 	if (IS_EMULATION()) {
 		TAX_KEY key;
-		key.tax = 2000;
-		key.nested = -1;
-		_taxChars[key.key] = L'0'; // 20%
-		key.tax = 500;
-		_taxChars[key.key] = L'1'; // 5% (not used)
-		key.tax = 2000;
-		key.nested = 1;
-		_taxChars[key.key] = L'2'; // 20% + 5%
 		key.tax = 0;
 		key.nested = -1;
-		_taxChars[key.key] = L'4'; // 0%
+		if (_taxChars.count(key.key) == 0)
+			_taxChars[key.key] = L'0'; // 20%
+
+		key.tax = 0;
+		key.nested = -1;
+		if (_taxChars.count(key.key) == 0)
+			_taxChars[key.key] = L'1'; // 5% (not used)
+
+		key.tax = 0;
+		key.nested = -1;
+		if (_taxChars.count(key.key) == 0)
+			_taxChars[key.key] = L'2'; // 20% + 5%
+
+		key.tax = 0;
+		key.nested = -1;
+		if (_taxChars.count(key.key) == 0)
+			_taxChars[key.key] = L'3'; // 20% + 5%
+
+		key.tax = 0;
+		key.nested = -1;
+		if (_taxChars.count(key.key) == 0)
+			_taxChars[key.key] = L'4'; // 0%
 	}
 
 	TAX_KEY key;

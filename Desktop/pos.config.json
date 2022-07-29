@@ -1,10 +1,10 @@
 ﻿{
 	"connectionString": "Data Source=localhost;Initial Catalog=bookkeeper;Integrated Security=True",
-	"startUrl2": "/pos",
+	"startUrl": "/pos",
 	"fiscalPrinters": [
 		{
-			"model": "ESC-POS",
-			"model2": "DATECS-Krypton",
+			"model2": "ESC-POS",
+			"model": "DATECS-Krypton",
 			"model3": "IKC-V11",
 			"port": "COM5",
 			"baud2": 9600,
