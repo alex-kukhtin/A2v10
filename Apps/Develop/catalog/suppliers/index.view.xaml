@@ -1,0 +1,15 @@
+﻿<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<Page.CollectionView>
+		<CollectionView ItemsSource="{Bind Customers}"
+						RunAt="Client" Filter="Filter" FilterDelegate="filter"/>
+	</Page.CollectionView>
+	<Toolbar>
+		<TextBox Value="{Bind Parent.Filter.Filter}"/>
+		<Code Content="{Bind Parent.Filter}"></Code>
+	</Toolbar>
+	<DataGrid ItemsSource="{Bind Parent.ItemsSource}">
+		<DataGridColumn Content="{Bind Id}"/>
+		<DataGridColumn Content="{Bind Name}"/>
+		<DataGridColumn Content="{Bind Amount}"/>
+	</DataGrid>
+</Page>

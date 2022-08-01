@@ -18,3 +18,25 @@ OnProcessMessageReceived
 
 // for debugging native: cefapp.cpp
 //command_line->AppendSwitchWithValue(L"single-process", "1"); //??? debugger tools???
+
+
+Andriy Nesterenya, [25.07.2022 11:57]
+Datecs FP-101;5.03;Україна;Feb 17 2022;28964;10498;4608;384;32;9;10;
+
+Andriy Nesterenya, [25.07.2022 12:24]
+DATECS []. GetTaxRates()
+  GETTAXRATE  SND:0x48 000000;0;
+    RCV:0000;3;0.00;Без ПДВ;-1;
+  GETTAXRATE  SND:0x48 000000;1;
+    RCV:0000;0;0.00;ПДВ_Б;-1;
+  GETTAXRATE  SND:0x48 000000;2;
+    RCV:0000;0;0.00;ПДВ_В;-1;
+  GETTAXRATE  SND:0x48 000000;3;
+    RCV:0000;0;0.00;ПДВ_Г;-1;
+  GETTAXRATE  SND:0x48 000000;4;
+    RCV:0000;0;0.00;ПДВ_Д;-1;
+  Tax mode: char: '4', tax: 0, nested:-1
+  DAYCOUNTERS  SND:0xE2 000000;0;
+    RCV:0000;530;
+  DAYCOUNTERS  SND:0xE2 000000;3;
+    RCV:0000;5458;

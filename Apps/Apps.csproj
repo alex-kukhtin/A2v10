@@ -166,6 +166,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </None>
+    <Page Include="Develop\catalog\Suppliers\index.view.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Content Include="Develop\dashboard\server.common.js" />
     <Content Include="Develop\dashboard\server4.module.js" />
     <Content Include="Develop\dashboard\server3.module.js" />

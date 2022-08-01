@@ -855,6 +855,7 @@ th {
   text-align: inherit;
   page-break-inside: avoid;
   vertical-align: middle;
+  background-color: inherit;
 }
 button,
 input[type=button] {
@@ -3163,7 +3164,7 @@ table.data-grid td.cell-validator {
   width: 23px;
 }
 table.data-grid colgroup > col.sorted {
-  background-color: rgba(238, 238, 238, 0.3);
+  background-color: rgba(238, 238, 238, 0.45);
 }
 table.data-grid th {
   background-color: #f5f5f5;
@@ -4763,36 +4764,46 @@ table.hover > tbody > tr:hover {
 table.hover > tbody > tr.active:hover {
   background-color: var(--activeBk) !important;
 }
-.grid-vertical > tbody > tr td,
-.grid-both > tbody > tr td,
-.grid-vertical > thead > tr td,
-.grid-both > thead > tr td,
-.grid-vertical > tfoot > tr td,
-.grid-both > tfoot > tr td,
-.grid-vertical > tbody > tr th,
-.grid-both > tbody > tr th,
-.grid-vertical > thead > tr th,
-.grid-both > thead > tr th,
-.grid-vertical > tfoot > tr th,
-.grid-both > tfoot > tr th {
+.grid-vertical > tbody > tr > td,
+.grid-both > tbody > tr > td,
+.grid-vertical > thead > tr > td,
+.grid-both > thead > tr > td,
+.grid-vertical > tfoot > tr > td,
+.grid-both > tfoot > tr > td,
+.grid-vertical > tbody > tr > th,
+.grid-both > tbody > tr > th,
+.grid-vertical > thead > tr > th,
+.grid-both > thead > tr > th,
+.grid-vertical > tfoot > tr > th,
+.grid-both > tfoot > tr > th {
   border-right: 1px solid var(--neutralBkDarker);
 }
-.grid-vertical > tbody > td:first-child:not(.no-first),
-.grid-both > tbody > td:first-child:not(.no-first) {
+.grid-vertical > tbody > tr > td:first-child:not(.no-first),
+.grid-both > tbody > tr > td:first-child:not(.no-first),
+.grid-vertical > thead > tr > td:first-child:not(.no-first),
+.grid-both > thead > tr > td:first-child:not(.no-first),
+.grid-vertical > tfoot > tr > td:first-child:not(.no-first),
+.grid-both > tfoot > tr > td:first-child:not(.no-first),
+.grid-vertical > tbody > tr > th:first-child:not(.no-first),
+.grid-both > tbody > tr > th:first-child:not(.no-first),
+.grid-vertical > thead > tr > th:first-child:not(.no-first),
+.grid-both > thead > tr > th:first-child:not(.no-first),
+.grid-vertical > tfoot > tr > th:first-child:not(.no-first),
+.grid-both > tfoot > tr > th:first-child:not(.no-first) {
   border-left: 1px solid var(--neutralBkDarker);
 }
-.grid-horizontal > tbody > tr td,
-.grid-both > tbody > tr td,
-.grid-horizontal > thead > tr td,
-.grid-both > thead > tr td,
-.grid-horizontal > tfoot > tr td,
-.grid-both > tfoot > tr td,
-.grid-horizontal > tbody > tr th,
-.grid-both > tbody > tr th,
-.grid-horizontal > thead > tr th,
-.grid-both > thead > tr th,
-.grid-horizontal > tfoot > tr th,
-.grid-both > tfoot > tr th {
+.grid-horizontal > tbody > tr > td,
+.grid-both > tbody > tr > td,
+.grid-horizontal > thead > tr > td,
+.grid-both > thead > tr > td,
+.grid-horizontal > tfoot > tr > td,
+.grid-both > tfoot > tr > td,
+.grid-horizontal > tbody > tr > th,
+.grid-both > tbody > tr > th,
+.grid-horizontal > thead > tr > th,
+.grid-both > thead > tr > th,
+.grid-horizontal > tfoot > tr > th,
+.grid-both > tfoot > tr > th {
   border-bottom: 1px solid var(--neutralBkDarker);
 }
 .grid-horizontal > thead > tr:first-child > td,

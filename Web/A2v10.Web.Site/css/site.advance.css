@@ -855,6 +855,7 @@ th {
   text-align: inherit;
   page-break-inside: avoid;
   vertical-align: middle;
+  background-color: inherit;
 }
 button,
 input[type=button] {
@@ -3163,7 +3164,7 @@ table.data-grid td.cell-validator {
   width: 23px;
 }
 table.data-grid colgroup > col.sorted {
-  background-color: rgba(238, 238, 238, 0.3);
+  background-color: rgba(238, 238, 238, 0.45);
 }
 table.data-grid th {
   background-color: #f5f5f5;

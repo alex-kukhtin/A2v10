@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20210328-7771
+// 20220801-7875
 // components/datagrid.js*/
 
 (function () {
@@ -410,6 +410,18 @@
 			},
 			markClass() {
 				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
+			},
+			_itemActive() {
+				return this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
+			}
+		},
+		watch: {
+			_itemActive(newValue, oldValue) {
+				if (newValue) {
+					let tr = this.$refs.tr;
+					if (tr && tr.scrollIntoViewCheck)
+						tr.scrollIntoViewCheck();
+				}
 			}
 		},
 		methods: {
