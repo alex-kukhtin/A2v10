@@ -318,10 +318,6 @@
       <Project>{4abb9b68-f32c-4262-8aff-0af8a1087d30}</Project>
       <Name>A2v10.Request</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Script\A2v10.Script.csproj">
-      <Project>{8d4a108f-28a4-4c56-bb2c-d189e6ab01c9}</Project>
-      <Name>A2v10.Script</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
       <Project>{76269196-DB55-4299-AE0F-A33A5BAB294F}</Project>
       <Name>A2v10.Workflow</Name>
@@ -345,10 +341,6 @@
     <ProjectReference Include="..\A2v10.Web.Identity\A2v10.Web.Identity.csproj">
       <Project>{7c10ee54-7b2c-4d76-b5de-802f26bd53ad}</Project>
       <Name>A2v10.Web.Identity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\A2v10.Web.Script\A2v10.Web.Script.csproj">
-      <Project>{0B570AD7-C466-4434-A610-F0CAC2813676}</Project>
-      <Name>A2v10.Web.Script</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -1,76 +1,46 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C53F9ED8-90A1-43DA-9EC4-8BCDB33E5D8F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>A2v10.Web.Config</RootNamespace>
-    <AssemblyName>A2v10.Web.Config</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Web" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebApplicationHost.cs" />
-    <Compile Include="WebLocalizer.cs" />
-    <Compile Include="WebLogger.cs" />
-    <Compile Include="WebProfiler.cs" />
-    <Compile Include="WebUserStateManager.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
-      <Project>{1c5a0097-29a8-4157-80c0-b865ceafccce}</Project>
-      <Name>A2v10.Data.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
-      <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
-      <Name>A2v10.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
-      <Project>{4ABB9B68-F32C-4262-8AFF-0AF8A1087D30}</Project>
-      <Name>A2v10.Request</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
-      <Project>{2FBBA076-26F4-4D61-872C-4EE29AFA1EDB}</Project>
-      <Name>A2v10.Web.Base</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netframework4.8</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Version>10.0.7875</Version>
+		<Product>A2v10</Product>
+		<Authors>Oleksandr Kukthin</Authors>
+		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>
+		<Description>A2v10 Platfrom Configuration</Description>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>A2v10</PackageTags>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj" />
+	  <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj" />
+	  <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="System.Configuration" />
+	  <Reference Include="System.Web" />
+	</ItemGroup>
 </Project>
+

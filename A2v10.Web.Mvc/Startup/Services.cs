@@ -12,11 +12,11 @@ using A2v10.Web.Base;
 using A2v10.Web.Config;
 using A2v10.Web.Identity;
 using A2v10.Web.Mvc.Config;
-using A2v10.Web.Script;
 using A2v10.Workflow;
 
 namespace A2v10.Web.Mvc.Startup
 {
+
 	public class StartOptions
 	{
 		public IProfiler Profiler;
@@ -49,15 +49,14 @@ namespace A2v10.Web.Mvc.Startup
 				IDataScripter scripter = new VueDataScripter(host, localizer);
 				ILogger logger = new WebLogger(host, dbContext);
 				IMessageService emailService = new IdentityEmailService(logger, host);
-                ISmsService smsService = new SmsService(dbContext, logger);
-                IUserStateManager userStateManager = new EmptyUserStateManager();
-                IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
+				ISmsService smsService = new SmsService(dbContext, logger);
+				IUserStateManager userStateManager = new EmptyUserStateManager();
+				IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
 				IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
-				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();
 
 
-                locator.RegisterService<IDbContext>(dbContext);
+				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
 				locator.RegisterService<IApplicationHost>(host);
 				locator.RegisterService<ILocalizer>(localizer);
@@ -67,10 +66,9 @@ namespace A2v10.Web.Mvc.Startup
 				locator.RegisterService<ISmsService>(smsService);
 				locator.RegisterService<IMessaging>(messaging);
 				locator.RegisterService<IWorkflowEngine>(workflowEngine);
-				locator.RegisterService<IScriptProcessor>(scriptProcessor);
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IUserLocale>(userLocale);
-                locator.RegisterService<IUserStateManager>(userStateManager);
+				locator.RegisterService<IUserStateManager>(userStateManager);
 				if (tokenProvider != null)
 					locator.RegisterService<ITokenProvider>(tokenProvider);
 

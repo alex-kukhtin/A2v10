@@ -105,10 +105,6 @@
       <Project>{7c10ee54-7b2c-4d76-b5de-802f26bd53ad}</Project>
       <Name>A2v10.Web.Identity</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Web\A2v10.Web.Script\A2v10.Web.Script.csproj">
-      <Project>{0b570ad7-c466-4434-a610-f0cac2813676}</Project>
-      <Name>A2v10.Web.Script</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="A2v10.Web.Mvc.nuspec">

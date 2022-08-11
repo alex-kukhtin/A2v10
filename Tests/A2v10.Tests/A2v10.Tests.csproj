@@ -115,10 +115,6 @@
       <Project>{478240AB-9772-4F70-8E31-BD0303CBF836}</Project>
       <Name>A2v10.Web.Mvc</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Web\A2v10.Web.Script\A2v10.Web.Script.csproj">
-      <Project>{0b570ad7-c466-4434-a610-f0cac2813676}</Project>
-      <Name>A2v10.Web.Script</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
