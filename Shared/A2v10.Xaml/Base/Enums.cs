@@ -242,6 +242,7 @@ namespace A2v10.Xaml
 		Bank,
 		BankAccount,
 		BankUah,
+		Barcode,
 		Bell,
 		BrandExcel,
 		Calc,

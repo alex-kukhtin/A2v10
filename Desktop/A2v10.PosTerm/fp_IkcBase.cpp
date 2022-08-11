@@ -1,4 +1,4 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+п»ї// Copyright В© 2015-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
 #include "posterm.h"
@@ -21,7 +21,7 @@
 #define MESSAGE_LENGTH 20
 
 __int64 makeCodeIks(__int64 art, __currency price) {
-	// max (6 byte) = 281 474 976 710 655
+	// max (6 byte) = 281В 474В 976В 710В 655
 	return (art % 10000000) * 10000000 + price.units();
 }
 
@@ -469,7 +469,7 @@ struct FPDISCOUNT_INFO
 	{
 		op = cmd; // 0 or 3 - discount % for the last row
 		value = (DWORD)prc;
-		value |= 0x04000000; // порядок + 2
+		value |= 0x04000000; // РїРѕСЂСЏРґРѕРє + 2
 		if (prc > 0)
 			value |= 0x80000000; // bit 31 - discount
 	}
@@ -520,6 +520,7 @@ struct REPNO_INFO
 	WORD from;
 	WORD to;
 	REPNO_INFO()
+		:from(0), to(0)
 	{
 		pwd[0] = 0;
 		pwd[1] = 0;
@@ -535,6 +536,11 @@ struct REPDATE_INFO
 	{
 		pwd[0] = 0;
 		pwd[1] = 0;
+		from[0] = 0;
+		from[1] = 0;
+		from[2] = 0;
+		to[0] = 0;
+		to[1] = 0;
 	}
 	void SetDateFrom(const tm& tm)
 	{
@@ -745,8 +751,8 @@ int CFiscalPrinter_IkcBase::ConvertText(const wchar_t* szText, char* text, int b
 {
 	UINT acp = 866;
 	std::wstring wstr(szText);
-	std::replace(wstr.begin(), wstr.end(), L'І', L'I');
-	std::replace(wstr.begin(), wstr.end(), L'і', L'i');
+	std::replace(wstr.begin(), wstr.end(), L'Р†', L'I');
+	std::replace(wstr.begin(), wstr.end(), L'С–', L'i');
 	if (wstr.length() > maxSize)
 		wstr.resize(maxSize);
 	// without '\0'!!!
@@ -857,7 +863,7 @@ long CFiscalPrinter_IkcBase::NullReceipt(bool bOpenCashDrawer)
 	TraceINFO(L"IKSBASE [%s]. NullReceipt({openCashDrawer=%s})", _id.c_str(), bool2string(bOpenCashDrawer));
 	CreateCommand(L"RESET_ORDER", FP_RESET_ORDER);
 	SendCommand();
-	Comment(L"НУЛЬОВИЙ ЧЕК", 27);
+	Comment(L"РќРЈР›Р¬РћР’РР™ Р§Р•Рљ", 27);
 	Payment(0, FP_PAYTYPE_CASH, true);
 	CheckPaperStatus();
 	RCP_NO rcp;
@@ -909,7 +915,7 @@ bool CFiscalPrinter_IkcBase::CancelCheck(bool& bClosed)
 	}
 	catch (EQUIPException e)
 	{
-		m_strError = e.GetError(); // без сообщения
+		m_strError = e.GetError(); // Р±РµР· СЃРѕРѕР±С‰РµРЅРёСЏ
 		return false;
 	}
 	return true;
@@ -978,7 +984,7 @@ bool CFiscalPrinter_IkcBase::CloseCheck(int sum, int get, CFiscalPrinter::PAY_MO
 		SendCommand();
 		CreateCommand(FP_CASH_DRAWER);
 		SendCommand();
-		GetLastCheckNo(0, true); // получим ID чека
+		GetLastCheckNo(0, true); // РїРѕР»СѓС‡РёРј ID С‡РµРєР°
 		m_bReturnCheck = false;
 	}
 	catch (EQUIPException ex)
@@ -1019,7 +1025,7 @@ void CFiscalPrinter_IkcBase::OpenReturnReceipt()
 	CreateCommand(L"RESET_ORDER", FP_RESET_ORDER);
 	SendCommand();
 	COMMENT_INFO ci = { 0 };
-	ci.len = ConvertText(L"ВИДАТКОВИЙ ЧЕК", ci.Text, 255, 27);
+	ci.len = ConvertText(L"Р’РР”РђРўРљРћР’РР™ Р§Р•Рљ", ci.Text, 255, 27);
 	ci.len |= 0x80; // high bit - return receipt
 	CreateCommand(L"COMMENT", FP_COMMENT, (BYTE*)&ci, ci.len + 1);
 	SendCommand();
@@ -1158,16 +1164,16 @@ bool CFiscalPrinter_IkcBase::PrintDiscount(LONG Type, LONG Value, const wchar_t*
 			throw EQUIPException(L"Invalid discount type. Valid is 0..3");
 		di.SetName(szDescr);
 		switch (Type) {
-		case 0: // % скидка на строку
+		case 0: // % СЃРєРёРґРєР° РЅР° СЃС‚СЂРѕРєСѓ
 			di.SetPercent(Value, 0);
 			break;
-		case 1: // сумма скидка на строку
+		case 1: // СЃСѓРјРјР° СЃРєРёРґРєР° РЅР° СЃС‚СЂРѕРєСѓ
 			di.SetSum(Value, 1);
 			break;
-		case 2: // % скидка на подытог
+		case 2: // % СЃРєРёРґРєР° РЅР° РїРѕРґС‹С‚РѕРі
 			di.SetPercent(Value, 2);
 			break;
-		case 3: // сумма скидка на строку
+		case 3: // СЃСѓРјРјР° СЃРєРёРґРєР° РЅР° СЃС‚СЂРѕРєСѓ
 			di.SetSum(Value, 3);
 			break;
 		}
@@ -1373,7 +1379,7 @@ JsonObject CFiscalPrinter_IkcBase::FillZReportInfo()
 	DAYREPORT_INFO_TAG_0 info_0 = { 0 };
 	DayReport_Tag(&info_0, 0, sizeof(DAYREPORT_INFO_TAG_0));
 
-	//DAYREPORT_INFO_TAG_1 info_1 = { 0 }; только для НАЛОЖЕННОГО НДС
+	//DAYREPORT_INFO_TAG_1 info_1 = { 0 }; С‚РѕР»СЊРєРѕ РґР»СЏ РќРђР›РћР–Р•РќРќРћР“Рћ РќР”РЎ
 	//DayReport_Tag(&info_1, 1, sizeof(DAYREPORT_INFO_TAG_1));
 
 	int coins = GetCash_();

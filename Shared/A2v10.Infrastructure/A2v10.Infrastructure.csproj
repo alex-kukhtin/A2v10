@@ -1,103 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>A2v10.Infrastructure</RootNamespace>
-    <AssemblyName>A2v10.Infrastructure</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.IO.Compression" />
-    <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AppInfo.cs" />
-    <Compile Include="AppReader\FileApplicationReader.cs" />
-    <Compile Include="AppReader\ZipApplicationReader.cs" />
-    <Compile Include="BaseLocalizer.cs" />
-    <Compile Include="ClrHelpers.cs" />
-    <Compile Include="CollectionHelpers.cs" />
-    <Compile Include="DynamicHelpers.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="IApiClrHandler.cs" />
-    <Compile Include="IApplicationReader.cs" />
-    <Compile Include="IControllerLocale.cs" />
-    <Compile Include="IHttpService.cs" />
-    <Compile Include="IJavaScriptEngine.cs" />
-    <Compile Include="ILicenseManager.cs" />
-    <Compile Include="IMessageAttachment.cs" />
-    <Compile Include="Implementation\NullMessaging.cs" />
-    <Compile Include="IPdfReportShim.cs" />
-    <Compile Include="IQueuedMessage.cs" />
-    <Compile Include="IBackgroundProcessing.cs" />
-    <Compile Include="IBackgroundTasksManager.cs" />
-    <Compile Include="IControllerProfiler.cs" />
-    <Compile Include="IControllerTenant.cs" />
-    <Compile Include="IExternalLoginManager.cs" />
-    <Compile Include="IInvokeTarget.cs" />
-    <Compile Include="ILogger.cs" />
-    <Compile Include="IMessageService.cs" />
-    <Compile Include="Implementation\NullLocalizer.cs" />
-    <Compile Include="Implementation\NullProfiler.cs" />
-    <Compile Include="IRequestInfo.cs" />
-    <Compile Include="IScriptProcessor.cs" />
-    <Compile Include="ISmsService.cs" />
-    <Compile Include="ITypeChecker.cs" />
-    <Compile Include="IUserId.cs" />
-    <Compile Include="IUserLocale.cs" />
-    <Compile Include="IUserStateManager.cs" />
-    <Compile Include="IApplicationHost.cs" />
-    <Compile Include="ILocalizer.cs" />
-    <Compile Include="IMessage.cs" />
-    <Compile Include="IMessaging.cs" />
-    <Compile Include="IModelHandler.cs" />
-    <Compile Include="IMessageAddress.cs" />
-    <Compile Include="IProfiler.cs" />
-    <Compile Include="IRenderer.cs" />
-    <Compile Include="IScriptContext.cs" />
-    <Compile Include="IServiceLocator.cs" />
-    <Compile Include="ISupportStopService.cs" />
-    <Compile Include="IWorkflowEngine.cs" />
-    <Compile Include="MimeTypes.cs" />
-    <Compile Include="PathHelpers.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleTypes.cs" />
-    <Compile Include="StringHelpers.cs" />
-    <Compile Include="Utilities\Parser.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
-      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
-      <Name>A2v10.Data.Interfaces</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netframework4.8</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>disable</Nullable>
+		<Version>10.0.7875</Version>
+		<Product>A2v10</Product>
+		<Authors>Oleksandr Kukthin</Authors>
+		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>
+		<Description>A2v10 Platform Infrastructure</Description>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>A2v10</PackageTags>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="System.IO.Compression" />
+	  <Reference Include="System.Net.Http" />
+	</ItemGroup>
 </Project>
+

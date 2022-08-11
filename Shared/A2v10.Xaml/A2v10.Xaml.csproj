@@ -1,238 +1,41 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>A2v10.Xaml</RootNamespace>
-    <AssemblyName>A2v10.Xaml</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Base\AttachedHelpers.cs" />
-    <Compile Include="Base\Base.cs" />
-    <Compile Include="Base\Bind.cs" />
-    <Compile Include="Base\BindBase.cs" />
-    <Compile Include="Base\BindCmd.cs" />
-    <Compile Include="Base\BindImpl.cs" />
-    <Compile Include="Base\Command.cs" />
-    <Compile Include="Base\Confirm.cs" />
-    <Compile Include="Base\EnumExtensions.cs" />
-    <Compile Include="Base\Enums.cs" />
-    <Compile Include="Base\Filter.cs" />
-    <Compile Include="Base\FilterDescription.cs" />
-    <Compile Include="Base\GroupDescription.cs" />
-    <Compile Include="Base\IHasWrapper.cs" />
-    <Compile Include="Base\IJavaScriptSource.cs" />
-    <Compile Include="Base\ISupportBinding.cs" />
-    <Compile Include="Base\ISupportTwoPhaseRendering.cs" />
-    <Compile Include="Base\ITableControl.cs" />
-    <Compile Include="Base\Setter.cs" />
-    <Compile Include="Base\RenderContext.cs" />
-    <Compile Include="Base\GapSize.cs" />
-    <Compile Include="Base\Size.cs" />
-    <Compile Include="Base\SortDescription.cs" />
-    <Compile Include="Base\Source.cs" />
-    <Compile Include="Base\StaticResource.cs" />
-    <Compile Include="Base\Style.cs" />
-    <Compile Include="Base\StyleResource.cs" />
-    <Compile Include="Base\Styles.cs" />
-    <Compile Include="Base\TagBuilder.cs" />
-    <Compile Include="Base\Thickness.cs" />
-    <Compile Include="Base\Toast.cs" />
-    <Compile Include="Base\UiContentElement.cs" />
-    <Compile Include="Base\UIElement.cs" />
-    <Compile Include="Base\UIElementBase.cs" />
-    <Compile Include="Base\UIElementCollection.cs" />
-    <Compile Include="Base\Length.cs" />
-    <Compile Include="Base\XamlElement.cs" />
-    <Compile Include="Base\XamlException.cs" />
-    <Compile Include="Components\CollectionView.cs" />
-    <Compile Include="Base\Accel.cs" />
-    <Compile Include="Components\Lazy.cs" />
-    <Compile Include="Components\Slot.cs" />
-    <Compile Include="Components\Switch.cs" />
-    <Compile Include="Components\Validator.cs" />
-    <Compile Include="Controls\Alert.cs" />
-    <Compile Include="Controls\Button.cs" />
-    <Compile Include="Controls\ChatItem.cs" />
-    <Compile Include="Controls\CheckBox.cs" />
-    <Compile Include="Controls\CheckBoxBase.cs" />
-    <Compile Include="Controls\Code.cs" />
-    <Compile Include="Controls\ComboBox.cs" />
-    <Compile Include="Controls\CommandControl.cs" />
-    <Compile Include="Controls\ContentControl.cs" />
-    <Compile Include="Controls\Control.cs" />
-    <Compile Include="Controls\DataGrid.cs" />
-    <Compile Include="Controls\DataGridColumn.cs" />
-    <Compile Include="Controls\DataGridRowDetails.cs" />
-    <Compile Include="Controls\DatePicker.cs" />
-    <Compile Include="Controls\EmptyPanel.cs" />
-    <Compile Include="Controls\GridDivider.cs" />
-    <Compile Include="Controls\ListItemSimple.cs" />
-    <Compile Include="Controls\PeriodPicker.cs" />
-    <Compile Include="Controls\StateCard.cs" />
-    <Compile Include="Controls\TabButton.cs" />
-    <Compile Include="Controls\TimePicker.cs" />
-    <Compile Include="Controls\ValidatorLabel.cs" />
-    <Compile Include="Drawing\ActionButton.cs" />
-    <Compile Include="Drawing\Card.cs" />
-    <Compile Include="Drawing\Diagram.cs" />
-    <Compile Include="Drawing\DrawingElement.cs" />
-    <Compile Include="Drawing\DrawingElementCollection.cs" />
-    <Compile Include="Drawing\Extensions.cs" />
-    <Compile Include="Drawing\Interfaces.cs" />
-    <Compile Include="Drawing\Enums.cs" />
-    <Compile Include="Drawing\Group.cs" />
-    <Compile Include="Drawing\Line.cs" />
-    <Compile Include="Drawing\Path.cs" />
-    <Compile Include="Drawing\Size.cs" />
-    <Compile Include="Drawing\Point.cs" />
-    <Compile Include="Drawing\Rectangle.cs" />
-    <Compile Include="Interfaces\IRootContainer.cs" />
-    <Compile Include="Interfaces\IXamlElement.cs" />
-    <Compile Include="Layouts\Flex.cs" />
-    <Compile Include="Layouts\FlexList.cs" />
-    <Compile Include="Layouts\Card.cs" />
-    <Compile Include="Layouts\InlineDialog.cs" />
-    <Compile Include="Layouts\PartialBlock.cs" />
-    <Compile Include="Layouts\TabBar.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Sheets\ISheetCell.cs" />
-    <Compile Include="Sheets\PrintPage.cs" />
-    <Compile Include="Sheets\SheetAutoGenerate.cs" />
-    <Compile Include="Sheets\SheetCellGroup.cs" />
-    <Compile Include="Sheets\SheetColumnGroup.cs" />
-    <Compile Include="Sheets\SheetGenerator.cs" />
-    <Compile Include="Sheets\SheetPage.cs" />
-    <Compile Include="Text\SpanSum.cs" />
-    <Compile Include="Text\StaticImage.cs" />
-    <Compile Include="Controls\TableMarkerCell.cs" />
-    <Compile Include="Controls\UploadFile.cs" />
-    <Compile Include="Controls\UploadFileSimple.cs" />
-    <Compile Include="Layouts\EUSignFrame.cs" />
-    <Compile Include="Layouts\IFrame.cs" />
-    <Compile Include="Layouts\CommandBar.cs" />
-    <Compile Include="Layouts\GridGroup.cs" />
-    <Compile Include="Layouts\Wizard.cs" />
-    <Compile Include="Layouts\DropDownMegaMenu.cs" />
-    <Compile Include="Layouts\FullHeightPanel.cs" />
-    <Compile Include="Layouts\Include.cs" />
-    <Compile Include="Layouts\Partial.cs" />
-    <Compile Include="Layouts\WizardPage.cs" />
-    <Compile Include="Text\Paragraph.cs" />
-    <Compile Include="Text\Badge.cs" />
-    <Compile Include="Text\Html.cs" />
-    <Compile Include="Text\TagLabel.cs" />
-    <Compile Include="Layouts\DropDownMenu.cs" />
-    <Compile Include="Controls\Graphics.cs" />
-    <Compile Include="Controls\Image.cs" />
-    <Compile Include="Controls\ImageList.cs" />
-    <Compile Include="Controls\Label.cs" />
-    <Compile Include="Controls\ListItem.cs" />
-    <Compile Include="Controls\Static.cs" />
-    <Compile Include="Layouts\FieldSet.cs" />
-    <Compile Include="Layouts\Group.cs" />
-    <Compile Include="Controls\Header.cs" />
-    <Compile Include="Controls\PropertyGrid.cs" />
-    <Compile Include="Controls\PropertyGridItem.cs" />
-    <Compile Include="Controls\Radio.cs" />
-    <Compile Include="Controls\Selector.cs" />
-    <Compile Include="Controls\TableColumn.cs" />
-    <Compile Include="Controls\TreeView.cs" />
-    <Compile Include="Layouts\Popup.cs" />
-    <Compile Include="Layouts\StackPanel.cs" />
-    <Compile Include="Sheets\Sheet.cs" />
-    <Compile Include="Sheets\SheetCell.cs" />
-    <Compile Include="Sheets\SheetColumn.cs" />
-    <Compile Include="Sheets\SheetGroupCell.cs" />
-    <Compile Include="Sheets\SheetRow.cs" />
-    <Compile Include="Sheets\SheetSection.cs" />
-    <Compile Include="Sheets\SheetTreeSection.cs" />
-    <Compile Include="Text\Break.cs" />
-    <Compile Include="Text\Hyperlink.cs" />
-    <Compile Include="Controls\List.cs" />
-    <Compile Include="Controls\MenuItem.cs" />
-    <Compile Include="Controls\Pager.cs" />
-    <Compile Include="Layouts\Repeater.cs" />
-    <Compile Include="Controls\Separator.cs" />
-    <Compile Include="Layouts\Tab.cs" />
-    <Compile Include="Controls\TableCell.cs" />
-    <Compile Include="Controls\TableRow.cs" />
-    <Compile Include="Layouts\TabPanel.cs" />
-    <Compile Include="Controls\TextBox.cs" />
-    <Compile Include="Controls\ValuedControl.cs" />
-    <Compile Include="Layouts\Block.cs" />
-    <Compile Include="Layouts\Panel.cs" />
-    <Compile Include="Layouts\RootContainer.cs" />
-    <Compile Include="Layouts\Container.cs" />
-    <Compile Include="Layouts\Dialog.cs" />
-    <Compile Include="Layouts\Grid.cs" />
-    <Compile Include="Layouts\Page.cs" />
-    <Compile Include="Layouts\Splitter.cs" />
-    <Compile Include="Layouts\Taskpad.cs" />
-    <Compile Include="Layouts\Toolbar.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Controls\Table.cs" />
-    <Compile Include="Text\SpanIcon.cs" />
-    <Compile Include="Text\Inline.cs" />
-    <Compile Include="Text\InlineCollection.cs" />
-    <Compile Include="Text\Line.cs" />
-    <Compile Include="Text\Popover.cs" />
-    <Compile Include="Text\Span.cs" />
-    <Compile Include="Text\Text.cs" />
-    <Compile Include="XamlRenderer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
-      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
-      <Name>A2v10.Data.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
-      <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
-      <Name>A2v10.Infrastructure</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Drawing\Resources\svgdefs.html" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netframework4.8</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Version>10.0.7875</Version>
+		<Product>A2v10</Product>
+		<Authors>Oleksandr Kukthin</Authors>
+		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>
+		<Description>A2v10 Platfrom Interop</Description>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>A2v10</PackageTags>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj" />
+	  <ProjectReference Include="..\A2v10.Infrastructure\A2v10.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="System.Xaml" />
+	</ItemGroup>
+
 </Project>
+

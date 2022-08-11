@@ -1,4 +1,4 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+п»ї// Copyright В© 2015-2020 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
 #include "posterm.h"
@@ -123,7 +123,7 @@ bool CFiscalPrinter_DatecsKrypton::PeriodicalByNo(BOOL Short, LONG From, LONG To
 
 		CreateCommand(FPCMD_CLOSEFISCAL, L"000000;0;");
 		SendCommand();
-		GetPrinterLastCheckNo(m_nLastCheckNo, true); // получим ID чека
+		GetPrinterLastCheckNo(m_nLastCheckNo, true); // РїРѕР»СѓС‡РёРј ID С‡РµРєР°
 	}
 	catch (EQUIPException ex)
 	{
@@ -154,7 +154,7 @@ bool CFiscalPrinter_DatecsKrypton::PeriodicalByDate(BOOL Short, COleDateTime Fro
 
 		CreateCommand(FPCMD_CLOSEFISCAL, L"000000;0;");
 		SendCommand();
-		GetPrinterLastCheckNo(m_nLastCheckNo, true); // получим ID чека
+		GetPrinterLastCheckNo(m_nLastCheckNo, true); // РїРѕР»СѓС‡РёРј ID С‡РµРєР°
 	}
 	catch (EQUIPException ex)
 	{
@@ -300,9 +300,9 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 
 		if (IS_EMULATION()) {
 			if (i == 0)
-				info = "RCV:0000;83;Готівка;";
+				info = "RCV:0000;83;Р“РѕС‚С–РІРєР°;";
 			else if (i == 1)
-				info = "RCV:0000;03;КАРТКА;";
+				info = "RCV:0000;03;РљРђР РўРљРђ;";
 		}
 
 
@@ -311,13 +311,13 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 		if (items.size() > 2) {
 			std::string payName = items[2];
 			toUpperUA(payName);
-			std::string xxx("готівка картка");
+			std::string xxx("РіРѕС‚С–РІРєР° РєР°СЂС‚РєР°");
 			toUpperUA(xxx);
-			if (payName == "ГОТІВКА" || payName == "НАЛИЧНЫЕ" || payName == "ГРОШІ") {
+			if (payName == "Р“РћРўР†Р’РљРђ" || payName == "РќРђР›РР§РќР«Р•" || payName == "Р“Р РћРЁР†") {
 				_payModeCash = L'0' + i;
 				bCashSet = true;
 			}
-			else if (payName == "КАРТКА" || payName == "КАРТА" || payName == "КАРТОЧКА") {
+			else if (payName == "РљРђР РўРљРђ" || payName == "РљРђР РўРђ" || payName == "РљРђР РўРћР§РљРђ") {
 				_payModeCard = L'0' + i;
 				std::string flags = items[1];
 				unsigned int val = 0;
@@ -331,10 +331,10 @@ void CFiscalPrinter_DatecsKrypton::GetPrinterPayModes()
 	}
 	// TODO: LOCALIZE MESSAGES
 	if (!bCardSet)
-		throw EQUIPException(L"Фіскальний реєстратор.\nНе знайдено форму оплати КАРТКА (КАРТОЧКА, КАРТА).\nПерепрограмуйте реєстратор.");
+		throw EQUIPException(L"Р¤С–СЃРєР°Р»СЊРЅРёР№ СЂРµС”СЃС‚СЂР°С‚РѕСЂ.\nРќРµ Р·РЅР°Р№РґРµРЅРѕ С„РѕСЂРјСѓ РѕРїР»Р°С‚Рё РљРђР РўРљРђ (РљРђР РўРћР§РљРђ, РљРђР РўРђ).\nРџРµСЂРµРїСЂРѕРіСЂР°РјСѓР№С‚Рµ СЂРµС”СЃС‚СЂР°С‚РѕСЂ.");
 
 	if ((dwCardFlags & 0x02) == 0)
-		throw EQUIPException(L"Фіскальний реєстратор.\nДля форми оплати КАРТКА заборонені повернення.\nПерепрограмуйте реєстратор.");
+		throw EQUIPException(L"Р¤С–СЃРєР°Р»СЊРЅРёР№ СЂРµС”СЃС‚СЂР°С‚РѕСЂ.\nР”Р»СЏ С„РѕСЂРјРё РѕРїР»Р°С‚Рё РљРђР РўРљРђ Р·Р°Р±РѕСЂРѕРЅРµРЅС– РїРѕРІРµСЂРЅРµРЅРЅСЏ.\nРџРµСЂРµРїСЂРѕРіСЂР°РјСѓР№С‚Рµ СЂРµС”СЃС‚СЂР°С‚РѕСЂ.");
 
 	TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
 	TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
@@ -450,14 +450,14 @@ void CFiscalPrinter_DatecsKrypton::Init()
 	RECEIPT_STATUS cs = GetReceiptStatus();
 	if (cs == CHS_NORMAL)
 	{
-		// CheckPrinterSession(); 24 часа Z-отчета?
+		// CheckPrinterSession(); 24 С‡Р°СЃР° Z-РѕС‚С‡РµС‚Р°?
 		//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
 		return;
 	}
 
 	CancelOrCloseReceipt();
 	m_nLastReceiptNo = GetPrinterLastReceiptNo(); // again
-	// CheckPrinterSession(); 24 часа Z-отчета?
+	// CheckPrinterSession(); 24 С‡Р°СЃР° Z-РѕС‚С‡РµС‚Р°?
 	//TODO::CHECK_INFO::TestFix(termId, m_nLastCheckNo);
 	TraceINFO(L"  Pay mode cash. char: %C", _payModeCash);
 	TraceINFO(L"  Pay mode card. char: %C", _payModeCard);
@@ -519,7 +519,7 @@ bool CFiscalPrinter_DatecsKrypton::CancelReceiptCommand()
 	try
 	{
 		if (cs == CHS_NORMAL) {
-			s = L"Нет открытых чеков";
+			s = L"РќРµС‚ РѕС‚РєСЂС‹С‚С‹С… С‡РµРєРѕРІ";
 			if (m_bBigMsg)
 				CMessageBox::DoMessageBox(s, NULL, MB_ICONHAND);
 			else
@@ -529,7 +529,7 @@ bool CFiscalPrinter_DatecsKrypton::CancelReceiptCommand()
 		else if (cs == CHS_NF_OPENED) {
 			CreateCommand(FPCMD_CLOSEFISCAL, L"000000;0;");
 			SendCommand();
-			s = L"Печать чека завершена";
+			s = L"РџРµС‡Р°С‚СЊ С‡РµРєР° Р·Р°РІРµСЂС€РµРЅР°";
 			if (m_bBigMsg)
 				CMessageBox::DoMessageBox(s, NULL, MB_ICONHAND);
 			else
@@ -538,7 +538,7 @@ bool CFiscalPrinter_DatecsKrypton::CancelReceiptCommand()
 		}
 		CreateCommand(FPCMD_CANCELRECEIPT, L"000000;0;");
 		SendCommand();
-		s = L"Чек успешно аннулирован";
+		s = L"Р§РµРє СѓСЃРїРµС€РЅРѕ Р°РЅРЅСѓР»РёСЂРѕРІР°РЅ";
 		if (m_bBigMsg)
 			CMessageBox::DoMessageBox(s, NULL, MB_ICONHAND);
 		else
@@ -653,7 +653,7 @@ void CFiscalPrinter_DatecsKrypton::DisplayRow(int nRow, LPCTSTR szString, TEXT_A
 	txt.Replace(L'\t', L' '); // tab is not supported
 	txt += CString(L' ', 20);
 	if (txt.GetLength() > 20)
-		txt = txt.Left(20); // не более 20 символов
+		txt = txt.Left(20); // РЅРµ Р±РѕР»РµРµ 20 СЃРёРјРІРѕР»РѕРІ
 	int line = nRow > 1 ? 2 : 1;
 	try
 	{
@@ -705,18 +705,18 @@ LONG CFiscalPrinter_DatecsKrypton::GetCurrentZReportNo(bool bFromPrinter /*= fal
 bool CFiscalPrinter_DatecsKrypton::CheckPaymentSum(int get)
 {
 	/*
-	Защита от неправильных сумм по артикулам.
-	Если полученная сумма меньше суммы по чеку, то принтер "зависнет"
+	Р—Р°С‰РёС‚Р° РѕС‚ РЅРµРїСЂР°РІРёР»СЊРЅС‹С… СЃСѓРјРј РїРѕ Р°СЂС‚РёРєСѓР»Р°Рј.
+	Р•СЃР»Рё РїРѕР»СѓС‡РµРЅРЅР°СЏ СЃСѓРјРјР° РјРµРЅСЊС€Рµ СЃСѓРјРјС‹ РїРѕ С‡РµРєСѓ, С‚Рѕ РїСЂРёРЅС‚РµСЂ "Р·Р°РІРёСЃРЅРµС‚"
 	*/
 	wchar_t buff[MAX_COMMAND_LEN];
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s3;1;", EMPTY_PARAM); // источник 3, значение  1 = сумма по чеку
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"%s3;1;", EMPTY_PARAM); // РёСЃС‚РѕС‡РЅРёРє 3, Р·РЅР°С‡РµРЅРёРµ  1 = СЃСѓРјРјР° РїРѕ С‡РµРєСѓ
 	CreateCommand(L"GETFISCTRANS", FPCMD_GETFISCTRANS, buff);
 	SendCommand();
 	std::string info((char*)m_data);
 	TraceINFO(L"\t\tRCV:%s", A2W(info.c_str()).c_str());
 	/*
 	// 0000;sum
-	// sum - сумма по чеку (если она БОЛЬШЕ get, то ЗАПРЕТ оплаты и анулирование чека
+	// sum - СЃСѓРјРјР° РїРѕ С‡РµРєСѓ (РµСЃР»Рё РѕРЅР° Р‘РћР›Р¬РЁР• get, С‚Рѕ Р—РђРџР Р•Рў РѕРїР»Р°С‚С‹ Рё Р°РЅСѓР»РёСЂРѕРІР°РЅРёРµ С‡РµРєР°
 	CString r;
 	if (AfxExtractSubString(r, info, 1, L';'))
 	{
@@ -762,10 +762,10 @@ bool CFiscalPrinter_DatecsKrypton::CloseCheck(int sum, int get, CFiscalPrinter::
 	{
 		if (!CheckPaymentSum(sum))
 		{
-			// отменяем ЧЕК
+			// РѕС‚РјРµРЅСЏРµРј Р§Р•Рљ
 			CreateCommand(FPCMD_CANCELRECEIPT, L"000000;0;");
 			SendCommand();
-			throw EQUIPException(L"Внтутренняя ошибка фискального регистратора\nТекущий чек анулирован.\nОбратитесь к администратору системы.");
+			throw EQUIPException(L"Р’РЅС‚СѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° С„РёСЃРєР°Р»СЊРЅРѕРіРѕ СЂРµРіРёСЃС‚СЂР°С‚РѕСЂР°\nРўРµРєСѓС‰РёР№ С‡РµРє Р°РЅСѓР»РёСЂРѕРІР°РЅ.\nРћР±СЂР°С‚РёС‚РµСЃСЊ Рє Р°РґРјРёРЅРёСЃС‚СЂР°С‚РѕСЂСѓ СЃРёСЃС‚РµРјС‹.");
 			return false;
 		}
 		CString payinfo;
@@ -1012,14 +1012,14 @@ void CFiscalPrinter_DatecsKrypton::PrintReceiptItem(const RECEIPT_ITEM& item)
 		TraceINFO(L"\t\tRCV:%s", A2W(result.c_str()).c_str());
 	}
 	//void CFiscalPrinter_DatecsKrypton::PrintItem(int code, int qty, double fQty, int price, int dscPrc, int dscSum, bool bIsWeight)
-	//ПЕЧАТЬ ДРОБНОГО КОЛИЧЕСТВА!!!!
+	//РџР•Р§РђРўР¬ Р”Р РћР‘РќРћР“Рћ РљРћР›РР§Р•РЎРўР’Рђ!!!!
 	/*
 	CString s;
 	s.Format(L"%s%ld;%#.03f;%d.%02d;",
 		EMPTY_PARAM, (long)code, (double)fQty, price / 100, price % 100);
 	/*
-	1. Хорошо бы знать, весовой товар, или нет
-	2. При печати простого чека bIsWeight - правильный, а возвратный - нет!
+	1. РҐРѕСЂРѕС€Рѕ Р±С‹ Р·РЅР°С‚СЊ, РІРµСЃРѕРІРѕР№ С‚РѕРІР°СЂ, РёР»Рё РЅРµС‚
+	2. РџСЂРё РїРµС‡Р°С‚Рё РїСЂРѕСЃС‚РѕРіРѕ С‡РµРєР° bIsWeight - РїСЂР°РІРёР»СЊРЅС‹Р№, Р° РІРѕР·РІСЂР°С‚РЅС‹Р№ - РЅРµС‚!
 	if (bIsWeight)
 		s.Format(L"%s%ld;%#.03f;%d.%02d;",
 			EMPTY_PARAM, (long) code, (double)fQty, price / 100, price % 100);
@@ -1160,34 +1160,34 @@ std::wstring CFiscalPrinter_DatecsKrypton::GetLastErrorS()
 		return L"";
 
 	if (m_dwError == err_NOT_CONNECTED)
-		return L"Невозможно подключиться к фискальному регистратору. Проверьте скорость порта.";
+		return L"РќРµРІРѕР·РјРѕР¶РЅРѕ РїРѕРґРєР»СЋС‡РёС‚СЊСЃСЏ Рє С„РёСЃРєР°Р»СЊРЅРѕРјСѓ СЂРµРіРёСЃС‚СЂР°С‚РѕСЂСѓ. РџСЂРѕРІРµСЂСЊС‚Рµ СЃРєРѕСЂРѕСЃС‚СЊ РїРѕСЂС‚Р°.";
 	else if (m_dwError == 0x0002)
 		return FP_E_INVALID_CODE;
 	else if (m_dwError == 0x000b)
-		return L"Ошибка состояния чека";
+		return L"РћС€РёР±РєР° СЃРѕСЃС‚РѕСЏРЅРёСЏ С‡РµРєР°";
 	else if (m_dwError == 0x0405)
-		return L"Переход через сутки. Сделайте Z-отчет";
+		return L"РџРµСЂРµС…РѕРґ С‡РµСЂРµР· СЃСѓС‚РєРё. РЎРґРµР»Р°Р№С‚Рµ Z-РѕС‚С‡РµС‚";
 	else if (m_dwError == 0x0705)
-		return L"Фискальный принтер не фискализирован.\nВыполнить операцию невозможно";
+		return L"Р¤РёСЃРєР°Р»СЊРЅС‹Р№ РїСЂРёРЅС‚РµСЂ РЅРµ С„РёСЃРєР°Р»РёР·РёСЂРѕРІР°РЅ.\nР’С‹РїРѕР»РЅРёС‚СЊ РѕРїРµСЂР°С†РёСЋ РЅРµРІРѕР·РјРѕР¶РЅРѕ";
 	else if (m_dwError == 0x0905)
-		return L"С начала смены прошло более 24-х часов. Сделайте Z-отчет";
+		return L"РЎ РЅР°С‡Р°Р»Р° СЃРјРµРЅС‹ РїСЂРѕС€Р»Рѕ Р±РѕР»РµРµ 24-С… С‡Р°СЃРѕРІ. РЎРґРµР»Р°Р№С‚Рµ Z-РѕС‚С‡РµС‚";
 	else if (m_dwError == 0x0A05)
-		return L"Необходимо скорректировать время";
+		return L"РќРµРѕР±С…РѕРґРёРјРѕ СЃРєРѕСЂСЂРµРєС‚РёСЂРѕРІР°С‚СЊ РІСЂРµРјСЏ";
 	else if (m_dwError == 0x080B)
-		return L"В касі недостатньо грошових коштів";
+		return L"Р’ РєР°СЃС– РЅРµРґРѕСЃС‚Р°С‚РЅСЊРѕ РіСЂРѕС€РѕРІРёС… РєРѕС€С‚С–РІ";
 	else if (m_dwError == 0x070B)
-		return L"Копия заданных чеков недоступна";
+		return L"РљРѕРїРёСЏ Р·Р°РґР°РЅРЅС‹С… С‡РµРєРѕРІ РЅРµРґРѕСЃС‚СѓРїРЅР°";
 	else if (m_dwError == 0x0F05)
 		return FP_E_DOCS_NOT_SENT;
 	else if ((m_dwError & 0xFF03) != 0) {
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Ошибка в команде (формат аргумента %d)", (int)(m_dwError & 0xFF00 >> 8));
+		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"РћС€РёР±РєР° РІ РєРѕРјР°РЅРґРµ (С„РѕСЂРјР°С‚ Р°СЂРіСѓРјРµРЅС‚Р° %d)", (int)(m_dwError & 0xFF00 >> 8));
 		return buff;
 	}
 	else if ((m_dwError & 0xFF04) != 0) {
-		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Ошибка в команде - (значение аргумента %d)", (int)(m_dwError & 0xFF00 >> 8));
+		swprintf_s(buff, MAX_COMMAND_LEN - 1, L"РћС€РёР±РєР° РІ РєРѕРјР°РЅРґРµ - (Р·РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р° %d)", (int)(m_dwError & 0xFF00 >> 8));
 		return buff;
 	}
-	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"Общая ошибка принтера: 0x%x", (int)m_dwError);
+	swprintf_s(buff, MAX_COMMAND_LEN - 1, L"РћР±С‰Р°СЏ РѕС€РёР±РєР° РїСЂРёРЅС‚РµСЂР°: 0x%x", (int)m_dwError);
 	return buff;
 }
 
