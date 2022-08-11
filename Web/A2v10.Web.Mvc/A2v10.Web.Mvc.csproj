@@ -1,348 +1,73 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{478240AB-9772-4F70-8E31-BD0303CBF836}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>A2v10.Web.Mvc</RootNamespace>
-    <AssemblyName>A2v10.Web.Mvc</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=6.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.IdentityModel.Abstractions.6.21.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.JsonWebTokens, Version=6.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.IdentityModel.JsonWebTokens.6.21.0\lib\net472\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Logging, Version=6.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.IdentityModel.Logging.6.21.0\lib\net472\Microsoft.IdentityModel.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Protocols, Version=6.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.IdentityModel.Protocols.6.21.0\lib\net472\Microsoft.IdentityModel.Protocols.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect, Version=6.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.IdentityModel.Protocols.OpenIdConnect.6.21.0\lib\net472\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.IdentityModel.Tokens, Version=6.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.IdentityModel.Tokens.6.21.0\lib\net472\Microsoft.IdentityModel.Tokens.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.4.2.2\lib\net45\Microsoft.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.4.2.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Security.4.2.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Security.Cookies.4.2.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Security.OAuth.4.2.2\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.OpenIdConnect, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Owin.Security.OpenIdConnect.4.2.2\lib\net45\Microsoft.Owin.Security.OpenIdConnect.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.2.0.1\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.IdentityModel" />
-    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IdentityModel.Tokens.Jwt.6.21.0\lib\net472\System.IdentityModel.Tokens.Jwt.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Controllers\AccountController2.cs" />
-    <Compile Include="Controllers\ApiOauth2Controller.cs" />
-    <Compile Include="Controllers\ApiV2Controller.cs" />
-    <Compile Include="Controllers\AttachmentController.cs" />
-    <Compile Include="Controllers\SiteController.cs" />
-    <Compile Include="Controllers\StaticController.cs" />
-    <Compile Include="Controllers\ApiController.cs" />
-    <Compile Include="Controllers\AppLinkController.cs" />
-    <Compile Include="Controllers\ReportController.cs" />
-    <Compile Include="Extensions\HtmlExtensions.cs" />
-    <Compile Include="Extensions\RequestExtensions.cs" />
-    <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
-    <Compile Include="Hooks\ClrApiHandlerBase.cs" />
-    <Compile Include="Hooks\CompanyModels.cs" />
-    <Compile Include="Hooks\LoginTenantUserHandler.cs" />
-    <Compile Include="Hooks\CreateTenantUserHandler.cs" />
-    <Compile Include="Hooks\GenerateApiKey.cs" />
-    <Compile Include="Hooks\GetOAuthUrl.cs" />
-    <Compile Include="Hooks\CreateTenantCompanyHandler.cs" />
-    <Compile Include="Hooks\UpdateTenantCompanyHandler.cs" />
-    <Compile Include="Hooks\DeleteTenantCompanyHandler.cs" />
-    <Compile Include="Hooks\DeleteTenantUserHandler.cs" />
-    <Compile Include="Hooks\CreateTenantHandler.cs" />
-    <Compile Include="Hooks\UpdateTenantUserHandler.cs" />
-    <Compile Include="Hooks\CreateUserHandler.cs" />
-    <Compile Include="Hooks\SetPasswordHandler.cs" />
-    <Compile Include="Hooks\SetPersonNameHandler.cs" />
-    <Compile Include="Hooks\SetPhoneNumberHandler.cs" />
-    <Compile Include="OAuth2\ApiV2User.cs" />
-    <Compile Include="OAuth2\ConfigSection.cs" />
-    <Compile Include="OAuth2\Encrypt.cs" />
-    <Compile Include="OAuth2\OAuth2Provider.cs" />
-    <Compile Include="Start\RazorGeneratorMvcStart.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ShellController.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Start\RouteConfig.cs" />
-    <Compile Include="Start\Startup.Auth.cs" />
-    <Compile Include="Start\Startup.cs" />
-    <Compile Include="Start\Startup.Services.cs" />
-    <Compile Include="Start\CacheForStaticFiles.cs" />
-    <Compile Include="Start\WebApplication.cs" />
-    <Compile Include="Start\FilterConfig.cs" />
-    <Compile Include="Start\WebTokenProvider.cs" />
-    <Compile Include="Views\Account\SendCode.generated.cs">
-      <DependentUpon>SendCode.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Account\VerifyCode.generated.cs">
-      <DependentUpon>VerifyCode.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Manage\AddPhoneNumber.generated.cs">
-      <DependentUpon>AddPhoneNumber.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Manage\Index.generated.cs">
-      <DependentUpon>Index.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Manage\ManageLogins.generated.cs">
-      <DependentUpon>ManageLogins.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Manage\VerifyPhoneNumber.generated.cs">
-      <DependentUpon>VerifyPhoneNumber.cshtml</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Views\Shared\Error.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Error.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\Exception.generated.cs">
-      <DependentUpon>Exception.cshtml</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Views\Shared\Lockout.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Lockout.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Shared\_Layout.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>_Layout.cshtml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\_ViewStart.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>_ViewStart.cshtml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-    <Content Include="Views\Account\SendCode.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>SendCode.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Account\VerifyCode.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>VerifyCode.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Manage\Index.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Index.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Manage\ManageLogins.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>ManageLogins.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>VerifyPhoneNumber.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Shared\Lockout.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Lockout.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Shared\Error.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Error.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\Shared\_Layout.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>_Layout.generated.cs</LastGenOutput>
-    </Content>
-    <Content Include="Views\_ViewStart.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>_ViewStart.generated.cs</LastGenOutput>
-    </Content>
-    <None Include="Views\Manage\AddPhoneNumber.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>AddPhoneNumber.generated.cs</LastGenOutput>
-    </None>
-    <Content Include="Views\Shared\Exception.cshtml">
-      <Generator>RazorGenerator</Generator>
-      <LastGenOutput>Exception.generated.cs</LastGenOutput>
-    </Content>
-    <None Include="Views\Web.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
-      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
-      <Name>A2v10.Data.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Providers\A2v10.Data.Providers.csproj">
-      <Project>{1562EE09-1FD2-41F6-B575-5BE0343196A4}</Project>
-      <Name>A2v10.Data.Providers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data\A2v10.Data.csproj">
-      <Project>{3cefba76-9ed3-40b4-a844-cc17d960202f}</Project>
-      <Name>A2v10.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\A2v10.Javascript\A2v10.Javascript.csproj">
-      <Project>{8900D48C-D909-4EBF-8AFE-E2F152972BBF}</Project>
-      <Name>A2v10.Javascript</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
-      <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
-      <Name>A2v10.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Interop\A2v10.Interop.csproj">
-      <Project>{39661034-47AA-4BDF-9B19-C835B614B545}</Project>
-      <Name>A2v10.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Messaging\A2v10.Messaging.csproj">
-      <Project>{d83666a0-acf5-47e6-94cf-732dddabbea2}</Project>
-      <Name>A2v10.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Reports\A2v10.Reports.csproj">
-      <Project>{0562c1fe-b4b7-4ee2-bf83-1808ebd63d05}</Project>
-      <Name>A2v10.Reports</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
-      <Project>{4abb9b68-f32c-4262-8aff-0af8a1087d30}</Project>
-      <Name>A2v10.Request</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
-      <Project>{76269196-DB55-4299-AE0F-A33A5BAB294F}</Project>
-      <Name>A2v10.Workflow</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
-      <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
-      <Name>A2v10.Xaml.Bootstrap</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
-      <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
-      <Name>A2v10.Xaml</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
-      <Project>{2fbba076-26f4-4d61-872c-4ee29afa1edb}</Project>
-      <Name>A2v10.Web.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\A2v10.Web.Config\A2v10.Web.Config.csproj">
-      <Project>{c53f9ed8-90a1-43da-9ec4-8bcdb33e5d8f}</Project>
-      <Name>A2v10.Web.Config</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\A2v10.Web.Identity\A2v10.Web.Identity.csproj">
-      <Project>{7c10ee54-7b2c-4d76-b5de-802f26bd53ad}</Project>
-      <Name>A2v10.Web.Identity</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netframework4.8</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Version>10.0.7875</Version>
+		<Product>A2v10</Product>
+		<Authors>Oleksandr Kukthin</Authors>
+		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>
+		<Description>A2v10 Web MVC</Description>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>A2v10</PackageTags>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
+		<PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.9" />
+		<PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.9" />
+		<PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.1" />
+		<PackageReference Include="Microsoft.Owin" Version="4.2.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Owin" Version="1.0" />
+		<PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
+		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.3" />
+		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.21.0" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.21.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.21.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="6.21.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.21.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.21.0" />
+		<PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.2.2" />
+		<PackageReference Include="Microsoft.Owin.Security" Version="4.2.2" />
+		<PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.2" />
+		<PackageReference Include="Microsoft.Owin.Security.OAuth" Version="4.2.2" />
+		<PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.2" />
+		<PackageReference Include="RazorGenerator.Mvc" Version="2.4.9" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
+		<PackageReference Include="WebActivatorEx" Version="2.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Providers\A2v10.Data.Providers.csproj" />
+	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data\A2v10.Data.csproj" />
+	  <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj" />
+	  <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj" />
+	  <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj" />
+	  <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj" />
+	  <ProjectReference Include="..\A2v10.Web.Config\A2v10.Web.Config.csproj" />
+	  <ProjectReference Include="..\A2v10.Web.Identity\A2v10.Web.Identity.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="System.ComponentModel.DataAnnotations" />
+	  <Reference Include="System.Transactions" />
+	</ItemGroup>
 </Project>
+

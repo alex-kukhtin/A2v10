@@ -5,6 +5,8 @@ using System.Web;
 
 using Owin;
 
+using Microsoft.Owin.Security.DataProtection;
+
 using A2v10.Data;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
@@ -16,10 +18,9 @@ using A2v10.Web.Config;
 using A2v10.Web.Identity;
 using A2v10.Workflow;
 using A2v10.Xaml;
-//using A2v10.Web.Script;
 using A2v10.Web.Base;
 using A2v10.Javascript;
-using Microsoft.Owin.Security.DataProtection;
+
 
 namespace A2v10.Web.Mvc.Start
 {
