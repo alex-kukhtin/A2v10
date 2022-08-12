@@ -29,7 +29,7 @@ foreach ($elem in $SourceStyles) {
 Copy-Item "..\Web\A2v10.Web.Site\css\fonts\*.*" -Destination ".\css\fonts";
 $i += 1;
 
-Copy-Item "..\Web\A2v10.Web.Site\localization\*.*" -Destination ".\localization";
+Copy-Item "..\Web\A2v10.Web.Site\localization\default.*" -Destination ".\localization";
 $i += 1;
 
 foreach ($elem in $SourceSql) {

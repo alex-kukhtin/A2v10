@@ -2054,9 +2054,10 @@ pre.a2-code {
 }
 .control-group label {
   color: #999;
-  margin-bottom: 0.25em;
+  margin-bottom: 0.2em;
   display: block;
   font-weight: normal;
+  font-size: 90%;
 }
 .control-group .control-link {
   float: right;

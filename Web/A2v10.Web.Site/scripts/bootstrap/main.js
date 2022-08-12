@@ -1651,7 +1651,7 @@ app.modules['std:http'] = function () {
 						return;
 					}
 
-					let cu = selector?.__loadedUrl__;
+					let cu = selector ? selector.__loadedUrl__ : undefined;
 					if (cu && cu !== url) {
 						// foreign url
 						eventBus.$emit('endLoad');
