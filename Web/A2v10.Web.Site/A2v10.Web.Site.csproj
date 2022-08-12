@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -25,7 +26,6 @@
     <Use64BitIISExpress />
     <IISExpressSSLPort />
     <TargetFrameworkProfile />
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -64,11 +64,9 @@
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.2.0.1\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -89,7 +87,6 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -340,6 +337,9 @@
     <Content Include="css\bpmn\font\bpmn.woff" />
     <Content Include="css\bpmn\font\bpmn.woff2" />
     <Content Include="Less.Advance\_Blue.colorscheme.less" />
+    <None Include="C:/A2v10_Net48/A2v10/Web/A2v10.Web.Site/\compilerconfig.json.bindings">
+      <Link>compilerconfig.json.bindings</Link>
+    </None>
     <None Include="Less.Advance\_Default.colorscheme.less" />
     <Content Include="css\blue.colorscheme.css" />
     <Content Include="Less.Advance\_ColorSchemes.less" />
@@ -546,12 +546,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".well-known\" />
-    <Folder Include="app.ts\" />
     <Folder Include="app\site.ts\" />
     <Folder Include="scripts\bpmn\" />
     <Folder Include="scripts\eusign\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\A2v10.Pdf.Report\A2v10.Pdf.Report\A2v10.Pdf.Report.csproj">
+      <Project>{8c3d6471-882a-4628-a619-2922c990cdf9}</Project>
+      <Name>A2v10.Pdf.Report</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\A2v10.Pdf.Report\A2v10.Xaml.Report\A2v10.Xaml.Report.csproj">
       <Project>{982b4b91-2299-4c8d-bd6a-50a95f663dfd}</Project>
       <Name>A2v10.Xaml.Report</Name>
@@ -559,10 +562,6 @@
     <ProjectReference Include="..\..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
       <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
       <Name>A2v10.Xaml.Bootstrap</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\XamExtensionsSample\XamExtensionsSample.csproj">
-      <Project>{228bd9a6-f2d8-46e8-bfc7-a2854382a456}</Project>
-      <Name>XamExtensionsSample</Name>
     </ProjectReference>
     <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
       <Project>{2fbba076-26f4-4d61-872c-4ee29afa1edb}</Project>
@@ -637,7 +636,6 @@
   </PropertyGroup>
   <PropertyGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
@@ -658,7 +656,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.targets'))" />
   </Target>
+  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.4.7.4\build\Microsoft.TypeScript.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

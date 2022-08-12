@@ -26,10 +26,7 @@ namespace A2v10.Request
 						loc.GetService<IWorkflowEngine>()
 					);
 				case CommandType.script:
-					return new ExecuteScriptCommand(
-						loc.GetService<IDbContext>(), 
-						loc.GetService<IScriptProcessor>()
-					);
+					throw new ArgumentOutOfRangeException("Script command is no longer supported");
 				case CommandType.clr:
 					return new ExecuteClrCommand();
 				case CommandType.xml:

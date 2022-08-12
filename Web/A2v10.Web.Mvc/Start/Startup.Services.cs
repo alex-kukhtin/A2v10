@@ -5,6 +5,8 @@ using System.Web;
 
 using Owin;
 
+using Microsoft.Owin.Security.DataProtection;
+
 using A2v10.Data;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
@@ -16,10 +18,9 @@ using A2v10.Web.Config;
 using A2v10.Web.Identity;
 using A2v10.Workflow;
 using A2v10.Xaml;
-using A2v10.Web.Script;
 using A2v10.Web.Base;
 using A2v10.Javascript;
-using Microsoft.Owin.Security.DataProtection;
+
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -53,7 +54,6 @@ namespace A2v10.Web.Mvc.Start
                 IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
                 IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
                 IExternalDataProvider dataProvider = new ExternalDataContext();
-				IScriptProcessor scriptProcessor = new ScriptProcessor(scripter, host);
 				IHttpService httpService = new HttpService();
 				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, host, smsService);
 
@@ -72,7 +72,6 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IExternalLoginManager>(externalLoginManager);
 				locator.RegisterService<IUserStateManager>(userStateManager);
 				locator.RegisterService<IExternalDataProvider>(dataProvider);
-				locator.RegisterService<IScriptProcessor>(scriptProcessor);
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IJavaScriptEngine>(javaScriptEngine);
 				locator.RegisterService<ITokenProvider>(tokenProvider);

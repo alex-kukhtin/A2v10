@@ -1639,15 +1639,13 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220518-7847
+// 20220518-7876
 /* services/http.js */
 
 app.modules['std:http'] = function () {
 
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
-
-	let currentUrl = '';
 
 	return {
 		get,
@@ -1762,23 +1760,28 @@ app.modules['std:http'] = function () {
 				fc.__vue__ = null;
 				selector.innerHTML = '';
 			}
+			selector.__loadedUrl__ = url;
 		}
 
-		currentUrl = url;
 		return new Promise(function (resolve, reject) {
 			eventBus.$emit('beginLoad');
 			doRequest('GET', url)
 				.then(function (html) {
 					if (!html)
 						return;
-					if (url !== currentUrl) {
-						return;
-					}
 					if (html.startsWith('<!DOCTYPE')) {
 						// full page - may be login?
 						window.location.assign('/');
 						return;
 					}
+
+					let cu = selector?.__loadedUrl__;
+					if (cu && cu !== url) {
+						// foreign url
+						eventBus.$emit('endLoad');
+						return;
+					}
+
 					let dp = new DOMParser();
 					let rdoc = dp.parseFromString(html, 'text/html');
 					// first element from fragment body
@@ -1801,6 +1804,7 @@ app.modules['std:http'] = function () {
 							document.body.appendChild(newScript).parentNode.removeChild(newScript);
 						}
 					}
+
 					let fec = selector.firstElementChild;
 					if (fec && fec.__vue__) {
 						let ve = fec.__vue__;

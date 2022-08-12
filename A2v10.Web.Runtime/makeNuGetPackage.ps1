@@ -43,7 +43,7 @@ $i += 1;
 
 Write-Host "Successfully copied client files.";
 
-Remove-item -Path "d:\NuGet.Local\*.*";
+Remove-item -Path "C:\A2v10_Net48\Nuget.local\*.*";
 
 # nuget.exe pack -OutputDirectory "d:\NuGet.Local" -Prop Configuration=Release;
 

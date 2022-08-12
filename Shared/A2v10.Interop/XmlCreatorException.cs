@@ -2,13 +2,12 @@
 
 using System;
 
-namespace A2v10.Interop
+namespace A2v10.Interop;
+
+public sealed class XmlCreatorException : Exception
 {
-	public sealed class XmlCreatorException : Exception
+	public XmlCreatorException(String msg)
+		: base(msg)
 	{
-		public XmlCreatorException(String msg)
-			: base(msg)
-		{
-		}
 	}
 }

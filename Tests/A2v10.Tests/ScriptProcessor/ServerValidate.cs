@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Request;
-using A2v10.Web.Script;
 
 using A2v10.Tests.Config;
 using System.Dynamic;
@@ -33,18 +32,6 @@ namespace A2v10.Tests.ServerScripts
 		[TestMethod]
 		public void ServerScriptValidate()
 		{
-			IDataScripter scripter = new VueDataScripter(_host, _localizer);
-			var sp = new ScriptProcessor(scripter, _host);
-			var ssi = new ServerScriptInfo()
-			{
-				DataModel = _dbContext.LoadModel(null, "a2test.[Document.Load]"),
-				Template = "document.template",
-				Path = "document/server",
-				RawData = "{Document: {Id:173}}",
-				Parameter = new {Id = 123, Text = "ParamText"}
-			};
-			var result = sp.ValidateModel(ssi);
-			Assert.IsNull(result);
 		}
 	}
 }

@@ -1,135 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props" Condition="Exists('..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A3C33261-F421-4CE9-9422-0158B081DE6A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>A2v10.Tests</RootNamespace>
-    <AssemblyName>A2v10.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MSTest.TestFramework.2.2.10\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MSTest.TestFramework.2.2.10\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Config\TestConfig.cs" />
-    <Compile Include="Config\TestApplicationHost.cs" />
-    <Compile Include="DatabaseTest.cs" />
-    <Compile Include="DataModelTest.cs" />
-    <Compile Include="Lang\Parser.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestModelTest.cs" />
-    <Compile Include="ScriptProcessor\ServerValidate.cs" />
-    <Compile Include="WorkflowTest.cs" />
-    <Compile Include="XamlAccel.cs" />
-    <Compile Include="XamlTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj">
-      <Project>{1C5A0097-29A8-4157-80C0-B865CEAFCCCE}</Project>
-      <Name>A2v10.Data.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Tests\A2v10.Data.Tests.csproj">
-      <Project>{92474e5e-6fba-4746-900c-55f68977e500}</Project>
-      <Name>A2v10.Data.Tests</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data\A2v10.Data.csproj">
-      <Project>{3cefba76-9ed3-40b4-a844-cc17d960202f}</Project>
-      <Name>A2v10.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
-      <Project>{8ab56abe-3894-40ee-a5b7-36b57b70d1be}</Project>
-      <Name>A2v10.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Lang\A2v10.Lang.csproj">
-      <Project>{4F4CEFEE-FDC7-44BC-A84B-96CE86C8D238}</Project>
-      <Name>A2v10.Lang</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
-      <Project>{4ABB9B68-F32C-4262-8AFF-0AF8A1087D30}</Project>
-      <Name>A2v10.Request</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Workflow\A2v10.Workflow.csproj">
-      <Project>{76269196-db55-4299-ae0f-a33a5bab294f}</Project>
-      <Name>A2v10.Workflow</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Shared\A2v10.Xaml\A2v10.Xaml.csproj">
-      <Project>{E0577880-9B04-4A2A-B791-8FDB47CAA3BC}</Project>
-      <Name>A2v10.Xaml</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Web\A2v10.Web.Base\A2v10.Web.Base.csproj">
-      <Project>{2FBBA076-26F4-4D61-872C-4EE29AFA1EDB}</Project>
-      <Name>A2v10.Web.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Web\A2v10.Web.Config\A2v10.Web.Config.csproj">
-      <Project>{c53f9ed8-90a1-43da-9ec4-8bcdb33e5d8f}</Project>
-      <Name>A2v10.Web.Config</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj">
-      <Project>{478240AB-9772-4F70-8E31-BD0303CBF836}</Project>
-      <Name>A2v10.Web.Mvc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Web\A2v10.Web.Script\A2v10.Web.Script.csproj">
-      <Project>{0b570ad7-c466-4434-a610-f0cac2813676}</Project>
-      <Name>A2v10.Web.Script</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
-    <Error Condition="!Exists('..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.props'))" />
-    <Error Condition="!Exists('..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
-  <Import Project="..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets" Condition="Exists('..\..\packages\MSTest.TestAdapter.2.2.10\build\net46\MSTest.TestAdapter.targets')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netframework4.8</TargetFramework>
+		<LangVersion>10.0</LangVersion>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Version>10.0.7876</Version>
+		<Product>A2v10</Product>
+		<Authors>Oleksandr Kukthin</Authors>
+		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>
+		<Description>A2v10 Web Tests</Description>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>A2v10</PackageTags>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj" />
+	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Tests\A2v10.Data.Tests.csproj" />
+	  <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj" />
+	  <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj" />
+	  <ProjectReference Include="..\..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj" />
+	</ItemGroup>
+
 </Project>
+

@@ -1,11 +1,10 @@
-﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
 
 using System.Net.Http;
 
-namespace A2v10.Infrastructure
+namespace A2v10.Infrastructure;
+
+public interface IHttpService
 {
-	public interface IHttpService
-	{
-		HttpClient HttpClient { get; }
-	}
+	HttpClient HttpClient { get; }
 }

@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.App.Runtime</id>
-		<version>10.0.7875</version>
+		<version>10.0.7876</version>
 		<title>A2v10.Web Application Assets</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -14,9 +14,11 @@
 		<tags>A2v10 Platform Business WebApp</tags>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
 		<references>
-			<reference file="A2v10.Xaml.dll" />
-			<reference file="A2v10.Xaml.Bootstrap.dll" />
-			<reference file="A2v10.Xaml.Report.dll" />
+			<group targetFramework=".NETFramework4.8">
+				<reference file="A2v10.Xaml.dll" />
+				<reference file="A2v10.Xaml.Bootstrap.dll" />
+				<reference file="A2v10.Xaml.Report.dll" />
+			</group>
 		</references>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net48" />
@@ -29,8 +31,11 @@
 		<file src="bin/A2v10.Xaml.dll" target="lib/net48" />
 		<file src="bin/A2v10.Xaml.Report.dll" target="lib/net48" />
 		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="lib/net48" />
-		<file src="D:/Git/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
-		<file src="D:/Git/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>
-		<file src="D:/Git/A2v10.BuildSql/A2v10.BuildSql.targets" target="build/A2v10.App.Runtime.targets" />
+		<file src="bin/A2v10.Xaml.dll" target="ref/net48" />
+		<file src="bin/A2v10.Xaml.Report.dll" target="ref/net48" />
+		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="ref/net48" />
+		<file src="C:/A2v10_Net48/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
+		<file src="C:/A2v10_Net48/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>
+		<file src="C:/A2v10_Net48/A2v10.BuildSql/A2v10.BuildSql.targets" target="build/A2v10.App.Runtime.targets" />
 	</files>
 </package>
