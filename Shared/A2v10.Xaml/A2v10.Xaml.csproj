@@ -9,7 +9,7 @@
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
 		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>
-		<Description>A2v10 Platfrom Interop</Description>
+		<Description>A2v10 Xaml Engine</Description>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
