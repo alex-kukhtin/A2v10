@@ -75,15 +75,11 @@
     <Content Include="Global.asax" />
     <Content Include="App_application\%40schemas\api-model-json-schema.json" />
     <Content Include="App_application\%40schemas\app-json-schema.json" />
-    <None Include="localization\de.xml" />
     <Content Include="localization\default.de.txt" />
     <Content Include="localization\default.en.txt" />
     <Content Include="localization\default.pl.txt" />
     <Content Include="localization\default.ru.txt" />
     <Content Include="localization\default.uk.txt" />
-    <None Include="localization\en.xml" />
-    <None Include="localization\ru.xml" />
-    <None Include="localization\uk.xml" />
     <Content Include="scripts\bootstrap\main.js" />
     <Content Include="scripts\bootstrap\main.min.js" />
     <Content Include="scripts\d3.min.js" />
