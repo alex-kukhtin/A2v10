@@ -36,6 +36,7 @@ public:
 		m_index(0), m_len(0),
 		m_tokstart(0)
 	{
+		m_tok = _tok_null;
 		m_len = lstrlen(m_szText);
 		m_value.Preallocate(255);
 	}

@@ -1,4 +1,4 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 #include "pch.h"
 #include "posterm.h"
@@ -12,7 +12,7 @@
 
 #define MAX_COMMAND_LEN 255
 #define MAX_NAME_LEN    75
-#define MAX_UNIT_LEN    6
+#define MAX_UNIT_LEN    5
 
 enum FP_COMMANDS {
 	FPCMD_SETDATETIME = 0x20,

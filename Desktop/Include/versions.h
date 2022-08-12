@@ -18,7 +18,11 @@ protected:
 
 public:
   CModuleVersion()
-		: m_pVersionInfo(NULL) {}
+		: m_pVersionInfo(NULL) 
+  {
+	  m_translation.langID = 0;
+	  m_translation.charset = 0;
+  }
   virtual ~CModuleVersion();
 
   BOOL    GetFileVersionInfo(LPCTSTR modulename);
