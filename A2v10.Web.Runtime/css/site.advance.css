@@ -106,6 +106,12 @@
 .ico-circle-small:before {
   content: "\ea0c";
 }
+.ico-barcode:before {
+  content: "\ea0d";
+}
+.ico-qrcode:before {
+  content: "\ea0e";
+}
 .ico-ban-red:before {
   content: "\ea0a";
   color: #a94442;
@@ -1925,7 +1931,7 @@ footer,
   height: 2rem;
   background-color: var(--neutralBk);
   border-top: 1px solid #e1dfdd;
-  padding: 0 2px 0 8px;
+  padding: 0 0 0 8px;
   font-size: 0.925rem;
   text-transform: lowercase;
 }
@@ -1937,6 +1943,7 @@ footer span,
 footer .debug-btn,
 .footer .debug-btn {
   display: inline;
+  height: 100%;
 }
 footer .menu,
 .footer .menu {
@@ -1946,7 +1953,7 @@ footer .menu,
 }
 footer .version-info,
 .footer .version-info {
-  margin-right: 6px;
+  margin-right: 1rem;
   white-space: nowrap;
 }
 footer button,
@@ -1958,6 +1965,7 @@ footer button,
   color: white;
   text-transform: lowercase;
   vertical-align: baseline;
+  border-radius: 0;
 }
 footer button:focus,
 .footer button:focus {

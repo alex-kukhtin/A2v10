@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7875</version>
+		<version>10.0.7876</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -45,12 +45,10 @@
 		<file src="bin/A2v10.Messaging.dll" target="lib/net48" />
 		<file src="bin/A2v10.Reports.dll" target="lib/net48" />
 		<file src="bin/A2v10.Request.dll" target="lib/net48" />
-		<file src="bin/A2v10.Script.dll" target="lib/net48" />
 		<file src="bin/A2v10.Javascript.dll" target="lib/net48" />
 		<file src="bin/A2v10.Web.Base.dll" target="lib/net48" />
 		<file src="bin/A2v10.Web.Config.dll" target="lib/net48" />
 		<file src="bin/A2v10.Web.Identity.dll" target="lib/net48" />
-		<file src="bin/A2v10.Web.Script.dll" target="lib/net48" />
 		<file src="bin/A2v10.Web.Mvc.dll" target="lib/net48" />
 		<file src="bin/A2v10.Workflow.dll" target="lib/net48" />
 		<file src="bin/A2v10.Xaml.dll" target="lib/net48" />
