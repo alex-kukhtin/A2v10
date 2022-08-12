@@ -1953,7 +1953,7 @@ footer .menu,
 }
 footer .version-info,
 .footer .version-info {
-  margin-right: 6px;
+  margin-right: 1rem;
   white-space: nowrap;
 }
 footer button,

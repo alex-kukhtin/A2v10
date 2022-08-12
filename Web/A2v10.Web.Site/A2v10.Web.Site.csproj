@@ -64,11 +64,9 @@
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.2.0.1\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
-    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -89,7 +87,6 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -340,6 +337,9 @@
     <Content Include="css\bpmn\font\bpmn.woff" />
     <Content Include="css\bpmn\font\bpmn.woff2" />
     <Content Include="Less.Advance\_Blue.colorscheme.less" />
+    <None Include="C:/A2v10_Net48/A2v10/Web/A2v10.Web.Site/\compilerconfig.json.bindings">
+      <Link>compilerconfig.json.bindings</Link>
+    </None>
     <None Include="Less.Advance\_Default.colorscheme.less" />
     <Content Include="css\blue.colorscheme.css" />
     <Content Include="Less.Advance\_ColorSchemes.less" />
@@ -546,12 +546,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".well-known\" />
-    <Folder Include="app.ts\" />
     <Folder Include="app\site.ts\" />
     <Folder Include="scripts\bpmn\" />
     <Folder Include="scripts\eusign\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\A2v10.Pdf.Report\A2v10.Pdf.Report\A2v10.Pdf.Report.csproj">
+      <Project>{8c3d6471-882a-4628-a619-2922c990cdf9}</Project>
+      <Name>A2v10.Pdf.Report</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\A2v10.Pdf.Report\A2v10.Xaml.Report\A2v10.Xaml.Report.csproj">
       <Project>{982b4b91-2299-4c8d-bd6a-50a95f663dfd}</Project>
       <Name>A2v10.Xaml.Report</Name>
@@ -559,10 +562,6 @@
     <ProjectReference Include="..\..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
       <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
       <Name>A2v10.Xaml.Bootstrap</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\XamExtensionsSample\XamExtensionsSample.csproj">
-      <Project>{228bd9a6-f2d8-46e8-bfc7-a2854382a456}</Project>
-      <Name>XamExtensionsSample</Name>
     </ProjectReference>
     <ProjectReference Include="..\A2v10.Web.Base\A2v10.Web.Base.csproj">
       <Project>{2fbba076-26f4-4d61-872c-4ee29afa1edb}</Project>

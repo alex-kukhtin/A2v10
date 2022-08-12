@@ -1636,6 +1636,7 @@ app.modules['std:http'] = function () {
 				fc.__vue__ = null;
 				selector.innerHTML = '';
 			}
+			selector.__loadedUrl__ = url;
 		}
 
 		return new Promise(function (resolve, reject) {
@@ -1649,7 +1650,13 @@ app.modules['std:http'] = function () {
 						window.location.assign('/');
 						return;
 					}
-					let fec = selector.firstElementChild;
+
+					let cu = selector?.__loadedUrl__;
+					if (cu && cu !== url) {
+						// foreign url
+						eventBus.$emit('endLoad');
+						return;
+					}
 
 					let dp = new DOMParser();
 					let rdoc = dp.parseFromString(html, 'text/html');
@@ -1673,6 +1680,8 @@ app.modules['std:http'] = function () {
 							document.body.appendChild(newScript).parentNode.removeChild(newScript);
 						}
 					}
+
+					let fec = selector.firstElementChild;
 					if (fec && fec.__vue__) {
 						let ve = fec.__vue__;
 						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);

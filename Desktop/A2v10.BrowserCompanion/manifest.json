@@ -1,9 +1,0 @@
-{
-	"name": "com.a2v10.companion",
-	"description": "A2v10 Broswer Companion",
-	"path": "C:\\Git\\A2v10\\bin\\A2v10.BrowserCompanion.exe",
-	"type": "stdio",
-	"allowed_origins": [
-		"chrome-extension://knopcophdgepmijgkhdehmbkmkalhidj/"
-	]
-}
