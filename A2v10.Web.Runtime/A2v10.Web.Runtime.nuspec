@@ -82,9 +82,8 @@
 
 		<file src="README.md" target="docs/" />
 
-
-		<file src="D:/Git/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
-		<file src="D:/Git/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>
-		<file src="D:/Git/A2v10.BuildSql/A2v10.BuildSql.targets" target="build/A2v10.Web.Runtime.targets" />
+		<file src="C:/A2v10_Net48/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
+		<file src="C:/A2v10_Net48/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>
+		<file src="C:/A2v10_Net48/A2v10.BuildSql/A2v10.BuildSql.targets" target="build/A2v10.Web.Runtime.targets" />
 	</files>
 </package>
