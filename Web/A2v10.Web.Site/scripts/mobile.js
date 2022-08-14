@@ -6367,7 +6367,8 @@ Vue.component('validator-control', {
 			caret: Boolean,
 			hasClear: Boolean,
 			mode: String,
-			fetchCommand: String
+			fetchCommand: String,
+			fetchCommandData: Object
 		},
 		data() {
 			return {
@@ -6669,7 +6670,8 @@ Vue.component('validator-control', {
 				} else if (this.fetchCommand) {
 					let fc = this.fetchCommand.split('/');
 					let action = fc.pop();
-					return elem.$vm.$invoke(action, {Text: text}, fc.join('/'));
+					let invokeArg = Object.assign({}, { Text: text }, this.fetchCommandData);
+					return elem.$vm.$invoke(action, invokeArg, fc.join('/'));
 				}
 				console.error('Selector. Fetch or Delegate not defined');
 			},
