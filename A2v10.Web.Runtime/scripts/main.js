@@ -6297,7 +6297,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220626-7852*/
+/*20220815-7879*/
 // components/selector.js
 
 /*TODO*/
@@ -6668,6 +6668,7 @@ Vue.component('validator-control', {
 				if (this.fetch) {
 					return this.fetch.call(this.item.$root, elem, text, all);
 				} else if (this.fetchCommand) {
+					if (!text) return [];
 					let fc = this.fetchCommand.split('/');
 					let action = fc.pop();
 					let invokeArg = Object.assign({}, { Text: text }, this.fetchCommandData);

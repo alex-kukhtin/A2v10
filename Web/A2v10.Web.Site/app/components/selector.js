@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220626-7852*/
+/*20220815-7879*/
 // components/selector.js
 
 /*TODO*/
@@ -105,7 +105,10 @@
 			clearVisible() {
 				if (!this.hasClear) return false;
 				let to = this.item[this.prop];
-				return to && utils.isDefined(to) && !to.$isEmpty;
+				if (!to) return false;
+				if (utils.isDefined(to.$isEmpty))
+					return !to.$isEmpty;
+				return !utils.isPlainObjectEmpty(to);
 			},
 			hasText() { return !!this.textProp; },
 			newText() {
@@ -302,6 +305,8 @@
 				let obj = this.item[this.prop];
 				if (obj.$empty)
 					obj.$empty();
+				else if (utils.isObjectExact(obj))
+					utils.clearObject(obj);
 			},
 			scrollIntoView() {
 				this.$nextTick(() => {
@@ -371,6 +376,7 @@
 				if (this.fetch) {
 					return this.fetch.call(this.item.$root, elem, text, all);
 				} else if (this.fetchCommand) {
+					if (!text) return [];
 					let fc = this.fetchCommand.split('/');
 					let action = fc.pop();
 					let invokeArg = Object.assign({}, { Text: text }, this.fetchCommandData);
