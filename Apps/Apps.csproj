@@ -47,9 +47,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Admin\A2v10.Web.Admin.nuspec">
-      <SubType>Designer</SubType>
-    </Content>
     <None Include="Admin\bpmn\catalog\model.json" />
     <None Include="Admin\Identity\Api\model.json" />
     <None Include="Admin\Identity\Group\model.json" />
