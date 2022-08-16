@@ -5221,9 +5221,9 @@ app.modules['std:impl:array'] = function () {
 
 	app.components['standaloneController'] = standalone;
 })();
-// Copyright © 2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
 
-/*20200604-7671*/
+/*20220816-7880*/
 /* controllers/navmenu.js */
 
 (function () {
@@ -5274,6 +5274,8 @@ app.modules['std:impl:array'] = function () {
 			am = menu.find((mi) => mi.Url === seg1);
 		if (!am) {
 			// no segments - find first active menu
+			if (seg1)
+				return url; // invalid segment -> invalid url
 			let parentMenu = { Url: '' };
 			am = findMenu(menu, (mi) => mi.Url && !mi.Menu, parentMenu);
 			if (am) {

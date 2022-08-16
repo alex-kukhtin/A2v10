@@ -2012,7 +2012,7 @@ footer,
   height: 1.8rem;
   background-color: #f2f3f9;
   border-top: 1px solid #cfd6e5;
-  padding: 0 2px 0 8px;
+  padding: 0 0 0 8px;
   font-size: 0.86rem;
   text-transform: lowercase;
 }
@@ -2024,6 +2024,7 @@ footer span,
 footer .debug-btn,
 .footer .debug-btn {
   display: inline;
+  height: 100%;
 }
 footer .menu,
 .footer .menu {
@@ -2033,14 +2034,14 @@ footer .menu,
 }
 footer .version-info,
 .footer .version-info {
-  margin-right: 6px;
+  margin-right: 12px;
   white-space: nowrap;
 }
 footer button,
 .footer button {
   background-color: #b94e4c;
   font-size: inherit;
-  padding: 0px 6px 2px 6px;
+  padding: 0px 8px 0 12px;
   color: white;
   text-transform: lowercase;
   vertical-align: baseline;

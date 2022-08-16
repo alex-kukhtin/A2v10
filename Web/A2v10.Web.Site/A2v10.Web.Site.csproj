@@ -337,10 +337,7 @@
     <Content Include="css\bpmn\font\bpmn.woff" />
     <Content Include="css\bpmn\font\bpmn.woff2" />
     <Content Include="Less.Advance\_Blue.colorscheme.less" />
-    <None Include="C:/A2v10_Net48/A2v10/Web/A2v10.Web.Site/\compilerconfig.json.bindings">
-      <Link>compilerconfig.json.bindings</Link>
-    </None>
-    <None Include="Less.Advance\_Default.colorscheme.less" />
+    <Content Include="Less.Advance\_Default.colorscheme.less" />
     <Content Include="css\blue.colorscheme.css" />
     <Content Include="Less.Advance\_ColorSchemes.less" />
     <Content Include="Less.Advance\Colors.less" />
