@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .dashboard {
+            display:grid;
+            width:100%;
+            background-color:lemonchiffon;
+        }
+		.dashboard-item {
+            border:1px solid red;
+            height:100%;
+		}
+        .dashboard-placeholder {
+            width:100%;
+            height:100%;
+            border:1px solid blue;
+            background-color:azure;
+        }
+        .dropzone {
+            background-color:aquamarine;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h3>Dashboard</h3>
+        <a2-dashboard :rows="4" :cols="4">
+            <a2-dashboard-item :row="1" :col="1">Item 1</a2-dashboard-item>
+            <a2-dashboard-item :row="1" :col="2">Item 2</a2-dashboard-item>
+            <a2-dashboard-item :row="4" :col="3" :col-span="2">Item 3</a2-dashboard-item>
+        </a2-dashboard>
+        <hr />
+        <a2-dashboard :rows=4 :cols=4 :items=items>
+               <template v-slot:element="elem">
+                   <div>I am a template '{{elem.item.row}}:{{elem.item.col}}'</div>
+               </template>
+        </a2-dashboard>
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="./dashboard.js"></script>
+    <script>
+		new Vue({
+            el: "#app",
+            data: {
+                items: [
+                    { row: 1, col: 1, text: 'Item 1' },
+                    { row: 1, col: 2, rowSpan:2, text: 'Item 2' },
+                    { row: 3, col: 3, colSpan:2, text: 'Item 3' }
+                ]
+			},
+			mounted() {
+			}
+		});    </script>
+</body>
+</html>

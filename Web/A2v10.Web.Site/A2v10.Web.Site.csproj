@@ -247,6 +247,8 @@
     <Content Include="TestMobile\testmobile.js" />
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
+    <Content Include="TestPages\d3line.js" />
+    <Content Include="TestPages\dashboard.html" />
     <Content Include="TestPages\nativeHost.html" />
     <Content Include="TestPages\JasmineTests.html" />
     <Content Include="TestPages\slot.html" />
@@ -437,7 +439,7 @@
     <Content Include="TestPages\collectionview.js" />
     <Content Include="TestPages\collectionview.txt" />
     <Content Include="TestPages\d3line.html" />
-    <Content Include="TestPages\d3line.js" />
+    <Content Include="TestPages\dashboard.js" />
     <Content Include="TestPages\datepicker.html" />
     <Content Include="TestPages\dropdown.html" />
     <Content Include="TestPages\formcontrol2.html" />
