@@ -23,7 +23,7 @@
             border:1px solid blue;
             background-color:azure;
         }
-        .dropzone {
+        .hover {
             background-color:aquamarine;
         }
 
@@ -38,9 +38,10 @@
             <a2-dashboard-item :row="4" :col="3" :col-span="2">Item 3</a2-dashboard-item>
         </a2-dashboard>
         <hr />
-        <a2-dashboard :rows=4 :cols=4 :items=items>
+        <button @click="startEdit">Edit</button>
+        <a2-dashboard :rows=7 :cols=4 :items=items>
                <template v-slot:element="elem">
-                   <div>I am a template '{{elem.item.row}}:{{elem.item.col}}'</div>
+                   <div>I am a template '{{elem.item.row}}:{{elem.item.col}}' <b>{{elem.item.text}}</b></div>
                </template>
         </a2-dashboard>
     </div>
@@ -50,11 +51,18 @@
 		new Vue({
             el: "#app",
             data: {
+                edit: false,
                 items: [
                     { row: 1, col: 1, text: 'Item 1' },
                     { row: 1, col: 2, rowSpan:2, text: 'Item 2' },
-                    { row: 3, col: 3, colSpan:2, text: 'Item 3' }
+                    { row: 3, col: 3, colSpan:2, text: 'Item 3' },
+                    { row: 4, col: 2, rowSpan:2, colSpan: 2, text: 'Item 4' }
                 ]
+            },
+            methods: {
+                startEdit() {
+                    alert('start edit');
+				}
 			},
 			mounted() {
 			}

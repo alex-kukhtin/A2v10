@@ -248,6 +248,7 @@
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
     <Content Include="TestPages\d3line.js" />
+    <Content Include="TestPages\dashboard2.js" />
     <Content Include="TestPages\dashboard.html" />
     <Content Include="TestPages\nativeHost.html" />
     <Content Include="TestPages\JasmineTests.html" />
