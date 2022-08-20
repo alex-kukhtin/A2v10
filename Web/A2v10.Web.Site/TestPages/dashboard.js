@@ -1,14 +1,15 @@
-﻿/**
- 2. drag image - full element
- 7. canDrop
- 8. editMode
- 9. add new elements
- * */
+﻿/*
+ row, col, 
+  
+ */
 
 let itemTemplate = `
-<div class=dashboard-item draggable 
-	:style="{gridArea: gridArea}" @dragstart=dragStart>
+<div class=dashboard-item :draggable="editMode" 
+	:style="{gridArea: gridArea}" @dragstart=dragStart @dragend=dragEnd>
 	<slot></slot>
+	<div class=drag-area v-if=editMode>
+		<button v-if="!isnew" class="clear-button" @click=remove>✕</button>
+	</div>
 </div>
 `;
 
@@ -18,17 +19,25 @@ let placeholderTemplate = `
 `;
 
 let boardTemplate = `
-<div class=dashboard :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}">
-	<template v-for="row in rows">
-		<a2-dashboard-placeholder v-show="placeholderVisible(row, col)" ref=ph
-			v-for="col in cols" :row="row" :col="col" :key="row * rows + col"/>
-	</template>
-	<slot>
-		<a2-dashboard-item v-for="(itm, ix) in items" :key=ix :item="itm"
-				:row="itm.row" :col="itm.col" :col-span="itm.colSpan" :row-span="itm.rowSpan">
-			<slot name="element" v-bind:item="itm"></slot>
+<div>
+	<div class=dashboard :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}">
+		<template v-for="row in rows" v-if = editMode >
+			<a2-dashboard-placeholder v-show="placeholderVisible(row, col)" ref=ph
+				v-for="col in cols" :row="row" :col="col" :key="row * rows + col"/>
+		</template>
+		<slot>
+			<a2-dashboard-item v-for="(itm, ix) in items" :key=ix :item="itm" :edit-mode="editMode"
+					:row="itm.row" :col="itm.col" :col-span="itm.colSpan" :row-span="itm.rowSpan">
+				<slot name="element" v-bind:item="itm"></slot>
+			</a2-dashboard-item>
+		</slot>
+	</div>
+	<ul class="dashboard-list" v-if="editMode">
+		<a2-dashboard-item v-for="(itm, ix) in list" :key=ix :edit-mode="true"
+				:item=itm :col-span="itm.colSpan" :row-span="itm.rowSpan" :isnew=true>
+			<slot name="listitem" v-bind:item="itm"></slot>
 		</a2-dashboard-item>
-	</slot>
+	</ul>
 </div>
 `;
 
@@ -46,7 +55,8 @@ let placeHolder = {
 	},
 	methods: {
 		dragOver(ev) {
-			ev.preventDefault();
+			if (this.$parent.$canDrop({row: this.row, col: this.col }))
+				ev.preventDefault();
 		},
 		dragEnter(ev) {
 			this.$parent.$enter(ev.target);
@@ -64,7 +74,9 @@ Vue.component('a2-dashboard-item', {
 		rowSpan: { type: Number, default: 1 },
 		col: { type: Number, default: 1 },
 		colSpan: { type: Number, default: 1 },
-		item: Object
+		isnew: Boolean,
+		item: Object,
+		editMode: Boolean
 	},
 	data() {
 		return {
@@ -79,9 +91,24 @@ Vue.component('a2-dashboard-item', {
 	},
 	methods: {
 		dragStart(ev) {
-			this.posY = Math.floor(ev.offsetY / (ev.target.offsetHeight / this.rowSpan));
-			this.posX = Math.floor(ev.offsetX / (ev.target.offsetWidth / this.colSpan))
+			if (!this.editMode) return;
+			ev.dataTransfer.effectAllowed = "move";
+			if (this.isnew) {
+				this.posX = 0;
+				this.posY = 0;
+			}
+			else {
+				this.posY = Math.floor(ev.offsetY / (ev.target.offsetHeight / this.rowSpan));
+				this.posX = Math.floor(ev.offsetX / (ev.target.offsetWidth / this.colSpan))
+			}
 			this.$parent.$start(this);
+		},
+		dragEnd(ev) {
+			if (!this.editMode) return;
+			this.$parent.$clearHover();
+		},
+		remove() {
+			this.$parent.$removeItem(this.item);
 		}
 	},
 	mounted() {
@@ -97,7 +124,9 @@ Vue.component('a2-dashboard', {
 	props: {
 		cols: Number,
 		rows: Number,
-		items: Array
+		items: Array,
+		list: Array,
+		editMode: Boolean
 	},
 	data() {
 		return {
@@ -127,6 +156,7 @@ Vue.component('a2-dashboard', {
 	},
 	methods: {
 		placeholderVisible(row, col) {
+			if (!this.editMode) return false;
 			let intercect = (elem) =>
 				row >= elem.startRow && row <= elem.endRow &&
 				col >= elem.startCol && col <= elem.endCol;
@@ -134,6 +164,12 @@ Vue.component('a2-dashboard', {
 		},
 		$register(item) {
 			this.staticElems.push({ startRow: item.row, startCol: item.col, endRow: item.row + item.rowSpan - 1, endCol: item.col + item.colSpan - 1 });
+		},
+		$removeItem(itm) {
+			let ix = this.items.indexOf(itm);
+			if (ix >= 0)
+				this.items.splice(ix, 1);
+
 		},
 		$findPlaceholder(el) {
 			return this.$refs.ph.find(x => x.$el === el);
@@ -170,6 +206,19 @@ Vue.component('a2-dashboard', {
 		$enter(el) {
 			this.$setHover(el, true);
 		},
+		$canDrop(el) {
+			let ce = this.currentElem;
+			if (!ce) return false;
+			let y1 = el.row - ce.posY;
+			let y2 = y1 + ce.rowSpan - 1;
+			let x1 = el.col - ce.posX;
+			let x2 = x1 + ce.colSpan - 1;
+			//console.dir(`x1: ${x1}, x2: ${x2}, y1: ${y1}, y2: ${y2}`);
+			if (y1 < 1 || y2 > this.rows) return false;
+			if (x1 < 1 || x2 > this.cols) return false;
+			//TODO: check intersections 
+			return true;
+		},
 		$drop(el) {
 			this.$clearHover();
 			let ce = this.currentElem;
@@ -177,6 +226,8 @@ Vue.component('a2-dashboard', {
 				if (ce.item) {
 					ce.item.row = el.row - ce.posY;
 					ce.item.col = el.col - ce.posX;
+					if (ce.isnew)
+						this.items.push(Object.assign({}, ce.item));
 				}
 				this.currentElem = null;
 			}

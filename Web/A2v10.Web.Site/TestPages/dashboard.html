@@ -11,21 +11,42 @@
         .dashboard {
             display:grid;
             width:100%;
-            background-color:lemonchiffon;
+            grid-gap:6px;
+            background-color2:aliceblue;
         }
 		.dashboard-item {
             border:1px solid red;
             height:100%;
+            background-color:antiquewhite;
+            position:relative;
 		}
+        .dashboard-item > .drag-area {
+            position:absolute;
+            opacity:0.8;
+            left:0;
+            top:0;
+            right:0;
+            bottom:0;
+        }
+
+        .clear-button {
+            position:absolute;
+            top:0;
+            right:0;
+        }
+
         .dashboard-placeholder {
             width:100%;
             height:100%;
-            border:1px solid blue;
-            background-color:azure;
+            border2:1px solid blue;
+            background-color:#f8f8f8;
         }
-        .hover {
-            background-color:aquamarine;
-        }
+		.dashboard-list {
+            width:272px;
+		}
+		.hover {
+			background-color: #ddd;
+		}
 
     </style>
 </head>
@@ -38,11 +59,20 @@
             <a2-dashboard-item :row="4" :col="3" :col-span="2">Item 3</a2-dashboard-item>
         </a2-dashboard>
         <hr />
-        <button @click="startEdit">Edit</button>
-        <a2-dashboard :rows=7 :cols=4 :items=items>
-               <template v-slot:element="elem">
-                   <div>I am a template '{{elem.item.row}}:{{elem.item.col}}' <b>{{elem.item.text}}</b></div>
-               </template>
+        <button @click="startEdit" v-if="!edit">Edit</button>
+        <button @click="stopEdit" v-if="edit">Cancel</button>
+        <a2-dashboard :rows=7 :cols=4 :items=items :list="list" :edit-mode="edit">
+            <template v-slot:element="elem">
+                <div>
+                    I am a template '{{elem.item.row}}:{{elem.item.col}}' <b>{{elem.item.text}}</b>
+                    <button class="btn">1</button>
+                    <button class="btn">2</button>
+                    <button class="btn">3</button>
+                </div>
+            </template>
+            <template v-slot:listitem="lelem">
+                <div style="height:50px">List template <b>{{lelem.item.text}}</b></div>
+            </template>
         </a2-dashboard>
     </div>
     <script src="../scripts/vue.js"></script>
@@ -53,15 +83,25 @@
             data: {
                 edit: false,
                 items: [
-                    { row: 1, col: 1, text: 'Item 1' },
-                    { row: 1, col: 2, rowSpan:2, text: 'Item 2' },
-                    { row: 3, col: 3, colSpan:2, text: 'Item 3' },
-                    { row: 4, col: 2, rowSpan:2, colSpan: 2, text: 'Item 4' }
+                    { id: 1, row: 1, col: 1, rowSpan:1, colSpan:1, text: 'Item 1' },
+					{ id: 2, row: 1, col: 2, rowSpan:2, text: 'Item 2' },
+					{ id: 3, row: 3, col: 3, colSpan:2, text: 'Item 3' },
+					{ id: 4, row: 4, col: 2, rowSpan:2, colSpan: 2, text: 'Item 4' }
+                ],
+                list: [
+                    { text: 'Item 5' },
+                    { colSpan: 2, text: 'Item 6' },
+                    { rowSpan: 2, text: 'Item 7' },
+                    { colSpan: 2, rowSpan: 2, text: 'Item 8' },
+                    { text: 'Item 9' },
                 ]
             },
             methods: {
                 startEdit() {
-                    alert('start edit');
+                    this.edit = true;
+				},
+                stopEdit() {
+					this.edit = false;
 				}
 			},
 			mounted() {
