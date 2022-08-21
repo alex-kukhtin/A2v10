@@ -126,7 +126,8 @@ Vue.component('a2-dashboard', {
 		rows: Number,
 		items: Array,
 		list: Array,
-		editMode: Boolean
+		editMode: Boolean,
+		setRows: Function
 	},
 	data() {
 		return {
@@ -230,6 +231,8 @@ Vue.component('a2-dashboard', {
 						this.items.push(Object.assign({}, ce.item));
 				}
 				this.currentElem = null;
+				if (this.setRows)
+					this.setRows(1);
 			}
 		}
 	}

@@ -12,7 +12,7 @@
             display:grid;
             width:100%;
             grid-gap:6px;
-            background-color2:aliceblue;
+            background-color:aliceblue;
         }
 		.dashboard-item {
             border:1px solid red;
@@ -22,7 +22,7 @@
 		}
         .dashboard-item > .drag-area {
             position:absolute;
-            opacity:0.8;
+            background-color:rgba(255,255,255, .7);
             left:0;
             top:0;
             right:0;
@@ -38,7 +38,7 @@
         .dashboard-placeholder {
             width:100%;
             height:100%;
-            border2:1px solid blue;
+            border:1px solid blue;
             background-color:#f8f8f8;
         }
 		.dashboard-list {
@@ -61,7 +61,8 @@
         <hr />
         <button @click="startEdit" v-if="!edit">Edit</button>
         <button @click="stopEdit" v-if="edit">Cancel</button>
-        <a2-dashboard :rows=7 :cols=4 :items=items :list="list" :edit-mode="edit">
+        <a2-dashboard :rows="rows" :cols=4 :items=items :list="list" :edit-mode="edit"
+                      :set-rows="setRows">
             <template v-slot:element="elem">
                 <div>
                     I am a template '{{elem.item.row}}:{{elem.item.col}}' <b>{{elem.item.text}}</b>
@@ -82,6 +83,7 @@
             el: "#app",
             data: {
                 edit: false,
+                rows: 7,
                 items: [
                     { id: 1, row: 1, col: 1, rowSpan:1, colSpan:1, text: 'Item 1' },
 					{ id: 2, row: 1, col: 2, rowSpan:2, text: 'Item 2' },
@@ -102,10 +104,14 @@
 				},
                 stopEdit() {
 					this.edit = false;
+                },
+                setRows(inc) {
+                    this.rows += inc;
 				}
 			},
 			mounted() {
 			}
-		});    </script>
+        });    
+    </script>
 </body>
 </html>
