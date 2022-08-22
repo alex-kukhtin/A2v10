@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>netframework4.8</TargetFramework>
+	  <LangVersion>10.0</LangVersion>
+	  <Nullable>disable</Nullable>
+	  <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Web\A2v10.Web.Mvc\A2v10.Web.Mvc.csproj" />
+  </ItemGroup>
+
+</Project>

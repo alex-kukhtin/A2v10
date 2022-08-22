@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 "use strict";
 
@@ -90,6 +90,8 @@
 						}
 						else if (result === 'AntiForgery')
 							that.failure(that.locale.$AntiForgery);
+						else if (result.startsWith("UI:"))
+							that.failure(result.substring(3));
 						else
 							alert(result);
 					})

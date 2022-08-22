@@ -25,6 +25,7 @@ using A2v10.Request.Models;
 using System.Net.Http.Headers;
 using System.Linq;
 using A2v10.Web.Base;
+using A2v10.Web.Mvc.Interfaces;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -32,10 +33,10 @@ namespace A2v10.Web.Mvc.Controllers
 	[AuthorizeFilter]
 	[ExecutingFilter]
 	[CheckMobileFilter]
-	public class ShellController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
+	public class ShellController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale, IControllerSession
 	{
 		private readonly A2v10.Request.BaseController _baseController = new BaseController();
-
+		private readonly IHooksProvider _hooksProvider;
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
 		public String UserSegment => User.Identity.GetUserSegment();
@@ -45,6 +46,7 @@ namespace A2v10.Web.Mvc.Controllers
 
 		public ShellController()
 		{
+			_hooksProvider = ServiceLocator.Current.GetService<IHooksProvider>();
 		}
 
 		#region IControllerProfiler
@@ -765,5 +767,22 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 		#endregion
 
+
+		#region IControllerSession
+		public Boolean IsSessionValid()
+		{
+			var hooks = _hooksProvider.SessionHooks;
+			if (hooks == null)
+				return true;
+			if (!hooks.IsSessionValid(Request, User.Identity.GetUserId<Int64>()))
+			{
+				HttpContext.Session.Abandon();
+				HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+				Response.Redirect("/account/login");
+				return false;
+			}
+			return true;
+		}
+		#endregion
 	}
 }

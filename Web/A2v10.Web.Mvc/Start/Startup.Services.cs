@@ -20,13 +20,15 @@ using A2v10.Workflow;
 using A2v10.Xaml;
 using A2v10.Web.Base;
 using A2v10.Javascript;
-
+using A2v10.Web.Mvc.Interfaces;
 
 namespace A2v10.Web.Mvc.Start
 {
 	public static partial class Startup
 	{
         private static IServiceLocator _currentLocator;
+
+		private static IHooksProvider _hooksProvider = new HooksProvider();
 
 		public static void StartServices(IAppBuilder app)
 		{
@@ -75,6 +77,7 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IJavaScriptEngine>(javaScriptEngine);
 				locator.RegisterService<ITokenProvider>(tokenProvider);
+				locator.RegisterService<IHooksProvider>(_hooksProvider);
 
 				IDataProtectionProvider dataProtection = app.GetDataProtectionProvider();
 				locator.RegisterService<IDataProtectionProvider>(dataProtection);

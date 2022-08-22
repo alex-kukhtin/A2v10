@@ -1,10 +1,9 @@
-﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021-2022 Alex Kukhtin. All rights reserved.
 
 
-namespace A2v10.Infrastructure
+namespace A2v10.Infrastructure;
+
+public interface IControllerLocale
 {
-	public interface IControllerLocale
-	{
-		void SetLocale();
-	}
+	void SetLocale();
 }

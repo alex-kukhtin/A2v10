@@ -36,6 +36,8 @@ using A2v10.Web.Mvc.Filters;
 using A2v10.Web.Identity;
 using A2v10.Web.Base;
 using A2v10.Web.Config;
+using A2v10.Web.Mvc.Interfaces;
+using System.Web.UI;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -56,6 +58,7 @@ namespace A2v10.Web.Mvc.Controllers
 		private readonly IUserStateManager _userStateManager;
 		private readonly IUserLocale _userLocale;
 		private readonly IDataProtectionProvider _dataProtectionProvider;
+		private readonly IHooksProvider _hooksProvider;
 
 		private const String LOCALE_COOKIE = "_locale";
 		private const String QUERYSTRING_COOKIE = "_originurl";
@@ -72,6 +75,7 @@ namespace A2v10.Web.Mvc.Controllers
 			_userStateManager = serviceLocator.GetService<IUserStateManager>();
 			_userLocale = serviceLocator.GetService<IUserLocale>();
 			_dataProtectionProvider = serviceLocator.GetService<IDataProtectionProvider>();
+			_hooksProvider = serviceLocator.GetService<IHooksProvider>();
 			_host.StartApplication(false);
 		}
 
@@ -83,6 +87,10 @@ namespace A2v10.Web.Mvc.Controllers
 			_host = serviceLocator.GetService<IApplicationHost>();
 			_dbContext = serviceLocator.GetService<IDbContext>();
 			_localizer = serviceLocator.GetService<ILocalizer>();
+			_userStateManager = serviceLocator.GetService<IUserStateManager>();
+			_userLocale = serviceLocator.GetService<IUserLocale>();
+			_dataProtectionProvider = serviceLocator.GetService<IDataProtectionProvider>();
+			_hooksProvider = serviceLocator.GetService<IHooksProvider>();
 			_host.StartApplication(false);
 		}
 
@@ -201,13 +209,12 @@ namespace A2v10.Web.Mvc.Controllers
 			SendPage(page, ResourceHelper.LoginScript);
 		}
 
-		// POST: /Account/Login
 		[ActionName("login")]
 		[HttpPost]
 		[IsAjaxOnly]
 		[AllowAnonymous]
 		[ValidateJsonAntiForgeryToken]
-		[HandlAntiForgeryExecptionAttribute]
+		[HandlAntiForgeryExecption]
 		public async Task<ActionResult> LoginPOST()
 		{
 			String status;
@@ -236,6 +243,17 @@ namespace A2v10.Web.Mvc.Controllers
 				switch (result)
 				{
 					case SignInStatus.Success:
+						var sh = _hooksProvider.SessionHooks;
+						if (sh != null)
+						{
+							var msg = sh.OnLogin(Request, Response, user.Id);
+							if (!String.IsNullOrEmpty(msg))
+							{
+								AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+								status = "UI:" + msg;
+								break;
+							}
+						}
 						await UpdateUser(user, success: true);
 						await CallHook("loginSuccess", user);
 						ClearRVTCookie();
@@ -890,6 +908,11 @@ namespace A2v10.Web.Mvc.Controllers
 		[HttpPost]
 		public ActionResult LogOff()
 		{
+			var sh = _hooksProvider.SessionHooks;
+			if (sh != null)
+			{
+				sh.OnLogout(Request, User.Identity.GetUserId<Int64>());
+			}
 			var openIdSettings = OpenIdSettings;
 			if (!String.IsNullOrEmpty(openIdSettings))
 			{
@@ -910,7 +933,6 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 		#region helpers
-
 		private ActionResult RedirectToLocal(String returnUrl)
 		{
 			if (Url.IsLocalUrl(returnUrl))
