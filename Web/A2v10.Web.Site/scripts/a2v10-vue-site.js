@@ -5216,7 +5216,7 @@ template: `
 })();
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220626-7866*/
+/*20220823-7883*/
 // controllers/base.js
 
 (function () {
@@ -5355,6 +5355,7 @@ template: `
 					this.$alert(locale.$PermissionDenied);
 					return;
 				}
+				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
 			},
@@ -5362,6 +5363,7 @@ template: `
 			async $invokeServer(url, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				if (confirm)
 					await this.$confirm(confirm);
@@ -5397,6 +5399,7 @@ template: `
 					console.error('Invalid argument for $execSelected');
 					return;
 				}
+				eventBus.$emit('closeAllPopups');
 				if (!confirm)
 					root._exec_(cmd, arg.$selected);
 				else
@@ -5430,6 +5433,7 @@ template: `
 					return;
 				if (!this.$data.$dirty)
 					return;
+				eventBus.$emit('closeAllPopups');
 				let mainObjectName = this.$data._meta_.$main;
 				let self = this;
 				let root = window.$$rootUrl;
@@ -5573,6 +5577,7 @@ template: `
 
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
+				eventBus.$emit('closeAllPopups');
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
@@ -5637,6 +5642,7 @@ template: `
 			$remove(item, confirm) {
 				if (this.$data.$readOnly) return;
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
 				if (!confirm)
 					item.$remove();
 				else
@@ -5676,6 +5682,7 @@ template: `
 					this.$store.commit('navigate', { url: urlToNavigate });
 			},
 			$navigateSimple(url, newWindow, update) {
+				eventBus.$emit('closeAllPopups');
 				if (newWindow === true) {
 					let nwin = window.open(url, "_blank");
 					if (nwin)
@@ -5686,6 +5693,7 @@ template: `
 			},
 
 			$navigateExternal(url, newWindow) {
+				eventBus.$emit('closeAllPopups');
 				if (newWindow === true) {
 					window.open(url, "_blank");
 				}
@@ -5694,12 +5702,14 @@ template: `
 			},
 
 			$download(url) {
+				eventBus.$emit('closeAllPopups');
 				const root = window.$$rootUrl;
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
 
 			async $upload(url, accept) {
+				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
 				try {
 					let file = await htmlTools.uploadFile(accept, url);
@@ -5718,6 +5728,7 @@ template: `
 			},
 
 			$file(url, arg, opts) {
+				eventBus.$emit('closeAllPopups');
 				const root = window.$$rootUrl;
 				let id = arg;
 				let token = undefined;
@@ -5747,6 +5758,7 @@ template: `
 			},
 
 			$attachment(url, arg, opts) {
+				eventBus.$emit('closeAllPopups');
 				const root = window.$$rootUrl;
 				let cmd = opts && opts.export ? 'export' : 'show';
 				let id = arg;
@@ -5797,6 +5809,8 @@ template: `
 					return;
 				}
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
+
 				let id = elem.$id;
 				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
 				let root = window.$$rootUrl;
@@ -5836,6 +5850,7 @@ template: `
 
 			$dbRemoveSelected(arr, confirm, opts) {
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
 				let sel = arr.$selected;
 				if (!sel)
 					return;
@@ -5852,6 +5867,7 @@ template: `
 			},
 
 			$openSelected(url, arr, newwin, update) {
+				eventBus.$emit('closeAllPopups');
 				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)

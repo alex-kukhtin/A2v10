@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20210627-7788*/
+/*20220823-7883*/
 /* directives/dropdown.js */
 
 (function () {
@@ -27,6 +27,12 @@
 					el._hide();
 				el.classList.remove('show');
 			};
+
+			el.addEventListener('mouseup', (ev) => {
+				// from children elements
+				eventBus.$emit('closeAllPopups');
+				ev.stopPropagation();
+			});
 
 			el.addEventListener('click', function (event) {
 				let trg = event.target;

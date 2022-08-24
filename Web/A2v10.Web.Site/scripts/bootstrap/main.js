@@ -5175,7 +5175,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220626-7866*/
+/*20220823-7883*/
 // controllers/base.js
 
 (function () {
@@ -5314,6 +5314,7 @@ app.modules['std:impl:array'] = function () {
 					this.$alert(locale.$PermissionDenied);
 					return;
 				}
+				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
 			},
@@ -5321,6 +5322,7 @@ app.modules['std:impl:array'] = function () {
 			async $invokeServer(url, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				if (confirm)
 					await this.$confirm(confirm);
@@ -5356,6 +5358,7 @@ app.modules['std:impl:array'] = function () {
 					console.error('Invalid argument for $execSelected');
 					return;
 				}
+				eventBus.$emit('closeAllPopups');
 				if (!confirm)
 					root._exec_(cmd, arg.$selected);
 				else
@@ -5389,6 +5392,7 @@ app.modules['std:impl:array'] = function () {
 					return;
 				if (!this.$data.$dirty)
 					return;
+				eventBus.$emit('closeAllPopups');
 				let mainObjectName = this.$data._meta_.$main;
 				let self = this;
 				let root = window.$$rootUrl;
@@ -5532,6 +5536,7 @@ app.modules['std:impl:array'] = function () {
 
 			$reload(args) {
 				//console.dir('$reload was called for' + this.$baseUrl);
+				eventBus.$emit('closeAllPopups');
 				let self = this;
 				if (utils.isArray(args) && args.$isLazy()) {
 					// reload lazy
@@ -5596,6 +5601,7 @@ app.modules['std:impl:array'] = function () {
 			$remove(item, confirm) {
 				if (this.$data.$readOnly) return;
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
 				if (!confirm)
 					item.$remove();
 				else
@@ -5635,6 +5641,7 @@ app.modules['std:impl:array'] = function () {
 					this.$store.commit('navigate', { url: urlToNavigate });
 			},
 			$navigateSimple(url, newWindow, update) {
+				eventBus.$emit('closeAllPopups');
 				if (newWindow === true) {
 					let nwin = window.open(url, "_blank");
 					if (nwin)
@@ -5645,6 +5652,7 @@ app.modules['std:impl:array'] = function () {
 			},
 
 			$navigateExternal(url, newWindow) {
+				eventBus.$emit('closeAllPopups');
 				if (newWindow === true) {
 					window.open(url, "_blank");
 				}
@@ -5653,12 +5661,14 @@ app.modules['std:impl:array'] = function () {
 			},
 
 			$download(url) {
+				eventBus.$emit('closeAllPopups');
 				const root = window.$$rootUrl;
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
 
 			async $upload(url, accept) {
+				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
 				try {
 					let file = await htmlTools.uploadFile(accept, url);
@@ -5677,6 +5687,7 @@ app.modules['std:impl:array'] = function () {
 			},
 
 			$file(url, arg, opts) {
+				eventBus.$emit('closeAllPopups');
 				const root = window.$$rootUrl;
 				let id = arg;
 				let token = undefined;
@@ -5706,6 +5717,7 @@ app.modules['std:impl:array'] = function () {
 			},
 
 			$attachment(url, arg, opts) {
+				eventBus.$emit('closeAllPopups');
 				const root = window.$$rootUrl;
 				let cmd = opts && opts.export ? 'export' : 'show';
 				let id = arg;
@@ -5756,6 +5768,8 @@ app.modules['std:impl:array'] = function () {
 					return;
 				}
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
+
 				let id = elem.$id;
 				let lazy = elem.$parent.$isLazy ? elem.$parent.$isLazy() : false;
 				let root = window.$$rootUrl;
@@ -5795,6 +5809,7 @@ app.modules['std:impl:array'] = function () {
 
 			$dbRemoveSelected(arr, confirm, opts) {
 				if (this.$isLoading) return;
+				eventBus.$emit('closeAllPopups');
 				let sel = arr.$selected;
 				if (!sel)
 					return;
@@ -5811,6 +5826,7 @@ app.modules['std:impl:array'] = function () {
 			},
 
 			$openSelected(url, arr, newwin, update) {
+				eventBus.$emit('closeAllPopups');
 				url = url || '';
 				let sel = arr.$selected;
 				if (!sel)

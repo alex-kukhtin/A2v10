@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="../css/site.css" />
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+
+		table {
+			width: 500px;
+		}
+
+		td, th {
+			padding: 6px;
+			border: 1px solid #ccc;
+		}
+
+			td.lev {
+				background-color: aliceblue;
+				width: 6rem;
+				border-right: none;
+			}
+
+			tbody > tr:nth-child(2n+1) {
+				background-color:rgba(224, 224, 224, 0.2);
+			}
+
+			td.fr {
+				border-left: none;
+			}
+
+			td.lev-0 {
+			}
+
+		tr.lev-1 > td.indent {
+			padding-left: 34px;
+		}
+
+		tr.lev-2 > td.indent {
+			padding-left: 62px;
+		}
+
+		button.toggle {
+			width:24px;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<h3>Tree Grid</h3>
+		<a2-treegrid :root="Tree" item="Items">
+			<template v-slot:row="row">
+				<td class="indent">
+					<button class="toggle" v-if="row.itm.Items.length" @click="row.that.toggle2(row.itm)">+</button>
+					<i class="ico ico-access"></i>
+					<span v-text="row.itm.Id"></span>
+				</td>
+				<td v-text="row.itm.Name"></td>
+				<td><i class="ico ico-access"></i></td>
+			</template>
+		</a2-treegrid>
+	</div>
+	<script src="../scripts/vue.js"></script>
+	<script src="./treegrid.js"></script>
+	<script>
+		new Vue({
+			el: "#app",
+			data: {
+				Tree: {
+					Items: [
+						{
+							$expanded: true,
+							Id: 100,
+							Name: 'Item 1',
+							Items: [
+								{ $expanded: true, Id: 101, Name: 'Item 1.1', Items: [] },
+								{
+									$expanded: true, Id: 102, Name: 'Item 1.2',
+									Items: [
+										{ $expanded: true, Id: 1001, Name: 'Item 1.2.1', Items: [] },
+										{ $expanded: true, Id: 1002, Name: 'Item 1.2.2', Items: [] }
+									]
+								}
+							]
+						},
+						{
+							$expanded: true,
+							Id: 200,
+							Name: 'Item 2',
+							Items: [
+								{ $expanded: true, Id: 201, Name: 'Item 2.1', Items: [] },
+								{ $expanded: true, Id: 202, Name: 'Item 2.2', Items: [] }
+							]
+						}
+					]
+				}
+			},
+			methods: {
+			},
+			mounted() {
+			}
+		});
+	</script>
+</body>
+</html>

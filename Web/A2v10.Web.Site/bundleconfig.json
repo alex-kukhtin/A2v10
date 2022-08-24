@@ -62,6 +62,7 @@
 			"app/components/spansum.js",
 			"app/components/megamenu.js",
 			"app/components/iframetarget.js",
+			"app/components/treegrid.js",
 			"app/directives/*.js",
 			"app/controllers/base.js",
 			"app/controllers/navmenu.js",

@@ -99,6 +99,7 @@
     <Content Include="app\bootstrap\shell.js" />
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\accelcommand.js" />
+    <Content Include="app\components\treegrid.js" />
     <Content Include="app\components\inlinedialog.js" />
     <Content Include="app\components\spansum.js" />
     <Content Include="app\components\timepicker.js" />
@@ -248,6 +249,8 @@
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
     <Content Include="TestPages\d3line.js" />
+    <Content Include="TestPages\treegrid.js" />
+    <Content Include="TestPages\treegrid.html" />
     <Content Include="TestPages\dashboard2.js" />
     <Content Include="TestPages\dashboard.html" />
     <Content Include="TestPages\nativeHost.html" />
@@ -352,6 +355,8 @@
     <Content Include="package.json" />
     <Content Include="libman.json" />
     <Content Include="manifest.json" />
+    <Content Include="compilerconfig.json.bindings" />
+    <Content Include="Less.Advance\TreeGrid.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
