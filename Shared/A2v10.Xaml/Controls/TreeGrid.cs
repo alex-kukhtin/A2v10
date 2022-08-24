@@ -25,6 +25,10 @@ public class TreeGrid : Control, ITableControl
 	public Object ItemsSource { get; set; }
 	public String ItemsProperty { get; set; }
 
+	public Boolean ExpandAll { get; set; }
+
+	public Length MinWidth { get; set; }
+
 	public TreeGridCellCollection Cells { get; set; } = new TreeGridCellCollection();
 	public TreeGridCellCollection Header { get; set; } = new TreeGridCellCollection();
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -65,8 +69,12 @@ public class TreeGrid : Control, ITableControl
 
 		treeGrid.AddCssClassBool(Hover, "hover");
 		treeGrid.AddCssClassBool(Striped, "striped");
+		treeGrid.MergeAttribute(":expand-all", ExpandAll.ToString().ToLowerInvariant());
 
 		treeGrid.MergeAttribute("folder-style", FolderStyle.ToString().ToLowerInvariant());
+
+		if (MinWidth != null)
+			treeGrid.MergeStyle("min-width", MinWidth.Value);
 
 		var rootBind = GetBinding(nameof(ItemsSource));
 		if (rootBind != null)

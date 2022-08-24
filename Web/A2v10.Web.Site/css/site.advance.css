@@ -7004,12 +7004,9 @@ table.tree-grid .overlay {
   flex-direction: row;
 }
 table.tree-grid .mark {
-  width: 18px;
+  min-width: 18px;
   margin-right: 0.5rem;
   text-align: right;
-}
-table.tree-grid tr.active {
-  background-color: var(--activeBkLight);
 }
 table.tree-grid.hover tr:hover:not(.active) {
   background-color: var(--hoverBkLight);
@@ -7017,14 +7014,23 @@ table.tree-grid.hover tr:hover:not(.active) {
 table.tree-grid.striped tbody > tr:nth-child(even) {
   background-color: rgba(208, 208, 208, 0.1);
 }
+table.tree-grid tr.active {
+  background-color: var(--activeBkLight);
+}
 table.tree-grid tr.lev-1 .mark {
-  width: 36px;
+  min-width: 36px;
 }
 table.tree-grid tr.lev-2 .mark {
-  width: 54px;
+  min-width: 54px;
 }
 table.tree-grid tr.lev-3 .mark {
-  width: 72px;
+  min-width: 72px;
+}
+table.tree-grid tr.lev-4 .mark {
+  min-width: 90px;
+}
+table.tree-grid tr.lev-5 .mark {
+  min-width: 108px;
 }
 table.tree-grid a.toggle {
   display: inline-block;

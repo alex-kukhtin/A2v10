@@ -16,9 +16,6 @@ public class TreeGridCellCollection : List<TreeGridCell>
 [ContentProperty("Content")]
 public class TreeGridCell : UiContentElement
 {
-	public Int32? ColSpan { get; set; }
-	public Int32? RowSpan { get; set; }
-
 	public Boolean? Bold { get; set; }
 	public Boolean? Italic { get; set; }
 	public Boolean Gray { get; set; }
@@ -27,6 +24,9 @@ public class TreeGridCell : UiContentElement
 	public TextAlign Align { get; set; }
 
 	public Boolean ShowButton { get; set; }
+
+	public Length Width { get; set; }
+
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -62,6 +62,8 @@ public class TreeGridCell : UiContentElement
 		td.AddCssClassBoolNo(Italic, "italic");
 		td.AddCssClassBool(Gray, "gray");
 
+		if (Width != null)
+			td.MergeStyle("width", Width.Value);
 
 		if (Align != TextAlign.Left)
 			td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
@@ -71,17 +73,6 @@ public class TreeGridCell : UiContentElement
 
 		if (Content is ITableControl)
 			td.AddCssClass("ctrl");
-
-		var colSpanBind = GetBinding(nameof(ColSpan));
-		if (colSpanBind != null)
-			td.MergeAttribute(":colspan", colSpanBind.GetPath(context));
-		else
-			MergeAttributeInt32(td, context, nameof(ColSpan), "colspan", ColSpan);
-		var rowSpanBind = GetBinding(nameof(RowSpan));
-		if (rowSpanBind != null)
-			td.MergeAttribute(":rowspan", rowSpanBind.GetPath(context));
-		else
-			MergeAttributeInt32(td, context, nameof(RowSpan), "rowspan", RowSpan);
 
 		if (ShowButton)
 			td.AddCssClass("indent");

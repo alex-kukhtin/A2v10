@@ -53,7 +53,7 @@ table.tree-grid {
 
 	tr:first-child {
 		th.gl-h {
-			border-top-width:1px;
+			border-top-width: 1px;
 		}
 	}
 
@@ -75,13 +75,9 @@ table.tree-grid {
 	}
 
 	.mark {
-		width: @toggle-size;
+		min-width: @toggle-size;
 		margin-right: @tg-padding-h;
 		text-align: right;
-	}
-
-	tr.active {
-		background-color: @tg-active-bg-color;
 	}
 
 	&.hover {
@@ -96,16 +92,28 @@ table.tree-grid {
 		}
 	}
 
+	tr.active {
+		background-color: @tg-active-bg-color;
+	}
+
 	tr.lev-1 .mark {
-		width: @toggle-size * 2;
+		min-width: @toggle-size * 2;
 	}
 
 	tr.lev-2 .mark {
-		width: @toggle-size * 3;
+		min-width: @toggle-size * 3;
 	}
 
 	tr.lev-3 .mark {
-		width: @toggle-size * 4;
+		min-width: @toggle-size * 4;
+	}
+
+	tr.lev-4 .mark {
+		min-width: @toggle-size * 5;
+	}
+
+	tr.lev-5 .mark {
+		min-width: @toggle-size * 6;
 	}
 
 	a.toggle {

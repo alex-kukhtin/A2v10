@@ -13,10 +13,11 @@ let gridTemplate = `
 		</tr>
 	</thead>
 	<tbody>
-		<tr v-for="(itm, ix) in rows" :class="itmClass(itm)">
+		<template v-for="(itm, ix) in rows">
+			
 			<td><button v-if='itm.hasChildren' @click.stop.prevent="toggle(itm)">+</button></td>
 			<slot name="row" v-bind:itm="itm.item" v-bind:that="that"></slot>
-		</tr>
+		</template>
 	</tbody>
 </table>
 `;

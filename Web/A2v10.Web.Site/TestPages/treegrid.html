@@ -53,13 +53,15 @@
 		<h3>Tree Grid</h3>
 		<a2-treegrid :root="Tree" item="Items">
 			<template v-slot:row="row">
-				<td class="indent">
-					<button class="toggle" v-if="row.itm.Items.length" @click="row.that.toggle2(row.itm)">+</button>
-					<i class="ico ico-access"></i>
-					<span v-text="row.itm.Id"></span>
-				</td>
-				<td v-text="row.itm.Name"></td>
-				<td><i class="ico ico-access"></i></td>
+				<tr :class="row.that.itmClass(row.itm)">
+					<td class="indent">
+						<button class="toggle" v-if="row.itm.Items.length" @click="row.that.toggle2(row.itm)">+</button>
+						<i class="ico ico-access"></i>
+						<span v-text="row.itm.Id"></span>
+					</td>
+					<td v-text="row.itm.Name"></td>
+					<td><i class="ico ico-access"></i></td>
+				</tr>
 			</template>
 		</a2-treegrid>
 	</div>

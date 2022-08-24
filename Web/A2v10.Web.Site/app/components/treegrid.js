@@ -25,7 +25,8 @@
 		props: {
 			root: [Object, Array],
 			item: String,
-			folderStyle: String
+			folderStyle: String,
+			expandAll: Boolean
 		},
 		computed: {
 			rows() {
@@ -75,20 +76,22 @@
 		},
 		mounted() {
 			// expand all
-			let expand = (pa, lev) => {
-				for (let i = 0; i < pa.length; i++) {
-					let el = pa[i];
-					el.$expanded = true;
-					let ch = el[this.item];
-					if (ch) {
-						expand(ch, lev + 1);
+			if (this.expandAll) {
+				let expand = (pa, lev) => {
+					for (let i = 0; i < pa.length; i++) {
+						let el = pa[i];
+						el.$expanded = true;
+						let ch = el[this.item];
+						if (ch) {
+							expand(ch, lev + 1);
+						}
 					}
-				}
-			};
-			if (Array.isArray(this.root))
-				expand(this.root, 0);
-			else
-				expand(this.root[this.item], 0);
+				};
+				if (Array.isArray(this.root))
+					expand(this.root, 0);
+				else
+					expand(this.root[this.item], 0);
+			}
 		}
 	});
 })();
