@@ -6983,6 +6983,9 @@ table.tree-grid th {
   background-color: #f5f5f5;
   color: #999;
 }
+table.tree-grid th.fit {
+  width: 1px;
+}
 table.tree-grid .gl-v {
   border-right-width: 1px;
 }

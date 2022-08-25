@@ -8,13 +8,13 @@ using System.Windows.Markup;
 
 namespace A2v10.Xaml;
 
-public class TreeGridCellCollection : List<TreeGridCell>
+public class TreeGridColumnCollection : List<TreeGridColumn>
 {
 
 }
 
 [ContentProperty("Content")]
-public class TreeGridCell : UiContentElement
+public class TreeGridColumn : UiContentElement
 {
 	public Boolean? Bold { get; set; }
 	public Boolean? Italic { get; set; }
@@ -27,6 +27,9 @@ public class TreeGridCell : UiContentElement
 
 	public Length Width { get; set; }
 
+	public Boolean Fit { get; set; }
+
+	public String Header { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -104,6 +107,22 @@ public class TreeGridCell : UiContentElement
 		{
 			RenderContent(context);
 		}
+		td.RenderEnd(context);
+	}
+	public void RenderColumn(String tagName, RenderContext context, Action<TagBuilder> onRender = null)
+	{
+		if (SkipRender(context))
+			return;
+		var td = new TagBuilder(tagName);
+		onRender?.Invoke(td);
+		if (Fit)
+			td.AddCssClass("fit");
+		else if (Width != null)
+			td.MergeStyle("width", Width.Value);
+		if (Align != TextAlign.Left)
+			td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+		td.RenderStart(context);
+		context.Writer.Write(context.LocalizeCheckApostrophe(Header.Replace("\\n", "<br>")));
 		td.RenderEnd(context);
 	}
 }

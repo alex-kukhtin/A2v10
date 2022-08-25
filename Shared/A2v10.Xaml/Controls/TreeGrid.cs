@@ -13,7 +13,7 @@ public enum FolderStyle
 	Italic
 }
 
-[ContentProperty("Cells")]
+[ContentProperty("Columns")]
 public class TreeGrid : Control, ITableControl
 {
 	public Boolean Hover { get; set; }
@@ -29,8 +29,9 @@ public class TreeGrid : Control, ITableControl
 
 	public Length MinWidth { get; set; }
 
-	public TreeGridCellCollection Cells { get; set; } = new TreeGridCellCollection();
-	public TreeGridCellCollection Header { get; set; } = new TreeGridCellCollection();
+	public Command DoubleClick { get; set; }
+
+	public TreeGridColumnCollection Columns { get; set; } = new TreeGridColumnCollection();
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (SkipRender(context))
@@ -81,29 +82,36 @@ public class TreeGrid : Control, ITableControl
 			treeGrid.MergeAttribute(":root", rootBind.GetPath(context));
 
 		treeGrid.MergeAttribute("item", ItemsProperty);
+
+		var dblClickBind = GetBindingCommand(nameof(DoubleClick));
+		if (dblClickBind != null)
+		{
+			// Function!
+			treeGrid.MergeAttribute(":doubleclick", "() => " + dblClickBind.GetCommand(context));
+		}
+
+
 		treeGrid.RenderStart(context);
 		var slot = new TagBuilder("template");
 		slot.MergeAttribute("v-slot:row", "row");
 		slot.RenderStart(context);
 		using (new ScopeContext(context, "row.itm", rootBind.Path))
 		{
-			foreach (var cell in Cells)
+			foreach (var col in Columns)
 			{
-				cell.RenderCell("td", context, SetGridlines);
+				col.RenderCell("td", context, SetGridlines);
 			}
 		}
 		slot.RenderEnd(context);
-		if (Header.Count > 0)
+		// render header
+		var hdr = new TagBuilder("template");
+		hdr.MergeAttribute("v-slot:header", "hrd");
+		hdr.RenderStart(context);
+		foreach (var col in Columns)
 		{
-			var hdr = new TagBuilder("template");
-			hdr.MergeAttribute("v-slot:header", "hrd");
-			hdr.RenderStart(context);
-			foreach (var cell in Header)
-			{
-				cell.RenderCell("th", context, SetGridlines);
-			}
-			hdr.RenderEnd(context);
+			col.RenderColumn("th", context, SetGridlines);
 		}
+		hdr.RenderEnd(context);
 		treeGrid.RenderEnd(context);
 	}
 
@@ -125,14 +133,14 @@ public class TreeGrid : Control, ITableControl
 	protected override void OnEndInit()
 	{
 		base.OnEndInit();
-		foreach (var col in Cells)
+		foreach (var col in Columns)
 			col.SetParent(this);
 	}
 
 	public override void OnSetStyles()
 	{
 		base.OnSetStyles();
-		foreach (var col in Cells)
+		foreach (var col in Columns)
 			col.OnSetStyles();
 	}
 }

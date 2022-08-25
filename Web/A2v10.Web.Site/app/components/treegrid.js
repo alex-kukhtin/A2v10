@@ -13,7 +13,8 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" @click.stop.prevent="select(itm)">
+		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
+				@click.stop.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
 			<slot name="row" v-bind:itm="itm.elem" v-bind:that="that"></slot>
 		</tr>
 	</tbody>
@@ -26,7 +27,8 @@
 			root: [Object, Array],
 			item: String,
 			folderStyle: String,
-			expandAll: Boolean
+			expandAll: Boolean,
+			doubleclick: Function
 		},
 		computed: {
 			rows() {
@@ -50,12 +52,23 @@
 				return this;
 			}
 		},
+		watch: {
+			root() {
+				console.dir('whatch items');
+			}
+		},
 		methods: {
 			toggle(itm) {
 				itm.$expanded = !itm.$expanded;
 			},
 			select(itm) {
 				itm.elem.$select(this.root);
+			},
+			dblClick(evt, itm) {
+				evt.stopImmediatePropagation();
+				window.getSelection().removeAllRanges();
+				if (this.doubleclick)
+					this.doubleclick();
 			},
 			hasChildren(itm) {
 				let ch = itm[this.item];
