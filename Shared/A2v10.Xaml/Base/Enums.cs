@@ -330,6 +330,7 @@ namespace A2v10.Xaml
 		Flag2,
 		File,
 		FileContent,
+		FileDownloadPdf,
 		FileError,
 		FileFailure,
 		FileImage,

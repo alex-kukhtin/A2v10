@@ -20,7 +20,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7847') format('woff'), url('/css/fonts/A2v10.ttf?v=7847') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7883') format('woff'), url('/css/fonts/A2v10.ttf?v=7883') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -408,6 +408,9 @@
 }
 .ico-file-error:before {
   content: "\e9de";
+}
+.ico-file-download-pdf:before {
+  content: "\e9df";
 }
 .ico-file-preview:before {
   content: "\e9e3";
