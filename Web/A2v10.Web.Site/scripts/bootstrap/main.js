@@ -3958,7 +3958,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-/*20220414-7837*/
+/*20220825-7883*/
 // services/datamodel.js
 
 /*
@@ -4234,8 +4234,15 @@ app.modules['std:impl:array'] = function () {
 			elem.$selected = false;
 
 		if (elem._meta_.$items) {
-			elem.$expanded = false; // tree elem
-			elem.$collapsed = false; // sheet elem
+			let exp = false;
+			let clps = false;
+			if (elem._meta_.$expanded) {
+				let val = source[elem._meta_.$expanded];
+				exp = !!val;
+				clps = !val;
+			}
+			elem.$expanded = exp; // tree elem
+			elem.$collapsed = clps; // sheet elem
 			elem.$level = 0;
 			addTreeMethods(elem);
 		}

@@ -2715,7 +2715,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-/*20220414-7837*/
+/*20220825-7883*/
 // services/datamodel.js
 
 /*
@@ -2991,8 +2991,15 @@ app.modules['std:impl:array'] = function () {
 			elem.$selected = false;
 
 		if (elem._meta_.$items) {
-			elem.$expanded = false; // tree elem
-			elem.$collapsed = false; // sheet elem
+			let exp = false;
+			let clps = false;
+			if (elem._meta_.$expanded) {
+				let val = source[elem._meta_.$expanded];
+				exp = !!val;
+				clps = !val;
+			}
+			elem.$expanded = exp; // tree elem
+			elem.$collapsed = clps; // sheet elem
 			elem.$level = 0;
 			addTreeMethods(elem);
 		}
@@ -11159,18 +11166,14 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2022 Alex Kukhtin. All rights reserved.
 
-// 20220824-7883
+// 20220825-7883
 // components/treegrid.js
 
 (function () {
 
 	let gridTemplate = `
 <table>
-	<thead>
-		<tr>
-			<slot name="header"></slot>
-		</tr>
-	</thead>
+	<thead><tr><slot name="header"></slot></tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
 				@click.stop.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
@@ -11186,7 +11189,6 @@ Vue.component('a2-panel', {
 			root: [Object, Array],
 			item: String,
 			folderStyle: String,
-			expandAll: Boolean,
 			doubleclick: Function
 		},
 		computed: {
@@ -11209,6 +11211,11 @@ Vue.component('a2-panel', {
 			},
 			that() {
 				return this;
+			}
+		},
+		watch: {
+			root() {
+				console.dir('whatch items');
 			}
 		},
 		methods: {
@@ -11239,25 +11246,6 @@ Vue.component('a2-panel', {
 			},
 			toggleClass(itm) {
 				return itm.$expanded ? 'expanded' : 'collapsed';
-			}
-		},
-		mounted() {
-			// expand all
-			if (this.expandAll) {
-				let expand = (pa, lev) => {
-					for (let i = 0; i < pa.length; i++) {
-						let el = pa[i];
-						el.$expanded = true;
-						let ch = el[this.item];
-						if (ch) {
-							expand(ch, lev + 1);
-						}
-					}
-				};
-				if (Array.isArray(this.root))
-					expand(this.root, 0);
-				else
-					expand(this.root[this.item], 0);
 			}
 		}
 	});

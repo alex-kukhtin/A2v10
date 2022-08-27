@@ -292,6 +292,8 @@ function modelData(template, data) {
 				sb.Append($"$permissions: '{meta.Permissions}',");
 			if (!String.IsNullOrEmpty(meta.Items))
 				sb.Append($"$items: '{meta.Items}',");
+			if (!String.IsNullOrEmpty(meta.Expanded))
+				sb.Append($"$expanded: '{meta.Expanded}',");
 			if (!String.IsNullOrEmpty(meta.MainObject))
 				sb.Append($"$main: '{meta.MainObject}',");
 			if (!String.IsNullOrEmpty(meta.Token))

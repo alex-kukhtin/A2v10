@@ -7014,7 +7014,7 @@ table.tree-grid .mark {
 table.tree-grid.hover tr:hover:not(.active) {
   background-color: var(--hoverBkLight);
 }
-table.tree-grid.striped tbody > tr:nth-child(even) {
+table.tree-grid.striped tbody > tr:nth-child(even):not(.active) {
   background-color: rgba(208, 208, 208, 0.1);
 }
 table.tree-grid tr.active {

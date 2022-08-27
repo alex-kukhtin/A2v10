@@ -1,17 +1,13 @@
 ﻿// Copyright © 2022 Alex Kukhtin. All rights reserved.
 
-// 20220824-7883
+// 20220825-7883
 // components/treegrid.js
 
 (function () {
 
 	let gridTemplate = `
 <table>
-	<thead>
-		<tr>
-			<slot name="header"></slot>
-		</tr>
-	</thead>
+	<thead><tr><slot name="header"></slot></tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
 				@click.stop.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
@@ -27,7 +23,6 @@
 			root: [Object, Array],
 			item: String,
 			folderStyle: String,
-			expandAll: Boolean,
 			doubleclick: Function
 		},
 		computed: {
@@ -85,25 +80,6 @@
 			},
 			toggleClass(itm) {
 				return itm.$expanded ? 'expanded' : 'collapsed';
-			}
-		},
-		mounted() {
-			// expand all
-			if (this.expandAll) {
-				let expand = (pa, lev) => {
-					for (let i = 0; i < pa.length; i++) {
-						let el = pa[i];
-						el.$expanded = true;
-						let ch = el[this.item];
-						if (ch) {
-							expand(ch, lev + 1);
-						}
-					}
-				};
-				if (Array.isArray(this.root))
-					expand(this.root, 0);
-				else
-					expand(this.root[this.item], 0);
 			}
 		}
 	});

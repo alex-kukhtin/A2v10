@@ -24,13 +24,9 @@ public class TreeGrid : Control, ITableControl
 	public FolderStyle FolderStyle { get; set; }
 	public Object ItemsSource { get; set; }
 	public String ItemsProperty { get; set; }
-
-	public Boolean ExpandAll { get; set; }
-
 	public Length MinWidth { get; set; }
-
 	public Command DoubleClick { get; set; }
-
+	public DropDownMenu ContextMenu { get; set; }
 	public TreeGridColumnCollection Columns { get; set; } = new TreeGridColumnCollection();
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -70,16 +66,23 @@ public class TreeGrid : Control, ITableControl
 
 		treeGrid.AddCssClassBool(Hover, "hover");
 		treeGrid.AddCssClassBool(Striped, "striped");
-		treeGrid.MergeAttribute(":expand-all", ExpandAll.ToString().ToLowerInvariant());
 
 		treeGrid.MergeAttribute("folder-style", FolderStyle.ToString().ToLowerInvariant());
 
 		if (MinWidth != null)
 			treeGrid.MergeStyle("min-width", MinWidth.Value);
 
+		String contextId = null;
+		if (ContextMenu != null)
+		{
+			contextId = $"ctx-{Guid.NewGuid()}";
+			treeGrid.MergeAttribute("v-contextmenu", $"'{contextId}'");
+		}
+
 		var rootBind = GetBinding(nameof(ItemsSource));
-		if (rootBind != null)
-			treeGrid.MergeAttribute(":root", rootBind.GetPath(context));
+		if (rootBind == null)
+			throw new XamlException("TreeGrid. ItemsSource must be a Bind");
+		treeGrid.MergeAttribute(":root", rootBind.GetPath(context));
 
 		treeGrid.MergeAttribute("item", ItemsProperty);
 
@@ -112,6 +115,7 @@ public class TreeGrid : Control, ITableControl
 			col.RenderColumn("th", context, SetGridlines);
 		}
 		hdr.RenderEnd(context);
+		RenderContextMenu(ContextMenu, context, contextId);
 		treeGrid.RenderEnd(context);
 	}
 

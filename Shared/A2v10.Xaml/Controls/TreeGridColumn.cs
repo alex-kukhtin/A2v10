@@ -122,7 +122,8 @@ public class TreeGridColumn : UiContentElement
 		if (Align != TextAlign.Left)
 			td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
 		td.RenderStart(context);
-		context.Writer.Write(context.LocalizeCheckApostrophe(Header.Replace("\\n", "<br>")));
+		if (Header != null)
+			context.Writer.Write(context.LocalizeCheckApostrophe(Header.Replace("\\n", "<br>")));
 		td.RenderEnd(context);
 	}
 }

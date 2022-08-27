@@ -47,7 +47,7 @@ table.tree-grid {
 		color: @dark-gray-text-color;
 
 		&.fit {
-			width:1px;
+			width: 1px;
 		}
 	}
 
@@ -91,7 +91,7 @@ table.tree-grid {
 	}
 
 	&.striped tbody {
-		> tr:nth-child(even) {
+		> tr:nth-child(even):not(.active) {
 			background-color: @alter-bg-color;
 		}
 	}
