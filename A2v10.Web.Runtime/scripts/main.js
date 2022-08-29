@@ -2715,7 +2715,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-/*20220414-7837*/
+/*20220825-7883*/
 // services/datamodel.js
 
 /*
@@ -2991,8 +2991,15 @@ app.modules['std:impl:array'] = function () {
 			elem.$selected = false;
 
 		if (elem._meta_.$items) {
-			elem.$expanded = false; // tree elem
-			elem.$collapsed = false; // sheet elem
+			let exp = false;
+			let clps = false;
+			if (elem._meta_.$expanded) {
+				let val = source[elem._meta_.$expanded];
+				exp = !!val;
+				clps = !val;
+			}
+			elem.$expanded = exp; // tree elem
+			elem.$collapsed = clps; // sheet elem
 			elem.$level = 0;
 			addTreeMethods(elem);
 		}
@@ -11159,24 +11166,18 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2022 Alex Kukhtin. All rights reserved.
 
-// 20220824-7883
+// 20220825-7883
 // components/treegrid.js
 
 (function () {
 
 	let gridTemplate = `
 <table>
-	<thead>
-		<tr>
-			<th style="width:1px">+</th>
-			<th>1</th>
-			<th>2</th>
-			<th>3</th>
-		</tr>
-	</thead>
+	<thead><tr><slot name="header"></slot></tr></thead>
 	<tbody>
-		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)">
-			<slot name="row" v-bind:itm="itm" v-bind:that="that"></slot>
+		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
+				@click.stop.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
+			<slot name="row" v-bind:itm="itm.elem" v-bind:that="that"></slot>
 		</tr>
 	</tbody>
 </table>
@@ -11186,7 +11187,9 @@ Vue.component('a2-panel', {
 		template: gridTemplate,
 		props: {
 			root: [Object, Array],
-			item: String
+			item: String,
+			folderStyle: String,
+			doubleclick: Function
 		},
 		computed: {
 			rows() {
@@ -11195,32 +11198,54 @@ Vue.component('a2-panel', {
 					for (let i = 0; i < pa.length; i++) {
 						let el = pa[i];
 						let ch = el[this.item];
-						arr.push(el);
+						arr.push({ elem: el, level: lev });
 						if (ch && el.$expanded)
 							collect(ch, lev + 1);
 					}
 				};
 				if (Array.isArray(this.root))
-					collect(this.root);
+					collect(this.root, 0);
 				else
 					collect(this.root[this.item], 0);
-				console.dir(arr);
 				return arr;
 			},
 			that() {
 				return this;
 			}
 		},
+		watch: {
+			root() {
+				console.dir('whatch items');
+			}
+		},
 		methods: {
 			toggle(itm) {
 				itm.$expanded = !itm.$expanded;
+			},
+			select(itm) {
+				itm.elem.$select(this.root);
+			},
+			dblClick(evt, itm) {
+				evt.stopImmediatePropagation();
+				window.getSelection().removeAllRanges();
+				if (this.doubleclick)
+					this.doubleclick();
 			},
 			hasChildren(itm) {
 				let ch = itm[this.item];
 				return ch && ch.length > 0;
 			},
 			rowClass(itm) {
-				return `lev lev-${itm.$level}`;
+				let cls = `lev lev-${itm.level}`;
+				if (itm.elem.$selected)
+					cls += ' active';
+				if (this.hasChildren(itm.elem) && this.folderStyle !== 'none')
+					cls += ' ' + this.folderStyle;
+					
+				return cls;
+			},
+			toggleClass(itm) {
+				return itm.$expanded ? 'expanded' : 'collapsed';
 			}
 		}
 	});
