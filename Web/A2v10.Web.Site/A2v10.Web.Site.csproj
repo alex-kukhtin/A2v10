@@ -357,6 +357,7 @@
     <Content Include="manifest.json" />
     <Content Include="compilerconfig.json.bindings" />
     <Content Include="Less.Advance\TreeGrid.less" />
+    <Content Include="Less\TreeGrid.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
