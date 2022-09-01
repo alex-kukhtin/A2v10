@@ -4,7 +4,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7883') format('woff'), url('/css/fonts/A2v10.ttf?v=7883') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7884') format('woff'), url('/css/fonts/A2v10.ttf?v=7884') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -199,6 +199,12 @@
 }
 .ico-chart-stacked-line:before {
   content: "\e929";
+}
+.ico-mode-light:before {
+  content: "\e975";
+}
+.ico-mode-dark:before {
+  content: "\e976";
 }
 .ico-check:before {
   content: "\e978";
@@ -479,6 +485,9 @@
 }
 .ico-history:before {
   content: "\e9ff";
+}
+.ico-upgrade:before {
+  content: "\ea01";
 }
 .ico-reload:before,
 .ico-refresh:before {
