@@ -1,54 +1,46 @@
-﻿using System;
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace A2v10.Xaml.Bootstrap
+namespace A2v10.Xaml.Bootstrap;
+
+[TypeConverter(typeof(BsCollectionConverter))]
+public class BsElementCollection : List<BsElement>
 {
-	[TypeConverter(typeof(BsCollectionConverter))]
-	public class BsElementCollection : List<BsElement>
+	public BsElementCollection()
 	{
-		public BsElementCollection()
-		{
 
-		}
+	}
+}
+
+public class BsCollectionConverter : TypeConverter
+{
+	public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+	{
+		if (sourceType == typeof(String))
+			return true;
+		else if (sourceType == typeof(BsElement))
+			return true;
+		return base.CanConvertFrom(context, sourceType);
 	}
 
-	public class BsCollectionConverter : TypeConverter
+	public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
 	{
-		public override Boolean CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-		{
-			if (sourceType == typeof(String))
-				return true;
-			else if (sourceType == typeof(BsElement))
-				return true;
-			return base.CanConvertFrom(context, sourceType);
-		}
-
-		public override Object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, Object value)
-		{
-			if (value == null)
-				return null;
-			if (value is String)
+		if (value == null)
+			return null;
+		if (value is String valString)
+			return new BsElementCollection
 			{
-				throw new NotImplementedException("Convert string to BsElementCollection");
-				var x = new BsElementCollection
-				{
-				};
-				return x;
-			}
-			else if (value is BsElement)
+				new Span() {Content = valString }
+			};
+		else if (value is BsElement valBsElem)
+			return new BsElementCollection
 			{
-				var x = new BsElementCollection
-				{
-					value as BsElement
-				};
-				return x;
-			}
-			return base.ConvertFrom(context, culture, value);
-		}
+				valBsElem
+			};
+		return base.ConvertFrom(context, culture, value);
 	}
 }

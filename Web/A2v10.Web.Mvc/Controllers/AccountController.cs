@@ -1017,18 +1017,18 @@ namespace A2v10.Web.Mvc.Controllers
 				var strResult = Encoding.UTF8.GetString(decBytes);
 				var xdata = strResult.Split('\b');
 				if (xdata.Length != 2)
-					return new HttpStatusCodeResult(400);
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 				var user = await UserManager.FindAsync(new UserLoginInfo("ExternalId", xdata[0].ToUpperInvariant()));
 				if (user == null)
-					return new HttpStatusCodeResult(400);
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 				if (!DateTime.TryParseExact(xdata[1], "o", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime date))
-					return new HttpStatusCodeResult(400);
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 				if ((DateTime.UtcNow - date).TotalSeconds > 300) // 5 minutes
-					return new HttpStatusCodeResult(400);
+					return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 				await SignInManager.SignInAsync(user, true, true);
 				return RedirectToLocal("~/");
 			} 
-			catch (Exception ex)
+			catch (Exception /*ex*/)
 			{
 				return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 			}
