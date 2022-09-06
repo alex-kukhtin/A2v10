@@ -10890,9 +10890,9 @@ Vue.component('a2-panel', {
 	});
 })();
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20180605-7210
+// 20220906-7884
 // components/feedback.js*/
 
 (function () {
@@ -10919,14 +10919,16 @@ Vue.component('a2-panel', {
     <div class="feedback-body">
 		<template v-if="shown">
 			<div v-html="source.promptText"></div>
-			<div style="margin-bottom:20px" />
-			<div class="control-group" style="">
-				<label v-html="source.labelText" /> 
-				<div class="input-group">
-					<textarea rows="5" maxlength="2048" v-model="value" style="height: 92px;max-height:400px" v-auto-size="true" />
+			<div v-if="!source.skipForm">
+				<div style="margin-bottom:20px" />
+				<div class="control-group" style="">
+					<label v-html="source.labelText" /> 
+					<div class="input-group">
+						<textarea rows="5" maxlength="2048" v-model="value" style="height: 92px;max-height:400px" v-auto-size="true" />
+					</div>
 				</div>
+				<button class="btn btn-primary" :disabled="noValue" @click.prevent="submit" v-text="source.buttonText" />
 			</div>
-			<button class="btn btn-primary" :disabled="noValue" @click.prevent="submit" v-text="source.buttonText" />
 			<include v-if="source.externalFragment" :src="source.externalFragment"/>
 			
 		</template>
