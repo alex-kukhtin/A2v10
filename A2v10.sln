@@ -117,7 +117,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "A2v10.Pdf.Report", "..\A2v1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "A2v10.Xaml.Report", "..\A2v10.Pdf.Report\A2v10.Xaml.Report\A2v10.Xaml.Report.csproj", "{982B4B91-2299-4C8D-BD6A-50A95F663DFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebExtensionSample", "WebExtensionSample\WebExtensionSample.csproj", "{759E5BDB-FFE2-4F77-B6BA-3808E8E61698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebExtensionSample", "WebExtensionSample\WebExtensionSample.csproj", "{759E5BDB-FFE2-4F77-B6BA-3808E8E61698}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

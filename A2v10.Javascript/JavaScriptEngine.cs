@@ -22,14 +22,16 @@ namespace A2v10.Javascript
 		private readonly IDbContext _dbContext;
 		private readonly IApplicationHost _host;
 		private readonly ISmsService _smsService;
+		private readonly IServiceLocator _locator;
 
 		private String _currentDirectory;
 
-		public JavaScriptEngine(IDbContext dbContext, IApplicationHost host, ISmsService smsService)
+		public JavaScriptEngine(IDbContext dbContext, IApplicationHost host, ISmsService smsService, IServiceLocator locator)
 		{
 			_dbContext = dbContext;
 			_host = host;
 			_smsService = smsService;
+			_locator = locator;
 		}
 
 		public static Engine CreateEngine()
@@ -45,7 +47,7 @@ namespace A2v10.Javascript
 		public ScriptEnvironment Environment()
 		{
 			if (_env == null)
-				_env = new ScriptEnvironment(_engine.Value, _dbContext, _host, _smsService, _currentDirectory);
+				_env = new ScriptEnvironment(_engine.Value, _locator, _dbContext, _host, _smsService, _currentDirectory);
 			return _env;
 		}
 

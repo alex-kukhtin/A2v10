@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7885</version>
+		<version>10.0.7886</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -77,6 +77,10 @@
 		<file src="bin/Owin.dll" target="lib/net48" />
 		<file src="bin/Jint.dll" target="lib/net48" />
 		<file src="bin/Esprima.dll" target="lib/net48" />
+		<file src="bin/System.Buffers.dll" target="lib/net48" />
+		<file src="bin/System.Memory.dll" target="lib/net48" />
+		<file src="bin/System.Numerics.Vectors.dll" target="lib/net48" />
+		<file src="bin/System.Runtime.CompilerServices.Unsafe.dll" target="lib/net48" />
 
 		<file src="README.md" target="docs/" />
 

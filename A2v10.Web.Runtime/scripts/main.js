@@ -11773,7 +11773,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220823-7883*/
+/*20220910-7886*/
 // controllers/base.js
 
 (function () {
@@ -12332,6 +12332,8 @@ Vue.directive('resize', {
 				attUrl = attUrl + urltools.makeQueryString(qry);
 				if (opts && opts.newWindow)
 					window.open(attUrl, '_blank');
+				else if (opts && opts.print)
+					htmlTools.printDirect(attUrl);
 				else
 					window.location.assign(attUrl);
 			},

@@ -8,6 +8,7 @@ using Jint.Native;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using System.Text;
 
 namespace A2v10.Javascript
 {
@@ -18,9 +19,10 @@ namespace A2v10.Javascript
 		private readonly ScriptConfig _config;
 		private readonly ISmsService _smsService;
 		private readonly IApplicationHost _host;
+		private readonly IServiceLocator _locator;
 		private readonly String _currentDir;
 
-		public ScriptEnvironment(Engine engine, IDbContext dbContext, IApplicationHost host, ISmsService smsService, String currentDir)
+		public ScriptEnvironment(Engine engine, IServiceLocator locator, IDbContext dbContext, IApplicationHost host, ISmsService smsService, String currentDir)
 		{
 			_engine = engine;
 			_dbContext = dbContext;
@@ -28,15 +30,13 @@ namespace A2v10.Javascript
 			_smsService = smsService;
 			_host = host;
 			_currentDir = currentDir;
+			_locator = locator;
 		}
 
 #pragma warning disable IDE1006 // Naming Styles
 		public ScriptConfig config => _config;
-#pragma warning restore IDE1006 // Naming Styles
 
-#pragma warning disable IDE1006 // Naming Styles
 		public ExpandoObject loadModel(ExpandoObject prms)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			String source = prms.Get<String>("source");
 			String command = prms.Get<String>("procedure");
@@ -45,9 +45,7 @@ namespace A2v10.Javascript
 			return dm.Root;
 		}
 
-#pragma warning disable IDE1006 // Naming Styles
 		public ExpandoObject saveModel(ExpandoObject prms)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			String source = prms.Get<String>("source");
 			String command = prms.Get<String>("procedure");
@@ -57,9 +55,7 @@ namespace A2v10.Javascript
 			return dm.Root;
 		}
 
-#pragma warning disable IDE1006 // Naming Styles
 		public ExpandoObject executeSql(ExpandoObject prms)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			String source = prms.Get<String>("source");
 			String command = prms.Get<String>("procedure");
@@ -67,31 +63,34 @@ namespace A2v10.Javascript
 			return _dbContext.ExecuteAndLoadExpando(source, command, dmParams);
 		}
 
-#pragma warning disable IDE1006 // Naming Styles
 		public FetchResponse fetch(String url)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			return fetch(url, null);
 		}
 
-#pragma warning disable IDE1006 // Naming Styles
 		public FetchResponse fetch(String url, ExpandoObject prms)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			return new FetchCommand().Execute(url, prms);
 		}
 
 
-#pragma warning disable IDE1006 // Naming Styles
 		public SendSmsResponse sendSms(String phone, String message, String extId)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			return new SendSmsCommand(_smsService).Execute(phone, message, extId);
 		}
 
-#pragma warning disable IDE1006 // Naming Styles
+		public FetchResponse invokeCommand(String cmd, String baseUrl, ExpandoObject parameters)
+		{
+			return new InvokeCommand(_locator).Execute(cmd, baseUrl, parameters);
+		}
+
+		public String toBase64(String source, int codePage)
+		{
+			var bytes = Encoding.GetEncoding(codePage).GetBytes(source);
+			return Convert.ToBase64String(bytes);
+		}
+
 		public JsValue require(String fileName, ExpandoObject prms, ExpandoObject args)
-#pragma warning restore IDE1006 // Naming Styles
 		{
 			var script = _host.ApplicationReader.ReadTextFile(_currentDir, fileName);
 
@@ -107,5 +106,6 @@ return function(_this, prms, args) {{
 			var func = _engine.Evaluate(code);
 			return _engine.Invoke(func, this, prms, args);
 		}
+#pragma warning restore IDE1006 // Naming Styles
 	}
 }

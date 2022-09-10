@@ -8,11 +8,13 @@ public class PdfViewer : UIElementBase
 {
 	public Size Size { get; set; }
 	public String Source { get; set; }
+
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (SkipRender(context))
 			return;
 		var tag = new TagBuilder("object");
+		MergeAttributes(tag, context);
 		tag.MergeAttribute("type", "application/pdf");
 		if (Size != null)
 		{

@@ -57,7 +57,8 @@ namespace A2v10.Web.Mvc.Start
                 IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);
                 IExternalDataProvider dataProvider = new ExternalDataContext();
 				IHttpService httpService = new HttpService();
-				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, host, smsService);
+				IJavaScriptEngine javaScriptEngine = new JavaScriptEngine(dbContext, host, smsService, locator);
+				ICommandInvoker commandInvoker = new CommandInvoker(locator);
 
 				locator.RegisterService<IDbContext>(dbContext);
 				locator.RegisterService<IProfiler>(profiler);
@@ -76,6 +77,8 @@ namespace A2v10.Web.Mvc.Start
 				locator.RegisterService<IExternalDataProvider>(dataProvider);
 				locator.RegisterService<IHttpService>(httpService);
 				locator.RegisterService<IJavaScriptEngine>(javaScriptEngine);
+				locator.RegisterService<ICommandInvoker>(commandInvoker);
+
 				locator.RegisterService<ITokenProvider>(tokenProvider);
 				locator.RegisterService<IHooksProvider>(_hooksProvider);
 
