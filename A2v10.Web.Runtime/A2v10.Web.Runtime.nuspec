@@ -80,7 +80,6 @@
 		<file src="bin/System.Buffers.dll" target="lib/net48" />
 		<file src="bin/System.Memory.dll" target="lib/net48" />
 		<file src="bin/System.Numerics.Vectors.dll" target="lib/net48" />
-		<file src="bin/System.Runtime.CompilerServices.Unsafe.dll" target="lib/net48" />
 
 		<file src="README.md" target="docs/" />
 
