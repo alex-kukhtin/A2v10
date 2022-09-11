@@ -15,6 +15,8 @@ using A2v10.Interop;
 using A2v10.Interop.AzureStorage;
 using System.Globalization;
 using System.Text;
+using System.ComponentModel;
+using A2v10.Javascript;
 
 namespace A2v10.Request
 {
@@ -290,7 +292,9 @@ namespace A2v10.Request
 			{
 				case RequestFileType.json:
 					var dm = await _dbContext.LoadModelAsync(ru.CurrentSource, ru.LoadProcedure, loadPrms);
-					var json = JsonConvert.SerializeObject(dm.Root, JsonHelpers.StandardSerializerSettings);
+					var settings = JsonHelpers.StandardSerializerSettings;
+					settings.Converters.Add(new IgnoreNullValueExpandoObjectConverter());
+					var json = JsonConvert.SerializeObject(dm.Root, settings);
 					return new AttachmentInfo()
 					{
 						SkipToken = true,

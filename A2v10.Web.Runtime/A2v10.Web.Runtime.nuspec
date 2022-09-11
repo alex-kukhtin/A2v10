@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7886</version>
+		<version>10.0.7887</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -15,16 +15,18 @@
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
 		<readme>docs\README.md</readme>
 		<references>
-			<reference file="A2v10.Web.Mvc.dll" />
-			<reference file="A2v10.Xaml.dll" />
-			<reference file="A2v10.Xaml.Bootstrap.dll" />
-			<reference file="A2v10.Workflow.dll" />
-			<reference file="A2v10.Data.Interfaces.dll" />
-			<reference file="A2v10.Infrastructure.dll" />
-			<reference file="A2v10.Messaging.dll" />
-			<reference file="A2v10.Reports.dll" />
-			<reference file="A2v10.Xaml.Report.dll" />
-			<reference file="Microsoft.Web.Infrastructure.dll" />
+			<group targetFramework=".NETFramework4.8">
+				<reference file="A2v10.Web.Mvc.dll" />
+				<reference file="A2v10.Xaml.dll" />
+				<reference file="A2v10.Xaml.Bootstrap.dll" />
+				<reference file="A2v10.Workflow.dll" />
+				<reference file="A2v10.Data.Interfaces.dll" />
+				<reference file="A2v10.Infrastructure.dll" />
+				<reference file="A2v10.Messaging.dll" />
+				<reference file="A2v10.Reports.dll" />
+				<reference file="A2v10.Xaml.Report.dll" />
+				<reference file="Microsoft.Web.Infrastructure.dll" />
+			</group>
 		</references>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System.Xaml" targetFramework="net48" />
@@ -33,7 +35,10 @@
 		<contentFiles>
 		</contentFiles>
 		<dependencies>
-			<group targetFramework=".NETFramework4.8"/>
+			<group targetFramework=".NETFramework4.8">
+				<dependency id="System.Memory" version="4.5.5" />
+				<dependency id="System.Runtime.CompilerServices.Unsafe" version="6.0.0" />
+			</group>
 		</dependencies>
 	</metadata>
 	<files>
@@ -72,14 +77,23 @@
 		<file src="bin/System.Web.WebPages.Deployment.dll" target="lib/net48"/>
 		<file src="bin/Microsoft.IdentityModel.Tokens.dll" target="lib/net48" />
 		<file src="bin/Microsoft.IdentityModel.Logging.dll" target="lib/net48" />
-		<file src="bin/Microsoft.IdentityModel.Abstractions.dll" target="lib/net48" />		
+		<file src="bin/Microsoft.IdentityModel.Abstractions.dll" target="lib/net48" />
 		<file src="bin/Newtonsoft.Json.dll" target="lib/net48" />
 		<file src="bin/Owin.dll" target="lib/net48" />
 		<file src="bin/Jint.dll" target="lib/net48" />
 		<file src="bin/Esprima.dll" target="lib/net48" />
-		<file src="bin/System.Buffers.dll" target="lib/net48" />
-		<file src="bin/System.Memory.dll" target="lib/net48" />
-		<file src="bin/System.Numerics.Vectors.dll" target="lib/net48" />
+
+		<file src="bin/A2v10.Infrastructure.dll" target="ref/net48" />
+		<file src="bin/A2v10.Data.Interfaces.dll" target="ref/net48" />
+		<file src="bin/A2v10.Xaml.dll" target="ref/net48" />
+		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="ref/net48" />
+		<file src="bin/Microsoft.Web.Infrastructure.dll" target="ref/net48" />
+		<file src="bin/A2v10.Xaml.Report.dll" target="ref/net48" />
+		<file src="bin/A2v10.Web.Mvc.dll" target="ref/net48" />
+		<file src="bin/A2v10.Workflow.dll" target="ref/net48" />
+		<file src="bin/A2v10.Messaging.dll" target="ref/net48" />
+		<file src="bin/A2v10.Reports.dll" target="ref/net48" />
+
 
 		<file src="README.md" target="docs/" />
 

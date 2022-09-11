@@ -8,7 +8,7 @@ using A2v10.Web.Identity.ApiKey;
 namespace A2v10.Web.Mvc.Hooks
 {
 
-	public class GenerateApiKey : IInvokeTarget
+	public class AppList : IInvokeTarget
 	{
 
 		public void Inject()
