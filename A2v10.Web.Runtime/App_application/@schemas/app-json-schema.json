@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7785",
+	"$version": "10.0.7789",
 	"title": "JSON Schema for app.json",
 	"type": "object",
 
@@ -18,7 +18,7 @@
 					"title": { "type": "string" },
 					"url": {
 						"type": "string",
-						"pattern": "^\/.+"
+						"pattern": "^[\/|http|https].+"
 					}
 				},
 				"additionalProperties": false
