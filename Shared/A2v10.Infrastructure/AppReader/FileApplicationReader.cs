@@ -107,6 +107,12 @@ namespace A2v10.Infrastructure
 			}
 			if (appKey != null)
 				appKey = "/" + appKey;
+
+			if (path.StartsWith("$"))
+			{
+				path = path.Replace("$", "../");
+			}
+
 			String fullPath = Path.Combine($"{AppPath}{appKey}", path, fileName);
 
 			if (EmulateBox)

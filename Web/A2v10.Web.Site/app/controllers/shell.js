@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20210713-7795*/
+/*20220912-7888*/
 /* controllers/shell.js */
 
 (function () {
@@ -56,7 +56,10 @@
 				this.$store.commit('navigate', { url: '/app/about' });
 			},
 			appLink(lnk) {
-				this.$store.commit('navigate', { url: lnk.url });
+				if (lnk.url.startsWith("http"))
+					window.open(lnk.url, "_blank");
+				else
+					this.$store.commit('navigate', { url: lnk.url });
 			},
 			navigate(url) {
 				this.$store.commit('navigate', { url: url });
