@@ -84,10 +84,14 @@ namespace A2v10.Javascript
 			return new InvokeCommand(_locator).Execute(cmd, baseUrl, parameters);
 		}
 
-		public String toBase64(String source, int codePage)
+		public String toBase64(String source, int codePage, bool safe)
 		{
-			var bytes = Encoding.GetEncoding(codePage).GetBytes(source);
-			return Convert.ToBase64String(bytes);
+			var enc = Encoding.GetEncoding(codePage, new EncoderReplacementFallback(String.Empty), DecoderFallback.ReplacementFallback);
+			var bytes = enc.GetBytes(source);
+			var res = Convert.ToBase64String(bytes);
+			if (safe)
+				res = res.Replace('+', '-').Replace('/', '_').TrimEnd('=');
+			return res;
 		}
 
 		public JsValue require(String fileName, ExpandoObject prms, ExpandoObject args)
