@@ -148,6 +148,13 @@ public class RenderContext
 	public Boolean IsWizard => _root is Wizard;
 
 
+	public XamlElement FindComponent(String name)
+	{
+		if (_root is IRootContainer container)
+			return container.FindComponent(name);
+		return null;
+	}
+
 	public IDataModel DataModel => _dataModel;
 
 	public Boolean IsDataModelIsReadOnly

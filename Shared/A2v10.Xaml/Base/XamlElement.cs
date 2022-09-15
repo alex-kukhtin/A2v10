@@ -57,7 +57,7 @@ namespace A2v10.Xaml
 
 		}
 
-		public virtual void OnSetStyles()
+		public virtual void OnSetStyles(RootContainer root)
 		{
 
 		}

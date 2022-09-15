@@ -36,11 +36,11 @@ namespace A2v10.Xaml
 			}
 		}
 
-        public override void OnSetStyles()
+        public override void OnSetStyles(RootContainer root)
         {
-            base.OnSetStyles();
+            base.OnSetStyles(root);
 			foreach (var c in Children)
-				c.OnSetStyles();
+				c.OnSetStyles(root);
 		}
 
         protected override void OnEndInit()
@@ -104,11 +104,11 @@ namespace A2v10.Xaml
 			}
 		}
 
-        public override void OnSetStyles()
+        public override void OnSetStyles(RootContainer root)
         {
-            base.OnSetStyles();
+            base.OnSetStyles(root);
 			foreach (var c in Cases)
-				c.OnSetStyles();
+				c.OnSetStyles(root);
         }
 
         protected override void OnEndInit()

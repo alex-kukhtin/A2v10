@@ -50,11 +50,11 @@ namespace A2v10.Xaml
 				r.SetParent(this);
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
+			base.OnSetStyles(root);
 			foreach (var r in Children)
-				r.OnSetStyles();
+				r.OnSetStyles(root);
 		}
 	}
 

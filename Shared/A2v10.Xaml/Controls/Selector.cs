@@ -152,10 +152,10 @@ public class Selector : ValuedControl, ITableControl
 		ItemsPanel?.SetParent(this);
 	}
 
-	public override void OnSetStyles()
+	public override void OnSetStyles(RootContainer root)
 	{
-		base.OnSetStyles();
-		ItemsPanel?.OnSetStyles();
+		base.OnSetStyles(root);
+		ItemsPanel?.OnSetStyles(root);
 	}
 
 	public override void OnDispose()

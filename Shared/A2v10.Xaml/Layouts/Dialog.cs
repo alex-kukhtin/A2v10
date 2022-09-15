@@ -277,10 +277,10 @@ namespace A2v10.Xaml
 				Maximize = true;
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
-			CollectionView?.OnSetStyles();
+			base.OnSetStyles(root);
+			CollectionView?.OnSetStyles(root);
 		}
 
 		public override void OnDispose()

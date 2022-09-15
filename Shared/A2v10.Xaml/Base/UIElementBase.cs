@@ -265,12 +265,12 @@ namespace A2v10.Xaml
 			base.OnEndInit();
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
 			switch (XamlStyle)
 			{
 				case StyleDescriptor sd:
-					sd.Set(this);
+					sd.Set(this, root);
 					break;
 				case Style st:
 					st.Set(this);

@@ -226,11 +226,11 @@ namespace A2v10.Xaml
 				xamlElement.SetParent(this);
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
+			base.OnSetStyles(root);
 			if (Content is XamlElement xamlElement)
-				xamlElement.OnSetStyles();
+				xamlElement.OnSetStyles(root);
 		}
 	}
 

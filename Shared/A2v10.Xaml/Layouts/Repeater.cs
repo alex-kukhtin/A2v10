@@ -43,10 +43,10 @@ namespace A2v10.Xaml
 			Content?.SetParent(this);
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
-			Content?.OnSetStyles();
+			base.OnSetStyles(root);
+			Content?.OnSetStyles(root);
 		}
 	}
 }

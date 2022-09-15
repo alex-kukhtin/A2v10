@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Drawing;
 using System.Windows.Markup;
 
 namespace A2v10.Xaml
@@ -32,11 +33,11 @@ namespace A2v10.Xaml
 			(Content as XamlElement)?.OnDispose();
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
+			base.OnSetStyles(root);
 			if (Content is XamlElement xamlCont)
-				xamlCont.OnSetStyles();
+				xamlCont.OnSetStyles(root);
 		}
 
 		protected override void OnEndInit()

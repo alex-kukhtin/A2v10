@@ -7,6 +7,6 @@ namespace A2v10.Xaml
 	{
 		void RenderElement(RenderContext context, Action<TagBuilder> onRender = null);
 		void SetParent(XamlElement parent);
-		void OnSetStyles();
+		void OnSetStyles(RootContainer root);
 	}
 }

@@ -131,11 +131,11 @@ namespace A2v10.Xaml
 				tab.SetParent(this);
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
+			base.OnSetStyles(root);
 			foreach (var tab in Tabs)
-				tab.OnSetStyles();
+				tab.OnSetStyles(root);
 		}
 
 		public override void OnDispose()

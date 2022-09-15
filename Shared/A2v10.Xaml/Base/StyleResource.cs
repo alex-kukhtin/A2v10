@@ -11,11 +11,14 @@ namespace A2v10.Xaml
 		public RootContainer Root;
 		public String StyleName;
 
-		public void Set(XamlElement elem)
+		public void Set(XamlElement elem, RootContainer rootContainer)
 		{
-			if (Root.Styles == null)
+			var root = Root ?? rootContainer;
+			if (root == null)
 				return;
-			if (Root.Styles.TryGetValue(StyleName, out Style style))
+			if (root.Styles == null)
+				return;
+			if (root.Styles.TryGetValue(StyleName, out Style style))
 				style.Set(elem);
 			else
 				throw new XamlException($"Style '{StyleName}' not found");
@@ -42,11 +45,9 @@ namespace A2v10.Xaml
 			IProvideValueTarget iTarget = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
 			if (!(serviceProvider.GetService(typeof(IRootObjectProvider)) is IRootObjectProvider iRoot))
 				throw new InvalidOperationException("StyleResource.ProvideValue. IRootObjectProvider is null");
-			if (!(iRoot.RootObject is RootContainer root))
-				return null;
 			return new StyleDescriptor()
 			{
-				Root = root,
+				Root = iRoot.RootObject as RootContainer,
 				StyleName = Member
 			};
 		}

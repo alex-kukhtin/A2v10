@@ -77,11 +77,11 @@ namespace A2v10.Xaml
 				c.SetParent(this);
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
+			base.OnSetStyles(root);
 			foreach (var c in Cells)
-				c.OnSetStyles();
+				c.OnSetStyles(root);
 		}
 
 		public override void OnDispose()

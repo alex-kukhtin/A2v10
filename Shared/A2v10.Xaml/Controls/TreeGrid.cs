@@ -141,10 +141,10 @@ public class TreeGrid : Control, ITableControl
 			col.SetParent(this);
 	}
 
-	public override void OnSetStyles()
+	public override void OnSetStyles(RootContainer root)
 	{
-		base.OnSetStyles();
+		base.OnSetStyles(root);
 		foreach (var col in Columns)
-			col.OnSetStyles();
+			col.OnSetStyles(root);
 	}
 }

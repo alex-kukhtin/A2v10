@@ -43,11 +43,11 @@ namespace A2v10.Xaml
 				xamlElem.SetParent(this);
 		}
 
-		public override void OnSetStyles()
+		public override void OnSetStyles(RootContainer root)
 		{
-			base.OnSetStyles();
+			base.OnSetStyles(root);
 			if (Content is XamlElement xamlElem)
-				xamlElem.OnSetStyles();
+				xamlElem.OnSetStyles(root);
 		}
 
 		protected Boolean HasContent
