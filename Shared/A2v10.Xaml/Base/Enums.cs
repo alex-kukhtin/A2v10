@@ -398,6 +398,7 @@ namespace A2v10.Xaml
 		Power,
 		Print,
 		Process,
+		Qrcode,
 		Query,
 		Queue,
 		Refresh,

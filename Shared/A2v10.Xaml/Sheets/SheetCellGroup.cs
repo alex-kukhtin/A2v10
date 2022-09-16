@@ -10,6 +10,7 @@ public class SheetCellGroup : XamlElement, ISheetCell
 {
 	public SheetCells Cells { get; } = new SheetCells();
 	public Object ItemsSource { get; set; }
+	public Boolean? If { get; set; }
 
 	public void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -17,6 +18,7 @@ public class SheetCellGroup : XamlElement, ISheetCell
 		if (isBind != null)
 		{
 			var t = new TagBuilder("template");
+			MergeBindingAttributeBool(t, context, "v-if", nameof(If), If);
 			t.MergeAttribute("v-for", $"(cell, cellIndex) in {isBind.GetPath(context)}");
 			t.RenderStart(context);
 			using (new ScopeContext(context, "cell", isBind.Path))
