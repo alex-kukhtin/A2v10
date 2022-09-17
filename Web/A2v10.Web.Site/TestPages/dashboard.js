@@ -1,6 +1,7 @@
 ﻿/*
- row, col, 
-  
+ 1. checkIntersections
+ 2. dragImage
+ 3. cellSize
  */
 
 let itemTemplate = `
@@ -19,14 +20,19 @@ let placeholderTemplate = `
 `;
 
 let boardTemplate = `
-<div>
-	<div class=dashboard :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}">
+<div class="dashboard-container" :class="{editing: editMode}">
+	<div class="drag-host" ref=drag-host></div>
+	<div v-if="editable" class="dashboard-toolbar">
+		<slot name="toolbar" v-if="editable"></slot>
+	</div>
+	<div class=dashboard :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}" ref=dash>
 		<template v-for="row in rows" v-if = editMode >
 			<a2-dashboard-placeholder v-show="placeholderVisible(row, col)" ref=ph
-				v-for="col in cols" :row="row" :col="col" :key="row * rows + col"/>
+				v-for="col in cols" :row="row" :col="col" :key="row + ':' + col"/>
 		</template>
 		<slot>
-			<a2-dashboard-item v-for="(itm, ix) in items" :key=ix :item="itm" :edit-mode="editMode"
+			<a2-dashboard-item v-for="(itm, ix) in items" :key=ix :item="itm" 
+					:edit-mode="editMode"
 					:row="itm.row" :col="itm.col" :col-span="itm.colSpan" :row-span="itm.rowSpan">
 				<slot name="element" v-bind:item="itm"></slot>
 			</a2-dashboard-item>
@@ -101,6 +107,8 @@ Vue.component('a2-dashboard-item', {
 				this.posY = Math.floor(ev.offsetY / (ev.target.offsetHeight / this.rowSpan));
 				this.posX = Math.floor(ev.offsetX / (ev.target.offsetWidth / this.colSpan))
 			}
+			let img = this.$parent.$getDragImage(this);
+			ev.dataTransfer.setDragImage(img, ev.offsetX, ev.offsetY);
 			this.$parent.$start(this);
 		},
 		dragEnd(ev) {
@@ -122,25 +130,46 @@ Vue.component('a2-dashboard', {
 		'a2-dashboard-placeholder': placeHolder
 	},
 	props: {
-		cols: Number,
-		rows: Number,
 		items: Array,
 		list: Array,
-		editMode: Boolean,
-		setRows: Function
+		editable: Boolean,
+		editMode: false,
+		cellSize: { type: Object, default: { cx: '100px', cy: '100px' } },
 	},
 	data() {
 		return {
 			staticElems: [],
-			currentElem: null
+			currentElem: null,
+			lastPhRow: 0,
+			lastPhCol: 0
 		};
 	},
 	computed: {
+		rows() {
+			let rows = 0;
+			if (this.items && this.items.length)
+				rows = this.items.reduce((p, c) => Math.max(p, c.row + (c.rowSpan || 1) - 1), -Infinity);
+			if (this.editMode) {
+				rows += 1;
+				rows = Math.max(rows, this.lastPhRow);
+			}
+			return rows;
+		},
+		cols() {
+			let cols = 0;
+			if (this.items && this.items.length)
+				cols = this.items.reduce((p, c) => Math.max(p, c.col + (c.colSpan || 1) - 1), -Infinity);
+			if (this.editMode) {
+				cols += 1;
+				cols = Math.max(cols, this.lastPhCol);
+			}
+			return cols;
+		},
 		templateColumns() {
-			return `repeat(${this.cols}, 1fr)`;
+			return `repeat(${this.cols}, ${this.cellSize.cx})`;
 		},
 		templateRows() {
-			return `repeat(${this.rows}, minMax(50px, auto))`;
+			return `repeat(${this.rows}, ${this.cellSize.cy})`;
 		},
 		elements() {
 			if (this.items)
@@ -178,18 +207,34 @@ Vue.component('a2-dashboard', {
 		$findPlaceholderPos(row, col) {
 			return this.$refs.ph.find(x => x.row === row && x.col === col);
 		},
-		$hover(arr) {
+		$hover(arr, pos) {
 			this.$refs.ph.forEach(ph => {
 				let sign = `${ph.row}:${ph.col}`;
 				let find = arr.find(ai => ai === sign);
 				ph.hover = !!find;
 			});
+			this.lastPhRow = pos.y + pos.cy;
+			this.lastPhCol = pos.x + pos.cx;
 		},
 		$clearHover() {
 			this.$refs.ph.forEach(ph => ph.hover = false);
 		},
 		$start(el) {
 			this.currentElem = el;
+		},
+		$getDragImage(el) {
+			let img = this.$refs['drag-host'];
+			let rs = window.getComputedStyle(this.$refs.dash);
+			//console.log(rs.gridColumnGap, rs.gridRowGap, rs.gridTemplateColumns, rs.gridTemplateRows);
+			let colSize = parseFloat(rs.gridTemplateColumns.split(' ')[0]);
+			let rowSize = parseFloat(rs.gridTemplateRows.split(' ')[0]);
+			let colGap = parseFloat(rs.gridColumnGap);
+			let rowGap = parseFloat(rs.gridRowGap);
+			//console.log(colGap, rowGap);
+			img.style.width = (colSize * el.colSpan + (el.colSpan - 1) * colGap) + 'px';
+			img.style.height = (rowSize * el.rowSpan + (el.rowSpan - 1) * rowGap) + 'px';
+			//console.log(img.style.width, img.style.height);
+			return img;
 		},
 		$setHover(el, val) {
 			let ce = this.currentElem;
@@ -199,10 +244,10 @@ Vue.component('a2-dashboard', {
 			let x = ph.col - ce.posX;
 			let y = ph.row - ce.posY;
 			let arr = [];
-			for (let r = 0; r < ce.rowSpan; r++) 
-				for (let c = 0; c < ce.colSpan; c++) 
+			for (let r = 0; r < ce.rowSpan; r++)
+				for (let c = 0; c < ce.colSpan; c++)
 					arr.push(`${r + y}:${c + x}`);
-			this.$hover(arr);
+			this.$hover(arr, { x, y, cx: ce.colSpan, cy: ce.rowSpan });
 		},
 		$enter(el) {
 			this.$setHover(el, true);
@@ -210,14 +255,29 @@ Vue.component('a2-dashboard', {
 		$canDrop(el) {
 			let ce = this.currentElem;
 			if (!ce) return false;
-			let y1 = el.row - ce.posY;
-			let y2 = y1 + ce.rowSpan - 1;
-			let x1 = el.col - ce.posX;
-			let x2 = x1 + ce.colSpan - 1;
-			//console.dir(`x1: ${x1}, x2: ${x2}, y1: ${y1}, y2: ${y2}`);
-			if (y1 < 1 || y2 > this.rows) return false;
-			if (x1 < 1 || x2 > this.cols) return false;
-			//TODO: check intersections 
+			let pos = {
+				t: el.row - ce.posY,
+				l: el.col - ce.posX
+			};
+			pos.b = pos.t + ce.rowSpan - 1;
+			pos.r = pos.l + ce.colSpan - 1;
+
+			let intersect = (el) => {
+				let r = {
+					t: el.row,
+					l: el.col,
+					b: el.row + (el.rowSpan || 1) - 1,
+					r: el.col + (el.colSpan || 1) - 1
+				};
+				let ints =
+					r.l > pos.r ||
+					r.r < pos.l ||
+					r.t > pos.b ||
+					r.b < pos.t;
+				return !ints;
+			}
+			// check intersections here
+			return !this.items.some(el => el !== ce.item && intersect(el));
 			return true;
 		},
 		$drop(el) {
@@ -231,8 +291,14 @@ Vue.component('a2-dashboard', {
 						this.items.push(Object.assign({}, ce.item));
 				}
 				this.currentElem = null;
-				if (this.setRows)
-					this.setRows(1);
+			}
+		}
+	},
+	watch: {
+		editMode(val) {
+			if (!val) {
+				this.lastPhRow = 0;
+				this.lastPhCol = 0;
 			}
 		}
 	}
