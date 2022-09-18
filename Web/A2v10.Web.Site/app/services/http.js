@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220518-7876
+// 20220918-7891
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -8,12 +8,18 @@ app.modules['std:http'] = function () {
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
 
+	const httpQueue = {
+		arr: [],
+		processing: false
+	};
+
 	return {
 		get,
 		post,
 		load,
 		upload,
-		localpost
+		localpost,
+		queue
 	};
 
 	async function doRequest(method, url, data, raw, skipEvents) {
@@ -111,6 +117,7 @@ app.modules['std:http'] = function () {
 	}
 
 	function load(url, selector, baseUrl) {
+
 		if (selector) {
 			let fc = selector.firstElementChild
 			if (fc && fc.__vue__) {
@@ -213,6 +220,23 @@ app.modules['std:http'] = function () {
 		} else {
 			throw response.statusText;
 		}
+	}
+
+	function queue(url, selector) {
+		httpQueue.arr.push({ url, selector });
+		if (!httpQueue.processing)
+			doQueue();
+	}
+
+	async function doQueue() {
+		if (!httpQueue.arr.length)
+			return;
+		httpQueue.processing = true;
+		while (httpQueue.arr.length > 0) {
+			let el = httpQueue.arr.shift();
+			await load(el.url, el.selector, null);
+		}
+		httpQueue.processing = false;
 	}
 };
 

@@ -24,6 +24,9 @@ namespace A2v10.Xaml
 		public Boolean Compact { get; set; }
 		public Length MinWidth { get; set; }
 
+		public Length Width { get; set; }
+		public Length Height { get; set; }
+
 		public ShadowStyle DropShadow { get; set; }
 
 		public Icon Icon { get; set; }
@@ -37,6 +40,10 @@ namespace A2v10.Xaml
 			MergeAttributes(panel, context);
 			if (MinWidth != null)
 				panel.MergeStyleUnit("min-width", MinWidth.Value);
+			if (Width != null)
+				panel.MergeStyleUnit("width", Width.Value);
+			if (Height != null)
+				panel.MergeStyleUnit("height", Height.Value);
 
 			if (DropShadow != ShadowStyle.None)
 			{

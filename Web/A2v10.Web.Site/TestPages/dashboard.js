@@ -22,8 +22,8 @@ let placeholderTemplate = `
 let boardTemplate = `
 <div class="dashboard-container" :class="{editing: editMode}">
 	<div class="drag-host" ref=drag-host></div>
-	<div v-if="editable" class="dashboard-toolbar">
-		<slot name="toolbar" v-if="editable"></slot>
+	<div v-if="editable" class="dashboard-start-toolbar">
+		<slot name="startbtn" v-if="editable && !editMode"></slot>
 	</div>
 	<div class=dashboard :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}" ref=dash>
 		<template v-for="row in rows" v-if = editMode >

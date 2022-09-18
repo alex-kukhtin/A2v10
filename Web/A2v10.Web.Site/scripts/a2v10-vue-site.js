@@ -2205,7 +2205,7 @@ app.modules['std:html'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220518-7876
+// 20220918-7891
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -2213,12 +2213,18 @@ app.modules['std:http'] = function () {
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
 
+	const httpQueue = {
+		arr: [],
+		processing: false
+	};
+
 	return {
 		get,
 		post,
 		load,
 		upload,
-		localpost
+		localpost,
+		queue
 	};
 
 	async function doRequest(method, url, data, raw, skipEvents) {
@@ -2316,6 +2322,7 @@ app.modules['std:http'] = function () {
 	}
 
 	function load(url, selector, baseUrl) {
+
 		if (selector) {
 			let fc = selector.firstElementChild
 			if (fc && fc.__vue__) {
@@ -2418,6 +2425,23 @@ app.modules['std:http'] = function () {
 		} else {
 			throw response.statusText;
 		}
+	}
+
+	function queue(url, selector) {
+		httpQueue.arr.push({ url, selector });
+		if (!httpQueue.processing)
+			doQueue();
+	}
+
+	async function doQueue() {
+		if (!httpQueue.arr.length)
+			return;
+		httpQueue.processing = true;
+		while (httpQueue.arr.length > 0) {
+			let el = httpQueue.arr.shift();
+			await load(el.url, el.selector, null);
+		}
+		httpQueue.processing = false;
 	}
 };
 
@@ -5019,9 +5043,9 @@ template: `
 })();
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20210618-7785
+// 20220918-7891
 /*components/include.js*/
 
 (function () {
@@ -5051,7 +5075,8 @@ template: `
 			cssClass: String,
 			needReload: Boolean,
 			insideDialog: Boolean,
-			done: Function
+			done: Function,
+			queued: Boolean
 		},
 		data() {
 			return {
@@ -5162,7 +5187,7 @@ template: `
 		props: {
 			source: String,
 			arg: undefined,
-			dat: undefined
+			dat: undefined,
 		},
 		data() {
 			return {
@@ -5175,6 +5200,11 @@ template: `
 				_destroyElement(this.$el);
 			},
 			loaded() {
+			},
+			error(msg) {
+				if (msg instanceof Error)
+					msg = msg.message;
+				alert(msg);
 			},
 			makeUrl() {
 				let arg = this.arg || '0';
@@ -5214,6 +5244,72 @@ template: `
 				http.load(this.currentUrl, this.$el)
 					.then(this.loaded)
 					.catch(this.error);
+			}
+		},
+		destroyed() {
+			this.__destroy(); // and for dialogs too
+		}
+	});
+
+
+	Vue.component('a2-queued-include', {
+		template: '<div class="a2-include"></div>',
+		props: {
+			source: String,
+			arg: undefined,
+			dat: undefined,
+		},
+		data() {
+			return {
+				needLoad: 0
+			};
+		},
+		methods: {
+			__destroy() {
+				//console.warn('include has been destroyed');
+				_destroyElement(this.$el);
+			},
+			loaded() {
+			},
+			error(msg) {
+				if (msg instanceof Error)
+					msg = msg.message;
+				alert(msg);
+			},
+			makeUrl() {
+				let arg = this.arg || '0';
+				let url = urlTools.combine('_page', this.source, arg);
+				if (this.dat)
+					url += urlTools.makeQueryString(this.dat);
+				return url;
+			},
+			load() {
+				let url = this.makeUrl();
+				this.__destroy();
+				http.queue(url, this.$el);
+			}
+		},
+		watch: {
+			source(newVal, oldVal) {
+				if (utils.isEqual(newVal, oldVal)) return;
+				this.needLoad += 1;
+			},
+			arg(newVal, oldVal) {
+				if (utils.isEqual(newVal, oldVal)) return;
+				this.needLoad += 1;
+			},
+			dat(newVal, oldVal) {
+				if (utils.isEqual(newVal, oldVal)) return;
+				this.needLoad += 1;
+			},
+			needLoad() {
+				this.load();
+			}
+		},
+		mounted() {
+			if (this.source) {
+				this.currentUrl = this.makeUrl(this.source);
+				http.queue(this.currentUrl, this.$el);
 			}
 		},
 		destroyed() {

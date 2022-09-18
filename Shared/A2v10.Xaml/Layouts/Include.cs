@@ -2,46 +2,51 @@
 
 using System;
 
-namespace A2v10.Xaml
+namespace A2v10.Xaml;
+
+public class Include : UIElementBase
 {
-	public class Include : UIElementBase
+	public String Source { get; set; }
+	public Object Argument { get; set; }
+	public Object Data { get; set; }
+
+	public Boolean FullHeight { get; set; }
+
+	public String CssClass { get; set; }
+
+	public Boolean Queued { get; set; }
+
+	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
-		public String Source { get; set; }
-		public Object Argument { get; set; }
-		public Object Data { get; set; }
+		if (SkipRender(context))
+			return;
+		var tagName = ("a2-include");
+		if (Queued)
+			tagName = "a2-queued-include";
 
-		public Boolean FullHeight { get; set; }
+		var div = new TagBuilder(tagName, null, IsInGrid);
 
-		public String CssClass { get; set; }
+		MergeAttributes(div, context);
 
-		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-		{
-			if (SkipRender(context))
-				return;
-			var div = new TagBuilder("a2-include", null, IsInGrid);
+		AddBindingCssClass(div, context, CssClass);
 
-			MergeAttributes(div, context);
-
-			AddBindingCssClass(div, context, CssClass);
-
-			var src = GetBinding(nameof(Source));
-			if (src != null)
-				div.MergeAttribute(":source", src.GetPathFormat(context));
-			else if (Source != null)
-				div.MergeAttribute("source", Source);
-			else
-				throw new XamlException("Partial. Source must be specified");
-			var arg =  GetBinding(nameof(Argument));
-			if (arg != null)
-				div.MergeAttribute(":arg", arg.GetPathFormat(context));
-			else if (Argument != null)
-				div.MergeAttribute("arg", Argument.ToString());
-			var dat = GetBinding(nameof(Data));
-			if (dat != null)
-				div.MergeAttribute(":dat", dat.GetPathFormat(context));
-			div.AddCssClassBool(FullHeight, "full-height");
-			div.RenderStart(context);
-			div.RenderEnd(context);
-		}
+		var src = GetBinding(nameof(Source));
+		if (src != null)
+			div.MergeAttribute(":source", src.GetPathFormat(context));
+		else if (Source != null)
+			div.MergeAttribute("source", Source);
+		else
+			throw new XamlException("Partial. Source must be specified");
+		var arg =  GetBinding(nameof(Argument));
+		if (arg != null)
+			div.MergeAttribute(":arg", arg.GetPathFormat(context));
+		else if (Argument != null)
+			div.MergeAttribute("arg", Argument.ToString());
+		var dat = GetBinding(nameof(Data));
+		if (dat != null)
+			div.MergeAttribute(":dat", dat.GetPathFormat(context));
+		div.AddCssClassBool(FullHeight, "full-height");
+		div.RenderStart(context);
+		div.RenderEnd(context);
 	}
 }

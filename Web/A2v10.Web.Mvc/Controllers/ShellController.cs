@@ -115,6 +115,10 @@ namespace A2v10.Web.Mvc.Controllers
 					_baseController.Host.SetAdmin(true);
 				await Shell(pathInfo, adminShell);
 			}
+			else if (pathInfo.StartsWith("_batch/", StringComparison.OrdinalIgnoreCase))
+			{
+				await DoBatch(pathInfo.Substring(7));
+			}
 			else if (pathInfo.StartsWith("_page/", StringComparison.OrdinalIgnoreCase))
 			{
 				await Render(pathInfo.Substring(6), RequestUrlKind.Page);
@@ -217,6 +221,31 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 		}
 
+
+		async Task DoBatch(String pathInfo)
+		{
+			if (IsNotAjax())
+				return;
+			List<String> list = null;
+			using (var tr = new StreamReader(Request.InputStream))
+			{
+				String json = tr.ReadToEnd();
+				list = JsonConvert.DeserializeObject<List<String>>(json);
+			}
+
+			if (list == null)
+				return;
+			foreach (var path in list)
+			{
+				ExpandoObject loadPrms = new ExpandoObject();
+				SetSqlQueryParams(loadPrms);
+				var url = path.Substring(6); // remove _page
+				using (var tw = new StringWriter())
+				{
+					await _baseController.RenderElementKind(RequestUrlKind.Page, url, loadPrms, Response.Output);
+				}
+			}
+		}
 
 		async Task Render(String pathInfo, RequestUrlKind kind)
 		{

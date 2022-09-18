@@ -63,6 +63,7 @@
 			"app/components/megamenu.js",
 			"app/components/iframetarget.js",
 			"app/components/treegrid.js",
+			"app/components/dashboard.js",
 			"app/directives/*.js",
 			"app/controllers/base.js",
 			"app/controllers/navmenu.js",

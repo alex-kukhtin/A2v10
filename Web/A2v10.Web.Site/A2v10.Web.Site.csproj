@@ -112,6 +112,7 @@
     <Content Include="app\bootstrap\shell.js" />
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\accelcommand.js" />
+    <Content Include="app\components\dashboard.js" />
     <Content Include="app\components\treegrid.js" />
     <Content Include="app\components\inlinedialog.js" />
     <Content Include="app\components\spansum.js" />
@@ -371,6 +372,7 @@
     <Content Include="compilerconfig.json.bindings" />
     <Content Include="Less.Advance\TreeGrid.less" />
     <Content Include="Less\TreeGrid.less" />
+    <Content Include="Less.Advance\Dashboard.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
