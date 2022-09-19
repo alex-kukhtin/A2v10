@@ -24,8 +24,9 @@ public class PdfReportHelper
 			var instUnwrap = inst.Unwrap();
 			var ass = Assembly.GetAssembly(instUnwrap.GetType());
 
+			var rootPath = _host.ApplicationReader.MakeFullPath(String.Empty, String.Empty);
 			var shim = instUnwrap as IPdfReportShim;
-			shim.Inject(sloc.GetService<ILocalizer>(), sloc.GetService<IUserLocale>());
+			shim.Inject(sloc.GetService<ILocalizer>(), sloc.GetService<IUserLocale>(), rootPath);
 			return shim;
 		});
 	}
@@ -35,8 +36,8 @@ public class PdfReportHelper
 		return _pdfReportShim.Build(path, data);
 	}
 
-	public Stream Build(Stream stream, ExpandoObject data)
+	public Stream Build(String path, Stream stream, ExpandoObject data)
 	{
-		return _pdfReportShim.Build(stream, data);
+		return _pdfReportShim.Build(path, stream, data);
 	}
 }

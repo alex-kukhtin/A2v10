@@ -4,12 +4,11 @@ using System;
 using System.Dynamic;
 using System.IO;
 
-namespace A2v10.Infrastructure
+namespace A2v10.Infrastructure;
+
+public interface IPdfReportShim
 {
-	public interface IPdfReportShim
-	{
-		void Inject(ILocalizer localizer, IUserLocale userLocale);
-		Stream Build(String path, ExpandoObject data);
-		Stream Build(Stream stream, ExpandoObject data);
-	}
+	void Inject(ILocalizer localizer, IUserLocale userLocale, String appPath);
+	Stream Build(String path, ExpandoObject data);
+	Stream Build(String path, Stream stream, ExpandoObject data);
 }

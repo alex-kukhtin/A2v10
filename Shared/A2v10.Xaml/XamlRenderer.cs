@@ -1,6 +1,7 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.IO;
 using System.Xaml;
 
 using A2v10.Infrastructure;
@@ -19,11 +20,31 @@ public class XamlRenderer : IRenderer
 
 	private static Boolean _stylesLoaded = false;
 	private static Styles _styles;
+	private static FileSystemWatcher _stylesWatcher;
 
 	public XamlRenderer(IProfiler profile, IApplicationHost host)
 	{
 		_profile = profile;
 		_host = host;
+	}
+
+	private static void CreateWatcher(IApplicationHost host, String path)
+	{
+		if (_stylesWatcher != null)
+			return;
+		if (host.IsDebugConfiguration && host.ApplicationReader.IsFileSystem)
+		{
+			// FileName can be in 8.3 format!
+			_stylesWatcher = new FileSystemWatcher(Path.GetDirectoryName(path), "*.*")
+			{
+				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes
+			};
+			_stylesWatcher.Changed += (sender, e) =>
+			{
+				_stylesLoaded = false;
+			};
+			_stylesWatcher.EnableRaisingEvents = true;
+		}
 	}
 
 	private void SetStyles(IRootContainer root) 
@@ -43,7 +64,8 @@ public class XamlRenderer : IRenderer
 				{
 					if (!(XamlServices.Load(stylesStream) is Styles styles))
 						throw new XamlException("Xaml. Styles is not 'Styles'");
-					_styles = styles;	
+					_styles = styles;
+					CreateWatcher(_host, stylesPath);
 					root.SetStyles(styles);
 				}
 			}

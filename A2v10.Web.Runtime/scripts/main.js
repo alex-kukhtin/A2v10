@@ -1694,7 +1694,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220518-7876
+// 20220918-7891
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1702,12 +1702,18 @@ app.modules['std:http'] = function () {
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
 
+	const httpQueue = {
+		arr: [],
+		processing: false
+	};
+
 	return {
 		get,
 		post,
 		load,
 		upload,
-		localpost
+		localpost,
+		queue
 	};
 
 	async function doRequest(method, url, data, raw, skipEvents) {
@@ -1805,6 +1811,7 @@ app.modules['std:http'] = function () {
 	}
 
 	function load(url, selector, baseUrl) {
+
 		if (selector) {
 			let fc = selector.firstElementChild
 			if (fc && fc.__vue__) {
@@ -1907,6 +1914,23 @@ app.modules['std:http'] = function () {
 		} else {
 			throw response.statusText;
 		}
+	}
+
+	function queue(url, selector) {
+		httpQueue.arr.push({ url, selector });
+		if (!httpQueue.processing)
+			doQueue();
+	}
+
+	async function doQueue() {
+		if (!httpQueue.arr.length)
+			return;
+		httpQueue.processing = true;
+		while (httpQueue.arr.length > 0) {
+			let el = httpQueue.arr.shift();
+			await load(el.url, el.selector, null);
+		}
+		httpQueue.processing = false;
 	}
 };
 
@@ -4682,9 +4706,9 @@ app.modules['std:accel'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20210618-7785
+// 20220918-7891
 /*components/include.js*/
 
 (function () {
@@ -4714,7 +4738,8 @@ app.modules['std:accel'] = function () {
 			cssClass: String,
 			needReload: Boolean,
 			insideDialog: Boolean,
-			done: Function
+			done: Function,
+			queued: Boolean
 		},
 		data() {
 			return {
@@ -4825,7 +4850,7 @@ app.modules['std:accel'] = function () {
 		props: {
 			source: String,
 			arg: undefined,
-			dat: undefined
+			dat: undefined,
 		},
 		data() {
 			return {
@@ -4838,6 +4863,11 @@ app.modules['std:accel'] = function () {
 				_destroyElement(this.$el);
 			},
 			loaded() {
+			},
+			error(msg) {
+				if (msg instanceof Error)
+					msg = msg.message;
+				alert(msg);
 			},
 			makeUrl() {
 				let arg = this.arg || '0';
@@ -4877,6 +4907,72 @@ app.modules['std:accel'] = function () {
 				http.load(this.currentUrl, this.$el)
 					.then(this.loaded)
 					.catch(this.error);
+			}
+		},
+		destroyed() {
+			this.__destroy(); // and for dialogs too
+		}
+	});
+
+
+	Vue.component('a2-queued-include', {
+		template: '<div class="a2-include"></div>',
+		props: {
+			source: String,
+			arg: undefined,
+			dat: undefined,
+		},
+		data() {
+			return {
+				needLoad: 0
+			};
+		},
+		methods: {
+			__destroy() {
+				//console.warn('include has been destroyed');
+				_destroyElement(this.$el);
+			},
+			loaded() {
+			},
+			error(msg) {
+				if (msg instanceof Error)
+					msg = msg.message;
+				alert(msg);
+			},
+			makeUrl() {
+				let arg = this.arg || '0';
+				let url = urlTools.combine('_page', this.source, arg);
+				if (this.dat)
+					url += urlTools.makeQueryString(this.dat);
+				return url;
+			},
+			load() {
+				let url = this.makeUrl();
+				this.__destroy();
+				http.queue(url, this.$el);
+			}
+		},
+		watch: {
+			source(newVal, oldVal) {
+				if (utils.isEqual(newVal, oldVal)) return;
+				this.needLoad += 1;
+			},
+			arg(newVal, oldVal) {
+				if (utils.isEqual(newVal, oldVal)) return;
+				this.needLoad += 1;
+			},
+			dat(newVal, oldVal) {
+				if (utils.isEqual(newVal, oldVal)) return;
+				this.needLoad += 1;
+			},
+			needLoad() {
+				this.load();
+			}
+		},
+		mounted() {
+			if (this.source) {
+				this.currentUrl = this.makeUrl(this.source);
+				http.queue(this.currentUrl, this.$el);
 			}
 		},
 		destroyed() {
@@ -11277,13 +11373,14 @@ Vue.component('a2-panel', {
 	let boardTemplate = `
 <div class="dashboard-container" :class="{editing: editMode}">
 	<div class="drag-host" ref=drag-host></div>
-	<div v-if="editable" class="dashboard-toolbar">
-		<slot name="toolbar" v-if="editable"></slot>
-	</div>
 	<div class=dashboard :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}" ref=dash>
-		<template v-for="row in rows" v-if = editMode >
-			<a2-dashboard-placeholder v-show="placeholderVisible(row, col)" ref=ph
-				v-for="col in cols" :row="row" :col="col" :key="row + ':' + col"/>
+		<div v-if="editable && !editMode" class="start-toolbar toolbar" 
+			:style="{'grid-column':cols + 1}" :class="{'no-items': !hasItems}">
+			<slot name="startbtn"></slot>
+		</div>
+		<template v-for="ph in placeholders" v-if=editMode>
+			<a2-dashboard-placeholder v-show="placeholderVisible(ph.row, ph.col)"
+				:row="ph.row" :col="ph.col" :key="ph.key" :hover="ph.hover"/>
 		</template>
 		<slot>
 			<a2-dashboard-item v-for="(itm, ix) in items" :key=ix :item="itm" 
@@ -11292,13 +11389,21 @@ Vue.component('a2-panel', {
 				<slot name="element" v-bind:item="itm"></slot>
 			</a2-dashboard-item>
 		</slot>
+		<div v-if="!hasItems && !editMode">
+			<slot name="empty"></slot>
+		</div>
 	</div>
-	<ul class="dashboard-list" v-if="editMode">
-		<a2-dashboard-item v-for="(itm, ix) in list" :key=ix :edit-mode="true"
-				:item=itm :col-span="itm.colSpan" :row-span="itm.rowSpan" :isnew=true>
-			<slot name="listitem" v-bind:item="itm"></slot>
-		</a2-dashboard-item>
-	</ul>
+	<div class="dashboard-list" v-if="editMode">
+		<div class="widget-toolbar">
+			<slot name="toolbar"></slot>
+		</div>
+		<ul class="widget-list">
+			<a2-dashboard-item v-for="(itm, ix) in list" :key=ix :edit-mode="true"
+					:item=itm :col-span="itm.colSpan" :row-span="itm.rowSpan" :isnew=true>
+				<slot name="listitem" v-bind:item="itm"></slot>
+			</a2-dashboard-item>
+		</ul>
+	</div>
 </div>
 `;
 
@@ -11307,23 +11412,24 @@ Vue.component('a2-panel', {
 		template: placeholderTemplate,
 		props: {
 			row: Number,
-			col: Number
+			col: Number,
+			hover: Boolean
 		},
-		data() {
-			return {
-				hover: false
-			};
+		computed: {
+			obj() {
+				return { row: this.row, col: this.col };
+			}
 		},
 		methods: {
 			dragOver(ev) {
-				if (this.$parent.$canDrop({ row: this.row, col: this.col }))
+				if (this.$parent.$canDrop(this.obj))
 					ev.preventDefault();
 			},
 			dragEnter(ev) {
-				this.$parent.$enter(ev.target);
+				this.$parent.$enter(this.obj);
 			},
 			drop(ev) {
-				this.$parent.$drop({ row: this.row, col: this.col });
+				this.$parent.$drop(this.obj);
 			}
 		}
 	}
@@ -11368,7 +11474,7 @@ Vue.component('a2-panel', {
 			},
 			dragEnd(ev) {
 				if (!this.editMode) return;
-				this.$parent.$clearHover();
+				this.$parent.$dragEnd();
 			},
 			remove() {
 				this.$parent.$removeItem(this.item);
@@ -11402,6 +11508,9 @@ Vue.component('a2-panel', {
 			};
 		},
 		computed: {
+			hasItems() {
+				return this.items && this.items.length;
+			},
 			rows() {
 				let rows = 0;
 				if (this.items && this.items.length)
@@ -11422,10 +11531,23 @@ Vue.component('a2-panel', {
 				}
 				return cols;
 			},
+			placeholders() {
+				let ph = [];
+				for (let r = 0; r < this.rows; r++) {
+					for (let c = 0; c < this.cols; c++) {
+						ph.push({ row: r + 1, col: c + 1, key: `${c}:${r}`, hover: false });
+					}
+				}
+				return ph;
+			},
 			templateColumns() {
-				return `repeat(${this.cols}, ${this.cellSize.cx})`;
+				if (!this.hasItems && !this.editMode)
+					return '';
+				return `repeat(${this.cols}, ${this.cellSize.cx}) ${this.editable ? 'minmax(20px,1fr)': ''}`;
 			},
 			templateRows() {
+				if (!this.hasItems && !this.editMode)
+					return '';
 				return `repeat(${this.rows}, ${this.cellSize.cy})`;
 			},
 			elements() {
@@ -11453,28 +11575,30 @@ Vue.component('a2-panel', {
 				this.staticElems.push({ startRow: item.row, startCol: item.col, endRow: item.row + item.rowSpan - 1, endCol: item.col + item.colSpan - 1 });
 			},
 			$removeItem(itm) {
-				let ix = this.items.indexOf(itm);
-				if (ix >= 0)
-					this.items.splice(ix, 1);
-
+				this.items.$remove(itm);
+				this.$clearHover();
+				this.lastPhRow = 0;
+				this.lastPhCol = 0;
 			},
 			$findPlaceholder(el) {
-				return this.$refs.ph.find(x => x.$el === el);
-			},
-			$findPlaceholderPos(row, col) {
-				return this.$refs.ph.find(x => x.row === row && x.col === col);
+				return this.placeholders.find(x => x.row === el.row && x.col == el.col);
 			},
 			$hover(arr, pos) {
-				this.$refs.ph.forEach(ph => {
+				this.lastPhRow = pos.y + pos.cy;
+				this.lastPhCol = pos.x + pos.cx;
+				this.placeholders.forEach(ph => {
 					let sign = `${ph.row}:${ph.col}`;
 					let find = arr.find(ai => ai === sign);
 					ph.hover = !!find;
 				});
-				this.lastPhRow = pos.y + pos.cy;
-				this.lastPhCol = pos.x + pos.cx;
+			},
+			$dragEnd() {
+				this.$clearHover();
+				this.lastPhRow = 0;
+				this.lastPhCol = 0;
 			},
 			$clearHover() {
-				this.$refs.ph.forEach(ph => ph.hover = false);
+				this.placeholders.forEach(ph => ph.hover = false);
 			},
 			$start(el) {
 				this.currentElem = el;
@@ -11482,15 +11606,12 @@ Vue.component('a2-panel', {
 			$getDragImage(el) {
 				let img = this.$refs['drag-host'];
 				let rs = window.getComputedStyle(this.$refs.dash);
-				//console.log(rs.gridColumnGap, rs.gridRowGap, rs.gridTemplateColumns, rs.gridTemplateRows);
 				let colSize = parseFloat(rs.gridTemplateColumns.split(' ')[0]);
 				let rowSize = parseFloat(rs.gridTemplateRows.split(' ')[0]);
 				let colGap = parseFloat(rs.gridColumnGap);
 				let rowGap = parseFloat(rs.gridRowGap);
-				//console.log(colGap, rowGap);
 				img.style.width = (colSize * el.colSpan + (el.colSpan - 1) * colGap) + 'px';
 				img.style.height = (rowSize * el.rowSpan + (el.rowSpan - 1) * rowGap) + 'px';
-				//console.log(img.style.width, img.style.height);
 				return img;
 			},
 			$setHover(el, val) {

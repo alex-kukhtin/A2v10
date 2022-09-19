@@ -19,6 +19,7 @@ public class Dashboard : UIElementBase
 	public UIElementBase ItemTemplate { get; set; }
 	public UIElementBase ListTemplate { get; set; }
 	public UIElement EmptyPanel { get; set; }
+	public String CssClass { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -27,6 +28,7 @@ public class Dashboard : UIElementBase
 		var tag = new TagBuilder("a2-dashboard", null, IsInGrid);
 		onRender?.Invoke(tag);
 		MergeAttributes(tag, context);
+		tag.AddCssClass(CssClass);
 		var sourceBind = GetBinding(nameof(ItemsSource));
 		if (sourceBind == null)
 			throw new XamlException("ItemsSource binding is required for the Dashboard element");

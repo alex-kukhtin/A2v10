@@ -46,7 +46,7 @@ public class AttachPdfReport : AttachReportBase, IInvokeTarget
 
 		var repPath = System.IO.Path.Combine(rqRep.Path, rqRep.ReportName);
 		using var stream = CreateStream(dm, repPath);
-		using var repStream = _reportHelper.Build(stream, dm.Root);
+		using var repStream = _reportHelper.Build(repPath, stream, dm.Root);
 		AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
 		{
 			UserId = UserId,
