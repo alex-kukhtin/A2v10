@@ -7007,6 +7007,10 @@ table > colgroup col.blue {
   padding: 0 8px;
   display: inline-block;
 }
+.a2-company-btn .dropdown .menu {
+  max-height: calc(100vh - 65px);
+  overflow: auto;
+}
 table.tree-grid {
   border-collapse: separate;
   border-spacing: 0;

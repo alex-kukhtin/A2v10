@@ -38,6 +38,7 @@ using A2v10.Web.Base;
 using A2v10.Web.Config;
 using A2v10.Web.Mvc.Interfaces;
 using System.Web.UI;
+using Jint.Runtime;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -204,6 +205,8 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			Session.Abandon();
 			ClearAllCookies();
+			if (IsExternalApplication())
+				return;
 			String page = GetRedirectedPage("login", _host.Mobile ? ResourceHelper.LoginMobileHtml : ResourceHelper.LoginHtml);
 			SetQueryStringCookie();
 			SendPage(page, ResourceHelper.LoginScript);
@@ -332,6 +335,8 @@ namespace A2v10.Web.Mvc.Controllers
 			Session.Abandon();
 			ClearAllCookies();
 
+			if (IsExternalApplication())
+				return;
 			SetQueryStringCookie();
 			String page = GetRedirectedPage("register", ResourceHelper.RegisterTenantHtml);
 			SendPage(page, ResourceHelper.RegisterTenantScript);
@@ -339,6 +344,19 @@ namespace A2v10.Web.Mvc.Controllers
 
 		static readonly ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
 
+		public Boolean IsExternalApplication()
+		{
+			var obj = _host.GetAppSettingsObject("externalApplication");
+			if (obj == null)
+				return false;
+			String appName = obj.Get<String>("name");
+			var externalFileName = $"external.{appName}.{_userLocale.Language}.html";
+			String file = _host.ApplicationReader.ReadTextFile("_platform/", externalFileName);
+			if (file == null)
+				return false;
+			Response.Write(file);
+			return true;
+		}
 		public Int32 IsDDOS()
 		{
 			String host = Request.UserHostAddress;
