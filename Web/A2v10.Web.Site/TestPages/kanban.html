@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="../css/site.css" />
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" style="height:100%;padding:10px">
+		<h3>Kanban board</h3>
+		<a2-kanban :items="Items" line-prop="State">
+			<template v-slot:element="card">
+				<div>
+					<div>Header</div>
+					<div>Content</div>
+					<div>Footer</div>
+				</div>
+			</template>
+		</a2-kanban>
+	</div>
+	<script src="../scripts/vue.js"></script>
+	<script src="./kanban.js"></script>
+	<script>
+		new Vue({
+			el: "#app",
+			data: {
+				Items: [
+					{
+						State: 'ToDo',
+						Header: 'Task 1',
+						Text: 'Analyze the new requirements gathered from the customer.'
+					},
+					{
+						State: 'ToDo',
+						Header: 'Task 2',
+						Text: 'Show the retrieved data from the server in grid control.'
+					},
+					{
+						State: 'InProgress',
+						Header: 'Task 3',
+						Text: 'Improve application performance'
+					}
+				]
+			},
+			methods: {
+			}
+		});
+	</script>
+</body>
+</html>

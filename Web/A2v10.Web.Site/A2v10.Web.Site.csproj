@@ -263,6 +263,8 @@
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
     <Content Include="TestPages\d3line.js" />
+    <Content Include="TestPages\kanban.js" />
+    <Content Include="TestPages\kanban.html" />
     <Content Include="TestPages\treegrid.js" />
     <Content Include="TestPages\treegrid.html" />
     <Content Include="TestPages\dashboard2.js" />
