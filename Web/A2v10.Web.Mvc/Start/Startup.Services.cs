@@ -30,8 +30,27 @@ namespace A2v10.Web.Mvc.Start
 
 		private static IHooksProvider _hooksProvider = new HooksProvider();
 
+		private static ILicenseManager _licenseManager;
+
+		private static void StartLicenseManager()
+		{
+			var entry = EntryAssemblyAttribute.GetEntryAssembly();
+			if (entry == null)
+				return;
+			var startupType = entry.GetType("A2v10.Application.AppStartup");
+			if (startupType == null)
+				return;
+			var mtd = startupType.GetMethod("CreateLicenseManager");
+			if (mtd == null)
+				return;
+			var mgr = mtd.Invoke(null, null);
+			if (mgr is ILicenseManager licMgr)
+				_licenseManager = licMgr;
+		}
+
 		public static void StartServices(IAppBuilder app)
 		{
+			// StartLicenseManager();
 			// DI ready
 			ServiceLocator.Start = (IServiceLocator locator) =>
 			{

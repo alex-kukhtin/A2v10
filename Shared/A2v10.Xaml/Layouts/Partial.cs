@@ -9,6 +9,8 @@ namespace A2v10.Xaml
 	{
 		public BackgroundStyle Background { get; set; }
 
+		public Overflow? Overflow { get; set; }
+
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
 			if (SkipRender(context))
@@ -16,6 +18,8 @@ namespace A2v10.Xaml
 			var page = new TagBuilder("div", "page partial");
 			page.MergeAttribute("id", context.RootId);
 			MergeAttributes(page, context, MergeAttrMode.Margin);
+
+			page.AddCssClass(Overflow.ToClass());
 
 			if (Background != BackgroundStyle.Default)
 				page.AddCssClass("background-" + Background.ToString().ToKebabCase());

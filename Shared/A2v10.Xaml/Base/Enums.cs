@@ -10,6 +10,15 @@ namespace A2v10.Xaml
 		Center
 	}
 
+	public enum Overflow
+	{
+		Visible,
+		Hidden,
+		Auto,
+		True = Visible,
+		False = Hidden,
+	}
+
 	public enum AlignItems
 	{
 		Default,

@@ -747,9 +747,10 @@ namespace A2v10.Request
 		[JsonIgnore]
 		internal Boolean Phase2;
 
-		public String model; // data model
+		public String model;  // data model
 		public String schema; // schema for data model
 		public String source; // connection string for data model
+		public String module;
 
 		[JsonIgnore]
 		internal RequestUrlKind CurrentKind => _kind;

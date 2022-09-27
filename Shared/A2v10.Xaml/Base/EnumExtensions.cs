@@ -25,5 +25,21 @@ namespace A2v10.Xaml
 					return null;
 			}
 		}
+
+		public static String ToClass(this Overflow? overflow)
+		{
+			if (overflow == null)
+				return null;
+			switch (overflow)
+			{
+				case Overflow.Visible:
+					return "of-visible";
+				case Overflow.Hidden:
+					return "of-hidden";
+				case Overflow.Auto:
+					return "of-auto";
+			}
+			return null;
+		}
 	}
 }

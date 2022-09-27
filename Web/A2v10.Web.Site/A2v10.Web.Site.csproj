@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="_Start\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
