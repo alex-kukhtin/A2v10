@@ -55,6 +55,7 @@
 
 .btn.xs {
 	font-size: 0.85rem;
+	padding:.3rem .4rem;
 
 	.ico {
 		font-size: .85rem;
@@ -135,6 +136,18 @@
 	padding:.5em;
 	min-width:2.6em;
 	min-height:2.6em;
+}
+
+.btn-toolbar {
+	background-color: transparent;
+
+	&:hover {
+		background-color: @toolbar-hover;
+	}
+
+	&:active {
+		background-color: @toolbar-active;
+	}
 }
 
 .btn-outline {

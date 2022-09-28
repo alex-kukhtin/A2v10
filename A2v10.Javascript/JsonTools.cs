@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -34,6 +35,11 @@ public class IgnoreNullValueExpandoObjectConverter : ExpandoObjectConverter
 		{
 			if (val == null)
 				return false;
+
+			// skip empty lists
+			if (val is List<ExpandoObject> iList && iList.Count == 0)
+				return false;
+
 			switch (val)
 			{
 				case String strVal:

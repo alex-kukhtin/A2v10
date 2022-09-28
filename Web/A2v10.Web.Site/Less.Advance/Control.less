@@ -34,8 +34,16 @@
 }
 
 .a2-hyperlink {
+	display: flex;
+	gap: .5rem;
+	align-items:baseline;
+
 	&:focus, &:active {
 		outline: thin dotted #ccc;
+	}
+
+	&.a2-inline {
+		display:inline-flex;
 	}
 }
 

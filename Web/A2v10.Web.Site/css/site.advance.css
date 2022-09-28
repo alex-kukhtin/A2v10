@@ -2050,9 +2050,17 @@ pre.a2-code {
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
   white-space: pre;
 }
+.a2-hyperlink {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
 .a2-hyperlink:focus,
 .a2-hyperlink:active {
   outline: thin dotted #ccc;
+}
+.a2-hyperlink.a2-inline {
+  display: inline-flex;
 }
 .control-group {
   display: block;
@@ -2627,6 +2635,7 @@ pre.a2-code {
 }
 .btn.xs {
   font-size: 0.85rem;
+  padding: 0.3rem 0.4rem;
 }
 .btn.xs .ico {
   font-size: 0.85rem;
@@ -2745,6 +2754,15 @@ pre.a2-code {
   padding: 0.5em;
   min-width: 2.6em;
   min-height: 2.6em;
+}
+.btn-toolbar {
+  background-color: transparent;
+}
+.btn-toolbar:hover {
+  background-color: var(--neutralBkDark);
+}
+.btn-toolbar:active {
+  background-color: var(--neutralBkDarker);
 }
 .btn-outline {
   background-color: transparent;
