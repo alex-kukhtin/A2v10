@@ -7,7 +7,7 @@
 	margin: @side-bar-margin;
 	bottom: @footer-height;
 	width: @side-bar-width;
-	padding: 16px 0 0 0;
+	padding: 26px 0 0 0;
 	border-right: 1px solid @side-bar-brd-color;
 	background-color: @side-bar-bg-color;
 
@@ -53,14 +53,17 @@
 		top: 0;
 		right: 0;
 		width: auto;
-		padding: 2px 4px;
-		color: @default-brd-color;
+		padding: 5px;
+		color: @icon-color;
 		font-size: 110%;
 
 		&:hover {
-			color: @link-hover-color;
 			text-decoration: none;
-			background-color: @side-bar-collapsed-bg-color;
+			background-color: @toolbar-hover;
+		}
+
+		&:active {
+			background-color: @toolbar-active;
 		}
 
 		&:before {

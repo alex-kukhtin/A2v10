@@ -3352,7 +3352,7 @@ table.data-grid tr.group td {
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
   cursor: pointer;
-  color: #777;
+  color: var(--text);
   padding-left: 0;
   line-height: 1;
 }
@@ -5279,7 +5279,7 @@ label.checkbox.small span:after {
 }
 .a2-pager button {
   padding: 3px;
-  background-color: white;
+  background-color: var(--background);
   border: 1px solid #ccc;
   min-width: 2em;
   min-height: 2em;
@@ -5312,7 +5312,7 @@ label.checkbox.small span:after {
 }
 .a2-pager > .a2-pager-title {
   font-size: 0.9em;
-  color: #777;
+  color: var(--text);
   white-space: nowrap;
   padding-left: 0.5em;
 }
@@ -6715,26 +6715,11 @@ table > colgroup col.blue {
   align-items: center;
   justify-content: center;
 }
-.a2-changelog {
-  padding: 1rem;
-  margin-top: -2rem;
-}
-.a2-changelog ol {
-  margin-top: 4px;
-}
-.a2-changelog h4 {
-  font-size: 1em;
-  margin: 0.5rem 0;
-  color: #777;
-  font-weight: bold;
-  font-family: inherit;
-  margin-top: 2rem;
-}
 .tooltip {
   position: absolute;
   padding: 6px;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: var(--background);
+  border: 1px solid var(--neutralBkDarker);
 }
 .title-notify {
   animation: pulse 1s infinite ease-out;
@@ -6788,7 +6773,7 @@ table > colgroup col.blue {
   margin: 0;
   bottom: 2rem;
   width: 278px;
-  padding: 16px 0 0 0;
+  padding: 26px 0 0 0;
   border-right: 1px solid #e1dfdd;
   background-color: var(--neutralBk);
 }
@@ -6830,14 +6815,16 @@ table > colgroup col.blue {
   top: 0;
   right: 0;
   width: auto;
-  padding: 2px 4px;
-  color: var(--neutralBkDarker);
+  padding: 5px;
+  color: var(--neutralSecondary);
   font-size: 110%;
 }
 .side-bar .collapse-handle:hover {
-  color: var(--linkDark);
   text-decoration: none;
-  background-color: var(--neutralBk);
+  background-color: var(--neutralBkDark);
+}
+.side-bar .collapse-handle:active {
+  background-color: var(--neutralBkDarker);
 }
 .side-bar .collapse-handle:before {
   content: "\e9a3";

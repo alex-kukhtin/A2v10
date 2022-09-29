@@ -1,6 +1,6 @@
 ﻿:root {
   --background: #ffff;
-  --text: #020202;
+  --text: #000;
   --fontSize: 14px;
   --brandPrimary: #2573a8;
   --themePrimary: #2573a8;
@@ -15,6 +15,7 @@
   --neutralBk: #f3f2f1;
   --neutralBkLight: #faf9f8;
   --link: #208cf8;
+  --linkDark: #0669cb;
   --hoverBk: #fdf4bf;
   --activeBk: #cde6f7;
   --hoverBkLight: #fdf4bf;

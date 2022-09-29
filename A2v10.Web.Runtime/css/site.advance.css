@@ -966,15 +966,15 @@ a[disabled] {
   cursor: not-allowed;
 }
 a:hover {
-  color: var(--link);
+  color: var(--linkDark);
   text-decoration: none;
 }
 a:focus {
-  color: var(--link);
+  color: var(--linkDark);
   outline-style: none;
 }
 a:active {
-  color: var(--link);
+  color: var(--linkDark);
 }
 pre {
   font-family: Consolas, 'Courier New', Courier, monospace;
@@ -1996,7 +1996,7 @@ footer .spinner,
 }
 footer .spinner.active,
 .footer .spinner.active {
-  border-color: var(--link);
+  border-color: var(--linkDark);
   border-top-color: #ccc;
   animation: spin 1.5s linear infinite;
 }
@@ -2050,9 +2050,17 @@ pre.a2-code {
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
   white-space: pre;
 }
+.a2-hyperlink {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
 .a2-hyperlink:focus,
 .a2-hyperlink:active {
   outline: thin dotted #ccc;
+}
+.a2-hyperlink.a2-inline {
+  display: inline-flex;
 }
 .control-group {
   display: block;
@@ -2627,6 +2635,7 @@ pre.a2-code {
 }
 .btn.xs {
   font-size: 0.85rem;
+  padding: 0.3rem 0.4rem;
 }
 .btn.xs .ico {
   font-size: 0.85rem;
@@ -2745,6 +2754,15 @@ pre.a2-code {
   padding: 0.5em;
   min-width: 2.6em;
   min-height: 2.6em;
+}
+.btn-toolbar {
+  background-color: transparent;
+}
+.btn-toolbar:hover {
+  background-color: var(--neutralBkDark);
+}
+.btn-toolbar:active {
+  background-color: var(--neutralBkDarker);
 }
 .btn-outline {
   background-color: transparent;
@@ -3018,7 +3036,7 @@ pre.a2-code {
   padding-right: 8px;
 }
 .input-group > .selector-pane {
-  border: 1px solid var(--link);
+  border: 1px solid var(--linkDark);
   position: absolute;
   background-color: #fff;
   left: 0;
@@ -3143,7 +3161,7 @@ table.data-grid col.fit {
   width: 0.1%;
 }
 table.data-grid.striped > tbody > tr.even {
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
 }
 table.data-grid:not(.no-hover) > tbody > tr:hover {
   background-color: var(--hoverBkLight);
@@ -3273,7 +3291,7 @@ table.data-grid td.marker > div {
   bottom: 0;
   right: 0;
   border-left: 6px solid #ddd;
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
 }
 table.data-grid td.marker > .warning,
 table.data-grid td.marker > .yellow {
@@ -3334,7 +3352,7 @@ table.data-grid tr.group td {
   border-bottom: 1px solid #ddd;
   border-top: 1px solid #ddd;
   cursor: pointer;
-  color: #777;
+  color: var(--text);
   padding-left: 0;
   line-height: 1;
 }
@@ -3944,7 +3962,7 @@ tr:hover .commandbar.visible-hover {
 }
 .tab-panel .tab-header > li:hover {
   background-color: #eee;
-  color: var(--link);
+  color: var(--linkDark);
 }
 .tab-panel .tab-header > li.active {
   background-color: white;
@@ -4176,7 +4194,7 @@ tr:hover .commandbar.visible-hover {
   background-color: #f9f9f9 !important;
 }
 .a2-list.striped .a2-list-item:nth-of-type(even) {
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
 }
 .a2-list.border,
 .a2-list.border-all {
@@ -4844,7 +4862,7 @@ table.hover > tbody > tr.active:hover {
   line-height: 1.8;
 }
 .a2-table.striped > tbody > tr:nth-of-type(even) {
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
 }
 .a2-table.bordered {
   margin: 1px;
@@ -4905,7 +4923,7 @@ table.hover > tbody > tr.active:hover {
   top: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
   border-left: 4px solid #ddd;
   height: 20px;
 }
@@ -4956,7 +4974,7 @@ table.hover > tbody > tr.active:hover {
   background-color: rgba(254, 220, 220, 0.5);
 }
 .a2-table tr.gray > td {
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
 }
 .a2-table .control-group .input-group {
   line-height: inherit;
@@ -5095,7 +5113,7 @@ table.prop-grid.grid-horizontal td.prop-value {
   padding-right: 0;
 }
 table.prop-grid.striped > tbody > tr:nth-of-type(even) {
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
 }
 table.prop-grid.grid-horizontal tr:first-child > td,
 table.prop-grid.grid-both tr:first-child > td {
@@ -5261,7 +5279,7 @@ label.checkbox.small span:after {
 }
 .a2-pager button {
   padding: 3px;
-  background-color: white;
+  background-color: var(--background);
   border: 1px solid #ccc;
   min-width: 2em;
   min-height: 2em;
@@ -5294,7 +5312,7 @@ label.checkbox.small span:after {
 }
 .a2-pager > .a2-pager-title {
   font-size: 0.9em;
-  color: #777;
+  color: var(--text);
   white-space: nowrap;
   padding-left: 0.5em;
 }
@@ -5548,8 +5566,8 @@ TODO:
   border-bottom-color: transparent;
 }
 .popover-wrapper > .popover-title:hover {
-  color: var(--link);
-  border-bottom-color: var(--link);
+  color: var(--linkDark);
+  border-bottom-color: var(--linkDark);
 }
 .popover-wrapper > .popup-body {
   display: none;
@@ -6220,7 +6238,7 @@ iframe.eusign-iframe {
 .eusign-loader .big-spinner {
   width: 64px;
   height: 64px;
-  border: 5px solid var(--link);
+  border: 5px solid var(--linkDark);
   border-radius: 50%;
   border-top-color: #ccc;
   animation: spin 1.5s linear infinite;
@@ -6464,7 +6482,7 @@ table.sheet tr.cyan {
   background-color: rgba(114, 234, 234, 0.15) !important;
 }
 table.sheet tr.gray {
-  background-color: rgba(208, 208, 208, 0.1) !important;
+  background-color: rgba(224, 224, 224, 0.1) !important;
 }
 table.sheet.compact {
   font-size: 0.95rem;
@@ -6697,26 +6715,11 @@ table > colgroup col.blue {
   align-items: center;
   justify-content: center;
 }
-.a2-changelog {
-  padding: 1rem;
-  margin-top: -2rem;
-}
-.a2-changelog ol {
-  margin-top: 4px;
-}
-.a2-changelog h4 {
-  font-size: 1em;
-  margin: 0.5rem 0;
-  color: #777;
-  font-weight: bold;
-  font-family: inherit;
-  margin-top: 2rem;
-}
 .tooltip {
   position: absolute;
   padding: 6px;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: var(--background);
+  border: 1px solid var(--neutralBkDarker);
 }
 .title-notify {
   animation: pulse 1s infinite ease-out;
@@ -6770,7 +6773,7 @@ table > colgroup col.blue {
   margin: 0;
   bottom: 2rem;
   width: 278px;
-  padding: 16px 0 0 0;
+  padding: 26px 0 0 0;
   border-right: 1px solid #e1dfdd;
   background-color: var(--neutralBk);
 }
@@ -6812,14 +6815,16 @@ table > colgroup col.blue {
   top: 0;
   right: 0;
   width: auto;
-  padding: 2px 4px;
-  color: var(--neutralBkDarker);
+  padding: 5px;
+  color: var(--neutralSecondary);
   font-size: 110%;
 }
 .side-bar .collapse-handle:hover {
-  color: var(--link);
   text-decoration: none;
-  background-color: var(--neutralBk);
+  background-color: var(--neutralBkDark);
+}
+.side-bar .collapse-handle:active {
+  background-color: var(--neutralBkDarker);
 }
 .side-bar .collapse-handle:before {
   content: "\e9a3";
@@ -7026,7 +7031,7 @@ table.tree-grid.hover tr:hover:not(.active) {
   background-color: var(--hoverBkLight);
 }
 table.tree-grid.striped tbody > tr:nth-child(even):not(.active) {
-  background-color: rgba(208, 208, 208, 0.1);
+  background-color: rgba(224, 224, 224, 0.1);
 }
 table.tree-grid tr.active {
   background-color: var(--activeBkLight);
@@ -7139,7 +7144,7 @@ table.tree-grid a.toggle.expanded:after {
 }
 .dashboard {
   display: grid;
-  grid-gap: 1rem;
+  grid-gap: 0.5rem;
   overflow: auto;
   max-height: 100%;
   height: 100%;
@@ -7149,7 +7154,7 @@ table.tree-grid a.toggle.expanded:after {
 .dashboard .a2-include,
 .dashboard .partial-block {
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 .drag-host {
   position: fixed;
@@ -7313,6 +7318,15 @@ td.vert > .vcell {
   background-color: transparent;
   left: -200mm;
   top: -200mm;
+}
+.of-visible {
+  overflow: visible !important;
+}
+.of-hidden {
+  overflow: hidden !important;
+}
+.of-auto {
+  overflow: auto !important;
 }
 .debug-panel {
   position: absolute;
