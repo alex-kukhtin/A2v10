@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20211028-7807
+// 20221002-7894
 // components/modal.js
 
 
@@ -58,6 +58,21 @@
 			let mw = el.closest('.modal-window');
 			if (mw && binding.value)
 				mw.setAttribute('maximize', 'true');
+		}
+	}
+
+	const modalPlacementComponent = {
+		inserted(el, binding) {
+			if (!binding.value)
+				return;
+			let mw = el.closest('.modal-window');
+			if (!mw || !mw.__vue__)
+				return;
+			if (mw.__vue__.$data)
+				mw.__vue__.$data.placement = ' with-placement ' + binding.value;
+			let mf = mw.closest('.modal-wrapper')
+			if (mf)
+				mf.setAttribute('data-placement', binding.value);
 		}
 	}
 
@@ -122,6 +137,8 @@
 
 	Vue.directive('maximize', maximizeComponent);
 
+	Vue.directive("modal-placement", modalPlacementComponent)
+
 	const modalComponent = {
 		template: modalTemplate,
 		props: {
@@ -131,6 +148,7 @@
 			// always need a new instance of function (modal stack)
 			return {
 				modalCreated: false,
+				placement: '',
 				keyUpHandler: function (event) {
 					// escape
 					if (event.which === 27) {
@@ -180,7 +198,7 @@
 				return !!this.dialog.url;
 			},
 			mwClass() {
-				return this.modalCreated ? 'loaded' : '';
+				return this.placement + (this.modalCreated ? ' loaded' : '');
 			},
 			hasIcon() {
 				return !!this.dialog.style;

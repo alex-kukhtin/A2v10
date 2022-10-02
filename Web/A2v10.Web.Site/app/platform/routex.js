@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20181121-7364
+// 20221002-7894
 /* platform/routex.js */
 
 (function () {
@@ -64,6 +64,8 @@
 		},
 		mutations: {
 			navigate: function (state, to) { // to: {url, query, title}
+				eventBus.$emit('closeAllPopups');
+				eventBus.$emit('modalCloseAll');
 				let root = window.$$rootUrl;
 				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url.toLowerCase();

@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2022 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7838 */
+/* Version 10.0.7894 */
 
 
 declare function require(url: string): any;
@@ -271,6 +271,7 @@ interface IController {
 	$upload(url: string, accept?: string): Promise<any>;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
+	$nodirty(func: () => Promise<any>): void;
 }
 
 interface IMessage {

@@ -4500,9 +4500,9 @@ app.modules['std:impl:array'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20211028-7807
+// 20221002-7894
 // components/modal.js
 
 
@@ -4560,6 +4560,21 @@ app.modules['std:impl:array'] = function () {
 			let mw = el.closest('.modal-window');
 			if (mw && binding.value)
 				mw.setAttribute('maximize', 'true');
+		}
+	}
+
+	const modalPlacementComponent = {
+		inserted(el, binding) {
+			if (!binding.value)
+				return;
+			let mw = el.closest('.modal-window');
+			if (!mw || !mw.__vue__)
+				return;
+			if (mw.__vue__.$data)
+				mw.__vue__.$data.placement = ' with-placement ' + binding.value;
+			let mf = mw.closest('.modal-wrapper')
+			if (mf)
+				mf.setAttribute('data-placement', binding.value);
 		}
 	}
 
@@ -4624,6 +4639,8 @@ app.modules['std:impl:array'] = function () {
 
 	Vue.directive('maximize', maximizeComponent);
 
+	Vue.directive("modal-placement", modalPlacementComponent)
+
 	const modalComponent = {
 		template: modalTemplate,
 		props: {
@@ -4633,6 +4650,7 @@ app.modules['std:impl:array'] = function () {
 			// always need a new instance of function (modal stack)
 			return {
 				modalCreated: false,
+				placement: '',
 				keyUpHandler: function (event) {
 					// escape
 					if (event.which === 27) {
@@ -4682,7 +4700,7 @@ app.modules['std:impl:array'] = function () {
 				return !!this.dialog.url;
 			},
 			mwClass() {
-				return this.modalCreated ? 'loaded' : '';
+				return this.placement + (this.modalCreated ? ' loaded' : '');
 			},
 			hasIcon() {
 				return !!this.dialog.style;

@@ -19,6 +19,7 @@
 	position: fixed;
 	z-index: @modal-stack-index;
 
+
 	.modal-wrapper {
 		background-color: transparent;
 		position: fixed;
@@ -28,14 +29,43 @@
 		bottom: 0;
 		z-index: @modal-wrapper-index;
 		overflow: auto;
-		display:flex;
-	
+		display: flex;
+
+		&[data-placement=full-screen] {
+			margin-top: @header-height;
+		}
+
+
 		.modal-window {
 			position: relative;
-			margin:auto; /*center at h and v*/
+			margin: auto; /*center at h and v*/
 			width: @modal-width-medium;
 			height: auto;
 			background-color: white;
+
+			&.with-placement {
+				position: absolute;
+				top: 0;
+				bottom: 0;
+
+				.modal-header {
+					display: none;
+				}
+			}
+
+			&.side-bar-right {
+				right: 0;
+			}
+
+			&.side-bar-left {
+				left: 0;
+			}
+
+			&.full-screen {
+				right: 0;
+				left: 0;
+				width: auto !important;
+			}
 
 			.modal-body-content {
 				width: 100%;
@@ -81,7 +111,7 @@
 	}
 
 	.modal-body .app-exception {
-		margin:0;
+		margin: 0;
 	}
 }
 

@@ -5319,7 +5319,7 @@ template: `
 })();
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220910-7886*/
+/*20221002-7894*/
 // controllers/base.js
 
 (function () {
@@ -5734,7 +5734,11 @@ template: `
 					});
 				});
 			},
-
+			async $nodirty(callback) {
+				let wasDirty = this.$data.$dirty;
+				await callback();
+				this.$defer(() => this.$data.$setDirty(wasDirty));
+			},
 			$requery() {
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
@@ -6144,7 +6148,7 @@ template: `
 							return __runDialog(url, arg, query, (result) => {
 								if (arg.$merge) {
 									arg.$merge(result);
-								} else {
+								} else if (result !== false) {
 									simpleMerge(arg, result);
 								}
 							});
@@ -6689,7 +6693,8 @@ template: `
 					$report: this.$report,
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
-					$emitSaveEvent: this.$emitSaveEvent
+					$emitSaveEvent: this.$emitSaveEvent,
+					$nodirty: this.$nodirty
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,
@@ -6730,6 +6735,8 @@ template: `
 				if (json.saveEvent) {
 					this.__saveEvent__ = json.saveEvent;
 				}
+				if (json.placement)
+					result.placement = json.placement;
 				return result;
 			},
 			__isModalRequery() {

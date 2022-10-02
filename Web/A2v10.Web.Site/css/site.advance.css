@@ -14,6 +14,7 @@
 @focus-index: auto;
 @hover-index: auto;
 */
+/* @modal-wrapper-index + 2 */
 /* mixins */
 /* icon colors */
 @font-face {
@@ -848,6 +849,7 @@
 @focus-index: auto;
 @hover-index: auto;
 */
+/* @modal-wrapper-index + 2 */
 * {
   box-sizing: border-box;
 }
@@ -1489,7 +1491,7 @@ header .dropdown.separate.show .btn.btn-success,
   top: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.2);
-  z-index: 25;
+  z-index: 1052;
 }
 .menu-navbar {
   width: 320px;
@@ -3084,9 +3086,10 @@ pre.a2-code {
 }
 .input-group > .selector-pane ul.selector-ul li {
   list-style: none;
-  padding: 4px 6px;
+  padding: 8px 6px;
   white-space: normal;
   cursor: pointer;
+  line-height: 1.1rem;
 }
 .input-group > .selector-pane ul.selector-ul li:hover {
   background-color: var(--hoverBk);
@@ -4398,6 +4401,9 @@ ul.news-list > li {
   overflow: auto;
   display: flex;
 }
+.modal-stack .modal-wrapper[data-placement=full-screen] {
+  margin-top: 42px;
+}
 .modal-stack .modal-wrapper .modal-window {
   position: relative;
   margin: auto;
@@ -4405,6 +4411,25 @@ ul.news-list > li {
   width: 500px;
   height: auto;
   background-color: white;
+}
+.modal-stack .modal-wrapper .modal-window.with-placement {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.modal-stack .modal-wrapper .modal-window.with-placement .modal-header {
+  display: none;
+}
+.modal-stack .modal-wrapper .modal-window.side-bar-right {
+  right: 0;
+}
+.modal-stack .modal-wrapper .modal-window.side-bar-left {
+  left: 0;
+}
+.modal-stack .modal-wrapper .modal-window.full-screen {
+  right: 0;
+  left: 0;
+  width: auto !important;
 }
 .modal-stack .modal-wrapper .modal-window .modal-body-content {
   width: 100%;

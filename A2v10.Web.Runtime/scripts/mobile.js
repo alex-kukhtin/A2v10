@@ -1938,9 +1938,9 @@ app.modules['std:http'] = function () {
 
 
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20181121-7364
+// 20221002-7894
 /* platform/routex.js */
 
 (function () {
@@ -2004,6 +2004,8 @@ app.modules['std:http'] = function () {
 		},
 		mutations: {
 			navigate: function (state, to) { // to: {url, query, title}
+				eventBus.$emit('closeAllPopups');
+				eventBus.$emit('modalCloseAll');
 				let root = window.$$rootUrl;
 				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url.toLowerCase();
@@ -9364,9 +9366,9 @@ TODO:
 	});
 })();
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20211028-7807
+// 20221002-7894
 // components/modal.js
 
 
@@ -9424,6 +9426,21 @@ TODO:
 			let mw = el.closest('.modal-window');
 			if (mw && binding.value)
 				mw.setAttribute('maximize', 'true');
+		}
+	}
+
+	const modalPlacementComponent = {
+		inserted(el, binding) {
+			if (!binding.value)
+				return;
+			let mw = el.closest('.modal-window');
+			if (!mw || !mw.__vue__)
+				return;
+			if (mw.__vue__.$data)
+				mw.__vue__.$data.placement = ' with-placement ' + binding.value;
+			let mf = mw.closest('.modal-wrapper')
+			if (mf)
+				mf.setAttribute('data-placement', binding.value);
 		}
 	}
 
@@ -9488,6 +9505,8 @@ TODO:
 
 	Vue.directive('maximize', maximizeComponent);
 
+	Vue.directive("modal-placement", modalPlacementComponent)
+
 	const modalComponent = {
 		template: modalTemplate,
 		props: {
@@ -9497,6 +9516,7 @@ TODO:
 			// always need a new instance of function (modal stack)
 			return {
 				modalCreated: false,
+				placement: '',
 				keyUpHandler: function (event) {
 					// escape
 					if (event.which === 27) {
@@ -9546,7 +9566,7 @@ TODO:
 				return !!this.dialog.url;
 			},
 			mwClass() {
-				return this.modalCreated ? 'loaded' : '';
+				return this.placement + (this.modalCreated ? ' loaded' : '');
 			},
 			hasIcon() {
 				return !!this.dialog.style;
@@ -11782,7 +11802,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220910-7886*/
+/*20221002-7894*/
 // controllers/base.js
 
 (function () {
@@ -12197,7 +12217,11 @@ Vue.directive('resize', {
 					});
 				});
 			},
-
+			async $nodirty(callback) {
+				let wasDirty = this.$data.$dirty;
+				await callback();
+				this.$defer(() => this.$data.$setDirty(wasDirty));
+			},
 			$requery() {
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
@@ -12607,7 +12631,7 @@ Vue.directive('resize', {
 							return __runDialog(url, arg, query, (result) => {
 								if (arg.$merge) {
 									arg.$merge(result);
-								} else {
+								} else if (result !== false) {
 									simpleMerge(arg, result);
 								}
 							});
@@ -13152,7 +13176,8 @@ Vue.directive('resize', {
 					$report: this.$report,
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
-					$emitSaveEvent: this.$emitSaveEvent
+					$emitSaveEvent: this.$emitSaveEvent,
+					$nodirty: this.$nodirty
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,
@@ -13193,6 +13218,8 @@ Vue.directive('resize', {
 				if (json.saveEvent) {
 					this.__saveEvent__ = json.saveEvent;
 				}
+				if (json.placement)
+					result.placement = json.placement;
 				return result;
 			},
 			__isModalRequery() {

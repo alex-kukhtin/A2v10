@@ -1868,9 +1868,9 @@ app.modules['std:accel'] = function () {
 	}
 };
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20181121-7364
+// 20221002-7894
 /* platform/routex.js */
 
 (function () {
@@ -1934,6 +1934,8 @@ app.modules['std:accel'] = function () {
 		},
 		mutations: {
 			navigate: function (state, to) { // to: {url, query, title}
+				eventBus.$emit('closeAllPopups');
+				eventBus.$emit('modalCloseAll');
 				let root = window.$$rootUrl;
 				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url.toLowerCase();
@@ -5278,7 +5280,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220910-7886*/
+/*20221002-7894*/
 // controllers/base.js
 
 (function () {
@@ -5693,7 +5695,11 @@ app.modules['std:impl:array'] = function () {
 					});
 				});
 			},
-
+			async $nodirty(callback) {
+				let wasDirty = this.$data.$dirty;
+				await callback();
+				this.$defer(() => this.$data.$setDirty(wasDirty));
+			},
 			$requery() {
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
@@ -6103,7 +6109,7 @@ app.modules['std:impl:array'] = function () {
 							return __runDialog(url, arg, query, (result) => {
 								if (arg.$merge) {
 									arg.$merge(result);
-								} else {
+								} else if (result !== false) {
 									simpleMerge(arg, result);
 								}
 							});
@@ -6648,7 +6654,8 @@ app.modules['std:impl:array'] = function () {
 					$report: this.$report,
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
-					$emitSaveEvent: this.$emitSaveEvent
+					$emitSaveEvent: this.$emitSaveEvent,
+					$nodirty: this.$nodirty
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,
@@ -6689,6 +6696,8 @@ app.modules['std:impl:array'] = function () {
 				if (json.saveEvent) {
 					this.__saveEvent__ = json.saveEvent;
 				}
+				if (json.placement)
+					result.placement = json.placement;
 				return result;
 			},
 			__isModalRequery() {
