@@ -11803,12 +11803,6 @@ Vue.directive('disable', {
 				el.classList.remove('show');
 			};
 
-			el.addEventListener('mouseup', (ev) => {
-				// from children elements
-				eventBus.$emit('closeAllPopups');
-				ev.stopPropagation();
-			});
-
 			el.addEventListener('click', function (event) {
 				let trg = event.target;
 				if (el._btn.disabled) return;

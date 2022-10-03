@@ -4423,6 +4423,9 @@ ul.news-list > li {
 .modal-stack .modal-wrapper .modal-window.with-placement .modal-header {
   display: none;
 }
+.modal-stack .modal-wrapper .modal-window.with-placement .load-indicator {
+  top: 4px;
+}
 .modal-stack .modal-wrapper .modal-window.side-bar-right {
   right: 0;
 }
@@ -5303,7 +5306,6 @@ label.checkbox.small span:after {
   display: flex;
   align-items: center;
   border-top: 1px solid var(--neutralLight);
-  padding: 0.5em;
 }
 .a2-pager button {
   padding: 3px;

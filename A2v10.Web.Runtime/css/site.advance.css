@@ -21,7 +21,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7891') format('woff'), url('/css/fonts/A2v10.ttf?v=7891') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7895') format('woff'), url('/css/fonts/A2v10.ttf?v=7895') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -112,6 +112,9 @@
 }
 .ico-qrcode:before {
   content: "\ea0e";
+}
+.ico-factory:before {
+  content: "\ea0f";
 }
 .ico-ban-red:before {
   content: "\ea0a";
@@ -4420,6 +4423,9 @@ ul.news-list > li {
 .modal-stack .modal-wrapper .modal-window.with-placement .modal-header {
   display: none;
 }
+.modal-stack .modal-wrapper .modal-window.with-placement .load-indicator {
+  top: 4px;
+}
 .modal-stack .modal-wrapper .modal-window.side-bar-right {
   right: 0;
 }
@@ -5300,7 +5306,6 @@ label.checkbox.small span:after {
   display: flex;
   align-items: center;
   border-top: 1px solid var(--neutralLight);
-  padding: 0.5em;
 }
 .a2-pager button {
   padding: 3px;
