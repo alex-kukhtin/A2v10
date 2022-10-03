@@ -328,6 +328,7 @@ namespace A2v10.Xaml
 		Eye,
 		EyeDisabled,
 		EyeDisabledRed,
+		Factory,
 		Failure,
 		FailureRed,
 		FailureOutline,
