@@ -1,6 +1,6 @@
-﻿/*! Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
+﻿/* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-// 20220627-7853
+// 20221004-7897
 // components/sheet.js
 
 (function () {

@@ -10475,9 +10475,9 @@ Vue.component('a2-panel', {
 	});
 
 })();
-/*! Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
 
-// 20220627-7853
+// 20221004-7897
 // components/sheet.js
 
 (function () {
@@ -11355,13 +11355,12 @@ Vue.directive('disable', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220823-7883*/
+/*20221004-7897*/
 /* directives/dropdown.js */
 
 (function () {
 
 	const popup = require('std:popup');
-	const eventBus = require('std:eventBus');
 
 	Vue.directive('dropdown', {
 		bind(el, binding, vnode) {
