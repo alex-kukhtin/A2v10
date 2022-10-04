@@ -1074,17 +1074,17 @@ h5,
   display: flex;
   padding: 0.8rem;
   margin: 0.4rem;
-  color: #383838;
-  border: 1px solid #d6d8db;
+  color: #999;
+  border: 1px solid var(--neutralBkDark);
   border-left-width: 6px;
-  background-color: #e2e3e5;
+  background-color: var(--neutralBk);
 }
 .a2-alert > .ico {
   font-size: 1.5rem;
   margin-right: 0.8rem;
 }
 .a2-alert hr {
-  border-color: #d6d8db;
+  border-color: var(--neutralBkDark);
 }
 .a2-alert > div {
   width: 100%;
@@ -6067,15 +6067,15 @@ TODO:
   content: "\e9a4";
 }
 .panel {
-  border: 1px solid #d6d8db;
+  border: 1px solid var(--neutralBkDark);
 }
 .panel > .panel-header {
-  color: #383838;
-  background-color: #e2e3e5;
-  border-bottom: 1px solid #d6d8db;
+  color: #999;
+  background-color: var(--neutralBk);
+  border-bottom: 1px solid var(--neutralBkDark);
 }
 .panel > .panel-header .panel-collapse-handle {
-  color: #383838;
+  color: #999;
 }
 .panel.panel-cyan {
   border: 1px solid #bcdff1;
@@ -6127,12 +6127,12 @@ TODO:
   text-align: left;
 }
 .panel.panel-cut > .panel-header {
-  color: #383838;
+  color: #999;
   background-color: transparent;
   border-bottom: 1px solid transparent;
 }
 .panel.panel-cut > .panel-header .panel-collapse-handle {
-  color: #383838;
+  color: #999;
 }
 .panel.panel-cut .panel-header {
   padding: 0;

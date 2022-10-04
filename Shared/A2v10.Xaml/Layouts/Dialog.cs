@@ -283,6 +283,10 @@ public class Dialog : RootContainer, ISupportTwoPhaseRendering
 	{
 		base.OnEndInit();
 		CollectionView?.SetParent(this);
+		Taskpad?.SetParent(this);
+		TitleInfo?.SetParent(this);
+		foreach (var b in Buttons)
+			b.SetParent(this);
 		if (Size == DialogSize.Max)
 			Maximize = true;
 	}
@@ -291,12 +295,20 @@ public class Dialog : RootContainer, ISupportTwoPhaseRendering
 	{
 		base.OnSetStyles(root);
 		CollectionView?.OnSetStyles(root);
+		Taskpad?.OnSetStyles(root);
+		TitleInfo?.OnSetStyles(root);
+		foreach (var b in Buttons)
+			b.OnSetStyles(this);
 	}
 
 	public override void OnDispose()
 	{
 		base.OnDispose();
 		CollectionView?.OnDispose();
+		Taskpad?.OnDispose();
+		TitleInfo?.OnDispose();
+		foreach (var b in Buttons)
+			b.OnDispose();
 	}
 	protected override T FindInside<T>()
 	{
