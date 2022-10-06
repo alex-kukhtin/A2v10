@@ -550,7 +550,7 @@ namespace A2v10.Web.Mvc.Controllers
 					try
 					{
 						var files = Request.Files;
-						await _baseController.SaveFiles(url, files, SetQueryStringAndSqlQueryParams, Response.Output);
+						await _baseController.SaveFiles(url, files, Request.Form.ToExpando(),  SetQueryStringAndSqlQueryParams, Response.Output);
 					}
 					catch (Exception ex)
 					{

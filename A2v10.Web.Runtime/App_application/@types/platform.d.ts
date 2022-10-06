@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2022 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7894 */
+/* Version 10.0.7898 */
 
 
 declare function require(url: string): any;
@@ -268,7 +268,7 @@ interface IController {
 	$expand(elem: ITreeElement, prop: string, value: boolean): Promise<any>;
 	$focus(htmlid: string): void;
 	$report(report: string, arg: object, opts?: { export?: Boolean, attach?: Boolean, print?: Boolean, format?: ReportFormat }, url?: string, data?: object): void;
-	$upload(url: string, accept?: string): Promise<any>;
+	$upload(url: string, accept?: string, data?: {Id?: any, Key?: any}): Promise<any>;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
 	$nodirty(func: () => Promise<any>): void;

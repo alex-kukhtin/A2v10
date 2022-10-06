@@ -6427,7 +6427,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20220815-7879*/
+/*20221006-7889*/
 // components/selector.js
 
 /*TODO*/
@@ -6452,7 +6452,7 @@ Vue.component('validator-control', {
 		<div v-if="isCombo" class="selector-combo" @click.stop.prevent="open"><span tabindex="-1" class="select-text" v-text="valueText" @keydown="keyDown" ref="xcombo"/></div>
 		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" v-else
 			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
-			:disabled="disabled" @click="clickInput($event)"/>
+			:disabled="disabled" @click="clickInput($event)" :tabindex="tabIndex"/>
 		<slot></slot>
 		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
 		<a class="selector-clear" href="" @click.stop.prevent="clear" v-if="clearVisible">&#x2715</a>
@@ -12711,15 +12711,17 @@ Vue.directive('resize', {
 				window.location = root + url;
 			},
 
-			async $upload(url, accept) {
+			async $upload(url, accept, data) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
 				try {
 					let file = await htmlTools.uploadFile(accept, url);
 					var dat = new FormData();
 					dat.append('file', file, file.name);
+					if (data)
+						dat.append('Key', data.Key || null);
 					let uploadUrl = urltools.combine(root, '_file', url);
-					uploadUrl = urltools.createUrlForNavigate(uploadUrl);
+					uploadUrl = urltools.createUrlForNavigate(uploadUrl, data);
 					return await httpTools.upload(uploadUrl, dat);
 				} catch (err) {
 					err = err || 'unknown error';

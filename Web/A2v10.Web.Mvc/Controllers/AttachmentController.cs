@@ -77,7 +77,8 @@ namespace A2v10.Web.Mvc.Controllers
 		void SetParams(ExpandoObject prms)
 		{
 			prms.Set("UserId", UserId);
-			prms.Set("TenantId", TenantId);
+			if (_baseController.Host.IsMultiTenant)
+				prms.Set("TenantId", TenantId);
 			if (_baseController.Host.IsMultiCompany)
 				prms.Set("CompanyId", CompanyId);
 		}

@@ -26,12 +26,12 @@ public class AttachStiReport : AttachReportBase, IInvokeTarget
 		_reportHelper = new ReportHelper(_host);
 	}
 
-	public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Report, String Model, String Schema)
+	public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Report, String Model, String Schema, String Key)
 	{
 		_reportHelper.SetupLicense();
 		var dm = await _dbContext.LoadModelAsync(String.Empty, $"[{Schema}].[{Model}.Report]", new { UserId, TenantId, Id });
 
-		using (var stream = CreateStream(dm, Report))
+		using (var stream = CreateStream(dm, Report).Stream)
 		{
 			using (var ms = new MemoryStream())
 			{
@@ -44,7 +44,8 @@ public class AttachStiReport : AttachReportBase, IInvokeTarget
 					Id = Id,
 					Mime = MimeTypes.Application.Pdf,
 					Stream = ms,
-					Name = repName
+					Name = repName,
+					Key = Key
 				};
 				if (String.IsNullOrEmpty(ai.Name))
 					ai.Name = "Attachment";

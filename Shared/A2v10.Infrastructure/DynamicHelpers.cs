@@ -312,6 +312,15 @@ public static class DynamicHelpers
 		coll.Add(nvObj);
 	}
 
+	public static ExpandoObject ToExpando(this NameValueCollection coll)
+	{
+		if (coll == null || coll.Count == 0)
+			return null;
+		var eo = new ExpandoObject();
+		foreach (var k in coll.AllKeys)
+			eo.Add(k, coll[k]);
+		return eo;
+	}
 
 	public static NameValueCollection ToCollection(this ExpandoObject eo)
 	{

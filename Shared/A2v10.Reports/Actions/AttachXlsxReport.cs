@@ -25,11 +25,11 @@ namespace A2v10.Reports.Actions
 
 		protected override String FileExtension => ".xlsx";
 
-		public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Report, String Model, String Schema)
+		public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Report, String Model, String Schema, String Key)
 		{
 			var dm = await _dbContext.LoadModelAsync(String.Empty, $"[{Schema}].[{Model}.Report]", new { UserId, TenantId, Id });
 
-			using (Stream stream = CreateStream(dm, Report))
+			using (Stream stream = CreateStream(dm, Report).Stream)
 			{
 				using (var rep = new ExcelReportGenerator(stream))
 				{
@@ -46,7 +46,8 @@ namespace A2v10.Reports.Actions
 							Id = Id,
 							Mime = MimeTypes.Application.Excel,
 							Stream = ms,
-							Name = Path.GetFileNameWithoutExtension(Report)
+							Name = Path.GetFileNameWithoutExtension(Report),
+							Key = Key
 						};
 						if (String.IsNullOrEmpty(ai.Name))
 							ai.Name = "Attachment";

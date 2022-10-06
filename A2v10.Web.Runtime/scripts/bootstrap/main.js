@@ -5776,15 +5776,17 @@ app.modules['std:impl:array'] = function () {
 				window.location = root + url;
 			},
 
-			async $upload(url, accept) {
+			async $upload(url, accept, data) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
 				try {
 					let file = await htmlTools.uploadFile(accept, url);
 					var dat = new FormData();
 					dat.append('file', file, file.name);
+					if (data)
+						dat.append('Key', data.Key || null);
 					let uploadUrl = urltools.combine(root, '_file', url);
-					uploadUrl = urltools.createUrlForNavigate(uploadUrl);
+					uploadUrl = urltools.createUrlForNavigate(uploadUrl, data);
 					return await httpTools.upload(uploadUrl, dat);
 				} catch (err) {
 					err = err || 'unknown error';

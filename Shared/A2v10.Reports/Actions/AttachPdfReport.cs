@@ -1,7 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
-using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -27,7 +26,7 @@ public class AttachPdfReport : AttachReportBase, IInvokeTarget
 
 	protected override String FileExtension => ".xaml";
 
-	public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Base, String Report)
+	public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, Int64 Id, String Base, String Report, String Key)
 	{
 
 		var url = $"/_report/{Base.RemoveHeadSlash()}/{Report}/{Id}";
@@ -45,8 +44,9 @@ public class AttachPdfReport : AttachReportBase, IInvokeTarget
 		var dm = await _dbContext.LoadModelAsync(String.Empty, rqRep.ReportProcedure, prms);
 
 		var repPath = System.IO.Path.Combine(rqRep.Path, rqRep.ReportName);
-		using var stream = CreateStream(dm, repPath);
-		using var repStream = _reportHelper.Build(repPath, stream, dm.Root);
+		var sr = CreateStream(dm, repPath);
+		using var stream = sr.Stream;
+		using var repStream = _reportHelper.Build(sr.Path, stream, dm.Root);
 		AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
 		{
 			UserId = UserId,
@@ -54,7 +54,8 @@ public class AttachPdfReport : AttachReportBase, IInvokeTarget
 			Id = Id,
 			Mime = MimeTypes.Application.Pdf,
 			Stream = repStream,
-			Name = dm.Root.Resolve(rqRep.name)
+			Name = dm.Root.Resolve(rqRep.name),
+			Key = Key
 		};
 		if (String.IsNullOrEmpty(ai.Name))
 			ai.Name = "Attachment";

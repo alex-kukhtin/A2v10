@@ -5865,22 +5865,16 @@ TODO:
 .a2-state-card {
   position: relative;
   background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   color: #aaa;
-  display: inline-block;
-}
-.a2-state-card .a2-state-card-header {
+  padding: 0.7rem;
   line-height: 1;
-  margin: 0.7rem;
-}
-.a2-state-card .a2-state-card-footer {
-  font-size: 95%;
-  margin: 0.7rem;
 }
 .a2-state-card .a2-state-card-text {
-  font-size: 32px;
-  line-height: 1.466666;
+  font-size: 2rem;
   font-weight: 500;
-  margin: 0.7rem;
 }
 .a2-state-card .a2-card-icon {
   position: absolute;
@@ -5920,13 +5914,13 @@ TODO:
   background-color: #3470b4;
 }
 .a2-state-card.compact .a2-state-card-text {
-  font-size: 1.6rem;
+  font-size: 150%;
 }
 .a2-state-card.compact .a2-card-icon {
   position: absolute;
-  right: 1.2rem;
-  top: 1.2rem;
-  font-size: 3.6rem;
+  right: 1rem;
+  top: 1rem;
+  font-size: 4rem;
 }
 .grid {
   display: grid !important;
