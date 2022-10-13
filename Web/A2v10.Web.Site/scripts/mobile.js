@@ -6427,10 +6427,8 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20221006-7889*/
+/*20221006-7899*/
 // components/selector.js
-
-/*TODO*/
 
 (function selector_component() {
 	const popup = require('std:popup');
@@ -6455,7 +6453,7 @@ Vue.component('validator-control', {
 			:disabled="disabled" @click="clickInput($event)" :tabindex="tabIndex"/>
 		<slot></slot>
 		<a class="selector-open" href="" @click.stop.prevent="open" v-if="caret"><span class="caret"></span></a>
-		<a class="selector-clear" href="" @click.stop.prevent="clear" v-if="clearVisible">&#x2715</a>
+		<a class="selector-clear" href="" @click.stop.prevent="clear" v-if="clearVisible" tabindex="-1">&#x2715</a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">

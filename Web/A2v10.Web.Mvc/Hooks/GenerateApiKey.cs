@@ -1,24 +1,22 @@
-﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 
 using A2v10.Infrastructure;
 using A2v10.Web.Identity.ApiKey;
 
-namespace A2v10.Web.Mvc.Hooks
+namespace A2v10.Web.Mvc.Hooks;
+
+public class GenerateApiKey : IInvokeTarget
 {
 
-	public class AppList : IInvokeTarget
+	public void Inject()
 	{
+	}
 
-		public void Inject()
-		{
-		}
-
-		public Object Invoke(Int64 UserId)
-		{
-			String apiKey = ApiKeyGenerator.GenerateKey();
-			return new { Result = apiKey };
-		}
+	public Object Invoke(Int64 UserId)
+	{
+		String apiKey = ApiKeyGenerator.GenerateKey();
+		return new { Result = apiKey };
 	}
 }
