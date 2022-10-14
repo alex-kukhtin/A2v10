@@ -115,7 +115,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220815-7879
+// 20221014-7900
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -303,6 +303,9 @@ app.modules['std:utils'] = function () {
 					break;
 				case 'string':
 					obj[key] = '';
+					break;
+				case 'object':
+					clearObject(obj[key]);
 					break;
 				default:
 					console.error(`utils.clearObject. Unknown property type ${typeof (val)}`);
