@@ -27,7 +27,6 @@ public class KsSmsConfig
 public class KsSmsSender
 {
     private readonly IServiceLocator _locator;
-    private readonly ExpandoObject _params;
 	private readonly IDbContext _dbContext;
 
 	public readonly KsSmsConfig _config;
@@ -35,7 +34,6 @@ public class KsSmsSender
 	{
 		_locator = locator;
 		_dbContext = locator.GetService<IDbContext>();	
-		_params = prms;
 		_config = new KsSmsConfig()
 		{
 			Url = prms.Get<String>("url"),
@@ -53,12 +51,12 @@ public class KsSmsSender
 
 	public KsResponse sendSms(String phone, String text)
 	{
-		var msg = KsMessage.SmsMessage("CC Support", phone, text);
+		var msg = KsMessage.SmsMessage(_config.Source, phone, text);
 		return SendMessage(msg);
 	}
 	public KsResponse sendViber(String phone, String text)
 	{
-		var msg = KsMessage.ViberMessage(phone, text);
+		var msg = KsMessage.ViberMessage(_config.Source, phone, text);
 		return SendMessage(msg);
 	}
 
@@ -84,31 +82,23 @@ public class KsSmsSender
 			{
 				rqs.Write(bytes, 0, bytes.Length);
 			}
-			using (var rsp = wr.GetResponse())
-			{
-				using (var rss = rsp.GetResponseStream())
-				{
-					using (var ms = new StreamReader(rss))
-					{
-						String resp = ms.ReadToEnd();
-						var mr = JsonConvert.DeserializeObject<KsResponse>(resp);
-						mr.success = true;
-						return mr;
-					}
-				}
-			}
+			using var rsp = wr.GetResponse();
+			using var rss = rsp.GetResponseStream();
+			using var ms = new StreamReader(rss);
+			String resp = ms.ReadToEnd();
+			var mr = JsonConvert.DeserializeObject<KsResponse>(resp);
+			mr.success = true;
+			return mr;
 		}
 		catch (WebException wex)
 		{
-			if (wex.Response != null && wex.Response is HttpWebResponse webResp)
+			if (wex.Response != null && wex.Response is HttpWebResponse)
 			{
-				using (var rs = new StreamReader(wex.Response.GetResponseStream()))
-				{
-					String strError = rs.ReadToEnd();
-					var mr = JsonConvert.DeserializeObject<KsResponse>(strError);
-					mr.success = false;
-					return mr;
-				}
+				using var rs = new StreamReader(wex.Response.GetResponseStream());
+				String strError = rs.ReadToEnd();
+				var mr = JsonConvert.DeserializeObject<KsResponse>(strError);
+				mr.success = false;
+				return mr;
 			}
 			return new KsResponse()
 			{

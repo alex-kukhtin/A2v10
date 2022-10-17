@@ -7,7 +7,7 @@ namespace A2v10.Javascript;
 
 public class SendSmsResponse
 {
-    public Boolean Success { get; set; } = true;
+    public Boolean success { get; set; } = true;
 }
 
 public class SendSmsCommand

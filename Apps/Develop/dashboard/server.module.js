@@ -15,7 +15,7 @@ module.exports = function (prms, args) {
 	
 	//return Object.assign(prms, args, {'5':[1, 2, 3, 4, ...Object.keys(prms)]});
 
-	//let r = this.fetch(this.config.appSettings('ProcS').url + '/api/process/start', {
+	let r = this.fetch(this.config.appSettings('ProcS').url + '/api/process/start', {
 		method: 'post',
 		body: {
 			processId: "bioprocs/donorpaid",

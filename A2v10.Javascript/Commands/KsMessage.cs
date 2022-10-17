@@ -52,11 +52,11 @@ namespace A2v10.Javascript
 			};
 		}
 
-		public static KsMessage ViberMessage(String phone, String text)
+		public static KsMessage ViberMessage(String source, String phone, String text)
 		{
 			return new KsMessage()
 			{
-				source = "18008",
+				source = source,
 				bearerType = KsBearerType.viber,
 				contentType = "text/plain",
 				content = text,
