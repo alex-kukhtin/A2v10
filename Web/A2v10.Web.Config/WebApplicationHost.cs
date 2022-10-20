@@ -252,17 +252,24 @@ namespace A2v10.Web.Config
 
 		public void StartApplication(Boolean bAdmin)
 		{
-			var file = ZipApplicationFile;
 			String key = bAdmin ? "admin" : AppKey;
-			if (file != null)
-				_reader = new ZipApplicationReader(AppPath, key);
-			else if (AppPath.StartsWith("db:"))
-				throw new NotImplementedException("DbApplicationReader");
+			if (AppPath.StartsWith("clr-type:"))
+			{
+				_reader = new ClrApplicationReader(AppPath, key);
+			}
 			else
-				_reader = new FileApplicationReader(AppPath, key)
-				{
-					EmulateBox = _emulateBox
-				};
+			{
+				var file = ZipApplicationFile;
+				if (file != null)
+					_reader = new ZipApplicationReader(AppPath, key);
+				else if (AppPath.StartsWith("db:"))
+					throw new NotImplementedException("DbApplicationReader");
+				else
+					_reader = new FileApplicationReader(AppPath, key)
+					{
+						EmulateBox = _emulateBox
+					};
+			}
 		}
 
 		public String AppVersion => AppInfo.MainAssembly.Version;
