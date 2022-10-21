@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -97,6 +97,10 @@ namespace BackgroundProcessor
 		private String CheckPath(String path)
 		{
 			return path.Replace('\\', '/').ToLowerInvariant();
+		}
+		public String CombinePath(String path1, String path2, String fileName)
+		{
+			return Path.Combine(path1, path2, fileName);
 		}
 	}
 }

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -11,11 +12,12 @@ namespace A2v10.Infrastructure;
 public class ClrApplicationReader : IApplicationReader
 {
 	private static IAppContainer _container;
+	private static String _appPath;
 	public ClrApplicationReader(String appPath, String key)
 	{
 		if (_container != null)
 			return;
-		var (assembly, type) = ClrHelpers.ParseClrType(appPath);
+		var (assembly, type) = ClrHelpers.ParseClrType(key);
 		var ass = Assembly.Load(assembly);
 		if (ass == null)
 			throw new FileNotFoundException(assembly);
@@ -23,7 +25,10 @@ public class ClrApplicationReader : IApplicationReader
 		if (inst == null)
 			throw new InvalidOperationException("Invalid type name");
 		if (inst is IAppContainer appCont)
+		{
+			_appPath = appPath;
 			_container = appCont;
+		}
 		else
 			throw new InvalidOperationException("Invalid CLR type");
 	}
@@ -35,29 +40,39 @@ public class ClrApplicationReader : IApplicationReader
 		return PathHelpers.CombineRelative(path1, path2);
 	}
 
+	public String CombinePath(String path1, String path2, String fileName)
+	{
+		//return Path.Combine(path1, path2, fileName);
+		return fileName;
+	}
+
 	public Boolean DirectoryExists(String fullPath)
 	{
-		throw new NotImplementedException();
+		return _container.EnumerateFiles(fullPath, "").Any();
 	}
 
 	public IEnumerable<String> EnumerateFiles(String path, String searchPattern)
 	{
-		throw new NotImplementedException();
+		if (String.IsNullOrEmpty(path))
+			return Enumerable.Empty<String>();
+		if (searchPattern.StartsWith("*"))
+			searchPattern = searchPattern.Substring(1);
+		return _container.EnumerateFiles(path, searchPattern);
 	}
 
 	public bool FileExists(string fullPath)
 	{
-		throw new NotImplementedException();
+		return _container.FileExists(fullPath);
 	}
 
 	public String FileReadAllText(String fullPath)
 	{
-		throw new NotImplementedException();
+		return _container.GetText(fullPath);
 	}
 
 	public Stream FileStreamFullPathRO(String fullPath)
 	{
-		throw new NotImplementedException();
+		return _container.GetStream(fullPath);
 	}
 
 	public String MakeFullPath(String path, String fileName)
@@ -73,7 +88,8 @@ public class ClrApplicationReader : IApplicationReader
 
 	public String ReadTextFile(String path, String fileName)
 	{
-		throw new NotImplementedException();
+		var fullPath = MakeFullPath(path, fileName);
+		return _container.GetText(fullPath);
 	}
 
 	public Task<String> ReadTextFileAsync(String path, String fileName)

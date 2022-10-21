@@ -134,5 +134,9 @@ namespace A2v10.Infrastructure
 		{
 			return Path.GetFullPath(Path.Combine(path1, path2));
 		}
+		public String CombinePath(String path1, String path2, String fileName)
+		{
+			return Path.Combine(path1, path2, fileName);
+		}
 	}
 }

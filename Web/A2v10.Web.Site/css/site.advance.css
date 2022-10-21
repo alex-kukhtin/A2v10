@@ -6449,22 +6449,22 @@ table.sheet tr.row-last-parameter td {
   padding-bottom: 18px;
 }
 table.sheet tr.row-header {
-  background-color: rgba(231, 231, 231, 0.4);
+  background-color: rgba(231, 231, 231, 0.25);
 }
 table.sheet tr.row-light-header {
   color: #ccc;
 }
 table.sheet tr.row-footer {
-  background-color: rgba(231, 231, 231, 0.4);
+  background-color: rgba(231, 231, 231, 0.25);
 }
 table.sheet tr.row-total {
-  background-color: rgba(255, 239, 135, 0.4);
+  background-color: rgba(255, 239, 135, 0.2);
 }
 table.sheet tr.row-total td {
   font-weight: 600;
 }
 table.sheet tr.group {
-  background-color: rgba(221, 248, 236, 0.4);
+  background-color: rgba(221, 248, 236, 0.25);
   color: #208080;
 }
 table.sheet tr.group td {

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Concurrent;
@@ -11,250 +11,245 @@ using System.Threading;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
-namespace A2v10.Web.Config
+namespace A2v10.Web.Config;
+
+class LocaleMapItem
 {
+	public ConcurrentDictionary<String, String> Map { get; } = new ConcurrentDictionary<String, String>();
 
-	class LocaleMapItem
+	public LocaleMapItem(Action<ConcurrentDictionary<String, String>> load)
 	{
-		public ConcurrentDictionary<String, String> Map { get; } = new ConcurrentDictionary<String, String>();
+		load(Map);
+	}
+}
 
-		public LocaleMapItem(Action<ConcurrentDictionary<String, String>> load)
+struct LocalePath
+{
+	public String Path;
+	public Boolean IsFileSystem;
+
+	public LocalePath(String path, Boolean fs)
+	{
+		Path = path;
+		IsFileSystem = fs;
+	}
+
+}
+
+internal class WebDictionary
+{
+	private static readonly ConcurrentDictionary<String, LocaleMapItem> _maps = new();
+	FileSystemWatcher _watcher_system = null;
+	FileSystemWatcher _watcher_app = null;
+
+	IEnumerable<String> ReadLines(IApplicationReader reader, String path, Boolean fileSystem)
+	{
+		using var stream = fileSystem ?
+			new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read) :
+			reader.FileStreamFullPathRO(path);
+		using var rdr = new StreamReader(stream);
+		while (!rdr.EndOfStream)
 		{
-			load(Map);
+			var s = rdr.ReadLine();
+			if (String.IsNullOrEmpty(s) || s.StartsWith(";"))
+				continue;
+			yield return s;
 		}
 	}
 
-	struct LocalePath
+	public IDictionary<String, String> GetLocalizerDictionary(IApplicationHost host, String locale)
 	{
-		public String Path;
-		public Boolean IsFileSystem;
-
-		public LocalePath(String path, Boolean fs)
+		var localmap = GetCurrentMap(locale, (map) =>
 		{
-			Path = path;
-			IsFileSystem = fs;
-		}
-
-	}
-
-	internal class WebDictionary
-	{
-		private static readonly ConcurrentDictionary<String, LocaleMapItem> _maps = new ConcurrentDictionary<String, LocaleMapItem>();
-		FileSystemWatcher _watcher_system = null;
-		FileSystemWatcher _watcher_app = null;
-
-		IEnumerable<String> ReadLines(IApplicationReader reader, String path)
-		{
-			using (var stream = reader.FileStreamFullPathRO(path))
+			foreach (var localePath in GetLocalizerFilePath(host, locale))
 			{
-				using (var rdr = new StreamReader(stream))
+				var lines = ReadLines(host.ApplicationReader, localePath.Path, localePath.IsFileSystem);
+				foreach (var line in lines)
 				{
-					while (!rdr.EndOfStream)
+					Int32 pos = line.IndexOf('=');
+					if (pos != -1)
 					{
-						var s = rdr.ReadLine();
-						if (String.IsNullOrEmpty(s) || s.StartsWith(";"))
-							continue;
-						yield return s;
+						var key = line.Substring(0, pos).Trim();
+						var val = line.Substring(pos + 1).Trim();
+						map.AddOrUpdate(key, val, (k, oldVal) => val);
 					}
+					else
+						throw new InvalidDataException($"Invalid dictionary string '{line}'");
 				}
 			}
-		}
+		});
+		return localmap.Map;
+	}
 
-		public IDictionary<String, String> GetLocalizerDictionary(IApplicationHost host, String locale)
+	IEnumerable<LocalePath> GetLocalizerFilePath(IApplicationHost host, String locale)
+	{
+		// locale may be "uk_UA"
+		var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
+		var appReader = host.ApplicationReader;
+		var appPath = appReader.CombinePath(host.AppPath, host.AppKey, "_localization");
+		// нельзя использовать appReader.MakeFullPath()! Там может быть AppKey = "admin"
+		if (!Directory.Exists(dirPath))
+			dirPath = null;
+
+		if (!appReader.DirectoryExists(appPath))
+			appPath = null;
+
+		CreateWatchers(host, dirPath, appReader.IsFileSystem ? appPath : null);
+		if (dirPath != null)
 		{
-			var localmap = GetCurrentMap(locale, (map) =>
-			{
-				foreach (var localePath in GetLocalizerFilePath(host, locale))
-				{
-					var lines = ReadLines(host.ApplicationReader, localePath.Path);
-					foreach (var line in lines)
-					{
-						Int32 pos = line.IndexOf('=');
-						if (pos != -1)
-						{
-							var key = line.Substring(0, pos).Trim();
-							var val = line.Substring(pos + 1).Trim();
-							map.AddOrUpdate(key, val, (k, oldVal) => val);
-						}
-						else
-							throw new InvalidDataException($"Invalid dictionary string '{line}'");
-					}
-				}
-			});
-			return localmap.Map;
+			foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
+				yield return new LocalePath(s, true);
 		}
-
-		IEnumerable<LocalePath> GetLocalizerFilePath(IApplicationHost host, String locale)
+		var appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
+		if (appFiles != null)
 		{
-			// locale may be "uk_UA"
-			var dirPath = System.Web.Hosting.HostingEnvironment.MapPath("~/Localization");
-			var appReader = host.ApplicationReader;
-			var appPath = Path.Combine(host.AppPath, host.AppKey, "_localization");
-			// нельзя использовать appReader.MakeFullPath()! Там может быть AppKey = "admin"
-			if (!Directory.Exists(dirPath))
-				dirPath = null;
-
-			if (!appReader.DirectoryExists(appPath))
-				appPath = null;
-
-			CreateWatchers(host, dirPath, appReader.IsFileSystem ? appPath : null);
+			foreach (var s in appFiles)
+				yield return new LocalePath(s, false);
+		}
+		// simple locale: uk
+		if (locale.Length > 2)
+		{
+			locale = locale.Substring(0, 2);
 			if (dirPath != null)
 			{
 				foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
 					yield return new LocalePath(s, true);
 			}
-			var appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
+			appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
 			if (appFiles != null)
 			{
 				foreach (var s in appFiles)
 					yield return new LocalePath(s, false);
 			}
-			// simple locale: uk
-			if (locale.Length > 2)
-			{
-				locale = locale.Substring(0, 2);
-				if (dirPath != null)
-				{
-					foreach (var s in Directory.EnumerateFiles(dirPath, $"*.{locale}.txt"))
-						yield return new LocalePath(s, true);
-				}
-				appFiles = appReader.EnumerateFiles(appPath, $"*.{locale}.txt");
-				if (appFiles != null)
-				{
-					foreach (var s in appFiles)
-						yield return new LocalePath(s, false);
-				}
-			}
-		}
-
-
-		LocaleMapItem GetCurrentMap(String locale, Action<ConcurrentDictionary<String, String>> load)
-		{
-			return _maps.GetOrAdd(locale, (key) => new LocaleMapItem(load));
-		}
-
-
-		void CreateWatchers(IApplicationHost host, String dirPath, String appPath)
-		{
-			if (_watcher_system != null)
-				return;
-			if (!host.IsDebugConfiguration || host.IsProductionEnvironment)
-				return;
-			if (!String.IsNullOrEmpty(dirPath))
-			{
-				// FileName can be in 8.3 format!
-				_watcher_system = new FileSystemWatcher(dirPath, "*.*")
-				{
-					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes
-				};
-				_watcher_system.Changed += _watcher_Changed;
-				_watcher_system.Created += _watcher_Changed;
-				_watcher_system.Deleted += _watcher_Changed;
-				_watcher_system.EnableRaisingEvents = true;
-			}
-
-			if (!String.IsNullOrEmpty(appPath))
-			{
-				// FileName can be in 8.3 format!
-				_watcher_app = new FileSystemWatcher(appPath, "*.*")
-				{
-					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes
-				};
-				_watcher_app.Changed += _watcher_Changed;
-				_watcher_app.Created += _watcher_Changed;
-				_watcher_app.Deleted += _watcher_Changed;
-				_watcher_app.EnableRaisingEvents = true;
-			}
-		}
-
-		private void _watcher_Changed(Object sender, FileSystemEventArgs e)
-		{
-			_maps.Clear();
 		}
 	}
 
 
-	public class WebUserLocale : IUserLocale
+	LocaleMapItem GetCurrentMap(String locale, Action<ConcurrentDictionary<String, String>> load)
 	{
-		public String Locale { get; set; }
+		return _maps.GetOrAdd(locale, (key) => new LocaleMapItem(load));
+	}
 
-		public String Language
+
+	void CreateWatchers(IApplicationHost host, String dirPath, String appPath)
+	{
+		if (_watcher_system != null)
+			return;
+		if (!host.IsDebugConfiguration || host.IsProductionEnvironment)
+			return;
+		if (!String.IsNullOrEmpty(dirPath))
 		{
-			get
+			// FileName can be in 8.3 format!
+			_watcher_system = new FileSystemWatcher(dirPath, "*.*")
 			{
-				var loc = Locale;
-				if (loc != null)
-					return loc.Substring(0, 2);
-				else
-					return Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
-			}
+				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes
+			};
+			_watcher_system.Changed += Watcher_Changed;
+			_watcher_system.Created += Watcher_Changed;
+			_watcher_system.Deleted += Watcher_Changed;
+			_watcher_system.EnableRaisingEvents = true;
 		}
 
-		public String Language2
+		if (!String.IsNullOrEmpty(appPath))
 		{
-			get
+			// FileName can be in 8.3 format!
+			_watcher_app = new FileSystemWatcher(appPath, "*.*")
 			{
-				var loc = Locale;
-				if (loc == null)
-					loc = Thread.CurrentThread.CurrentUICulture.Name;
-				return loc.Substring(3, 2).ToLowerInvariant();
-			}
+				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size | NotifyFilters.Attributes
+			};
+			_watcher_app.Changed += Watcher_Changed;
+			_watcher_app.Created += Watcher_Changed;
+			_watcher_app.Deleted += Watcher_Changed;
+			_watcher_app.EnableRaisingEvents = true;
 		}
+	}
 
-		private static IEnumerable<String> AvailableLocales()
+	private void Watcher_Changed(Object sender, FileSystemEventArgs e)
+	{
+		_maps.Clear();
+	}
+}
+
+
+public class WebUserLocale : IUserLocale
+{
+	public String Locale { get; set; }
+
+	public String Language
+	{
+		get
 		{
-			var avail = ConfigurationManager.AppSettings["availableLocales"];
-			if (avail == null)
-				return Enumerable.Empty<String>();
-			return avail.Split(',');
+			var loc = Locale;
+			if (loc != null)
+				return loc.Substring(0, 2);
+			else
+				return Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName;
 		}
+	}
 
-		public static String AvaliableLanguages()
+	public String Language2
+	{
+		get
 		{
-			var avail = AvailableLocales();
-			return String.Join(",", avail.Select(x => x.Substring(0, 2)).ToArray());
+			var loc = Locale;
+			loc ??= Thread.CurrentThread.CurrentUICulture.Name;
+			return loc.Substring(3, 2).ToLowerInvariant();
 		}
+	}
 
-		public static String Lang2Locale(String lang)
-		{
-			if (lang == null)
-				return null;
-			var avail = AvailableLocales();
-			var loc = avail.FirstOrDefault(x => x.Trim().StartsWith(lang, StringComparison.OrdinalIgnoreCase));
-			return loc?.Trim();
-		}
+	private static IEnumerable<String> AvailableLocales()
+	{
+		var avail = ConfigurationManager.AppSettings["availableLocales"];
+		if (avail == null)
+			return Enumerable.Empty<String>();
+		return avail.Split(',');
+	}
 
-		public static String CheckLocale(String locale)
-		{
-			if (locale == null)
-				return null;
-			var avail = AvailableLocales();
-			if (avail.Any(x => x.Trim() == locale))
-				return locale;
+	public static String AvaliableLanguages()
+	{
+		var avail = AvailableLocales();
+		return String.Join(",", avail.Select(x => x.Substring(0, 2)).ToArray());
+	}
+
+	public static String Lang2Locale(String lang)
+	{
+		if (lang == null)
 			return null;
-		}
+		var avail = AvailableLocales();
+		var loc = avail.FirstOrDefault(x => x.Trim().StartsWith(lang, StringComparison.OrdinalIgnoreCase));
+		return loc?.Trim();
 	}
 
-	public class WebLocalizer : BaseLocalizer, IDataLocalizer
+	public static String CheckLocale(String locale)
 	{
-		private readonly IApplicationHost _host;
+		if (locale == null)
+			return null;
+		var avail = AvailableLocales();
+		if (avail.Any(x => x.Trim() == locale))
+			return locale;
+		return null;
+	}
+}
 
-		private readonly WebDictionary _webDictionary = new WebDictionary();
+public class WebLocalizer : BaseLocalizer, IDataLocalizer
+{
+	private readonly IApplicationHost _host;
 
-		public WebLocalizer(IApplicationHost host, IUserLocale userLocale)
-			: base(userLocale)
-		{
-			_host = host;
-		}
+	private readonly WebDictionary _webDictionary = new();
 
-		protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
-		{
-			return _webDictionary.GetLocalizerDictionary(_host, locale);
-		}
+	public WebLocalizer(IApplicationHost host, IUserLocale userLocale)
+		: base(userLocale)
+	{
+		_host = host;
+	}
 
-		String IDataLocalizer.Localize(String content)
-		{
-			return Localize(_userLocale.Locale, content, true);
-		}
+	protected override IDictionary<String, String> GetLocalizerDictionary(String locale)
+	{
+		return _webDictionary.GetLocalizerDictionary(_host, locale);
+	}
+
+	String IDataLocalizer.Localize(String content)
+	{
+		return Localize(_userLocale.Locale, content, true);
 	}
 }
