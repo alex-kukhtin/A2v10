@@ -6,6 +6,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 
 using Newtonsoft.Json;
 
@@ -13,8 +15,6 @@ using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 using A2v10.Interop;
 using A2v10.Interop.AzureStorage;
-using System.Globalization;
-using System.Text;
 using A2v10.Javascript;
 
 namespace A2v10.Request;
@@ -156,12 +156,21 @@ public partial class BaseController
 
 	async Task<ExpandoObject> SaveJson(RequestFile rf, Stream stream, ExpandoObject prms)
 	{
-		using (var sr = new StreamReader(stream)) {
-			String json = sr.ReadToEnd();
-			var data = JsonConvert.DeserializeObject<ExpandoObject>(json);
-			var res = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, data, prms);
-			return res.Root;
+		String json = null;
+		if (rf.zip)
+		{
+			json = ZipUtils.DecompressText(stream);
 		}
+		else
+		{
+			using (var sr = new StreamReader(stream))
+			{
+				json = sr.ReadToEnd();
+			}
+		}
+		var data = JsonConvert.DeserializeObject<ExpandoObject>(json);
+		var res = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, data, prms);
+		return res.Root;
 	}
 
 	async Task<ExpandoObject> SaveFlat(String format, RequestFile rf, Stream stream, ExpandoObject prms)
@@ -295,11 +304,20 @@ public partial class BaseController
 				var settings = JsonHelpers.StandardSerializerSettings;
 				settings.Converters.Add(new IgnoreNullValueExpandoObjectConverter());
 				var json = JsonConvert.SerializeObject(dm.Root, settings);
+				Byte[] stream = null;
+				String mime = MimeTypes.Application.Json;
+				if (ru.zip) 
+				{
+					mime = MimeTypes.Application.Zip;
+					stream = ZipUtils.CompressText(json);
+				} else {
+					stream = Encoding.UTF8.GetBytes(json);
+				}
 				return new AttachmentInfo()
 				{
 					SkipToken = true,
-					Mime = MimeTypes.Application.Json,
-					Stream = Encoding.UTF8.GetBytes(json),
+					Mime = mime,
+					Stream = stream,
 					Name = ru.outputFileName
 				};
 			case RequestFileType.sql:

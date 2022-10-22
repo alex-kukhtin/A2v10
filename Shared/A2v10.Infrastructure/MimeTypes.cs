@@ -20,6 +20,7 @@ public static class MimeTypes
 		public const String FormData = "multipart/form-data";
 		public const String Xml = "application/xml";
 		public const String Pdf = "application/pdf";
+		public const String Zip = "application/zip";
 		public const String Excel = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 	}
 

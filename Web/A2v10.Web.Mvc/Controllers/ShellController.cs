@@ -42,6 +42,8 @@ namespace A2v10.Web.Mvc.Controllers
 		public String UserSegment => User.Identity.GetUserSegment();
 		public Int64 CompanyId => _baseController.UserStateManager.UserCompanyId(TenantId, UserId);
 
+		private const String DEMOUSER_COOKIE = "_demo_user_"; // as AccountController!
+
 		public String CatalogDataSource => _baseController.Host.CatalogDataSource;
 
 		public ShellController()
@@ -121,7 +123,9 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			else if (pathInfo.StartsWith("_page/", StringComparison.OrdinalIgnoreCase))
 			{
-				await Render(pathInfo.Substring(6), RequestUrlKind.Page);
+				pathInfo = pathInfo.Substring(6);
+				await LogDemoUser(pathInfo);
+				await Render(pathInfo, RequestUrlKind.Page);
 			}
 			else if (pathInfo.StartsWith("_dialog/", StringComparison.OrdinalIgnoreCase))
 			{
@@ -787,6 +791,26 @@ namespace A2v10.Web.Mvc.Controllers
 			String content = System.IO.File.ReadAllText(fullPath);
 			Response.Write(content);
 		}
+
+		async Task LogDemoUser(String pathInfo)
+		{
+			var c = Request.Cookies[DEMOUSER_COOKIE];
+			if (c == null)
+				return;
+			if (c.Value == null)
+				return;
+			var x = pathInfo.Split('/');
+			if (x.Length < 2)
+				return;
+			var url = String.Join("/", x.Take(2));
+			await _baseController.DbContext.ExecuteExpandoAsync(_baseController.Host.CatalogDataSource,
+				"a2security.[LogDemoUser]", new ExpandoObject()
+				{
+					{ "Id", c.Value},
+					{ "Url", url }
+				});
+		}
+
 
 		#region IControllerLocale
 		public void SetLocale()

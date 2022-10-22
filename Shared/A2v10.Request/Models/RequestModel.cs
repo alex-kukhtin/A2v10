@@ -708,6 +708,7 @@ namespace A2v10.Request
 		public ImageSettings imageCompress;
 		public String locale;
 		public String outputFileName;
+		public Boolean zip;
 
 		public List<RequestFileAvaliModel> availableModels;
 		[JsonIgnore]

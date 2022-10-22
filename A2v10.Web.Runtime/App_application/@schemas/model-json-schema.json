@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7869",
+	"$version": "10.0.7891",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -273,6 +273,7 @@
 						"locale": { "type": "string" },
 						"container": { "type": "string" },
 						"outputFileName": { "type": "string" },
+						"zip": {"type": "boolean" },
 						"azureSource": { "type": "string" },
 						"imageCompress": {
 							"type": "object",
