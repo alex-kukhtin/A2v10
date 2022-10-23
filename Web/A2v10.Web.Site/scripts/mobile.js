@@ -8215,7 +8215,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220414-7835
+// 20221023-7901
 // components/collectionview.js
 
 /*
@@ -8376,7 +8376,7 @@ TODO:
 				return arr;
 			},
 			sourceCount() {
-				return this.ItemsSource.length;
+				return this.filteredCount; //this.ItemsSource.length;
 			},
 			thisPager() {
 				return this;
