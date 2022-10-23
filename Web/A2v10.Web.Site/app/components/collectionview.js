@@ -161,7 +161,7 @@ TODO:
 				return arr;
 			},
 			sourceCount() {
-				return this.filteredCount; //this.ItemsSource.length;
+				return this.filteredCount;
 			},
 			thisPager() {
 				return this;

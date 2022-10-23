@@ -2476,7 +2476,7 @@ TODO:
 				return arr;
 			},
 			sourceCount() {
-				return this.filteredCount; //this.ItemsSource.length;
+				return this.filteredCount;
 			},
 			thisPager() {
 				return this;
@@ -5283,7 +5283,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20221002-7894*/
+/*20221023-7901*/
 // controllers/base.js
 
 (function () {
@@ -5736,6 +5736,9 @@ app.modules['std:impl:array'] = function () {
 				if (subject)
 					href += '?subject=' + urltools.encodeUrl(subject);
 				return href;
+			},
+			$callphone(phone) {
+				return `tel:${phone}`;
 			},
 			$href(url, data) {
 				return urltools.createUrlForNavigate(url, data);

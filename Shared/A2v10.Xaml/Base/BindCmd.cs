@@ -42,6 +42,7 @@ namespace A2v10.Xaml
 		Report,
 		Export,
 		MailTo,
+		CallPhone,
 		Navigate,
 		NavigateExternal,
 		Download,
@@ -153,6 +154,8 @@ namespace A2v10.Xaml
 					return $"$href({CommandUrl(context)}, {CommandArgument(context)})";
 				case CommandType.MailTo:
 					return $"$mailto({CommandArgument(context)}, {GetData(context)})";
+				case CommandType.CallPhone:
+					return $"$callphone({CommandArgument(context)})";
 				case CommandType.Help:
 					return $"$helpHref({CommandUrl(context)})";
 				case CommandType.NavigateExternal:
@@ -234,6 +237,7 @@ namespace A2v10.Xaml
 					return $"$dbRemoveSelected({CommandArgument(context)}, {GetConfirm(context)}, {GetOptions(context)})";
 
 				case CommandType.MailTo:
+				case CommandType.CallPhone:
 					return null;
 
 				case CommandType.Navigate:
@@ -643,6 +647,7 @@ namespace A2v10.Xaml
 				case CommandType.Report:
 				case CommandType.Requery:
 				case CommandType.MailTo:
+				case CommandType.CallPhone:
 				case CommandType.Help:
 				case CommandType.Print:
 				case CommandType.Execute:

@@ -376,6 +376,7 @@
     <Content Include="Less.Advance\TreeGrid.less" />
     <Content Include="Less\TreeGrid.less" />
     <Content Include="Less.Advance\Dashboard.less" />
+    <Content Include="package-lock.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
