@@ -128,7 +128,7 @@ public partial class BaseController
 				if (fm == null)
 					throw new RequestModelException($"There is no model for columns='{cols}'");
 				prms.Append(fm.parameters);
-				var dm = await _dbContext.SaveModelAsync(fm.CurrentSource(ru), fm.UpdateProcedure(ru), epr.Data, prms);
+				var dm = await _dbContext.SaveModelAsync(fm.CurrentSource(ru), fm.UpdateProcedure(ru), epr.Data, prms, null, ru.commandTimeout);
 				return dm?.Root;
 			}
 		}
@@ -169,7 +169,7 @@ public partial class BaseController
 			}
 		}
 		var data = JsonConvert.DeserializeObject<ExpandoObject>(json);
-		var res = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, data, prms);
+		var res = await _dbContext.SaveModelAsync(rf.CurrentSource, rf.UpdateProcedure, data, prms, null, rf.commandTimeout);
 		return res.Root;
 	}
 

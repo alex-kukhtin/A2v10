@@ -374,7 +374,7 @@ namespace A2v10.Request
 				args: null,
 				culture: null,
 				activationAttributes: null).Unwrap();
-			if (!(modelHandler is IModelHandler))
+			if (modelHandler is not IModelHandler)
 				throw new RequestModelException($"{typeName} must implement interface IModelHandler");
 
 			ClrInvoker.CallInject(modelHandler);
@@ -405,17 +405,13 @@ namespace A2v10.Request
 
 		public Encoding GetEncoding()
 		{
-			switch (encoding)
+			return encoding switch
 			{
-				case "1251":
-					return Encoding.GetEncoding(1251);
-				case "866":
-					return Encoding.GetEncoding(866);
-				case "utf8":
-					return Encoding.UTF8;
-				default:
-					throw new RequestModelException($"Invalid encoding value '{encoding}'. Possible values are 'utf8', '1251', '866'");
-			}
+				"1251" => Encoding.GetEncoding(1251),
+				"866" => Encoding.GetEncoding(866),
+				"utf8" => Encoding.UTF8,
+				_ => throw new RequestModelException($"Invalid encoding value '{encoding}'. Possible values are 'utf8', '1251', '866'"),
+			};
 		}
 	}
 
@@ -626,13 +622,12 @@ namespace A2v10.Request
 		public Boolean HasPath => type == RequestReportType.stimulsoft || type == RequestReportType.pdf;
 
 		public String GetExtension() {
-			switch (type) {
-				case RequestReportType.stimulsoft:
-					return ".mrt";
-				case RequestReportType.pdf:
-					return ".xaml";
-			}
-			return "";
+			return type switch
+			{
+				RequestReportType.stimulsoft => ".mrt",
+				RequestReportType.pdf => ".xaml",
+				_ => "",
+			};
 		}
 
 		[JsonIgnore]
@@ -820,20 +815,13 @@ namespace A2v10.Request
 		}
 
 		[JsonIgnore]
-		public String BasePath
-		{
-			get
-			{
-				switch (_kind)
+		public String BasePath =>
+			_kind switch
 				{
-					case RequestUrlKind.Page:
-						return $"{_modelPath}/{_action}/{_id}";
-					case RequestUrlKind.Dialog:
-						return $"{_modelPath}/{_dialog}/{_id}";
-				}
-				return null;
-			}
-		}
+					RequestUrlKind.Page => $"{_modelPath}/{_action}/{_id}",
+					RequestUrlKind.Dialog => $"{_modelPath}/{_dialog}/{_id}",
+					_ => null,
+				};
 
 		public RequestAction CurrentAction
 		{
@@ -1011,7 +999,7 @@ namespace A2v10.Request
 			return mi;
 		}
 
-		static readonly Lazy<RedirectModule> _redirect = new Lazy<RedirectModule>(() => new RedirectModule(), isThreadSafe: true);
+		static readonly Lazy<RedirectModule> _redirect = new (() => new RedirectModule(), isThreadSafe: true);
 
 		public static RequestAction GetActionFromUrl(IApplicationHost host, String normalizedUrl)
 		{
