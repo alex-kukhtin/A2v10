@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20221014-7900
+// 20221027-7902
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -24,6 +24,7 @@ app.modules['std:utils'] = function () {
 
 	let numFormatCache = {};
 
+	const zeroDate = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
 
 	return {
 		isArray: Array.isArray,
@@ -430,8 +431,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateZero() {
-		let td = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
-		return td;
+		return zeroDate;
 	}
 
 	function dateTryParse(str) {

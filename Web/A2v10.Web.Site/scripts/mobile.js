@@ -222,6 +222,7 @@ app.modules['std:utils'] = function () {
 
 	let numFormatCache = {};
 
+	const zeroDate = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
 
 	return {
 		isArray: Array.isArray,
@@ -628,8 +629,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateZero() {
-		let td = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
-		return td;
+		return zeroDate;
 	}
 
 	function dateTryParse(str) {
@@ -5829,9 +5829,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20210728-7797
+// 20221027-7902
 // components/datepicker.js
 
 
@@ -5890,6 +5890,8 @@ Vue.component('validator-control', {
 			},
 			fitDate(dt) {
 				let du = utils.date;
+				if (du.isZero(dt))
+					return dt;
 				if (dt < du.minDate)
 					dt = du.minDate;
 				else if (dt > du.maxDate)

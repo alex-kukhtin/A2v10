@@ -201,6 +201,7 @@ app.modules['std:utils'] = function () {
 
 	let numFormatCache = {};
 
+	const zeroDate = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
 
 	return {
 		isArray: Array.isArray,
@@ -607,8 +608,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateZero() {
-		let td = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
-		return td;
+		return zeroDate;
 	}
 
 	function dateTryParse(str) {
