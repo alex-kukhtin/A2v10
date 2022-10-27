@@ -4500,6 +4500,11 @@ ul.news-list > li {
   flex-direction: column;
   height: 100%;
 }
+.modal .cw-dialog {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .modal-header {
   background-color: var(--dialogHeaderBkColor);
   padding: 0.5em 0.5em 0.5em 1rem;

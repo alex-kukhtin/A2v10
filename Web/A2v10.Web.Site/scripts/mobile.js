@@ -11359,7 +11359,7 @@ Vue.directive('disable', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20221004-7897*/
+/*20221027-7902*/
 /* directives/dropdown.js */
 
 (function () {
@@ -11369,15 +11369,7 @@ Vue.directive('disable', {
 	Vue.directive('dropdown', {
 		bind(el, binding, vnode) {
 
-			let me = this;
-
-			el._btn = el.querySelector('[toggle]');
 			el.setAttribute('dropdown-top', '');
-			// el.focus(); // ???
-			if (!el._btn) {
-				console.error('DropDown does not have a toggle element');
-			}
-
 			popup.registerPopup(el);
 
 			el._close = function (ev) {
@@ -11386,15 +11378,24 @@ Vue.directive('disable', {
 				el.classList.remove('show');
 			};
 
-			el.addEventListener('click', function (event) {
+			el._findButton = function() {
+				let btn = el.querySelector('[toggle]');
+				if (!btn) {
+					console.error('DropDown does not have a toggle element');
+				}
+				return btn;
+			}
+
+			el._handler = function(event) {
 				let trg = event.target;
-				if (el._btn.disabled) return;
+				let btn = el._findButton(el);
+				if (!btn || btn.disabled) return;
 				while (trg) {
-					if (trg === el._btn) break;
+					if (trg === btn) break;
 					if (trg === el) return;
 					trg = trg.parentElement;
 				}
-				if (trg === el._btn) {
+				if (trg === btn) {
 					event.preventDefault();
 					event.stopPropagation();
 					let isVisible = el.classList.contains('show');
@@ -11415,11 +11416,14 @@ Vue.directive('disable', {
 						el.classList.add('show');
 					}
 				}
-			});
+			}
+
+			el.addEventListener('click', el._handler);
 		},
 		unbind(el) {
 			const popup = require('std:popup');
 			popup.unregisterPopup(el);
+			el.removeEventListener('click', el._handler);
 		}
 	});
 

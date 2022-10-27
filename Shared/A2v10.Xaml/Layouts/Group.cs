@@ -12,5 +12,5 @@ namespace A2v10.Xaml
 				return;
 			RenderChildren(context);
 		}
-	}
+	}	
 }

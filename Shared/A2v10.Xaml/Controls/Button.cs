@@ -97,7 +97,7 @@ public class Button : CommandControl
 		onRender?.Invoke(button);
 		if (!Block && !insideBar && !IsInGrid)
 			button.AddCssClass("a2-inline");
-		if (Parent is Toolbar && Style == ButtonStyle.Default)
+		if (IsParentToolBar && Style == ButtonStyle.Default)
 			button.AddCssClass("btn-tb");
 		else if (IsParentCommandBar)
 			button.AddCssClass("btn-cb");

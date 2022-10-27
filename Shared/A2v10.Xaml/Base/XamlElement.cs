@@ -19,8 +19,7 @@ namespace A2v10.Xaml
 		{
 			get
 			{
-				if (_bindImpl == null)
-					_bindImpl = new BindImpl();
+				_bindImpl ??= new BindImpl();
 				return _bindImpl;
 			}
 		}
@@ -69,8 +68,8 @@ namespace A2v10.Xaml
 
 		protected virtual T FindInside<T>() where T: class
 		{
-			if (this is T)
-				return this as T;
+			if (this is T te)
+				return te;
 			return null;
 		}
 
