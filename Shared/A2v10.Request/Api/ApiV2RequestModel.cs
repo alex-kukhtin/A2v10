@@ -22,7 +22,10 @@ namespace A2v10.Request.Api
 	{
 		Any,
 		Get,
-		Post
+		Post,
+		Put,
+		Patch,
+		Delete
 	}
 
 	public enum SqlCommandAction
