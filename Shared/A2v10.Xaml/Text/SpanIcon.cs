@@ -17,8 +17,10 @@ namespace A2v10.Xaml
 			if (SkipRender(context))
 				return;
 			var span = new TagBuilder("i", "ico", IsInGrid);
-			if (!Block)
+			if (IsNoBlock)
 				span.AddCssClass("ico-inline");
+			else if (IsBlock)
+				span.AddCssClass("block");
 			MergeAttributes(span, context);
 			span.AddCssClassBool(Gray, "text-gray");
 			var iconBind = GetBinding(nameof(Icon));

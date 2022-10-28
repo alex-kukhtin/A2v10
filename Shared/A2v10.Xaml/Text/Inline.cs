@@ -9,10 +9,12 @@ namespace A2v10.Xaml;
 
 public abstract class Inline : UIElement
 {
-	public Boolean Block { get; set; }
+	public Boolean? Block { get; set; }
 	public TextColor Color { get; set; }
 	public FloatMode Float { get; set; }
 
+	internal Boolean IsNoBlock => Block.HasValue && !Block.Value;
+	internal Boolean IsBlock => Block.HasValue && Block.Value;
 	public override void MergeAttributes(TagBuilder tag, RenderContext context, MergeAttrMode mode = MergeAttrMode.All)
 	{
 		base.MergeAttributes(tag, context, mode);

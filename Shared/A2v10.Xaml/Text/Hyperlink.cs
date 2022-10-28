@@ -39,8 +39,10 @@ public class Hyperlink : Inline
 				.AddCssClass(bDropUp ? "dir-up" : "dir-down")
 				.MergeAttribute("v-dropdown", String.Empty);
 			onRender?.Invoke(wrap);
-			if (!Block)
+			if (IsNoBlock)
 				wrap.AddCssClass("a2-inline");
+			else if (IsBlock)
+				wrap.AddCssClass("block");
 			if (Style != HyperlinkStyle.Default)
 				wrap.AddCssClass(Style.ToString().ToLowerInvariant());
 			MergeAttributesNoBlock(wrap, context, MergeAttrMode.Visibility);
@@ -77,8 +79,10 @@ public class Hyperlink : Inline
 		MergeAttributesNoBlock(tag, context, attrMode);
 		MergeCommandAttribute(tag, context);
 		tag.AddCssClassBool(Highlight, "highlight");
-		if (!Block)
+		if (IsNoBlock)
 			tag.AddCssClass("a2-inline");
+		else if (IsBlock)
+			tag.AddCssClass("block");
 		if (Style != HyperlinkStyle.Default)
 			tag.AddCssClass(Style.ToString().ToLowerInvariant());
 		if (IsNavigateExternal())
