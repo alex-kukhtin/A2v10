@@ -43,6 +43,18 @@
 	<runtime>
 		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
 			<dependentAssembly>
+				<assemblyIdentity name="System.Web.Mvc" publicKeyToken="31BF3856AD364E35" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-5.2.9.0" newVersion="5.2.9.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Memory" publicKeyToken="CC7B13FFCD2DDD51" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-4.0.1.2" newVersion="4.0.1.2" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Buffers" publicKeyToken="CC7B13FFCD2DDD51" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-4.0.3.0" newVersion="4.0.3.0" />
+			</dependentAssembly>
+			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Owin.Security" publicKeyToken="31bf3856ad364e35" />
 				<bindingRedirect oldVersion="0.0.0.0-4.2.2.0" newVersion="4.2.2.0" />
 			</dependentAssembly>
@@ -64,31 +76,35 @@
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.IdentityModel.Tokens" publicKeyToken="31bf3856ad364e35" />
-				<bindingRedirect oldVersion="0.0.0.0-6.24.0.0" newVersion="6.24.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-6.25.0.0" newVersion="6.25.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.IdentityModel.Protocols.OpenIdConnect" publicKeyToken="31bf3856ad364e35" />
-				<bindingRedirect oldVersion="0.0.0.0-6.24.0.0" newVersion="6.24.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-6.25.0.0" newVersion="6.25.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.IdentityModel.Protocols" publicKeyToken="31bf3856ad364e35" />
-				<bindingRedirect oldVersion="0.0.0.0-6.24.0.0" newVersion="6.24.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-6.25.0.0" newVersion="6.25.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.IdentityModel.Logging" publicKeyToken="31bf3856ad364e35" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-6.24.0.0" newVersion="6.24.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-6.25.0.0" newVersion="6.25.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.IdentityModel.JsonWebTokens" publicKeyToken="31bf3856ad364e35" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-6.24.0.0" newVersion="6.24.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-6.25.0.0" newVersion="6.25.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="System.IdentityModel.Tokens.Jwt" publicKeyToken="31BF3856AD364E35" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-6.24.0.0" newVersion="6.24.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-6.25.0.0" newVersion="6.25.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Web.Infrastructure" publicKeyToken="31bf3856ad364e35" culture="neutral" />
 				<bindingRedirect oldVersion="0.0.0.0-2.0.1.0" newVersion="2.0.1.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Runtime.CompilerServices.Unsafe" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
 			</dependentAssembly>
 		</assemblyBinding>
 	</runtime>
