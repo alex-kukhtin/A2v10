@@ -232,6 +232,7 @@
 						"report": { "type": "string" },
 						"checkTypes": { "type": "string" },
 						"encoding": { "type": "string" },
+						"commandTimeout": { "type": "number" },
 						"xmlSchemas": {
 							"type": "array",
 							"items": { "type": "string" }

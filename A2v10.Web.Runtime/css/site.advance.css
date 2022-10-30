@@ -2673,7 +2673,7 @@ pre.a2-code {
   background-color: #3470b4;
   color: white;
 }
-.btn.btn-primary:active {
+.btn.btn-primary:not([disabled]):active {
   background-color: #2b5c94 !important;
 }
 .btn.btn-primary:not([disabled]):hover {
@@ -2687,8 +2687,8 @@ pre.a2-code {
   background-color: #ffb74d;
   color: white;
 }
-.btn.btn-orange:active,
-.btn.btn-warning:active {
+.btn.btn-orange:not([disabled]):active,
+.btn.btn-warning:not([disabled]):active {
   background-color: #ffa624 !important;
 }
 .btn.btn-orange:not([disabled]):hover,
@@ -2704,8 +2704,8 @@ pre.a2-code {
   background-color: #5db750;
   color: white;
 }
-.btn.btn-green:active,
-.btn.btn-success:active {
+.btn.btn-green:not([disabled]):active,
+.btn.btn-success:not([disabled]):active {
   background-color: #4c9d41 !important;
 }
 .btn.btn-green:not([disabled]):hover,
@@ -2722,9 +2722,9 @@ pre.a2-code {
   background-color: #da533f;
   color: white;
 }
-.btn.btn-red:active,
-.btn.btn-danger:active,
-.btn.btn-error:active {
+.btn.btn-red:not([disabled]):active,
+.btn.btn-danger:not([disabled]):active,
+.btn.btn-error:not([disabled]):active {
   background-color: #c93c27 !important;
 }
 .btn.btn-red:not([disabled]):hover,
@@ -2742,8 +2742,8 @@ pre.a2-code {
   background-color: #60bbe5;
   color: white;
 }
-.btn.btn-cyan:active,
-.btn.btn-info:active {
+.btn.btn-cyan:not([disabled]):active,
+.btn.btn-info:not([disabled]):active {
   background-color: #3dacdf !important;
 }
 .btn.btn-cyan:not([disabled]):hover,
@@ -2766,7 +2766,7 @@ pre.a2-code {
 .btn-toolbar:hover {
   background-color: var(--neutralBkDark);
 }
-.btn-toolbar:active {
+.btn-toolbar:not([disabled]):active {
   background-color: var(--neutralBkDarker);
 }
 .btn-outline {
@@ -2777,7 +2777,7 @@ pre.a2-code {
   border-color: var(--neutralBkDark);
   background-color: var(--neutralBk);
 }
-.btn-outline:active {
+.btn-outline:not([disabled]):active {
   background-color: var(--neutralBkDark);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
   border-color: var(--neutralBkDark);
@@ -4496,6 +4496,11 @@ ul.news-list > li {
   background-color: white;
 }
 .modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.modal .cw-dialog {
   display: flex;
   flex-direction: column;
   height: 100%;

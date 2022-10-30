@@ -177,7 +177,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20221014-7900
+// 20221027-7902
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -201,6 +201,7 @@ app.modules['std:utils'] = function () {
 
 	let numFormatCache = {};
 
+	const zeroDate = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
 
 	return {
 		isArray: Array.isArray,
@@ -607,8 +608,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateZero() {
-		let td = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
-		return td;
+		return zeroDate;
 	}
 
 	function dateTryParse(str) {
@@ -3691,9 +3691,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20210623-7786*/
+/*20221026-7902*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -4025,6 +4025,9 @@ app.modules['std:impl:array'] = function () {
 			return !!this.$selected;
 		});
 
+		defPropertyGet(arr, "$hasChecked", function () {
+			return this.$checked && this.$checked.length;
+		});
 	}
 
 	function defineArrayItemProto(elem) {

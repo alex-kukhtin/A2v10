@@ -198,7 +198,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20221014-7900
+// 20221027-7902
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -222,6 +222,7 @@ app.modules['std:utils'] = function () {
 
 	let numFormatCache = {};
 
+	const zeroDate = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
 
 	return {
 		isArray: Array.isArray,
@@ -628,8 +629,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateZero() {
-		let td = new Date(Date.UTC(0, 0, 1, 0, 0, 0, 0));
-		return td;
+		return zeroDate;
 	}
 
 	function dateTryParse(str) {
@@ -2376,9 +2376,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20210623-7786*/
+/*20221026-7902*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2710,6 +2710,9 @@ app.modules['std:impl:array'] = function () {
 			return !!this.$selected;
 		});
 
+		defPropertyGet(arr, "$hasChecked", function () {
+			return this.$checked && this.$checked.length;
+		});
 	}
 
 	function defineArrayItemProto(elem) {
@@ -5826,9 +5829,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20210728-7797
+// 20221027-7902
 // components/datepicker.js
 
 
@@ -5887,6 +5890,8 @@ Vue.component('validator-control', {
 			},
 			fitDate(dt) {
 				let du = utils.date;
+				if (du.isZero(dt))
+					return dt;
 				if (dt < du.minDate)
 					dt = du.minDate;
 				else if (dt > du.maxDate)
@@ -11356,7 +11361,7 @@ Vue.directive('disable', {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-/*20221004-7897*/
+/*20221027-7902*/
 /* directives/dropdown.js */
 
 (function () {
@@ -11366,15 +11371,7 @@ Vue.directive('disable', {
 	Vue.directive('dropdown', {
 		bind(el, binding, vnode) {
 
-			let me = this;
-
-			el._btn = el.querySelector('[toggle]');
 			el.setAttribute('dropdown-top', '');
-			// el.focus(); // ???
-			if (!el._btn) {
-				console.error('DropDown does not have a toggle element');
-			}
-
 			popup.registerPopup(el);
 
 			el._close = function (ev) {
@@ -11383,15 +11380,24 @@ Vue.directive('disable', {
 				el.classList.remove('show');
 			};
 
-			el.addEventListener('click', function (event) {
+			el._findButton = function() {
+				let btn = el.querySelector('[toggle]');
+				if (!btn) {
+					console.error('DropDown does not have a toggle element');
+				}
+				return btn;
+			}
+
+			el._handler = function(event) {
 				let trg = event.target;
-				if (el._btn.disabled) return;
+				let btn = el._findButton(el);
+				if (!btn || btn.disabled) return;
 				while (trg) {
-					if (trg === el._btn) break;
+					if (trg === btn) break;
 					if (trg === el) return;
 					trg = trg.parentElement;
 				}
-				if (trg === el._btn) {
+				if (trg === btn) {
 					event.preventDefault();
 					event.stopPropagation();
 					let isVisible = el.classList.contains('show');
@@ -11412,11 +11418,14 @@ Vue.directive('disable', {
 						el.classList.add('show');
 					}
 				}
-			});
+			}
+
+			el.addEventListener('click', el._handler);
 		},
 		unbind(el) {
 			const popup = require('std:popup');
 			popup.unregisterPopup(el);
+			el.removeEventListener('click', el._handler);
 		}
 	});
 
