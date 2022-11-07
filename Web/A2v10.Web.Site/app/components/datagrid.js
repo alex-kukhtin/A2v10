@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220801-7875
+// 20221107-7903
 // components/datagrid.js*/
 
 (function () {
@@ -48,7 +48,7 @@
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row" />
-						<data-grid-row-details v-if="rowDetails" v-show="isGroupBodyVisible(g)" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
+						<data-grid-row-details v-if="rowDetailsShow(row)" v-show="isGroupBodyVisible(g)" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
 							<slot name="row-details" :row="row"></slot>
 						</data-grid-row-details>
 					</template>
@@ -59,7 +59,7 @@
 			<tbody>
 				<template v-for="(item, rowIndex) in $items">
 					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" ref="row" :is-item-active="isItemActive" :hit-item="hitItem"/>
-					<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
+					<data-grid-row-details v-if="rowDetailsShow(item)" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
 						<slot name="row-details" :row="item"></slot>
 					</data-grid-row-details>
 				</template>
@@ -670,7 +670,8 @@
 			$isEmpty() {
 				if (!this.itemsSource) return false;
 				let mi = this.itemsSource.$ModelInfo;
-				if (!mi) return false;
+				if (!mi)
+					return this.itemsSource.length === 0;
 				if ('HasRows' in mi) {
 					if (this.itemsSource.length)
 						return false;
@@ -710,6 +711,14 @@
 				let ix = this.columns.indexOf(column);
 				if (ix !== -1)
 					this.columns.splice(ix, 1);
+			},
+			rowDetailsShow(item) {
+				if (!this.rowDetails)
+					return false;
+				if (utils.isBoolean(this.rowDetailsVisible))
+					return this.rowDetailsVisible; // unset
+				let vis = item[this.rowDetailsVisible];
+				return !!vis;
 			},
 			columnClass(column) {
 				let cls = '';

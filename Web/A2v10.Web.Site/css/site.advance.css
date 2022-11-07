@@ -1123,7 +1123,7 @@ h5,
   border-color: #f5c6cb;
 }
 .a2-alert.info {
-  background-color: #d9edf7;
+  background-color: #edfcfe;
   border-color: #bcdff1;
   color: #31708f;
 }
@@ -2541,20 +2541,20 @@ pre.a2-code {
   color: #daa520;
 }
 .control-group.val-info .validator {
-  background-color: #eef7fb;
+  background-color: #ffffff;
   border-color: #69a5f8;
   color: #69a5f8;
   box-shadow: 1px 4px 10px rgba(32, 165, 220, 0.2);
 }
 .control-group.val-info .validator:after {
-  border-bottom-color: #eef7fb;
+  border-bottom-color: #ffffff;
 }
 .control-group.val-info .validator:before {
   border-bottom-color: #69a5f8;
 }
 .control-group.val-info .validator.top-left:after,
 .control-group.val-info .validator.top-right:after {
-  border-top-color: #eef7fb;
+  border-top-color: #ffffff;
 }
 .control-group.val-info .validator.top-left:before,
 .control-group.val-info .validator.top-right:before {
@@ -2562,7 +2562,7 @@ pre.a2-code {
 }
 .control-group.val-info .input-group {
   border-color: #69a5f8 !important;
-  background-color: #eef7fb !important;
+  background-color: #ffffff !important;
 }
 .control-group.val-info .input-group:after {
   border-top-color: #69a5f8;
@@ -3261,11 +3261,7 @@ table.data-grid tr.row-details:hover {
   background-color: white !important;
 }
 table.data-grid tr.row-details td.details-cell {
-  background-color: #fefcea;
   padding: 0;
-}
-table.data-grid tr.row-details .details-wrapper {
-  padding: 0.5rem;
 }
 table.data-grid td.danger,
 table.data-grid td.error,
@@ -5075,7 +5071,7 @@ table.hover > tbody > tr.active:hover {
   background-color: #fffff0;
 }
 .a2-table.bk-cyan {
-  background-color: #f8ffff;
+  background-color: #edfcfe;
 }
 .a2-table.bk-rose {
   background-color: #fff8f8;
@@ -6081,7 +6077,7 @@ TODO:
 }
 .panel.panel-cyan > .panel-header {
   color: #31708f;
-  background-color: #d9edf7;
+  background-color: #edfcfe;
   border-bottom: 1px solid #bcdff1;
 }
 .panel.panel-cyan > .panel-header .panel-collapse-handle {
