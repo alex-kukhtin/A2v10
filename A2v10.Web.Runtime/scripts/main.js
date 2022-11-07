@@ -6841,7 +6841,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20220801-7875
+// 20221107-7903
 // components/datagrid.js*/
 
 (function () {
@@ -6889,7 +6889,7 @@ Vue.component('validator-control', {
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
 						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row" />
-						<data-grid-row-details v-if="rowDetails" v-show="isGroupBodyVisible(g)" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
+						<data-grid-row-details v-if="rowDetailsShow(row)" v-show="isGroupBodyVisible(g)" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
 							<slot name="row-details" :row="row"></slot>
 						</data-grid-row-details>
 					</template>
@@ -6900,7 +6900,7 @@ Vue.component('validator-control', {
 			<tbody>
 				<template v-for="(item, rowIndex) in $items">
 					<data-grid-row :cols="columns" :row="item" :key="rowIndex" :index="rowIndex" :mark="mark" ref="row" :is-item-active="isItemActive" :hit-item="hitItem"/>
-					<data-grid-row-details v-if="rowDetails" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
+					<data-grid-row-details v-if="rowDetailsShow(item)" :cols="columns.length" :row="item" :key="'rd:' + rowIndex" :mark="mark">
 						<slot name="row-details" :row="item"></slot>
 					</data-grid-row-details>
 				</template>
@@ -7511,7 +7511,8 @@ Vue.component('validator-control', {
 			$isEmpty() {
 				if (!this.itemsSource) return false;
 				let mi = this.itemsSource.$ModelInfo;
-				if (!mi) return false;
+				if (!mi)
+					return this.itemsSource.length === 0;
 				if ('HasRows' in mi) {
 					if (this.itemsSource.length)
 						return false;
@@ -7551,6 +7552,14 @@ Vue.component('validator-control', {
 				let ix = this.columns.indexOf(column);
 				if (ix !== -1)
 					this.columns.splice(ix, 1);
+			},
+			rowDetailsShow(item) {
+				if (!this.rowDetails)
+					return false;
+				if (utils.isBoolean(this.rowDetailsVisible))
+					return this.rowDetailsVisible; // unset
+				let vis = item[this.rowDetailsVisible];
+				return !!vis;
 			},
 			columnClass(column) {
 				let cls = '';
@@ -7862,15 +7871,15 @@ template: `
 })();
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-//20210104-7738
+//20221107-7903
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
-<div v-dropdown class="popover-wrapper" :style="{top: top}" :class="{show: isShowHover}">
-	<span toggle class="popover-title" v-on:mouseover="mouseover" v-on:mouseout="mouseout"><i v-if="hasIcon" :class="iconClass"></i> <span :title="title" v-text="content"></span><slot name="badge"></slot></span>
+<div v-dropdown class="popover-wrapper" :style="{top: top}" :class="{show: isShowHover}" :title="title">
+	<span toggle class="popover-title" v-on:mouseover="mouseover" v-on:mouseout="mouseout"><i v-if="hasIcon" :class="iconClass"></i> <span v-text="content"></span><slot name="badge"></slot></span>
 	<div class="popup-body" :style="{width: width, left:offsetLeft}">
 		<div class="arrow" :style="{left:offsetArrowLeft}"/>
 		<div v-if="visible">
