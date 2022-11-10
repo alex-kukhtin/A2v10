@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -98,7 +98,7 @@ namespace A2v10.Xaml
 			if (StickyHeaders)
             {
 				var outTag = new TagBuilder("div", "a2-sticky-container", IsInGrid);
-				MergeAttributes(outTag, context, MergeAttrMode.Visibility);
+				MergeAttributes(outTag, context, MergeAttrMode.Visibility | MergeAttrMode.Margin);
 				if (Height != null)
 					outTag.MergeStyle("height", Height.Value);
 				outTag.RenderStart(context);

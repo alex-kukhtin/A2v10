@@ -89,26 +89,26 @@ namespace A2v10.Request
 				var handled = await handler.BeforeSave(userId, data);
 				if (!handled)
 				{
-					model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+					model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms, null, rw.commandTimeout);
 					await handler.AfterSave(userId, data, model.Root);
 				}
 			}
 			else if (invokeTarget != null)
 			{
-				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms, null, rw.commandTimeout);
 				var clr = new ClrInvoker();
 				clr.EnableThrow();
 				clr.Invoke(invokeTarget, prms); // after save
 			}
 			else
 			{
-				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms);
+				model = await _dbContext.SaveModelAsync(rw.CurrentSource, rw.UpdateProcedure, data, prms, null, rw.commandTimeout);
 			}
 			var eh = rw?.events?.afterSave;
 			if (eh != null)
 			{
 				// new model data
-				await _dbContext.SaveModelAsync(eh.CurrentSource(rw), eh.UpdateProcedure(rw), model.Root, prms);
+				await _dbContext.SaveModelAsync(eh.CurrentSource(rw), eh.UpdateProcedure(rw), model.Root, prms, null, rw.commandTimeout);
 			}
 			WriteDataModel(model, writer);
 		}
