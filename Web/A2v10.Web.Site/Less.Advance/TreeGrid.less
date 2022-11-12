@@ -40,6 +40,7 @@ table.tree-grid {
 		border-width: 0;
 		font-weight: inherit;
 		font-style: inherit;
+		vertical-align:top;
 	}
 
 	th {
@@ -69,13 +70,19 @@ table.tree-grid {
 		border-bottom-width: 1px;
 	}
 
-	td.indent {
-		vertical-align: top;
+	td.ctrl {
+		padding:0;
+		vertical-align:middle;
+		.commandbar {
+			margin:0 .5rem;
+		}
 	}
 
 	.overlay {
-		display: flex;
+		display: inline-flex;
 		flex-direction: row;
+		line-height:inherit;
+		align-items:baseline;
 	}
 
 	.mark {

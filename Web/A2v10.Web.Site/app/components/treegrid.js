@@ -1,12 +1,13 @@
 ﻿// Copyright © 2022 Alex Kukhtin. All rights reserved.
 
-// 20220825-7883
+// 20221112-7905
 // components/treegrid.js
 
 (function () {
 
 	let gridTemplate = `
-<table>
+<table v-lazy="root">
+	<colgroup><slot name="columns" v-bind:that="that"></slot></colgroup>
 	<thead><tr><slot name="header"></slot></tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
@@ -49,7 +50,7 @@
 		},
 		watch: {
 			root() {
-				console.dir('whatch items');
+				//console.dir('whatch items');
 			}
 		},
 		methods: {
@@ -80,6 +81,12 @@
 			},
 			toggleClass(itm) {
 				return itm.$expanded ? 'expanded' : 'collapsed';
+			},
+			columnStyle(text) {
+				console.dir(text);
+				if (text == "Name") {
+					return { backgroundColor: 'rgba(238,238,238,.45)' };
+				}
 			}
 		}
 	});

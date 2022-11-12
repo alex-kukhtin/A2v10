@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -33,7 +33,7 @@ public class TreeGrid : Control, ITableControl
 		if (SkipRender(context))
 			return;
 
-		if(StickyHeaders)
+		if (StickyHeaders)
 		{
 			var outTag = new TagBuilder("div", "a2-sticky-container", IsInGrid);
 			MergeAttributes(outTag, context, MergeAttrMode.Visibility);
@@ -102,7 +102,7 @@ public class TreeGrid : Control, ITableControl
 		{
 			foreach (var col in Columns)
 			{
-				col.RenderCell("td", context, SetGridlines);
+				col.RenderCell("td", context, SetGridLines);
 			}
 		}
 		slot.RenderEnd(context);
@@ -112,14 +112,25 @@ public class TreeGrid : Control, ITableControl
 		hdr.RenderStart(context);
 		foreach (var col in Columns)
 		{
-			col.RenderColumn("th", context, SetGridlines);
+			col.RenderColumn("th", context, SetGridLines);
 		}
 		hdr.RenderEnd(context);
+
+		// render columns
+		var cols = new TagBuilder("template");
+		cols.MergeAttribute("v-slot:columns", "cols");
+		cols.RenderStart(context);
+		foreach (var col in Columns)
+		{
+			col.RenderColumnTag(context);
+		}
+		cols.RenderEnd(context);
+
 		RenderContextMenu(ContextMenu, context, contextId);
 		treeGrid.RenderEnd(context);
 	}
 
-	private void SetGridlines(TagBuilder tag)
+	private void SetGridLines(TagBuilder tag)
 	{
 		switch (GridLines)
 		{

@@ -44,6 +44,15 @@ public class TreeGridColumn : UiContentElement
 		onRender?.Invoke(td);
 		RenderCell(td, context);
 	}
+
+	public void AddAligns(TagBuilder td)
+	{
+		if (Align != TextAlign.Left)
+			td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
+
+		if (VAlign != VerticalAlign.Default)
+			td.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");
+	}
 	void RenderCell(TagBuilder td, RenderContext context)
 	{
 		MergeAttributes(td, context);
@@ -68,11 +77,7 @@ public class TreeGridColumn : UiContentElement
 		if (Width != null)
 			td.MergeStyle("width", Width.Value);
 
-		if (Align != TextAlign.Left)
-			td.AddCssClass("text-" + Align.ToString().ToLowerInvariant());
-
-		if (VAlign != VerticalAlign.Default)
-			td.AddCssClass($"valign-{VAlign.ToString().ToLowerInvariant()}");
+		AddAligns(td);
 
 		if (Content is ITableControl)
 			td.AddCssClass("ctrl");
@@ -115,6 +120,8 @@ public class TreeGridColumn : UiContentElement
 			return;
 		var td = new TagBuilder(tagName);
 		onRender?.Invoke(td);
+		AddAligns(td);
+		MergeAttributes(td, null, MergeAttrMode.Wrap);
 		if (Fit)
 			td.AddCssClass("fit");
 		else if (Width != null)
@@ -125,5 +132,14 @@ public class TreeGridColumn : UiContentElement
 		if (Header != null)
 			context.Writer.Write(context.LocalizeCheckApostrophe(Header.Replace("\\n", "<br>")));
 		td.RenderEnd(context);
+	}
+
+	public void RenderColumnTag(RenderContext context)
+	{
+		var col = new TagBuilder("col");
+		var hd = GetBinding(nameof(Content));
+		if (hd != null)
+			col.MergeAttribute(":style", $"cols.that.columnStyle('{hd.Path}')");
+		col.Render(context);
 	}
 }

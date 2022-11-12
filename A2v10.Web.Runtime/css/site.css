@@ -7073,6 +7073,9 @@ table.tree-grid .gl-h {
 table.tree-grid td.indent {
   vertical-align: top;
 }
+table.tree-grid .commandbar {
+  margin: -3px;
+}
 table.tree-grid .overlay {
   display: flex;
   flex-direction: row;

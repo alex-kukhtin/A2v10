@@ -11299,13 +11299,13 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2022 Alex Kukhtin. All rights reserved.
 
-// 20220825-7883
+// 20221112-7905
 // components/treegrid.js
 
 (function () {
 
 	let gridTemplate = `
-<table>
+<table v-lazy="root">
 	<thead><tr><slot name="header"></slot></tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 

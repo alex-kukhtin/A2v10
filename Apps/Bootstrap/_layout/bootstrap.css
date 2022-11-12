@@ -1,34 +1,42 @@
 ﻿.shell {
   display: grid;
-  grid-template-areas: "header header" "sidebar content";
+  grid-template-areas: "header header" "sidebar content";
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
   height: 100vh;
-  overflow: hidden; }
-  .shell.full-page > .app-side-bar {
-    width: 0;
-    display: none; }
+  overflow: hidden;
+}
+.shell.full-page > .app-side-bar {
+  width: 0;
+  display: none;
+}
 
 .main-view {
   grid-area: content;
-  overflow: auto; }
+  overflow: auto;
+}
 
 .app-header {
-  grid-area: header; }
+  grid-area: header;
+}
 
 .app-side-bar {
   grid-area: sidebar;
   width: 250px;
   overflow: auto;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); }
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
 
 .sidebar-nav {
   padding: 1rem;
   list-style: none;
-  background-color: aliceblue; }
-  .sidebar-nav .sidebar-item.active > .sidebar-link {
-    background-color: bisque; }
+  background-color: aliceblue;
+}
+.sidebar-nav .sidebar-item.active > .sidebar-link {
+  background-color: bisque;
+}
 
 .sidebar-link {
   display: flex;
-  padding: 3px; }
+  padding: 3px;
+}
