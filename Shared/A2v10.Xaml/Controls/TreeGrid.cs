@@ -108,7 +108,7 @@ public class TreeGrid : Control, ITableControl
 		slot.RenderEnd(context);
 		// render header
 		var hdr = new TagBuilder("template");
-		hdr.MergeAttribute("v-slot:header", "hrd");
+		hdr.MergeAttribute("v-slot:header", "hdr");
 		hdr.RenderStart(context);
 		foreach (var col in Columns)
 		{
