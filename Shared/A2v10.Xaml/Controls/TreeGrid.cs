@@ -28,6 +28,7 @@ public class TreeGrid : Control, ITableControl
 	public Command DoubleClick { get; set; }
 	public DropDownMenu ContextMenu { get; set; }
 	public TreeGridColumnCollection Columns { get; set; } = new TreeGridColumnCollection();
+	public Boolean Sort { get; set; }
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (SkipRender(context))
@@ -112,7 +113,7 @@ public class TreeGrid : Control, ITableControl
 		hdr.RenderStart(context);
 		foreach (var col in Columns)
 		{
-			col.RenderColumn("th", context, SetGridLines);
+			col.RenderColumn("th", context, Sort, SetGridLines);
 		}
 		hdr.RenderEnd(context);
 

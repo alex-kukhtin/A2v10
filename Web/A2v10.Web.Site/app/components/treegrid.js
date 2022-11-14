@@ -8,7 +8,7 @@
 	let gridTemplate = `
 <table v-lazy="root">
 	<colgroup><slot name="columns" v-bind:that="that"></slot></colgroup>
-	<thead><tr><slot name="header"></slot></tr></thead>
+	<thead><tr><slot name="header" v-bind:that="that"></slot></tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
 				@click.stop.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
@@ -43,6 +43,18 @@
 				else
 					collect(this.root[this.item], 0);
 				return arr;
+			},
+			sortColumn() {
+				let sort = {
+					dir: '',
+					order: ''
+				};
+				let mi = this.root.$ModelInfo;
+				if (!mi)
+					return sort;
+				sort.dir = (mi.SortDir || '').toLowerCase();
+				sort.order = (mi.SortOrder || '').toLowerCase();
+				return sort;
 			},
 			that() {
 				return this;
@@ -82,11 +94,26 @@
 			toggleClass(itm) {
 				return itm.$expanded ? 'expanded' : 'collapsed';
 			},
-			columnStyle(text) {
-				console.dir(text);
-				if (text == "Name") {
-					return { backgroundColor: 'rgba(238,238,238,.45)' };
+			columnClass(sort, fitcol) {
+				let col = this.sortColumn;
+				let cls = {
+					sorted: false,
+					fit: fitcol,
+				};
+				if (sort.toLowerCase() === col.order) {
+					cls.sorted = true;
 				}
+				return cls;
+			},
+			headerClass(sort) {
+				let col = this.sortColumn;
+				if (col.order === (sort || '').toLowerCase())
+					return col.dir;
+				return null;
+			},
+			doSort(prop) {
+				prop = (prop || '').toLowerCase();
+				this.$parent.$emit('sort', prop);
 			}
 		}
 	});

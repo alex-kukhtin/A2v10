@@ -2056,7 +2056,7 @@ pre.a2-code {
   white-space: pre;
 }
 .a2-hyperlink {
-  display: flex;
+  display: inline-flex;
   gap: 0.5rem;
   align-items: baseline;
 }
@@ -4802,6 +4802,9 @@ ul.news-list > li {
 table col.fit {
   width: 0.1%;
 }
+table col.sorted {
+  background-color: rgba(238, 238, 238, 0.45);
+}
 table tr.bold > td {
   font-weight: 600;
 }
@@ -7019,6 +7022,7 @@ table.tree-grid th {
   border-width: 0;
   font-weight: inherit;
   font-style: inherit;
+  vertical-align: top;
 }
 table.tree-grid th {
   background-color: #f5f5f5;
@@ -7026,6 +7030,35 @@ table.tree-grid th {
 }
 table.tree-grid th.fit {
   width: 1px;
+}
+table.tree-grid th.sortable {
+  cursor: pointer;
+}
+table.tree-grid th.sortable:hover {
+  background-color: #dcdcdc;
+}
+table.tree-grid th.sortable.asc,
+table.tree-grid th.sortable.desc {
+  background-color: #eee;
+}
+table.tree-grid th.sortable .h-holder {
+  white-space: nowrap;
+}
+table.tree-grid th.sortable .h-holder:after {
+  border: 5px solid transparent;
+  margin-left: 5px;
+}
+table.tree-grid th.sortable.asc .h-holder:after {
+  content: '';
+  display: inline-block;
+  border-bottom-color: #999;
+  vertical-align: 2px;
+}
+table.tree-grid th.sortable.desc .h-holder:after {
+  content: '';
+  display: inline-block;
+  border-top-color: #999;
+  vertical-align: bottom;
 }
 table.tree-grid .gl-v {
   border-right-width: 1px;
@@ -7040,12 +7073,18 @@ table.tree-grid th:first-child.gl-v {
 table.tree-grid .gl-h {
   border-bottom-width: 1px;
 }
-table.tree-grid td.indent {
-  vertical-align: top;
+table.tree-grid td.ctrl {
+  padding: 0;
+  vertical-align: middle;
+}
+table.tree-grid td.ctrl .commandbar {
+  margin: 0 0.5rem;
 }
 table.tree-grid .overlay {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
+  line-height: inherit;
+  align-items: baseline;
 }
 table.tree-grid .mark {
   min-width: 18px;
@@ -7130,7 +7169,7 @@ table.tree-grid a.toggle.expanded:after {
 }
 .dashboard-container .dashboard-list .widget-toolbar {
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   z-index: 2;
   flex-direction: row;
   justify-content: end;
