@@ -172,6 +172,30 @@ header, .header {
 			background-color: darken(@success-base-color, 5%);
 		}
 	}
+
+	.include.nav-pane {
+		width: auto;
+
+		.btn {
+			padding: 0 .5rem;
+			position: relative;
+		}
+
+		.partial-block {
+			display: flex;
+			align-items: stretch;
+			height: 100%;
+
+			.btn-icon {
+				width: @header-height;
+			}
+
+			.control-group {
+				margin-bottom: 0;
+				align-self: center;
+			}
+		}
+	}
 }
 
 .content-view {

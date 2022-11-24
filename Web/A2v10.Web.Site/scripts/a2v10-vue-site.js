@@ -2206,9 +2206,9 @@ app.modules['std:html'] = function () {
 
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220918-7891
+// 20221124-7907
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -2324,7 +2324,7 @@ app.modules['std:http'] = function () {
 		}
 	}
 
-	function load(url, selector, baseUrl) {
+	function load(url, selector, baseUrl, skipIndicator) {
 
 		if (selector) {
 			let fc = selector.firstElementChild
@@ -2341,7 +2341,7 @@ app.modules['std:http'] = function () {
 
 		return new Promise(function (resolve, reject) {
 			eventBus.$emit('beginLoad');
-			doRequest('GET', url)
+			doRequest('GET', url, null, false, skipIndicator)
 				.then(function (html) {
 					if (!html)
 						return;
@@ -4213,16 +4213,16 @@ app.modules['std:impl:array'] = function () {
 })();
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20210302-7752
+// 20221124-7907
 // dataservice.js
 (function () {
 
 	let http = require('std:http');
 
-	function post(url, data, raw) {
-		return http.post(url, data, raw);
+	function post(url, data, raw, hideIndicator) {
+		return http.post(url, data, raw, hideIndicator);
 	}
 
 	function get(url) {
@@ -5049,9 +5049,9 @@ template: `
 })();
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220918-7891
+// 20221124-7907
 /*components/include.js*/
 
 (function () {
@@ -5082,7 +5082,8 @@ template: `
 			needReload: Boolean,
 			insideDialog: Boolean,
 			done: Function,
-			queued: Boolean
+			queued: Boolean,
+			hideIndicator: Boolean
 		},
 		data() {
 			return {
@@ -5103,7 +5104,7 @@ template: `
 				if (this.currentUrl) {
 					// Do not set loading. Avoid blinking
 					this.__destroy();
-					http.load(this.currentUrl, this.$el)
+					http.load(this.currentUrl, this.$el, undefined, this.hideIndicator)
 						.then(this.loaded)
 						.catch(this.error);
 				}
@@ -5146,7 +5147,7 @@ template: `
 			//console.warn('include has been mounted');
 			if (this.src) {
 				this.currentUrl = this.src;
-				http.load(this.src, this.$el)
+				http.load(this.src, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -5175,7 +5176,7 @@ template: `
 					this.loading = true; // hides the current view
 					this.currentUrl = newUrl;
 					this.__destroy();
-					http.load(newUrl, this.$el)
+					http.load(newUrl, this.$el, undefined, this.hideIndicator)
 						.then(this.loaded)
 						.catch(this.error);
 				}
@@ -5222,7 +5223,7 @@ template: `
 			load() {
 				let url = this.makeUrl();
 				this.__destroy();
-				http.load(url, this.$el)
+				http.load(url, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -5247,7 +5248,7 @@ template: `
 		mounted() {
 			if (this.source) {
 				this.currentUrl = this.makeUrl(this.source);
-				http.load(this.currentUrl, this.$el)
+				http.load(this.currentUrl, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -5323,9 +5324,9 @@ template: `
 		}
 	});
 })();
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-/*20221023-7901*/
+/*20221124-7907*/
 // controllers/base.js
 
 (function () {
@@ -5628,6 +5629,10 @@ template: `
 				bus.$emit('childrenSaved', dat);
 			},
 
+			$showSidePane(url, arg, data) {
+				let newurl = urltools.combine('_navpane', url, arg || '0') + urltools.makeQueryString(data);
+				eventBus.$emit('showSidePane', newurl);
+			},
 
 			$invoke(cmd, data, base, opts) {
 				let self = this;
@@ -5637,9 +5642,10 @@ template: `
 				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
+				let hideIndicator = opts && opts.hideIndicator || false;
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl, data: data });
-					dataservice.post(url, jsonData).then(function (data) {
+					dataservice.post(url, jsonData, false, hideIndicator).then(function (data) {
 						if (self.__destroyed__) return;
 						if (utils.isObject(data))
 							resolve(data);
@@ -6705,7 +6711,8 @@ template: `
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
-					$nodirty: this.$nodirty
+					$nodirty: this.$nodirty,
+					$showSidePane: this.$showSidePane
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

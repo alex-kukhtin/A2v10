@@ -79,9 +79,10 @@ header, .header {
 		}
 
 		.app-logo {
-			padding-right:12px;
+			padding-right: 12px;
+
 			> img {
-				display:block;
+				display: block;
 			}
 		}
 
@@ -179,6 +180,30 @@ header, .header {
 
 		.btn.btn-success {
 			background-color: darken(@success-base-color, 5%);
+		}
+	}
+
+	.include.nav-pane {
+		width: auto;
+
+		.btn {
+			padding: 0 .5rem;
+			position: relative;
+		}
+
+		.partial-block {
+			display: flex;
+			align-items: stretch;
+			height: 100%;
+
+			.btn-icon {
+				width: @header-height;
+			}
+
+			.control-group {
+				margin-bottom: 0;
+				align-self: center;
+			}
 		}
 	}
 }

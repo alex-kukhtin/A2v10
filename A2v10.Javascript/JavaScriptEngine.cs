@@ -9,7 +9,6 @@ using Jint;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
-using Jint.Runtime.Interop;
 
 namespace A2v10.Javascript;
 
@@ -42,6 +41,7 @@ public class JavaScriptEngine : IJavaScriptEngine
 	public static void EngineOptions(Options opts)
 	{
 		opts.Strict(true);
+		// opts.CatchClrExceptions(ex => true);
 	}
 
 	public ScriptEnvironment Environment()

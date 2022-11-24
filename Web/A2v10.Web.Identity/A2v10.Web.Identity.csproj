@@ -5,7 +5,7 @@
 		<LangVersion>10.0</LangVersion>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Version>10.0.7906</Version>
+		<Version>10.0.7907</Version>
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
 		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>
@@ -49,7 +49,7 @@
 		<PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security.OAuth" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Owin" Version="1.0" />
 	</ItemGroup>
 

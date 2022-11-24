@@ -26,6 +26,7 @@
 				feedbackVisible: false,
 				globalPeriod: null,
 				dataCounter: 0,
+				sidePaneUrl: '',
 				traceEnabled: log.traceEnabled()
 			};
 		},
@@ -44,7 +45,10 @@
 				if (this.userIsExternal)
 					return undefined;
 				return this.doChangePassword;
-			}
+			},
+			sidePaneVisible() {
+				return !!this.sidePaneUrl
+			},
 		},
 		watch: {
 			traceEnabled(val) {
@@ -166,6 +170,17 @@
 				}
 			});
 
+			eventBus.$on('showSidePane', function (url) {
+				if (!url) {
+					me.sidePaneUrl = '';
+				} else {
+					let newurl = '/_page' + url;
+					if (me.sidePaneUrl === newurl)
+						me.sidePaneUrl = '';
+					else
+						me.sidePaneUrl = newurl;
+				}
+			});
 
 			popup.startService();
 

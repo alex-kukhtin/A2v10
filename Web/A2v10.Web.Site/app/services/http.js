@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220918-7891
+// 20221124-7907
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -116,7 +116,7 @@ app.modules['std:http'] = function () {
 		}
 	}
 
-	function load(url, selector, baseUrl) {
+	function load(url, selector, baseUrl, skipIndicator) {
 
 		if (selector) {
 			let fc = selector.firstElementChild
@@ -133,7 +133,7 @@ app.modules['std:http'] = function () {
 
 		return new Promise(function (resolve, reject) {
 			eventBus.$emit('beginLoad');
-			doRequest('GET', url)
+			doRequest('GET', url, null, false, skipIndicator)
 				.then(function (html) {
 					if (!html)
 						return;

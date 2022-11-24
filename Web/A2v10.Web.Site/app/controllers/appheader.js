@@ -1,6 +1,6 @@
-﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021-2022 Oleksandr Kukhtin. All rights reserved.
 
-/*20210914-7803*/
+/*20221123-7907*/
 /* controllers/appheader.js */
 
 (function () {

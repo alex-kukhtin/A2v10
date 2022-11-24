@@ -35,6 +35,7 @@ public class Button : CommandControl
 	public ButtonStyle Style { get; set; }
 	public IconAlign IconAlign { get; set; }
 	public Boolean Rounded { get; set; }
+	public String Badge { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -123,7 +124,6 @@ public class Button : CommandControl
 		button.MergeAttribute("v-settabindex", String.Empty);
 		button.RenderStart(context);
 		RenderIcon(context, Icon);
-
 		var contBind = GetBinding(nameof(Content));
 		if (contBind != null)
 		{
@@ -139,6 +139,9 @@ public class Button : CommandControl
 			if (!hasCommand)
 				RenderCaret(context, bDropUp);
 		}
+
+		RenderBadge(context, Badge, "btn-badge");
+
 		button.RenderEnd(context);
 		if (hasDropDown && hasCommand)
 		{

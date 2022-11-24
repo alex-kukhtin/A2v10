@@ -1,13 +1,13 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20210302-7752
+// 20221124-7907
 // dataservice.js
 (function () {
 
 	let http = require('std:http');
 
-	function post(url, data, raw) {
-		return http.post(url, data, raw);
+	function post(url, data, raw, hideIndicator) {
+		return http.post(url, data, raw, hideIndicator);
 	}
 
 	function get(url) {

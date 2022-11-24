@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-/*20221023-7901*/
+/*20221124-7907*/
 // controllers/base.js
 
 (function () {
@@ -303,6 +303,10 @@
 				bus.$emit('childrenSaved', dat);
 			},
 
+			$showSidePane(url, arg, data) {
+				let newurl = urltools.combine('_navpane', url, arg || '0') + urltools.makeQueryString(data);
+				eventBus.$emit('showSidePane', newurl);
+			},
 
 			$invoke(cmd, data, base, opts) {
 				let self = this;
@@ -312,9 +316,10 @@
 				let baseUrl = self.$indirectUrl || self.$baseUrl;
 				if (base)
 					baseUrl = urltools.combine('_page', base, 'index', 0);
+				let hideIndicator = opts && opts.hideIndicator || false;
 				return new Promise(function (resolve, reject) {
 					var jsonData = utils.toJson({ cmd: cmd, baseUrl: baseUrl, data: data });
-					dataservice.post(url, jsonData).then(function (data) {
+					dataservice.post(url, jsonData, false, hideIndicator).then(function (data) {
 						if (self.__destroyed__) return;
 						if (utils.isObject(data))
 							resolve(data);
@@ -1380,7 +1385,8 @@
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
-					$nodirty: this.$nodirty
+					$nodirty: this.$nodirty,
+					$showSidePane: this.$showSidePane
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

@@ -196,6 +196,16 @@ namespace A2v10.Web.Mvc.Controllers
 			return String.Empty;
 		}
 
+
+		public String GetNavPane()
+		{
+			var appReader = _baseController.Host.ApplicationReader;
+			String path = appReader.MakeFullPath("_navpane", "model.json");
+			if (appReader.FileExists(path))
+				return "<include class=nav-pane src=\"/_page/_navpane/index/0\" :hide-indicator=\"true\"></include>";
+			return String.Empty;
+		}
+
 		public String GetCompanyButton()
 		{
 			if (!_baseController.Host.IsMultiCompany)
@@ -213,6 +223,7 @@ namespace A2v10.Web.Mvc.Controllers
 					{ "$(RootUrl)", RootUrl },
 					{ "$(PersonName)", GetUserPersonName() },
 					{ "$(ClientId)", GetUserClientId() },
+					{ "$(NavPane)", GetNavPane() },
 					{ "$(CompanyButton)", GetCompanyButton() },
 					{ "$(Locale)", _baseController.CurrentLang },
 					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." }

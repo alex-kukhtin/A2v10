@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <!--
 A2v10 platform.
-Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved. 333
 Site: https://a2v10.com
 GitHub: https://github.com/alex-kukhtin/A2v10
 -->
@@ -33,6 +33,7 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 					   :menu="menu" :new-menu="newMenu" :settings-menu="settingsMenu" :app-data="appData"
 					   person-name="$(PersonName)" client-id="$(ClientId)" :user-is-admin="userIsAdmin" :show-feedback="showFeedback"
 					   :feedback-visible="feedbackVisible" :change-password="changePassword" :nav-bar-mode=navBarMode>
+			$(NavPane)
 			$(CompanyButton)
 		</a2-app-header>
 		<a2-main-view :menu="menu" :side-bar-mode="sideBarMode" :nav-bar-mode=navBarMode :period="globalPeriod" :pages="pages" :title="title"></a2-main-view>
@@ -71,6 +72,9 @@ GitHub: https://github.com/alex-kukhtin/A2v10
 			</div>
 		</footer>
 		<a2-iframe-target></a2-iframe-target>
+		<div class="side-pane-frame" v-if="sidePaneVisible">
+			<include :src="sidePaneUrl" :hide-indicator="true"></include>
+		</div>
 	</div>
 	<script type="text/javascript" src="/scripts/vue.$(Minify)js?v=$(Build)"></script>
 	<script type="text/javascript" src="/scripts/d3.min.js?v=$(Build)"></script>

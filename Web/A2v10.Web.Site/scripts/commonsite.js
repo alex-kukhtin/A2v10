@@ -1665,9 +1665,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220918-7891
+// 20221124-7907
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1783,7 +1783,7 @@ app.modules['std:http'] = function () {
 		}
 	}
 
-	function load(url, selector, baseUrl) {
+	function load(url, selector, baseUrl, skipIndicator) {
 
 		if (selector) {
 			let fc = selector.firstElementChild
@@ -1800,7 +1800,7 @@ app.modules['std:http'] = function () {
 
 		return new Promise(function (resolve, reject) {
 			eventBus.$emit('beginLoad');
-			doRequest('GET', url)
+			doRequest('GET', url, null, false, skipIndicator)
 				.then(function (html) {
 					if (!html)
 						return;
@@ -4207,16 +4207,16 @@ app.modules['std:impl:array'] = function () {
 })();
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20210302-7752
+// 20221124-7907
 // dataservice.js
 (function () {
 
 	let http = require('std:http');
 
-	function post(url, data, raw) {
-		return http.post(url, data, raw);
+	function post(url, data, raw, hideIndicator) {
+		return http.post(url, data, raw, hideIndicator);
 	}
 
 	function get(url) {
@@ -4232,9 +4232,9 @@ app.modules['std:impl:array'] = function () {
 
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220918-7891
+// 20221124-7907
 /*components/include.js*/
 
 (function () {
@@ -4265,7 +4265,8 @@ app.modules['std:impl:array'] = function () {
 			needReload: Boolean,
 			insideDialog: Boolean,
 			done: Function,
-			queued: Boolean
+			queued: Boolean,
+			hideIndicator: Boolean
 		},
 		data() {
 			return {
@@ -4286,7 +4287,7 @@ app.modules['std:impl:array'] = function () {
 				if (this.currentUrl) {
 					// Do not set loading. Avoid blinking
 					this.__destroy();
-					http.load(this.currentUrl, this.$el)
+					http.load(this.currentUrl, this.$el, undefined, this.hideIndicator)
 						.then(this.loaded)
 						.catch(this.error);
 				}
@@ -4329,7 +4330,7 @@ app.modules['std:impl:array'] = function () {
 			//console.warn('include has been mounted');
 			if (this.src) {
 				this.currentUrl = this.src;
-				http.load(this.src, this.$el)
+				http.load(this.src, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -4358,7 +4359,7 @@ app.modules['std:impl:array'] = function () {
 					this.loading = true; // hides the current view
 					this.currentUrl = newUrl;
 					this.__destroy();
-					http.load(newUrl, this.$el)
+					http.load(newUrl, this.$el, undefined, this.hideIndicator)
 						.then(this.loaded)
 						.catch(this.error);
 				}
@@ -4405,7 +4406,7 @@ app.modules['std:impl:array'] = function () {
 			load() {
 				let url = this.makeUrl();
 				this.__destroy();
-				http.load(url, this.$el)
+				http.load(url, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -4430,7 +4431,7 @@ app.modules['std:impl:array'] = function () {
 		mounted() {
 			if (this.source) {
 				this.currentUrl = this.makeUrl(this.source);
-				http.load(this.currentUrl, this.$el)
+				http.load(this.currentUrl, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -5778,9 +5779,9 @@ app.modules['std:impl:array'] = function () {
 		tabSideBar: a2TabSideBar
 	};
 })();	
-// Copyright © 2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2021-2022 Oleksandr Kukhtin. All rights reserved.
 
-/*20210914-7803*/
+/*20221123-7907*/
 /* controllers/appheader.js */
 
 (function () {

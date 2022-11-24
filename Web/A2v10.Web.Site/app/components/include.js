@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20220918-7891
+// 20221124-7907
 /*components/include.js*/
 
 (function () {
@@ -31,7 +31,8 @@
 			needReload: Boolean,
 			insideDialog: Boolean,
 			done: Function,
-			queued: Boolean
+			queued: Boolean,
+			hideIndicator: Boolean
 		},
 		data() {
 			return {
@@ -52,7 +53,7 @@
 				if (this.currentUrl) {
 					// Do not set loading. Avoid blinking
 					this.__destroy();
-					http.load(this.currentUrl, this.$el)
+					http.load(this.currentUrl, this.$el, undefined, this.hideIndicator)
 						.then(this.loaded)
 						.catch(this.error);
 				}
@@ -95,7 +96,7 @@
 			//console.warn('include has been mounted');
 			if (this.src) {
 				this.currentUrl = this.src;
-				http.load(this.src, this.$el)
+				http.load(this.src, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -124,7 +125,7 @@
 					this.loading = true; // hides the current view
 					this.currentUrl = newUrl;
 					this.__destroy();
-					http.load(newUrl, this.$el)
+					http.load(newUrl, this.$el, undefined, this.hideIndicator)
 						.then(this.loaded)
 						.catch(this.error);
 				}
@@ -171,7 +172,7 @@
 			load() {
 				let url = this.makeUrl();
 				this.__destroy();
-				http.load(url, this.$el)
+				http.load(url, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}
@@ -196,7 +197,7 @@
 		mounted() {
 			if (this.source) {
 				this.currentUrl = this.makeUrl(this.source);
-				http.load(this.currentUrl, this.$el)
+				http.load(this.currentUrl, this.$el, undefined, this.hideIndicator)
 					.then(this.loaded)
 					.catch(this.error);
 			}

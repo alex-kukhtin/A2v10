@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20221002-7894
+// 20221124-7907
 /* platform/routex.js */
 
 (function () {
@@ -66,6 +66,7 @@
 			navigate: function (state, to) { // to: {url, query, title}
 				eventBus.$emit('closeAllPopups');
 				eventBus.$emit('modalCloseAll');
+				eventBus.$emit('showSidePane', null);
 				let root = window.$$rootUrl;
 				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
 				state.route = to.url.toLowerCase();

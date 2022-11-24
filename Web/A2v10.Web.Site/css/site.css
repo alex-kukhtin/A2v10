@@ -1493,6 +1493,30 @@ header .dropdown.separate.show .btn.btn-success,
 .header .dropdown.separate.show .btn.btn-success {
   background-color: #52a845;
 }
+header .include.nav-pane,
+.header .include.nav-pane {
+  width: auto;
+}
+header .include.nav-pane .btn,
+.header .include.nav-pane .btn {
+  padding: 0 0.5rem;
+  position: relative;
+}
+header .include.nav-pane .partial-block,
+.header .include.nav-pane .partial-block {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+header .include.nav-pane .partial-block .btn-icon,
+.header .include.nav-pane .partial-block .btn-icon {
+  width: 40px;
+}
+header .include.nav-pane .partial-block .control-group,
+.header .include.nav-pane .partial-block .control-group {
+  margin-bottom: 0;
+  align-self: center;
+}
 .content-view {
   position: absolute;
   left: 0;
@@ -2704,6 +2728,17 @@ pre.a2-code {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2) inset;
   outline-style: none;
   transition: box-shadow linear 0.2s;
+}
+.btn .btn-badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 9px;
+  background-color: coral;
+  border-radius: 50%;
+  padding: 1px;
+  min-width: 14px;
+  min-height: 14px;
 }
 .btn.lg {
   padding: 0.85rem 1rem;

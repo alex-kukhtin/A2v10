@@ -1,7 +1,7 @@
 ﻿
-/* Copyright © 2019-2022 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7898 */
+/* Copyright © 2019-2022 Oleksandr Kukhtin. All rights reserved. */
 
+/* Version 10.0.7907 */
 
 declare function require(url: string): any;
 
@@ -246,7 +246,7 @@ interface IController {
 	$save(): Promise<object>;
 	$requery(): void;
 	$reload(args?: any): Promise<void>;
-	$invoke(command: string, arg?: object, path?: string, opts?: { catchError: boolean }): Promise<any>;
+	$invoke(command: string, arg?: object, path?: string, opts?: { catchError?: boolean, hideIndicator?: boolean }): Promise<any>;
 	$close(): void;
 	$modalClose(result?: any): any;
 	$msg(msg: string, title?: string, style?: CommonStyle): Promise<boolean>;
@@ -272,6 +272,7 @@ interface IController {
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
 	$nodirty(func: () => Promise<any>): void;
+	$showSidePane(url: string, arg?: string | number, data?: object): void;
 }
 
 interface IMessage {

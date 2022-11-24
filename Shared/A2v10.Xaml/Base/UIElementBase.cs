@@ -201,19 +201,19 @@ namespace A2v10.Xaml
 			return result;
 		}
 
-		protected void RenderBadge(RenderContext context, String badge)
+		protected void RenderBadge(RenderContext context, String badge, String cssClass = "badge")
 		{
 			var badgeBind = GetBinding("Badge");
 			if (badgeBind != null)
 			{
-				new TagBuilder("span", "badge")
+				new TagBuilder("span", cssClass)
 					.MergeAttribute("v-text", badgeBind.GetPathFormat(context))
 					.MergeAttribute("v-if", badgeBind.GetPathFormat(context))
 					.Render(context);
 			}
 			else if (!String.IsNullOrEmpty(badge))
 			{
-				new TagBuilder("span", "badge")
+				new TagBuilder("span", cssClass)
 					.SetInnerText(context.LocalizeCheckApostrophe(badge))
 					.Render(context);
 			}
