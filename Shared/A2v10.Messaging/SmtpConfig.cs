@@ -35,6 +35,8 @@ namespace A2v10.Messaging
 
 		public static SmtpConfig FromJson(String json)
 		{
+			if (json == null)
+				return null;
 			return JsonConvert.DeserializeObject<SmtpConfig>(json.Replace('\'', '"'));
 		}
 	}

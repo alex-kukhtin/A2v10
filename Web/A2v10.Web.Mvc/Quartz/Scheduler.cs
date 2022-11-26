@@ -1,16 +1,17 @@
-﻿using Quartz.Impl;
-using Quartz;
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Configuration;
-using DocumentFormat.OpenXml.Vml;
+using System.Dynamic;
+
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
-using System.Dynamic;
+
+using Quartz.Impl;
+using Quartz;
+
 using A2v10.Infrastructure;
+using A2v10.Messaging;
 
 namespace A2v10.Web.Mvc.Quartz;
 
@@ -26,9 +27,13 @@ public class Scheduler
 		IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
 		await scheduler.Start();
 
+		var mailSettings = ConfigurationManager.AppSettings["mailSettings"];
+		SmtpConfig.FromJson(mailSettings);
+
 		var dataMap = new JobDataMap
 		{
-			{ "DataSource", config.Get<String>("dataSource") ?? "" }
+			{ "DataSource", config.Get<String>("dataSource") ?? "" },
+			{ "MailSettings",  SmtpConfig.FromJson(mailSettings) }
 		};
 
 		var timeSpan = TimeSpan.Parse(config.Get<String>("interval"));
