@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-/*20221124-7907*/
+/*20221127-7908*/
 // controllers/base.js
 
 (function () {
@@ -1328,8 +1328,17 @@
 				if (!utils.isObjectExact(search)) {
 					console.error('base.__queryChange. invalid argument type');
 				}
+				let searchBase = search.__baseUrl__;
+				if (searchBase) {
+					let searchurl = urltools.parseUrlAndQuery(searchBase);
+					let thisurl = urltools.parseUrlAndQuery(this.$data.__baseUrl__);
+					if (searchurl.url !== thisurl.url)
+						return;
+				}
 				let nq = Object.assign({}, this.$baseQuery);
 				for (let p in search) {
+					if (p.startsWith('__'))
+						continue;
 					if (search[p]) {
 						// replace from search
 						nq[p] = search[p];

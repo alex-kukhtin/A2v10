@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20221023-7901
+// 20221127-7908
 // components/collectionview.js
 
 /*
@@ -454,6 +454,9 @@ TODO:
 		methods: {
 			commit(query) {
 				//console.dir(this.$root.$store);
+				query.__baseUrl__ = '';
+				if (this.$root.$data)
+					query.__baseUrl__ = this.$root.$data.__baseUrl__;
 				this.$store.commit('setquery', query);
 			},
 			sortDir(order) {

@@ -4358,7 +4358,7 @@ app.components['std:store'] = {
 
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20221023-7901
+// 20221127-7908
 // components/collectionview.js
 
 /*
@@ -4812,6 +4812,9 @@ TODO:
 		methods: {
 			commit(query) {
 				//console.dir(this.$root.$store);
+				query.__baseUrl__ = '';
+				if (this.$root.$data)
+					query.__baseUrl__ = this.$root.$data.__baseUrl__;
 				this.$store.commit('setquery', query);
 			},
 			sortDir(order) {
@@ -5326,7 +5329,7 @@ template: `
 })();
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-/*20221124-7907*/
+/*20221127-7908*/
 // controllers/base.js
 
 (function () {
@@ -6654,8 +6657,17 @@ template: `
 				if (!utils.isObjectExact(search)) {
 					console.error('base.__queryChange. invalid argument type');
 				}
+				let searchBase = search.__baseUrl__;
+				if (searchBase) {
+					let searchurl = urltools.parseUrlAndQuery(searchBase);
+					let thisurl = urltools.parseUrlAndQuery(this.$data.__baseUrl__);
+					if (searchurl.url !== thisurl.url)
+						return;
+				}
 				let nq = Object.assign({}, this.$baseQuery);
 				for (let p in search) {
+					if (p.startsWith('__'))
+						continue;
 					if (search[p]) {
 						// replace from search
 						nq[p] = search[p];

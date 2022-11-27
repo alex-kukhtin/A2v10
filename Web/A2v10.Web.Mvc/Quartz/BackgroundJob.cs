@@ -26,6 +26,12 @@ public class BackgroundJob
 	public Guid Lock { get; set; }
 	public ExpandoObject DataObject => 
 		JsonConvert.DeserializeObject<ExpandoObject>(Data, new ExpandoObjectConverter());
+
+	public T GetObject<T>()
+	{
+		return JsonConvert.DeserializeObject<T>(Data);
+	}
+
 	public static IJobHandler CreateHandler(BackgroundJob job, IServiceProvider sp)
 	{
 		switch (job.Kind)
