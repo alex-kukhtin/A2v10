@@ -353,6 +353,12 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		String file = _host.ApplicationReader.ReadTextFile("_platform/", externalFileName);
 		if (file == null)
 			return false;
+
+		AntiForgery.GetTokens(null, out String cookieToken, out String formToken);
+		file= file.Replace("$(Token)", formToken);
+
+		Response.Cookies.Add(new HttpCookie(AntiForgeryConfig.CookieName, cookieToken));
+
 		Response.Write(file);
 		return true;
 	}

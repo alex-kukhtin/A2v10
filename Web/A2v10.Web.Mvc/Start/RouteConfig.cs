@@ -18,6 +18,8 @@ public class RouteConfig
 		routes.IgnoreRoute("fonts/{resource}/{*pathInfo}");
 		routes.IgnoreRoute("*.ico");
 		routes.IgnoreRoute("*.png");
+		routes.IgnoreRoute("*.svg");
+		routes.IgnoreRoute("*.jpg");
 		routes.IgnoreRoute(".well-known/{*pathInfo}");
 		routes.IgnoreRoute("robots.txt");
 		routes.IgnoreRoute("manifest.json");
