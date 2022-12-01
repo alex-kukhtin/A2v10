@@ -37,6 +37,8 @@ using A2v10.Web.Identity;
 using A2v10.Web.Base;
 using A2v10.Web.Config;
 using A2v10.Web.Mvc.Interfaces;
+using System.Security.Cryptography;
+using System.Xml.XPath;
 
 namespace A2v10.Web.Mvc.Controllers;
 
@@ -211,6 +213,31 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		SendPage(page, ResourceHelper.LoginScript);
 	}
 
+	private String GetInitPasswordToken(AppUser user, String password)
+	{
+		var dataProtector = _dataProtectionProvider.Create("SetPassword");
+		var tokenData = new ExpandoObject()
+						{
+							{ "UserId", user.Id },
+							{ "Password", password },
+							{ "TimeStamp", DateTime.UtcNow }
+						};
+		var dataBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(tokenData));
+		var protectedData = dataProtector.Protect(dataBytes);
+
+		return Base64UrlEncoder.Encode(protectedData);
+	}
+
+	private ExpandoObject DecodeInitPasswordToken(String token)
+	{
+		var dataProtector = _dataProtectionProvider.Create("SetPassword");
+		var dataBytes = Base64UrlEncoder.DecodeBytes(token);
+		var decodedBytes = dataProtector.Unprotect(dataBytes);
+		var jsonData = Encoding.UTF8.GetString(decodedBytes);
+		return JsonConvert.DeserializeObject<ExpandoObject>(jsonData);
+	}
+
+
 	[ActionName("login")]
 	[HttpPost]
 	[IsAjaxOnly]
@@ -239,6 +266,18 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 			{
 				Session.Add(USERNAME_SESSIONKEY, user.UserName);
 				return Json(new { Status = "EmailNotConfirmed" });
+			}
+			if (user.SetPassword)
+			{
+				status = "SetPassword";
+				var token = GetInitPasswordToken(user, model.Password);
+				Response.SetCookie(new HttpCookie("__SetPassword", token)
+				{
+					Expires = DateTime.UtcNow + TimeSpan.FromMinutes(5),
+					HttpOnly= true,
+					SameSite = SameSiteMode.Strict
+				});
+				return Json(new { Status = status, Token = token });
 			}
 
 			var result = await SignInManager.PasswordSignInAsync(userName: model.Name, password: model.Password, isPersistent: model.RememberMe, shouldLockout: true);
@@ -746,9 +785,69 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		SendPage(page, ResourceHelper.ForgotPasswordScript);
 	}
 
-	//
-	// POST: /Account/ForgotPasswordCode
-	[ActionName("forgotpasswordcode")]
+	[AllowAnonymous]
+	[HttpGet]
+	[OutputCache(Duration = 0)]
+	public void InitPassword(String token)
+	{
+		if (String.IsNullOrEmpty(token)) { 
+			Response.Redirect("/account/login");
+			return;
+		}
+		try
+		{
+			var user = DecodeInitPasswordToken(token);
+			String page = GetRedirectedPage("initpassword", _host.Mobile ? ResourceHelper.ForgotPasswordMobileHtml : ResourceHelper.InitPasswordHtml);
+			SendPage(page, ResourceHelper.InitPasswordScript);
+		}
+		catch (Exception)
+		{
+			Response.Redirect("/account/login");
+			return;
+		}
+	}
+
+	// POST: /Account/InitPassword
+	[ActionName("initpassword")]
+	[HttpPost]
+	[IsAjaxOnly]
+	[AllowAnonymous]
+	[ValidateJsonAntiForgeryToken]
+	[HandlAntiForgeryExecptionAttribute]
+	public async Task<ActionResult> InitPassword_POST()
+	{
+		var status = "BadRequest";
+		var cookie = Request.Cookies["__SetPassword"];
+		try
+		{
+			if (cookie != null)
+			{
+				var userData = DecodeInitPasswordToken(cookie.Value);
+				NewPasswordViewModel model = GetModelFromBody<NewPasswordViewModel>();
+				if (!String.IsNullOrEmpty(model.Password))
+				{
+					var userId = userData.Get<Int64>("UserId");
+					var user = await UserManager.FindByIdAsync(userId);
+					if (user.SetPassword)
+					{
+						var oldPassword = userData.Get<String>("Password");
+						var result = await UserManager.ChangePasswordAsync(user.Id, oldPassword, model.Password);
+						if (result == IdentityResult.Success)
+						{
+							await UserManager.UpdateUser(user);
+							status = "Success";
+						}
+					}
+				}
+			}
+		} 
+		catch (Exception)
+		{
+			status = "ServerError";
+		}
+		return Json(new { Status = status });
+	}
+
 	[HttpPost]
 	[IsAjaxOnly]
 	[AllowAnonymous]

@@ -14,6 +14,7 @@
 		<tags>A2v10 Platform Business WebApp</tags>
 		<license type="expression">MIT</license>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
+		<readme>docs\README.md</readme>
 		<references>
 			<group targetFramework=".NETFramework4.8">
 				<reference file="A2v10.Xaml.dll" />
@@ -38,5 +39,6 @@
 		<file src="C:/A2v10_Net48/A2v10.BuildSql/bin/Release/A2v10.BuildSql.dll" target="build"/>
 		<file src="C:/A2v10_Net48/A2v10.BuildSql/bin/Release/Newtonsoft.Json.dll" target="build"/>
 		<file src="C:/A2v10_Net48/A2v10.BuildSql/A2v10.BuildSql.targets" target="build/A2v10.App.Runtime.targets" />
+		<file src="README.md" target="docs/" />
 	</files>
 </package>

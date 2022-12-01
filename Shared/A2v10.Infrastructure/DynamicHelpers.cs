@@ -15,7 +15,7 @@ public static class DynamicHelpers
 {
 	public static T Get<T>(this ExpandoObject obj, String name)
 	{
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return default;
 		if (d.TryGetValue(name, out Object result))
 		{
@@ -28,7 +28,7 @@ public static class DynamicHelpers
 
 	public static ExpandoObject Add(this ExpandoObject obj, String name, Object value)
 	{
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return obj;
 		d.Add(name, value);
 		return obj;
@@ -36,7 +36,7 @@ public static class DynamicHelpers
 
 	public static Object GetObject(this ExpandoObject obj, String name)
 	{
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return null;
 		if (d.TryGetValue(name, out Object result))
 		{
@@ -47,7 +47,7 @@ public static class DynamicHelpers
 
 	public static void Set(this ExpandoObject obj, String name, Object value)
 	{
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return;
 		if (d.ContainsKey(name))
 			d[name] = value;
@@ -59,7 +59,7 @@ public static class DynamicHelpers
 	{
 		if (obj == null)
 			return true;
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return true;
 		return d.Count == 0;
 	}
@@ -75,7 +75,7 @@ public static class DynamicHelpers
 
 	public static void SetIfNotExists(this ExpandoObject obj, String name, Object value)
 	{
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return;
 		if (!d.ContainsKey(name))
 			d.Add(name, value);
@@ -83,7 +83,7 @@ public static class DynamicHelpers
 
 	public static void RemoveKeys(this ExpandoObject obj, String keys)
 	{
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return;
 		foreach (var key in keys.Split(','))
 		{
@@ -94,7 +94,7 @@ public static class DynamicHelpers
 
 	public static Boolean HasProperty(this ExpandoObject obj, String name)
 	{
-		if (!(obj is IDictionary<String, Object> d))
+		if (obj is not IDictionary<String, Object> d)
 			return false;
 		return d.ContainsKey(name);
 	}

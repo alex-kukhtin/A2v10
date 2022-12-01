@@ -435,22 +435,30 @@ namespace A2v10.Request.Properties {
                 return ResourceManager.GetString("forgotPassword", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;div class=&quot;mobile-page&quot;&gt;
-        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
-        ///	&lt;hr class=&quot;hline&quot; /&gt;
-        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
-        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
-        ///	&lt;/div&gt;
-        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
-        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
-        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
-        ///		&lt;a tabindex=&quot;3&quot; :href=&quot;getReferUrl(&apos;/&apos;)&quot; class=&quot;a2-hyperlink block&quot; style=&quot;margin-top:1rem&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
-        ///	&lt;/div&gt;
-        ///	&lt;div v-else clas [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string forgotPasswordMobile {
+
+		internal static string initPassword
+		{
+			get
+			{
+				return ResourceManager.GetString("initPassword", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to &lt;div class=&quot;mobile-page&quot;&gt;
+		///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+		///	&lt;hr class=&quot;hline&quot; /&gt;
+		///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+		///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+		///	&lt;/div&gt;
+		///	&lt;div v-if=&quot;showConfirm&quot;&gt;
+		///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
+		///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
+		///		&lt;a tabindex=&quot;3&quot; :href=&quot;getReferUrl(&apos;/&apos;)&quot; class=&quot;a2-hyperlink block&quot; style=&quot;margin-top:1rem&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+		///	&lt;/div&gt;
+		///	&lt;div v-else clas [rest of string was truncated]&quot;;.
+		/// </summary>
+		internal static string forgotPasswordMobile {
             get {
                 return ResourceManager.GetString("forgotPasswordMobile", resourceCulture);
             }
@@ -494,26 +502,34 @@ namespace A2v10.Request.Properties {
                 return ResourceManager.GetString("forgotPasswordScript", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-        ///&lt;!--
-        ///A2v10 platform.
-        ///Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
-        ///Site: https://a2v10.com
-        ///GitHub: https://github.com/alex-kukhtin/A2v10
-        ///--&gt;
-        ///&lt;html lang=&quot;$(Lang)&quot;&gt;
-        ///&lt;head&gt;
-        ///	$(SiteMeta)
-        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
-        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-        ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///	&lt;meta name=&quot;goo [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string initLayout {
+
+		internal static string initPasswordScript
+		{
+			get
+			{
+				return ResourceManager.GetString("initPasswordScript", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+		///&lt;!--
+		///A2v10 platform.
+		///Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+		///Site: https://a2v10.com
+		///GitHub: https://github.com/alex-kukhtin/A2v10
+		///--&gt;
+		///&lt;html lang=&quot;$(Lang)&quot;&gt;
+		///&lt;head&gt;
+		///	$(SiteMeta)
+		///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+		///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+		///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
+		///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+		///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+		///	&lt;meta name=&quot;goo [rest of string was truncated]&quot;;.
+		/// </summary>
+		internal static string initLayout {
             get {
                 return ResourceManager.GetString("initLayout", resourceCulture);
             }

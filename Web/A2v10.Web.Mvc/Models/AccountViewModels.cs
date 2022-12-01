@@ -64,6 +64,7 @@ namespace A2v10.Web.Mvc.Models
 		public ExpandoObject ExtraData { get; set; }
 	}
 
+
 	public class ConfirmEmailModel
 	{
 		public String Email { get; set; }
@@ -91,6 +92,11 @@ namespace A2v10.Web.Mvc.Models
 		[DataType(DataType.Password)]
 		[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
 		public String ConfirmPassword { get; set; }
+	}
+
+	public class NewPasswordViewModel
+	{
+		public String Password { get; set; }
 	}
 
 	public class ResetPasswordViewModel

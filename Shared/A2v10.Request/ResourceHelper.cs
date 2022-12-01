@@ -19,6 +19,8 @@ namespace A2v10.Request
 		public static String ForgotPasswordMobileHtml => Resources.forgotPasswordMobile;
 		public static String ForgotPasswordScript => Resources.forgotPasswordScript;
 		public static String AppLinksScript => Resources.appLinkScript;
+		public static String InitPasswordHtml => Resources.initPassword;
+		public static String InitPasswordScript => Resources.initPasswordScript;
 
 		public static String SimpleScript => Resources.simpleScript;
 		public static String ErrorHtml => Resources.error;

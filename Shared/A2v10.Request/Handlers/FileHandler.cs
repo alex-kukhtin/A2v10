@@ -1,26 +1,25 @@
-﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2022 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Web;
 
-namespace A2v10.Request
+namespace A2v10.Request;
+
+public interface IRequestHandler
 {
-	public interface IRequestHandler
-	{
 
-	}
+}
 
-	public class FileHandler : IRequestHandler
+public class FileHandler : IRequestHandler
+{
+	public void Process(String url, HttpRequestBase request, HttpResponseBase response)
 	{
-		public void Process(String url, HttpRequestBase request, HttpResponseBase response)
+		if (request.HttpMethod == "GET")
 		{
-			if (request.HttpMethod == "GET")
-			{
-			}
-			else if (request.HttpMethod == "POST")
-			{
+		}
+		else if (request.HttpMethod == "POST")
+		{
 
-			}
 		}
 	}
 }

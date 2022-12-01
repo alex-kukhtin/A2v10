@@ -175,6 +175,12 @@
   <data name="initLayoutMobile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\initLayoutMobile.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="initPassword" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\initPassword.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="initPasswordScript" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Pages\initPasswordScript.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="layout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\layout.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -234,8 +240,5 @@
   </data>
   <data name="stiReport" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Pages\stiReport.html;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="String1" xml:space="preserve">
-    <value>String resource</value>
   </data>
 </root>
