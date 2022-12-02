@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7910
-generated: 02.12.2022 04:04:11
+generated: 02.12.2022 14:16:47
 */
 
 set nocount on;
@@ -3112,7 +3112,7 @@ Last updated : 02 dec 2022
 module version : 7910
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:bg', 7908;
+exec a2sys.SetVersion N'std:bg', 7910;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2bg')
@@ -3219,3 +3219,4 @@ begin
 	insert into a2bg.Exceptions([JobId], [Message]) values (@JobId, @Message);
 end
 go
+

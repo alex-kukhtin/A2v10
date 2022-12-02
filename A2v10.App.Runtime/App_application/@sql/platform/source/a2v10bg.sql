@@ -5,7 +5,7 @@ Last updated : 02 dec 2022
 module version : 7910
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:bg', 7908;
+exec a2sys.SetVersion N'std:bg', 7910;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2bg')
