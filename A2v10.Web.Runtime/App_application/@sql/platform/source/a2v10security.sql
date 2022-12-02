@@ -2,11 +2,11 @@
 ------------------------------------------------
 Copyright © 2008-2022 Alex Kukhtin
 
-Last updated : 10 feb 2022
-module version : 7770
+Last updated : 01 dec 2022
+module version : 7910
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7770;
+exec a2sys.SetVersion N'std:security', 7910;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -175,6 +175,7 @@ begin
 		[Guid] uniqueidentifier null,
 		Referral bigint null,
 		Segment nvarchar(32) null,
+		SetPassword bit null,
 		Company bigint null,
 			-- constraint FK_Users_Company_Companies foreign key references a2security.Companies(Id)
 		DateCreated datetime null
@@ -188,6 +189,10 @@ begin
 	alter table a2security.Users add SecurityStamp2 nvarchar(max) null;
 	alter table a2security.Users add PasswordHash2 nvarchar(max) null;
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'SetPassword')
+	alter table a2security.Users add SetPassword bit;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'DateCreated')
@@ -590,7 +595,7 @@ as
 		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan, Segment,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined: admins*/ then 1 else 0 end as bit),
 		IsTenantAdmin = cast(case when exists(select * from a2security.Tenants where [Admin] = u.Id) then 1 else 0 end as bit),
-		SecurityStamp2, PasswordHash2, Company
+		SecurityStamp2, PasswordHash2, Company, SetPassword
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77 /*predefined: admins*/
 	where Void=0 and Id <> 0 and ApiUser = 0;
@@ -838,7 +843,9 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp where Id=@Id;
+	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp,
+		SetPassword = null
+	where Id=@Id;
 	exec a2security.[WriteLog] @Id, N'I', 15; /*PasswordUpdated*/
 end
 go

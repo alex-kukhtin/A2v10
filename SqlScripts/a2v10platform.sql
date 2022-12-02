@@ -1,6 +1,6 @@
 ﻿/*
-version: 10.0.7877
-generated: 30.11.2022 15:18:56
+version: 10.0.7910
+generated: 02.12.2022 04:04:11
 */
 
 set nocount on;
@@ -19,9 +19,9 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys
 go
 ----------------------------------------------
 if exists(select * from a2sys.Versions where [Module]=N'script:platform')
-	update a2sys.Versions set [Version]=7877, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
+	update a2sys.Versions set [Version]=7910, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
 else
-	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7877, N'a2v10platform.sql', null);
+	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7910, N'a2v10platform.sql', null);
 go
 
 
@@ -420,11 +420,11 @@ go
 ------------------------------------------------
 Copyright © 2008-2022 Alex Kukhtin
 
-Last updated : 10 feb 2022
-module version : 7770
+Last updated : 01 dec 2022
+module version : 7910
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7770;
+exec a2sys.SetVersion N'std:security', 7910;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -593,6 +593,7 @@ begin
 		[Guid] uniqueidentifier null,
 		Referral bigint null,
 		Segment nvarchar(32) null,
+		SetPassword bit null,
 		Company bigint null,
 			-- constraint FK_Users_Company_Companies foreign key references a2security.Companies(Id)
 		DateCreated datetime null
@@ -606,6 +607,10 @@ begin
 	alter table a2security.Users add SecurityStamp2 nvarchar(max) null;
 	alter table a2security.Users add PasswordHash2 nvarchar(max) null;
 end
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'SetPassword')
+	alter table a2security.Users add SetPassword bit;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.COLUMNS where TABLE_SCHEMA=N'a2security' and TABLE_NAME=N'Users' and COLUMN_NAME=N'DateCreated')
@@ -1008,7 +1013,7 @@ as
 		PhoneNumberConfirmed, RegisterHost, ChangePasswordEnabled, TariffPlan, Segment,
 		IsAdmin = cast(case when ug.GroupId = 77 /*predefined: admins*/ then 1 else 0 end as bit),
 		IsTenantAdmin = cast(case when exists(select * from a2security.Tenants where [Admin] = u.Id) then 1 else 0 end as bit),
-		SecurityStamp2, PasswordHash2, Company
+		SecurityStamp2, PasswordHash2, Company, SetPassword
 	from a2security.Users u
 		left join a2security.UserGroups ug on u.Id = ug.UserId and ug.GroupId=77 /*predefined: admins*/
 	where Void=0 and Id <> 0 and ApiUser = 0;
@@ -1256,7 +1261,9 @@ begin
 	set transaction isolation level read committed;
 	set xact_abort on;
 
-	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp where Id=@Id;
+	update a2security.ViewUsers set PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp,
+		SetPassword = null
+	where Id=@Id;
 	exec a2security.[WriteLog] @Id, N'I', 15; /*PasswordUpdated*/
 end
 go
@@ -3098,3 +3105,117 @@ begin
 end
 go
 
+/*
+Copyright © 2008-2022 Oleksandr Kukhtin
+
+Last updated : 02 dec 2022
+module version : 7910
+*/
+------------------------------------------------
+exec a2sys.SetVersion N'std:bg', 7908;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2bg')
+	exec sp_executesql N'create schema a2bg';
+go
+------------------------------------------------
+grant execute on schema ::a2bg to public;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.SEQUENCES where SEQUENCE_SCHEMA=N'a2bg' and SEQUENCE_NAME=N'SQ_Commands')
+	create sequence a2bg.SQ_Commands as bigint start with 100 increment by 1;
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2bg' and TABLE_NAME=N'Commands')
+create table a2bg.Commands
+(
+	Id	bigint not null constraint PK_Commands primary key
+		constraint DF_Commands_PK default(next value for a2bg.SQ_Commands),
+	Kind nvarchar(16) not null,
+	[Data] nvarchar(max) null,
+	[Complete] int not null,
+	UtcRunAt datetime null,
+	Lock uniqueidentifier null,
+	LockDate datetime null,
+	[UtcDateCreated] datetime not null
+		constraint DF_Commands_UtcDateCreated default(getutcdate()),
+	[UtcDateComplete] datetime null,
+	Error nvarchar(1024) sparse null 
+);
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2bg' and TABLE_NAME=N'Exceptions')
+create table a2bg.Exceptions
+(
+	Id bigint identity(100, 1) not null constraint PK_Exceptions primary key,
+	[JobId] nvarchar(32) null,
+	[Message] nvarchar(255) null,
+	[UtcDateCreated] datetime not null
+		constraint DF_Exceptions_UtcDateCreated default(getutcdate())
+);
+go
+------------------------------------------------
+create or alter procedure a2bg.[Command.List]
+@Limit int = 10
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	
+	declare @inst table(Id bigint);
+
+	update top(@Limit) a2bg.Commands set Lock = newid(), LockDate = getutcdate()
+	output inserted.Id into @inst
+	where Lock is null and Complete = 0 and 
+		(UtcRunAt is null or UtcRunAt < getutcdate());
+
+	select b.Id, b.Kind, b.[Data], b.Lock
+	from @inst t inner join a2bg.Commands b on t.Id = b.Id
+	order by b.Id; -- required!
+end
+go
+------------------------------------------------
+create or alter procedure a2bg.[Command.Queue]
+@Command nvarchar(16),
+@UtcRunAt datetime = null,
+@Data nvarchar(1024) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+
+	declare @rtable table(id bigint);
+	insert a2bg.Commands (Kind, UtcRunAt, [Data], Complete)
+	output inserted.Id into @rtable(id)
+	values (@Command, @UtcRunAt, @Data, 0);
+
+	select [Id] = id from @rtable;
+end
+go
+------------------------------------------------
+create or alter procedure a2bg.[Command.Complete]
+@Id bigint,
+@Lock uniqueidentifier,
+@Complete int,
+@Error nvarchar(1024) = null
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+
+	update a2bg.Commands set Complete = case when @Complete = 1 then 1 else -1 end, 
+		Error = @Error, UtcDateComplete = getutcdate()
+	where Id = @Id and Lock = @Lock;
+end
+go
+------------------------------------------------
+create or alter procedure a2bg.[Exception]
+@Message nvarchar(255),
+@JobId nvarchar(32)
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	insert into a2bg.Exceptions([JobId], [Message]) values (@JobId, @Message);
+end
+go

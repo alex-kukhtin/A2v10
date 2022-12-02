@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2022 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -22,7 +22,12 @@ public class FetchCommand
 			return;
 		var d = headers as IDictionary<String, Object>;
 		foreach (var hp in d)
-			wr.Headers.Add(hp.Key, hp.Value.ToString());
+		{
+			if (hp.Key == "Content-Type")
+				wr.ContentType = hp.Value.ToString();
+			else
+				wr.Headers.Add(hp.Key, hp.Value.ToString());
+		}
 	}
 
 	void AddAuthorization(HttpWebRequest wr, ExpandoObject auth)

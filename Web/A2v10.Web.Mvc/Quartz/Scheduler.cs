@@ -12,6 +12,7 @@ using Quartz;
 
 using A2v10.Infrastructure;
 using A2v10.Messaging;
+using System.Collections.Generic;
 
 namespace A2v10.Web.Mvc.Quartz;
 
@@ -22,33 +23,52 @@ public class Scheduler
 		var settings = ConfigurationManager.AppSettings["quartz"];
 		if (settings == null)
 			return;
-		var config = JsonConvert.DeserializeObject<ExpandoObject>(settings, new ExpandoObjectConverter());
+		var configList = JsonConvert.DeserializeObject<List<ExpandoObject>>(settings, new ExpandoObjectConverter());
+		if (configList == null) 
+			return;
 
 		IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
 		await scheduler.Start();
 
 		var mailSettings = ConfigurationManager.AppSettings["mailSettings"];
-		SmtpConfig.FromJson(mailSettings);
+		var mailConfig = SmtpConfig.FromJson(mailSettings);
 
-		var dataMap = new JobDataMap
+		Int32 index = 0;
+		const String groupName = "default";
+		foreach (var elem in configList)
 		{
-			{ "DataSource", config.Get<String>("dataSource") ?? "" },
-			{ "MailSettings",  SmtpConfig.FromJson(mailSettings) }
-		};
+			index++;
+			String jobName = $"job_{index}";
+			String triggerName = $"trigger_{index}";
 
-		var timeSpan = TimeSpan.Parse(config.Get<String>("interval"));
-		var seconds = Convert.ToInt32(timeSpan.TotalSeconds);
+			var dataMap = new JobDataMap
+			{
+				{ "DataSource", elem.Get<String>("dataSource") ?? "" },
+				{ "MailSettings",  mailConfig },
+				{ "ConfigItem", elem }
+			};
 
-		IJobDetail job = JobBuilder.Create<SqlServerJob>().SetJobData(dataMap).Build();
+			String cronStrng = elem.Get<String>("cron");
+			String invoke = elem.Get<String>("invoke");
 
-		ITrigger trigger = TriggerBuilder.Create()
-			.WithIdentity("trigger", "default")
-			.StartNow()
-			.WithSimpleSchedule(x =>
-				x.WithIntervalInSeconds(seconds)
-				.RepeatForever()
-			).Build();
+			var cmd = invoke switch
+			{
+				"commands" => JobBuilder.Create<CommandJob>(),
+				"sql" => JobBuilder.Create<ExecuteSqlJob>(),
+				_ => throw new ConfigurationErrorsException($"Invalid quartz invoke '{invoke}'")
+			};
 
-		await scheduler.ScheduleJob(job, trigger);
-	}
+			IJobDetail job = cmd
+				.WithIdentity(jobName, groupName)
+				.SetJobData(dataMap).Build();
+
+			ITrigger trigger = TriggerBuilder.Create()
+				.WithIdentity(triggerName, groupName)
+				.WithCronSchedule(cronStrng)
+				.ForJob(jobName, groupName)
+				.Build();
+
+			await scheduler.ScheduleJob(job, trigger);
+		}
+	} 
 }

@@ -67,6 +67,7 @@
     <Content Include="App_application\%40sql\platform\mt\a2v10multitenant.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10admin.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10api.sql" />
+    <Content Include="App_application\%40sql\platform\source\a2v10bg.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10messaging.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10security.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10system.sql" />

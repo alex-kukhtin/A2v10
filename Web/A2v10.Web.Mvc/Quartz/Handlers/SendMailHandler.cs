@@ -16,9 +16,9 @@ namespace A2v10.Web.Mvc.Quartz;
 
 internal class SendMailHandler : IJobHandler
 {
-	private readonly BackgroundJob _job;
+	private readonly CommandJobData _job;
 	private readonly IDbContext _dbContext;
-	internal SendMailHandler(BackgroundJob job, IServiceProvider sp)
+	internal SendMailHandler(CommandJobData job, IServiceProvider sp)
 	{
 		_job = job;
 		_dbContext = sp.GetService(typeof(IDbContext)) as IDbContext;
@@ -40,8 +40,7 @@ internal class SendMailHandler : IJobHandler
 		mm.BodyEncoding = Encoding.UTF8;
 
 		var msg = _job.GetObject<MailMessageInfo>();
-		msg.ToMessage(mm);
-
+		msg.ToMessage(mm, smtpConfig);
 		client.Send(mm);
 		return Task.CompletedTask;
 	}

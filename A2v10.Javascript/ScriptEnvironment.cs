@@ -2,14 +2,16 @@
 
 using System;
 using System.Dynamic;
+using System.Text;
 
 using Jint;
 using Jint.Native;
+using Jint.Runtime.Interop;
+
+using Newtonsoft.Json;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
-using System.Text;
-using Jint.Runtime.Interop;
 
 namespace A2v10.Javascript;
 
@@ -74,6 +76,16 @@ public class ScriptEnvironment
 		return new FetchCommand().Execute(url, prms);
 	}
 
+	public ExpandoObject queueTask(String command, ExpandoObject prms, DateTime? runAt = null)
+	{
+		var dbParams = new ExpandoObject()
+		{
+			{ "Command", command },
+			{ "UtcRunAt", runAt  },
+			{ "Data", prms != null ? JsonConvert.SerializeObject(prms) : null }
+		};
+		return _dbContext.ExecuteAndLoadExpando(null, "a2bg.[Command.Queue]", dbParams);
+	}
 
 	public SendSmsResponse sendSms(String phone, String message, String extId)
 	{

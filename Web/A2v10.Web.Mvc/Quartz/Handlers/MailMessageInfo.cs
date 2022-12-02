@@ -1,5 +1,6 @@
 ﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
+using A2v10.Messaging;
 using System;
 using System.Net.Mail;
 using System.Reflection;
@@ -15,13 +16,18 @@ internal class MessageAddress
 
 internal class MailMessageInfo
 {
-	public String Subject { get; set; }
-	public String Body { get; set; }
+	public String subject { get; set; }
+	public String body { get; set; }
+	public String to { get; set; }
 
-	public void ToMessage(MailMessage mm)
+	public String from { get; set; }
+
+	public void ToMessage(MailMessage mm, SmtpConfig config)
 	{
-		mm.Body = Body;
-		mm.Subject = Subject;
+		mm.Body = body;
+		mm.Subject = subject;
+		mm.To.Add(new MailAddress(to));
+		mm.From = new MailAddress(from ?? config.from);
 		HackSubjectEncoding(mm, mm.Subject);
 	}
 

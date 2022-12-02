@@ -1,13 +1,14 @@
 [
 	{
-		"version": "10.0.7877",
+		"version": "10.0.7910",
 		"name": "platform",
 		"outputFile": "a2v10platform.sql",
 		"inputFiles": [
 			"a2v10system.sql",
 			"a2v10security.sql",
 			"a2v10messaging.sql",
-			"a2v10ui.sql"
+			"a2v10ui.sql",
+			"a2v10bg.sql"
 		]
 	}
 ]
