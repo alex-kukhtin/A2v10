@@ -15,7 +15,7 @@ namespace A2v10.Javascript;
 public class JavaScriptEngine : IJavaScriptEngine
 {
 
-	private readonly Lazy<Engine> _engine = new Lazy<Engine>(CreateEngine, isThreadSafe: true);
+	private readonly Lazy<Engine> _engine = new(CreateEngine, isThreadSafe: true);
 	private ScriptEnvironment _env;
 
 	private readonly IDbContext _dbContext;
@@ -46,8 +46,7 @@ public class JavaScriptEngine : IJavaScriptEngine
 
 	public ScriptEnvironment Environment()
 	{
-		if (_env == null)
-			_env = new ScriptEnvironment(_engine.Value, _locator, _dbContext, _host, _smsService, _currentDirectory);
+		_env ??= new ScriptEnvironment(_engine.Value, _locator, _dbContext, _host, _smsService, _currentDirectory);
 		return _env;
 	}
 

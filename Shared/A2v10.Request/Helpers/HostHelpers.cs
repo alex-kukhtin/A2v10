@@ -12,6 +12,7 @@ using System.Dynamic;
 
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
+using Jint.Runtime;
 
 namespace A2v10.Request;
 
@@ -112,6 +113,21 @@ public static class HostHelpers
 	{
 		var touchIconPath = Path.Combine(host.HostingPath, "touch-icon-iphone.png");
 		return File.Exists(touchIconPath) ? "<link rel=\"apple-touch-icon\"  href=\"/touch-icon-iphone.png\">" : null;
+	}
+
+
+	public static String GetSiteMetaTags(this IApplicationHost appHost, String siteHost)
+	{
+		if (String.IsNullOrEmpty(siteHost))
+			return String.Empty;
+		Int32 dotPos = siteHost.IndexOfAny(":".ToCharArray());
+		if (dotPos != -1)
+			siteHost = siteHost.Substring(0, dotPos);
+		siteHost = siteHost.Replace('.', '_').ToLowerInvariant();
+		String metaText = appHost.ApplicationReader.ReadTextFile("_meta/", $"{siteHost}.head");
+		if (metaText != null)
+			return metaText;
+		return String.Empty;
 	}
 
 	public static void ReplaceMacros(this IApplicationHost host, StringBuilder sb, String controllerName = "_shell")

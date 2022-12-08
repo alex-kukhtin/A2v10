@@ -5,7 +5,7 @@
 		<LangVersion>10.0</LangVersion>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Version>10.0.7910</Version>
+		<Version>10.0.7912</Version>
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
 		<Copyright>Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.</Copyright>

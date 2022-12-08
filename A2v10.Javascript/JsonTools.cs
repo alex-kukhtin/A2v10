@@ -31,7 +31,7 @@ public class IgnoreNullValueExpandoObjectConverter : ExpandoObjectConverter
 
 	public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
 	{
-		Boolean IsValueNotEmpty(Object val)
+		static Boolean IsValueNotEmpty(Object val)
 		{
 			if (val == null)
 				return false;
@@ -40,18 +40,14 @@ public class IgnoreNullValueExpandoObjectConverter : ExpandoObjectConverter
 			if (val is List<ExpandoObject> iList && iList.Count == 0)
 				return false;
 
-			switch (val)
+			return val switch
 			{
-				case String strVal:
-					return !String.IsNullOrEmpty(strVal);
-				case Boolean boolVal:
-					return boolVal;
-				case Double doubleVal:
-					return doubleVal != 0;
-				case Int32 intVal:
-					return intVal != 0;
-			}
-			return true;
+				String strVal => !String.IsNullOrEmpty(strVal),
+				Boolean boolVal => boolVal,
+				Double doubleVal => doubleVal != 0,
+				Int32 intVal => intVal != 0,
+				_ => true,
+			};
 		}
 
 		if (value is IDictionary<String, Object> expando)

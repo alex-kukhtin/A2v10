@@ -7,7 +7,9 @@ namespace A2v10.Javascript;
 
 public class SendSmsResponse
 {
-    public Boolean success { get; set; } = true;
+#pragma warning disable IDE1006 // Naming Styles
+	public Boolean success { get; set; } = true;
+#pragma warning restore IDE1006 // Naming Styles
 }
 
 public class SendSmsCommand
@@ -19,8 +21,7 @@ public class SendSmsCommand
     }
     public SendSmsResponse Execute(String phone, String message, String extId)
     {
-        if (extId == null)
-            extId = Guid.NewGuid().ToString();
+        extId ??= Guid.NewGuid().ToString();
         _smsService.SendSms(phone, message, extId);
         return new SendSmsResponse();
     }

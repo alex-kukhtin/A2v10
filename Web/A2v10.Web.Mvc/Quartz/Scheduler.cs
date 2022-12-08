@@ -48,8 +48,13 @@ public class Scheduler
 				{ "ConfigItem", elem }
 			};
 
-			String cronStrng = elem.Get<String>("cron");
+			String cronString = elem.Get<String>("cron");
 			String invoke = elem.Get<String>("invoke");
+
+			if (!CronExpression.IsValidExpression(cronString))
+			{
+				throw new ConfigurationErrorsException($"Invalid cron expression '{cronString}'");
+			}
 
 			var cmd = invoke switch
 			{
@@ -64,7 +69,7 @@ public class Scheduler
 
 			ITrigger trigger = TriggerBuilder.Create()
 				.WithIdentity(triggerName, groupName)
-				.WithCronSchedule(cronStrng)
+				.WithCronSchedule(cronString)
 				.ForJob(jobName, groupName)
 				.Build();
 

@@ -24,7 +24,7 @@ namespace A2v10.Request
 
 	public partial class BaseController
 	{
-		public void Layout(TextWriter writer, IDictionary<String, String> prms, String localUrl)
+		public void Layout(TextWriter writer, IDictionary<String, String> prms, String localUrl, String siteHost)
 		{
 			var customLayout = _host.CustomLayout;
 			String layout;
@@ -39,7 +39,7 @@ namespace A2v10.Request
 				layout = Admin ? Resources.layoutAdmin :
 					_host.Mobile ? Resources.layoutMobile : Resources.layout;
 
-			StringBuilder sb = new StringBuilder(_localizer.Localize(null, layout));
+			StringBuilder sb = new(_localizer.Localize(null, layout));
 
 			foreach (var p in prms)
 				sb.Replace(p.Key, p.Value);
@@ -54,6 +54,7 @@ namespace A2v10.Request
 			sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");
 			sb.Replace("$(ModelScripts)", action?.GetModelScripts());
 			sb.Replace("$(ModelStyles)", action?.GetModelStyles());
+			sb.Replace("$(SiteMeta)", _host.GetSiteMetaTags(siteHost));
 			_host.ReplaceMacros(sb);
 			writer.Write(sb.ToString());
 		}
@@ -73,8 +74,8 @@ namespace A2v10.Request
 				_userStateManager.SetUserCompanyId(currentCompanyId);
 
 			// get keys and features
-			StringBuilder strKeys = new StringBuilder();
-			StringBuilder strFeatures = new StringBuilder();
+			StringBuilder strKeys = new();
+			StringBuilder strFeatures = new();
 			var modules = root.Eval<List<ExpandoObject>>("Modules");
 			var features = root.Eval<List<ExpandoObject>>("Features");
 			if (modules != null)
@@ -125,7 +126,7 @@ namespace A2v10.Request
 		public async Task ShellScript2(Action<ExpandoObject> setParams, IUserInfo userInfo, TextWriter writer)
 		{
 
-			ExpandoObject loadPrms = new ExpandoObject();
+			ExpandoObject loadPrms = new();
 			setParams?.Invoke(loadPrms);
 
 			var macros = new ExpandoObject();
@@ -201,7 +202,7 @@ namespace A2v10.Request
 			}
 			String shell = bAdmin ? Resources.shellAdmin : Resources.shell;
 
-			ExpandoObject loadPrms = new ExpandoObject();
+			ExpandoObject loadPrms = new();
 			setParams?.Invoke(loadPrms);
 
 			var macros = new ExpandoObject();

@@ -356,27 +356,25 @@ namespace A2v10.Request
 			RendererInfo rendererInfo = FindRenderer(rw);
 			if (rendererInfo != null)
 			{
-				using (var strWriter = new StringWriter())
+				using var strWriter = new StringWriter();
+				var ri = new RenderInfo()
 				{
-					var ri = new RenderInfo()
-					{
-						RootId = rootId,
-						FileName = rendererInfo.FilePath,
-						FileTitle = rendererInfo.FileName,
-						Path = basePath,
-						Writer = strWriter,
-						DataModel = model,
-						Localizer = _localizer,
-						TypeChecker = typeChecker,
-						CurrentLocale = null,
-						IsDebugConfiguration = _host.IsDebugConfiguration,
-						SecondPhase = secondPhase
-					};
-					rendererInfo.Renderer.Render(ri);
-					// write markup
-					writer.Write(strWriter.ToString());
-					bRendered = true;
-				}
+					RootId = rootId,
+					FileName = rendererInfo.FilePath,
+					FileTitle = rendererInfo.FileName,
+					Path = basePath,
+					Writer = strWriter,
+					DataModel = model,
+					Localizer = _localizer,
+					TypeChecker = typeChecker,
+					CurrentLocale = null,
+					IsDebugConfiguration = _host.IsDebugConfiguration,
+					SecondPhase = secondPhase
+				};
+				rendererInfo.Renderer.Render(ri);
+				// write markup
+				writer.Write(strWriter.ToString());
+				bRendered = true;
 			}
 
 			if (!bRendered)

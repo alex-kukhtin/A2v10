@@ -1,8 +1,10 @@
-﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Net;
+using Jint.Native;
 using Newtonsoft.Json;
 
 namespace A2v10.Javascript;
@@ -29,13 +31,29 @@ public class FetchResponse
 #pragma warning restore IDE1006 // Naming Styles
 
 #pragma warning disable IDE1006 // Naming Styles
-	public ExpandoObject json()
-#pragma warning restore IDE1006 // Naming Styles
+	public Object json()
 	{
 		if (isJson)
+		{
+			if (IsBodyArray())
+				return JsonConvert.DeserializeObject<List<ExpandoObject>>(body);
 			return JsonConvert.DeserializeObject<ExpandoObject>(body);
+		}
 		throw new InvalidOperationException($"The answer is not in application/json format");
 	}
+	private Boolean IsBodyArray()
+	{
+		for (int i=0; i<body.Length; i++) {
+			if (body[i] == '[')
+				return true;
+			else if (body[i] == '{')
+				return false;
+		}
+		return false;
+
+	}
+
+#pragma warning restore IDE1006 // Naming Styles
 
 #pragma warning disable IDE1006 // Naming Styles
 	public String text()

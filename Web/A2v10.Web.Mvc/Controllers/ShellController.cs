@@ -35,7 +35,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[CheckMobileFilter]
 	public class ShellController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale, IControllerSession
 	{
-		private readonly A2v10.Request.BaseController _baseController = new BaseController();
+		private readonly A2v10.Request.BaseController _baseController = new();
 		private readonly IHooksProvider _hooksProvider;
 		public Int64 UserId => User.Identity.GetUserId<Int64>();
 		public Int32 TenantId => User.Identity.GetUserTenantId();
@@ -228,7 +228,8 @@ namespace A2v10.Web.Mvc.Controllers
 					{ "$(Locale)", _baseController.CurrentLang },
 					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." }
 				};
-				_baseController.Layout(Response.Output, prms, Request.Url.LocalPath);
+				var siteHost = Request.Headers["Host"];
+				_baseController.Layout(Response.Output, prms, Request.Url.LocalPath, siteHost);
 			}
 			catch (Exception ex)
 			{
@@ -252,13 +253,11 @@ namespace A2v10.Web.Mvc.Controllers
 				return;
 			foreach (var path in list)
 			{
-				ExpandoObject loadPrms = new ExpandoObject();
+				ExpandoObject loadPrms = new();
 				SetSqlQueryParams(loadPrms);
 				var url = path.Substring(6); // remove _page
-				using (var tw = new StringWriter())
-				{
-					await _baseController.RenderElementKind(RequestUrlKind.Page, url, loadPrms, Response.Output);
-				}
+				using StringWriter tw = new();
+				await _baseController.RenderElementKind(RequestUrlKind.Page, url, loadPrms, Response.Output);
 			}
 		}
 
@@ -275,7 +274,7 @@ namespace A2v10.Web.Mvc.Controllers
 			try
 			{
 				Response.ContentType = "text/html";
-				ExpandoObject loadPrms = new ExpandoObject();
+				ExpandoObject loadPrms = new();
 				// query string
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 				if (pathInfo.StartsWith("app/"))
@@ -323,11 +322,9 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.ContentType = "application/json";
 			try
 			{
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					await _baseController.Data(command, SetSqlQueryParams, json, Response);
-				}
+				using var tr = new StreamReader(Request.InputStream);
+				String json = tr.ReadToEnd();
+				await _baseController.Data(command, SetSqlQueryParams, json, Response);
 			}
 			catch (Exception ex)
 			{
@@ -345,11 +342,9 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.ContentType = "application/json";
 			try
 			{
-				using (var tr = new StreamReader(Request.InputStream))
-				{
-					String json = tr.ReadToEnd();
-					await _baseController.ApplicationCommand(command, SetSqlQueryParams, json, Response);
-				}
+				using var tr = new StreamReader(Request.InputStream);
+				String json = tr.ReadToEnd();
+				await _baseController.ApplicationCommand(command, SetSqlQueryParams, json, Response);
 			}
 			catch (Exception ex)
 			{
@@ -442,7 +437,7 @@ namespace A2v10.Web.Mvc.Controllers
 			// HTTP GET
 			try
 			{
-				ExpandoObject loadPrms = new ExpandoObject();
+				ExpandoObject loadPrms = new();
 				SetSqlQueryParams(loadPrms);
 				await _baseController.RenderEUSignIFrame(Response.Output, path, loadPrms);
 			}
@@ -457,7 +452,7 @@ namespace A2v10.Web.Mvc.Controllers
 			// HTTP GET
 			try
 			{
-				ExpandoObject loadPrms = new ExpandoObject();
+				ExpandoObject loadPrms = new();
 				loadPrms.Append(_baseController.CheckPeriod(Request.QueryString), toPascalCase: true);
 				SetSqlQueryParams(loadPrms);
 				await _baseController.Export(path, TenantId, UserId, loadPrms, Response);
@@ -486,10 +481,8 @@ namespace A2v10.Web.Mvc.Controllers
 					FileNameStar = Path.GetFileName(fullPath)
 				};
 				Response.Headers.Add("Content-Disposition", cdh.ToString());
-				using (var stream = appReader.FileStreamFullPathRO(fullPath))
-				{
-					stream.CopyTo(Response.OutputStream);
-				}
+				using var stream = appReader.FileStreamFullPathRO(fullPath);
+				stream.CopyTo(Response.OutputStream);
 			}
 			catch (Exception ex)
 			{
@@ -511,10 +504,8 @@ namespace A2v10.Web.Mvc.Controllers
 				if (!appReader.FileExists(fullPath))
 					throw new FileNotFoundException($"File not found '{path}'");
 				Response.ContentType = "text/html";
-				using (var stream = appReader.FileStreamFullPathRO(fullPath))
-				{
-					stream.CopyTo(Response.OutputStream);
-				}
+				using var stream = appReader.FileStreamFullPathRO(fullPath);
+				stream.CopyTo(Response.OutputStream);
 			}
 			catch (Exception ex)
 			{
@@ -649,16 +640,12 @@ namespace A2v10.Web.Mvc.Controllers
 			Response.ContentType = "image/png";
 			if (ex.InnerException != null)
 				ex = ex.InnerException;
-			using (var b = new Bitmap(380, 30))
-			{
-				using (var g = Graphics.FromImage(b))
-				{
-					g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
-					g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
-					g.Save();
-					b.Save(Response.OutputStream, ImageFormat.Png);
-				}
-			}
+			using var b = new Bitmap(380, 30);
+			using var g = Graphics.FromImage(b);
+			g.FillRectangle(Brushes.LavenderBlush, new Rectangle(0, 0, 380, 30));
+			g.DrawString(ex.Message, SystemFonts.SmallCaptionFont, Brushes.DarkRed, 5, 5, StringFormat.GenericTypographic);
+			g.Save();
+			b.Save(Response.OutputStream, ImageFormat.Png);
 		}
 
 		async Task SaveImage(String url)
