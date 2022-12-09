@@ -335,7 +335,25 @@ public partial class BaseController
 					}
 					return ai;
 				}
-			default:
+			case RequestFileType.clr:
+				{
+                    var invoker = new ClrInvoker();
+                    Object result;
+                    if (ru.async)
+                        result = await invoker.InvokeAsync(ru.clrType, loadPrms);
+                    else
+                        result = invoker.Invoke(ru.clrType, loadPrms);
+
+                    if (result is not ServerCommandResult srres)
+                        throw new InvalidOperationException($"Invoke for file should return the type 'ServerCommandResult'");
+                    return new AttachmentInfo()
+					{
+						Mime = srres.ContentType,
+						Stream = srres.Stream,
+                        SkipToken =  true
+                    };
+                }
+            default:
 				throw new InvalidOperationException($"Invalid type for file: '{ru.type}'");
 		}
 	}

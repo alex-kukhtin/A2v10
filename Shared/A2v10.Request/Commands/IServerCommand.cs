@@ -19,7 +19,15 @@ namespace A2v10.Request
 			Data = data;
 		}
 
-		public String Data { get; set; }
+        public ServerCommandResult(Byte[] data, String contentType)
+        {
+            Stream = data;
+			_conentType = contentType;
+        }
+
+        public String Data { get; set; }
+
+		public Byte[] Stream { get; set; }
 
 		public String ContentType
 		{

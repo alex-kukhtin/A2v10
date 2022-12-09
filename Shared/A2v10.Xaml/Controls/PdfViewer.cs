@@ -19,10 +19,14 @@ public class PdfViewer : UIElementBase
 		if (Size != null)
 		{
 			if (!Size.Width.IsEmpty)
+			{
 				tag.MergeAttribute("width", Size.Width.ToString());
-			if (!Size.Height.IsEmpty)
+                tag.MergeStyle("width", Size.Width.ToString());
+            }
+            if (!Size.Height.IsEmpty)
 			{
 				tag.MergeAttribute("height", Size.Height.ToString());
+				tag.MergeStyle("height", Size.Height.ToString());
 			}
 		}
 		else
