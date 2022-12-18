@@ -56,6 +56,7 @@
     <Content Include="App_application\%40schemas\app-json-schema.json" />
     <Content Include="App_application\%40schemas\model-json-schema.json" />
     <Content Include="App_application\%40schemas\sql-json-schema.json" />
+    <Content Include="App_application\%40sql\platform\source\a2v10bg.sql" />
     <Content Include="tsconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

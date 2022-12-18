@@ -38,8 +38,9 @@ internal class SendMailHandler : IJobHandler
 		mm.SubjectEncoding = Encoding.Unicode;
 		mm.HeadersEncoding = Encoding.UTF8;
 		mm.BodyEncoding = Encoding.UTF8;
+		mm.IsBodyHtml = true;
 
-		var msg = _job.GetObject<MailMessageInfo>();
+        var msg = _job.GetObject<MailMessageInfo>();
 		msg.ToMessage(mm, smtpConfig);
 		client.Send(mm);
 		return Task.CompletedTask;
