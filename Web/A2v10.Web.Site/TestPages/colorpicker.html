@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .color-picker select {
+            opacity:0;
+            pointer-events:auto;
+        }
+        .color-picker .color-picker-pane {
+            position:absolute;
+            z-index:100; /*selector z-index*/
+            background:white;
+            top:100%;
+            width:100%;
+            border:1px solid #ccc;
+            max-height:280px;
+            overflow:auto;
+        }
+		.color-picker .color-picker-wrapper {
+            padding:0;
+            margin:0;
+            display:flex;
+            flex-direction:row;
+            width:100%;
+            align-items:center;
+            padding:4px 4px;
+		}
+
+		.color-picker-wrapper:focus-visible {
+            outline:none;
+		}
+		.color-picker-pane .color-picker-list {
+			display: flex;
+			flex-direction: column;
+			padding: 4px;
+			gap: 4px;
+		}
+		.color-picker .tag-label {
+			width: 100%;
+            height:20px;
+            margin:0;
+            cursor:pointer;
+		}
+		.color-picker .caret {
+			margin: 4px 4px 0 6px;
+		}
+
+    </style>
+</head>
+<body>
+    <h1>COLOR PICKER</h1>
+    <div id="app" style="height:80%">
+
+        <div style="width:200px;padding:1rem;background-color:aliceblue">
+            <a2-color-picker :item="Element" value-prop="color" label="Select color">
+            </a2-color-picker>
+        </div>
+
+        <div style="width:120px;padding:1rem;background-color:aliceblue">
+            <a2-color-picker :item="Element" value-prop="color" label="Select color">
+            </a2-color-picker>
+        </div>
+
+        <div v-text="Element.color"></div>
+        <hr />
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="../scripts/locale-uk.min.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script src="./colorpicker.js"></script>
+    <script>
+        const popup = require('std:popup');
+
+        new Vue({
+            el: "#app",
+            data: {
+                Element: {
+                    color: "red"
+                }
+            }
+        });
+
+        popup.startService();
+    </script>
+</body>
+</html>

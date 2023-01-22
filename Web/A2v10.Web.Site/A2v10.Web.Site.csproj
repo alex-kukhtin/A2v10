@@ -114,6 +114,7 @@
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\accelcommand.js" />
     <Content Include="app\components\dashboard.js" />
+    <Content Include="app\components\tagscontrol.js" />
     <Content Include="app\components\treegrid.js" />
     <Content Include="app\components\inlinedialog.js" />
     <Content Include="app\components\spansum.js" />
@@ -264,6 +265,10 @@
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
     <Content Include="TestPages\d3line.js" />
+    <Content Include="TestPages\colorpicker.js" />
+    <Content Include="TestPages\colorpicker.html" />
+    <Content Include="TestPages\tagscontrol.js" />
+    <Content Include="TestPages\tagscontrol.html" />
     <Content Include="TestPages\kanban.js" />
     <Content Include="TestPages\kanban.html" />
     <Content Include="TestPages\treegrid.js" />

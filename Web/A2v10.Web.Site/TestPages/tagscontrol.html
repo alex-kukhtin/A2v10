@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+		.tags-new-item input {
+            border:1px solid red;
+            line-height:16px;
+		}
+		.color-picker-input {
+            display:inline-block;
+            height:20px;
+            width:100px;
+            border:1px solid red;
+		}
+		.color-picker select {
+            opacity:0;
+		}
+    </style>
+</head>
+<body>
+    <h1>TAGS CONTROL</h1>
+    <div id="app" style="height:80%">
+
+        <a2-color-picker :value="value">
+        </a2-color-picker>
+
+        <div v-text="value"></div>
+        <hr />
+        <a2-tags :items=items content-property="Name" color-property="Color">
+            <template v-slot:default="el">
+                <span v-text="el.item.Name"></span>
+                <span v-text="el.item.Color"></span>
+            </template>
+        </a2-tags>
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script src="./tagscontrol.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                readOnly: false,
+                value: "red",
+                items: [
+                    { Name: 'Tag1', Color: 'red' },
+                    { Name: 'Tag2', Color: 'blue' },
+                    { Name: 'Tag3', Color: 'green' }
+                ]
+            },
+            methods: {
+            }
+        });
+    </script>
+</body>
+</html>
