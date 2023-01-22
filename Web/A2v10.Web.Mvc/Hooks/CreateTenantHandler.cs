@@ -1,4 +1,4 @@
-﻿// Copyright © 2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Web;
@@ -35,17 +35,18 @@ namespace A2v10.Web.Mvc.Hooks
 				return Fail("id required");
 			if (String.IsNullOrEmpty(email))
 				return Fail("email required");
-			if (String.IsNullOrEmpty(phone))
-				return Fail("phone required");
 			if (String.IsNullOrEmpty(name))
 				return Fail("name required");
 
 			var user = await _userManager.FindByNameAsync(email);
 			if (user != null)
 				return Fail("Email already taken");
-			user = await _userManager.FindAsync(new UserLoginInfo("PhoneNumber", phone));
-			if (user != null)
-				return Fail("Phone already taken");
+			if (String.IsNullOrEmpty(phone))
+			{
+				user = await _userManager.FindAsync(new UserLoginInfo("PhoneNumber", phone));
+				if (user != null)
+					return Fail("Phone already taken");
+			}
 			user = new AppUser()
 			{
 				UserName = email,
