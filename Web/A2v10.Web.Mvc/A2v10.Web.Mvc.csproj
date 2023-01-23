@@ -5,7 +5,7 @@
 		<LangVersion>10.0</LangVersion>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Version>10.0.7915</Version>
+		<Version>10.0.7916</Version>
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
 		<Copyright>Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.</Copyright>
@@ -41,12 +41,12 @@
 		<PackageReference Include="Owin" Version="1.0" />
 		<PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
 		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.3" />
-		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.25.1" />
-		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.25.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.25.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="6.25.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.25.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.1" />
+		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.26.0" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.26.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.26.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="6.26.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.26.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.26.0" />
 		<PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.2" />
