@@ -113,6 +113,7 @@
     <Content Include="app\bootstrap\shell.js" />
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\accelcommand.js" />
+    <Content Include="app\components\colorpicker.js" />
     <Content Include="app\components\dashboard.js" />
     <Content Include="app\components\tagscontrol.js" />
     <Content Include="app\components\treegrid.js" />
@@ -382,6 +383,8 @@
     <Content Include="Less\TreeGrid.less" />
     <Content Include="Less.Advance\Dashboard.less" />
     <Content Include="package-lock.json" />
+    <Content Include="Less.Advance\ColorPicker.less" />
+    <Content Include="Less\ColorPicker.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

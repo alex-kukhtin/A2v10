@@ -3,12 +3,6 @@
 // 20230122-7916
 // components/colorpicker.js*/
 
-/*
- TODO:
- 1. XAML
- 2. styles to LESS
- */
-
 (function () {
 
 	const popup = require('std:popup');
@@ -47,7 +41,7 @@
 			item: {
 				type: Object, default() { return {}; }
 			},
-			valueProp: String,
+			prop: String,
 			text: String
 		},
 		data() {
@@ -59,10 +53,10 @@
 		computed: {
 			cmbValue: {
 				get() {
-					return this.item[this.valueProp];
+					return this.item[this.prop];
 				},
 				set(val) {
-					this.item[this.valueProp] = val;
+					this.item[this.prop] = val;
 				}
 			},
 			items() { return colors.split('|'); }
@@ -97,7 +91,7 @@
 				this.isOpen = !this.isOpen;
 			},
 			hit(itm) {
-				this.item[this.valueProp] = itm;
+				this.item[this.prop] = itm;
 				this.isOpen = false;
 			},
 			__clickOutside() {
