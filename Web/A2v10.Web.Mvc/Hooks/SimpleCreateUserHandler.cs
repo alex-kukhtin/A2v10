@@ -42,14 +42,12 @@ public class SimpleCreateUserHandler : IInvokeTarget
 	{
 		var catalogDS = _host.IsMultiTenant ? _host.CatalogDataSource : _host.TenantDataSource;
 
-		var schema = _host.CustomSecuritySchema;
-		if (String.IsNullOrEmpty(schema))
-			schema = "a2security";
+		var schema = _host.ActualSecuritySchema;
 		var appUser = new AppUser()
 		{
 			UserName = User.Get<String>(nameof(AppUser.UserName)),
-			PersonName = User.Get<String>(nameof(AppUser.UserName)),
-			PhoneNumber = User.Get<String>(nameof(AppUser.UserName)),
+			PersonName = User.Get<String>(nameof(AppUser.PersonName)),
+			PhoneNumber = User.Get<String>(nameof(AppUser.PhoneNumber)),
 			Email = User.Get<String>(nameof(AppUser.Email)),
 			EmailConfirmed = true,
 			RegisterHost = _request.Uri.Host,
@@ -57,7 +55,7 @@ public class SimpleCreateUserHandler : IInvokeTarget
 		appUser.Email = appUser.Email ?? appUser.UserName;
 		if (_host.IsMultiTenant)
 			appUser.Tenant = TenantId;
-		appUser = await _dbContext.ExecuteAndLoadAsync<AppUser, AppUser>(catalogDS, $"{schema}.[User.CreateSimple]", appUser);
+		appUser = await _dbContext.ExecuteAndLoadAsync<AppUser, AppUser>(catalogDS, $"{schema}.[User.Simple.Create]", appUser);
 
 		var token = await _userManager.GeneratePasswordResetTokenAsync(appUser.Id);
 		var identityResult = await _userManager.ResetPasswordAsync(appUser.Id, token, User.Get<String>("Password"));
@@ -67,9 +65,9 @@ public class SimpleCreateUserHandler : IInvokeTarget
 
 		if (_host.IsMultiTenant)
 		{
-			// Update segment
+			// Update segment data source
 			appUser.Tenant = TenantId;
-			await _dbContext.ExecuteAsync<AppUser>(_host.TenantDataSource, $"{schema}.[User.CreateSimple]", appUser);
+			await _dbContext.ExecuteAsync<AppUser>(_host.TenantDataSource, $"{schema}.[TenantUser.Simple.Create]", appUser);
 		}
 		return appUser;
 	}

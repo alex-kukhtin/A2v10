@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -37,8 +37,6 @@ using A2v10.Web.Identity;
 using A2v10.Web.Base;
 using A2v10.Web.Config;
 using A2v10.Web.Mvc.Interfaces;
-using System.Security.Cryptography;
-using System.Xml.XPath;
 
 namespace A2v10.Web.Mvc.Controllers;
 
@@ -452,7 +450,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 			UserId = userId,
 			Referral = referral
 		};
-		await _dbContext.ExecuteAsync<UserReferralInfo>(_host.CatalogDataSource, "a2security.SaveReferral", uri);
+		await _dbContext.ExecuteAsync<UserReferralInfo>(_host.CatalogDataSource, $"{_host.ActualSecuritySchema}.SaveReferral", uri);
 	}
 
 	void SaveDDOSTime()
@@ -520,7 +518,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 			// delete user if possible
 			var checkEO = new ExpandoObject();
 			checkEO.Set("UserName", model.Name);
-			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2security.[User.CheckRegister]", checkEO);
+			await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, $"{_host.ActualSecuritySchema}.[User.CheckRegister]", checkEO);
 
 			if (!String.IsNullOrEmpty(model.Locale))
 			{
@@ -569,7 +567,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
                     {
 					var prm = model.ExtraData.Clone(null);
 					prm.Set("UserId", user.Id);
-					await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, "a2security.[SaveExtraData]", prm);
+					await _dbContext.ExecuteExpandoAsync(_host.CatalogDataSource, $"{_host.ActualSecuritySchema}.[SaveExtraData]", prm);
                     }
 
 				SaveDDOSTime();
@@ -1285,6 +1283,6 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		var eo = new ExpandoObject();
 		eo.Set("UserId", user.Id);
 		eo.Set("Value", qs.ToString());
-		await _dbContext.SaveListAsync<ETag>(_host.CatalogDataSource, "a2security.SaveAnalytics", eo, list);
+		await _dbContext.SaveListAsync<ETag>(_host.CatalogDataSource, $"{_host.ActualSecuritySchema}.SaveAnalytics", eo, list);
 	}
 }
