@@ -15,6 +15,15 @@ using A2v10.Data.Interfaces;
 
 namespace A2v10.Web.Mvc.Hooks;
 
+/*
+ST: SEGMENT: sec.[User.Simple.Create]
+	SEGMENT: sec.[UpdateUserPassword]
+
+MT: CATALOG: sec.[User.Simple.Create]
+	CATALOG: sec.[UpdateUserPassword]
+	SEGMENT: sec.[TenantUser.Simple.Create]
+*/
+
 public class SimpleCreateUserHandler : IInvokeTarget
 {
 	private IApplicationHost _host;
@@ -38,9 +47,9 @@ public class SimpleCreateUserHandler : IInvokeTarget
 	}
 
 
-	public async Task<Object> InvokeAsync(Int32 TenantId, Int64 UserId, Int64 Id, ExpandoObject User)
+	public async Task<Object> InvokeAsync(Int32 TenantId, Int64 UserId, ExpandoObject User)
 	{
-		var catalogDS = _host.IsMultiTenant ? _host.CatalogDataSource : _host.TenantDataSource;
+		var securityDS = _host.IsMultiTenant ? _host.CatalogDataSource : _host.TenantDataSource;
 
 		var schema = _host.ActualSecuritySchema;
 		var appUser = new AppUser()
@@ -51,11 +60,15 @@ public class SimpleCreateUserHandler : IInvokeTarget
 			Email = User.Get<String>(nameof(AppUser.Email)),
 			EmailConfirmed = true,
 			RegisterHost = _request.Uri.Host,
+			Tenant = 1 /* default value */
 		};
 		appUser.Email = appUser.Email ?? appUser.UserName;
 		if (_host.IsMultiTenant)
+		{
 			appUser.Tenant = TenantId;
-		appUser = await _dbContext.ExecuteAndLoadAsync<AppUser, AppUser>(catalogDS, $"{schema}.[User.Simple.Create]", appUser);
+			appUser.Segment = _request.User.Identity.GetUserSegment();
+		}
+		appUser = await _dbContext.ExecuteAndLoadAsync<AppUser, AppUser>(securityDS, $"{schema}.[User.Simple.Create]", appUser);
 
 		var token = await _userManager.GeneratePasswordResetTokenAsync(appUser.Id);
 		var identityResult = await _userManager.ResetPasswordAsync(appUser.Id, token, User.Get<String>("Password"));
