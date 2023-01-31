@@ -62,7 +62,7 @@ public class SimpleCreateUserHandler : IInvokeTarget
 			RegisterHost = _request.Uri.Host,
 			Tenant = 1 /* default value */
 		};
-		appUser.Email = appUser.Email ?? appUser.UserName;
+		appUser.Email ??= appUser.UserName;
 		if (_host.IsMultiTenant)
 		{
 			appUser.Tenant = TenantId;
