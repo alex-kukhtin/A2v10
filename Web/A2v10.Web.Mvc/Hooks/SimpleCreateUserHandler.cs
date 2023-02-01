@@ -58,6 +58,7 @@ public class SimpleCreateUserHandler : IInvokeTarget
 			PersonName = User.Get<String>(nameof(AppUser.PersonName)),
 			PhoneNumber = User.Get<String>(nameof(AppUser.PhoneNumber)),
 			Email = User.Get<String>(nameof(AppUser.Email)),
+			Memo = User.Get<String>(nameof(AppUser.Memo)),
 			EmailConfirmed = true,
 			RegisterHost = _request.Uri.Host,
 			Tenant = 1 /* default value */
@@ -82,6 +83,8 @@ public class SimpleCreateUserHandler : IInvokeTarget
 			appUser.Tenant = TenantId;
 			await _dbContext.ExecuteAsync<AppUser>(_host.TenantDataSource, $"{schema}.[TenantUser.Simple.Create]", appUser);
 		}
+		appUser.PasswordHash = String.Empty;
+		appUser.SecurityStamp = String.Empty;
 		return appUser;
 	}
 }
