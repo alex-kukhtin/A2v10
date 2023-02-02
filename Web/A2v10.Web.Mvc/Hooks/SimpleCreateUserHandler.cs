@@ -61,6 +61,7 @@ public class SimpleCreateUserHandler : IInvokeTarget
 			Memo = User.Get<String>(nameof(AppUser.Memo)),
 			EmailConfirmed = true,
 			RegisterHost = _request.Uri.Host,
+			Locale = User.Get<String>(nameof(AppUser.Locale)),
 			Tenant = 1 /* default value */
 		};
 		appUser.Email ??= appUser.UserName;
@@ -77,14 +78,15 @@ public class SimpleCreateUserHandler : IInvokeTarget
 			throw new SecurityException(String.Join(",", identityResult.Errors));
 		await _userManager.UpdateAsync(appUser);
 
+		appUser.PasswordHash = String.Empty;
+		appUser.SecurityStamp = String.Empty;
+
 		if (_host.IsMultiTenant)
 		{
 			// Update segment data source
 			appUser.Tenant = TenantId;
-			await _dbContext.ExecuteAsync<AppUser>(_host.TenantDataSource, $"{schema}.[TenantUser.Simple.Create]", appUser);
+			await _dbContext.ExecuteAsync<AppUser>(_host.TenantDataSource, $"{schema}.[User.Simple.Create]", appUser);
 		}
-		appUser.PasswordHash = String.Empty;
-		appUser.SecurityStamp = String.Empty;
 		return appUser;
 	}
 }

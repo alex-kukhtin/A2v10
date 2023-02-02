@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -65,6 +65,7 @@ public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenant
 	private readonly Boolean _debug;
 	private readonly String _environment;
 	private readonly IUserLocale _userLocale;
+	private readonly String _customSecuritySchema;
 
 	public WebApplicationHost(IProfiler profiler, IUserLocale userLocale, IServiceLocator locator)
 	{
@@ -81,9 +82,10 @@ public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenant
 		Profiler.Enabled = _debug;
 
 		_environment = ConfigurationManager.AppSettings["environment"];
+		_customSecuritySchema = ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
 	}
 
-	public IServiceLocator Locator { get; }
+public IServiceLocator Locator { get; }
 	public IProfiler Profiler { get; }
 
 	public Boolean Mobile { get; private set; }
@@ -189,7 +191,7 @@ public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenant
 	public Boolean IsMultiCompany => !_admin && IsAppSettingsIsTrue("multiCompany");
 	public Boolean IsRegistrationEnabled => IsAppSettingsIsTrue("registration");
 	public Boolean IsDTCEnabled => IsAppSettingsIsTrue("enableDTC");
-	public String CustomSecuritySchema => ConfigurationManager.AppSettings[AppHostKeys.customSecuritySchema];
+	public String CustomSecuritySchema => _customSecuritySchema;
 	public String ActualSecuritySchema => CustomSecuritySchema ?? "a2security";
 
 	public String UseClaims => ConfigurationManager.AppSettings["useClaims"];
@@ -339,7 +341,7 @@ public class WebApplicationHost : A2v10.Infrastructure.IApplicationHost, ITenant
 
 	#region ITenantManager
 
-	const String SET_TENANT_CMD = "[a2security].[SetTenantId]";
+	String SET_TENANT_CMD => $"[{ActualSecuritySchema}].[SetTenantId]";
 
 	public async Task SetTenantIdAsync(SqlConnection cnn, String source)
 	{

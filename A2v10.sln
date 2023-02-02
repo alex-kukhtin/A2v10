@@ -33,6 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 		SqlScripts\a2v10admin.sql = SqlScripts\a2v10admin.sql
 		SqlScripts\a2v10messaging.sql = SqlScripts\a2v10messaging.sql
 		SqlScripts\a2v10meta.sql = SqlScripts\a2v10meta.sql
+		SqlScripts\a2v10minimal.sql = SqlScripts\a2v10minimal.sql
 		SqlScripts\a2v10platform.sql = SqlScripts\a2v10platform.sql
 		SqlScripts\a2v10security.sql = SqlScripts\a2v10security.sql
 		SqlScripts\a2v10system.sql = SqlScripts\a2v10system.sql

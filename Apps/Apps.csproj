@@ -47,6 +47,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="A2v10.Web.Runtime.Interfaces.nuspec" />
     <None Include="Admin\bpmn\catalog\model.json" />
     <None Include="Admin\Identity\Api\model.json" />
     <None Include="Admin\Identity\Group\model.json" />

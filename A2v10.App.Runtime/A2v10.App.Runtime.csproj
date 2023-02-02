@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_application\%40sql\platform\a2v10minimal.sql" />
     <Content Include="App_application\%40sql\platform\mt\a2v10multitenant.sql" />
     <None Include="A2v10.App.Runtime.nuspec" />
     <Content Include="App_application\%40schemas\api-model-json-schema.json" />
