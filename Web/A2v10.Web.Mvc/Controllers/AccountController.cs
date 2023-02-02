@@ -116,7 +116,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		{
 			AntiForgery.GetTokens(null, out String cookieToken, out String formToken);
 
-			AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
+			AppTitleModel appTitle = _dbContext.Load<AppTitleModel>(_host.CatalogDataSource, "a2sys.[AppTitle.Load]");
 
 			var layoutHtml = _host.Mobile ? ResourceHelper.InitLayoutMobileHtml : ResourceHelper.InitLayoutHtml;
 

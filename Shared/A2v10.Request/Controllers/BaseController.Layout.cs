@@ -151,7 +151,7 @@ namespace A2v10.Request
 
 			// SetUserStateFromData(dm);
 			// ALWAYS from CATALOG
-			IDataModel stateModel = await _dbContext.LoadModelAsync(_host.CatalogDataSource, "[a2security].[UserStateInfo.Load]", loadPrms);
+			IDataModel stateModel = await _dbContext.LoadModelAsync(_host.CatalogDataSource, $"{_host.ActualSecuritySchema}.[UserStateInfo.Load]", loadPrms);
 			SetUserStateFromData(stateModel);
 			// and SetUserState to MENU
 			dm.Root.Set("UserState", stateModel.Root.Get<ExpandoObject>("UserState"));

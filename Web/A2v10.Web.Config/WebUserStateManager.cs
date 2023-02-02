@@ -70,7 +70,7 @@ namespace A2v10.Web.Config
 		UserState SetUserState(Int64 userId)
 		{
 			var userState = new UserState();
-			var dm = _dbContext.LoadModel(_host.CatalogDataSource, "[a2security].[UserStateInfo.Load]", new { UserId = userId });
+			var dm = _dbContext.LoadModel(_host.CatalogDataSource, $"{_host.ActualSecuritySchema}.[UserStateInfo.Load]", new { UserId = userId });
 			userState.ReadOnly = dm.Eval<Boolean>("UserState.ReadOnly");
 			HttpContext.Current.Session[_sessionKey] = userState;
 			return userState;

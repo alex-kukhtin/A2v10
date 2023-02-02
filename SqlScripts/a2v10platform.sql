@@ -1,6 +1,6 @@
 ﻿/*
 version: 10.0.7910
-generated: 02.02.2023 08:44:07
+generated: 02.02.2023 09:51:45
 */
 
 set nocount on;
@@ -404,6 +404,20 @@ begin
 	set xact_abort on;
 	update a2sys.[DbEvents] set [State]=N'Complete', DateComplete = a2sys.fn_getCurrentDate()
 	where Id=@Id;
+end
+go
+------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'AppTitle.Load')
+	drop procedure a2sys.[AppTitle.Load]
+go
+------------------------------------------------
+create procedure a2sys.[AppTitle.Load]
+as
+begin
+	set nocount on;
+	select [AppTitle], [AppSubTitle]
+	from (select Name, Value=StringValue from a2sys.SysParams) as s
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle])) as p;
 end
 go
 ------------------------------------------------
