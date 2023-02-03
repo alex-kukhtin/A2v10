@@ -1272,6 +1272,7 @@ header,
 header .h-menu-title,
 .header .h-menu-title {
   font-size: 18px;
+  white-space: nowrap;
 }
 header .h-block,
 .header .h-block {
@@ -6793,11 +6794,26 @@ table > colgroup col.blue {
   background-color: var(--background);
   border: 1px solid var(--neutralBkDarker);
 }
+.license-notify {
+  animation: pulse 1s infinite ease-out;
+  color: white;
+  display: block;
+  border-radius: 2px;
+  padding: 2px 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 4px;
+  background-color: #da533f;
+}
+.license-notify:hover {
+  color: white;
+}
 .title-notify {
   animation: pulse 1s infinite ease-out;
-  display: none;
+  display: block;
   padding: 2px 12px;
-  border-radius: 1rem;
+  border-radius: 2px;
   color: white;
   white-space: nowrap;
   overflow: hidden;

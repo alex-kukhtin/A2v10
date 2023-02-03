@@ -50,6 +50,7 @@ namespace A2v10.Request
 		protected readonly IExternalDataProvider _externalDataProvider;
 		protected readonly ITokenProvider _tokenProvider;
 		protected readonly IUserLocale _userLocale;
+		protected readonly ILicenseManager _licenseManager;
 
 		public class DataModelAndView
 		{
@@ -77,6 +78,7 @@ namespace A2v10.Request
 			_externalDataProvider = _locator.GetServiceOrNull<IExternalDataProvider>();
 			_tokenProvider = _locator.GetService<ITokenProvider>();
 			_userLocale = _locator.GetService<IUserLocale>();
+			_licenseManager = _locator.GetServiceOrNull<ILicenseManager>();
 		}
 
 		public Boolean IsDebugConfiguration => _host.IsDebugConfiguration;
@@ -131,10 +133,20 @@ namespace A2v10.Request
 			}
 		}
 
+		void CheckLicense(RequestModel rm)
+		{
+			if (String.IsNullOrEmpty(rm.module))
+				return;
+			var lic = _userStateManager.GetLicense();
+			/*
+			 * CHECK LICENSE INFORMATIOn
+			 */
+		}
 
 		public async Task RenderElementKind(RequestUrlKind kind, String pathInfo, ExpandoObject loadPrms, TextWriter writer)
 		{
 			RequestModel rm = await RequestModel.CreateFromUrl(_host, kind, pathInfo);
+			CheckLicense(rm);
 			RequestView rw = rm.GetCurrentAction(kind);
 			rw.CheckPermissions(_userStateManager?.GetUserPermissions(), Host.IsDebugConfiguration);
 			await Render(rw, writer, loadPrms);

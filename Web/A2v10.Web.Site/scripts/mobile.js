@@ -13801,6 +13801,7 @@ Vue.directive('resize', {
 	<div v-if=isNavBarMenu class=h-menu-title v-text=seg0text></div>
 	<div class="aligner"></div>
 	<span class="title-notify" v-if="notifyText" v-text="notifyText" :title="notifyText" :class="notifyClass"></span>
+	<a href="/profile/license" class="license-notify" v-if="notifyLicense" v-text="notifyLicense"></a>
 	<div class="aligner"></div>
 	<template v-if="!isSinglePage ">
 		<a2-new-button :menu="newMenu" icon="plus" btn-style="success"></a2-new-button>
@@ -13861,6 +13862,9 @@ Vue.directive('resize', {
 			notifyClass() {
 				return this.getNotify(1).toLowerCase();
 			},
+			notifyLicense() {
+				return this.userState ? this.userState.NotifyLicense : null;
+			},
 			feedback() {
 				return this.appData ? this.appData.feedback : null;
 			},
@@ -13893,6 +13897,9 @@ Vue.directive('resize', {
 				if (m && m.length > ix)
 					return m[ix];
 				return '';
+			},
+			clickNotify() {
+				alert(1);
 			},
 			root() {
 				let opts = { title: null };

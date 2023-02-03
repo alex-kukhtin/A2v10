@@ -61,6 +61,7 @@ header, .header {
 
 	.h-menu-title {
 		font-size: 18px;
+		white-space:nowrap;
 	}
 
 	.h-block {
@@ -580,11 +581,29 @@ pre.a2-code {
 	border: 1px solid @default-brd-color;
 }
 
+.license-notify {
+	animation: pulse 1s infinite ease-out;
+	color: white;
+	display: block;
+	border-radius: 2px;
+	padding: 2px 12px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin:0 4px;
+
+	&:hover {
+		color: white;
+	}
+
+	background-color: @danger-base-color;
+}
+
 .title-notify {
 	animation: pulse 1s infinite ease-out;
-	display: none;
+	display: block;
 	padding: 2px 12px;
-	border-radius: 1rem;
+	border-radius: 2px;
 	color: white;
 	white-space:nowrap;
 	overflow:hidden;

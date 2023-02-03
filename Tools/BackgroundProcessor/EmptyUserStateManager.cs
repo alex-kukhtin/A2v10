@@ -8,7 +8,7 @@ namespace BackgroundProcessor
 {
     class EmptyUserStateManager : IUserStateManager
     {
-        public String GetUserPermissions()
+		public String GetUserPermissions()
         {
             return null;
         }
@@ -18,7 +18,7 @@ namespace BackgroundProcessor
             return false;
         }
 
-        public void SetReadOnly(Boolean readOnly)
+		public void SetReadOnly(Boolean readOnly)
         {
         }
 
@@ -34,5 +34,13 @@ namespace BackgroundProcessor
         {
             return 0;
         }
-    }
+
+		public void SetLicense(LicenseInfo? info)
+		{
+		}
+		public LicenseInfo? GetLicense()
+		{
+            return null;
+		}
+	}
 }

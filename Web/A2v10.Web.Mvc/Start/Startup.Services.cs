@@ -50,7 +50,7 @@ public static partial class Startup
 
 	public static void StartServices(IAppBuilder app)
 	{
-		// StartLicenseManager();
+		StartLicenseManager();
 		// DI ready
 		ServiceLocator.Start = (IServiceLocator locator) =>
 		{

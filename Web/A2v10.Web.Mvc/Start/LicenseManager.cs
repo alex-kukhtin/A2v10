@@ -17,8 +17,13 @@ public class LicenseManager : ILicenseManager
 		return new LicenseManager();
 	}
 
-	public LicenseState VerifyLicense(String companyCode)
+	public LicenseInfo VerifyLicense(String license)
 	{
-		throw new NotImplementedException();
+		// decode
+		return new LicenseInfo()
+		{
+			Ok = true,
+			Expired = DateTime.Now,
+		};
 	}
 }

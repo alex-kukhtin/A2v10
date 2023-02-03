@@ -4,18 +4,16 @@ using System;
 
 namespace A2v10.Infrastructure;
 
-public enum LicenseState
+public record LicenseInfo
 {
-	Ok,
-	NotFound,
-	InvalidSignature,
-	Expired,
-	InvalidCompany,
-	FileCorrupt,
-	UnknownError
+	public Boolean Ok;
+	public String Name;
+	public DateTime Expired;
+	public String[] Modules;
+	public String Error;
 }
 
 public interface ILicenseManager
 {
-	LicenseState VerifyLicense(String companyCode);
+	LicenseInfo VerifyLicense(String license);
 }

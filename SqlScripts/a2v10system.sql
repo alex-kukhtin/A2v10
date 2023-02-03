@@ -1,8 +1,8 @@
 ﻿/*
-Copyright © 2008-2021 Alex Kukhtin
+Copyright © 2008-2023 Oleksandr Kukhtin
 
-Last updated : 27 jun 2021
-module version : 7061
+Last updated : 27 jun 2023
+module version : 7918
 */
 ------------------------------------------------
 set nocount on;
