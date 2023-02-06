@@ -5,85 +5,83 @@
 
 (function () {
 	const template = `
-<ul class=tags-control>
-	<li v-for="(itm, ix) in items" :key="ix">
-		<slot v-bind:item="itm"></slot>
-	</li>
-	<li class="tags-new-item">
-		<input type=text class="tags-input">
-	</li>
-</ul>
-`;
-	Vue.component('a2-tags', {
-		props: {
-			items: Array,
-			readOnly: Boolean
-		},
-		template,
-		methods: {
-			remove(itm) {
-				alert(itm);
-			}
-		},
-		mounted() {
-		}
-	});
-
-
-	const colorPickerTemplate =
-		`
-<div class="color-picker">
-	<div @click.stop.prevent="toggle">
-		<div class="color-picker-wrapper">
-			<span v-text="value"></span>
-			<span class="caret"></span>
-		</div>
-		<select v-model="value" @keydown=keydown>
-			<option v-for="(itm, ix) in items" :key="ix" v-text="itm"></option>
-		</select>
-	</div>
-	<div class="color-picker-pane" v-if="isOpen">
-		<ul class="color-picker-list">
-			<li @mousedown.prevent="hit(itm)" :class="itmClass(itm)"
-				v-for="(itm, ix) in items" :key="ix">ELEMENT</li>
+<div class="tags-control" :class="cssClass()" :test-id="testId">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
+	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
+		<ul class="tags-items">
+			<li v-for="(itm, ix) in value" :key="ix" class="tags-item tag-label" :class="tagColor(itm)">
+				<span v-text="tagName(itm)"/>
+				<button @click.stop.prevent="itm.$remove()" class="btn-close">×</button>
+			</li>
 		</ul>
+		<button v-if="!readOnly" @click.stop.prevent="toggle" class="btn-open">▽</button>
+	</div>
+	<div class="tags-pane" v-if=isOpen>
+		<ul class="tags-pane-items">
+			<li v-for="(itm, ix) in itemsSource" :key="ix" class="tag-label" :class="tagColor(itm)">
+				<span v-text="tagName(itm)" 
+					@click.stop.prevent="addTag(itm)"/>
+			</li>
+		</ul>
+		<button>tag settings</button>
 	</div>
 </div>
 `;
-	const colors = "default|green|orange|cyan|red|purple|pink|gold|blue|salmon|seagreen|tan|magenta|lightgray|olive|teal";
 
 	const baseControl = component('control');
+	const popup = require('std:popup');
 
-	Vue.component('a2-color-picker', {
+
+	Vue.component('a2-tags', {
 		extends: baseControl,
 		props: {
-			value: String
+			item: {
+				type: Object, default() { return {}; }
+			},
+			valueProp: String,
+			itemsSource: Array,
+			contentProp: { type: String, default: 'Name' },
+			colorProp: { type: String, default: 'Color' },
+			readOnly: Boolean
 		},
-		data() {
+		data() { 
 			return {
 				isOpen: false
 			};
 		},
-		template: colorPickerTemplate,
+		template,
 		computed: {
-			items() { return ["red", "green", "blue", "tan"]; }
+			value() {
+				return this.item[this.valueProp];
+			}
 		},
 		methods: {
-			keydown() {
-				alert('keydown');
+			tagName(itm) {
+				return itm[this.contentProp];
 			},
-			toggle() { 
+			tagColor(itm) {
+				return itm[this.colorProp];
+			},
+			addTag(itm) {
+				let val = this.value;
+				if (val.$find(x => x.$id === itm.$id))
+					return; // already added
+				this.item[this.valueProp].$append(itm);
+			},
+			toggle() {
 				this.isOpen = !this.isOpen;
 			},
-			hit(itm) {
-				this.value = itm;
+			__clickOutside() {
 				this.isOpen = false;
-			},
-			itmClass(itm) {
-				return false;
-			}			
+			}
+		},
+		mounted() {
+			popup.registerPopup(this.$el);
+			this.$el._close = this.__clickOutside;
+		},
+		beforeDestroy() {
+			popup.unregisterPopup(this.$el);
 		}
 	});
-
-
 })();
+

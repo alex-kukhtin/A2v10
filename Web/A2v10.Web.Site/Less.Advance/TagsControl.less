@@ -1,0 +1,65 @@
+﻿
+
+.tags-control {
+	.input-group {
+		display: flex;
+		min-height: 30px;
+		padding: 2px;
+	}
+
+	.tags-items {
+		flex-grow: 1;
+		margin: 0;
+		padding: 0;
+		gap: 4px;
+		flex-wrap: wrap;
+		display: flex;
+	}
+
+	li.tag-label {
+		list-style: none;
+		padding: 0 4px 0 6px;
+		border-radius: 2px;
+		line-height: 1.8;
+
+		.btn-close {
+			background-color: transparent;
+			color: inherit;
+			padding: 0 0 0 4px;
+		}
+	}
+
+	.btn-open {
+		background-color: transparent;
+
+		&:hover {
+			background-color: #f8f8f8;
+		}
+	}
+
+	.tags-pane {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		min-width: 100px;
+		border: 1px solid red;
+		padding: .5rem;
+
+		.tags-pane-items {
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: row;
+			gap: 4px;
+			align-items: start;
+			flex-wrap: wrap;
+
+			li {
+				cursor: pointer;
+				line-height:2;
+				padding: 0 6px;
+			}
+		}
+	}
+}

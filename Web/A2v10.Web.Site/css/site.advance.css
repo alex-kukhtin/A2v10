@@ -7339,6 +7339,59 @@ table.tree-grid a.toggle.expanded:after {
 .color-picker .caret {
   margin: 4px 6px 0 5px;
 }
+.tags-control .input-group {
+  display: flex;
+  min-height: 30px;
+  padding: 2px;
+}
+.tags-control .tags-items {
+  flex-grow: 1;
+  margin: 0;
+  padding: 0;
+  gap: 4px;
+  flex-wrap: wrap;
+  display: flex;
+}
+.tags-control li.tag-label {
+  list-style: none;
+  padding: 0 4px 0 6px;
+  border-radius: 2px;
+  line-height: 1.8;
+}
+.tags-control li.tag-label .btn-close {
+  background-color: transparent;
+  color: inherit;
+  padding: 0 0 0 4px;
+}
+.tags-control .btn-open {
+  background-color: transparent;
+}
+.tags-control .btn-open:hover {
+  background-color: #f8f8f8;
+}
+.tags-control .tags-pane {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: 100px;
+  border: 1px solid red;
+  padding: 0.5rem;
+}
+.tags-control .tags-pane .tags-pane-items {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: start;
+  flex-wrap: wrap;
+}
+.tags-control .tags-pane .tags-pane-items li {
+  cursor: pointer;
+  line-height: 2;
+  padding: 0 6px;
+}
 .block {
   display: block!important;
   width: 100%;

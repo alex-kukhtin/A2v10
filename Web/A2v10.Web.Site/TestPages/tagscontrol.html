@@ -3,36 +3,50 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" href="../css/site.css" />
+    <link rel="stylesheet" href="../css/site.advance.css" />
+    <style>
+        :root {
+            --background: #ffff;
+            --text: #000;
+            --fontSize: 14px;
+            --brandPrimary: #2573a8;
+            --themePrimary: #2573a8;
+            --themeDark: #2573a8;
+            --themeDarker: #205980;
+            --themeLight: #2d8ecf;
+            --neutralLight: #edebe9;
+            --neutralLighterAlt: #faf9f8;
+            --neutralSecondary: #605e5c;
+            --neutralBkDarker: #dad9d8;
+            --neutralBkDark: #e5e4e3;
+            --neutralBk: #f3f2f1;
+            --neutralBkLight: #faf9f8;
+            --link: #208cf8;
+            --linkDark: #0669cb;
+            --hoverBk: #fdf4bf;
+            --activeBk: #cde6f7;
+            --hoverBkLight: #fdf4bf;
+            --activeBkLight: #cde6f7;
+            --dialogHeaderBkColor: #fff29d;
+            --dialogHeaderBkColorDark: #ede193;
+        }
+    </style>
     <style>
         [v-cloak] {
             display: none;
         }
-		.tags-new-item input {
-            border:1px solid red;
-            line-height:16px;
-		}
-		.color-picker-input {
-            display:inline-block;
-            height:20px;
-            width:100px;
-            border:1px solid red;
-		}
-		.color-picker select {
-            opacity:0;
-		}
     </style>
 </head>
 <body>
     <h1>TAGS CONTROL</h1>
-    <div id="app" style="height:80%">
+    <div id="app" style="height:80%;padding:2rem;width:350px">
 
-        <a2-color-picker :value="value">
-        </a2-color-picker>
-
-        <div v-text="value"></div>
+        <div style="display:flex;gap:5px;flex-direction:row">
+            <span v-for="itm in Entity.Tags" class="tag-label" :class="itm.Color" v-text="itm.Name"></span>
+        </div>
         <hr />
-        <a2-tags :items=items content-property="Name" color-property="Color">
+        <a2-tags :items-source=AllTags content-prop="Name" color-prop="Color"
+                 :item="Entity" value-prop="Tags" label="Select tags here">
             <template v-slot:default="el">
                 <span v-text="el.item.Name"></span>
                 <span v-text="el.item.Color"></span>
@@ -40,23 +54,88 @@
         </a2-tags>
     </div>
     <script src="../scripts/vue.js"></script>
+    <script src="../scripts/locale-uk.min.js"></script>
     <script src="../scripts/main.js"></script>
     <script src="./tagscontrol.js"></script>
     <script>
+
+		const popup = require('std:popup');
+
+        const currentModule = function () {
+            let rawData = {
+                Entity: {
+                    Tags: [
+                        { Id: 5, Name: 'Tag 1', Color: 'red' }
+                    ]
+                },
+                AllTags: [
+					{ Id: 4, Name: 'Tag 2', Color: 'green' },
+					{ Id: 5, Name: 'Tag 1', Color: 'red' },
+                    { Id: 6, Name: 'Tag 3', Color: 'blue' },
+                    { Id: 7, Name: 'Tag 7', Color: 'orange' },
+                    { Id: 8, Name: 'Tag 8', Color: 'tan' },
+					{ Id: 9, Name: 'Tag 9', Color: 'magenta' },
+                    { Id: 10, Name: 'Tag 10', Color: 'pink' }
+                ]
+            };
+
+            function modelData(template, data) {
+                const cmn = require('std:datamodel');
+                function TRoot(source, path, parent) {
+                    cmn.createObject(this, source, path, parent);
+                }
+                cmn.defineObject(TRoot, {
+                    props: { 'Entity': TEntity, 'AllTags': TTagArray },
+                    $main: 'Entity'
+                }, false);
+
+                function TTag(source, path, parent) {
+                    cmn.createObject(this, source, path, parent);
+                }
+                cmn.defineObject(TTag, {
+                    props: {
+                        'Id': Number, 'Name': { type: String, len: 255 }, 'Color': { type: String, len: 32 }, 'CodeKSPOV': { type: String, len: 8 }
+                    },
+                    $id: 'Id', $name: 'Name'
+                }, true);
+
+                function TEntity(source, path, parent) {
+                    cmn.createObject(this, source, path, parent);
+                }
+
+                cmn.defineObject(TEntity, {
+                    props: {
+                        'Id': Number, 'Tags': { type: TTagArray }
+                    },
+                    $id: 'Id'
+                }, true);
+
+                function TTagArray(source, path, parent) {
+                    return cmn.createArray(source, path, TTag, TTagArray, parent);
+                }
+
+                const ctors = { TRoot, TEntity, TTag, TTagArray };
+                cmn.implementRoot(TRoot, template, ctors);
+                let root = new TRoot(data);
+                cmn.setModelInfo(root, {
+                }, rawData);
+                return root;
+            }
+
+            return {
+                dataModel: modelData(template, rawData)
+            };
+        }
+
+
         new Vue({
             el: "#app",
-            data: {
-                readOnly: false,
-                value: "red",
-                items: [
-                    { Name: 'Tag1', Color: 'red' },
-                    { Name: 'Tag2', Color: 'blue' },
-                    { Name: 'Tag3', Color: 'green' }
-                ]
-            },
+			data: currentModule().dataModel,
             methods: {
             }
         });
+
+        popup.startService();
     </script>
 </body>
 </html>
