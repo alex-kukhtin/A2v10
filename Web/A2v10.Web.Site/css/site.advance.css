@@ -7367,16 +7367,25 @@ table.tree-grid a.toggle.expanded:after {
   background-color: transparent;
 }
 .tags-control .btn-open:hover {
-  background-color: #f8f8f8;
+  background-color: var(--neutralBkLight);
+}
+.tags-control .tags-placeholder {
+  flex-grow: 1;
+  line-height: 1.5;
+  padding: 0 0.5rem;
+  color: #999;
 }
 .tags-control .tags-pane {
   position: absolute;
+  background-color: white;
   top: 100%;
   left: 0;
   width: 100%;
   min-width: 100px;
-  border: 1px solid red;
+  border: 1px solid var(--link);
   padding: 0.5rem;
+  z-index: 1070 !important;
+  box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
 }
 .tags-control .tags-pane .tags-pane-items {
   margin: 0;
@@ -7389,8 +7398,21 @@ table.tree-grid a.toggle.expanded:after {
 }
 .tags-control .tags-pane .tags-pane-items li {
   cursor: pointer;
-  line-height: 2;
+  line-height: 1.83;
   padding: 0 6px;
+}
+.tags-control .tags-pane .tags-settings {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--neutralBkDarker);
+}
+.tags-control .tags-pane .btn-settings {
+  background-color: transparent;
+  color: var(--link);
+  border-radius: 2px;
+}
+.tags-control .tags-pane .btn-settings:hover {
+  background-color: var(--neutralBkLight);
 }
 .block {
   display: block!important;

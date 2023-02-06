@@ -1,4 +1,4 @@
-﻿
+﻿@import "Variables.less";
 
 .tags-control {
 	.input-group {
@@ -33,18 +33,28 @@
 		background-color: transparent;
 
 		&:hover {
-			background-color: #f8f8f8;
+			background-color: @hover-bg-light;
 		}
+	}
+
+	.tags-placeholder {
+		flex-grow:1;
+		line-height:1.5;
+		padding:0 .5rem;
+		color:@label-color;
 	}
 
 	.tags-pane {
 		position: absolute;
+		background-color:white;
 		top: 100%;
 		left: 0;
 		width: 100%;
 		min-width: 100px;
-		border: 1px solid red;
+		border: 1px solid @control-focus-color;
 		padding: .5rem;
+		z-index: @popup-index !important;
+		box-shadow: @dropdown-shadow;
 
 		.tags-pane-items {
 			margin: 0;
@@ -57,8 +67,24 @@
 
 			li {
 				cursor: pointer;
-				line-height:2;
+				line-height: 1.83;
 				padding: 0 6px;
+			}
+		}
+
+		.tags-settings {
+			margin-top: .5rem;
+			padding-top: .5rem;
+			border-top: 1px solid @default-brd-color;
+		}
+
+		.btn-settings {
+			background-color: transparent;
+			color: @link-color;
+			border-radius:2px;
+
+			&:hover {
+				background-color: @hover-bg-light;
 			}
 		}
 	}

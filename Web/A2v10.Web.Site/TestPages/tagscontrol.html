@@ -46,7 +46,9 @@
         </div>
         <hr />
         <a2-tags :items-source=AllTags content-prop="Name" color-prop="Color"
-                 :item="Entity" value-prop="Tags" label="Select tags here">
+                 :item="Entity" value-prop="Tags" label="Select tags here" :read-only="false"
+                 settings-text="show settings 2" placeholder="Choose tags"
+                 :settings-func="settings">
             <template v-slot:default="el">
                 <span v-text="el.item.Name"></span>
                 <span v-text="el.item.Color"></span>
@@ -128,12 +130,18 @@
         }
 
 
+        function settins(items) {
+			console.dir(this);
+			alert(items.length);
+        }
+
         new Vue({
             el: "#app",
 			data: currentModule().dataModel,
             methods: {
+                settings: settins
             }
-        });
+        });       
 
         popup.startService();
     </script>
