@@ -23,7 +23,7 @@ public class TagsControl : ValuedControl, ITableControl
 		onRender?.Invoke(input);
 		input.MergeAttribute("content-prop", NameProperty);
 		input.MergeAttribute("color-prop", ColorProperty);
-		input.MergeAttribute("settings-text", SettingsText);
+		input.MergeAttribute("settings-text", context.Localize(SettingsText));
 		if (!String.IsNullOrEmpty(SettingsDelegate))
 			input.MergeAttribute(":settings-func", $"$delegate('{SettingsDelegate}')");
 

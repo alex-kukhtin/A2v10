@@ -11884,20 +11884,26 @@ Vue.component('a2-panel', {
 		</ul>
 		<div class="tags-placeholder" v-else v-text="placeholder"></div>
 		<button v-if="!disabled" @click.stop.prevent="toggle" class="btn-open">▽</button>
+		<div class="tags-pane" v-if=isOpen>
+			<ul class="tags-pane-items">
+				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-label" :class="tagColor(itm)">
+					<span v-text="tagName(itm)" 
+						@click.stop.prevent="addTag(itm)"/>
+				</li>
+			</ul>
+			<div class="tags-settings" v-if="!disabled">
+				<button class="btn-settings" v-text="settingsText" @click.stop.prevent=doSettings></button>
+			</div>
+		</div>
 	</div>
 	<slot name="popover"></slot>
 	<span class="descr" v-if="hasDescr" v-text="description"></span>
-	<div class="tags-pane" v-if=isOpen>
-		<ul class="tags-pane-items">
-			<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-label" :class="tagColor(itm)">
-				<span v-text="tagName(itm)" 
-					@click.stop.prevent="addTag(itm)"/>
-			</li>
-		</ul>
-		<div class="tags-settings" v-if="!disabled">
-			<button class="btn-settings" v-text="settingsText" @click.stop.prevent=doSettings></button>
-		</div>
-	</div>
+</div>
+`;
+
+	const templateList = `
+<div class="tags-list" :test-id="testId">
+	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tag-label" :class="tagColor(itm)" v-text="tagName(itm)"/>
 </div>
 `;
 
@@ -11976,6 +11982,24 @@ Vue.component('a2-panel', {
 		},
 		beforeDestroy() {
 			popup.unregisterPopup(this.$el);
+		}
+	});
+
+	Vue.component("a2-tags-list", {
+		template: templateList,
+		props: {
+			testId: String,
+			itemsSource: Array,
+			contentProp: { type: String, default: 'Name' },
+			colorProp: { type: String, default: 'Color' },
+		},
+		methods: {
+			tagName(itm) {
+				return itm[this.contentProp];
+			},
+			tagColor(itm) {
+				return itm[this.colorProp];
+			}
 		}
 	});
 })();

@@ -1012,6 +1012,7 @@ h5,
   color: white;
   font-size: 0.86rem;
   padding: 0 0.25rem 0.1rem 0.25rem;
+  border-radius: 2px;
   display: inline-block;
   margin: 1px;
   line-height: normal;
@@ -7413,6 +7414,12 @@ table.tree-grid a.toggle.expanded:after {
 }
 .tags-control .tags-pane .btn-settings:hover {
   background-color: var(--neutralBkLight);
+}
+.tags-list {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  flex-wrap: wrap;
 }
 .block {
   display: block!important;
