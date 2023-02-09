@@ -44,6 +44,7 @@
         <div style="display:flex;gap:5px;flex-direction:row">
             <span v-for="itm in Entity.Tags" class="tag-label" :class="itm.Color" v-text="itm.Name"></span>
         </div>
+        <div>Filter: <pre v-text="Filter.Tags"></pre></div>
         <hr />
         <a2-tags :items-source=AllTags content-prop="Name" color-prop="Color"
                  :item="Entity" value-prop="Tags" label="Select tags here" :read-only="false"
@@ -54,6 +55,10 @@
                 <span v-text="el.item.Color"></span>
             </template>
         </a2-tags>
+        <div>
+            <a2-tags-filter :items-source="AllTags" :item="Filter" prop="Tags">
+            </a2-tags-filter>
+        </div>
     </div>
     <script src="../scripts/vue.js"></script>
     <script src="../scripts/locale-uk.min.js"></script>
@@ -74,11 +79,14 @@
 					{ Id: 4, Name: 'Tag 2', Color: 'green' },
 					{ Id: 5, Name: 'Tag 1', Color: 'red' },
                     { Id: 6, Name: 'Tag 3', Color: 'blue' },
-                    { Id: 7, Name: 'Tag 7', Color: 'orange' },
+                    { Id: 7, Name: 'Лояльний клієнт', Color: 'orange' },
                     { Id: 8, Name: 'Tag 8', Color: 'tan' },
 					{ Id: 9, Name: 'Tag 9', Color: 'magenta' },
                     { Id: 10, Name: 'Tag 10', Color: 'pink' }
-                ]
+                ],
+				Filter: {
+					Tags: '4,8',
+				},
             };
 
             function modelData(template, data) {
@@ -87,7 +95,7 @@
                     cmn.createObject(this, source, path, parent);
                 }
                 cmn.defineObject(TRoot, {
-                    props: { 'Entity': TEntity, 'AllTags': TTagArray },
+                    props: { 'Entity': TEntity, 'AllTags': TTagArray, 'Filter': TFilter },
                     $main: 'Entity'
                 }, false);
 
@@ -96,7 +104,7 @@
                 }
                 cmn.defineObject(TTag, {
                     props: {
-                        'Id': Number, 'Name': { type: String, len: 255 }, 'Color': { type: String, len: 32 }, 'CodeKSPOV': { type: String, len: 8 }
+                        'Id': Number, 'Name': { type: String, len: 255 }, 'Color': { type: String, len: 32 }
                     },
                     $id: 'Id', $name: 'Name'
                 }, true);
@@ -116,7 +124,18 @@
                     return cmn.createArray(source, path, TTag, TTagArray, parent);
                 }
 
-                const ctors = { TRoot, TEntity, TTag, TTagArray };
+				function TFilter(source, path, parent) {
+					cmn.createObject(this, source, path, parent);
+				}
+
+				cmn.defineObject(TFilter, {
+					props: {
+						'Id': Number, 'Tags': { type: String }
+					},
+					$id: 'Id'
+				}, true);
+
+                const ctors = { TRoot, TEntity, TTag, TTagArray, TFilter };
                 cmn.implementRoot(TRoot, template, ctors);
                 let root = new TRoot(data);
                 cmn.setModelInfo(root, {

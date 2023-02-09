@@ -67,6 +67,21 @@ public partial class BaseController
 		return SaveDataObj(setParams, dataToSave, writer);
 	}
 
+	ExpandoObject ResolveParameters(ExpandoObject prms, ExpandoObject dataToSave)
+	{
+		if (prms == null || dataToSave == null)
+			return null;
+		var newParams = new ExpandoObject();
+		foreach (var x in prms)
+		{
+			var val = x.Value;
+			if (val != null && val is String strVal && strVal.StartsWith("{{"))
+				val = dataToSave.Resolve(strVal);
+			newParams.Add(x.Key, val);
+		}
+		return newParams;
+	}
+
 	internal async Task SaveDataObj(Action<ExpandoObject> setParams, ExpandoObject dataToSave, TextWriter writer)
 	{
 		String baseUrl = dataToSave.Get<String>("baseUrl");
@@ -77,7 +92,7 @@ public partial class BaseController
 		RequestView rw = rm.GetCurrentAction();
 		var prms = new ExpandoObject();
 		setParams?.Invoke(prms);
-		prms.Append(rw.parameters);
+		prms.Append(ResolveParameters(rw.parameters, data));
 		CheckUserState(prms);
 		IDataModel model = null;
 

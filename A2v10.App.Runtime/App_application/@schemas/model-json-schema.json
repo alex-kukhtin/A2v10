@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7891",
+	"$version": "10.0.7918",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -23,6 +23,7 @@
 		},
 		"model": { "type": "string" },
 		"schema": { "type": "string" },
+		"module": { "type": "string" },
 		"allowAddress": { "type": "string" },
 		"allowOrigin": { "type,": "string" },
 		"actions": {
@@ -30,68 +31,68 @@
 			"patternProperties": {
 				".+": {
 					"type": "object",
-				  "properties": {
-					"index": { "type": "boolean" },
-					"source": { "type": "string" },
-					"schema": { "type": "string" },
-					"model": { "type": "string" },
-					"view": { "type": "string" },
-					"viewMobile": { "type": "string" },
-					"template": { "type": "string" },
-					"checkTypes": { "type": "string" },
-					"processDbEvents": { "type": "boolean" },
-					"commandTimeout": { "type": "number" },
-					"indirect": { "type": "boolean" },
-					"target": { "type": "string" },
-					"targetId": { "type": "string" },
-					"skipDataStack": { "type": "boolean" },
-					"merge": {
-					  "type": "object",
-					  "properties": {
+					"properties": {
+						"index": { "type": "boolean" },
 						"source": { "type": "string" },
-						"model": { "type": "string" },
 						"schema": { "type": "string" },
-						"parameters": { "type": "object" }
-					  },
-					  "additionalProperties": false
-					},
-					"events": {
-					  "type": "object",
-					  "properties": {
-						"afterSave": {
-						  "type": "object",
-						  "properties": {
-							"source": { "type": "string" },
-							"schema": { "type": "string" },
-							"model": { "type": "string" }
-						  }
-						}
-					  }
-					},
-					"export": {
-					  "type": "object",
-					  "properties": {
+						"model": { "type": "string" },
+						"view": { "type": "string" },
+						"viewMobile": { "type": "string" },
 						"template": { "type": "string" },
-						"fileName": { "type": "string" },
-						"format": {
-						  "type": "string",
-						  "enum": [ "xlsx", "dbf", "csv" ]
+						"checkTypes": { "type": "string" },
+						"processDbEvents": { "type": "boolean" },
+						"commandTimeout": { "type": "number" },
+						"indirect": { "type": "boolean" },
+						"target": { "type": "string" },
+						"targetId": { "type": "string" },
+						"skipDataStack": { "type": "boolean" },
+						"merge": {
+							"type": "object",
+							"properties": {
+								"source": { "type": "string" },
+								"model": { "type": "string" },
+								"schema": { "type": "string" },
+								"parameters": { "type": "object" }
+							},
+							"additionalProperties": false
 						},
-						"encoding": { "type": "string" }
-					  },
-					  "additionalProperties": false
+						"events": {
+							"type": "object",
+							"properties": {
+								"afterSave": {
+									"type": "object",
+									"properties": {
+										"source": { "type": "string" },
+										"schema": { "type": "string" },
+										"model": { "type": "string" }
+									}
+								}
+							}
+						},
+						"export": {
+							"type": "object",
+							"properties": {
+								"template": { "type": "string" },
+								"fileName": { "type": "string" },
+								"format": {
+									"type": "string",
+									"enum": [ "xlsx", "dbf", "csv" ]
+								},
+								"encoding": { "type": "string" }
+							},
+							"additionalProperties": false
+						},
+						"parameters": { "type": "object" },
+						"permissions": { "$ref": "#/definitions/permissions" },
+						"scripts": {
+							"type": "array",
+							"items": { "type": "string" }
+						},
+						"styles": {
+							"type": "array",
+							"items": { "type": "string" }
+						}
 					},
-					"parameters": { "type": "object" },
-					"permissions": { "$ref": "#/definitions/permissions" },
-					"scripts": {
-					  "type": "array",
-					  "items": { "type": "string" }
-					},
-					"styles": {
-					  "type": "array",
-					  "items": { "type": "string" }
-					}
-				  },
 					"additionalProperties": false
 				}
 			}
@@ -187,7 +188,10 @@
 						"model": { "type": "string" },
 						"command": { "type": "string" },
 						"procedure": { "type": "string" },
-						"target": { "type": "string", "pattern": "^(\\w+)\\.(\\w+)$" },
+						"target": {
+							"type": "string",
+							"pattern": "^(\\w+)\\.(\\w+)$"
+						},
 						"checkTypes": { "type": "string" },
 						"processDbEvents": { "type": "boolean" },
 						"commandTimeout": { "type": "number" },
@@ -274,7 +278,7 @@
 						"locale": { "type": "string" },
 						"container": { "type": "string" },
 						"outputFileName": { "type": "string" },
-						"zip": {"type": "boolean" },
+						"zip": { "type": "boolean" },
 						"azureSource": { "type": "string" },
 						"imageCompress": {
 							"type": "object",

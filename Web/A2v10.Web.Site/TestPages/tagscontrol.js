@@ -101,5 +101,59 @@
 			popup.unregisterPopup(this.$el);
 		}
 	});
+
+
+	const filterTemplate = `
+<div class="tags-filter">
+	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tags-filter-item"
+		:class="tagClass(itm)" @click.stop.prevent="toggle(itm)">
+		<i class="ico" :class="icoClass(itm)"/>
+		<span v-text="tagName(itm)"/>
+	</span>
+</div>
+`
+
+	Vue.component("a2-tags-filter", {
+		template: filterTemplate,
+		props: {
+			itemsSource: Array,
+			item: {
+				type: Object, default() { return {}; }
+			},
+			prop: String,
+			contentProp: { type: String, default: 'Name' },
+			colorProp: { type: String, default: 'Color' },
+		},
+		computed: {
+			valueArray() {
+				let v = this.item[this.prop];
+				return v ? v.split(',') : [];
+			}
+		},
+		methods: {
+			tagName(itm) {
+				return itm[this.contentProp];
+			},
+			tagClass(itm) {
+				let activeClass = this.isActive(itm) ? ' active' : '';
+				return itm[this.colorProp] + activeClass;
+			},
+			icoClass(itm) {
+				return this.isActive(itm) ? 'ico-checkbox-checked' : 'ico-checkbox';
+			},
+			isActive(itm) {
+				return this.valueArray.some(x => x == itm.$id);
+			},
+			toggle(itm) {
+				if (this.isActive(itm)) {
+					// remove
+					this.item[this.prop] = this.valueArray.filter(x => x != itm.$id).join(',');
+				} else {
+					// add
+					this.item[this.prop] = this.valueArray.concat([itm.$id]).join(',');
+				}
+			}
+		}
+	});
 })();
 

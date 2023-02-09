@@ -7,18 +7,17 @@
 	const template = `
 <div class="tags-control" :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
-	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
+	<div class="input-group" @click.stop.prevent="toggle">
 		<ul class="tags-items" v-if="hasItems">
-			<li v-for="(itm, ix) in value" :key="ix" class="tags-item tag-label" :class="tagColor(itm)">
+			<li v-for="(itm, ix) in value" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
 				<span v-text="tagName(itm)"/>
 				<button @click.stop.prevent="itm.$remove()" class="btn-close">×</button>
 			</li>
 		</ul>
 		<div class="tags-placeholder" v-else v-text="placeholder"></div>
-		<button v-if="!disabled" @click.stop.prevent="toggle" class="btn-open">▽</button>
 		<div class="tags-pane" v-if=isOpen>
 			<ul class="tags-pane-items">
-				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-label" :class="tagColor(itm)">
+				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)">
 					<span v-text="tagName(itm)" 
 						@click.stop.prevent="addTag(itm)"/>
 				</li>
@@ -35,7 +34,32 @@
 
 	const templateList = `
 <div class="tags-list" :test-id="testId">
-	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tag-label" :class="tagColor(itm)" v-text="tagName(itm)"/>
+	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tag-body tag-sm" :class="tagColor(itm)" v-text="tagName(itm)"/>
+</div>
+`;
+
+	const templateFilter = `
+<div class="tags-control" :class="cssClass()" :test-id="testId">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
+	<div class="input-group" @click.stop.prevent="toggle">
+		<ul class="tags-items" v-if="hasItems">
+			<li v-for="(itm, ix) in valueList" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
+				<span v-text="tagName(itm)"/>
+				<button @click.stop.prevent="removeTag(itm)" class="btn-close">×</button>
+			</li>
+		</ul>
+		<div class="tags-placeholder" v-else v-text="placeholder"></div>
+		<div class="tags-pane" v-if=isOpen>
+			<ul class="tags-pane-items">
+				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)">
+					<span v-text="tagName(itm)" 
+						@click.stop.prevent="addTag(itm)"/>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<slot name="popover"></slot>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
 </div>
 `;
 
@@ -132,6 +156,84 @@
 			tagColor(itm) {
 				return itm[this.colorProp];
 			}
+		}
+	});
+
+	Vue.component('a2-tags-filter', {
+		extends: baseControl,
+		props: {
+			item: {
+				type: Object, default() { return {}; }
+			},
+			prop: String,
+			itemsSource: Array,
+			contentProp: { type: String, default: 'Name' },
+			colorProp: { type: String, default: 'Color' },
+			placeholder: String
+		},
+		data() {
+			return {
+				isOpen: false
+			};
+		},
+		template: templateFilter,
+		computed: {
+			value() {
+				return this.item[this.prop];
+			},
+			valueArray() {
+				let v = this.value;
+				return v ? v.split('-') : [];
+			},
+			valueList() {
+				var va = this.valueArray;
+				return this.itemsSource.filter(tag => va.indexOf('' + tag.$id) >= 0);
+			},
+			actualItemsSource() {
+				var va = this.valueArray;
+				return this.itemsSource.filter(tag => va.indexOf('' + tag.$id) < 0);
+			},
+			hasItems() {
+				return !!this.value;
+			}
+		},
+		methods: {
+			tagName(itm) {
+				return itm[this.contentProp];
+			},
+			tagColor(itm) {
+				return itm[this.colorProp];
+			},
+			addTag(itm) {
+				if (this.disabled)
+					return;
+				let va = this.valueArray;
+				if (va.indexOf('' + itm.$id) >= 0)
+					return; // already added
+				this.item[this.prop] = va.concat([itm.$id]).join('-');
+			},
+			removeTag(itm) {
+				let va = this.valueArray.filter(x => x != itm.$id);
+				this.item[this.prop] = va.join('-');
+			},
+			toggle() {
+				if (this.disabled)
+					return;
+				if (!this.isOpen) {
+					eventBus.$emit('closeAllPopups');
+				}
+				this.isOpen = !this.isOpen;
+			},
+			__clickOutside() {
+				this.isOpen = false;
+			}
+		},
+		mounted() {
+			popup.registerPopup(this.$el);
+			this.$el._close = this.__clickOutside;
+		},
+		beforeDestroy() {
+			popup.unregisterPopup(this.$el);
 		}
 	});
 })();

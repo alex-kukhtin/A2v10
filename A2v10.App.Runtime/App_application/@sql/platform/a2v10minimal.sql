@@ -1,8 +1,8 @@
 ﻿/*
 Copyright © 2008-2023 Oleksandr Kukhtin
 
-Last updated : 02 feb 2023
-module version : 7917
+Last updated : 05 feb 2023
+module version : 7918
 */
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2sys')
@@ -44,4 +44,46 @@ if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2s
 	as table(
 		Id uniqueidentifier null
 	);
+go
+------------------------------------------------
+if not exists(select * from INFORMATION_SCHEMA.DOMAINS where DOMAIN_SCHEMA=N'a2sys' and DOMAIN_NAME=N'NameValue.TableType' and DATA_TYPE=N'table type')
+create type a2sys.[NameValue.TableType]
+as table(
+	[Name] nvarchar(255),
+	[Value] nvarchar(max)
+);
+go
+------------------------------------------------
+create or alter procedure a2sys.[GetVersions]
+as
+begin
+	set nocount on;
+	set transaction isolation level read uncommitted;
+	select [Module], [Version], [File], [Title] from a2sys.Versions;
+end
+go
+------------------------------------------------
+create or alter procedure a2sys.[SetVersion]
+@Module nvarchar(255),
+@Version int
+as
+begin
+	set nocount on;
+	set transaction isolation level read committed;
+	if not exists(select * from a2sys.Versions where Module = @Module)
+		insert into a2sys.Versions (Module, [Version]) values (@Module, @Version);
+	else
+		update a2sys.Versions set [Version] = @Version where Module = @Module;
+end
+go
+
+------------------------------------------------
+create or alter procedure a2sys.[AppTitle.Load]
+as
+begin
+	set nocount on;
+	select [AppTitle], [AppSubTitle]
+	from (select Name, Value=StringValue from a2sys.SysParams) as s
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle])) as p;
+end
 go

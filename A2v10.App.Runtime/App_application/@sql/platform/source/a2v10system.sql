@@ -377,6 +377,20 @@ begin
 end
 go
 ------------------------------------------------
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_SCHEMA=N'a2sys' and ROUTINE_NAME=N'AppTitle.Load')
+	drop procedure a2sys.[AppTitle.Load]
+go
+------------------------------------------------
+create procedure a2sys.[AppTitle.Load]
+as
+begin
+	set nocount on;
+	select [AppTitle], [AppSubTitle]
+	from (select Name, Value=StringValue from a2sys.SysParams) as s
+		pivot (min(Value) for Name in ([AppTitle], [AppSubTitle])) as p;
+end
+go
+------------------------------------------------
 begin
 	set nocount on;
 	grant execute on schema ::a2sys to public;

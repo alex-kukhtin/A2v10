@@ -1012,6 +1012,7 @@ h5,
   color: white;
   font-size: 0.86rem;
   padding: 0 0.25rem 0.1rem 0.25rem;
+  border-radius: 2px;
   display: inline-block;
   margin: 1px;
   line-height: normal;
@@ -1750,7 +1751,7 @@ header .include.nav-pane .partial-block .control-group,
   position: absolute;
   left: 0;
   top: 0;
-  background-color: #e1dfdd;
+  background-color: var(--neutralBkDark);
   opacity: 0.5;
   pointer-events: none;
 }
@@ -1980,7 +1981,7 @@ footer,
   right: 0;
   height: 2rem;
   background-color: var(--neutralBk);
-  border-top: 1px solid #e1dfdd;
+  border-top: 1px solid var(--neutralBkDark);
   padding: 0 0 0 8px;
   font-size: 0.925rem;
   text-transform: lowercase;
@@ -6846,7 +6847,7 @@ table > colgroup col.blue {
   bottom: 2rem;
   width: 278px;
   padding: 26px 0 0 0;
-  border-right: 1px solid #e1dfdd;
+  border-right: 1px solid var(--neutralBkDark);
   background-color: var(--neutralBk);
 }
 .side-bar .side-bar-body,
@@ -7339,6 +7340,158 @@ table.tree-grid a.toggle.expanded:after {
 .color-picker .caret {
   margin: 4px 6px 0 5px;
 }
+.tags-control .input-group {
+  display: flex;
+  min-height: 30px;
+  padding: 2px;
+  border-color: transparent;
+  padding: 2px 0;
+  cursor: pointer;
+}
+.tags-control .tags-items {
+  flex-grow: 1;
+  margin: 0;
+  padding: 0;
+  gap: 4px;
+  flex-wrap: wrap;
+  display: flex;
+}
+.tags-control li {
+  list-style: none;
+}
+.tags-control .tags-placeholder {
+  flex-grow: 1;
+  line-height: 1.5;
+  color: #999;
+}
+.tags-control .tags-pane {
+  position: absolute;
+  background-color: white;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  min-width: 100px;
+  border: 1px solid var(--neutralBkDark);
+  padding: 0.5rem;
+  z-index: 1070 !important;
+  box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
+  clip-path: inset(0px -40px -40px -40px);
+}
+.tags-control .tags-pane .tags-pane-items {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: start;
+  flex-wrap: wrap;
+  min-height: 26px;
+}
+.tags-control .tags-pane .tags-pane-items li {
+  cursor: pointer;
+}
+.tags-control .tags-pane .tags-pane-items li:hover {
+  background-color: var(--neutralBkLight);
+  box-shadow: 0px 1px 2px currentColor;
+}
+.tags-control .tags-pane .tags-settings {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--neutralBkDarker);
+}
+.tags-control .tags-pane .btn-settings {
+  background-color: transparent;
+  color: var(--link);
+  border-radius: 2px;
+}
+.tags-control .tags-pane .btn-settings:hover {
+  background-color: var(--neutralBkLight);
+}
+.tags-list {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+.tag-sm {
+  padding: 0 6px;
+  line-height: 1.5;
+}
+.tag-md {
+  padding: 0 6px;
+  line-height: 1.8;
+}
+.tag-md-close {
+  padding: 0 0 0 6px;
+  line-height: 1.8;
+}
+.tag-md-close .btn-close {
+  background-color: transparent;
+  color: inherit;
+  padding: 0 4px;
+  margin-left: 2px;
+}
+.tag-md-close .btn-close:hover {
+  background-color: var(--neutralBkLight);
+}
+.tag-body {
+  font-size: 0.85rem;
+  background-color: var(--background);
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin: 1px;
+  display: inline-flex;
+  align-items: stretch;
+}
+.tag-body.default {
+  color: #8f94b0;
+}
+.tag-body.green {
+  color: #5db750;
+}
+.tag-body.orange {
+  color: #ffb74d;
+}
+.tag-body.red {
+  color: #da533f;
+}
+.tag-body.cyan {
+  color: #60bbe5;
+}
+.tag-body.purple {
+  color: mediumpurple;
+}
+.tag-body.pink {
+  color: hotpink;
+}
+.tag-body.gold {
+  color: #eac500;
+}
+.tag-body.blue {
+  color: cornflowerblue;
+}
+.tag-body.salmon {
+  color: salmon;
+}
+.tag-body.seagreen {
+  color: darkseagreen;
+}
+.tag-body.tan {
+  color: tan;
+}
+.tag-body.magenta {
+  color: darkmagenta;
+}
+.tag-body.lightgray {
+  color: #ccc;
+}
+.tag-body.olive {
+  color: #b5cc18;
+}
+.tag-body.teal {
+  color: #00b5ad;
+}
 .block {
   display: block!important;
   width: 100%;
@@ -7521,7 +7674,7 @@ td.vert > .vcell {
 }
 .debug-panel .toolbar {
   min-height: 3rem;
-  border-bottom: 1px solid #e1dfdd;
+  border-bottom: 1px solid var(--neutralBkDark);
 }
 .debug-panel .debug-body {
   overflow: auto;

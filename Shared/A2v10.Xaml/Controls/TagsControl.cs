@@ -40,19 +40,36 @@ public class TagsControl : ValuedControl, ITableControl
 		RenderAddOns(context);
 		input.RenderEnd(context);
 	}
+}
 
-	protected override void OnEndInit()
-	{
-		base.OnEndInit();
-	}
+public class TagsFilter : ValuedControl, ITableControl
+{
+	public String Placeholder { get; set; }
+	public Object ItemsSource { get; set; }
 
-	public override void OnSetStyles(RootContainer root)
-	{
-		base.OnSetStyles(root);
-	}
+	public String NameProperty { get; set; }
+	public String ColorProperty { get; set; }
 
-	public override void OnDispose()
+	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
-		base.OnDispose();
+		if (CheckDisabledModel(context))
+			return;
+		var input = new TagBuilder("a2-tags-filter", null, IsInGrid);
+		onRender?.Invoke(input);
+		input.MergeAttribute("content-prop", NameProperty);
+		input.MergeAttribute("color-prop", ColorProperty);
+
+		var isBind = GetBinding(nameof(ItemsSource));
+		if (isBind != null)
+			input.MergeAttribute(":items-source", isBind.GetPath(context));
+
+		MergeAttributes(input, context);
+		MergeDisabled(input, context);
+		MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
+		MergeValue(input, context);
+
+		input.RenderStart(context);
+		RenderAddOns(context);
+		input.RenderEnd(context);
 	}
 }

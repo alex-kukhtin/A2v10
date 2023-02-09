@@ -5,6 +5,9 @@
 		display: flex;
 		min-height: 30px;
 		padding: 2px;
+		border-color:transparent;
+		padding:2px 0;
+		cursor:pointer;
 	}
 
 	.tags-items {
@@ -16,45 +19,28 @@
 		display: flex;
 	}
 
-	li.tag-label {
+	li {
 		list-style: none;
-		padding: 0 4px 0 6px;
-		border-radius: 2px;
-		line-height: 1.8;
-
-		.btn-close {
-			background-color: transparent;
-			color: inherit;
-			padding: 0 0 0 4px;
-		}
-	}
-
-	.btn-open {
-		background-color: transparent;
-
-		&:hover {
-			background-color: @hover-bg-light;
-		}
 	}
 
 	.tags-placeholder {
-		flex-grow:1;
-		line-height:1.5;
-		padding:0 .5rem;
-		color:@label-color;
+		flex-grow: 1;
+		line-height: 1.5;
+		color: @label-color;
 	}
 
 	.tags-pane {
 		position: absolute;
-		background-color:white;
+		background-color: white;
 		top: 100%;
 		left: 0;
 		width: 100%;
 		min-width: 100px;
-		border: 1px solid @control-focus-color;
+		border: 1px solid @light-brd-color;
 		padding: .5rem;
 		z-index: @popup-index !important;
 		box-shadow: @dropdown-shadow;
+		clip-path: inset(0px -40px -40px -40px);
 
 		.tags-pane-items {
 			margin: 0;
@@ -64,11 +50,14 @@
 			gap: 4px;
 			align-items: start;
 			flex-wrap: wrap;
-
+			min-height:26px;
 			li {
 				cursor: pointer;
-				line-height: 1.83;
-				padding: 0 6px;
+
+				&:hover {
+					background-color: @hover-bg-light;
+					box-shadow: 0px 1px 2px currentColor;
+				}
 			}
 		}
 
@@ -81,7 +70,7 @@
 		.btn-settings {
 			background-color: transparent;
 			color: @link-color;
-			border-radius:2px;
+			border-radius: 2px;
 
 			&:hover {
 				background-color: @hover-bg-light;
@@ -96,4 +85,105 @@
 	gap:2px;
 	flex-wrap:wrap;
 
+}
+
+.tag-sm {
+	padding: 0 6px;
+	line-height: 1.5;
+}
+
+.tag-md {
+	padding: 0 6px;
+	line-height: 1.8;
+}
+
+.tag-md-close {
+	padding: 0 0 0 6px;
+	line-height: 1.8;
+
+	.btn-close {
+		background-color: transparent;
+		color: inherit;
+		padding: 0 4px;
+		margin-left: 2px;
+
+		&:hover {
+			background-color: @hover-bg-light;
+		}
+	}
+}
+
+.tag-body {
+	font-size: 0.85rem;
+	background-color: @background-color;
+	border: 1px solid currentColor;
+	border-radius: 4px;
+	white-space: nowrap;
+	margin: 1px;
+	display: inline-flex;
+	align-items: stretch;
+
+	&.default {
+		color: #8f94b0;
+	}
+
+	&.green {
+		color: @success-base-color;
+	}
+
+	&.orange {
+		color: @warning-base-color;
+	}
+
+	&.red {
+		color: @danger-base-color;
+	}
+
+	&.cyan {
+		color: @info-base-color;
+	}
+
+	&.purple {
+		color: mediumpurple;
+	}
+
+	&.pink {
+		color: hotpink;
+	}
+
+	&.gold {
+		color: #eac500;
+	}
+
+	&.blue {
+		color: cornflowerblue;
+	}
+
+	&.salmon {
+		color: salmon;
+	}
+
+	&.seagreen {
+		color: darkseagreen;
+	}
+
+	&.tan {
+		color: tan;
+	}
+
+	&.magenta {
+		color: darkmagenta;
+	}
+
+	&.lightgray {
+		color: #ccc;
+	}
+
+	&.olive {
+		color: #b5cc18;
+	}
+
+	&.teal {
+		color: #00b5ad;
+	}
 }
