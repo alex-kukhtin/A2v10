@@ -146,6 +146,9 @@
     <Content Include="css\bpmn\diagram-js.css" />
     <Content Include="css\bpmn\editor.css" />
     <Content Include="css\bpmn\font\bpmn.svg" />
+    <Content Include="Less.Advance\checkbox_radio.svg" />
+    <Content Include="Less.Advance\checkbox_indeterminate.svg" />
+    <Content Include="Less.Advance\checkbox_checked.svg" />
     <Content Include="Localization\default.pl.txt" />
     <Content Include="openidconnect.txt" />
     <Content Include="scripts\locale-pl.min.js" />
