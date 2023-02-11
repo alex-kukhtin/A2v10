@@ -1,8 +1,9 @@
-﻿// Copyright © 2019-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Dynamic;
 using System.Text;
+using System.Security.Cryptography;
 
 using Jint;
 using Jint.Native;
@@ -105,6 +106,19 @@ public class ScriptEnvironment
 		if (safe)
 			res = res.Replace('+', '-').Replace('/', '_').TrimEnd('=');
 		return res;
+	}
+
+	public String generateApiKey()
+	{
+		Int32 size = 48;
+		using (var provider = new RNGCryptoServiceProvider())
+		{
+			Byte[] data = new Byte[size];
+			provider.GetNonZeroBytes(data);
+			String res = Convert.ToBase64String(data);
+			res = res.Remove(res.Length - 2);
+			return res;
+		}
 	}
 
 	public JsValue require(String fileName, ExpandoObject prms, ExpandoObject args)

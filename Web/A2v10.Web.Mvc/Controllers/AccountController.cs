@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -380,6 +380,14 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 
 	static readonly ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
 
+	public Boolean IsDelayedConfirm()
+	{
+		var delayed = _host.GetAppSettingsObject("delayedConfirm");
+		if (delayed == null)
+			return false;
+		return delayed.Get<Boolean>("enabled");
+	}
+
 	public Boolean IsExternalApplication()
 	{
 		var obj = _host.GetAppSettingsObject("externalApplication");
@@ -704,6 +712,8 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 						await UserManager.SendEmailAsync(user.Id, subject, body);
 					}
 					status = "Success";
+					if (IsDelayedConfirm())
+						status = "DelayedConfirm";
 				}
 			}
 			if (status == "Success")
@@ -721,6 +731,16 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		return Json(new { Status = status });
 	}
 
+
+	//
+	// GET: /Account/ConfirmEmailSuccess
+	[AllowAnonymous]
+	[HttpGet]
+	[OutputCache(Duration = 0)]
+	public void ConfirmEmailSuccess()
+	{
+		SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
+	}
 
 	//
 	// GET: /Account/ConfirmEmail
@@ -760,6 +780,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 					body = body.Replace("{0}", inviteCallback);
 					await UserManager.SendEmailAsync(user.Id, subject, body);
 				}
+
 
 				SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
 				Session.Add(USERNAME_SESSIONKEY, user.UserName);

@@ -85,7 +85,7 @@ public class SimpleCreateUserHandler : IInvokeTarget
 		{
 			// Update segment data source
 			appUser.Tenant = TenantId;
-			await _dbContext.ExecuteAsync<AppUser>(_host.TenantDataSource, $"{schema}.[User.Simple.Create]", appUser);
+			await _dbContext.ExecuteAsync<AppUser>(_host.TenantDataSource, $"{schema}.[TenantUser.Simple.Create]", appUser);
 		}
 		return appUser;
 	}

@@ -1,6 +1,6 @@
 ﻿
-/* Copyright © 2019-2021 Alex Kukhtin. All rights reserved. */
-/* Version 10.0.7796 */
+/* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
+/* Version 10.0.7919 */
 
 interface keyable {
 	[key: string]: any
@@ -63,4 +63,7 @@ interface ServerEnvironment {
 	executeSql(args: ServerSqlParameters): keyable;
 	loadModel(args: ServerSqlParameters): keyable;
 	saveModel(args: ServerSaveModelParameters): keyable;
+	toBase64(source: string, codePage: number, safe: boolean): string;
+	generateApiKey(): string;
+	require(fileName: string, prms: object, args: object): any;
 }

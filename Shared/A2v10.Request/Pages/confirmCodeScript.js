@@ -80,6 +80,9 @@
 							case 'LoggedIn':
 								that.navigate();
 								break;
+							case 'DelayedConfirm':
+								window.location.assign('/account/confirmemailsuccess');
+								break;
 							case 'AntiForgery':
 								alert(that.locale.$ErrorAntiForgery);
 								that.reload();
