@@ -5215,59 +5215,37 @@ table.prop-grid.small td {
 label.checkbox,
 label.radio {
   cursor: pointer;
-  display: inline;
-  position: relative;
+  display: inline-block;
   padding: 2px 0;
-  line-height: 16px;
+  line-height: 1em;
   white-space: nowrap;
 }
 label.checkbox > span,
 label.radio > span {
-  display: inline-block;
+  display: inline-flex;
   position: relative;
-  padding-left: 21px;
   min-height: 1em;
   white-space: normal;
+  gap: 1ch;
+  align-items: baseline;
 }
 label.checkbox > span::before,
 label.radio > span::before {
-  position: absolute;
-  left: 0;
-  top: 0;
   content: '';
-  display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 1em;
+  height: 1em;
   border: 1px solid #999;
   border-radius: 1px;
   background-color: white;
-}
-label.checkbox > span::after,
-label.radio > span::after {
-  content: '';
-  font-family: 'A2v10';
-  font-size: 85%;
-  position: absolute;
-  display: inline-block;
-  left: 0;
-  top: 0;
-  line-height: 14px;
-  width: 14px;
-  height: 14px;
-  border: 1px solid transparent;
-  text-align: center;
-  color: #555;
+  background-position: center;
+  background-repeat: no-repeat;
+  align-self: center;
 }
 label.checkbox.no-wrap span,
 label.radio.no-wrap span {
   white-space: nowrap;
 }
-label.checkbox.no-label > span,
-label.radio.no-label > span {
-  padding-left: 15px;
-}
-label.radio span::before,
-label.radio span::after {
+label.radio span::before {
   border-radius: 50%;
 }
 input[type="checkbox"],
@@ -5286,69 +5264,32 @@ input[type="radio"] {
 input[type="checkbox"]:disabled + span,
 input[type="radio"]:disabled + span {
   cursor: not-allowed;
-  color: #aaa;
+  opacity: 0.5;
 }
-input[type="checkbox"]:disabled + span::before,
-input[type="radio"]:disabled + span::before {
-  border-color: #aaa;
-  background-color: var(--neutralBkLight);
-}
-input[type="checkbox"]:disabled + span::after,
-input[type="radio"]:disabled + span::after {
-  color: #aaa;
-  border-color: transparent;
-}
-input[type="checkbox"]:checked + span::after {
-  content: '\e977';
-}
-input[type="checkbox"]:indeterminate + span::after {
-  display: block;
-  content: "";
-  width: 6px;
-  height: 2px;
-  left: 4px;
-  top: 6px;
-  background-color: #999;
-}
-input[type="checkbox"]:disabled:indeterminate + span::after {
-  background-color: #aaa !important;
-}
-input[type="checkbox"]:focus + span::before {
-  outline: thin dotted #999;
-  outline-offset: 0;
-}
-input[type="radio"]:checked + span::after {
-  content: '';
-  border: 8px solid #555;
-  text-align: center;
-  width: 0;
-  height: 0;
-  transform: scale(0.6, 0.6);
-}
+input[type="checkbox"]:focus + span::before,
 input[type="radio"]:focus + span::before {
   outline: thin dotted #999;
   outline-offset: 0;
 }
-input[type="radio"]:disabled:checked + span::after {
-  border-color: #aaa;
+input[type="checkbox"]:checked + span::before {
+  background-image: url("data:image/svg+xml,%EF%BB%BF%3Csvg%20viewBox%3D'0%200%2020%2020'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%0D%0A%09%3Cpath%20fill%3D'none'%20%0D%0A%09%09stroke%3D'%23555'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20stroke-width%3D'3'%0D%0A%09d%3D'M6%2010l3%203l6-6'%2F%3E%0D%0A%3C%2Fsvg%3E");
 }
-.checkbox input[type="radio"]:checked + span::after {
-  content: '\e977';
-  border: 1px solid transparent;
-  text-align: center;
-  width: 14px;
-  height: 14px;
-  line-height: 14px;
-  transform: none;
+input[type="checkbox"]:indeterminate + span::before {
+  background-image: url("data:image/svg+xml,%EF%BB%BF%3Csvg%20viewBox%3D'0%200%2020%2020'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%0D%0A%09%3Cpath%20fill%3D'none'%20%0D%0A%09%09stroke%3D'%23555'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20stroke-width%3D'3'%0D%0A%09d%3D'M6%2010h8'%2F%3E%0D%0A%3C%2Fsvg%3E%0D%0A%0D%0A");
 }
-label.checkbox.small {
-  font-size: 0.9em;
+input[type="radio"]:checked + span::before {
+  background-image: url("data:image/svg+xml,%EF%BB%BF%3Csvg%20viewBox%3D'-4%20-4%208%208'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%0D%0A%09%3Ccircle%20fill%3D'%23555'%20%20r%3D'2.5'%2F%3E%0D%0A%3C%2Fsvg%3E%0D%0A");
 }
-label.checkbox.small span:before {
-  transform: scale(0.9, 0.9);
+.checkbox input[type="radio"]:checked + span::before {
+  background-image: url("data:image/svg+xml,%EF%BB%BF%3Csvg%20viewBox%3D'0%200%2020%2020'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%0D%0A%09%3Cpath%20fill%3D'none'%20%0D%0A%09%09stroke%3D'%23555'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20stroke-width%3D'3'%0D%0A%09d%3D'M6%2010l3%203l6-6'%2F%3E%0D%0A%3C%2Fsvg%3E");
 }
-label.checkbox.small span:after {
-  transform: scale(0.9, 0.9);
+label.checkbox.small,
+label.radio.small {
+  font-size: 0.85em;
+}
+label.radio.lg,
+label.checkbox.lg {
+  font-size: 1.21em;
 }
 .a2-pager {
   padding: 1rem 0 0 0;

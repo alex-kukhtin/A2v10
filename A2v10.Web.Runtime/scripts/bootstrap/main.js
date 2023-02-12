@@ -5795,7 +5795,7 @@ app.modules['std:impl:array'] = function () {
 				window.location = root + url;
 			},
 
-			async $upload(url, accept, data) {
+			async $upload(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
 				try {
@@ -5809,7 +5809,9 @@ app.modules['std:impl:array'] = function () {
 					return await httpTools.upload(uploadUrl, dat);
 				} catch (err) {
 					err = err || 'unknown error';
-					if (err.indexOf('UI:') === 0)
+					if (opts && opts.catchError)
+						throw err;
+					else if (err.indexOf('UI:') === 0)
 						this.$alert(err);
 					else
 						alert(err);
