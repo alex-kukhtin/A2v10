@@ -7,7 +7,7 @@
 	const template = `
 <div class="tags-control" :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
-	<div class="input-group" @click.stop.prevent="toggle">
+	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
 		<ul class="tags-items" v-if="hasItems">
 			<li v-for="(itm, ix) in value" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
 				<span v-text="tagName(itm)"/>
@@ -41,7 +41,7 @@
 	const templateFilter = `
 <div class="tags-control" :class="cssClass()" :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
-	<div class="input-group" @click.stop.prevent="toggle">
+	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
 		<ul class="tags-items" v-if="hasItems">
 			<li v-for="(itm, ix) in valueList" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
 				<span v-text="tagName(itm)"/>

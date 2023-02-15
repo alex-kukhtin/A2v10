@@ -1,13 +1,14 @@
 ﻿@import "Variables.less";
 
+@control-border: @default-brd-color;
+
 .tags-control {
 	.input-group {
 		display: flex;
 		min-height: 30px;
-		padding: 2px;
-		border-color:transparent;
-		padding:2px 0;
-		cursor:pointer;
+		border-color: @control-border;
+		padding: 4px;
+		cursor: pointer;
 	}
 
 	.tags-items {
@@ -36,7 +37,7 @@
 		left: 0;
 		width: 100%;
 		min-width: 100px;
-		border: 1px solid @light-brd-color;
+		border: 1px solid @control-focus-color;
 		padding: .5rem;
 		z-index: @popup-index !important;
 		box-shadow: @dropdown-shadow;
@@ -50,7 +51,8 @@
 			gap: 4px;
 			align-items: start;
 			flex-wrap: wrap;
-			min-height:26px;
+			min-height: 26px;
+
 			li {
 				cursor: pointer;
 

@@ -3086,7 +3086,7 @@ pre.a2-code {
   padding-right: 8px;
 }
 .input-group > .selector-pane {
-  border: 1px solid var(--linkDark);
+  border: 1px solid var(--link);
   position: absolute;
   background-color: #fff;
   left: 0;
@@ -7284,9 +7284,8 @@ table.tree-grid a.toggle.expanded:after {
 .tags-control .input-group {
   display: flex;
   min-height: 30px;
-  padding: 2px;
-  border-color: transparent;
-  padding: 2px 0;
+  border-color: var(--neutralBkDarker);
+  padding: 4px;
   cursor: pointer;
 }
 .tags-control .tags-items {
@@ -7312,7 +7311,7 @@ table.tree-grid a.toggle.expanded:after {
   left: 0;
   width: 100%;
   min-width: 100px;
-  border: 1px solid var(--neutralBkDark);
+  border: 1px solid var(--link);
   padding: 0.5rem;
   z-index: 1070 !important;
   box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
