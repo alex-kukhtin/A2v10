@@ -103,6 +103,7 @@ namespace A2v10.Web.Identity
 		private UserCache _cache;
 
 		private String _customSchema;
+		private Boolean _lockCreateTenant;
 
 		public AppUserStore(IDbContext dbContext, IApplicationHost host)
 		{
@@ -209,6 +210,8 @@ namespace A2v10.Web.Identity
 
 		async Task CreateTenantUser(AppUser user)
 		{
+			if (_lockCreateTenant)
+				return;
 			if (_host.IsMultiTenant)
 			{
 				// with TenantRoles
@@ -562,5 +565,9 @@ namespace A2v10.Web.Identity
 			return roles.IndexOf(roleName) != -1;
 		}
 		#endregion
+		public void LockCreateTenant()
+		{
+			_lockCreateTenant = true;
+        }
 	}
 }

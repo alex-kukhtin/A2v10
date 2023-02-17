@@ -7146,7 +7146,6 @@ table.tree-grid a.toggle.expanded:after {
   overflow: hidden;
   border-left: 1px solid var(--neutralBkDarker);
   display: grid;
-  grid-gap: 6px;
   background-color: var(--background);
   grid-template-rows: auto 1fr;
 }
@@ -7177,6 +7176,33 @@ table.tree-grid a.toggle.expanded:after {
 }
 .dashboard-container .dashboard-list .widget-list .dashboard-item {
   background-color: var(--neutralBkLight);
+}
+.dashboard-container .dashboard-list .widget-list-grouping {
+  margin: 0;
+  padding: 0;
+}
+.dashboard-container .dashboard-list .widget-list-grouping .widget-group-title {
+  margin: 1rem 1rem 0.5rem 1rem;
+  color: var(--themeLight);
+  font-size: 115%;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.dashboard-container .dashboard-list .widget-group {
+  list-style: none;
+}
+.dashboard-container .dashboard-list .widget-group .collapse-handle {
+  font-size: 110%;
+}
+.dashboard-container .dashboard-list .widget-group .collapse-handle:before {
+  content: "\e9a2";
+}
+.dashboard-container .dashboard-list .widget-group.collapsed .widget-list {
+  display: none;
+}
+.dashboard-container .dashboard-list .widget-group.collapsed .collapse-handle:before {
+  content: "\e9a4";
 }
 .dashboard-container .dashboard-placeholder {
   width: 100%;

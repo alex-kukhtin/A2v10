@@ -38,7 +38,6 @@
 		overflow: hidden;
 		border-left: 1px solid var(--neutralBkDarker);
 		display: grid;
-		grid-gap: 6px;
 		background-color: var(--background);
 		grid-template-rows: auto 1fr;
 
@@ -72,6 +71,42 @@
 
 			.dashboard-item {
 				background-color: var(--neutralBkLight);
+			}
+		}
+
+		.widget-list-grouping {
+			margin: 0;
+			padding: 0;
+
+			.widget-group-title {
+				margin: 1rem 1rem .5rem 1rem;
+				color: var(--themeLight);
+				font-size:115%;
+				display:flex;
+				justify-content:space-between;
+				cursor:pointer;
+			}
+		}
+
+		.widget-group {
+			list-style: none;
+
+			.collapse-handle {
+				font-size: 110%;
+
+				&:before {
+					content: "\e9a2"; // chevron-down
+				}
+			}
+
+			&.collapsed {
+				.widget-list {
+					display: none;
+				}
+
+				.collapse-handle:before {
+					content: "\e9a4"; // chevron-up
+				}
 			}
 		}
 	}

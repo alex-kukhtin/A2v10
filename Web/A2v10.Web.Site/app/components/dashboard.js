@@ -1,6 +1,6 @@
-﻿// Copyright © 2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20220917-7891
+// 20220917-7920
 // components/dashboard.js
 
 (function () {
@@ -46,7 +46,22 @@
 		<div class="widget-toolbar">
 			<slot name="toolbar"></slot>
 		</div>
-		<ul class="widget-list">
+		<ul class="widget-list-grouping" v-if="groupBy">
+			<li class="widget-group" v-for="(grp, ixg) in groupingList" :key="ixg"
+					:class="{collapsed: isGroupCollapsed(grp)}">
+				<div class="widget-group-title" @click.stop.prevent="toggleGroup(grp)">
+					<span v-text="grp.name"/>
+					<span class="ico collapse-handle"></span>
+				</div>
+				<ul class="widget-list">
+					<a2-dashboard-item v-for="(itm, ix) in grp.items" :key=ix :edit-mode="true"
+							:item=itm :col-span="itm.colSpan" :row-span="itm.rowSpan" :isnew=true>
+						<slot name="listitem" v-bind:item="itm"></slot>
+					</a2-dashboard-item>
+				</ul>
+			</li>
+		</ul>
+		<ul class="widget-list" v-else>
 			<a2-dashboard-item v-for="(itm, ix) in list" :key=ix :edit-mode="true"
 					:item=itm :col-span="itm.colSpan" :row-span="itm.rowSpan" :isnew=true>
 				<slot name="listitem" v-bind:item="itm"></slot>
@@ -142,6 +157,7 @@
 		props: {
 			items: Array,
 			list: Array,
+			groupBy: String,
 			editable: Boolean,
 			editMode: false,
 			cellSize: {
@@ -153,12 +169,30 @@
 				staticElems: [],
 				currentElem: null,
 				lastPhRow: 0,
-				lastPhCol: 0
+				lastPhCol: 0,
+				collapsedGroups: []
 			};
 		},
 		computed: {
 			hasItems() {
 				return this.items && this.items.length;
+			},
+			groupingList() {
+				if (!this.groupBy)
+					return [];
+				let el = [];
+				this.list.forEach(p => {
+					let g = p[this.groupBy];
+					let found = el.find(x => x.name === g);
+					if (found)
+						found.items.push(p);
+					else
+						el.push({
+							name: g,
+							items: [p]
+						});
+				});
+				return el;
 			},
 			rows() {
 				let rows = 0;
@@ -318,6 +352,18 @@
 							this.items.push(Object.assign({}, ce.item));
 					}
 					this.currentElem = null;
+				}
+			},
+			isGroupCollapsed(grp) {
+				return this.collapsedGroups.indexOf(grp.name) >= 0;
+			},
+			toggleGroup(grp) {
+				if (!this.isGroupCollapsed(grp))
+					this.collapsedGroups.push(grp.name);
+				else {
+					let ix = this.collapsedGroups.indexOf(grp.name);
+					if (ix >= 0)
+						this.collapsedGroups.splice(ix, 1);
 				}
 			}
 		},

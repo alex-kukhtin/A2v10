@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -59,10 +59,11 @@ public class AppUser : IUser<Int64>, IEquatable<AppUser>
 	// optional (for delete)
 	public Int64 CurrentUser { get; set; }
 
+
 	DateTime? _lastLoginDate;
 	String _lastLoginHost;
 
-	public DateTime? LastLoginDate
+    public DateTime? LastLoginDate
 	{
 		get { return _lastLoginDate; }
 		set {
@@ -107,7 +108,7 @@ public class AppUser : IUser<Int64>, IEquatable<AppUser>
 	public Boolean IsEmailConfirmModified => _modifiedFlag.HasFlag(UserModifiedFlag.EmailConfirmed);
 	public Boolean IsPhoneNumberModified  => _modifiedFlag.HasFlag(UserModifiedFlag.PhoneNumber);
 
-	public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
+    public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUser, Int64> manager)
 	{
 		// Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
 		var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);

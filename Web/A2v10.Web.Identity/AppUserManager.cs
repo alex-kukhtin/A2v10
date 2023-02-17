@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -16,10 +16,12 @@ namespace A2v10.Web.Identity
 
 	public class AppUserManager : UserManager<AppUser, Int64>
 	{
-		public AppUserManager(IUserStore<AppUser, Int64> store)
+		AppUserStore _userStore;
+		public AppUserManager(AppUserStore store)
 			: base(store)
 		{
-		}
+            _userStore = store;
+        }
 
 		public static class TWOFACTORPROVIDERS
 		{
@@ -31,9 +33,9 @@ namespace A2v10.Web.Identity
 		{
 			IDbContext dbContext = ServiceLocator.Current.GetService<IDbContext>();
 			IApplicationHost host = ServiceLocator.Current.GetService<IApplicationHost>();
-			AppUserStore store = new AppUserStore(dbContext, host);
+			AppUserStore store = new(dbContext, host);
 			store.SetCustomSchema(host.CustomSecuritySchema);
-			AppUserManager manager = new AppUserManager(store);
+			AppUserManager manager = new(store);
 
 			manager.Construct(options);
 
@@ -93,6 +95,11 @@ namespace A2v10.Web.Identity
 				UserTokenProvider =
 					new DataProtectorTokenProvider<AppUser, Int64>(dataProtectionProvider.Create("ASP.NET Identity"));
 			}
+		}
+
+		public void LockCreateTenant()
+		{
+			_userStore.LockCreateTenant();
 		}
 	}
 }

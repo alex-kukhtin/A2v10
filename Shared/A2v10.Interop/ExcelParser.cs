@@ -84,9 +84,12 @@ public class ExcelParser : IDisposable
 
 			var stylesPart = workBookPart.WorkbookStylesPart;
 			// This formats is NUMBER, not standard!
-			var numFormats = stylesPart.Stylesheet.Descendants<NumberingFormat>()?.ToDictionary(x => x.NumberFormatId.Value.ToString());
+			var numFormats = stylesPart.Stylesheet
+				.Descendants<NumberingFormat>()?
+				.GroupBy(x => x.NumberFormatId.Value.ToString())
+				.ToDictionary(g => g.Key, g => g.First());
 
-			var rows = workSheetPart.Worksheet.Descendants<Row>().ToList();
+            var rows = workSheetPart.Worksheet.Descendants<Row>().ToList();
 			if (rows == null)
 				throw new InteropException($"The sheet does not have a rows");
 

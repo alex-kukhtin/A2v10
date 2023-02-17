@@ -48,6 +48,7 @@ namespace A2v10.Web.Identity
 			private set
 			{
 				_userManager = value;
+
 			}
 		}
 

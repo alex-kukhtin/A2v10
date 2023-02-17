@@ -40,6 +40,12 @@ using A2v10.Web.Mvc.Interfaces;
 
 namespace A2v10.Web.Mvc.Controllers;
 
+public record DelayedConfirm
+{
+	public Boolean SkipCreateTenant { get; set; }
+	public String ConfirmPage { get; set; }
+}
+
 public class ETag
 {
 	public String Name { get; set; }
@@ -380,12 +386,16 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 
 	static readonly ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
 
-	public Boolean IsDelayedConfirm()
+	public DelayedConfirm GetDelayedConfirm()
 	{
 		var delayed = _host.GetAppSettingsObject("delayedConfirm");
 		if (delayed == null)
-			return false;
-		return delayed.Get<Boolean>("enabled");
+			return null;
+		return new DelayedConfirm()
+		{
+			SkipCreateTenant = delayed.Get<Boolean>("skipCreateTenant"),
+			ConfirmPage = delayed.Get<String>("confirmPage")
+		};
 	}
 
 	public Boolean IsExternalApplication()
@@ -673,7 +683,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		String status;
 		try
 		{
-
+			DelayedConfirm delayedConfirm = GetDelayedConfirm();
 			ConfirmEmailModel model = GetModelFromBody<ConfirmEmailModel>();
 
 			if (model.Email == null)
@@ -697,6 +707,8 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 					status = "InvalidConfirmCode";
 				else
 				{
+					if (delayedConfirm != null && delayedConfirm.SkipCreateTenant)
+						UserManager.LockCreateTenant();
 					user.SetEMailConfirmed();
 					await UserManager.UpdateUser(user);
 
@@ -712,7 +724,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 						await UserManager.SendEmailAsync(user.Id, subject, body);
 					}
 					status = "Success";
-					if (IsDelayedConfirm())
+					if (delayedConfirm != null)
 						status = "DelayedConfirm";
 				}
 			}
@@ -739,7 +751,11 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 	[OutputCache(Duration = 0)]
 	public void ConfirmEmailSuccess()
 	{
-		SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
+		var delayedConfirm = GetDelayedConfirm();
+		var pageName = "confirmemail";
+		if (delayedConfirm != null && !String.IsNullOrEmpty(delayedConfirm.ConfirmPage))
+			pageName = delayedConfirm.ConfirmPage;
+        SendPage(GetRedirectedPage(pageName, ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
 	}
 
 	//
@@ -751,6 +767,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 	{
 		try
 		{
+			var delayedConfirm = GetDelayedConfirm();
 			if (userId == null || code == null)
 			{
 				SendPage(GetRedirectedPage("error", ResourceHelper.ErrorHtml), ResourceHelper.SimpleScript);
@@ -763,7 +780,10 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 				return;
 			}
 
-			var result = await UserManager.ConfirmEmailAsync(userId.Value, code);
+			if (delayedConfirm != null && delayedConfirm.SkipCreateTenant)
+				UserManager.LockCreateTenant();
+
+            var result = await UserManager.ConfirmEmailAsync(userId.Value, code);
 			if (result.Succeeded)
 			{
 				user = await UserManager.FindByIdAsync(userId.Value);
@@ -781,8 +801,11 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 					await UserManager.SendEmailAsync(user.Id, subject, body);
 				}
 
+				var pageName = "confirmemail";
+                if (delayedConfirm != null && !String.IsNullOrEmpty(delayedConfirm.ConfirmPage))
+                    pageName = delayedConfirm.ConfirmPage;
 
-				SendPage(GetRedirectedPage("confirmemail", ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
+                SendPage(GetRedirectedPage(pageName, ResourceHelper.ConfirmEMailHtml), ResourceHelper.SimpleScript);
 				Session.Add(USERNAME_SESSIONKEY, user.UserName);
 				return;
 			}
