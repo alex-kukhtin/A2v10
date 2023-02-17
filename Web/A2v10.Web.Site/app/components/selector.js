@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
 
-/*20221006-7899*/
+/*20230217-7921*/
 // components/selector.js
 
 (function selector_component() {
@@ -369,8 +369,10 @@
 			fetchData(text, all) {
 				all = all || false;
 				let elem = this.item[this.prop];
-				if (elem && !('$vm' in elem))
-					elem.$vm = this.$root; // plain object hack
+				if (elem && !('$vm' in elem)) {
+					// plain object hack
+					Object.defineProperty(elem, '$vm', { value: this.$root, writable: false, enumerable: false });
+				}
 				if (this.fetch) {
 					return this.fetch.call(this.item.$root, elem, text, all);
 				} else if (this.fetchCommand) {

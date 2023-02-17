@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221027-7902
+// 20230217-7921
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -192,6 +192,9 @@ app.modules['std:utils'] = function () {
 					break;
 				case 'object':
 					clearObject(obj[key]);
+					break;
+				case 'boolean':
+					obj[key] = false;
 					break;
 				default:
 					console.error(`utils.clearObject. Unknown property type ${typeof (val)}`);

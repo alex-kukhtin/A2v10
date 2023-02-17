@@ -196,9 +196,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221027-7902
+// 20230217-7921
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -390,6 +390,9 @@ app.modules['std:utils'] = function () {
 					break;
 				case 'object':
 					clearObject(obj[key]);
+					break;
+				case 'boolean':
+					obj[key] = false;
 					break;
 				default:
 					console.error(`utils.clearObject. Unknown property type ${typeof (val)}`);
@@ -6435,9 +6438,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
 
-/*20221006-7899*/
+/*20230217-7921*/
 // components/selector.js
 
 (function selector_component() {
@@ -6806,8 +6809,10 @@ Vue.component('validator-control', {
 			fetchData(text, all) {
 				all = all || false;
 				let elem = this.item[this.prop];
-				if (elem && !('$vm' in elem))
-					elem.$vm = this.$root; // plain object hack
+				if (elem && !('$vm' in elem)) {
+					// plain object hack
+					Object.defineProperty(elem, '$vm', { value: this.$root, writable: false, enumerable: false });
+				}
 				if (this.fetch) {
 					return this.fetch.call(this.item.$root, elem, text, all);
 				} else if (this.fetchCommand) {
