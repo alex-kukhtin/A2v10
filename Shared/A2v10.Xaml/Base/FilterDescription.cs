@@ -50,12 +50,17 @@ namespace A2v10.Xaml
 						return "utils.date.zero()";
 					DateTime dt = (DateTime) Value;
 					return $"utils.date.create({dt.Year}, {dt.Month}, {dt.Day})";
-				case DataType.Period:
+                case DataType.DateTime:
+                    if (Value == null)
+                        return "utils.date.zero()";
+                    DateTime dtt = (DateTime)Value;
+                    return $"utils.date.createTime({dtt.Year}, {dtt.Month}, {dtt.Day}, {dtt.Hour}, {dtt.Minute}, {dtt.Second})";
+                case DataType.Period:
 					if (Value == null)
 						return "period.all()";
 					return "null"; // TODO: initial value
 				default:
-					throw new NotImplementedException("type for FilterItem");
+					throw new NotImplementedException($"The '{DataType}' type is not supported for the FilterItem object");
 			}
 		}
 	}

@@ -177,7 +177,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230217-7921
+// 20230224-7921
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -242,6 +242,7 @@ app.modules['std:utils'] = function () {
 			add: dateAdd,
 			diff: dateDiff,
 			create: dateCreate,
+			createTime: dateCreateTime,
 			compare: dateCompare,
 			endOfMonth: endOfMonth,
 			minDate: dateCreate(1901, 1, 1),
@@ -729,6 +730,11 @@ app.modules['std:utils'] = function () {
 
 	function dateCreate(year, month, day) {
 		let dt = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+		return dt;
+	}
+
+	function dateCreateTime(year, month, day, hour, min, sec) {
+		let dt = new Date(Date.UTC(year, month - 1, day, hour || 0, min || 0, sec || 0, 0));
 		return dt;
 	}
 

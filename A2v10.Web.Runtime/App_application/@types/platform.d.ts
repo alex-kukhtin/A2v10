@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7919 */
+/* Version 10.0.7921 */
 
 declare function require(url: string): any;
 
@@ -349,6 +349,7 @@ interface UtilsDate {
 	isZero(d: Date): boolean;
 	add(d: Date, nm: number, unit: DateTimeUnit);
 	create(year: number, month: number, day: number): Date;
+	createTime(year: number, month: number, day: number, hour?: number, minute?: number, second?: number): Date
 	fromDays(days: number): Date;
 	compare(d1: Date, d2: Date): number;
 	diff(unit: DateUnit, d1: Date, d2: Date): number;
