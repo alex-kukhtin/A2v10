@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="../css/site.css" />
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+		input {
+			padding:4px;
+			border:1px solid red;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" style="height:100%;padding:10px">
+		<h3>Barcode generator</h3>
+		<div>
+			<span>
+				<label>Perfix</label>
+				<input v-model="prefix" />
+			</span>
+		</div>
+		<div>
+			<span>
+				<label>Suffix</label>
+				<input v-model="suffix" />
+			</span>
+		</div>
+		<div>
+			<span>
+				<label>Generated EAN 13</label>
+				<input v-model="generated13" disabled="true" />
+			</span>
+		</div>
+		<div>
+			<span>
+				<label>Generated EAN 8</label>
+				<input v-model="generated8" disabled="true" />
+			</span>
+		</div>
+	</div>
+	<script src="../scripts/vue.js"></script>
+	<script src="./barcode.js"></script>
+	<script>
+
+		//see: https://github.com/lindell/JsBarcode/blob/master/src/barcodes/EAN_UPC/EAN13.js
+
+		const checksum = (number) => {
+			const res = number
+				.substr(0, 12)
+				.split('')
+				.map((n) => +n)
+				.reduce((sum, a, idx) => (
+					idx % 2 ? sum + a * 3 : sum + a
+				), 0);
+			return (10 - (res % 10)) % 10;
+		};
+
+		function generateBarCode(prefix, suffix) {
+			let len = 13;
+			let maxCodeLen = len - prefix.length - 2;
+			suffix = +suffix % +('1' + '0'.repeat(maxCodeLen));
+			console.dir(suffix);
+			let need = (len - 1) - ('' + prefix).length - ('' + suffix).length;
+			if (need < 0)
+				return 'unknown';
+			let fill = '0'.repeat(need);
+			let code = `${prefix}${fill}${suffix}`;
+			return `${code}${checksum(code)}/${code.length + 1}`;
+		}
+
+		new Vue({
+			el: "#app",
+			data: {
+				prefix: '21',
+				suffix: '782'
+
+			},
+			computed: {
+				generated13() {
+					return generateBarCode(this.prefix, this.suffix);
+				},
+				generated8() {
+					return generateBarCode(this.prefix, this.suffix);
+				}
+			},
+			methods: {
+			}
+		});
+	</script>
+</body>
+</html>

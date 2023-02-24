@@ -4724,6 +4724,37 @@ app.modules['std:accel'] = function () {
 	}
 };
 
+// Copyright © 2023 Oleksandr Kukhtin. All rights reserved.
+
+/*20230224-7921*/
+/* services/barcode.js */
+
+app.modules['std:barcode'] = function () {
+
+	const checksum = (number) => {
+		let res = number
+			.substr(0, 12)
+			.split('')
+			.map(n => +n)
+			.reduce((sum, a, idx) => (idx % 2 ? sum + a * 3 : sum + a), 0);
+		return (10 - (res % 10)) % 10;
+	};
+
+	return {
+		generateEAN13
+	};
+
+	function generateEAN13(prefix, data) {
+		let len = 13;
+		let maxCodeLen = len - prefix.length - 2;
+		data = '' + (+data % +('1' + '0'.repeat(maxCodeLen)));
+		let need = (len - 1) - ('' + prefix).length - data.length;
+		let fill = '0'.repeat(need);
+		let code = `${prefix}${fill}${data}`;
+		return code + checksum(code);
+	}
+};
+
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20221124-7907
@@ -11828,9 +11859,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20221127-7908*/
+/*20230224-7921*/
 // controllers/base.js
 
 (function () {
@@ -12041,6 +12072,15 @@ Vue.directive('resize', {
 					this.$caller.$data.$emit(event, ...arr);
 				else
 					log.error('There is no caller here');
+			},
+			$clearObject(obj) {
+				if (!obj) return;
+				if (obj.$empty)
+					obj.$empty();
+				else {
+					for (let k of Object.keys(obj))
+						obj[k] = null;
+				}
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)

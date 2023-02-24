@@ -197,7 +197,7 @@ namespace A2v10.Xaml
 					return $"$save({{toast: {GetToast(context)}, options:{GetOptionsValid(context)}}})";
 
 				case CommandType.Clear:
-					return $"{CommandArgument(context)}.$empty()";
+					return $"$clearObject({CommandArgument(context)})";
 
 				case CommandType.Close:
 					if (src != null) {

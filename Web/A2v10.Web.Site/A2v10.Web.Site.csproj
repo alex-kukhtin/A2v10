@@ -138,6 +138,7 @@
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />
+    <Content Include="app\services\barcode.js" />
     <Content Include="css\blue.colorscheme.min.css">
       <DependentUpon>blue.colorscheme.css</DependentUpon>
     </Content>
@@ -271,6 +272,8 @@
     <Content Include="TestPages\d3line.js" />
     <Content Include="TestPages\colorpicker.js" />
     <Content Include="TestPages\colorpicker.html" />
+    <Content Include="TestPages\barcode.html" />
+    <Content Include="TestPages\barcode.js" />
     <Content Include="TestPages\tagscontrol.js" />
     <Content Include="TestPages\tagscontrol.html" />
     <Content Include="TestPages\kanban.js" />

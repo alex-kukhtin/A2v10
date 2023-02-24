@@ -5336,9 +5336,9 @@ template: `
 		}
 	});
 })();
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20221127-7908*/
+/*20230224-7921*/
 // controllers/base.js
 
 (function () {
@@ -5549,6 +5549,15 @@ template: `
 					this.$caller.$data.$emit(event, ...arr);
 				else
 					log.error('There is no caller here');
+			},
+			$clearObject(obj) {
+				if (!obj) return;
+				if (obj.$empty)
+					obj.$empty();
+				else {
+					for (let k of Object.keys(obj))
+						obj[k] = null;
+				}
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)

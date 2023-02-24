@@ -196,9 +196,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221027-7902
+// 20230224-7921
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -263,6 +263,7 @@ app.modules['std:utils'] = function () {
 			add: dateAdd,
 			diff: dateDiff,
 			create: dateCreate,
+			createTime: dateCreateTime,
 			compare: dateCompare,
 			endOfMonth: endOfMonth,
 			minDate: dateCreate(1901, 1, 1),
@@ -390,6 +391,9 @@ app.modules['std:utils'] = function () {
 					break;
 				case 'object':
 					clearObject(obj[key]);
+					break;
+				case 'boolean':
+					obj[key] = false;
 					break;
 				default:
 					console.error(`utils.clearObject. Unknown property type ${typeof (val)}`);
@@ -747,6 +751,11 @@ app.modules['std:utils'] = function () {
 
 	function dateCreate(year, month, day) {
 		let dt = new Date(Date.UTC(year, month - 1, day, 0, 0, 0, 0));
+		return dt;
+	}
+
+	function dateCreateTime(year, month, day, hour, min, sec) {
+		let dt = new Date(Date.UTC(year, month - 1, day, hour || 0, min || 0, sec || 0, 0));
 		return dt;
 	}
 
@@ -4715,6 +4724,37 @@ app.modules['std:accel'] = function () {
 	}
 };
 
+// Copyright © 2023 Oleksandr Kukhtin. All rights reserved.
+
+/*20230224-7921*/
+/* services/barcode.js */
+
+app.modules['std:barcode'] = function () {
+
+	const checksum = (number) => {
+		let res = number
+			.substr(0, 12)
+			.split('')
+			.map(n => +n)
+			.reduce((sum, a, idx) => (idx % 2 ? sum + a * 3 : sum + a), 0);
+		return (10 - (res % 10)) % 10;
+	};
+
+	return {
+		generateEAN13
+	};
+
+	function generateEAN13(prefix, data) {
+		let len = 13;
+		let maxCodeLen = len - prefix.length - 2;
+		data = '' + (+data % +('1' + '0'.repeat(maxCodeLen)));
+		let need = (len - 1) - ('' + prefix).length - data.length;
+		let fill = '0'.repeat(need);
+		let code = `${prefix}${fill}${data}`;
+		return code + checksum(code);
+	}
+};
+
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20221124-7907
@@ -6435,9 +6475,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
 
-/*20221006-7899*/
+/*20230217-7921*/
 // components/selector.js
 
 (function selector_component() {
@@ -6806,8 +6846,10 @@ Vue.component('validator-control', {
 			fetchData(text, all) {
 				all = all || false;
 				let elem = this.item[this.prop];
-				if (elem && !('$vm' in elem))
-					elem.$vm = this.$root; // plain object hack
+				if (elem && !('$vm' in elem)) {
+					// plain object hack
+					Object.defineProperty(elem, '$vm', { value: this.$root, writable: false, enumerable: false });
+				}
 				if (this.fetch) {
 					return this.fetch.call(this.item.$root, elem, text, all);
 				} else if (this.fetchCommand) {
@@ -11817,9 +11859,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20221127-7908*/
+/*20230224-7921*/
 // controllers/base.js
 
 (function () {
@@ -12030,6 +12072,15 @@ Vue.directive('resize', {
 					this.$caller.$data.$emit(event, ...arr);
 				else
 					log.error('There is no caller here');
+			},
+			$clearObject(obj) {
+				if (!obj) return;
+				if (obj.$empty)
+					obj.$empty();
+				else {
+					for (let k of Object.keys(obj))
+						obj[k] = null;
+				}
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
