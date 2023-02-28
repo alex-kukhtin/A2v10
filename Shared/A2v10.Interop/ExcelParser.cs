@@ -75,9 +75,8 @@ public class ExcelParser : IDisposable
 		{
 			var workBookPart = doc.WorkbookPart;
 			var workBook = workBookPart.Workbook;
-			var sheet = workBook.Descendants<Sheet>().First();
-			if (sheet == null)
-				throw new InteropException($"The workbook does not have a sheet");
+			var sheet = workBook.Descendants<Sheet>().First() 
+				?? throw new InteropException($"The workbook does not have a sheet");
 			var workSheetPart = (WorksheetPart) workBookPart.GetPartById(sheet.Id);
 			var sharedStringPart = workBookPart.SharedStringTablePart;
 			var sharedStringTable = sharedStringPart.SharedStringTable;
@@ -89,10 +88,8 @@ public class ExcelParser : IDisposable
 				.GroupBy(x => x.NumberFormatId.Value.ToString())
 				.ToDictionary(g => g.Key, g => g.First());
 
-            var rows = workSheetPart.Worksheet.Descendants<Row>().ToList();
-			if (rows == null)
-				throw new InteropException($"The sheet does not have a rows");
-
+            var rows = workSheetPart.Worksheet.Descendants<Row>().ToList() 
+				?? throw new InteropException($"The sheet does not have a rows");
 			var hdr = rows[0];
 
 			var hdrCells = hdr.Elements<Cell>().ToList();
