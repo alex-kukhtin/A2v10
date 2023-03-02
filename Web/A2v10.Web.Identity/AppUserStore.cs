@@ -30,8 +30,8 @@ namespace A2v10.Web.Identity
 
 		class UserCache
 		{
-			Dictionary<String, AppUser> _mapNames = new Dictionary<String, AppUser>();
-			Dictionary<Int64, AppUser> _mapIds = new Dictionary<Int64, AppUser>();
+			readonly Dictionary<String, AppUser> _mapNames = new();
+			readonly Dictionary<Int64, AppUser> _mapIds = new();
 
 			public AppUser GetById(Int64 id)
 			{
@@ -391,8 +391,8 @@ namespace A2v10.Web.Identity
 
 		public async Task<AppUser> FindByEmailAsync(String email)
 		{
-			var emaillwoer = (email ?? String.Empty).ToLowerInvariant();
-			AppUser user = _cache.GetByEmail(email);
+			var emaillower = (email ?? String.Empty).ToLowerInvariant();
+			AppUser user = _cache.GetByEmail(emaillower);
 			if (user != null)
 				return user;
 			user = await _dbContext.LoadAsync<AppUser>(DataSource, $"[{DbSchema}].[FindUserByEmail]", new { Email = email });
@@ -492,7 +492,7 @@ namespace A2v10.Web.Identity
 		 */
 		public async Task<IList<Claim>> GetClaimsAsync(AppUser user)
 		{
-			List<Claim> list = new List<Claim>
+			List<Claim> list = new()
 			{
 				new Claim("PersonName", user.PersonName ?? String.Empty),
 				new Claim("TenantId", user.Tenant.ToString()),
