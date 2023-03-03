@@ -3201,7 +3201,7 @@ pre.a2-code {
   border-left: 1px solid #ddd;
   width: 0;
   z-index: 1;
-  height: 37px;
+  height: 36px;
 }
 table.data-grid {
   cursor: default;
@@ -3474,10 +3474,10 @@ table.data-grid > tbody > tr.bold > td {
   height: 100%;
   overflow: hidden;
   position: relative;
-  min-height: 37px;
+  min-height: 36px;
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header {
-  margin-top: 37px;
+  margin-top: 36px;
   overflow: hidden;
   overflow-y: auto;
   height: calc(100% - 2.6rem);
@@ -3517,7 +3517,7 @@ table.data-grid > tbody > tr.bold > td {
   top: 0;
   background-color: inherit;
   width: 100%;
-  min-height: 37px;
+  min-height: 36px;
   margin-left: -1px;
   border-left: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
@@ -3537,7 +3537,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container > .data-grid-body > .data-grid-empty {
   position: absolute;
-  top: 37px;
+  top: 36px;
   left: 0;
   right: 0;
   margin-top: 1px;
