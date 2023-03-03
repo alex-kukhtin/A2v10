@@ -5239,6 +5239,7 @@ app.modules['std:impl:array'] = function () {
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
 		root.prototype.$destroy = destroyRoot;
+		root.prototype.$newArray = newArray;
 		// props cache for t.construct
 		if (!template) return;
 		let xProp = {};
@@ -5286,6 +5287,13 @@ app.modules['std:impl:array'] = function () {
 				ensureCrossSize(ta, runtime.$cross);
 			}
 		}
+	}
+
+	function newArray() {
+		let arr = [];
+		// $merge hack
+		Object.defineProperty(arr, '$copy', { enumerable: false, writable: false, value: () => { } });
+		return arr;
 	}
 
 	function destroyRoot() {
