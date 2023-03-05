@@ -1,6 +1,6 @@
-﻿/* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
+﻿/* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20220825-7883*/
+/*20230304-7922*/
 // services/datamodel.js
 
 /*
@@ -1074,7 +1074,8 @@
 				if (Array.isArray(trg)) {
 					if (trg.$loaded)
 						trg.$loaded = false; // may be lazy
-					trg.$copy(src[prop]);
+					if ('$copy' in trg)
+						trg.$copy(src[prop]);
 					// copy rowCount
 					if (ROWCOUNT in trg) {
 						let rcProp = prop + '.$RowCount';
@@ -1132,7 +1133,6 @@
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
 		root.prototype.$destroy = destroyRoot;
-		root.prototype.$newArray = newArray;
 		// props cache for t.construct
 		if (!template) return;
 		let xProp = {};
@@ -1180,13 +1180,6 @@
 				ensureCrossSize(ta, runtime.$cross);
 			}
 		}
-	}
-
-	function newArray() {
-		let arr = [];
-		// $merge hack
-		Object.defineProperty(arr, '$copy', { enumerable: false, writable: false, value: () => { } });
-		return arr;
 	}
 
 	function destroyRoot() {

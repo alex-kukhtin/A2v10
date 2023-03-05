@@ -274,6 +274,8 @@
     <Content Include="TestPages\colorpicker.html" />
     <Content Include="TestPages\barcode.html" />
     <Content Include="TestPages\barcode.js" />
+    <Content Include="TestPages\pivot.js" />
+    <Content Include="TestPages\pivot.html" />
     <Content Include="TestPages\tagscontrol.js" />
     <Content Include="TestPages\tagscontrol.html" />
     <Content Include="TestPages\kanban.js" />
