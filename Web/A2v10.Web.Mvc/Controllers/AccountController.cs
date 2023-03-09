@@ -126,9 +126,9 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 
 			var layoutHtml = _host.Mobile ? ResourceHelper.InitLayoutMobileHtml : ResourceHelper.InitLayoutHtml;
 
-			StringBuilder layout = new StringBuilder(_localizer.Localize(null, GetRedirectedPage("layout", layoutHtml)));
+			StringBuilder layout = new(_localizer.Localize(null, GetRedirectedPage("layout", layoutHtml)));
 			layout.Replace("$(Lang)", _userLocale.Language);
-			StringBuilder html = new StringBuilder(rsrcHtml);
+			StringBuilder html = new(rsrcHtml);
 			layout.Replace("$(Partial)", html.ToString());
 			layout.Replace("$(Title)", appTitle?.AppTitle);
 			layout.Replace("$(ErrorMessage)", _localizer.Localize(null, errorMessage));
@@ -138,7 +138,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 			String mtMode = _host.IsMultiTenant.ToString().ToLowerInvariant();
 			String regMode = _host.IsRegistrationEnabled.ToString().ToLowerInvariant();
 
-			StringBuilder script = new StringBuilder(rsrcScript);
+			StringBuilder script = new(rsrcScript);
 			script.Replace("$(Utils)", ResourceHelper.PageUtils);
 			script.Replace("$(Locale)", ResourceHelper.LocaleLibrary(_userLocale.Language));
 			script.Replace("$(Mask)", ResourceHelper.Mask);
@@ -172,7 +172,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		Int32 ix = text.IndexOf("@PartialFile:");
 		if (ix == -1)
 			return text;
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new();
 		Int32 spIndex = text.IndexOfAny(" \n\r<>".ToCharArray(), ix);
 		sb.Append(text.Substring(0, ix));
 		String partialFileName = text.Substring(ix + 13, spIndex - ix - 13);
@@ -384,7 +384,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		SendPage(page, ResourceHelper.RegisterTenantScript);
 	}
 
-	static readonly ConcurrentDictionary<String, DateTime> _ddosChecker = new ConcurrentDictionary<String, DateTime>();
+	static readonly ConcurrentDictionary<String, DateTime> _ddosChecker = new();
 
 	public DelayedConfirm GetDelayedConfirm()
 	{
@@ -494,7 +494,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		var callbackUrl = Url.Action("confirmemaillink", "account", new { userId = user.Id, code = emailConfirmLink }, Request.Url.Scheme);
 
 		String subject = _localizer.Localize(null, "@[ConfirmEMail]");
-		StringBuilder sbBody = new StringBuilder(GetEMailBody("confirmemail", "@[ConfirmEMailBody]"));
+		StringBuilder sbBody = new(GetEMailBody("confirmemail", "@[ConfirmEMailBody]"));
 		sbBody.Replace("{0}", confirmCode)
 			.Replace("{1}", callbackUrl)
 			.Replace("$(EMail)", user.UserName)
@@ -1009,8 +1009,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 							if (e.Contains("Invalid token"))
 								status = "InvalidToken";
 						}
-						if (status == null)
-							status = String.Join(", ", result.Errors);
+						status ??= String.Join(", ", result.Errors);
 					}
 				}
 				else
@@ -1042,11 +1041,9 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 			if (User.Identity.IsUserOpenId())
 				throw new SecurityException("Invalid User type (openId?)");
 
-			var user = await UserManager.FindByIdAsync(model.Id);
-			if (user == null)
-				throw new SecurityException("User not found");
-
-			if (!user.ChangePasswordEnabled)
+			var user = await UserManager.FindByIdAsync(model.Id) 
+				?? throw new SecurityException("User not found");
+            if (!user.ChangePasswordEnabled)
 				throw new SecurityException("Change password not allowed");
 
 			var ir = await UserManager.ChangePasswordAsync(model.Id, model.OldPassword, model.NewPassword);
@@ -1073,10 +1070,7 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 	public ActionResult LogOff()
 	{
 		var sh = _hooksProvider.SessionHooks;
-		if (sh != null)
-		{
-			sh.OnLogout(Request, User.Identity.GetUserId<Int64>());
-		}
+		sh?.OnLogout(Request, User.Identity.GetUserId<Int64>());
 		var openIdSettings = OpenIdSettings;
 		if (!String.IsNullOrEmpty(openIdSettings))
 		{
@@ -1249,11 +1243,9 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 
 	private T GetModelFromBody<T>()
 	{
-		using (var tr = new StreamReader(Request.InputStream))
-		{
-			String json = tr.ReadToEnd();
-			return JsonConvert.DeserializeObject<T>(json);
-		}
+		using var tr = new StreamReader(Request.InputStream);
+		String json = tr.ReadToEnd();
+		return JsonConvert.DeserializeObject<T>(json);
 	}
 
 	private async Task CallHook(String hookName, AppUser user)

@@ -49,7 +49,7 @@
 		<PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security.OAuth" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.1" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Owin" Version="1.0" />
 	</ItemGroup>
 
