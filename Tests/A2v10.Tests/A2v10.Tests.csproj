@@ -23,6 +23,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Remove="WorkflowTest.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="MSTest.TestAdapter" Version="3.0.2" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.0.2" />
 	</ItemGroup>

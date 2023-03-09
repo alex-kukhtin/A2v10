@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace A2v10.Tests.Lang
 {
 	[TestClass]
-	[TestCategory("Workflow")]
+	[TestCategory("Lang (Parser)")]
 	public class TSParserTest
 	{
 		[TestMethod]
