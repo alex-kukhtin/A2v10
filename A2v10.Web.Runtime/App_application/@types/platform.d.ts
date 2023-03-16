@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7921 */
+/* Version 10.0.7922 */
 
 declare function require(url: string): any;
 
@@ -284,7 +284,9 @@ interface IMessage {
 interface IConfirm {
 	msg: string;
 	style?: MessageStyle;
+	title?: string;
 	list?: string[];
+	buttons?: { text: string, result: string | boolean }[];
 }
 
 interface IErrorInfo {
