@@ -54,7 +54,7 @@
 		<PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.2" />
 		<PackageReference Include="Quartz" Version="3.6.2" />
 		<PackageReference Include="RazorGenerator.Mvc" Version="2.4.9" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.1" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="7.0.2" />
 		<PackageReference Include="WebActivatorEx" Version="2.2.0" />
 	</ItemGroup>
 
