@@ -45,9 +45,9 @@ namespace A2v10.Xaml
 				tab.MergeStyle("height", Height.Value);
 
 			// show/hide support
-			MergeBindingAttributeBool(tab, context, ":show", nameof(Show), Show);
+			MergeBindingAttributeBool(tab, context, ":tab-show", nameof(Show), Show);
 			// emulate v-hide
-			MergeBindingAttributeBool(tab, context, ":show", nameof(Hide), Hide, bInvert: true);
+			MergeBindingAttributeBool(tab, context, ":tab-show", nameof(Hide), Hide, bInvert: true);
 
 			tab.RenderStart(context);
 

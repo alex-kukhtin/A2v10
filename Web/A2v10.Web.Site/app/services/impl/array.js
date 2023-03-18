@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20221026-7902*/
+/*20230318-7922*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -106,6 +106,7 @@ app.modules['std:impl:array'] = function () {
 		arr.$empty = function () {
 			if (this.$root.isReadOnly)
 				return this;
+			this._root_.$setDirty(true);
 			this.splice(0, this.length);
 			if ('$RowCount' in this)
 				this.$RowCount = 0;

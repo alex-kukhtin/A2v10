@@ -1,7 +1,7 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2013 Oleksandr Kukhtin. All rights reserved.
 
 
-/* 20180821-7280 */
+/* 20230318-7922 */
 /*components/tab.js*/
 
 /*
@@ -58,7 +58,7 @@ TODO:
 `;
 
 	const tabItemTemplate = `
-<div class="tab-item" v-show="isActive">
+<div class="tab-item" v-if="isActive" v-show="isVisible">
 	<slot />
 </div>
 `;
@@ -72,7 +72,7 @@ TODO:
 			badge: [String, Number, Object],
 			icon: String,
 			tabStyle: String,
-			show: undefined,
+			tabShow: { type: Boolean, default: true },
 			itemToValidate: Object,
 			propToValidate: String
 		},
@@ -98,9 +98,7 @@ TODO:
 				return (this.isActive ? 'active ' : '') + (this.tabStyle || '');
 			},
 			isVisible() {
-				if (typeof this.show === 'boolean')
-					return this.show;
-				return true;
+				return this.tabShow;
 			}
 		},
 		methods: {

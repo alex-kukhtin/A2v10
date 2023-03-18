@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230304-7922*/
+/*20230318-7922*/
 // services/datamodel.js
 
 /*
@@ -399,6 +399,7 @@
 			elem._root_ctor_ = elem.constructor;
 			elem.$dirty = false;
 			elem._query_ = {};
+			elem._allErrors_ = [];
 
 			// rowcount implementation
 			for (var m in elem._meta_.props) {
@@ -945,6 +946,36 @@
 
 	}
 
+	function hasErrors(props) {
+		if (!props || !props.length) return false;
+		let errs = this._collectErrors_();
+		if (!errs.length) return false;
+		for (let i = 0; i < errs.length; i++) {
+			let e = errs[i];
+			if (props.some(p => p === e.x))
+				return true;
+		}
+		return false;
+	}
+
+	function collectErrors() {
+		let me = this;
+		if (!me._host_) return me._allErrors_;
+		if (!me._needValidate_) return me._allErrors_;
+		let tml = me.$template;
+		if (!tml) return me._allErrors_;
+		let vals = tml.validators;
+		if (!vals) return me._allErrors_;
+		me._allErrors_.splice(0, me._allErrors_.length);
+		for (var val in vals) {
+			let err1 = validateOneElement(me, val, vals[val]);
+			if (err1) {
+				me._allErrors_.push({ x: val, e: err1 });
+			}
+		}
+		return me._allErrors_;
+	}
+
 	function validateAll(force) {
 		var me = this;
 		if (!me._host_) return;
@@ -1132,6 +1163,8 @@
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
+		root.prototype._collectErrors_ = collectErrors;
+		root.prototype.$hasErrors = hasErrors;
 		root.prototype.$destroy = destroyRoot;
 		// props cache for t.construct
 		if (!template) return;

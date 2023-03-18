@@ -122,6 +122,7 @@ interface IRoot extends IElement {
 	$forceValidate(): void;
 	$setDirty(dirty: boolean, path?: string): void;
 	$createModelInfo(elem: IElementArray<IElement>, modelInfo: IModelInfo): IModelInfo;
+	$hasErrors(props: string[]): boolean;
 }
 
 

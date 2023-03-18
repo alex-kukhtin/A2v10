@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7921 */
+/* Version 10.0.7922 */
 
 declare function require(url: string): any;
 
@@ -122,6 +122,7 @@ interface IRoot extends IElement {
 	$forceValidate(): void;
 	$setDirty(dirty: boolean, path?: string): void;
 	$createModelInfo(elem: IElementArray<IElement>, modelInfo: IModelInfo): IModelInfo;
+	$hasErrors(props: string[]): boolean;
 }
 
 
@@ -251,7 +252,7 @@ interface IController {
 	$modalClose(result?: any): any;
 	$msg(msg: string, title?: string, style?: CommonStyle): Promise<boolean>;
 	$alert(msg: string | IMessage): Promise<boolean>;
-	$confirm(msg: string | IConfirm): Promise<boolean>;
+	$confirm(msg: string | IConfirm): Promise<boolean|string>;
 	$showDialog(url: string, data?: object, query?: object): Promise<any>;
 	$inlineOpen(id: string): void;
 	$inlineClose(id: string, result?: any): void;
@@ -284,7 +285,9 @@ interface IMessage {
 interface IConfirm {
 	msg: string;
 	style?: MessageStyle;
+	title?: string;
 	list?: string[];
+	buttons?: { text: string, result: string | boolean }[];
 }
 
 interface IErrorInfo {
