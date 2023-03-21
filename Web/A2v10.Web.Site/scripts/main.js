@@ -6975,6 +6975,8 @@ Vue.component('validator-control', {
 						// first property from result
 						let prop = Object.keys(result)[0];
 						this.items = result[prop];
+						if (this.items.length)
+							this.current = 0;
 					}).catch(() => {
 						this.items = [];
 					});
