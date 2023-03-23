@@ -8,18 +8,49 @@
 		[v-cloak] {
 			display: none;
 		}
+		.kanban {
+			display:flex;
+			flex-wrap:nowrap;
+			flex-direction:row;
+			gap:1rem;
+			overflow:auto;
+
+		}
+
+		.kanban .lane-header {
+			padding:10px 0;
+		}
+
+		.kanban .card-list {
+			margin:0;
+			padding:0;
+			display:flex;
+			flex-direction:column;
+			gap:1rem;
+		}
+		.card {
+			background-color:antiquewhite;
+			padding:1rem;
+			cursor:pointer;
+		}
 	</style>
 </head>
 <body>
 	<div id="app" style="height:100%;padding:10px">
 		<h3>Kanban board</h3>
-		<a2-kanban :items="Items" line-prop="State">
-			<template v-slot:element="card">
-				<div>
-					<div>Header</div>
-					<div>Content</div>
-					<div>Footer</div>
+		<a2-kanban :lanes="Lanes" line-prop="State">
+			<template v-slot:header="{lane}">
+				<div>{{lane.Name}}</div>
+				<div>{{lane.State}}</div>
+			</template>
+			<template v-slot:card="{card}">
+				<div style="width:300px">
+					<div>{{card.Header}}</div>
+					<div>{{card.Text}}</div>
 				</div>
+			</template>
+			<template v-slot:footer="{lane}">
+				<div>Count: {{lane.Items.length}}</div>
 			</template>
 		</a2-kanban>
 	</div>
@@ -29,21 +60,34 @@
 		new Vue({
 			el: "#app",
 			data: {
-				Items: [
+				Lanes: [
 					{
+						Name: 'Lane 1',
 						State: 'ToDo',
-						Header: 'Task 1',
-						Text: 'Analyze the new requirements gathered from the customer.'
+						Items: [
+							{
+								Header: 'Task 1',
+								Text: 'Analyze the new requirements gathered from the customer.'
+							},
+							{
+								Header: 'Task 2',
+								Text: 'Show the retrieved data from the server in grid control.'
+							},
+							{
+								Header: 'Task 3',
+								Text: 'Improve application performance'
+							}
+						]
 					},
 					{
-						State: 'ToDo',
-						Header: 'Task 2',
-						Text: 'Show the retrieved data from the server in grid control.'
-					},
-					{
+						Name: 'Lane 2',
 						State: 'InProgress',
-						Header: 'Task 3',
-						Text: 'Improve application performance'
+						Items: [
+							{
+								Header: 'Task 3',
+								Text: 'Improve application performance'
+							}
+						]
 					}
 				]
 			},
