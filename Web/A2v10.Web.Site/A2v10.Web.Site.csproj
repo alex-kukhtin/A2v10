@@ -394,6 +394,7 @@
     <Content Include="Less.Advance\ColorPicker.less" />
     <Content Include="Less\ColorPicker.less" />
     <Content Include="Less.Advance\TagsControl.less" />
+    <Content Include="Less.Advance\Kanban.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

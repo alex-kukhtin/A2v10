@@ -3,54 +3,38 @@
 <head>
 	<meta charset="utf-8" />
 	<title></title>
-	<link rel="stylesheet" href="../css/site.css" />
+	<link rel="stylesheet" href="../css/site.advance.css" />
+	<link rel="stylesheet" href="../css/blue.colorscheme.css" />
 	<style>
 		[v-cloak] {
 			display: none;
 		}
-		.kanban {
-			display:flex;
-			flex-wrap:nowrap;
-			flex-direction:row;
-			gap:1rem;
-			overflow:auto;
-
-		}
-
-		.kanban .lane-header {
-			padding:10px 0;
-		}
-
-		.kanban .card-list {
-			margin:0;
-			padding:0;
-			display:flex;
-			flex-direction:column;
-			gap:1rem;
-		}
-		.card {
-			background-color:antiquewhite;
-			padding:1rem;
-			cursor:pointer;
-		}
 	</style>
 </head>
 <body>
-	<div id="app" style="height:100%;padding:10px">
+	<div id="app" style="height:100%;padding:10px;overflow:hidden;display:grid;grid-template-rows:auto 1fr">
 		<h3>Kanban board</h3>
-		<a2-kanban :lanes="Lanes" line-prop="State">
+		<a2-kanban :lanes="States" :items="Items" :drop-delegate="dropDelegate" state-prop="State"
+				   style="height:100%">
 			<template v-slot:header="{lane}">
 				<div>{{lane.Name}}</div>
 				<div>{{lane.State}}</div>
 			</template>
 			<template v-slot:card="{card}">
-				<div style="width:300px">
+				<div class="kanban-card">
 					<div>{{card.Header}}</div>
 					<div>{{card.Text}}</div>
+					<div>{{card.State.$id}}</div>
+					<div>{{card.Header}}</div>
+					<div>{{card.Text}}</div>
+					<div>{{card.State.$id}}</div>
+					<div>{{card.Header}}</div>
+					<div>{{card.Text}}</div>
+					<div>{{card.State.$id}}</div>
 				</div>
 			</template>
 			<template v-slot:footer="{lane}">
-				<div>Count: {{lane.Items.length}}</div>
+				<div>Count: {{5}}</div>
 			</template>
 		</a2-kanban>
 	</div>
@@ -60,38 +44,45 @@
 		new Vue({
 			el: "#app",
 			data: {
-				Lanes: [
+				States: [
+					{ $id: 10, Name: 'Lane 1', State: 'ToDo' },
+					{ $id: 20, Name: 'Lane 2', State: 'InProgress' },
+					{ $id: 30, Name: 'Lane 2', State: 'Testing' },
+					{ $id: 40, Name: 'Lane 3', State: 'Done' },
+				],
+				Items: [
 					{
-						Name: 'Lane 1',
-						State: 'ToDo',
-						Items: [
-							{
-								Header: 'Task 1',
-								Text: 'Analyze the new requirements gathered from the customer.'
-							},
-							{
-								Header: 'Task 2',
-								Text: 'Show the retrieved data from the server in grid control.'
-							},
-							{
-								Header: 'Task 3',
-								Text: 'Improve application performance'
-							}
-						]
+						$id: 50,
+						Header: 'Task 1',
+						Text: 'Analyze the new requirements gathered from the customer.',
+						State: { $id: 10 }
 					},
 					{
-						Name: 'Lane 2',
-						State: 'InProgress',
-						Items: [
-							{
-								Header: 'Task 3',
-								Text: 'Improve application performance'
-							}
-						]
-					}
+						$id: 51,
+						Header: 'Task 2',
+						Text: 'Show the retrieved data from the server in grid control.',
+						State: { $id: 10 }
+					},
+					{
+						$id: 52,
+						Header: 'Task 3',
+						Text: 'Improve application performance',
+						State: { $id: 10 }
+					},
+					{
+						$id: 53,
+						Header: 'Task 4',
+						Text: 'Fix selected bugs',
+						State: { $id: 20 }
+					},
 				]
 			},
 			methods: {
+				dropDelegate(card, lane) {
+					console.dir(card);
+					console.dir(lane);
+					card.State.$id = lane.$id;
+				}
 			}
 		});
 	</script>

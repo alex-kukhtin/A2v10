@@ -7458,6 +7458,68 @@ table.tree-grid a.toggle.expanded:after {
 .tag-body.teal {
   color: #00b5ad;
 }
+.kanban {
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+.kanban .kanban-part {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+}
+.kanban .kanban-header,
+.kanban .kanban-footer {
+  position: sticky;
+}
+.kanban .kanban-header {
+  top: 0;
+}
+.kanban .kanban-footer {
+  bottom: 0;
+}
+.kanban .kanban-body {
+  flex-grow: 2;
+}
+.kanban .lane-header {
+  padding: 10px;
+  background-color: azure;
+  width: 300px;
+  display: flex;
+  border-bottom: 1px solid red;
+}
+.kanban .lane {
+  background-color: var(--neutralBkLight);
+  padding: 10px;
+  width: 300px;
+  display: flex;
+}
+.kanban .lane-header .lane-header-body {
+  flex-grow: 2;
+}
+.kanban .lane-footer {
+  padding: 10px;
+  width: 300px;
+  background-color: cornsilk;
+  border-top: 1px solid orange;
+}
+.kanban .card-list {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-grow: 2;
+}
+.kanban .card {
+  cursor: pointer;
+}
+.kanban .kanban-card {
+  padding: 10px;
+  background-color: aliceblue;
+  border: 1px solid blue;
+}
 .block {
   display: block!important;
   width: 100%;
