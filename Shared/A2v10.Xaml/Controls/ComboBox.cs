@@ -65,8 +65,7 @@ namespace A2v10.Xaml
 		{
 			get
 			{
-				if (_children == null)
-					_children = new ComboBoxItems();
+				_children ??= new ComboBoxItems();
 				return _children;
 			}
 			set
@@ -104,14 +103,12 @@ namespace A2v10.Xaml
 						throw new XamlException("The ComboBox with the specified ItemsSource must have only one ComboBoxItem element");
 					}
 					var elem = Children[0];
-					var contBind = elem.GetBinding("Content");
-					if (contBind == null)
-						throw new XamlException("ComboBoxItem. Content binging must be specified");
-					combo.MergeAttribute(":name-prop", $"'{contBind.Path}'"); /*without context!*/
-					var valBind = elem.GetBinding("Value");
-					if (valBind == null)
-						throw new XamlException("ComboBoxItem. Value binging must be specified");
-					combo.MergeAttribute(":value-prop", $"'{valBind.Path}'");  /*without context!*/
+					var contBind = elem.GetBinding("Content") 
+						?? throw new XamlException("ComboBoxItem. Content binging must be specified");
+                    combo.MergeAttribute(":name-prop", $"'{contBind.Path}'"); /*without context!*/
+					var valBind = elem.GetBinding("Value") 
+						?? throw new XamlException("ComboBoxItem. Value binging must be specified");
+                    combo.MergeAttribute(":value-prop", $"'{valBind.Path}'");  /*without context!*/
 				}
 			}
 			MergeValue(combo, context);

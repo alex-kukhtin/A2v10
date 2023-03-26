@@ -120,7 +120,7 @@ public class Selector : ValuedControl, ITableControl
 	{
 		if (ItemsPanel == null)
 			return;
-		if (!(ItemsPanel is DataGrid dg))
+		if (ItemsPanel is not DataGrid dg)
 			throw new XamlException("Only DataGrid panel is supported");
 		var tml = new TagBuilder("template");
 		tml.MergeAttribute("slot", "pane");

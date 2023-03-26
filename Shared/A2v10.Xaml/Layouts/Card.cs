@@ -81,7 +81,7 @@ namespace A2v10.Xaml
 			if (hb != null)
 			{
 				var s = new TagBuilder("span");
-				s.MergeAttribute(":text", hb.GetPathFormat(context));
+				s.MergeAttribute("v-text", hb.GetPathFormat(context));
 				s.Render(context);
 			}
 			else if (Header is UIElementBase hUiElem) {
@@ -117,7 +117,7 @@ namespace A2v10.Xaml
 			if (fb != null)
 			{
 				var s = new TagBuilder("span");
-				s.MergeAttribute(":text", fb.GetPathFormat(context));
+				s.MergeAttribute("v-text", fb.GetPathFormat(context));
 				s.Render(context);
 			}
 			else if (Footer is UIElementBase fUiElem)
