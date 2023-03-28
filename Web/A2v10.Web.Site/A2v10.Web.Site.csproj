@@ -275,6 +275,8 @@
     <Content Include="TestPages\colorpicker.html" />
     <Content Include="TestPages\barcode.html" />
     <Content Include="TestPages\barcode.js" />
+    <Content Include="TestPages\timetable.js" />
+    <Content Include="TestPages\timetable.html" />
     <Content Include="TestPages\pivot.js" />
     <Content Include="TestPages\pivot.html" />
     <Content Include="TestPages\tagscontrol.js" />

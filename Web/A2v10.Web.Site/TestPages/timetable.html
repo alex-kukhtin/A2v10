@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .time-table {
+            position:relative;
+        }
+
+        .table-timetable td {
+            padding:4px;
+            border:1px solid #ccc;
+        }
+
+        td.bottom {
+            border-bottom:2px solid #999;
+        }
+
+		.table-timetable th {
+			padding: 4px;
+			border: 1px solid orange;
+            background-color:#fafafa;
+		}
+
+        .blue {
+            background-color:aliceblue;
+        }
+        .cell-marker {
+            position:absolute;
+            background-color:antiquewhite;
+            border:1px solid orange;
+        }
+        .mark-input {
+            width:20px;
+            padding:4px;
+            height:100%;
+        }
+        .mark-dropdown {
+            position:absolute;
+            font-size:12px;
+            top:100%;
+            left:0;
+            margin:0;
+            padding:0;
+            width:auto;
+            background-color:azure;
+            border:1px solid blue;
+        }
+
+        .mark-dropdown li {
+            list-style:none;
+            margin:0;
+            padding:0;
+            white-space:nowrap;
+            padding:2px 4px;
+            cursor:pointer;
+        }
+
+        li:hover {
+            background-color:yellow;
+        }
+		.mark-input-dropdown {
+            width:38px;
+            font-size:12px;
+		}
+    </style>
+</head>
+<body style="padding:2rem">
+    <div>
+        <h3>TimeTable</h3>
+    </div>
+    <div id="app">
+        <a2-timetable :rows="document.rows">
+        </a2-timetable>
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="./timetable.js"></script>
+    <script>
+        let dat = {
+            document: {
+                rows: [
+                ]
+            }
+        };
+
+        for (let i = 0; i < 10; i++) {
+            let r = { id: i, days: [] };
+            for (let d = 0; d < 31; d++)
+                r.days.push({ day: d + 1, val: 'v' + (d + 1) });
+            dat.document.rows.push(r);
+        }
+
+        console.dir(dat.document.rows);
+
+        new Vue({
+            el: "#app",
+            data: dat
+        });
+    </script>
+</body>
+</html>
