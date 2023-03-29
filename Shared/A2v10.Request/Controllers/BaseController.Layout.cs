@@ -320,6 +320,8 @@ public partial class BaseController
 					continue; // min.{ext} found
 			}
 			var txt = _host.ApplicationReader.FileReadAllText(fileName);
+			if (txt.StartsWith("/*@localize*/"))
+				txt = _localizer.Localize(null, txt, false);
 			writer.Write(txt);
 		}
 	}
