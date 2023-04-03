@@ -277,7 +277,7 @@ function modelData(template, data) {
 
 		public String GetSpecialProperties(IDataMetadata meta)
 		{
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new();
 			if (!String.IsNullOrEmpty(meta.Id))
 				sb.Append($"$id: '{meta.Id}',");
 			if (!String.IsNullOrEmpty(meta.Name))
@@ -302,7 +302,7 @@ function modelData(template, data) {
 				sb.Append($"$group: true,");
 			if (meta.HasCross)
 				sb.Append($"$cross: {GetCrossProperties(meta)},");
-			StringBuilder lazyFields = new StringBuilder();
+			StringBuilder lazyFields = new();
 			foreach (var f in meta.Fields)
 			{
 				if (f.Value.IsLazy)
@@ -508,10 +508,10 @@ function modelData(template, data) {
 		public async Task<ScriptInfo> GetModelScript(ModelScriptInfo msi)
 		{
 			var result = new ScriptInfo();
-			StringBuilder output = new StringBuilder();
+			StringBuilder output = new();
 			String dataModelText = "{}";
 			String templateText = "{}";
-			StringBuilder sbRequired = new StringBuilder();
+			StringBuilder sbRequired = new();
 
 			// write model script
 			String fileTemplateText = null;

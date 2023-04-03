@@ -59,12 +59,10 @@ namespace A2v10.Interop
 
 			foreach (var f in _schemaPathes)
 			{
-				using (var textReader = XmlReader.Create(f))
-				{
-					XmlSchema sc = XmlSchema.Read(textReader, eventHandler);
-					_schemaSet.Add(sc);
-				}
-			}
+                using var textReader = XmlReader.Create(f);
+                XmlSchema sc = XmlSchema.Read(textReader, eventHandler);
+                _schemaSet.Add(sc);
+            }
 
 			_schemaSet.Compile();
 			return CreateXmlFromSchema();
@@ -196,11 +194,18 @@ namespace A2v10.Interop
 			}
 
 			writer.WriteStartElement(elem.Name);
+
 			if (level == 0 && FirstSchema != null)
 				writer.WriteAttributeString("xsi", "noNamespaceSchemaLocation", XmlSchema.InstanceNamespace, FirstSchema);
 
 
-			switch (elem.ElementSchemaType)
+            if (innerModel is IList<Object> listObj && listObj.Count == 0)
+            {
+                if (elem.IsNillable)
+                    WriteNil(writer);
+            }
+
+            switch (elem.ElementSchemaType)
 			{
 				case XmlSchemaComplexType complexType:
 					var pi = complexType.Particle as XmlSchemaSequence;

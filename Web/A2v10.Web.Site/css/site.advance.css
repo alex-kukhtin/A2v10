@@ -1022,51 +1022,106 @@ h5,
 .tag-label.green {
   background-color: #5db750;
 }
+.tag-label.success.outline,
+.tag-label.green.outline {
+  color: #5db750;
+}
 .tag-label.warning,
 .tag-label.orange {
   background-color: #ffb74d;
+}
+.tag-label.warning.outline,
+.tag-label.orange.outline {
+  color: #ffb74d;
 }
 .tag-label.danger,
 .tag-label.red,
 .tag-label.error {
   background-color: #da533f;
 }
+.tag-label.danger.outline,
+.tag-label.red.outline,
+.tag-label.error.outline {
+  color: #da533f;
+}
 .tag-label.info,
 .tag-label.cyan {
   background-color: #60bbe5;
 }
+.tag-label.info.outline,
+.tag-label.cyan.outline {
+  color: #60bbe5;
+}
 .tag-label.purple {
   background-color: mediumpurple;
+}
+.tag-label.purple.outline {
+  color: mediumpurple;
 }
 .tag-label.pink {
   background-color: hotpink;
 }
+.tag-label.pink.outline {
+  color: hotpink;
+}
 .tag-label.gold {
   background-color: #eac500;
+}
+.tag-label.gold.outline {
+  color: #eac500;
 }
 .tag-label.blue {
   background-color: cornflowerblue;
 }
+.tag-label.blue.outline {
+  color: cornflowerblue;
+}
 .tag-label.salmon {
   background-color: salmon;
+}
+.tag-label.salmon.outline {
+  color: salmon;
 }
 .tag-label.seagreen {
   background-color: darkseagreen;
 }
+.tag-label.seagreen.outline {
+  color: darkseagreen;
+}
 .tag-label.tan {
   background-color: tan;
+}
+.tag-label.tan.outline {
+  color: tan;
 }
 .tag-label.magenta {
   background-color: darkmagenta;
 }
+.tag-label.magenta.outline {
+  color: darkmagenta;
+}
 .tag-label.lightgray {
   background-color: #ccc;
+}
+.tag-label.lightgray.outline {
+  color: #ccc;
 }
 .tag-label.olive {
   background-color: #b5cc18;
 }
+.tag-label.olive.outline {
+  color: #b5cc18;
+}
 .tag-label.teal {
   background-color: #00b5ad;
+}
+.tag-label.teal.outline {
+  color: #00b5ad;
+}
+.tag-label.outline {
+  background-color: white;
+  border: 1px solid currentColor;
+  color: #8f94b0;
 }
 .tag-label.hidden {
   display: none;
