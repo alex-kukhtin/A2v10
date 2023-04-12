@@ -1,0 +1,7 @@
+﻿<Page xmlns="clr-namespace:A2v10.Xaml;assembly=A2v10.Xaml">
+	<EmptyPanel Icon="Smile">
+		<Text>@[Hello],
+			<Span Content="{Bind Home.User.PersonName}"/> !
+		</Text>
+	</EmptyPanel>
+</Page>

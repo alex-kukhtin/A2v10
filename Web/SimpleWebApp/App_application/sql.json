@@ -1,0 +1,14 @@
+﻿[
+  {
+    "$schema": "@schemas/sql-json-schema.json#",
+    "version": "1.0.0001",
+    "outputFile": "sqlscripts/mainapp.sql",
+    "inputFiles": [
+      "@sql/platform/a2v10platform.sql",
+      "@sql/platform/a2v10admin.sql",
+      "main/_sql/struct.sql",
+      "main/_sql/ui.sql",
+      "main/home/home.sql"
+    ]
+  }
+]

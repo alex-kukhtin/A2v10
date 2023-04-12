@@ -1,0 +1,21 @@
+﻿{
+	"$schema": "http://json-schema.org/draft-04/schema",
+	"$version": "10.0.7644",
+	"title": "JSON Schema for sql.json",
+	"type": "array",
+	"items": {
+		"type": "object",
+		"properties": {
+			"$schema": { "type": "string" },
+			"name": { "type": "string" },
+			"version": { "type": "string" },
+			"outputFile": { "type": "string" },
+			"inputFiles": {
+				"type": "array",
+				"items": { "type": "string" }
+			}
+		},
+		"required": [ "inputFiles", "outputFile", "name", "version" ],
+		"additionalProperties": false
+	}
+}

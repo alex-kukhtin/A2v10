@@ -1,0 +1,84 @@
+﻿{
+	"$schema": "http://json-schema.org/draft-04/schema",
+	"$version": "10.0.7797",
+	"title": "JSON Schema for model.json",
+	"type": "object",
+
+	"properties": {
+		"$schema": { "type": "string" },
+		"source": { "type": "string" },
+		"schema": {"type": "string"},
+		"commands": {
+			"type": "object",
+			"patternProperties": {
+				".+": {
+					"type": "object",
+					"properties": {
+						"type": {
+							"type": "string",
+							"enum": [ "sql", "clr", "javascript" ]
+						},
+						"method": {
+							"type": "string",
+							"enum": [ "any", "get", "post" ]
+						},
+						"clientId": {
+							"type": "array",
+							"items": { "type": "string" }
+						},
+						"allowOrigin": { "type": "string" },
+						"wrap": { "type": "boolean" },
+						"debugOnly": { "type": "boolean" },
+						"sqlCommand": {
+							"type": "object",
+							"properties": {
+								"source": { "type": "string" },
+								"schema": { "type": "string" },
+								"procedure": { "type": "string" },
+								"model": { "type": "string" },
+								"commandTimeout": { "type": "number" },
+								"action": {
+									"type": "string",
+									"enum": [ "loadModel", "updateModel", "executeSql" ]
+								},
+								"parameters": {
+									"type": "object",
+									"additionalProperties": true
+								},
+								"returns": { "type": "string" }
+							},
+							"additionalProperties": false
+						},
+						"clrCommand": {
+							"type": "object",
+							"properties": {
+								"clrType": {
+									"type": "string",
+									"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
+								},
+								"parameters": {
+									"type": "object",
+									"additionalProperties": true
+								}
+							},
+							"additionalProperties": false
+						},
+						"javascriptCommand": {
+							"type": "object",
+							"properties": {
+								"script": { "type": "string" },
+								"parameters": {
+									"type": "object",
+									"additionalProperties": true
+								}
+							},
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				}
+			}
+		}
+	},
+	"additionalProperties": false
+}

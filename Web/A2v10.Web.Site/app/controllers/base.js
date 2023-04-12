@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230224-7921*/
+/*20230412-7926*/
 // controllers/base.js
 
 (function () {
@@ -530,7 +530,7 @@
 					if (opts && opts.catchError)
 						throw err;
 					else if (err.indexOf('UI:') === 0)
-						this.$alert(err);
+						this.$alert(err.substring(3).replace('\\n', '\n'));
 					else
 						alert(err);
 				}

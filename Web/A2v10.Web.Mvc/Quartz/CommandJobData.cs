@@ -28,6 +28,7 @@ public class CommandJobData
 		{
 			"SendMail" => new SendMailHandler(job, sp),
 			"ExecuteSql" => new ExecuteSqlHandler(job, sp),
+			"InvokeClr" => new InvokeClrHandler(job, sp),
 			_ => throw new InvalidOperationException($"Invalid Job Kind ({job.Kind})"),
 		};
 	}
