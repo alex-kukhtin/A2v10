@@ -2,7 +2,7 @@
 
 @import "Variables.less";
 
-@toggle-size:18px;
+@toggle-size: 18px;
 
 @tg-hover-bg-color: @hover-bg-color-light;
 @tg-active-bg-color: @active-bg-color-light;
@@ -43,6 +43,12 @@ table.tree-grid {
 		font-weight: inherit;
 		font-style: inherit;
 		vertical-align: top;
+
+		&.c-m {
+			min-width: 6px;
+			padding: 0;
+			border-left:none!important;
+		}
 	}
 
 	th {
@@ -88,6 +94,55 @@ table.tree-grid {
 			}
 		}
 	}
+
+	td {
+		&.c-m {
+			background-color: @tg-header-bg-color;
+			opacity: .5;
+
+			&.red, &.danger, &.error {
+				background-color: @mark-danger-brd-color;
+			}
+
+			&.green, &.success {
+				background-color: @mark-success-brd-color;
+			}
+
+			&.warning, &.orange {
+				background-color: @mark-warning-brd-color;
+			}
+
+			&.info, &.cyan {
+				background-color: @mark-info-brd-color;
+			}
+		}
+	}
+
+
+	tr.warning, tr.orange {
+		> td {
+			background-color: @mark-warning-bg-color;
+		}
+	}
+
+	tr.danger, tr.error, tr.red {
+		> td {
+			background-color: @mark-danger-bg-color;
+		}
+	}
+
+	tr.success, tr.green {
+		> td {
+			background-color: @mark-success-bg-color;
+		}
+	}
+
+	tr.info, tr.cyan {
+		> td {
+			background-color: @mark-info-bg-color;
+		}
+	}
+
 
 	.gl-v {
 		border-right-width: 1px;

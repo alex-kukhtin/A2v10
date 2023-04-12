@@ -13,15 +13,6 @@
 @dg-bage-bg-color: darken(@table-hdr-brd-color, 20%);
 
 
-//TODO: from @cmn-xxxxx-brd-color
-@dg-danger-bg-color: rgba(254, 220, 220, 0.5);
-@dg-danger-brd-color: #fc7c7c;
-@dg-warning-bg-color: rgba(255, 216, 0, 0.15);
-@dg-warning-brd-color: gold;
-@dg-success-bg-color: rgba(216, 255, 216, 0.5);
-@dg-success-brd-color: #89e489;
-@dg-info-bg-color: rgba(114, 234, 234, 0.15);
-@dg-info-brd-color: #72eaea;
 @dg-light-yellow-bg-color: rgba(255, 216, 0, 0.07);
 
 @group-padding: 12px;
@@ -193,19 +184,19 @@ table.data-grid {
 	}
 
 	td.danger, td.error, td.red {
-		background-color: @dg-danger-bg-color !important;
+		background-color: @mark-danger-bg-color !important;
 	}
 
 	td.warning, td.orange {
-		background-color: @dg-warning-bg-color !important;
+		background-color: @mark-warning-bg-color !important;
 	}
 
 	td.success, td.green {
-		background-color: @dg-success-bg-color !important;
+		background-color: @mark-success-bg-color !important;
 	}
 
 	td.info, td.cyan {
-		background-color: @dg-info-bg-color !important;
+		background-color: @mark-info-bg-color !important;
 	}
 
 	td.marker {
@@ -227,23 +218,23 @@ table.data-grid {
 		}
 
 		> .warning, > .yellow {
-			background-color: @dg-warning-bg-color;
-			border-left-color: @dg-warning-brd-color;
+			background-color: @mark-warning-bg-color;
+			border-left-color: @mark-warning-brd-color;
 		}
 
 		> .danger, > .error, > .red {
-			background-color: @dg-danger-bg-color;
-			border-left-color: @dg-danger-brd-color;
+			background-color: @mark-danger-bg-color;
+			border-left-color: @mark-danger-brd-color;
 		}
 
 		> .success, > .green {
-			background-color: @dg-success-bg-color;
-			border-left-color: @dg-success-brd-color;
+			background-color: @mark-success-bg-color;
+			border-left-color: @mark-success-brd-color;
 		}
 
 		> .info, > .cyan {
-			background-color: @dg-info-bg-color;
-			border-left-color: @dg-info-brd-color;
+			background-color: @mark-info-bg-color;
+			border-left-color: @mark-info-brd-color;
 		}
 	}
 
@@ -363,25 +354,25 @@ table.data-grid.compact {
 table.data-grid > tbody {
 	> tr.warning, > tr.orange {
 		> td {
-			background-color: @dg-warning-bg-color;
+			background-color: @mark-warning-bg-color;
 		}
 	}
 
 	> tr.danger, > tr.error, > tr.red {
 		> td {
-			background-color: @dg-danger-bg-color;
+			background-color: @mark-danger-bg-color;
 		}
 	}
 
 	> tr.success, > tr.green {
 		> td {
-			background-color: @dg-success-bg-color;
+			background-color: @mark-success-bg-color;
 		}
 	}
 
 	> tr.info, > tr.cyan {
 		> td {
-			background-color: @dg-info-bg-color;
+			background-color: @mark-info-bg-color;
 		}
 	}
 

@@ -342,6 +342,7 @@ public partial class BaseController
 			IsDialog = rw.IsDialog,
 			IsIndex = rw.index,
 			IsSkipDataStack = rw.skipDataStack,
+			IsPlain = rw.plain,
 			Template = rw.template,
 			Path = rw.Path,
 			BaseUrl = rw.ParentModel.BasePath

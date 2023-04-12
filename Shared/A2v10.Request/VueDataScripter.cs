@@ -125,9 +125,13 @@ vm.__doInit__('$(BaseUrl)');
 			_localizer = localizer;
 		}
 
-		public String CreateDataModelScript(IDataModel model)
+		public String CreateDataModelScript(IDataModel model, Boolean isPlain)
 		{
-			return model != null ? model.CreateScript(this) : CreateEmptyStript();
+			if (model == null)
+				return CreateEmptyStript();
+			if (isPlain)
+				return CreatePlainScript();
+			return model.CreateScript(this);
 		}
 
 		public String CreateScript(IDataHelper helper, IDictionary<String, Object> sys, IDictionary<String, IDataMetadata> meta)
@@ -148,6 +152,14 @@ vm.__doInit__('$(BaseUrl)');
 			return sb.ToString();
 		}
 
+		String CreatePlainScript()
+		{
+			return @"
+function modelData(template, data) {
+	return rawData;
+}
+";
+		}
 		String CreateEmptyStript()
 		{
 			return @"
@@ -535,7 +547,7 @@ function modelData(template, data) {
 			modelFunc.Replace("$(RequiredModules)", sbRequired?.ToString());
 			modelFunc.Replace("$(TemplateText)", Localize(templateText));
 			modelFunc.Replace("$(DataModelText)", dataModelText);
-			String modelScript = CreateDataModelScript(msi.DataModel);
+			String modelScript = CreateDataModelScript(msi.DataModel, msi.IsPlain);
 			modelFunc.Replace("$(ModelScript)", modelScript);
 			result.DataScript = modelFunc.ToString();
 

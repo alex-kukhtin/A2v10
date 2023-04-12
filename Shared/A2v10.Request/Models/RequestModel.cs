@@ -118,6 +118,7 @@ public class RequestBase
 	public String source; // or parent
 	public Boolean index;
 	public Boolean skipDataStack;
+	public Boolean plain;
 	public Boolean copy;
 	public String template;
 	public String script;
