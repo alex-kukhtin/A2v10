@@ -13701,9 +13701,9 @@ Vue.directive('resize', {
 		pageNavBar: a2NavBarPage
 	};
 })();	
-// Copyright © 2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20200611-7673*/
+/*20230412-7926*/
 /* controllers/sidebar.js */
 
 (function () {
@@ -13770,11 +13770,10 @@ Vue.directive('resize', {
 					console.error('no top menu found');
 			},
 			itemHref(item) {
+				if (!item.Url)
+					return undefined
 				let top = this.topMenu;
-				if (top) {
-					return urlTools.combine(top.Url, item.Url);
-				}
-				return undefined;
+				return top ? urlTools.combine(top.Url, item.Url) : undefined;
 			},
 			toggle() {
 				this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
@@ -13796,7 +13795,7 @@ Vue.directive('resize', {
 		template: `
 <div :class="cssClass">
 	<a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
-	<div class="side-bar-body" v-if="bodyIsVisible">
+	<div class="side-bar-body advance" v-if="bodyIsVisible">
 		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
 			subitems: 'Menu', expandAll:true, xtraClass:'ClassName',
