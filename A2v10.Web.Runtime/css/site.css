@@ -318,6 +318,9 @@
 .ico-database:before {
   content: "\e945";
 }
+.ico-board:before {
+  content: "\e946";
+}
 .ico-dot:before {
   content: "\ea49";
 }
@@ -356,6 +359,9 @@
 }
 .ico-devices:before {
   content: "\e958";
+}
+.ico-personnel:before {
+  content: "\e9c0";
 }
 .ico-ellipsis-bottom:before {
   content: "\e9b3";

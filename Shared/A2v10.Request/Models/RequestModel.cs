@@ -312,8 +312,7 @@ public class RequestBase
 	{
 		if (actual == "_admin_")
 			return;
-		if (permissions != null)
-			permissions.CheckAllow(actual, debug);
+		permissions?.CheckAllow(actual, debug);
 	}
 }
 
@@ -1028,10 +1027,8 @@ public class RequestModel
 	{
 		var mi = GetModelInfo(kind, normalizedUrl);
 		String pathForLoad = _redirect.Value.Redirect(mi.path);
-		String jsonText = await host.ApplicationReader.ReadTextFileAsync(pathForLoad, "model.json");
-		if (jsonText == null)
-			throw new FileNotFoundException($"File not found '{pathForLoad}/model.json'");
-
+		String jsonText = await host.ApplicationReader.ReadTextFileAsync(pathForLoad, "model.json") 
+				?? throw new FileNotFoundException($"File not found '{pathForLoad}/model.json'");
 		var rm = JsonConvert.DeserializeObject<RequestModel>(jsonText);
 		rm._host = host;
 		rm.EndInit();

@@ -11489,20 +11489,26 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2022-2023 Alex Kukhtin. All rights reserved.
 
-// 20221112-7905
+// 20230412-7926
 // components/treegrid.js
 
 (function () {
 
+	const utils = require('std:utils');
+
 	let gridTemplate = `
 <table v-lazy="root">
-	<colgroup><slot name="columns" v-bind:that="that"></slot></colgroup>
-	<thead><tr><slot name="header" v-bind:that="that"></slot></tr></thead>
+	<colgroup><col class="fit c-m" v-if=isMarkCell></col><slot name="columns" v-bind:that="that"></slot></colgroup>
+	<thead><tr>
+		<th class="c-m" v-if=isMarkCell :class=gridLines></th>
+		<slot name="header" v-bind:that="that"></slot>
+	</tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
 				@click.stop.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
+			<td class="c-m" v-if=isMarkCell :class="rowMarkClass(itm)"></td>
 			<slot name="row" v-bind:itm="itm.elem" v-bind:that="that"></slot>
 		</tr>
 	</tbody>
@@ -11515,7 +11521,11 @@ Vue.component('a2-panel', {
 			root: [Object, Array],
 			item: String,
 			folderStyle: String,
-			doubleclick: Function
+			doubleclick: Function,
+			isFolder: String,
+			mark: String,
+			markStyle: String,
+			gridLines: String
 		},
 		computed: {
 			rows() {
@@ -11549,6 +11559,12 @@ Vue.component('a2-panel', {
 			},
 			that() {
 				return this;
+			},
+			isMarkCell() {
+				return this.markStyle === 'marker' || this.markStyle === 'both';
+			},
+			isMarkRow() {
+				return this.markStyle === 'row' || this.markStyle === 'both';
 			}
 		},
 		watch: {
@@ -11573,13 +11589,29 @@ Vue.component('a2-panel', {
 				let ch = itm[this.item];
 				return ch && ch.length > 0;
 			},
+			isRowFolder(elm) {
+				if (this.hasChildren(elm))
+					return true;
+				if (this.isFolder)
+					return utils.simpleEval(elm, this.isFolder);
+				return '';
+			},
+			rowMarkClass(itm) {
+				if (this.isMarkRow && this.mark)
+					return utils.simpleEval(itm.elem, this.mark) + ' ' + this.gridLines;
+				return this.gridLines;
+			},
+			rowMarker(itm) {
+				if (this.isMarkRow && this.mark)
+					return utils.simpleEval(itm.elem, this.mark);
+				return '';
+			},
 			rowClass(itm) {
-				let cls = `lev lev-${itm.level}`;
+				let cls = `lev lev-${itm.level} ` + this.rowMarker(itm);
 				if (itm.elem.$selected)
 					cls += ' active';
-				if (this.hasChildren(itm.elem) && this.folderStyle !== 'none')
+				if (this.isRowFolder(itm.elem) && this.folderStyle !== 'none')
 					cls += ' ' + this.folderStyle;
-					
 				return cls;
 			},
 			toggleClass(itm) {
@@ -12819,7 +12851,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230224-7921*/
+/*20230412-7926*/
 // controllers/base.js
 
 (function () {
@@ -13349,7 +13381,7 @@ Vue.directive('resize', {
 					if (opts && opts.catchError)
 						throw err;
 					else if (err.indexOf('UI:') === 0)
-						this.$alert(err);
+						this.$alert(err.substring(3).replace('\\n', '\n'));
 					else
 						alert(err);
 				}
@@ -14316,7 +14348,8 @@ Vue.directive('resize', {
 				log.time('create time:', __createStartTime, false);
 		},
 		beforeDestroy() {
-			this.$data._fireUnload_();
+			if (this.$data._fireUnload_)
+				this.$data._fireUnload_();
 		},
 		destroyed() {
 			//console.dir('base.js has been destroyed');
@@ -14623,9 +14656,9 @@ Vue.directive('resize', {
 		pageNavBar: a2NavBarPage
 	};
 })();	
-// Copyright © 2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20200611-7673*/
+/*20230412-7926*/
 /* controllers/sidebar.js */
 
 (function () {
@@ -14692,11 +14725,10 @@ Vue.directive('resize', {
 					console.error('no top menu found');
 			},
 			itemHref(item) {
+				if (!item.Url)
+					return undefined
 				let top = this.topMenu;
-				if (top) {
-					return urlTools.combine(top.Url, item.Url);
-				}
-				return undefined;
+				return top ? urlTools.combine(top.Url, item.Url) : undefined;
 			},
 			toggle() {
 				this.$parent.sideBarCollapsed = !this.$parent.sideBarCollapsed;
@@ -14718,7 +14750,7 @@ Vue.directive('resize', {
 		template: `
 <div :class="cssClass">
 	<a href role="button" class="ico collapse-handle" @click.prevent="toggle"></a>
-	<div class="side-bar-body" v-if="bodyIsVisible">
+	<div class="side-bar-body advance" v-if="bodyIsVisible">
 		<tree-view :items="sideMenu" :is-active="isActive" :is-group="isGroup" :click="navigate" :get-href="itemHref"
 			:options="{folderSelect: folderSelect, label: 'Name', title: 'Description',
 			subitems: 'Menu', expandAll:true, xtraClass:'ClassName',

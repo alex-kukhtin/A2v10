@@ -396,6 +396,7 @@ public enum Icon
 	Paste,
 	Pencil,
 	PencilOutline,
+	Personnel,
 	Pin,
 	PinOutline,
 	Pinned,

@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7922",
+	"$version": "10.0.7926",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -46,6 +46,7 @@
 						"target": { "type": "string" },
 						"targetId": { "type": "string" },
 						"skipDataStack": { "type": "boolean" },
+						"plain": {"type": "boolean"},
 						"merge": {
 							"type": "object",
 							"properties": {

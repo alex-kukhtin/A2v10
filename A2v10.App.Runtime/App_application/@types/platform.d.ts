@@ -233,6 +233,7 @@ interface Template {
 	delegates?: {
 		[prop: string]: (this: IRoot, ...args: any[]) => any
 	};
+	loaded?: (data: object) => void;
 }
 
 declare const enum ReportFormat {

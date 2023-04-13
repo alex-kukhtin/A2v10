@@ -359,6 +359,9 @@
 .ico-package-outline:before {
   content: "\e95d";
 }
+.ico-personnel:before {
+  content: "\e9c0";
+}
 .ico-devices:before {
   content: "\e958";
 }

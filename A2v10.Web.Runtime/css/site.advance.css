@@ -15,6 +15,7 @@
 @hover-index: auto;
 */
 /* @modal-wrapper-index + 2 */
+/* marker */
 /* mixins */
 /* icon colors */
 @font-face {
@@ -319,6 +320,9 @@
 .ico-database:before {
   content: "\e945";
 }
+.ico-board:before {
+  content: "\e946";
+}
 .ico-dot:before {
   content: "\ea49";
 }
@@ -354,6 +358,9 @@
 }
 .ico-package-outline:before {
   content: "\e95d";
+}
+.ico-personnel:before {
+  content: "\e9c0";
 }
 .ico-devices:before {
   content: "\e958";
@@ -853,6 +860,7 @@
 @hover-index: auto;
 */
 /* @modal-wrapper-index + 2 */
+/* marker */
 * {
   box-sizing: border-box;
 }
@@ -3366,19 +3374,19 @@ table.data-grid tr.row-details td.details-cell {
 table.data-grid td.danger,
 table.data-grid td.error,
 table.data-grid td.red {
-  background-color: rgba(254, 220, 220, 0.5) !important;
+  background-color: rgba(254, 220, 220, 0.25) !important;
 }
 table.data-grid td.warning,
 table.data-grid td.orange {
-  background-color: rgba(255, 216, 0, 0.15) !important;
+  background-color: rgba(255, 216, 0, 0.07) !important;
 }
 table.data-grid td.success,
 table.data-grid td.green {
-  background-color: rgba(216, 255, 216, 0.5) !important;
+  background-color: rgba(216, 255, 216, 0.25) !important;
 }
 table.data-grid td.info,
 table.data-grid td.cyan {
-  background-color: rgba(114, 234, 234, 0.15) !important;
+  background-color: rgba(114, 234, 234, 0.07) !important;
 }
 table.data-grid td.marker {
   padding: 0;
@@ -3397,23 +3405,23 @@ table.data-grid td.marker > div {
 }
 table.data-grid td.marker > .warning,
 table.data-grid td.marker > .yellow {
-  background-color: rgba(255, 216, 0, 0.15);
+  background-color: rgba(255, 216, 0, 0.07);
   border-left-color: gold;
 }
 table.data-grid td.marker > .danger,
 table.data-grid td.marker > .error,
 table.data-grid td.marker > .red {
-  background-color: rgba(254, 220, 220, 0.5);
+  background-color: rgba(254, 220, 220, 0.25);
   border-left-color: #fc7c7c;
 }
 table.data-grid td.marker > .success,
 table.data-grid td.marker > .green {
-  background-color: rgba(216, 255, 216, 0.5);
+  background-color: rgba(216, 255, 216, 0.25);
   border-left-color: #89e489;
 }
 table.data-grid td.marker > .info,
 table.data-grid td.marker > .cyan {
-  background-color: rgba(114, 234, 234, 0.15);
+  background-color: rgba(114, 234, 234, 0.07);
   border-left-color: #72eaea;
 }
 table.data-grid th.details-marker {
@@ -3503,20 +3511,20 @@ table.data-grid.compact td {
 }
 table.data-grid > tbody > tr.warning > td,
 table.data-grid > tbody > tr.orange > td {
-  background-color: rgba(255, 216, 0, 0.15);
+  background-color: rgba(255, 216, 0, 0.07);
 }
 table.data-grid > tbody > tr.danger > td,
 table.data-grid > tbody > tr.error > td,
 table.data-grid > tbody > tr.red > td {
-  background-color: rgba(254, 220, 220, 0.5);
+  background-color: rgba(254, 220, 220, 0.25);
 }
 table.data-grid > tbody > tr.success > td,
 table.data-grid > tbody > tr.green > td {
-  background-color: rgba(216, 255, 216, 0.5);
+  background-color: rgba(216, 255, 216, 0.25);
 }
 table.data-grid > tbody > tr.info > td,
 table.data-grid > tbody > tr.cyan > td {
-  background-color: rgba(114, 234, 234, 0.15);
+  background-color: rgba(114, 234, 234, 0.07);
 }
 table.data-grid > tbody > tr.info > td,
 table.data-grid > tbody > tr.light-yellow > td {
@@ -5064,23 +5072,23 @@ table.hover > tbody > tr.active:hover {
 }
 .a2-table td.marker-cell .marker.success,
 .a2-table td.marker-cell .marker.green {
-  background-color: rgba(216, 255, 216, 0.5);
+  background-color: rgba(216, 255, 216, 0.25);
   border-left-color: #89e489;
 }
 .a2-table td.marker-cell .marker.danger,
 .a2-table td.marker-cell .marker.red,
 .a2-table td.marker-cell .marker.error {
-  background-color: rgba(254, 220, 220, 0.5);
+  background-color: rgba(254, 220, 220, 0.25);
   border-left-color: #fc7c7c;
 }
 .a2-table td.marker-cell .marker.warning,
 .a2-table td.marker-cell .marker.orange {
-  background-color: rgba(255, 216, 0, 0.15);
+  background-color: rgba(255, 216, 0, 0.07);
   border-left-color: gold;
 }
 .a2-table td.marker-cell .marker.info,
 .a2-table td.marker-cell .marker.cyan {
-  background-color: rgba(114, 234, 234, 0.15);
+  background-color: rgba(114, 234, 234, 0.07);
   border-left-color: #72eaea;
 }
 .a2-table td.row-divider {
@@ -5093,20 +5101,20 @@ table.hover > tbody > tr.active:hover {
 }
 .a2-table tr.success > td,
 .a2-table tr.green > td {
-  background-color: rgba(216, 255, 216, 0.5);
+  background-color: rgba(216, 255, 216, 0.25);
 }
 .a2-table tr.info > td,
 .a2-table tr.cyan > td {
-  background-color: rgba(114, 234, 234, 0.15);
+  background-color: rgba(114, 234, 234, 0.07);
 }
 .a2-table tr.warning > td,
 .a2-table tr.orange > td {
-  background-color: rgba(255, 216, 0, 0.15);
+  background-color: rgba(255, 216, 0, 0.07);
 }
 .a2-table tr.danger > td,
 .a2-table tr.error > td,
 .a2-table tr.red > td {
-  background-color: rgba(254, 220, 220, 0.5);
+  background-color: rgba(254, 220, 220, 0.25);
 }
 .a2-table tr.gray > td {
   background-color: rgba(224, 224, 224, 0.1);
@@ -6534,21 +6542,21 @@ table.sheet.striped > tbody > tr:nth-child(even) {
 }
 table.sheet tr.success,
 table.sheet tr.green {
-  background-color: rgba(216, 255, 216, 0.5) !important;
+  background-color: rgba(216, 255, 216, 0.25) !important;
 }
 table.sheet tr.danger,
 table.sheet tr.red,
 table.sheet tr.error {
-  background-color: rgba(254, 220, 220, 0.5) !important;
+  background-color: rgba(254, 220, 220, 0.25) !important;
   color: #a94442;
 }
 table.sheet tr.warning,
 table.sheet tr.orange {
-  background-color: rgba(255, 216, 0, 0.15) !important;
+  background-color: rgba(255, 216, 0, 0.07) !important;
 }
 table.sheet tr.info,
 table.sheet tr.cyan {
-  background-color: rgba(114, 234, 234, 0.15) !important;
+  background-color: rgba(114, 234, 234, 0.07) !important;
 }
 table.sheet tr.gray {
   background-color: rgba(224, 224, 224, 0.1) !important;
@@ -6846,24 +6854,42 @@ table > colgroup col.blue {
   border-right: 1px solid var(--neutralBkDark);
   background-color: var(--neutralBk);
 }
-.side-bar .side-bar-body,
-.side-bar .tree-view {
+.side-bar .side-bar-body.advance {
+  height: 100%;
+  padding-bottom: 6px;
+}
+.side-bar .side-bar-body.advance .tree-view {
+  display: flex;
+  flex-direction: column;
+}
+.side-bar .side-bar-body.advance .aligner {
+  pointer-events: none;
+  flex-grow: 2;
+}
+.side-bar .side-bar-body.advance .aligner .overlay {
+  display: none;
+}
+.side-bar .side-bar-body .tree-view {
   height: 100%;
 }
-.side-bar .side-bar-body li.border-top,
-.side-bar .tree-view li.border-top {
+.side-bar .side-bar-body .tree-view li > ul {
+  padding: 0;
+}
+.side-bar .side-bar-body .tree-view li > .overlay:hover {
+  background-color: var(--hoverBkLight);
+}
+.side-bar .side-bar-body .tree-view li.active > .overlay:hover {
+  background-color: var(--activeBk);
+}
+.side-bar .side-bar-body .tree-view li.border-top {
   border-top: 1px solid var(--neutralBkDarker);
   padding-top: 8px;
   margin-top: 8px;
 }
-.side-bar .side-bar-body li.border-bottom,
-.side-bar .tree-view li.border-bottom {
+.side-bar .side-bar-body .tree-view li.border-bottom {
   border-bottom: 1px solid var(--neutralBkDarker);
   padding-bottom: 8px;
   margin-bottom: 8px;
-}
-.side-bar .side-bar-body .tree-view li > ul {
-  padding: 0;
 }
 .side-bar .side-bar-title {
   background-color: var(--neutralBk);
@@ -6908,6 +6934,9 @@ table > colgroup col.blue {
 }
 .side-bar.collapsed .collapse-handle:before {
   content: "\e9a5";
+}
+.side-bar.advance .tree-view {
+  display: flex;
 }
 .side-bar-compact {
   position: absolute;
@@ -7065,6 +7094,12 @@ table.tree-grid th {
   font-style: inherit;
   vertical-align: top;
 }
+table.tree-grid td.c-m,
+table.tree-grid th.c-m {
+  min-width: 6px;
+  padding: 0;
+  border-left: none!important;
+}
 table.tree-grid th {
   background-color: #f5f5f5;
   color: #999;
@@ -7100,6 +7135,44 @@ table.tree-grid th.sortable.desc .h-holder:after {
   display: inline-block;
   border-top-color: #999;
   vertical-align: bottom;
+}
+table.tree-grid td.c-m {
+  background-color: #f5f5f5;
+  opacity: 0.5;
+}
+table.tree-grid td.c-m.red,
+table.tree-grid td.c-m.danger,
+table.tree-grid td.c-m.error {
+  background-color: #fc7c7c;
+}
+table.tree-grid td.c-m.green,
+table.tree-grid td.c-m.success {
+  background-color: #89e489;
+}
+table.tree-grid td.c-m.warning,
+table.tree-grid td.c-m.orange {
+  background-color: gold;
+}
+table.tree-grid td.c-m.info,
+table.tree-grid td.c-m.cyan {
+  background-color: #72eaea;
+}
+table.tree-grid tr.warning > td,
+table.tree-grid tr.orange > td {
+  background-color: rgba(255, 216, 0, 0.07);
+}
+table.tree-grid tr.danger > td,
+table.tree-grid tr.error > td,
+table.tree-grid tr.red > td {
+  background-color: rgba(254, 220, 220, 0.25);
+}
+table.tree-grid tr.success > td,
+table.tree-grid tr.green > td {
+  background-color: rgba(216, 255, 216, 0.25);
+}
+table.tree-grid tr.info > td,
+table.tree-grid tr.cyan > td {
+  background-color: rgba(114, 234, 234, 0.07);
 }
 table.tree-grid .gl-v {
   border-right-width: 1px;

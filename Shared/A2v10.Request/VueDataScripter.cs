@@ -154,9 +154,18 @@ vm.__doInit__('$(BaseUrl)');
 
 		String CreatePlainScript()
 		{
+			// as empty 
 			return @"
 function modelData(template, data) {
-	return rawData;
+	const cmn = require('std:datamodel');
+	function TRoot(source, path, parent) { cmn.createObject(this, source, path, parent);}
+	cmn.defineObject(TRoot, { props: { } }, false);
+	cmn.implementRoot(TRoot, template, {TRoot});
+	let root = new TRoot(data);
+	cmn.setModelInfo(root, {}, rawData); 
+	if (template.loaded)
+		template.loaded(rawData);
+	return root;
 }
 ";
 		}
@@ -187,10 +196,10 @@ function modelData(template, data) {
 					val = val.ToString().ToLowerInvariant();
 				else if (val is String)
 					val = $"'{val}'";
-				else if (val is Object)
-					val = JsonConvert.SerializeObject(val);
 				else if (val is DateTime)
 					val = helper.DateTime2StringWrap(val);
+				else if (val is Object)
+					val = JsonConvert.SerializeObject(val);
 				sb.Append($"'{k.Key}': {val},");
 			}
 			sb.RemoveTailComma();
@@ -572,9 +581,8 @@ function modelData(template, data) {
 			String templateText = "{}";
 			if (msi.Template != null)
 			{
-				String fileTemplateText = _host.ApplicationReader.ReadTextFile(msi.Path, msi.Template + ".js");
-				if (fileTemplateText == null)
-					throw new FileNotFoundException($"File not found. '{Path.Combine(msi.Path, msi.Template)}'");
+				String fileTemplateText = _host.ApplicationReader.ReadTextFile(msi.Path, msi.Template + ".js") 
+					?? throw new FileNotFoundException($"File not found. '{Path.Combine(msi.Path, msi.Template)}'");
 				sbRequired = new StringBuilder();
 				AddRequiredModules(sbRequired, fileTemplateText);
 				templateText = CreateTemplateForWrite(Localize(fileTemplateText));
