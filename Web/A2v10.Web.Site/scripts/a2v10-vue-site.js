@@ -5906,6 +5906,7 @@ template: `
 						this.$alert(err.substring(3).replace('\\n', '\n'));
 					else
 						alert(err);
+					return false;
 				}
 			},
 

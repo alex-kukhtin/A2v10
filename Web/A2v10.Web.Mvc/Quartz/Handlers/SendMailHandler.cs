@@ -17,11 +17,10 @@ namespace A2v10.Web.Mvc.Quartz;
 internal class SendMailHandler : IJobHandler
 {
 	private readonly CommandJobData _job;
-	private readonly IDbContext _dbContext;
+
 	internal SendMailHandler(CommandJobData job, IServiceProvider sp)
 	{
 		_job = job;
-		_dbContext = sp.GetService(typeof(IDbContext)) as IDbContext;
 	}
 	public Task ProcessAsync(IJobExecutionContext context)
 	{

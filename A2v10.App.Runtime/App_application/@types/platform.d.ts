@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7922 */
+/* Version 10.0.7927 */
 
 declare function require(url: string): any;
 

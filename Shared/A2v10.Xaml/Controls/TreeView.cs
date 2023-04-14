@@ -62,9 +62,7 @@ namespace A2v10.Xaml
 			if (InitialExpand)
 				sb.Append("initialExpand: true,");
 			// visible => if or show
-			var showBind = GetBinding(nameof(Show));
-			if (showBind == null)
-				showBind = GetBinding(nameof(If));
+			var showBind = GetBinding(nameof(Show)) ?? GetBinding(nameof(If));
 			if (showBind != null)
 				sb.Append($"isVisible: '{showBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 		}

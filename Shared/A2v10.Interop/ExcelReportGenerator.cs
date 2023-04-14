@@ -107,9 +107,8 @@ namespace A2v10.Interop
 			String tempFileName = Path.GetTempFileName();
 			File.Delete(tempFileName);
 			if (_templateStream != null) {
-				using (var br = new FileStream(tempFileName, FileMode.Create)) {
-					_templateStream.CopyTo(br);
-				}
+				using var br = new FileStream(tempFileName, FileMode.Create);
+				_templateStream.CopyTo(br);
 			}
 			else if (_templateFile != null)
 				File.Copy(_templateFile, tempFileName);
@@ -145,11 +144,7 @@ namespace A2v10.Interop
 			}
 			finally
 			{
-				if (doc != null)
-				{
-					doc.Close();
-					doc.Dispose();
-				}
+				doc?.Dispose();
 			}
 			_resultFile = tempFileName;
 		}
@@ -163,10 +158,8 @@ namespace A2v10.Interop
 				String str = ssitem.Text.Text;
 				if (!str.StartsWith("{"))
 					continue;
-				if (_sharedStringMap == null)
-					_sharedStringMap = new Dictionary<String, SharedStringDef>();
-				if (_sharedStringIndexMap == null)
-					_sharedStringIndexMap = new Dictionary<Int32, SharedStringDef>();
+				_sharedStringMap ??= new Dictionary<String, SharedStringDef>();
+				_sharedStringIndexMap ??= new Dictionary<Int32, SharedStringDef>();
 				var ssd = new SharedStringDef(ssitem, i);
 				_sharedStringMap.Add(str, ssd);
 				_sharedStringIndexMap.Add(i, ssd);
@@ -206,9 +199,8 @@ namespace A2v10.Interop
 				if (!UInt32.TryParse(endRef.Substring(1), out endRow))
 					return;
 			}
-			if (_dataSetRows == null)
-				_dataSetRows = new Dictionary<String, RowSetDef>();
-			RowSetDef rd = new RowSetDef
+			_dataSetRows ??= new Dictionary<String, RowSetDef>();
+			RowSetDef rd = new()
 			{
 				FirstRow = startRow,
 				LastRow = endRow,
@@ -260,11 +252,8 @@ namespace A2v10.Interop
 		{ 
 			foreach (var dataSet in _dataSetRows)
 			{
-				IList<ExpandoObject> list = _dataModel.Eval<List<ExpandoObject>>(dataSet.Key);
-				if (list == null)
-				{
-					throw new InteropException($"The data model does not have a '{dataSet.Key}' property ");
-				}
+				IList<ExpandoObject> list = _dataModel.Eval<List<ExpandoObject>>(dataSet.Key) 
+					?? throw new InteropException($"The data model does not have a '{dataSet.Key}' property ");
 				RowSetDef def = dataSet.Value;
 				if (list.Count == 0)
 				{
@@ -333,58 +322,56 @@ namespace A2v10.Interop
 				cell.DataType = null;
 				cell.CellValue = null;
 			}
-			else if (obj is String)
+			else if (obj is String strVal)
 			{
 				cell.DataType = CellValues.SharedString;
-				cell.CellValue = new CellValue(NewSharedString(obj as String));
+				cell.CellValue = new CellValue(NewSharedString(strVal));
 			}
-			else if (obj is DateTime)
+			else if (obj is DateTime dt)
 			{
-				DateTime dt = (DateTime)obj;
 				var cv = new CellValue
 				{
 					Text = dt.ToOADate().ToString(CultureInfo.InvariantCulture)
 				};
 				// CellValues.Date supported in Office2010 only
-				cell.DataType = CellValues.Number; 
+				cell.DataType = CellValues.Number;
 				cell.CellValue = cv;
 			}
-			else if (obj is TimeSpan)
+			else if (obj is TimeSpan ts)
 			{
 				cell.DataType = CellValues.Date;
-				TimeSpan ts = (TimeSpan)obj;
-				DateTime dt = new DateTime(ts.Ticks);
-				cell.CellValue = new CellValue(dt.ToOADate().ToString(CultureInfo.InvariantCulture));
+				DateTime dtv = new(ts.Ticks);
+				cell.CellValue = new CellValue(dtv.ToOADate().ToString(CultureInfo.InvariantCulture));
 			}
-			else if (obj is Double)
+			else if (obj is Double dblVal)
 			{
 				cell.DataType = CellValues.Number;
-				cell.CellValue = new CellValue(((Double)obj).ToString(CultureInfo.InvariantCulture));
+				cell.CellValue = new CellValue(dblVal.ToString(CultureInfo.InvariantCulture));
 			}
-			else if (obj is Decimal)
+			else if (obj is Decimal decVal)
 			{
 				cell.DataType = CellValues.Number;
-				cell.CellValue = new CellValue(((Decimal)obj).ToString(CultureInfo.InvariantCulture));
+				cell.CellValue = new CellValue(decVal.ToString(CultureInfo.InvariantCulture));
 			}
-			else if (obj is Int64)
+			else if (obj is Int64 int64Val)
 			{
 				cell.DataType = CellValues.Number;
-				cell.CellValue = new CellValue(((Int64)obj).ToString());
+				cell.CellValue = new CellValue(int64Val.ToString());
 			}
-			else if (obj is Int32)
+			else if (obj is Int32 int32Val)
 			{
 				cell.DataType = CellValues.Number;
-				cell.CellValue = new CellValue(((Int32)obj).ToString());
+				cell.CellValue = new CellValue(int32Val.ToString());
 			}
-			else if (obj is Int16)
+			else if (obj is Int16 int16Val)
 			{
 				cell.DataType = CellValues.Number;
-				cell.CellValue = new CellValue(((Int16)obj).ToString());
+				cell.CellValue = new CellValue(int16Val.ToString());
 			}
-			else if (obj is Boolean)
+			else if (obj is Boolean boolVal)
 			{
 				cell.DataType = CellValues.Boolean;
-				cell.CellValue = new CellValue(((Boolean)obj).ToString());
+				cell.CellValue = new CellValue(boolVal.ToString());
 			}
 		}
 

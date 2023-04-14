@@ -8,7 +8,7 @@ namespace A2v10.Web.Base
 {
 	public class HttpService : IHttpService
 	{
-		private static readonly Lazy<HttpClient> _httpClient = new Lazy<HttpClient>(()=> new HttpClient(), true);
+		private static readonly Lazy<HttpClient> _httpClient = new(()=> new HttpClient(), true);
 
 		public HttpClient HttpClient
 		{

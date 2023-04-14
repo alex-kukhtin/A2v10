@@ -27,7 +27,6 @@ Web.App.dll - does not work.
 
 public class Scheduler
 {
-	private static IScheduler _savedScheduler;
 	public static async void Start()
 	{
 		var settings = ConfigurationManager.AppSettings["quartz"];
@@ -38,7 +37,6 @@ public class Scheduler
 			return;
 
 		IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
-		_savedScheduler = scheduler;
 		await scheduler.Start();
 
 		var mailSettings = ConfigurationManager.AppSettings["mailSettings"];

@@ -1,22 +1,24 @@
-﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
+using System.Dynamic;
 
 using Quartz;
 
 using A2v10.Data.Interfaces;
-using A2v10.Data;
-using System.Dynamic;
+using A2v10.Infrastructure;
 
 namespace A2v10.Web.Mvc.Quartz;
 
 public class CommandJob : IJob
 {
 	private readonly IDbContext _dbContext;
+	private readonly IHttpService _httpService;
 	public CommandJob()
 	{
 		_dbContext = LocalDbContext.Create();
+		_httpService = new LocalHttpService();
 	}
 	public async Task Execute(IJobExecutionContext context)
 	{
@@ -30,6 +32,7 @@ public class CommandJob : IJob
 
 			var sp = new ServiceProvider();
 			sp.RegisterService<IDbContext>(_dbContext);
+			sp.RegisterService<IHttpService>(_httpService);
 
 			foreach (var itm in list)
 			{
@@ -46,7 +49,8 @@ public class CommandJob : IJob
 	{
 		try
 		{
-			await CommandJobData.CreateHandler(job, sp).ProcessAsync(context);
+			await CommandJobData.CreateHandler(job, sp)
+				.ProcessAsync(context);
 			await WriteComplete(dataSource, job, true);
 		}
 		catch (Exception ex)

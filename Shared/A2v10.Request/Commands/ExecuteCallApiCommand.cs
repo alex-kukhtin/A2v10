@@ -50,26 +50,20 @@ namespace A2v10.Request
 				bodyStr = Resolve(body, dataToExec);
 			}
 
-			using (var msg = new HttpRequestMessage(mtd, url))
+			using var msg = new HttpRequestMessage(mtd, url);
+			SetHeaders(msg, headers, dataToExec);
+			if (bodyStr != null && mtd == HttpMethod.Post)
+				msg.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
+			using var result = await _httpService.HttpClient.SendAsync(msg);
+			if (result.IsSuccessStatusCode)
 			{
-				SetHeaders(msg, headers, dataToExec);
-				if (bodyStr != null && mtd == HttpMethod.Post)
-					msg.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
-				using (var result = await _httpService.HttpClient.SendAsync(msg))
+				return new ServerCommandResult(await result.Content?.ReadAsStringAsync())
 				{
-					if (result.IsSuccessStatusCode)
-					{
-						return new ServerCommandResult(await result.Content?.ReadAsStringAsync())
-						{
-							ContentType = result.Content?.Headers?.ContentType?.MediaType
-						};
-					}
-					else
-					{
-						throw new RequestModelException($"CallApi Failed. statusCode:{result.StatusCode}, content:{await result.Content.ReadAsStringAsync()}");
-					}
-				}
+					ContentType = result.Content?.Headers?.ContentType?.MediaType
+				};
 			}
+			else
+				throw new RequestModelException($"CallApi Failed. statusCode:{result.StatusCode}, content:{await result.Content.ReadAsStringAsync()}");
 		}
 
 
@@ -126,8 +120,7 @@ namespace A2v10.Request
 		{
 			if (source.IndexOf("((") == -1)
 				return source;
-			if (_envRegEx == null)
-				_envRegEx = new Regex("\\(\\((.+?)\\)\\)", RegexOptions.Compiled);
+			_envRegEx ??= new Regex("\\(\\((.+?)\\)\\)", RegexOptions.Compiled);
 			var ms = _envRegEx.Matches(source);
 
 			if (ms.Count == 0)
@@ -146,8 +139,7 @@ namespace A2v10.Request
 		{
 			if (source.IndexOf("[[") == -1)
 				return source;
-			if (_prmRegEx == null)
-				_prmRegEx = new Regex("\\[\\[(.+?)\\]\\]", RegexOptions.Compiled);
+			_prmRegEx ??= new Regex("\\[\\[(.+?)\\]\\]", RegexOptions.Compiled);
 			var ms = _prmRegEx.Matches(source);
 			if (ms.Count == 0)
 				return source;
@@ -175,8 +167,7 @@ namespace A2v10.Request
 				return source;
 			if (source.IndexOf("{{") == -1)
 				return source;
-			if (_datRegEx == null)
-				_datRegEx = new Regex("\\{\\{(.+?)\\}\\}", RegexOptions.Compiled);
+			_datRegEx ??= new Regex("\\{\\{(.+?)\\}\\}", RegexOptions.Compiled);
 			var ms = _datRegEx.Matches(source);
 			if (ms.Count == 0)
 				return source;

@@ -5,7 +5,7 @@
 		<LangVersion>10.0</LangVersion>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Version>10.0.7926</Version>
+		<Version>10.0.7927</Version>
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
 		<Copyright>Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.</Copyright>
@@ -35,7 +35,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		  <PackageReference Include="DocumentFormat.OpenXml" Version="2.19.0" />
+		  <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
 			<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 

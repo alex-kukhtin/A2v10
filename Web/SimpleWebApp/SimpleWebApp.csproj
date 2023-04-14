@@ -109,7 +109,6 @@
     <Content Include="App_application\main\home\model.json" />
     <None Include="packages.config" />
     <None Include="Web.config" />
-    <Content Include="Web.config.sample" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

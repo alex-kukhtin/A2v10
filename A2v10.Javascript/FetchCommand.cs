@@ -109,31 +109,23 @@ public class FetchCommand
 				if (bodyStr != null)
 				{
 					var bytes = Encoding.GetEncoding("UTF-8").GetBytes(bodyStr);
-					using (var rqs = httpWebRequest.GetRequestStream())
-					{
-						rqs.Write(bytes, 0, bytes.Length);
-					}
+					using var rqs = httpWebRequest.GetRequestStream();
+					rqs.Write(bytes, 0, bytes.Length);
 				}
 			}
 
-			using (var resp = httpWebRequest.GetResponse() as HttpWebResponse)
-			{
-				var contentType = resp.ContentType;
-				var headers = resp.Headers;
-				using (var rs = resp.GetResponseStream())
-				{
-					using (var ms = new StreamReader(rs))
-					{
-						String strResult = ms.ReadToEnd();
-						return new FetchResponse(
-							resp.StatusCode,
-							contentType,
-							strResult,
-							GetResponseHeaders(headers),
-							resp.StatusDescription);
-					}
-				}
-			}
+			using var resp = httpWebRequest.GetResponse() as HttpWebResponse;
+			var contentType = resp.ContentType;
+			var headers = resp.Headers;
+			using var rs = resp.GetResponseStream();
+			using var ms = new StreamReader(rs);
+			String strResult = ms.ReadToEnd();
+			return new FetchResponse(
+				resp.StatusCode,
+				contentType,
+				strResult,
+				GetResponseHeaders(headers),
+				resp.StatusDescription);
 		}
 		catch (WebException wex)
 		{

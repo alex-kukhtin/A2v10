@@ -22,7 +22,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7895') format('woff'), url('/css/fonts/A2v10.ttf?v=7895') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7927') format('woff'), url('/css/fonts/A2v10.ttf?v=7927') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -78,6 +78,9 @@
 }
 .ico-arrow-left-right:before {
   content: "\e906";
+}
+.ico-arrow-left-right-full:before {
+  content: "\e907";
 }
 .ico-arrow-export:before {
   content: "\e908";

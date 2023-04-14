@@ -17,6 +17,15 @@ public class InvokeClrData
 	public ExpandoObject data { get; set; }
 }
 
+public class InvokeContext : IInvokeContext
+{
+	public InvokeContext(IJobExecutionContext jobContext)
+	{
+		DataSource = jobContext.MergedJobDataMap["DataSource"]?.ToString() ?? String.Empty;
+	}
+	public String DataSource { get; }
+}
+
 internal class InvokeClrHandler : IJobHandler
 {
 	private readonly CommandJobData _job;
@@ -39,6 +48,7 @@ internal class InvokeClrHandler : IJobHandler
 				?? throw new InvalidOperationException("Invalid ctor");
 		if (handler is not IInvokeClrHandler invokeClrHandler)
 			throw new InvalidOperationException("Invalid Handler");
-		return invokeClrHandler.InvokeAsync(clrData.data);
+		var invokeContext = new InvokeContext(context);
+		return invokeClrHandler.InvokeAsync(invokeContext, clrData.data);
 	}
 }

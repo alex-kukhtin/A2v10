@@ -239,6 +239,7 @@ public enum Icon
 	ArrowDownRed,
 	ArrowLeft,
 	ArrowLeftRight,
+	ArrowLeftRightFull,
 	ArrowRight,
 	ArrowUp,
 	ArrowUpGreen,

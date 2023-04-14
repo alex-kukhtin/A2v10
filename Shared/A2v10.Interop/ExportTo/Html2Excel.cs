@@ -25,18 +25,18 @@ namespace A2v10.Interop.ExportTo
 			_currentFormat = System.Globalization.CultureInfo.CreateSpecificCulture(locale);
 		}
 
-		List<String> _mergeCells = new List<String>();
+		readonly List<String> _mergeCells = new();
 
 		public Stream ConvertHtmlToExcel(String html)
 		{
-			HtmlReader rdr = new HtmlReader(_currentFormat);
+			HtmlReader rdr = new(_currentFormat);
 			var sheet = rdr.ReadHtmlSheet(html);
 			return SheetToExcel(sheet);
 		}
 
 		public Stream SheetToExcel(ExSheet exsheet)
 		{
-			MemoryStream ms = null;
+			MemoryStream ms;
 			ms = new MemoryStream();
 			using (var doc = SpreadsheetDocument.Create(ms, SpreadsheetDocumentType.Workbook, true))
 			{
@@ -59,11 +59,11 @@ namespace A2v10.Interop.ExportTo
 				}
 
 				Sheets sheets = doc.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
-				Sheet sheet = new Sheet() { Id = doc.WorkbookPart.GetIdOfPart(wsPart), SheetId = 1, Name = "Sheet1" };
+				Sheet sheet = new() { Id = doc.WorkbookPart.GetIdOfPart(wsPart), SheetId = 1, Name = "Sheet1" };
 				sheets.Append(sheet);
 
 				wbPart.Workbook.Save();
-				doc.Close();
+				doc.Dispose();
 			};
 			return ms;
 		}
@@ -71,9 +71,9 @@ namespace A2v10.Interop.ExportTo
 
 		Stylesheet AddStyles(StylesDictionary styles)
 		{
-			Color autoColor() { return new Color() { Auto = true }; }
+			static Color autoColor() { return new Color() { Auto = true }; }
 
-			Fonts fonts = new Fonts(
+			Fonts fonts = new(
 				new Font( // Index 0 - default
 					new FontSize() { Val = 11 }
 
@@ -87,7 +87,7 @@ namespace A2v10.Interop.ExportTo
 					new Bold()
 				));
 
-			Borders borders = new Borders(
+			Borders borders = new(
 					new Border(), // index 0 default
 					new Border( // index 1 black border
 						new LeftBorder(autoColor()) { Style = BorderStyleValues.Thin },
@@ -103,10 +103,10 @@ namespace A2v10.Interop.ExportTo
 						new DiagonalBorder())
 				);
 
-			Fills fills = new Fills(
+			Fills fills = new(
 					new Fill(new PatternFill() { PatternType = PatternValues.None }));
 
-			NumberingFormats numFormats = new NumberingFormats(
+			NumberingFormats numFormats = new (
 					/*date*/     new NumberingFormat() { FormatCode = "dd\\.mm\\.yyyy;@", NumberFormatId = 166 },
 					/*datetime*/ new NumberingFormat() { FormatCode = "dd\\.mm\\.yyyy hh:mm;@", NumberFormatId = 167 },
 					/*currency*/ new NumberingFormat() { FormatCode = "#,##0.00####;[Red]\\-#,##0.00####", NumberFormatId = 169 },
@@ -114,7 +114,7 @@ namespace A2v10.Interop.ExportTo
 					/*time*/     new NumberingFormat() { FormatCode = "hh:mm;@", NumberFormatId = 165 }
 				);
 
-			CellFormats cellFormats = new CellFormats(new CellFormat());
+			CellFormats cellFormats = new(new CellFormat());
 
 			for (var i=1 /*1-based!*/; i< styles.List.Count; i++)
 			{
