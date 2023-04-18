@@ -21,7 +21,7 @@ namespace A2v10.Web.Identity
 	{
 		public static String GetUserPersonName(this IIdentity identity)
 		{
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return null;
 			var value = user.FindFirstValue("PersonName");
 			return String.IsNullOrEmpty(value) ? identity.GetUserName() : value;
@@ -29,7 +29,7 @@ namespace A2v10.Web.Identity
 
 		public static Boolean IsUserAdmin(this IIdentity identity)
 		{
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return false;
 			var value = user.FindFirstValue("Admin");
 			return value == "Admin";
@@ -37,7 +37,7 @@ namespace A2v10.Web.Identity
 
 		public static String GetUserClientId(this IIdentity identity)
 		{
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return null;
 			var value = user.FindFirstValue("ClientId");
 			return String.IsNullOrEmpty(value) ? null : value;
@@ -45,7 +45,7 @@ namespace A2v10.Web.Identity
 
 		public static String GetUserLocale(this IIdentity identity)
 		{
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return null;
 			var value = user.FindFirstValue("Locale");
 			return String.IsNullOrEmpty(value) ? Thread.CurrentThread.CurrentUICulture.Name : value;
@@ -53,7 +53,7 @@ namespace A2v10.Web.Identity
 
 		public static Boolean IsTenantAdmin(this IIdentity identity)
 		{
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return false;
 			var value = user.FindFirstValue("TenantAdmin");
 			return value == "TenantAdmin";
@@ -61,7 +61,7 @@ namespace A2v10.Web.Identity
 
 		public static IUserInfo UserInfo(this IIdentity identity)
 		{
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return null;
 			var ui = new IdentityUserInfo()
 			{
@@ -82,7 +82,7 @@ namespace A2v10.Web.Identity
 		{
 			if (identity == null)
 				return 0;
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return 0;
 			var value = user.FindFirstValue("TenantId");
 			if (Int32.TryParse(value, out Int32 tenantId))
@@ -94,7 +94,7 @@ namespace A2v10.Web.Identity
 		{
 			if (identity == null)
 				return null;
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return null;
 			return user.FindFirstValue("Segment");
 		}
@@ -103,14 +103,14 @@ namespace A2v10.Web.Identity
 		{
 			if (identity == null)
 				return false;
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return false;
 			return user.FindFirstValue("OpenIdIdentifier") != null;
 		}
 
 		public static String GetUserClaim(this IIdentity identity, String claim)
 		{
-			if (!(identity is ClaimsIdentity user))
+			if (identity is not ClaimsIdentity user)
 				return null;
 			return user.FindFirstValue(claim);
 		}

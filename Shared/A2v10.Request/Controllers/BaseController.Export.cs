@@ -16,14 +16,13 @@ namespace A2v10.Request;
 
 public partial class BaseController
 {
-	public async Task Export(String path, Int32 TenantId, Int64 UserId, ExpandoObject prms, HttpResponseBase response)
+	public async Task Export(String path, Int32 _1/*TenantId*/, Int64 _2/*UserId*/, ExpandoObject prms, HttpResponseBase response)
 	{
 		var rm = await RequestModel.CreateFromBaseUrl(_host, path);
 		var action = rm.CurrentAction;
-		var export = action.Export;
-		if (export == null)
-			throw new RequestModelException($"There is no export in '{rm.ModelAction}' action");
-		if (prms != null)
+		var export = action.Export 
+			?? throw new RequestModelException($"There is no export in '{rm.ModelAction}' action");
+        if (prms != null)
 		{
 			prms.Append(action.parameters);
 			prms.SetIfNotExists("Id", action.Id);
@@ -36,10 +35,9 @@ public partial class BaseController
 		var templExpr = export.GetTemplateExpression();
 		if (!String.IsNullOrEmpty(templExpr))
 		{
-			var bytes = dm.Eval<Byte[]>(templExpr);
-			if (bytes == null)
-				throw new RequestModelException($"Template stream not found or its format is invalid. ({templExpr})");
-			stream = new MemoryStream(dm.Eval<Byte[]>(templExpr));
+			var bytes = dm.Eval<Byte[]>(templExpr) 
+				?? throw new RequestModelException($"Template stream not found or its format is invalid. ({templExpr})");
+            stream = new MemoryStream(bytes);
 		}
 		else if (!String.IsNullOrEmpty(export.template))
 		{
@@ -68,10 +66,9 @@ public partial class BaseController
 			case RequestExportFormat.csv:
 				{
 					var fmt = export.format.ToString().ToLowerInvariant();
-					var extDataProvider = _externalDataProvider.GetWriter(dm, fmt, export.GetEncoding());
-					if (extDataProvider == null)
-						throw new RequestModelException($"There is no data provider for '{fmt}' files");
-					extDataProvider.Write(response.OutputStream);
+					var extDataProvider = _externalDataProvider.GetWriter(dm, fmt, export.GetEncoding()) 
+						?? throw new RequestModelException($"There is no data provider for '{fmt}' files");
+                    extDataProvider.Write(response.OutputStream);
 					SetResponseInfo(response, export, dm);
 				}
 				break;

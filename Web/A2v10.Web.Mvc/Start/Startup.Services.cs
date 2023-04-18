@@ -70,7 +70,7 @@ public static partial class Startup
                 ISmsService smsService = new SmsService(dbContext, logger);
 			IRenderer renderer = new XamlRenderer(profiler, host);
 			IDataScripter scripter = new VueDataScripter(host, localizer);
-			IExternalLoginManager externalLoginManager = new ExternalLoginManager(dbContext);
+			IExternalLoginManager externalLoginManager = new ExternalLoginManager();
 			IUserStateManager userStateManager = new WebUserStateManager(host, dbContext);
                 IMessaging messaging = new MessageProcessor(host, dbContext, emailService, smsService, logger);
                 IWorkflowEngine workflowEngine = new WorkflowEngine(host, dbContext, messaging);

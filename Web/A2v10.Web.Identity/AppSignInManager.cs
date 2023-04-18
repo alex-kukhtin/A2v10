@@ -23,7 +23,7 @@ namespace A2v10.Web.Identity
 			return user.GenerateUserIdentityAsync((AppUserManager)UserManager);
 		}
 
-		public static AppSignInManager Create(IdentityFactoryOptions<AppSignInManager> options, IOwinContext context)
+		public static AppSignInManager Create(IdentityFactoryOptions<AppSignInManager> _/*options*/, IOwinContext context)
 		{
 			return new AppSignInManager(context.GetUserManager<AppUserManager>(), context.Authentication);
 		}

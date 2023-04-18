@@ -14,8 +14,7 @@ namespace A2v10.Web.Identity.ApiBasic
 			if (app == null)
 				throw new ArgumentNullException(nameof(app));
 
-			if (options == null)
-				options = new ApiBasicAuthenticationOptions();
+			options ??= new ApiBasicAuthenticationOptions();
 
 			app.Use<ApiBasicAuthenticationMiddleware>(app, options);
 			app.UseStageMarker(PipelineStage.Authenticate);

@@ -32,7 +32,7 @@ namespace A2v10.Web.Identity.ApiBasic
 			var dbContext = ServiceLocator.Current.GetService<IDbContext>();
 			var host = ServiceLocator.Current.GetService<IApplicationHost>();
 
-			schema = schema ?? "a2security";
+			schema ??= "a2security";
 			var findUsersql = $"[{schema}].[FindApiUserByBasic]";
 			var writeLogSql = $"[{schema}].[WriteLog]";
 

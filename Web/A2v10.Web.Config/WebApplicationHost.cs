@@ -102,10 +102,9 @@ public IServiceLocator Locator { get; }
 		if (!String.IsNullOrEmpty(UserSegment) && source != CatalogDataSource)
 			source = UserSegment;
 
-		var strSet = ConfigurationManager.ConnectionStrings[source];
-		if (strSet == null)
-			throw new ConfigurationErrorsException($"Connection string '{source}' not found");
-		var cnnString = strSet.ConnectionString;
+		var strSet = ConfigurationManager.ConnectionStrings[source] 
+			?? throw new ConfigurationErrorsException($"Connection string '{source}' not found");
+        var cnnString = strSet.ConnectionString;
 		if (source != CatalogDataSource && cnnString.Contains("$("))
 		{
 			cnnString = cnnString
@@ -120,9 +119,8 @@ public IServiceLocator Locator { get; }
 	{
 		get
 		{
-			String path = ConfigurationManager.AppSettings["appPath"];
-			if (path == null)
-				path = "~/App_application";
+			String path = ConfigurationManager.AppSettings["appPath"]
+				?? "~/App_application";
 			if (path.StartsWith("~"))
 				path = HostingEnvironment.MapPath(path);
 			return path;
@@ -314,14 +312,13 @@ public IServiceLocator Locator { get; }
 
 	public ExpandoObject GetEnvironmentObject(String key)
 	{
-		var val = ConfigurationManager.AppSettings[key];
-		if (val == null)
-			throw new ConfigurationErrorsException($"Configuration parameter 'appSettings/{key}' not defined");
+		var val = ConfigurationManager.AppSettings[key]
+			?? throw new ConfigurationErrorsException($"Configuration parameter 'appSettings/{key}' not defined");
 		return JsonConvert.DeserializeObject<ExpandoObject>(val, new ExpandoObjectConverter());
 	}
 
 
-	private static readonly Lazy<Regex> _checkMobileRegEx = new Lazy<Regex>(() =>
+	private static readonly Lazy<Regex> _checkMobileRegEx = new(() =>
 	{
 		var checkMobile = ConfigurationManager.AppSettings["mobileRegEx"];
 		if (!String.IsNullOrEmpty(checkMobile))
@@ -351,14 +348,12 @@ public IServiceLocator Locator { get; }
 			return;
 		using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
 		{
-			using (var cmd = cnn.CreateCommand())
-			{
-				cmd.CommandText = SET_TENANT_CMD;
-				cmd.CommandType = System.Data.CommandType.StoredProcedure;
-				cmd.Parameters.AddWithValue("@TenantId", TenantId);
-				await cmd.ExecuteNonQueryAsync();
-			}
-		}
+            using var cmd = cnn.CreateCommand();
+            cmd.CommandText = SET_TENANT_CMD;
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@TenantId", TenantId);
+            await cmd.ExecuteNonQueryAsync();
+        }
 	}
 
 	public void SetTenantId(SqlConnection cnn, String source)
@@ -369,14 +364,12 @@ public IServiceLocator Locator { get; }
 			return;
 		using (Profiler.CurrentRequest.Start(ProfileAction.Sql, SET_TENANT_CMD))
 		{
-			using (var cmd = cnn.CreateCommand())
-			{
-				cmd.CommandText = SET_TENANT_CMD;
-				cmd.CommandType = System.Data.CommandType.StoredProcedure;
-				cmd.Parameters.AddWithValue("@TenantId", TenantId);
-				cmd.ExecuteNonQuery();
-			}
-		}
+            using var cmd = cnn.CreateCommand();
+            cmd.CommandText = SET_TENANT_CMD;
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@TenantId", TenantId);
+            cmd.ExecuteNonQuery();
+        }
 	}
 
 	#endregion

@@ -26,10 +26,9 @@ public class UploadApp : IInvokeTarget
 	public async Task<Object> InvokeAsync(Int64 UserId, Int32 TenantId, String FileName, String model, String schema)
 	{
 		var appReader = _host.ApplicationReader;
-		var text = await appReader.ReadTextFileAsync("../_apps", Path.ChangeExtension(FileName, ".json"));
-		if (text == null)
-			throw new FileNotFoundException($"Application file '{FileName}' not found");
-		var data = JsonConvert.DeserializeObject<ExpandoObject>(text);
+		var text = await appReader.ReadTextFileAsync("../_apps", Path.ChangeExtension(FileName, ".json")) 
+			?? throw new FileNotFoundException($"Application file '{FileName}' not found");
+        var data = JsonConvert.DeserializeObject<ExpandoObject>(text);
 		var prms = new ExpandoObject()
 		{
 			{"UserId", UserId },

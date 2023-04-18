@@ -19,7 +19,7 @@ public class AppList : IInvokeTarget
 		_host = host;
 	}
 
-	public async Task<Object> InvokeAsync(Int64 UserId)
+	public async Task<Object> InvokeAsync(Int64 _/*UserId*/)
 	{
 		var appReader = _host.ApplicationReader;
 		var text = await appReader.ReadTextFileAsync("../_apps", "applist.json");

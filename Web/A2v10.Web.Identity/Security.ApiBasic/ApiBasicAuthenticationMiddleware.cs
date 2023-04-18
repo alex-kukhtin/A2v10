@@ -5,18 +5,17 @@ using Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Infrastructure;
 
-namespace A2v10.Web.Identity.ApiBasic
-{
-	class ApiBasicAuthenticationMiddleware : AuthenticationMiddleware<ApiBasicAuthenticationOptions>
-	{
-		public ApiBasicAuthenticationMiddleware(OwinMiddleware next, IAppBuilder app, ApiBasicAuthenticationOptions options)
-			: base(next, options)
-		{
-		}
+namespace A2v10.Web.Identity.ApiBasic;
 
-		protected override AuthenticationHandler<ApiBasicAuthenticationOptions> CreateHandler()
-		{
-			return new ApiBasicAuthenticationHandler();
-		}
+class ApiBasicAuthenticationMiddleware : AuthenticationMiddleware<ApiBasicAuthenticationOptions>
+{
+	public ApiBasicAuthenticationMiddleware(OwinMiddleware next, IAppBuilder _/*app*/, ApiBasicAuthenticationOptions options)
+		: base(next, options)
+	{
+	}
+
+	protected override AuthenticationHandler<ApiBasicAuthenticationOptions> CreateHandler()
+	{
+		return new ApiBasicAuthenticationHandler();
 	}
 }

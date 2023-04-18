@@ -119,7 +119,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			else if (pathInfo.StartsWith("_batch/", StringComparison.OrdinalIgnoreCase))
 			{
-				await DoBatch(pathInfo.Substring(7));
+				await DoBatch();
 			}
 			else if (pathInfo.StartsWith("_page/", StringComparison.OrdinalIgnoreCase))
 			{
@@ -238,7 +238,7 @@ namespace A2v10.Web.Mvc.Controllers
 		}
 
 
-		async Task DoBatch(String pathInfo)
+		async Task DoBatch()
 		{
 			if (IsNotAjax())
 				return;
@@ -293,14 +293,9 @@ namespace A2v10.Web.Mvc.Controllers
 			catch (Exception ex)
 			{
 				if (ex.Message.StartsWith("UI:", StringComparison.OrdinalIgnoreCase))
-				{
-					var error = _baseController.Localize(ex.Message.Substring(3));
 					_baseController.WriteExceptionStatus(ex, Response);
-				}
 				else
-				{
 					_baseController.WriteHtmlException(ex, Response.Output);
-				}
 			}
 		}
 
@@ -567,10 +562,9 @@ namespace A2v10.Web.Mvc.Controllers
 					try
 					{
 						var token = Request.QueryString["token"];
-						var ai = await _baseController.LoadFileGet(url, SetQueryStringAndSqlQueryParams, token);
-						if (ai == null)
-							throw new InvalidOperationException($"Not found. Url='{url}'");
-						if (ai.CheckToken && !_baseController.IsTokenValid(Response, ai.Token, token))
+						var ai = await _baseController.LoadFileGet(url, SetQueryStringAndSqlQueryParams, token) 
+							?? throw new InvalidOperationException($"Not found. Url='{url}'");
+                        if (ai.CheckToken && !_baseController.IsTokenValid(Response, ai.Token, token))
 							return;
 						Response.ContentType = ai.Mime;
 						if (Request.QueryString["export"] != null)

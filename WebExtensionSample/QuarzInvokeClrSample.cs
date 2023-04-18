@@ -19,7 +19,7 @@ public class QuarzInvokeClrSample : IInvokeClrHandler
 		_dbContext = serviceProvider.GetService(typeof(IDbContext)) as IDbContext;
 		_httpService = serviceProvider.GetService(typeof(IHttpService)) as IHttpService;
 	}
-	public async Task InvokeAsync(IInvokeContext context, ExpandoObject data)
+	public Task InvokeAsync(IInvokeContext context, ExpandoObject data)
 	{
 		var dat = JsonConvert.SerializeObject(data);
 		throw new InvalidOperationException(dat);
