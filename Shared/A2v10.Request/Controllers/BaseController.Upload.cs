@@ -245,6 +245,27 @@ public partial class BaseController
 		return resultList;
 	}
 
+	String ResolveAzureContainer(String container)
+	{
+		// "((Segment ?? DEFAULT_SEGMENT))"
+		if (String.IsNullOrEmpty(container))
+			return null;
+		container = container.Trim();
+		if (container.StartsWith("((Segment") && container.EndsWith("))")) {
+			int pos = container.IndexOf("??");
+			if (pos != -1)
+			{
+				int len = container.Length - pos - 4 /*??))*/;
+				String defaultContainerName = container.Substring(pos + 2, len).Trim();
+				return String.IsNullOrEmpty(_host.UserSegment) ? defaultContainerName : _host.UserSegment;
+			}
+			if (String.IsNullOrEmpty(_host.UserSegment))
+				throw new InvalidOperationException("Container not defined. Use ((Segment ?? Default_ContainerName");
+			return _host.UserSegment;
+		}
+		return container;
+	}
+
 	async Task<Object> SaveFilesAzureStorage(RequestFile ru, ExpandoObject prms, HttpFileCollectionBase files)
 	{
 		AttachmentUpdateInfo ii = new AttachmentUpdateInfo()
@@ -266,12 +287,14 @@ public partial class BaseController
 				azureStream = CompressImage(file.InputStream, file.ContentType, ru.imageCompress.quality);
 			}
 
-			await azureClient.Put(ru.azureSource, ru.container, blobName, azureStream, azureStream.Length);
+			var container = ResolveAzureContainer(ru.container);
+
+			await azureClient.Put(ru.azureSource, container, blobName, azureStream, azureStream.Length);
 
 			ii.Name = Path.GetFileName(file.FileName);
 			ii.Mime = file.ContentType;
 			ii.Stream = null;
-			ii.BlobName = $"{ru.container}/{blobName}";
+			ii.BlobName = $"{container}/{blobName}";
 			var result = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(ru.CurrentSource, ru.FileProcedureUpdate, ii);
 			resultList.Add(new AttachmentUpdateIdToken()
 			{

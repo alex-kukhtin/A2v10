@@ -4,7 +4,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7927') format('woff'), url('/css/fonts/A2v10.ttf?v=7927') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7928') format('woff'), url('/css/fonts/A2v10.ttf?v=7928') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -779,6 +779,12 @@
 .ico-pane-right-blue:before {
   content: "\eab2";
   color: #1ba1e2 !important;
+}
+.ico-pane-close:before {
+  content: "\e90b";
+}
+.ico-pane-open:before {
+  content: "\e90c";
 }
 .ico-workflow1:before {
   content: "\eabb";
