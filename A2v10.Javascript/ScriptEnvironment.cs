@@ -21,6 +21,7 @@ public class ScriptEnvironment
 	private readonly IDbContext _dbContext;
 	private readonly Engine _engine;
 	private readonly ScriptConfig _config;
+	private readonly ScriptUser _currentUser;
 	private readonly ISmsService _smsService;
 	private readonly IApplicationHost _host;
 	private readonly IServiceLocator _locator;
@@ -35,10 +36,12 @@ public class ScriptEnvironment
 		_host = host;
 		_currentDir = currentDir;
 		_locator = locator;
+		_currentUser = new ScriptUser(_host);
 	}
 
 #pragma warning disable IDE1006 // Naming Styles
 	public ScriptConfig config => _config;
+	public ScriptUser currentUser => _currentUser;
 
 	public ExpandoObject loadModel(ExpandoObject prms)
 	{
