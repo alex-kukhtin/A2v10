@@ -7281,9 +7281,12 @@ Vue.component('validator-control', {
 			}
 
 			let content = utils.eval(row, col.content, col.dataType, col.evalOpts);
-			if (col.maxChars)
+			let spanProps = { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col) } };
+			if (col.maxChars) {
+				spanProps.attrs = { title: content };
 				content = utils.text.maxChars(content, col.maxChars);
-			let chElems = [h('span', { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col) } }, content)];
+			}
+			let chElems = [h('span', spanProps, content)];
 			let icoSingle = !col.content ? ' ico-single' : '';
 			if (col.icon)
 				chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon + icoSingle }));

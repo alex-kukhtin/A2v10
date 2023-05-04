@@ -380,6 +380,7 @@ public enum Icon
 	Lock,
 	LockOutline,
 	Log,
+	Logout,
 	Menu,
 	Message,
 	MessageOutline,

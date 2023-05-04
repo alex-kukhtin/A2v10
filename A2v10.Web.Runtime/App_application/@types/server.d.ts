@@ -64,8 +64,8 @@ interface ServerSaveModelParameters extends ServerSqlParameters {
 }
 
 interface ServerEnvironment {
-	config: ServerConfiguration;
-	currentUser: CurrentUserInfo;
+	readonly config: ServerConfiguration;
+	readonly currentUser: CurrentUserInfo;
 	fetch(url: string, prms?: ServerFetchRequest): ServerFetchResponse;
 	executeSql(args: ServerSqlParameters): keyable;
 	loadModel(args: ServerSqlParameters): keyable;
