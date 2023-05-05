@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
-/* Version 10.0.7929 */
+/* Version 10.0.7930 */
 
 interface keyable {
 	[key: string]: any
@@ -23,7 +23,7 @@ interface ServerAuthorization {
 interface ServerFetchResponse {
 	ok: boolean;
 	isJson: boolean;
-	json(): string;
+	json(): any;
 	text(): string;
 	statusText: string;
 	contentType: string;

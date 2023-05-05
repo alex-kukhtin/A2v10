@@ -24,8 +24,7 @@ namespace A2v10.Infrastructure
 
 		public static T LoadObjectSP<T>(String clrType, IServiceLocator locator = null)
 		{
-			if (locator == null)
-				locator = ServiceLocator.Current;
+			locator ??= ServiceLocator.Current;
 			var (assembly, type) = ClrHelpers.ParseClrType(clrType);
 			var ass = Assembly.Load(assembly);
 			var handlerType = ass.GetType(type);

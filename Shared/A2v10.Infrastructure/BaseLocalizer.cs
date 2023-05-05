@@ -23,8 +23,7 @@ namespace A2v10.Infrastructure
 			if (locale == null)
 			{
 				locale = _userLocale.Locale;
-				if (locale == null)
-					locale = Thread.CurrentThread.CurrentUICulture.Name;
+				locale ??= Thread.CurrentThread.CurrentUICulture.Name;
 			}
 			var dict = GetLocalizerDictionary(locale);
 			if (dict.TryGetValue(key, out String value))

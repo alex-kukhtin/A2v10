@@ -20,7 +20,7 @@ public class PdfReportHelper
 		{
 			var inst = System.Activator.CreateInstance("A2v10.Pdf.Report", "A2v10.Pdf.Report.PdfReportShim");
 			if (inst == null)
-				throw new ArgumentNullException("A2v10.Stimulsoft");
+				throw new ArgumentNullException("A2v10.Pdf.Report");
 			var instUnwrap = inst.Unwrap();
 			var ass = Assembly.GetAssembly(instUnwrap.GetType());
 
