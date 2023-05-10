@@ -249,7 +249,7 @@ public partial class BaseController
 	{
 		// "((Segment ?? DEFAULT_SEGMENT))"
 		if (String.IsNullOrEmpty(container))
-			return null;
+			return String.Empty;
 		container = container.Trim();
 		if (container.StartsWith("((Segment") && container.EndsWith("))")) {
 			int pos = container.IndexOf("??");
@@ -287,7 +287,7 @@ public partial class BaseController
 				azureStream = CompressImage(file.InputStream, file.ContentType, ru.imageCompress.quality);
 			}
 
-			var container = ResolveAzureContainer(ru.container);
+			var container = ResolveAzureContainer(ru.container).ToLowerInvariant();
 
 			await azureClient.Put(ru.azureSource, container, blobName, azureStream, azureStream.Length);
 

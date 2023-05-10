@@ -13,6 +13,7 @@ module.exports = function (grunt) {
 			main: {
 				files: {
 					"scripts/main.min.js": ['scripts/main.js'],
+					"scripts/tabmain.min.js": ['scripts/tabmain.js'],
 					"scripts/bootstrap/main.min.js": ['scripts/bootstrap/main.js']
 				}
 			},

@@ -136,6 +136,7 @@
     <Content Include="app\localization\locale-de.js" />
     <Content Include="app\localization\locale-pl.js" />
     <Content Include="app\mobile\shell.js" />
+    <Content Include="app\platform\routeplain.js" />
     <Content Include="app\server\app.js" />
     <Content Include="app\server\locale.js" />
     <Content Include="app\server\platform.js" />
@@ -266,6 +267,8 @@
     <Content Include="scripts\main.min.js" />
     <Content Include="scripts\mobile.js" />
     <Content Include="scripts\server\invoke.js" />
+    <Content Include="scripts\tabmain.js" />
+    <Content Include="scripts\tabmain.min.js" />
     <Content Include="TestMobile\index.html" />
     <Content Include="TestMobile\testmobile.js" />
     <Content Include="TestPages\d3hierarchy.html" />

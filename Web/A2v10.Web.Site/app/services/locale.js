@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Oleksandr Kukhtin. All rights reserved.
 
 // 20181201-7379
 // services/locale.js

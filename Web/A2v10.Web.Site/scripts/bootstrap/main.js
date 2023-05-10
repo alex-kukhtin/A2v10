@@ -76,7 +76,7 @@
 	*/
 
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Oleksandr Kukhtin. All rights reserved.
 
 // 20181201-7379
 // services/locale.js
@@ -2916,7 +2916,7 @@ const maccel = require('std:accel');
 	});
 })();
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20210211-7747
 /* services/modelinfo.js */
@@ -3409,7 +3409,7 @@ app.modules['std:mask'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20201004-7806
 /* services/html.js */

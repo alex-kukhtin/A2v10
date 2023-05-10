@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20201004-7806
 /* services/html.js */
