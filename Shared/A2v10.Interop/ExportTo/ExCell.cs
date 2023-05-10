@@ -1,154 +1,153 @@
-﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace A2v10.Interop.ExportTo
+namespace A2v10.Interop.ExportTo;
+
+public enum CellKind
 {
-	public enum CellKind
+	Normal,
+	Null,
+	Span
+}
+
+public struct CellSpan
+{
+	public Int32 Row;
+	public Int32 Col;
+}
+
+public class ExCell
+{
+	public CellSpan Span { get; set; }
+	public String Value { get; set; }
+
+	public CellKind Kind { get; set; }
+
+	public DataType DataType { get; set; }
+	public UInt32 StyleIndex { get; set; }
+
+	String NormalizeNumber(String number, IFormatProvider format)
 	{
-		Normal,
-		Null,
-		Span
+		if (Decimal.TryParse(number, NumberStyles.Number, format, out Decimal result))
+			return result.ToString(CultureInfo.InvariantCulture);
+		if (number.IndexOf(".") != -1)
+			return new Regex(@"[\s,]").Replace(number, String.Empty);
+		else
+			return new Regex(@"[\s]").Replace(number, String.Empty).Replace(",", ".");
 	}
 
-	public struct CellSpan
+	String NormalizeDate(String text)
 	{
-		public Int32 Row;
-		public Int32 Col;
+		if (String.IsNullOrEmpty(text))
+			return String.Empty;
+		if (DateTime.TryParseExact(text, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+			return dt.ToOADate().ToString(CultureInfo.InvariantCulture);
+		throw new InteropException($"Invalid date {text}");
 	}
 
-	public class ExCell
+	String NormalizeDateTime(String text)
 	{
-		public CellSpan Span { get; set; }
-		public String Value { get; set; }
+		if (String.IsNullOrEmpty(text))
+			return String.Empty;
+		if (DateTime.TryParseExact(text, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
+			return dt.ToOADate().ToString(CultureInfo.InvariantCulture);
+		throw new InteropException($"Invalid datetime {text}");
+	}
 
-		public CellKind Kind { get; set; }
-
-		public DataType DataType { get; set; }
-		public UInt32 StyleIndex { get; set; }
-
-		String NormalizeNumber(String number, IFormatProvider format)
+	String NormalizeTime(String text)
+	{
+		if (String.IsNullOrEmpty(text))
+			return String.Empty;
+		if (DateTime.TryParseExact(text, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
 		{
-			if (Decimal.TryParse(number, NumberStyles.Number, format, out Decimal result))
-				return result.ToString(CultureInfo.InvariantCulture);
-			if (number.IndexOf(".") != -1)
-				return new Regex(@"[\s,]").Replace(number, String.Empty);
-			else
-				return new Regex(@"[\s]").Replace(number, String.Empty).Replace(",", ".");
+			DateTime oaBaseDate = new DateTime(1899, 12, 30);
+			return oaBaseDate.Add(dt.TimeOfDay).ToOADate().ToString(CultureInfo.InvariantCulture);
 		}
+		throw new InteropException($"Invalid time {text}");
+	}
 
-		String NormalizeDate(String text)
+	public Style GetStyle(ExRow row, String strClasses)
+	{
+		var cls = Utils.ParseClasses(strClasses);
+		var align = row.Align;
+		if (cls.Align != HorizontalAlign.NotSet)
+			align = cls.Align;
+		return new Style()
 		{
-			if (String.IsNullOrEmpty(text))
-				return String.Empty;
-			if (DateTime.TryParseExact(text, "dd.MM.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
-				return dt.ToOADate().ToString(CultureInfo.InvariantCulture);
-			throw new InteropException($"Invalid date {text}");
-		}
+			DataType = DataType,
+			RowRole = row.Role,
+			RowKind = row.Kind,
+			Align = align,
+			VAlign = cls.VAlign,
+			Bold = cls.Bold,
+			Indent = cls.Indent,
+			Underline = cls.Underline
+		};
+	}
 
-		String NormalizeDateTime(String text)
+	public void SetValue(String text, String dataType, IFormatProvider format)
+	{
+		if (text.Contains("\n"))
+			dataType = "string";
+		switch (dataType)
 		{
-			if (String.IsNullOrEmpty(text))
-				return String.Empty;
-			if (DateTime.TryParseExact(text, "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
-				return dt.ToOADate().ToString(CultureInfo.InvariantCulture);
-			throw new InteropException($"Invalid datetime {text}");
+			case null:
+			case "":
+			case "string":
+				DataType = DataType.String;
+				Value = text;
+				break;
+			case "currency":
+				DataType = DataType.Currency;
+				Value = NormalizeNumber(text, format);
+				break;
+			case "number":
+				DataType = DataType.Number;
+				Value = NormalizeNumber(text, format);
+				break;
+			case "date":
+				DataType = DataType.Date;
+				Value = NormalizeDate(text);
+				break;
+			case "datetime":
+				DataType = DataType.DateTime;
+				Value = NormalizeDateTime(text);
+				break;
+			case "time":
+				DataType = DataType.Time;
+				Value = NormalizeTime(text);
+				break;
+			default:
+				Value = text;
+				break;
 		}
+	}
 
-		String NormalizeTime(String text)
-		{
-			if (String.IsNullOrEmpty(text))
-				return String.Empty;
-			if (DateTime.TryParseExact(text, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
-			{
-				DateTime oaBaseDate = new DateTime(1899, 12, 30);
-				return oaBaseDate.Add(dt.TimeOfDay).ToOADate().ToString(CultureInfo.InvariantCulture);
-			}
-			throw new InteropException($"Invalid time {text}");
-		}
+	public String Reference(Int32 row, Int32 col)
+	{
+		return $"{Index2Col(col)}{row + 1}";
+	}
 
-		public Style GetStyle(ExRow row, String strClasses)
-		{
-			var cls = Utils.ParseClasses(strClasses);
-			var align = row.Align;
-			if (cls.Align != HorizontalAlign.NotSet)
-				align = cls.Align;
-			return new Style()
-			{
-				DataType = DataType,
-				RowRole = row.Role,
-				RowKind = row.Kind,
-				Align = align,
-				VAlign = cls.VAlign,
-				Bold = cls.Bold,
-				Indent = cls.Indent,
-				Underline = cls.Underline
-			};
-		}
+	String Index2Col(Int32 index)
+	{
+		Int32 q = index / 26;
 
-		public void SetValue(String text, String dataType, IFormatProvider format)
-		{
-			if (text.Contains("\n"))
-				dataType = "string";
-			switch (dataType)
-			{
-				case null:
-				case "":
-				case "string":
-					DataType = DataType.String;
-					Value = text;
-					break;
-				case "currency":
-					DataType = DataType.Currency;
-					Value = NormalizeNumber(text, format);
-					break;
-				case "number":
-					DataType = DataType.Number;
-					Value = NormalizeNumber(text, format);
-					break;
-				case "date":
-					DataType = DataType.Date;
-					Value = NormalizeDate(text);
-					break;
-				case "datetime":
-					DataType = DataType.DateTime;
-					Value = NormalizeDateTime(text);
-					break;
-				case "time":
-					DataType = DataType.Time;
-					Value = NormalizeTime(text);
-					break;
-				default:
-					Value = text;
-					break;
-			}
-		}
+		if (q > 0)
+			return Index2Col(q - 1) + (Char)((Int32)'A' + (index % 26));
+		else
+			return "" + (Char)((Int32)'A' + index);
+	}
 
-		public String Reference(Int32 row, Int32 col)
-		{
-			return $"{Index2Col(col)}{row + 1}";
-		}
-
-		String Index2Col(Int32 index)
-		{
-			Int32 q = index / 26;
-
-			if (q > 0)
-				return Index2Col(q - 1) + (Char)((Int32)'A' + (index % 26));
-			else
-				return "" + (Char)((Int32)'A' + index);
-		}
-
-		public String MergeReference(Int32 row, Int32 col)
-		{
-			if (Span.Col <= 1 && Span.Row <= 1)
-				return null;
-			var colDelta = Span.Col > 1 ? Span.Col - 1 : 0;
-			var rowDelta = Span.Row > 1 ? Span.Row - 1 : 0;
-			var rs = Span.Row - 1;
-			return $"{Index2Col(col)}{row + 1}:{Index2Col(col + colDelta)}{row + 1 + rowDelta}";
-		}
+	public String MergeReference(Int32 row, Int32 col)
+	{
+		if (Span.Col <= 1 && Span.Row <= 1)
+			return null;
+		var colDelta = Span.Col > 1 ? Span.Col - 1 : 0;
+		var rowDelta = Span.Row > 1 ? Span.Row - 1 : 0;
+		var rs = Span.Row - 1;
+		return $"{Index2Col(col)}{row + 1}:{Index2Col(col + colDelta)}{row + 1 + rowDelta}";
 	}
 }

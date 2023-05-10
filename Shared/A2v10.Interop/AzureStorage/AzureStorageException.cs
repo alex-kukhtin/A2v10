@@ -1,14 +1,13 @@
-﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
-namespace A2v10.Interop.AzureStorage
+namespace A2v10.Interop.AzureStorage;
+
+public sealed class AzureStorageException : Exception
 {
-	public sealed class AzureStorageException : Exception
+	public AzureStorageException(String message)
+		: base(message)
 	{
-		public AzureStorageException(String message)
-			: base(message)
-		{
-		}
 	}
 }

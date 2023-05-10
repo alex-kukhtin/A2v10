@@ -16,6 +16,7 @@ using A2v10.Infrastructure;
 using A2v10.Interop;
 using A2v10.Interop.AzureStorage;
 using A2v10.Javascript;
+using System.Text.RegularExpressions;
 
 namespace A2v10.Request;
 
@@ -247,22 +248,20 @@ public partial class BaseController
 
 	String ResolveAzureContainer(String container)
 	{
-		// "((Segment ?? DEFAULT_SEGMENT))"
+		// [path_1/]((Segment ?? DEFAULT_SEGMENT))[path_2]
 		if (String.IsNullOrEmpty(container))
 			return String.Empty;
 		container = container.Trim();
-		if (container.StartsWith("((Segment") && container.EndsWith("))")) {
-			int pos = container.IndexOf("??");
-			if (pos != -1)
-			{
-				int len = container.Length - pos - 4 /*??))*/;
-				String defaultContainerName = container.Substring(pos + 2, len).Trim();
-				return String.IsNullOrEmpty(_host.UserSegment) ? defaultContainerName : _host.UserSegment;
-			}
-			if (String.IsNullOrEmpty(_host.UserSegment))
-				throw new InvalidOperationException("Container not defined. Use ((Segment ?? Default_ContainerName");
-			return _host.UserSegment;
-		}
+
+		const String pattern = @"(.*)\(\(Segment\s*?\?\?\s*(.*)\s*?\)\)(.*)";
+		var match = Regex.Match(container, pattern, RegexOptions.IgnorePatternWhitespace);
+		if (match.Success && match.Groups.Count == 4)
+		{
+			var segment = _host.UserSegment;
+			if (String.IsNullOrEmpty(segment))
+				segment = match.Groups[2].Value;
+			return $"{match.Groups[1].Value}{segment}{match.Groups[3]}";
+		}	
 		return container;
 	}
 
