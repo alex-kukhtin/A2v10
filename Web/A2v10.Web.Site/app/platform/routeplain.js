@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221124-7907
+// 20230511-7933
 /* platform/routplain.js */
 
 (function () {
@@ -74,6 +74,7 @@
 				state.query = Object.assign({}, to.query);
 				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
 				setTitle(to);
+				eventBus.$emit('navigateto', to);
 			},
 			query: function (state, query) {
 				// changes all query
@@ -100,6 +101,7 @@
 				let oldRoute = state.route;
 				let newRoute = urlTools.replaceSegment(oldRoute, to.id, to.action);
 				state.route = newRoute;
+				eventBus.$emit('setnewid', { from: oldRoute, to: newRoute });
 			},
 			close: function (state) {
 			}

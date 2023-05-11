@@ -1950,9 +1950,9 @@ app.modules['std:http'] = function () {
 
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221124-7907
+// 20230511-7933
 /* platform/routplain.js */
 
 (function () {
@@ -2026,6 +2026,7 @@ app.modules['std:http'] = function () {
 				state.query = Object.assign({}, to.query);
 				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
 				setTitle(to);
+				eventBus.$emit('navigateto', to);
 			},
 			query: function (state, query) {
 				// changes all query
@@ -2052,6 +2053,7 @@ app.modules['std:http'] = function () {
 				let oldRoute = state.route;
 				let newRoute = urlTools.replaceSegment(oldRoute, to.id, to.action);
 				state.route = newRoute;
+				eventBus.$emit('setnewid', { from: oldRoute, to: newRoute });
 			},
 			close: function (state) {
 			}
@@ -4748,8 +4750,8 @@ app.modules['std:barcode'] = function () {
 
 // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
-// 20221124-7907
-/*components/include.js*/
+// 20230511-7933
+/*components/includeplain.js*/
 
 (function () {
 
@@ -4885,13 +4887,14 @@ app.modules['std:barcode'] = function () {
 		}
 	});
 
-
 	Vue.component('a2-include', {
 		template: '<div class="a2-include"></div>',
 		props: {
 			source: String,
 			arg: undefined,
 			dat: undefined,
+			complete: Function,
+			lock: Boolean
 		},
 		data() {
 			return {
@@ -4904,6 +4907,8 @@ app.modules['std:barcode'] = function () {
 				_destroyElement(this.$el);
 			},
 			loaded() {
+				if (this.complete)
+					this.complete(this.source);
 			},
 			error(msg) {
 				if (msg instanceof Error)
@@ -4911,7 +4916,7 @@ app.modules['std:barcode'] = function () {
 				alert(msg);
 			},
 			makeUrl() {
-				let arg = this.arg || '0';
+				let arg = this.arg || '';
 				let url = urlTools.combine('_page', this.source, arg);
 				if (this.dat)
 					url += urlTools.makeQueryString(this.dat);
@@ -4927,14 +4932,17 @@ app.modules['std:barcode'] = function () {
 		},
 		watch: {
 			source(newVal, oldVal) {
+				if (this.lock) return;
 				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			arg(newVal, oldVal) {
+				if (this.lock) return;
 				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
 			dat(newVal, oldVal) {
+				if (this.lock) return;
 				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
@@ -11287,12 +11295,14 @@ Vue.component('a2-panel', {
 	});
 })();
 
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20180821-7280
-// components/doctitle.js*/
+// 20230511-7933
+// components/doctitleplain.js*/
 
 (function () {
+
+	const eventBus = require('std:eventBus');
 
 	const documentTitle = {
 		render() {
@@ -11306,8 +11316,7 @@ Vue.component('a2-panel', {
 		},
 		methods: {
 			setTitle() {
-				if (this.pageTitle)
-					document.title = this.pageTitle;
+				eventBus.$emit('setdoctitle', this.pageTitle);
 			}
 		},
 		created() {

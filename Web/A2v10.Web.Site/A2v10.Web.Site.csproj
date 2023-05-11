@@ -115,6 +115,8 @@
     <Content Include="app\components\accelcommand.js" />
     <Content Include="app\components\colorpicker.js" />
     <Content Include="app\components\dashboard.js" />
+    <Content Include="app\components\doctitleplain.js" />
+    <Content Include="app\components\includeplain.js" />
     <Content Include="app\components\kanban.js" />
     <Content Include="app\components\tagscontrol.js" />
     <Content Include="app\components\treegrid.js" />
