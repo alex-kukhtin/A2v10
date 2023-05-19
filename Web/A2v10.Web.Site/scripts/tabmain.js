@@ -1704,9 +1704,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221124-7907
+// 20230518-7933
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1864,7 +1864,7 @@ app.modules['std:http'] = function () {
 					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
 					if (elemId && !document.getElementById(elemId)) {
 						selector.innerHTML = '';
-						resolve(false);
+						resolve(false, null);
 						return;
 					}
 					for (let i = 0; i < rdoc.scripts.length; i++) {
@@ -1880,8 +1880,9 @@ app.modules['std:http'] = function () {
 					}
 
 					let fec = selector.firstElementChild;
+					let ve = null;
 					if (fec && fec.__vue__) {
-						let ve = fec.__vue__;
+						ve = fec.__vue__;
 						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
 						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
@@ -1892,7 +1893,7 @@ app.modules['std:http'] = function () {
 						}
 					}
 					rdoc.body.remove();
-					resolve(true);
+					resolve(ve);
 					eventBus.$emit('endLoad');
 				})
 				.catch(function (error) {
@@ -1952,7 +1953,7 @@ app.modules['std:http'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230511-7933
+// 20230517-7933
 /* platform/routplain.js */
 
 (function () {
@@ -1960,9 +1961,14 @@ app.modules['std:http'] = function () {
 	const eventBus = require('std:eventBus');
 	const urlTools = require('std:url');
 
-	// TODO:
+	function replaceUrlSearch(url, search) {
+		let parts = url.split('?');
+		return parts[0] + (search || '');
+	}
 
-	// 1: save/restore query (localStorage)
+	function replaceUrlQuery(url, query) {
+		return replaceUrlSearch(url, urlTools.makeQueryString(query));
+	}
 
 	const titleStore = {};
 
@@ -1987,8 +1993,53 @@ app.modules['std:http'] = function () {
 		return urlTools.normalizeRoot(path);
 	}
 
-	const store = new Vuex.Store({
-		strict: true,
+	class StoreClass {
+		constructor(elem) {
+			this.root = elem;
+			this.parseQueryString = urlTools.parseQueryString;
+			this.makeQueryString = urlTools.makeQueryString;
+			this.replaceUrlSearch = replaceUrlSearch;
+			this.replaceUrlQuery = replaceUrlQuery;
+			this.makeBackUrl = makeBackUrl;
+			this.route = '';
+			this.query = {}
+		}
+
+		commit(name, state) {
+			this[name](state);
+		}
+
+		setroute(url) {
+			this.route = url;
+		}
+
+		navigate(url) {
+			this.route = url;
+			eventBus.$emit('closeAllPopups');
+			eventBus.$emit('modalCloseAll');
+			eventBus.$emit('showSidePane', null);
+			eventBus.$emit('navigateto', url);
+		}
+
+		close() {
+			eventBus.$emit('closePlain', { root: this.root });
+		}
+
+		setnewid(to) {
+			let oldRoute = this.route;
+			let newRoute = urlTools.replaceSegment(oldRoute, to.id, to.action);
+			this.route = newRoute;
+			eventBus.$emit('setnewid', { from: oldRoute, to: newRoute });
+		}
+	};
+
+	const store = {
+		create(elem) {
+			return new StoreClass(elem);
+		}
+	};
+
+	let storeOld = {
 		state: {
 			route: normalizedRoute(),
 			query: urlTools.parseQueryString('')
@@ -2014,20 +2065,8 @@ app.modules['std:http'] = function () {
 				return urlTools.makeQueryString(state.query);
 			}
 		},
+
 		mutations: {
-			navigate: function (state, to) { // to: {url, query, title}
-				eventBus.$emit('closeAllPopups');
-				eventBus.$emit('modalCloseAll');
-				eventBus.$emit('showSidePane', null);
-				let root = window.$$rootUrl;
-				let oldUrl = root + state.route + urlTools.makeQueryString(state.query);
-				state.route = to.url.toLowerCase();
-				//console.dir(state.route);
-				state.query = Object.assign({}, to.query);
-				let newUrl = root + state.route + urlTools.makeQueryString(to.query);
-				setTitle(to);
-				eventBus.$emit('navigateto', to);
-			},
 			query: function (state, query) {
 				// changes all query
 				let root = window.$$rootUrl;
@@ -2056,18 +2095,10 @@ app.modules['std:http'] = function () {
 				eventBus.$emit('setnewid', { from: oldRoute, to: newRoute });
 			},
 			close: function (state) {
+				eventBus.$emit('closePlain', { root: this.root });
 			}
 		}
-	});
-
-	function replaceUrlSearch(url, search) {
-		let parts = url.split('?');
-		return parts[0] + (search || '');
-	}
-
-	function replaceUrlQuery(url, query) {
-		return replaceUrlSearch(url, urlTools.makeQueryString(query));
-	}
+	};
 
 	store.parseQueryString = urlTools.parseQueryString;
 	store.makeQueryString = urlTools.makeQueryString;
@@ -4748,9 +4779,9 @@ app.modules['std:barcode'] = function () {
 	}
 };
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230511-7933
+// 20230518-7933
 /*components/includeplain.js*/
 
 (function () {
@@ -4792,7 +4823,7 @@ app.modules['std:barcode'] = function () {
 			};
 		},
 		methods: {
-			loaded(ok) {
+			loaded() {
 				this.loading = false;
 				if (this.insideDialog)
 					eventBus.$emit('modalCreated', this);
@@ -4906,9 +4937,9 @@ app.modules['std:barcode'] = function () {
 				//console.warn('include has been destroyed');
 				_destroyElement(this.$el);
 			},
-			loaded() {
+			loaded(data) {
 				if (this.complete)
-					this.complete(this.source);
+					this.complete({ src: this.source, root: data });
 			},
 			error(msg) {
 				if (msg instanceof Error)
@@ -8388,10 +8419,10 @@ Vue.component('popover', {
 	});
 })();
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221127-7908
-// components/collectionview.js
+// 20230518-7933
+// components/collectionviewplain.js
 
 /*
 TODO:
@@ -8606,7 +8637,7 @@ TODO:
 
 
 	// server collection view
-	Vue.component('collection-view-server', {
+	let collectionView = {
 		//store: component('std:store'),
 		template: `
 <div>
@@ -8766,161 +8797,10 @@ TODO:
 		beforeDestroy() {
 			eventBus.$off('setFilter', this.__setFilter);
 		}
-	});
+	};
 
-	// server url collection view
-	Vue.component('collection-view-server-url', {
-		store: component('std:store'),
-		template: `
-<div>
-	<slot :ItemsSource="ItemsSource" :Pager="thisPager" :Filter="filter" :Grouping="thisGrouping">
-	</slot>
-</div>
-`,
-		props: {
-			ItemsSource: [Array, Object],
-			initialFilter: Object,
-			initialGroup: Object
-		},
-		data() {
-			return {
-				filter: this.initialFilter,
-				GroupBy: '',
-				lockChange: true
-			};
-		},
-		watch: {
-			jsonFilter: {
-				handler(newData, oldData) {
-					this.filterChanged();
-				}
-			},
-			GroupBy: {
-				handler(newData, oldData) {
-					this.filterChanged();
-				}
-			}
-		},
-		computed: {
-			jsonFilter() {
-				return utils.toJson(this.filter);
-			},
-			pageSize() {
-				let ps = getModelInfoProp(this.ItemsSource, 'PageSize');
-				return ps ? ps : DEFAULT_PAGE_SIZE;
-			},
-			dir() {
-				let dir = this.$store.getters.query.dir;
-				if (!dir) dir = getModelInfoProp(this.ItemsSource, 'SortDir');
-				return dir;
-			},
-			offset() {
-				let ofs = this.$store.getters.query.offset;
-				if (!utils.isDefined(ofs))
-					ofs = getModelInfoProp(this.ItemsSource, 'Offset');
-				return ofs || 0;
-			},
-			order() {
-				return getModelInfoProp(this.ItemsSource,'SortOrder');
-			},
-			sourceCount() {
-				if (!this.ItemsSource) return 0;
-				return this.ItemsSource.$RowCount || 0;
-			},
-			thisPager() {
-				return this;
-			},
-			thisGrouping() {
-				return this;
-			},
-			pages() {
-				cnt = this.sourceCount;
-				return Math.ceil(cnt / this.pageSize);
-			},
-			Filter() {
-				return this.filter;
-			}
-		},
-		methods: {
-			commit(query) {
-				//console.dir(this.$root.$store);
-				query.__baseUrl__ = '';
-				if (this.$root.$data)
-					query.__baseUrl__ = this.$root.$data.__baseUrl__;
-				this.$store.commit('setquery', query);
-			},
-			sortDir(order) {
-				return eqlower(order, this.order) ? this.dir : undefined;
-			},
-			$setOffset(offset) {
-				if (this.offset === offset)
-					return;
-				setModelInfoProp(this.ItemsSource, "Offset", offset);
-				this.commit({ offset: offset });
-			},
-			doSort(order) {
-				let nq = this.makeNewQuery();
-				if (eqlower(nq.order, order))
-					nq.dir = eqlower(nq.dir ,'asc') ? 'desc' : 'asc';
-				else {
-					nq.order = order;
-					nq.dir = 'asc';
-				}
-				if (!nq.order)
-					nq.dir = null;
-				this.commit(nq);
-			},
-			makeNewQuery() {
-				return makeNewQueryFunc(this);
-			},
-			filterChanged() {
-				if (this.lockChange) return;
-				// for server only
-				let nq = this.makeNewQuery();
-				nq.offset = 0;
-				if (!nq.order) nq.dir = undefined;
-				//console.warn('filter changed');
-				this.commit(nq);
-			},
-			__setFilter(props) {
-				if (this.ItemsSource !== props.source) return;
-				if (period.isPeriod(props.value))
-					this.filter[props.prop].assign(props.value);
-				else
-					this.filter[props.prop] = props.value;
-			},
-			__clearFilter(props) {
-				if (this.ItemsSource !== props.source) return;
-				this.filter = this.initialFilter;
-			}
-		},
-		created() {
-			// get filter values from modelInfo and then from query
-			let mi = this.ItemsSource.$ModelInfo;
-			if (mi) {
-				modelInfoToFilter(mi.Filter, this.filter);
-				if (mi.GroupBy) {
-					this.GroupBy = mi.GroupBy;
-				}
-			}
-			// then query from url
-			let q = this.$store.getters.query;
-			modelInfoToFilter(q, this.filter);
-
-			this.$nextTick(() => {
-				this.lockChange = false;
-			});
-
-			this.$on('sort', this.doSort);
-
-			eventBus.$on('setFilter', this.__setFilter);
-			eventBus.$on('clearFilter', this.__clearFilter);
-		},
-		beforeDestroy() {
-			eventBus.$off('setFilter', this.__setFilter);
-			eventBus.$off('clearFilter', this.__clearFilter);
-		}
-	});
+	Vue.component('collection-view-server', collectionView);
+	Vue.component('collection-view-server-url', collectionView);
 
 })();
 // Copyright © 2021 Alex Kukhtin. All rights reserved.
@@ -11183,118 +11063,6 @@ Vue.component('a2-panel', {
 	});
 })();
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
-
-// 20220906-7884
-// components/feedback.js*/
-
-(function () {
-
-    /**
-     * TODO
-    1. Trace window
-    2. Dock right/left
-    6.
-     */
-
-	const dataService = require('std:dataservice');
-	const urlTools = require('std:url');
-	const locale = window.$$locale;
-	const utils = require('std:utils');
-
-	Vue.component('a2-feedback', {
-		template: `
-<div class="feedback-panel" v-if="visible">
-    <div class="feedback-pane-header">
-        <span class="feedback-pane-title" v-text="source.title"></span>
-        <a class="btn btn-close" @click.prevent="close">&#x2715</a>
-    </div>
-    <div class="feedback-body">
-		<template v-if="shown">
-			<div v-html="source.promptText"></div>
-			<div v-if="!source.skipForm">
-				<div style="margin-bottom:20px" />
-				<div class="control-group" style="">
-					<label v-html="source.labelText" /> 
-					<div class="input-group">
-						<textarea rows="5" maxlength="2048" v-model="value" style="height: 92px;max-height:400px" v-auto-size="true" />
-					</div>
-				</div>
-				<button class="btn btn-primary" :disabled="noValue" @click.prevent="submit" v-text="source.buttonText" />
-			</div>
-			<include v-if="source.externalFragment" :src="source.externalFragment"/>
-			
-		</template>
-		<template v-else>
-			<div class="thanks" v-html="source.thanks" />
-			<button class="btn btn-primary" @click.prevent="close" v-text="closeText" />
-		</template>
-	</div>
-</div>
-`,
-		components: {
-		},
-		props: {
-			visible: Boolean,
-			modelStack: Array,
-			close: Function,
-			source: Object
-		},
-		data() {
-			return {
-				value: "",
-				shown: true
-			};
-		},
-		computed: {
-			noValue() { return !this.value; },
-			closeText() { return locale.$Close; }
-		},
-		methods: {
-			text(key) {
-				return locale[key];
-			},
-			refresh() {
-			},
-			loadfeedbacks() {
-
-			},
-			submit() {
-				const root = window.$$rootUrl;
-				const url = urlTools.combine(root, '_shell/savefeedback');
-				const that = this;
-				let jsonData = utils.toJson({ text: this.value });
-				dataService.post(url, jsonData).then(function (result) {
-					//that.trace.splice(0, that.trace.length);
-					//console.dir(result);
-					that.shown = false;
-					that.value = '';
-					//result.forEach((val) => {
-						//that.trace.push(val);
-					//});
-				}).catch(function (result) {
-					console.dir(result);
-					that.$parent.$alert(that.source.alert);
-					that.close();
-					//alert('Щось пішло не так. Спробуйте ще через декілька хвилин');
-				});
-
-			}
-		},
-		watch: {
-			visible(val) {
-				if (!val) return;
-				this.shown = true;
-				this.value = '';
-				// load my feedbacks
-				this.loadfeedbacks();
-			}
-		},
-		created() {
-		}
-	});
-})();
-
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 // 20230511-7933
@@ -11428,37 +11196,6 @@ Vue.component('a2-panel', {
 		}
 	});
 
-})();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
-
-// 20180605-7327
-// components/iframetarget.js*/
-
-(function () {
-
-	const eventBus = require('std:eventBus');
-
-	Vue.component('a2-iframe-target', {
-		template: `
-<div class="frame-stack" v-if="visible">
-	<iframe width="100%" height="100%" :src="iFrameUrl" frameborder="0" />
-</div>
-`,
-		data() {
-			return {
-				iFrameUrl: ''
-			};
-		},
-		computed: {
-			visible() { return !!this.iFrameUrl; }
-		},
-		created() {
-			eventBus.$on('openframe', (url) => {
-				alert(url);
-				this.iFrameUrl = url;
-			});
-		}
-	});
 })();
 // Copyright © 2022-2023 Alex Kukhtin. All rights reserved.
 
@@ -12822,7 +12559,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230412-7926*/
+/*20230519-7933*/
 // controllers/base.js
 
 (function () {
@@ -13027,6 +12764,9 @@ Vue.directive('resize', {
 			$emitSaveEvent() {
 				if (this.__saveEvent__)
 					this.$caller.$data.$emit(this.__saveEvent__, this.$data);
+			},
+			$emitParentTab(event, data) {
+				eventBus.$emit('toParentTab', { event, source: this, data });
 			},
 			$emitCaller(event, ...arr) {
 				if (this.$caller)
@@ -14228,6 +13968,7 @@ Vue.directive('resize', {
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
+					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane
 				};
@@ -14305,6 +14046,9 @@ Vue.directive('resize', {
 				eventBus.$emit('registerData', this, out);
 			this.$caller = out.caller;
 			this.__destroyed__ = false;
+
+			if (!this.$store && store.create)
+				this.$store = store.create(this);
 
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);

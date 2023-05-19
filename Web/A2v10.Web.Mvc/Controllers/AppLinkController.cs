@@ -79,7 +79,15 @@ namespace A2v10.Web.Mvc.Controllers
 			AppTitleModel appTitle = await _dbContext.LoadAsync<AppTitleModel>(_host.CatalogDataSource, "a2ui.[AppTitle.Load]");
 			StringBuilder layout = new StringBuilder(_localizer.Localize(null, ResourceHelper.InitLayoutHtml));
 			layout.Replace("$(Lang)", CurrentLang);
-			layout.Replace("$(LayoutScripts)", _host.CustomAppScripts());
+
+			var customScripts = _host.CustomAppScripts();
+			if (customScripts.Contains("@{CurrentUserInfo}"))
+			{
+				var res = "{}"; // simple empty element
+				customScripts = customScripts.Replace("@{CurrentUserInfo}", res);
+			}
+
+			layout.Replace("$(LayoutScripts)", customScripts);
 			layout.Replace("$(Partial)", pageContent);
 			layout.Replace("$(Title)", appTitle.AppTitle);
 			layout.Replace("$(SiteMeta)", Request.GetSiteMetaTags(_host));

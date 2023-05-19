@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230511-7933
+// 20230518-7933
 /*components/includeplain.js*/
 
 (function () {
@@ -42,7 +42,7 @@
 			};
 		},
 		methods: {
-			loaded(ok) {
+			loaded() {
 				this.loading = false;
 				if (this.insideDialog)
 					eventBus.$emit('modalCreated', this);
@@ -156,9 +156,9 @@
 				//console.warn('include has been destroyed');
 				_destroyElement(this.$el);
 			},
-			loaded() {
+			loaded(data) {
 				if (this.complete)
-					this.complete(this.source);
+					this.complete({ src: this.source, root: data });
 			},
 			error(msg) {
 				if (msg instanceof Error)

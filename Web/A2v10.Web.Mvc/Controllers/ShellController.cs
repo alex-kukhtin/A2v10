@@ -229,7 +229,7 @@ namespace A2v10.Web.Mvc.Controllers
 					{ "$(Minify)", _baseController.IsDebugConfiguration ? String.Empty : "min." }
 				};
 				var siteHost = Request.Headers["Host"];
-				_baseController.Layout(Response.Output, prms, Request.Url.LocalPath, siteHost);
+				_baseController.Layout(Response.Output, prms, Request.Url.LocalPath, siteHost, SetUserTenantToParams);
 			}
 			catch (Exception ex)
 			{

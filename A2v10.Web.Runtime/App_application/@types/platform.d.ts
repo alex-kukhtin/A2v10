@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7927 */
+/* Version 10.0.7933 */
 
 declare function require(url: string): any;
 
@@ -273,6 +273,7 @@ interface IController {
 	$upload(url: string, accept?: string, data?: { Id?: any, Key?: any }, opts?: { catchError?: boolean }): Promise<any>;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
+	$emitParentTab(event: string, data?: any): void;
 	$nodirty(func: () => Promise<any>): void;
 	$showSidePane(url: string, arg?: string | number, data?: object): void;
 }

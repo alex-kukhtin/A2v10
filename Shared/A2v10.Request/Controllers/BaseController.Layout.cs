@@ -24,7 +24,7 @@ public class MultiTenantParamJson
 
 public partial class BaseController
 {
-	public void Layout(TextWriter writer, IDictionary<String, String> prms, String localUrl, String siteHost)
+	public void Layout(TextWriter writer, IDictionary<String, String> prms, String localUrl, String siteHost, Action<ExpandoObject> setParams = null)
 	{
 		var customLayout = _host.CustomLayout;
 		String layout;
@@ -49,8 +49,14 @@ public partial class BaseController
 			actionUrl = actionUrl.Remove(0, 6); // remove 'admin/';
 		var action = RequestModel.GetActionFromUrl(_host, actionUrl);
 
+		var customScripts = _host.CustomAppScripts();
+		if (customScripts.Contains("@{CurrentUserInfo}"))
+		{
+			var res = GetCurrentUserInfoForScript(setParams);
+			customScripts = customScripts.Replace("@{CurrentUserInfo}", res);
+		}
 		sb.Replace("$(AssetsScripts)", AppScriptsLink);
-		sb.Replace("$(LayoutScripts)", _host.CustomAppScripts());
+		sb.Replace("$(LayoutScripts)", customScripts);
 		sb.Replace("$(Release)", _host.IsDebugConfiguration ? "debug" : "release");
 		sb.Replace("$(ModelScripts)", action?.GetModelScripts());
 		sb.Replace("$(ModelStyles)", action?.GetModelStyles());
@@ -59,6 +65,13 @@ public partial class BaseController
 		writer.Write(sb.ToString());
 	}
 
+	String GetCurrentUserInfoForScript(Action<ExpandoObject> setParams = null)
+	{
+		var prms = new ExpandoObject();
+		setParams.Invoke(prms);
+		var res = _dbContext.ExecuteAndLoadExpando(_host.TenantDataSource, "a2security.[CurrentUser.Info]", prms);
+		return JsonConvert.SerializeObject(res);
+	}
 	async Task<MultiTenantParamJson> ProcessMultiTenantParams(ExpandoObject prms)
 	{
 		var permssionModel = await _dbContext.LoadModelAsync(_host.TenantDataSource, "a2security_tenant.[Permission.LoadMenu]", prms);

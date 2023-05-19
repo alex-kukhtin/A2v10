@@ -331,22 +331,6 @@ footer, .footer {
 		}
 	}
 
-	.spinner {
-		box-sizing: content-box;
-		width: .8rem;
-		min-width: .8rem;
-		height: .8rem;
-		margin-right: .25rem;
-		background-color: transparent;
-		border-radius: 50%;
-		border: 4px solid #ccc;
-
-		&.active {
-			border-color: @link-hover-color;
-			border-top-color: #ccc;
-			animation: spin 1.5s linear infinite;
-		}
-	}
 
 	.app-links {
 		white-space: nowrap;
@@ -358,6 +342,22 @@ footer, .footer {
 	}
 }
 
+.spinner {
+	box-sizing: content-box;
+	width: .8rem;
+	min-width: .8rem;
+	height: .8rem;
+	margin-right: .25rem;
+	background-color: transparent;
+	border-radius: 50%;
+	border: 4px solid #ccc;
+
+	&.active {
+		border-color: @link-hover-color;
+		border-top-color: #ccc;
+		animation: spin 1.5s linear infinite;
+	}
+}
 
 @keyframes spin {
 	0% {

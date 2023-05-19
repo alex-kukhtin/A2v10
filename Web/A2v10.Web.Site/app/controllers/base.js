@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230412-7926*/
+/*20230519-7933*/
 // controllers/base.js
 
 (function () {
@@ -205,6 +205,9 @@
 			$emitSaveEvent() {
 				if (this.__saveEvent__)
 					this.$caller.$data.$emit(this.__saveEvent__, this.$data);
+			},
+			$emitParentTab(event, data) {
+				eventBus.$emit('toParentTab', { event, source: this, data });
 			},
 			$emitCaller(event, ...arr) {
 				if (this.$caller)
@@ -1406,6 +1409,7 @@
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
+					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane
 				};
@@ -1483,6 +1487,9 @@
 				eventBus.$emit('registerData', this, out);
 			this.$caller = out.caller;
 			this.__destroyed__ = false;
+
+			if (!this.$store && store.create)
+				this.$store = store.create(this);
 
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);

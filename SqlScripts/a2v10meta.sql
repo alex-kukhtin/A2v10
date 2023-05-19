@@ -108,7 +108,7 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2met
 begin
 	create table a2meta.[Tables]
 	(
-		Name sysname not null,
+		[Name] sysname not null,
 		Module sysname not null 
 			constraint FK_Tables_Module_Modules foreign key references a2meta.Modules(Name),
 		[Key] as cast(Module + N'.' + Name as sysname) persisted not null constraint PK_Tables primary key,
@@ -126,7 +126,7 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2met
 begin
 	create table a2meta.[Views]
 	(
-		Name sysname not null,
+		[Name] sysname not null,
 		Module sysname not null 
 			constraint FK_Views_Module_Modules foreign key references a2meta.Modules(Name),
 		[Key] as cast(Module + N'.' + Name as sysname) persisted not null constraint PK_Views primary key,
