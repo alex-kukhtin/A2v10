@@ -28,10 +28,8 @@ namespace A2v10.Infrastructure
 			String fullPath = GetFullPath(path, fileName);
 			if (!File.Exists(fullPath))
 				return null;
-			using (var tr = new StreamReader(fullPath))
-			{
-				return await tr.ReadToEndAsync();
-			}
+			using var tr = new StreamReader(fullPath);
+			return await tr.ReadToEndAsync();
 		}
 
 		public String ReadTextFile(String path, String fileName)
@@ -39,10 +37,8 @@ namespace A2v10.Infrastructure
 			String fullPath = GetFullPath(path, fileName);
 			if (!File.Exists(fullPath))
 				return null;
-			using (var tr = new StreamReader(fullPath))
-			{
-				return tr.ReadToEnd();
-			}
+			using var tr = new StreamReader(fullPath);
+			return tr.ReadToEnd();
 		}
 
 		public IEnumerable<String> EnumerateFiles(String path, String searchPattern)

@@ -36,7 +36,7 @@ namespace A2v10.Infrastructure
 
 		public static IServiceLocator Current => ServiceLocator.GetCurrentLocator();
 
-		Dictionary<Type, Object> _services = new Dictionary<Type, Object>();
+		private readonly Dictionary<Type, Object> _services = new();
 
 		public T GetService<T>() where T : class
 		{

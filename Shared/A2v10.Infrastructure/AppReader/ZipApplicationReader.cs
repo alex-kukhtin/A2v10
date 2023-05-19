@@ -47,30 +47,22 @@ namespace A2v10.Infrastructure
 
 		public async Task<String> ReadTextFileAsync(String path, String fileName)
 		{
-			using (var za = ZipFile.OpenRead(FileName))
-			{
-				var ze = GetEntry(za, path, fileName);
-				if (ze == null)
-					return null;
-				using (var sr = new StreamReader(ze.Open()))
-				{
-					return await sr.ReadToEndAsync();
-				}
-			}
+			using var za = ZipFile.OpenRead(FileName);
+			var ze = GetEntry(za, path, fileName);
+			if (ze == null)
+				return null;
+			using var sr = new StreamReader(ze.Open());
+			return await sr.ReadToEndAsync();
 		}
 
 		public String ReadTextFile(String path, String fileName)
 		{
-			using (var za = ZipFile.OpenRead(FileName))
-			{
-				var ze = GetEntry(za, path, fileName);
-				if (ze == null)
-					return null;
-				using (var sr = new StreamReader(ze.Open()))
-				{
-					return sr.ReadToEnd();
-				}
-			}
+			using var za = ZipFile.OpenRead(FileName);
+			var ze = GetEntry(za, path, fileName);
+			if (ze == null)
+				return null;
+			using var sr = new StreamReader(ze.Open());
+			return sr.ReadToEnd();
 		}
 
 		public IEnumerable<String> EnumerateFiles(String path, String searchPattern)
@@ -78,15 +70,13 @@ namespace A2v10.Infrastructure
 			String searchExtension = searchPattern;
 			if (searchExtension.StartsWith("*"))
 				searchExtension = searchExtension.Substring(1).ToLowerInvariant();
-			using (var za = ZipFile.OpenRead(FileName))
+			using var za = ZipFile.OpenRead(FileName);
+			foreach (var e in za.Entries)
 			{
-				foreach (var e in za.Entries)
-				{
-					var ePath = Path.GetDirectoryName(e.FullName);
-					var extMatch = e.Name.EndsWith(searchExtension);
-					if (ePath == path && extMatch)
-						yield return e.FullName;
-				}
+				var ePath = Path.GetDirectoryName(e.FullName);
+				var extMatch = e.Name.EndsWith(searchExtension);
+				if (ePath == path && extMatch)
+					yield return e.FullName;
 			}
 		}
 
@@ -94,14 +84,12 @@ namespace A2v10.Infrastructure
 		{
 			if (fullPath == null)
 				return false;
-			using (var za = ZipFile.OpenRead(FileName))
+			using var za = ZipFile.OpenRead(FileName);
+			foreach (var e in za.Entries)
 			{
-				foreach (var e in za.Entries)
-				{
-					var ePath = Path.GetDirectoryName(e.FullName);
-					if (ePath == fullPath)
-						return true;
-				}
+				var ePath = Path.GetDirectoryName(e.FullName);
+				if (ePath == fullPath)
+					return true;
 			}
 			return false;
 		}
@@ -110,52 +98,40 @@ namespace A2v10.Infrastructure
 		{
 			if (fullPath == null)
 				return false;
-			using (var za = ZipFile.OpenRead(FileName))
-			{
-				var ze = za.GetEntry(fullPath);
-				return ze != null;
-			}
+			using var za = ZipFile.OpenRead(FileName);
+			var ze = za.GetEntry(fullPath);
+			return ze != null;
 		}
 
 		public String FileReadAllText(String fullPath)
 		{
 			if (fullPath == null)
 				return null;
-			using (var za = ZipFile.OpenRead(FileName))
-			{
-				var ze = za.GetEntry(fullPath);
-				using (var sr = new StreamReader(ze.Open()))
-				{
-					return sr.ReadToEnd();
-				}
-			}
+			using var za = ZipFile.OpenRead(FileName);
+			var ze = za.GetEntry(fullPath);
+			using var sr = new StreamReader(ze.Open());
+			return sr.ReadToEnd();
 		}
 
 		public IEnumerable<String> FileReadAllLines(String fullPath)
 		{
 			if (fullPath != null)
 			{
-				using (var za = ZipFile.OpenRead(FileName))
+				using var za = ZipFile.OpenRead(FileName);
+				var ze = za.GetEntry(fullPath);
+				using var sr = new StreamReader(ze.Open());
+				while (!sr.EndOfStream)
 				{
-					var ze = za.GetEntry(fullPath);
-					using (var sr = new StreamReader(ze.Open()))
-					{
-						while (!sr.EndOfStream)
-						{
-							yield return sr.ReadLine();
-						}
-					}
+					yield return sr.ReadLine();
 				}
 			}
 		}
 
 		public Stream FileStream(String path, String fileName)
 		{
-			using (var za = ZipFile.OpenRead(FileName))
-			{
-				var ze = GetEntry(za, path, fileName);
-				return Deflate(ze);
-			}
+			using var za = ZipFile.OpenRead(FileName);
+			var ze = GetEntry(za, path, fileName);
+			return Deflate(ze);
 		}
 
 		Stream Deflate(ZipArchiveEntry entry)
@@ -173,11 +149,9 @@ namespace A2v10.Infrastructure
 
 		public Stream FileStreamFullPathRO(String fullPath)
 		{
-			using (var za = ZipFile.OpenRead(FileName))
-			{
-				var ze = za.GetEntry(fullPath);
-				return Deflate(ze);
-			}
+			using var za = ZipFile.OpenRead(FileName);
+			var ze = za.GetEntry(fullPath);
+			return Deflate(ze);
 		}
 
 		private String MakeEntry(String path, String entry)

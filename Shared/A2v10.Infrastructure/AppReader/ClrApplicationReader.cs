@@ -18,12 +18,10 @@ public class ClrApplicationReader : IApplicationReader
 		if (_container != null)
 			return;
 		var (assembly, type) = ClrHelpers.ParseClrType(key);
-		var ass = Assembly.Load(assembly);
-		if (ass == null)
-			throw new FileNotFoundException(assembly);
-		var inst = ass.CreateInstance(type);
-		if (inst == null)
-			throw new InvalidOperationException("Invalid type name");
+		var ass = Assembly.Load(assembly) 
+			?? throw new FileNotFoundException(assembly);
+		var inst = ass.CreateInstance(type) 
+			?? throw new InvalidOperationException("Invalid type name");
 		if (inst is IAppContainer appCont)
 		{
 			_appPath = appPath;

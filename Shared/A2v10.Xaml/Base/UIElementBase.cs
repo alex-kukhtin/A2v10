@@ -70,10 +70,8 @@ public abstract class UIElementBase : XamlElement, IXamlElement
 
 		if (mode.HasFlag(MergeAttrMode.Margin))
 		{
-			if (Margin != null)
-				Margin.MergeStyles("margin", tag);
-			if (Padding != null)
-				Padding.MergeStyles("padding", tag);
+			Margin?.MergeStyles("margin", tag);
+			Padding?.MergeStyles("padding", tag);
 		}
 
 		if (Absolute != null)

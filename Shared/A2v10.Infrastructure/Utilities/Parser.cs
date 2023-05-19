@@ -40,7 +40,7 @@ namespace A2v10.Infrastructure
 			public String Text;
 			public Int32 pos;
 
-			public String UnquotedText
+			public readonly String UnquotedText
 			{
 				get
 				{
@@ -51,7 +51,7 @@ namespace A2v10.Infrastructure
 			}
 		}
 
-		String text = null;
+		readonly String text = null;
 		Int32 textPos = 0;
 		readonly Int32 textLen = 0;
 		Char ch;
@@ -103,7 +103,7 @@ namespace A2v10.Infrastructure
 		{
 			while (Char.IsWhiteSpace(ch)) NextChar();
 			Int32 tokenPos = textPos;
-			TokenId t = TokenId.Null;
+			TokenId t;
 			switch (ch)
 			{
 				case '(':
