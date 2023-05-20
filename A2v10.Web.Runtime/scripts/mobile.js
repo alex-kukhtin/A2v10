@@ -1704,9 +1704,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221124-7907
+// 20230518-7933
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1864,7 +1864,7 @@ app.modules['std:http'] = function () {
 					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
 					if (elemId && !document.getElementById(elemId)) {
 						selector.innerHTML = '';
-						resolve(false);
+						resolve(false, null);
 						return;
 					}
 					for (let i = 0; i < rdoc.scripts.length; i++) {
@@ -1880,8 +1880,9 @@ app.modules['std:http'] = function () {
 					}
 
 					let fec = selector.firstElementChild;
+					let ve = null;
 					if (fec && fec.__vue__) {
-						let ve = fec.__vue__;
+						ve = fec.__vue__;
 						ve.$data.__baseUrl__ = baseUrl || urlTools.normalizeRoot(url);
 						// save initial search
 						ve.$data.__baseQuery__ = urlTools.parseUrlAndQuery(url).query;
@@ -1892,7 +1893,7 @@ app.modules['std:http'] = function () {
 						}
 					}
 					rdoc.body.remove();
-					resolve(true);
+					resolve(ve);
 					eventBus.$emit('endLoad');
 				})
 				.catch(function (error) {
@@ -11902,7 +11903,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230412-7926*/
+/*20230519-7933*/
 // controllers/base.js
 
 (function () {
@@ -12107,6 +12108,9 @@ Vue.directive('resize', {
 			$emitSaveEvent() {
 				if (this.__saveEvent__)
 					this.$caller.$data.$emit(this.__saveEvent__, this.$data);
+			},
+			$emitParentTab(event, data) {
+				eventBus.$emit('toParentTab', { event, source: this, data });
 			},
 			$emitCaller(event, ...arr) {
 				if (this.$caller)
@@ -13308,6 +13312,7 @@ Vue.directive('resize', {
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
+					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane
 				};
@@ -13385,6 +13390,9 @@ Vue.directive('resize', {
 				eventBus.$emit('registerData', this, out);
 			this.$caller = out.caller;
 			this.__destroyed__ = false;
+
+			if (!this.$store && store.create)
+				this.$store = store.create(this);
 
 			eventBus.$on('beginRequest', this.__beginRequest);
 			eventBus.$on('endRequest', this.__endRequest);

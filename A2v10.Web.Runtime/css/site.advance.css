@@ -2097,8 +2097,16 @@ footer button:focus,
 .footer button:focus {
   outline-style: none;
 }
-footer .spinner,
-.footer .spinner {
+footer .app-links,
+.footer .app-links {
+  white-space: nowrap;
+}
+footer .app-links a,
+.footer .app-links a {
+  display: inline-block;
+  margin: 0 10px;
+}
+.spinner {
   box-sizing: content-box;
   width: 0.8rem;
   min-width: 0.8rem;
@@ -2108,20 +2116,10 @@ footer .spinner,
   border-radius: 50%;
   border: 4px solid #ccc;
 }
-footer .spinner.active,
-.footer .spinner.active {
+.spinner.active {
   border-color: var(--linkDark);
   border-top-color: #ccc;
   animation: spin 1.5s linear infinite;
-}
-footer .app-links,
-.footer .app-links {
-  white-space: nowrap;
-}
-footer .app-links a,
-.footer .app-links a {
-  display: inline-block;
-  margin: 0 10px;
 }
 @keyframes spin {
   0% {
