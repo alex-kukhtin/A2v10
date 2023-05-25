@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230518-7933
+// 20230525-7935
 /*components/includeplain.js*/
 
 (function () {
@@ -144,7 +144,8 @@
 			arg: undefined,
 			dat: undefined,
 			complete: Function,
-			lock: Boolean
+			lock: Boolean,
+			reload: Number,
 		},
 		data() {
 			return {
@@ -194,6 +195,9 @@
 			dat(newVal, oldVal) {
 				if (this.lock) return;
 				if (utils.isEqual(newVal, oldVal)) return;
+				this.needLoad += 1;
+			},
+			reload() {
 				this.needLoad += 1;
 			},
 			needLoad() {

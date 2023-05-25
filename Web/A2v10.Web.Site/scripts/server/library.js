@@ -115,7 +115,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230224-7921
+// 20230525-7935
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -933,7 +933,8 @@ app.modules['std:utils'] = function () {
 			events: assign(src.events, tml.events),
 			defaults: assign(src.defaults, tml.defaults),
 			commands: assign(src.commands, tml.commands),
-			delegates: assign(src.delegates, tml.delegates)
+			delegates: assign(src.delegates, tml.delegates),
+			options: assign(src.options, tml.options)
 		});
 	}
 };
@@ -1921,7 +1922,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230318-7922*/
+/*20230525-7935*/
 // services/datamodel.js
 
 /*
@@ -2368,6 +2369,9 @@ app.modules['std:impl:array'] = function () {
 			elem._fireGlobalPeriodChanged_ = (period) => {
 				elem.$emit('GlobalPeriod.change', elem, period);
 			};
+			elem._fireGlobalAppEvent_ = (ev) => {
+				elem.$emit(ev.event, ev.data);
+			}
 		}
 		if (startTime) {
 			logtime('create root time:', startTime, false);
@@ -2647,6 +2651,14 @@ app.modules['std:impl:array'] = function () {
 		}
 	}
 
+	function getGlobalSaveEvent() {
+		let tml = this.$template;
+		if (!tml) return undefined;
+		let opts = tml.options;
+		if (!opts) return undefined;
+		return opts.globalSaveEvent;
+
+	}
 	function getDelegate(name) {
 		let tml = this.$template;
 		if (!tml || !tml.delegates) {
@@ -3081,6 +3093,7 @@ app.modules['std:impl:array'] = function () {
 		root.prototype._exec_ = executeCommand;
 		root.prototype._canExec_ = canExecuteCommand;
 		root.prototype._delegate_ = getDelegate;
+		root.prototype._globalSaveEvent_ = getGlobalSaveEvent;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;

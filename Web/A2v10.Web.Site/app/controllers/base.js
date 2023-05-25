@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230519-7933*/
+/*20230525-7935*/
 // controllers/base.js
 
 (function () {
@@ -206,6 +206,9 @@
 				if (this.__saveEvent__)
 					this.$caller.$data.$emit(this.__saveEvent__, this.$data);
 			},
+			$emitGlobal(event, data) {
+				eventBus.$emit('globalAppEvent', { event, data });
+			},
 			$emitParentTab(event, data) {
 				eventBus.$emit('toParentTab', { event, source: this, data });
 			},
@@ -256,6 +259,9 @@
 						self.$data.$emit('Model.saved', self.$data);
 						if (self.__saveEvent__)
 							self.$caller.$data.$emit(self.__saveEvent__, self.$data);
+						let globalSaveEvent = self.$data._globalSaveEvent_();
+						if (globalSaveEvent)
+							self.$emitGlobal(globalSaveEvent, self.$data);
 						self.$data.$setDirty(false);
 						// data is a full model. Resolve requires only single element.
 						let dataToResolve;
@@ -441,7 +447,7 @@
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
-					eventBus.$emit('requery');
+					eventBus.$emit('requery', this);
 			},
 
 			$remove(item, confirm) {
@@ -1409,6 +1415,7 @@
 					$upload: this.$upload,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
+					$emitGlobal: this.$emitGlobal,
 					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane
@@ -1479,6 +1486,10 @@
 			},
 			__global_period_changed__(period) {
 				this.$data._fireGlobalPeriodChanged_(period);
+			},
+			__globalAppEvent__(data) {
+				if (this.$data._fireGlobalAppEvent_)
+					this.$data._fireGlobalAppEvent_(data);
 			}
 		},
 		created() {
@@ -1497,6 +1508,7 @@
 			eventBus.$on('childrenSaved', this.__notified);
 			eventBus.$on('invokeTest', this.__invoke__test__);
 			eventBus.$on('globalPeriodChanged', this.__global_period_changed__);
+			eventBus.$on('globalAppEvent', this.__globalAppEvent__);
 
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
@@ -1519,6 +1531,7 @@
 			eventBus.$off('childrenSaved', this.__notified);
 			eventBus.$off('invokeTest', this.__invoke__test__);
 			eventBus.$off('globalPeriodChanged', this.__global_period_changed__);
+			eventBus.$off('globalAppEvent', this.__globalAppEvent__);
 
 			this.$off('cwChange', this.__cwChange);
 			htmlTools.removePrintFrame();

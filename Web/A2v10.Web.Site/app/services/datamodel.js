@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230318-7922*/
+/*20230525-7935*/
 // services/datamodel.js
 
 /*
@@ -447,6 +447,9 @@
 			elem._fireGlobalPeriodChanged_ = (period) => {
 				elem.$emit('GlobalPeriod.change', elem, period);
 			};
+			elem._fireGlobalAppEvent_ = (ev) => {
+				elem.$emit(ev.event, ev.data);
+			}
 		}
 		if (startTime) {
 			logtime('create root time:', startTime, false);
@@ -726,6 +729,14 @@
 		}
 	}
 
+	function getGlobalSaveEvent() {
+		let tml = this.$template;
+		if (!tml) return undefined;
+		let opts = tml.options;
+		if (!opts) return undefined;
+		return opts.globalSaveEvent;
+
+	}
 	function getDelegate(name) {
 		let tml = this.$template;
 		if (!tml || !tml.delegates) {
@@ -1160,6 +1171,7 @@
 		root.prototype._exec_ = executeCommand;
 		root.prototype._canExec_ = canExecuteCommand;
 		root.prototype._delegate_ = getDelegate;
+		root.prototype._globalSaveEvent_ = getGlobalSaveEvent;
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;

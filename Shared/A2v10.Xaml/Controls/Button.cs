@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
@@ -166,6 +166,6 @@ public class Button : CommandControl
 		btn.Render(context);
 	}
 
-	public Boolean IsParentCommandBar => FindParent<CommandBar>() != null;
-	public Boolean IsParentToolBar => FindParent<Toolbar>() != null;
+	public Boolean IsParentCommandBar => FindParentExact<CommandBar>() != null;
+	public Boolean IsParentToolBar => FindParentExact<Toolbar>() != null;
 }
