@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Text;
@@ -99,8 +99,7 @@ public class Dialog : RootContainer, ISupportTwoPhaseRendering
 				.MergeAttribute(":ready", "$data.$ready")
 				.Render(context, TagRenderMode.Normal);
 
-		if (CollectionView != null)
-			CollectionView.RenderStart(context, tag =>
+		CollectionView?.RenderStart(context, tag =>
 			{
 				tag.AddCssClass("cw-dialog");
 			});
@@ -111,9 +110,11 @@ public class Dialog : RootContainer, ISupportTwoPhaseRendering
 		var content = new TagBuilder("div", "modal-content");
 		OnCreateContent(content);
 		if (Height != null)
+		{
 			content.MergeStyle("min-height", Height.Value);
-		if (Padding != null)
-			Padding.MergeStyles("padding", content);
+			content.MergeStyle("height", Height.Value);
+		}
+		Padding?.MergeStyles("padding", content);
 		content.AddCssClassBool(IsContentIsIFrame, "content-iframe"); // bug fix (3px height)
 		if (Background != BackgroundStyle.Default)
 			content.AddCssClass("background-" + Background.ToString().ToKebabCase());
@@ -152,8 +153,7 @@ public class Dialog : RootContainer, ISupportTwoPhaseRendering
 
 		RenderFooter(context);
 
-		if (CollectionView != null)
-			CollectionView.RenderEnd(context);
+		CollectionView?.RenderEnd(context);
 
 		RenderAccelCommands(context);
 		RenderContextMenus();
@@ -274,7 +274,7 @@ public class Dialog : RootContainer, ISupportTwoPhaseRendering
 	{
 		if (Children.Count != 1)
 			throw new XamlException("Invalid dialog for two-phase rendering");
-		if (!(Children[0] is EUSignFrame eusignFrame))
+		if (Children[0] is not EUSignFrame eusignFrame)
 			throw new XamlException("Invalid dialog for two-phase rendering");
 		eusignFrame.RenderTwoPhaseContent(context);
 	}

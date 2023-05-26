@@ -78,8 +78,12 @@
 				this.setDate(dt);
 			},
 			selectDay(day) {
+				let oldMonth = this.modelDate.getUTCMonth();
 				var dt = new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0));
 				this.setDate(dt);
+				let newMonth = this.modelDate.getUTCMonth();
+				if (newMonth != oldMonth)
+					return;
 				this.isOpen = false;
 			},
 			setDate(d) {
