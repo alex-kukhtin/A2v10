@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,12 @@ namespace A2v10.Xaml
 		None,
 		Bottom,
 		BottomShadow
+	}
+
+	public enum ToolbarOrientation
+	{
+		Horizontal,
+		Vertical
 	}
 
 	public class ToolbarAligner : UIElementBase
@@ -65,6 +71,7 @@ namespace A2v10.Xaml
 		public ToolbarStyle Style { get; set; }
 		public ToolbarBorderStyle Border { get; set; }
 		public AlignItems AlignItems { get; set; }
+		public ToolbarOrientation Orientation { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
@@ -76,6 +83,8 @@ namespace A2v10.Xaml
 				tb.AddCssClass(Style.ToString().ToKebabCase());
 			if (AlignItems != AlignItems.Default)
 				tb.AddCssClass("align-" + AlignItems.ToString().ToLowerInvariant());
+			if (Orientation == ToolbarOrientation.Vertical)
+			tb.AddCssClass("vertical");
 			MergeAttributes(tb, context);
 			if (Border != ToolbarBorderStyle.None)
 				tb.AddCssClass("tb-border-" + Border.ToString().ToKebabCase());

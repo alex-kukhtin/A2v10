@@ -247,6 +247,7 @@ declare const enum ReportFormat {
 
 interface IController {
 	$save(): Promise<object>;
+	$savePart(data: object, url: string, dialog?: boolean): Promise<object>;
 	$requery(run?: boolean): void;
 	$reload(args?: any): Promise<void>;
 	$invoke(command: string, arg?: object, path?: string, opts?: { catchError?: boolean, hideIndicator?: boolean }): Promise<any>;

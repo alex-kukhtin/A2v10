@@ -1,4 +1,4 @@
-﻿// Copyright © 2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -8,7 +8,8 @@ namespace A2v10.Xaml
 {
 	public enum SheetAutoGenerateMode
 	{
-		FromDataModel
+		FromDataModel,
+		FromReportInfo
 	}
 
 	[TypeConverter(typeof(SheetAutoGenerateConverter))]
