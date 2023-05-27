@@ -4794,7 +4794,7 @@ app.modules['std:barcode'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230525-7935
+// 20230527-7936
 /*components/includeplain.js*/
 
 (function () {
@@ -4939,11 +4939,12 @@ app.modules['std:barcode'] = function () {
 			dat: undefined,
 			complete: Function,
 			lock: Boolean,
-			reload: Number,
+			reload: Number
 		},
 		data() {
 			return {
-				needLoad: 0
+				needLoad: 0,
+				addRun: false
 			};
 		},
 		methods: {
@@ -4965,6 +4966,12 @@ app.modules['std:barcode'] = function () {
 				let url = urlTools.combine('_page', this.source, arg);
 				if (this.dat)
 					url += urlTools.makeQueryString(this.dat);
+				if (this.addRun) {
+					if (url.indexOf('?') !== -1)
+						url += '&run=true'
+					else
+						url += '?run=true'
+				}
 				return url;
 			},
 			load() {
@@ -4991,7 +4998,10 @@ app.modules['std:barcode'] = function () {
 				if (utils.isEqual(newVal, oldVal)) return;
 				this.needLoad += 1;
 			},
-			reload() {
+			reload(newVal, oldVal) {
+				this.addRun = false;
+				if (newVal - oldVal == 7)
+					this.addRun = true;
 				this.needLoad += 1;
 			},
 			needLoad() {
@@ -12398,7 +12408,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230525-7935*/
+/*20230527-7936*/
 // controllers/base.js
 
 (function () {
@@ -12841,11 +12851,11 @@ Vue.directive('resize', {
 				await callback();
 				this.$defer(() => this.$data.$setDirty(wasDirty));
 			},
-			$requery() {
+			$requery(run) {
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
-					eventBus.$emit('requery', this);
+					eventBus.$emit('requery', this, run);
 			},
 
 			$remove(item, confirm) {
