@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7935 */
+/* Version 10.0.7936 */
 
 declare function require(url: string): any;
 
@@ -247,7 +247,8 @@ declare const enum ReportFormat {
 
 interface IController {
 	$save(): Promise<object>;
-	$requery(): void;
+	$savePart(data: object, url: string, dialog?: boolean): Promise<object>;
+	$requery(query?: object): void;
 	$reload(args?: any): Promise<void>;
 	$invoke(command: string, arg?: object, path?: string, opts?: { catchError?: boolean, hideIndicator?: boolean }): Promise<any>;
 	$close(): void;
@@ -274,7 +275,7 @@ interface IController {
 	$upload(url: string, accept?: string, data?: { Id?: any, Key?: any }, opts?: { catchError?: boolean }): Promise<any>;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
-	$emitGlobalUpdate(event: string): void;
+	$emitGlobal(event: string, data?: any): void;
 	$emitParentTab(event: string, data?: any): void;
 	$nodirty(func: () => Promise<any>): void;
 	$showSidePane(url: string, arg?: string | number, data?: object): void;

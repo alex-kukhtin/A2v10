@@ -3038,7 +3038,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230525-7935*/
+/*20230528-7936*/
 // services/datamodel.js
 
 /*
@@ -4054,6 +4054,7 @@ app.modules['std:impl:array'] = function () {
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
+		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
 		if (isNoDirty(this.$root))
 			return;
 		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
@@ -5397,7 +5398,7 @@ template: `
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230527-7936*/
+/*20230528-7936*/
 // controllers/base.js
 
 (function () {
@@ -5864,11 +5865,11 @@ template: `
 				await callback();
 				this.$defer(() => this.$data.$setDirty(wasDirty));
 			},
-			$requery(run) {
+			$requery(query) {
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
-					eventBus.$emit('requery', this, run);
+					eventBus.$emit('requery', this, query);
 			},
 
 			$remove(item, confirm) {

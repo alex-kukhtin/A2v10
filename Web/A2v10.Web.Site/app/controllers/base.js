@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230527-7936*/
+/*20230528-7936*/
 // controllers/base.js
 
 (function () {
@@ -467,11 +467,11 @@
 				await callback();
 				this.$defer(() => this.$data.$setDirty(wasDirty));
 			},
-			$requery(run) {
+			$requery(query) {
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
-					eventBus.$emit('requery', this, run);
+					eventBus.$emit('requery', this, query);
 			},
 
 			$remove(item, confirm) {

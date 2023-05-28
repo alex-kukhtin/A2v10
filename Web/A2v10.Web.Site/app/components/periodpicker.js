@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20210729-7798
+// 20230528-7936
 // components/periodpicker.js
 
 
@@ -186,6 +186,7 @@
 				let root = this.item.$root;
 				if (!root) return;
 				let eventName = this.item._path_ + '.' + this.prop + '.change';
+				root.$setDirty(true);
 				root.$emit(eventName, this.item, this.period, null);
 			},
 			toggle(ev) {

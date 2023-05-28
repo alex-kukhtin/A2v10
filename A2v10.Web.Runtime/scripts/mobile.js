@@ -198,7 +198,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230525-7935
+// 20230527-7936
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -243,6 +243,7 @@ app.modules['std:utils'] = function () {
 		eval: evaluate,
 		simpleEval: simpleEval,
 		format: format,
+		convertToString,
 		toNumber,
 		parse: parse,
 		getStringId,
@@ -520,6 +521,15 @@ app.modules['std:utils'] = function () {
 		return formatDate(date);
 	}
 
+	function convertToString(obj) {
+		if (!obj)
+			return '';
+		if (isObjectExact(obj) && 'Name' in obj)
+			return obj.Name;
+		else if (isDate(obj))
+			return formatDate(obj);
+		return '' + val;
+	}
 
 	function format(obj, dataType, opts) {
 		opts = opts || {};
@@ -2760,7 +2770,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230525-7935*/
+/*20230528-7936*/
 // services/datamodel.js
 
 /*
@@ -3776,6 +3786,7 @@ app.modules['std:impl:array'] = function () {
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
+		this.$root.$emit('Model.dirty.change', val);
 		if (isNoDirty(this.$root))
 			return;
 		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
@@ -6279,9 +6290,9 @@ Vue.component('validator-control', {
 	});
 })();
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20210729-7798
+// 20230528-7936
 // components/periodpicker.js
 
 
@@ -6467,6 +6478,7 @@ Vue.component('validator-control', {
 				let root = this.item.$root;
 				if (!root) return;
 				let eventName = this.item._path_ + '.' + this.prop + '.change';
+				root.$setDirty(true);
 				root.$emit(eventName, this.item, this.period, null);
 			},
 			toggle(ev) {
@@ -9273,9 +9285,9 @@ TODO:
 	});
 
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20190328-7473
+// 20230527-7936
 // components/list.js
 
 /* TODO:
@@ -9294,7 +9306,7 @@ TODO:
 <ul class="a2-list" v-lazy="itemsSource">
 	<template v-if="itemsSource">
 		<li class="a2-list-item" tabindex="1" :class="cssClass(listItem)" v-for="(listItem, listItemIndex) in source" :key="listItemIndex" 
-				@mousedown.prevent="select(listItem)" @keydown="keyDown" 
+				@mousedown="select(listItem)" @keydown="keyDown" 
 				ref="li" v-on:dblclick.prevent="doDblClick">
 			<span v-if="listItem.__group" v-text="listItem.__group"></span>
 			<slot name="items" :item="listItem" v-if="!listItem.__group"/>
@@ -11920,7 +11932,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230525-7935*/
+/*20230528-7936*/
 // controllers/base.js
 
 (function () {
@@ -12147,6 +12159,30 @@ Vue.directive('resize', {
 						obj[k] = null;
 				}
 			},
+			$savePart(dataToSave, urlToSave, dialog) {
+				if (this.$data.$readOnly)
+					return;
+				eventBus.$emit('closeAllPopups');
+				let self = this;
+				let root = window.$$rootUrl;
+				const routing = require('std:routing'); // defer loading
+
+				let url = `${root}/${routing.dataUrl()}/save`;
+				return new Promise(function (resolve, reject) {
+					let baseUrl = urltools.combine(dialog ? '/_dialog' : '/_page', urlToSave);
+					let jsonData = utils.toJson({ baseUrl: baseUrl, data: dataToSave });
+					dataservice.post(url, jsonData).then(function (data) {
+						if (self.__destroyed__) return;
+						if (dataToSave.$merge)
+							dataToSave.$merge(data, true, true /*only exists*/);
+						resolve(dataToSave); // merged
+					}).catch(function (msg) {
+						if (msg === __blank__)
+							return;
+						self.$alertUi(msg);
+					});
+				});
+			},
 			$save(opts) {
 				if (this.$data.$readOnly)
 					return;
@@ -12363,11 +12399,11 @@ Vue.directive('resize', {
 				await callback();
 				this.$defer(() => this.$data.$setDirty(wasDirty));
 			},
-			$requery() {
+			$requery(query) {
 				if (this.inDialog)
 					eventBus.$emit('modalRequery', this.$baseUrl);
 				else
-					eventBus.$emit('requery', this);
+					eventBus.$emit('requery', this, query);
 			},
 
 			$remove(item, confirm) {
@@ -13077,6 +13113,8 @@ Vue.directive('resize', {
 					opts = { dataType: opts };
 				if (!opts.format && !opts.dataType && !opts.mask)
 					return value;
+				if (opts.format === 'ToString')
+					return utils.convertToString(value, opts);
 				if (opts.mask)
 					return value ? mask.getMasked(opts.mask, value) : value;
 				if (opts.dataType)
@@ -13309,6 +13347,7 @@ Vue.directive('resize', {
 			__createController__() {
 				let ctrl = {
 					$save: this.$save,
+					$savePart: this.$savePart,
 					$invoke: this.$invoke,
 					$close: this.$close,
 					$modalClose: this.$modalClose,
