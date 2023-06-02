@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -21,8 +21,9 @@ namespace A2v10.Xaml
 		Footer,
 		Total,
 		NoBorder,
-		PageHeader
-	}
+		PageHeader,
+        Divider
+    }
 
 	[ContentProperty("Cells")]
 	public class SheetRow : UIElement
