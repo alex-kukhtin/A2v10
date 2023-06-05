@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230602-7936*/
+/*20230605-7936*/
 // services/datamodel.js
 
 /*
@@ -449,6 +449,9 @@
 			};
 			elem._fireGlobalAppEvent_ = (ev) => {
 				elem.$emit(ev.event, ev.data);
+			}
+			elem._fireSignalAppEvent_ = (ev) => {
+				elem.$emit("Signal." + ev.event, ev.data);
 			}
 		}
 		if (startTime) {

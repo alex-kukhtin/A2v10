@@ -155,6 +155,8 @@
     <Content Include="Less.Advance\checkbox_radio.svg" />
     <Content Include="Less.Advance\checkbox_indeterminate.svg" />
     <Content Include="Less.Advance\checkbox_checked.svg" />
+    <Content Include="lib\microsoft-signalr\signalr.js" />
+    <Content Include="lib\microsoft-signalr\signalr.min.js" />
     <Content Include="Localization\default.pl.txt" />
     <Content Include="openidconnect.txt" />
     <Content Include="scripts\locale-pl.min.js" />

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230528-7936*/
+/*20230605-7936*/
 // controllers/base.js
 
 (function () {
@@ -1514,6 +1514,10 @@
 			__global_period_changed__(period) {
 				this.$data._fireGlobalPeriodChanged_(period);
 			},
+			__signalAppEvent__(data) {
+				if (this.$data._fireSignalAppEvent_)
+					this.$data._fireSignalAppEvent_(data);
+			},
 			__globalAppEvent__(data) {
 				if (this.$data._fireGlobalAppEvent_)
 					this.$data._fireGlobalAppEvent_(data);
@@ -1536,6 +1540,7 @@
 			eventBus.$on('invokeTest', this.__invoke__test__);
 			eventBus.$on('globalPeriodChanged', this.__global_period_changed__);
 			eventBus.$on('globalAppEvent', this.__globalAppEvent__);
+			eventBus.$on('signalEvent', this.__signalAppEvent__);
 
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};

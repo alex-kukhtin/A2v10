@@ -2770,7 +2770,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230602-7936*/
+/*20230605-7936*/
 // services/datamodel.js
 
 /*
@@ -3219,6 +3219,9 @@ app.modules['std:impl:array'] = function () {
 			};
 			elem._fireGlobalAppEvent_ = (ev) => {
 				elem.$emit(ev.event, ev.data);
+			}
+			elem._fireSignalAppEvent_ = (ev) => {
+				elem.$emit("Signal." + ev.event, ev.data);
 			}
 		}
 		if (startTime) {
@@ -11933,7 +11936,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230528-7936*/
+/*20230605-7936*/
 // controllers/base.js
 
 (function () {
@@ -13447,6 +13450,10 @@ Vue.directive('resize', {
 			__global_period_changed__(period) {
 				this.$data._fireGlobalPeriodChanged_(period);
 			},
+			__signalAppEvent__(data) {
+				if (this.$data._fireSignalAppEvent_)
+					this.$data._fireSignalAppEvent_(data);
+			},
 			__globalAppEvent__(data) {
 				if (this.$data._fireGlobalAppEvent_)
 					this.$data._fireGlobalAppEvent_(data);
@@ -13469,6 +13476,7 @@ Vue.directive('resize', {
 			eventBus.$on('invokeTest', this.__invoke__test__);
 			eventBus.$on('globalPeriodChanged', this.__global_period_changed__);
 			eventBus.$on('globalAppEvent', this.__globalAppEvent__);
+			eventBus.$on('signalEvent', this.__signalAppEvent__);
 
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};
