@@ -247,7 +247,7 @@
 						},
 						"type": {
 							"type": "string",
-							"enum": [ "stimulsoft", "xml", "json", "pdf" ]
+							"enum": [ "stimulsoft", "xml", "json", "pdf", "xlsx" ]
 						},
 						"permissions": {
 							"$ref": "#/definitions/permissions"

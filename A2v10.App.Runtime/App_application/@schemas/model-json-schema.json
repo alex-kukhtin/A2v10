@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7926",
+	"$version": "10.0.7936",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -46,7 +46,8 @@
 						"target": { "type": "string" },
 						"targetId": { "type": "string" },
 						"skipDataStack": { "type": "boolean" },
-						"plain": {"type": "boolean"},
+						"plain": { "type": "boolean" },
+						"signal": { "type": "boolean" },
 						"merge": {
 							"type": "object",
 							"properties": {
@@ -115,6 +116,7 @@
 						"checkTypes": { "type": "string" },
 						"processDbEvents": { "type": "boolean" },
 						"commandTimeout": { "type": "number" },
+						"signal": { "type": "boolean" },
 						"hook": {
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
@@ -181,7 +183,8 @@
 								"javascript",
 								"processDbEvents",
 								"startBpmn",
-								"resumeBpmn"
+								"resumeBpmn",
+								"signal"
 							]
 						},
 						"schema": { "type": "string" },
@@ -244,7 +247,7 @@
 						},
 						"type": {
 							"type": "string",
-							"enum": [ "stimulsoft", "xml", "json", "pdf" ]
+							"enum": [ "stimulsoft", "xml", "json", "pdf", "xlsx" ]
 						},
 						"permissions": {
 							"$ref": "#/definitions/permissions"

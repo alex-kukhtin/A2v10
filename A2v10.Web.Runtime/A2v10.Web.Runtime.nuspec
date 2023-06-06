@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7935</version>
+		<version>10.0.7936</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -25,6 +25,7 @@
 				<reference file="A2v10.Messaging.dll" />
 				<reference file="A2v10.Reports.dll" />
 				<reference file="A2v10.Xaml.Report.dll" />
+				<reference file="A2v10.Xaml.Spreadsheet.dll" />
 				<reference file="Microsoft.Web.Infrastructure.dll" />
 			</group>
 		</references>
@@ -62,6 +63,8 @@
 		<file src="bin/A2v10.Xaml.dll" target="lib/net48" />
 		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="lib/net48" />
 		<file src="bin/A2v10.Xaml.Report.dll" target="lib/net48" />
+		<file src="bin/A2v10.Xaml.Spreadsheet.dll" target="lib/net48" />
+		<file src="bin/A2v10.Spreadsheet.Report.dll" target="lib/net48" />
 		<file src="bin/A2v10.Lang.dll" target="lib/net48" />
 		<file src="bin/DocumentFormat.OpenXml.dll" target="lib/net48" />
 		<file src="bin/Microsoft.Activities.Extensions.dll" target="lib/net48" />
@@ -92,6 +95,8 @@
 		<file src="bin/A2v10.Xaml.Bootstrap.dll" target="ref/net48" />
 		<file src="bin/Microsoft.Web.Infrastructure.dll" target="ref/net48" />
 		<file src="bin/A2v10.Xaml.Report.dll" target="ref/net48" />
+		<file src="bin/A2v10.Spreadsheet.Report.dll" target="ref/net48" />
+		<file src="bin/A2v10.Xaml.Spreadsheet.dll" target="ref/net48" />
 		<file src="bin/A2v10.Web.Mvc.dll" target="ref/net48" />
 		<file src="bin/A2v10.Workflow.dll" target="ref/net48" />
 		<file src="bin/A2v10.Messaging.dll" target="ref/net48" />

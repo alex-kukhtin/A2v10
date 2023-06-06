@@ -2770,7 +2770,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230528-7936*/
+/*20230605-7936*/
 // services/datamodel.js
 
 /*
@@ -3219,6 +3219,9 @@ app.modules['std:impl:array'] = function () {
 			};
 			elem._fireGlobalAppEvent_ = (ev) => {
 				elem.$emit(ev.event, ev.data);
+			}
+			elem._fireSignalAppEvent_ = (ev) => {
+				elem.$emit("Signal." + ev.event, ev.data);
 			}
 		}
 		if (startTime) {
@@ -3729,7 +3732,7 @@ app.modules['std:impl:array'] = function () {
 
 	function hasErrors(props) {
 		if (!props || !props.length) return false;
-		let errs = this._collectErrors_();
+		let errs = this._allErrors_;
 		if (!errs.length) return false;
 		for (let i = 0; i < errs.length; i++) {
 			let e = errs[i];
@@ -3740,21 +3743,6 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function collectErrors() {
-		let me = this;
-		if (!me._host_) return me._allErrors_;
-		if (!me._needValidate_) return me._allErrors_;
-		let tml = me.$template;
-		if (!tml) return me._allErrors_;
-		let vals = tml.validators;
-		if (!vals) return me._allErrors_;
-		me._allErrors_.splice(0, me._allErrors_.length);
-		for (var val in vals) {
-			let err1 = validateOneElement(me, val, vals[val]);
-			if (err1) {
-				me._allErrors_.push({ x: val, e: err1 });
-			}
-		}
-		return me._allErrors_;
 	}
 
 	function validateAll(force) {
@@ -3777,6 +3765,23 @@ app.modules['std:impl:array'] = function () {
 			}
 		}
 		logtime('validation time:', startTime);
+		// merge allerrs into
+		// sync arrays:
+		// if me._allErrors_[i] not found in allerrs => remove it
+		let i = me._allErrors_.length;
+		while (i--) {
+			let a = me._allErrors_[i];
+			if (!allerrs.find(n => n.x === a.x))
+				me._allErrors_.splice(i, 1);
+		}
+		// if allerrs[i] not found in me._allErrors_ => append it
+		allerrs.forEach(n => {
+			if (!me._allErrors_.find(a => a.x === n.x))
+				me._allErrors_.push(n);
+		});
+
+
+
 		return allerrs;
 		//console.dir(allerrs);
 	}
@@ -3786,7 +3791,7 @@ app.modules['std:impl:array'] = function () {
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
-		this.$root.$emit('Model.dirty.change', val);
+		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
 		if (isNoDirty(this.$root))
 			return;
 		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
@@ -3946,7 +3951,6 @@ app.modules['std:impl:array'] = function () {
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
-		root.prototype._collectErrors_ = collectErrors;
 		root.prototype.$hasErrors = hasErrors;
 		root.prototype.$destroy = destroyRoot;
 		// props cache for t.construct
@@ -11932,7 +11936,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230528-7936*/
+/*20230605-7936*/
 // controllers/base.js
 
 (function () {
@@ -13446,6 +13450,10 @@ Vue.directive('resize', {
 			__global_period_changed__(period) {
 				this.$data._fireGlobalPeriodChanged_(period);
 			},
+			__signalAppEvent__(data) {
+				if (this.$data._fireSignalAppEvent_)
+					this.$data._fireSignalAppEvent_(data);
+			},
 			__globalAppEvent__(data) {
 				if (this.$data._fireGlobalAppEvent_)
 					this.$data._fireGlobalAppEvent_(data);
@@ -13468,6 +13476,7 @@ Vue.directive('resize', {
 			eventBus.$on('invokeTest', this.__invoke__test__);
 			eventBus.$on('globalPeriodChanged', this.__global_period_changed__);
 			eventBus.$on('globalAppEvent', this.__globalAppEvent__);
+			eventBus.$on('signalEvent', this.__signalAppEvent__);
 
 			this.$on('cwChange', this.__cwChange);
 			this.__asyncCache__ = {};

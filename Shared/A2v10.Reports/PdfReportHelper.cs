@@ -18,9 +18,8 @@ public class PdfReportHelper
 		IServiceLocator locator = host.Locator;
 		_pdfReportShim = locator.GetService<IPdfReportShim>(sloc =>
 		{
-			var inst = System.Activator.CreateInstance("A2v10.Pdf.Report", "A2v10.Pdf.Report.PdfReportShim");
-			if (inst == null)
-				throw new ArgumentNullException("A2v10.Pdf.Report");
+			var inst = System.Activator.CreateInstance("A2v10.Pdf.Report", "A2v10.Pdf.Report.PdfReportShim") 
+				?? throw new ArgumentNullException("A2v10.Pdf.Report");
 			var instUnwrap = inst.Unwrap();
 			var ass = Assembly.GetAssembly(instUnwrap.GetType());
 

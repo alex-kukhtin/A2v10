@@ -84,6 +84,10 @@
       <Project>{982b4b91-2299-4c8d-bd6a-50a95f663dfd}</Project>
       <Name>A2v10.Xaml.Report</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\A2v10.Speadsheet.Report\A2v10.Xaml.Speradsheet\A2v10.Xaml.Spreadsheet.csproj">
+      <Project>{a63217e7-139e-4470-8500-b89225e5d6e2}</Project>
+      <Name>A2v10.Xaml.Spreadsheet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
       <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
       <Name>A2v10.Xaml.Bootstrap</Name>

@@ -588,7 +588,8 @@ public enum RequestReportType
 	stimulsoft,
 	xml,
 	json,
-	pdf
+	pdf,
+	xlsx
 }
 
 public class RequestReport : RequestBase
@@ -619,13 +620,14 @@ public class RequestReport : RequestBase
 	}
 
 	[JsonIgnore]
-	public Boolean HasPath => type == RequestReportType.stimulsoft || type == RequestReportType.pdf;
+	public Boolean HasPath => type == RequestReportType.stimulsoft || type == RequestReportType.pdf || type == RequestReportType.xlsx;
 
 	public String GetExtension() {
 		return type switch
 		{
 			RequestReportType.stimulsoft => ".mrt",
 			RequestReportType.pdf => ".xaml",
+			RequestReportType.xlsx => ".xaml",
 			_ => "",
 		};
 	}

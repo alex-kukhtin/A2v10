@@ -29,9 +29,8 @@ namespace A2v10.Reports
             IServiceLocator locator = host.Locator;
 			_stimulsoftReportShim = locator.GetService<IStimulsoftReportShim>(sloc =>
 			{
-				var inst = System.Activator.CreateInstance("A2v10.Stimulsoft", "A2v10.Stimulsoft.StimulsoftReportShim");
-                if (inst == null)
-                    throw new ArgumentNullException("A2v10.Stimulsoft");
+				var inst = System.Activator.CreateInstance("A2v10.Stimulsoft", "A2v10.Stimulsoft.StimulsoftReportShim") 
+					?? throw new ArgumentNullException("A2v10.Stimulsoft");
 				var instUnwrap = inst.Unwrap();
 				var ass = Assembly.GetAssembly(instUnwrap.GetType());
 
@@ -51,10 +50,8 @@ namespace A2v10.Reports
 		public ActionResult ExportStiReport(ReportInfo ri, String format, Boolean saveFile = true)
 		{
 			var targetFormat = (format ?? "pdf").ToLowerInvariant();
-			using (var stream = ri.GetStream(_host.ApplicationReader))
-			{
-				return _stimulsoftReportShim.ExportStiReport(stream, ri, targetFormat, saveFile);
-			}
+			using var stream = ri.GetStream(_host.ApplicationReader);
+			return _stimulsoftReportShim.ExportStiReport(stream, ri, targetFormat, saveFile);
 		}
 
 		public Task<ExportReportResult> ExportStiReportStreamAsync(ReportInfo ri, String format, Stream output)

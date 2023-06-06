@@ -19,6 +19,7 @@ using A2v10.Reports;
 using A2v10.Web.Identity;
 using A2v10.Interop;
 using A2v10.Web.Base;
+using A2v10.Spreadsheet.Report;
 
 namespace A2v10.Web.Mvc.Controllers
 {
@@ -40,9 +41,10 @@ namespace A2v10.Web.Mvc.Controllers
 	[CheckMobileFilter]
 	public class ReportController : Controller, IControllerProfiler, IControllerTenant, IControllerLocale
 	{
-		readonly A2v10.Request.BaseController _baseController = new BaseController();
+		readonly A2v10.Request.BaseController _baseController = new();
         ReportHelper _reportHelper = null;
 		PdfReportHelper _pdfReportHelper = null;
+
 		private readonly ReportHelperInfo _reportInfo;
 
 		public ReportController()
@@ -55,8 +57,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			get
 			{
-				if (_reportHelper == null)
-					_reportHelper = new ReportHelper(_baseController.Host);
+				_reportHelper ??= new ReportHelper(_baseController.Host);
 				return _reportHelper;
 			}
 		}
@@ -65,8 +66,7 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			get
 			{
-				if (_pdfReportHelper == null)
-					_pdfReportHelper = new PdfReportHelper(_baseController.Host);
+				_pdfReportHelper ??= new PdfReportHelper(_baseController.Host);
 				return _pdfReportHelper;
 			}
 		}
@@ -123,10 +123,8 @@ namespace A2v10.Web.Mvc.Controllers
 		{
 			Response.ContentType = MimeTypes.Application.Pdf;
 
-			using (var ms = PdfReportHelper.Build(ri.ReportPath, ri.DataModel.Root))
-			{
-				await ms.CopyToAsync(Response.OutputStream);
-			}
+			using var ms = PdfReportHelper.Build(ri.ReportPath, ri.DataModel.Root);
+			await ms.CopyToAsync(Response.OutputStream);
 		}
 
 		void ShowStimulsoft(RequestReport rep, String repName)
@@ -257,6 +255,8 @@ namespace A2v10.Web.Mvc.Controllers
 							return ReportHelper.ExportStiReport(ri, Format, saveFile: true);
 						case RequestReportType.pdf:
 							return ExportPdfReport(ri, saveFile: true);
+						case RequestReportType.xlsx:
+							return ExportExcelReport(ri);
 						case RequestReportType.xml:
 							return ExportXmlReport(ri);
 						case RequestReportType.json:
@@ -305,6 +305,20 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.Write(ex.Message);
 			}
 			return new EmptyResult();
+		}
+
+		ActionResult ExportExcelReport(ReportInfo ri)
+		{
+			var repgen = new ExcelSpreadsheetGenerator();
+			var stream = repgen.FileToExcel(ri.ReportPath, ri.DataModel);
+
+			var cdh = new ContentDispositionHeaderValue("attachment")
+			{
+				FileNameStar = _baseController.Localize(ri.Name) + ".xlsx"
+			};
+			Response.Headers.Add("Content-Disposition", cdh.ToString());
+
+			return new FileStreamResult(stream, MimeTypes.Application.Excel);
 		}
 
 		ActionResult ExportPdfReport(ReportInfo ri, Boolean saveFile)
@@ -369,15 +383,11 @@ namespace A2v10.Web.Mvc.Controllers
 				prms.Append(_baseController.CheckPeriod(vrp.QueryString), toPascalCase: true);
 				prms.RemoveKeys("Rep,rep,Base,base,Format,format");
 
-				ReportInfo ri = await GetReportInfo(url, id, prms);
-				//TODO: image settings var rm = rm.ImageInfo;
-				if (ri == null)
-					throw new InvalidProgramException("invalid data");
+				ReportInfo ri = await GetReportInfo(url, id, prms) 
+					?? throw new InvalidProgramException("invalid data");
 				var path = ri.ReportPath;
-				using (var stream = ri.GetStream(_baseController.Host.ApplicationReader))
-				{
-					return ReportHelper.CreateReportResult(stream, ri);
-				}
+				using var stream = ri.GetStream(_baseController.Host.ApplicationReader);
+				return ReportHelper.CreateReportResult(stream, ri);
 			}
 			catch (Exception ex)
 			{
