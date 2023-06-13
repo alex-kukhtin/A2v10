@@ -257,6 +257,11 @@ namespace A2v10.Interop.ExportTo
 				row.Height = ConvertToPoints(exrow.Height);
 				row.CustomHeight = true;
 			}
+			else if (exrow.Role == RowRole.Divider)
+			{
+				row.Height = 8.25;
+				row.CustomHeight = true;
+			}
 			for (var col=0; col <exrow.Cells.Count; col++)
 			{
 				var c = exrow.Cells[col];

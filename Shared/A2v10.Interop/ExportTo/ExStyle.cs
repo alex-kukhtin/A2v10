@@ -1,4 +1,5 @@
-﻿
+﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+
 using System;
 using System.Collections.Generic;
 
@@ -13,7 +14,8 @@ namespace A2v10.Interop.ExportTo
 		LightHeader,
 		Total,
 		Body,
-		Footer
+		Footer,
+		Divider
 	}
 
 	public struct Style
@@ -28,14 +30,14 @@ namespace A2v10.Interop.ExportTo
 		public UInt32 Indent;
 		public Boolean Underline;
 
-		public Boolean HasBorder => RowKind == RowKind.Body || RowRole == RowRole.Header || RowRole == RowRole.Footer || RowRole == RowRole.Total;
-		public Boolean HasAlignment => Align != HorizontalAlign.NotSet || DataType == DataType.DateTime || DataType == DataType.Date;
+		public readonly Boolean HasBorder => RowKind == RowKind.Body || RowRole == RowRole.Header || RowRole == RowRole.Footer || RowRole == RowRole.Total;
+		public readonly Boolean HasAlignment => Align != HorizontalAlign.NotSet || DataType == DataType.DateTime || DataType == DataType.Date;
 	}
 
 	public class StylesDictionary
 	{
-		Dictionary<Style, UInt32> _hash = new Dictionary<Style, UInt32>();
-		public List<Style> List { get; }  = new List<Style>();
+		private readonly Dictionary<Style, UInt32> _hash = new();
+		public List<Style> List { get; }  = new();
 
 		public StylesDictionary()
 		{

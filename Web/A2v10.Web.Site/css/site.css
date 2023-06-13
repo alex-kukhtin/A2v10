@@ -6528,6 +6528,9 @@ table.sheet tr.row-page-header td {
   height: 3rem;
   border-style: none;
 }
+table.sheet tr.row-divider {
+  height: 12px;
+}
 table.sheet tr.row-parameter td,
 table.sheet tr.row-last-parameter td {
   border-style: none !important;

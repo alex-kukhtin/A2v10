@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
 
-/*20230217-7921*/
+/*20230613-7937*/
 // components/selector.js
 
 (function selector_component() {
@@ -30,10 +30,10 @@
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
-				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :slotStyle="slotStyle">
+				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :max-chars="maxChars" :slotStyle="slotStyle">
 					<ul class="selector-ul">
 						<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
-							v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)">}</li>
+							v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)"></li>
 					</ul>
 				</slot>
 			</div>
@@ -69,7 +69,8 @@
 			hasClear: Boolean,
 			mode: String,
 			fetchCommand: String,
-			fetchCommandData: Object
+			fetchCommandData: Object,
+			maxChars: Number
 		},
 		data() {
 			return {
@@ -187,7 +188,10 @@
 				return ix === this.current;
 			},
 			itemName(itm) {
-				return utils.simpleEval(itm, this.display);
+				let v = utils.simpleEval(itm, this.display);
+				if (this.maxChars)
+					return utils.text.maxChars(v, this.maxChars);
+				return v;
 			},
 			blur() {
 				let text = this.query;

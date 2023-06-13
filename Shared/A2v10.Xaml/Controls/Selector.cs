@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -37,6 +37,7 @@ public class Selector : ValuedControl, ITableControl
 	public Boolean ShowClear { get; set; }
 
 	public SelectorStyle Style { get; set; }
+	public Int32 MaxChars { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -69,6 +70,8 @@ public class Selector : ValuedControl, ITableControl
 			input.MergeAttribute(":caret", "true");
 		if (ShowClear)
 			input.MergeAttribute(":has-clear", "true");
+		if (MaxChars != 0)
+			input.MergeAttribute(":max-chars", MaxChars.ToString());
 
 		var isBind = GetBinding(nameof(ItemsSource));
 		if (isBind != null)

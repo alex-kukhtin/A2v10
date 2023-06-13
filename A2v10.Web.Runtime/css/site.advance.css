@@ -6482,7 +6482,7 @@ table.sheet tr.row-title td:last-child {
   padding-right: 0;
 }
 table.sheet tr.row-no-border td {
-  border-style: none!important;
+  border-style: none !important;
   background-color: var(--background) !important;
 }
 table.sheet tr.row-no-border td.underline {
@@ -6494,6 +6494,9 @@ table.sheet tr.row-page-header td {
   color: #999;
   height: 3rem;
   border-style: none;
+}
+table.sheet tr.row-divider {
+  height: 12px;
 }
 table.sheet tr.row-parameter td,
 table.sheet tr.row-last-parameter td {

@@ -11,10 +11,8 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 
 using A2v10.Data.Interfaces;
-using A2v10.Infrastructure;
 
 namespace A2v10.Interop;
-
 
 class RowSetDef
 {
@@ -29,7 +27,7 @@ class RowSetDef
 	internal List<RowSetDef> _children;
 	internal void AddChildren(RowSetDef ch)
 	{
-		_children = _children ?? new List<RowSetDef>();
+		_children ??= new List<RowSetDef>();
 		_children.Add(ch);
 	}
 	internal Boolean HasChildren => _children != null && _children.Count > 0;
@@ -237,7 +235,7 @@ public class ExcelReportGenerator : IDisposable
 		Int32 exclPos = showRef.IndexOf('!');
 		if (exclPos == -1)
 			return null;
-		String shtName = showRef.Substring(1, exclPos - 2);
+		String shtName = showRef.Substring(0, exclPos);
 		String shtRef = showRef.Substring(exclPos + 1);
 		Int32 colonPos = shtRef.IndexOf(':');
 		if (colonPos == -1)

@@ -84,12 +84,15 @@ table.sheet {
 
 	tr.row-page-header {
 		td {
-			font-size:.95rem;
-			color:#999;
-			height:3rem;
-			border-style:none;
-
+			font-size: .95rem;
+			color: #999;
+			height: 3rem;
+			border-style: none;
 		}
+	}
+
+	tr.row-divider {
+		height: @cell-padding-v * 2;
 	}
 
 	tr.row-parameter, tr.row-last-parameter {
@@ -198,7 +201,7 @@ table.sheet {
 	}
 
 	&.fit-width {
-		width:1px;
+		width: 1px;
 	}
 }
 

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20220627-7853*/
+/*20230613-7937*/
 /*components/combobox.js */
 
 (function () {
@@ -20,10 +20,10 @@
 				<optgroup v-for="(grp, grpIndex) in itemsSourceGroup" :key="grpIndex" v-if="groupby"
 					:label="grp.name">
 					<option v-for="(cmb, cmbIndex) in grp.items" :key="grpIndex + '_' + cmbIndex"
-						v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
+						v-text="getName(cmb, true)" :value="getValue(cmb)" :class="getClass(cmb)"></option>
 				</optgroup>
 				<option v-for="(cmb, cmbIndex) in itemsSource" :key="cmbIndex" v-if="!groupby"
-					v-text="getName(cmb, true)" :value="getValue(cmb)"></option>
+					v-text="getName(cmb, true)" :value="getValue(cmb)" :class="getClass(cmb)"></option>
 			</slot>
 		</select>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
@@ -56,6 +56,7 @@
 			propToValidate: String,
 			nameProp: String,
 			valueProp: String,
+			boldProp: String,
 			showvalue: Boolean,
 			align: String,
 			groupby : String
@@ -96,6 +97,10 @@
 			getValue(itm) {
 				let v = this.valueProp ? utils.eval(itm, this.valueProp) : itm;
 				return v;
+			},
+			getClass(itm) {
+				return this.boldProp ?
+					(utils.eval(itm, this.boldProp) ? 'bold' : undefined) : undefined;
 			},
 			getWrapText() {
 				return this.showvalue ? this.getComboValue() : this.getText();
