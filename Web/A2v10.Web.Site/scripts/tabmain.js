@@ -2758,7 +2758,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230605-7936*/
+/*20230618-7938*/
 // services/datamodel.js
 
 /*
@@ -3186,6 +3186,7 @@ app.modules['std:impl:array'] = function () {
 
 			elem._fireLoad_ = () => {
 				platform.defer(() => {
+					if (!elem.$vm) return;
 					let isRequery = elem.$vm.__isModalRequery();
 					elem.$emit('Model.load', elem, _lastCaller, isRequery);
 					elem._root_.$setDirty(elem._root_.$isCopy ? true : false);
@@ -12433,7 +12434,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230605-7936*/
+/*20230618-7938*/
 // controllers/base.js
 
 (function () {
@@ -12877,6 +12878,7 @@ Vue.directive('resize', {
 					let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {
 						if (self.__destroyed__) return;
+						eventBus.$emit('pageReloaded', dataToQuery.baseUrl);
 						if (utils.isObject(data)) {
 							dat.$merge(data, true/*checkBindOnce*/);
 							modelInfo.reconcileAll(data.$ModelInfo);
