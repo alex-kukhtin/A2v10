@@ -1606,7 +1606,7 @@ create procedure [a2demo].[Entity.Image.Load]
 as
 begin
 	set nocount on;
-	select Mime, Stream = [Data], [Name], BlobName, Token=AccessKey from a2demo.Attachments where Id=@Id;
+	--select Mime, Stream = [Data], [Name], BlobName, Token=AccessKey from a2demo.Attachments where Id=@Id;
 end
 go
 ------------------------------------------------
@@ -1636,7 +1636,7 @@ begin
 	values(@UserId, @Name, @Mime, @Stream, @BlobName);
 
 	select @RetId = Id from @rtable;
-	select [Id], Token=AccessKey from a2demo.Attachments where Id=@RetId;
+	--select [Id], Token=AccessKey from a2demo.Attachments where Id=@RetId;
 end
 go
 ------------------------------------------------
@@ -1975,7 +1975,8 @@ create procedure a2demo.[Goods.Index]
 	@PageSize int = 10,
 	@Order nvarchar(255) = N'Id',
 	@Dir nvarchar(20) = N'desc',
-	@Fragment nvarchar(255) = null
+	@Fragment nvarchar(255) = null,
+	@Date datetime = null
 as
 begin
 	set nocount on;

@@ -52,9 +52,6 @@ define(["require", "exports"], function (require, exports) {
             'Document.No': {
                 valid(doc) { return doc.No > 0; }, msg: 'Invalid document number', severity: cst.SEVERITY.WARNING
             },
-            'TestValidator'(item, val) {
-                return { msg: 'test error', severity: "info" };
-            },
             'TestValidator2': {
                 valid(item, val) {
                     return { msg: '', severity: "warning" };

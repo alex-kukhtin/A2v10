@@ -30,7 +30,7 @@
 					"X": "{{Document.Id}}"
 				}
 			},
-			"events": {
+			"events2": {
 				"afterSave2": {
 					"source": "",
 					"schema": "",

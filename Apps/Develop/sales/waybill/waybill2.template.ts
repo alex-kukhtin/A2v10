@@ -60,9 +60,11 @@ const template: Template = {
 		'Document.No': {
 			valid(doc: TDocument) { return doc.No > 0; }, msg: 'Invalid document number', severity: cst.SEVERITY.WARNING
 		},
+		/*
 		'TestValidator'(item, val): templateValidatorResult {
 			return { msg: 'test error', severity: Severity.info };
 		},
+		*/
 		'TestValidator2': {
 			valid(item, val): templateValidatorResult {
 				return { msg: '', severity: Severity.warning };
