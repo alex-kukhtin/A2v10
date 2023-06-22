@@ -11,6 +11,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Packaging;
 
 using A2v10.Data.Interfaces;
+using DocumentFormat.OpenXml;
 
 namespace A2v10.Interop;
 
@@ -23,15 +24,6 @@ class RowSetDef
 	internal UInt32 FirstRow;
 	internal UInt32 RowCount;
 	internal UInt32 LastRow;
-
-	internal List<RowSetDef> _children;
-	internal void AddChildren(RowSetDef ch)
-	{
-		_children ??= new List<RowSetDef>();
-		_children.Add(ch);
-	}
-	internal Boolean HasChildren => _children != null && _children.Count > 0;
-
 	internal void Clear()
 	{
 		Rows = null;
@@ -83,7 +75,6 @@ public class ExcelReportGenerator : IDisposable
 	Boolean _sharedStringModified = false;
 	Int32 _sharedStringCount = 0;
 
-
 	public ExcelReportGenerator(String templateFile)
 	{
 		_templateFile = templateFile;
@@ -104,19 +95,16 @@ public class ExcelReportGenerator : IDisposable
 	{
 		if (disposing)
 		{
-			if (_resultFile != null)
-				File.Delete(_resultFile);
-			_resultFile = null;
-			if (_templateStream != null)
-			{
-				_templateStream.Close();
-				_templateStream.Dispose();
-			}
+			var r = _resultFile;
+            _resultFile = null;
+            if (r != null)
+				File.Delete(r);
+			_templateStream?.Close();
+			_templateStream?.Dispose();
 		}
 	}
 
 	public String ResultFile => _resultFile;
-
 
 	private Dictionary<String, Dictionary<String, RowSetDef>> CreateDataSetRows(Workbook workbook)
 	{
@@ -130,30 +118,14 @@ public class ExcelReportGenerator : IDisposable
 			if (!result.TryGetValue(df.SheetName, out var rdict))
 			{
 				rdict = new Dictionary<String, RowSetDef>();
-				result.Add(df.SheetName, rdict);
+				var sheetName = df.SheetName;
+				if (sheetName.StartsWith("'") && sheetName.EndsWith("'"))
+					sheetName = sheetName.Substring(1, sheetName.Length - 2);
+				result.Add(sheetName, rdict);
 			}
 			rdict.Add(df.PropertyName, df);
 		}
-		foreach (var dd in result.Values)
-		{
-			var toRemove = new List<String>();
-			foreach (var k in dd.Keys)
-			{
-				if (k.Contains('.'))
-				{
-					toRemove.Add(k);
-				}
-			}
-			foreach (var k in toRemove)
-			{
-				var vx = k.Split('.');
-				var parent = dd[vx[0]];
-				dd[k].PropertyName = vx[1];	
-				parent.AddChildren(dd[k]);
-				dd.Remove(k);
-			}
-		}
-		return result;
+        return result;
 	}
 
 	public void GenerateReport(IDataModel dataModel)
@@ -194,7 +166,17 @@ public class ExcelReportGenerator : IDisposable
 				dataSetRows.TryGetValue(sheet.Name, out var ds);	
 				var modified = ProcessData(ds, sheetData);
 
-				if (modified)
+
+                workSheet.AddChild(new IgnoredErrors(
+                    new IgnoredError()
+                    {
+                        NumberStoredAsText = true,
+                        SequenceOfReferences = new ListValue<StringValue>(
+                            new List<StringValue>() { new StringValue("A1:WZZ999999") })
+                    }
+                ));
+
+                if (modified)
 					workSheet.Save();
 			}
 
