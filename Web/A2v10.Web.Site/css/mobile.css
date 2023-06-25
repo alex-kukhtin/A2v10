@@ -1939,7 +1939,7 @@ table.data-grid > tbody > tr.bold > td {
   color: #a94442;
   border: 1px solid #dca7a7;
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
-  white-space: pre;
+  white-space: pre-line;
 }
 .control-group {
   display: block;

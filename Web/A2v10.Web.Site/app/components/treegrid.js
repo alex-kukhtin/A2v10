@@ -1,6 +1,6 @@
 ﻿// Copyright © 2022-2023 Olekdsandr Kukhtin. All rights reserved.
 
-// 20230525-7935
+// 20230625-7939
 // components/treegrid.js
 
 (function () {
@@ -16,7 +16,7 @@
 	</tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
-				@click.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
+				@click.stop="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
 			<td class="c-m" v-if=isMarkCell :class="rowMarkClass(itm)"></td>
 			<slot name="row" v-bind:itm="itm.elem" v-bind:that="that"></slot>
 		</tr>
