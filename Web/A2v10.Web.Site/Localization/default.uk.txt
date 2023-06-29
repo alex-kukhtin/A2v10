@@ -97,6 +97,7 @@
 @Locale=uk-UA
 @Ok=OK
 @Login=Увійти
+@UserName=Ім'я
 @LoginPrompt=Вхід в систему
 @RegisterPrompt=Реєстрація в системі
 @ForgotPrompt=Відновлення паролю

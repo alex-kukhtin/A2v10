@@ -337,8 +337,7 @@ function maskTool() {
 
 
 	function fireChange(input) {
-		var evt = document.createEvent('HTMLEvents');
-		evt.initEvent('change', false, true);
+		let evt = new Event('change', { bubbles: false, cancelable : true});
 		input.dispatchEvent(evt);
 	}
 }

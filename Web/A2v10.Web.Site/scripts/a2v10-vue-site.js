@@ -1715,9 +1715,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20190307-7460*/
+/*20230629-7939*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -2070,8 +2070,7 @@ app.modules['std:mask'] = function () {
 
 
 	function fireChange(input) {
-		var evt = document.createEvent('HTMLEvents');
-		evt.initEvent('change', false, true);
+		let evt = new Event('change', { bubbles: false, cancelable: true });
 		input.dispatchEvent(evt);
 	}
 };

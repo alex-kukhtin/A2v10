@@ -97,6 +97,7 @@
 @Locale=ru-RU
 @Ok=OK
 @Login=Войти
+@UserName=Имя
 @LoginPrompt=Вход в систему
 @RegisterPrompt=Регистрация в системе
 @ForgotPrompt=Восстановление пароля

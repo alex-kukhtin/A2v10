@@ -97,6 +97,7 @@
 @Locale=pl-PL
 @Ok=OK
 @Login=Logowanie
+@UserName=Nazwa użytkownika
 @LoginPrompt=Zaloguj sie
 @RegisterPrompt=Rejestracja w systemie
 @ForgotPrompt=Odzyskiwanie hasła

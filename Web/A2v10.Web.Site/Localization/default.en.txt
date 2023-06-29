@@ -98,6 +98,7 @@
 @Locale=en-US
 @Ok=OK
 @Login=Log in
+@UserName=Username
 @LoginPrompt=Login to system
 @RegisterPrompt=Register in the system
 @ForgotPrompt=Reset password

@@ -96,6 +96,7 @@
 @Locale=de-DE
 @Ok=OK
 @Login=Anmelden
+@UserName=Nutzername
 @LoginPrompt=Systemanmeldung
 @RegisterPrompt=Im System registrieren
 @ForgotPrompt=Passwort zurücksetzen

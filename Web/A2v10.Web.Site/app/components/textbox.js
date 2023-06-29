@@ -209,8 +209,7 @@
 				let inp = this.$refs.input;
 				if (!inp) return;
 				// send for auto size
-				var evt = document.createEvent('HTMLEvents');
-				evt.initEvent('autosize', false, true);
+				let evt = new Event('autosize', { bubbles: false, cancelable: true });
 				inp.dispatchEvent(evt);
 			}
 		}
