@@ -74,8 +74,7 @@ public abstract class UIElementBase : XamlElement, IXamlElement
 			Padding?.MergeStyles("padding", tag);
 		}
 
-		if (Absolute != null)
-			Absolute.MergeAbsolute(tag);
+		Absolute?.MergeAbsolute(tag);
 
 		tag.MergeAttribute("id", HtmlId);
 	}
@@ -233,7 +232,7 @@ public abstract class UIElementBase : XamlElement, IXamlElement
 		if (rm == RenderMode.Hide)
 			return true;
 		if (rm == RenderMode.Debug)
-			return context.IsDebugConfiguration ? false : true;
+			return !context.IsDebugConfiguration;
 		return false;
 	}
 
