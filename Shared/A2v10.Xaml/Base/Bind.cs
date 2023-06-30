@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -65,7 +65,7 @@ public class Bind : BindBase, ISupportInitialize
 			return realPath;
 		var opts = new StringBuilder("{");
 		if (DataType != DataType.String)
-			opts.Append($"dataType: '{DataType.ToString()}',");
+			opts.Append($"dataType: '{DataType}',");
 
 		if (formatBind != null)
 			opts.Append($"format: {formatBind.GetPathFormat(context)},");
@@ -95,7 +95,7 @@ public class Bind : BindBase, ISupportInitialize
 		return $"[{String.Join(",", fStrings)}]";
 	}
 
-	private static Regex _selectedRegEx = new Regex(@"([\w\.]+)\.Selected\((\w+)\)", RegexOptions.Compiled);
+	private static readonly Regex _selectedRegEx = new(@"([\w\.]+)\.Selected\((\w+)\)", RegexOptions.Compiled);
 
 	#region ISupportInitialize
 	public void BeginInit()
