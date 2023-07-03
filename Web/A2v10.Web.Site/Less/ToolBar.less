@@ -1,4 +1,4 @@
-﻿
+﻿@import "Variables.less";
 
 @tb-item-height:28px;
 
@@ -11,7 +11,7 @@
 	background-color: @toolbar-bg-color;
 	color: @toolbar-txt-color;
 	//min-height:34px;
-	z-index: 1;
+	z-index: @toolbar-z-index;
 
 	.checkbox {
 		margin: 0 6px;
@@ -26,7 +26,7 @@
 	}
 
 	&.tb-border-bottom-shadow {
-		border-bottom:none!important;
+		border-bottom: none !important;
 		box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
 	}
 
@@ -94,7 +94,7 @@
 
 	.a2-header {
 		margin: 0;
-		align-self:baseline;
+		align-self: baseline;
 	}
 
 	> .divider {

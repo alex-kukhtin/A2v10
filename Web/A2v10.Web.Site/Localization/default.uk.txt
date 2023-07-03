@@ -138,6 +138,7 @@
 @TryLater=Надто багато спроб зареєструватися за короткий час.\nСпробуйте зареєструватися через п'ять хвилин.
 @Continue=Продовжити
 @ConfirmCode=Код підтвердження
+@EnterConfirmCode=Введіть код підтвердження
 @InvalidConfirmCode=Неправильний код підтверження
 @EMailAlreadyConfirmed=е-mail вже підтверджено
 @LocaleLabel=Мова інтерфейсу

@@ -3655,7 +3655,7 @@ table.data-grid > tbody > tr.bold > td {
   overflow: visible;
   background-color: #cfd6e5;
   color: #555;
-  z-index: 1;
+  z-index: 8;
 }
 .toolbar .checkbox {
   margin: 0 6px;
@@ -3667,7 +3667,7 @@ table.data-grid > tbody > tr.bold > td {
   border-bottom: 1px solid #ddd;
 }
 .toolbar.tb-border-bottom-shadow {
-  border-bottom: none!important;
+  border-bottom: none !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 .toolbar > .control-group.first-elem label {
