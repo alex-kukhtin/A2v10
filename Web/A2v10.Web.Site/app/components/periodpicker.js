@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230528-7939
+// 20230705-7939
 // components/periodpicker.js
 
 

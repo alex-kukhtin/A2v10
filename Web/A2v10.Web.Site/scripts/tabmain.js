@@ -2758,7 +2758,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230618-7938*/
+/*20230705-7939*/
 // services/datamodel.js
 
 /*
@@ -3776,12 +3776,12 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function setDirty(val, path, prop) {
-		if (this.$root.$readOnly || this.$root._lockEvents_)
-			return;
-		if (path && path.toLowerCase().startsWith('query'))
+		if (this.$root.$readOnly)
 			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
 		if (isNoDirty(this.$root))
+			return;
+		if (path && path.toLowerCase().startsWith('query'))
 			return;
 		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
 			return;
@@ -6418,7 +6418,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230528-7939
+// 20230705-7939
 // components/periodpicker.js
 
 

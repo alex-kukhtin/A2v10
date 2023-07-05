@@ -758,6 +758,9 @@ public class RequestModel
 	public String allowOrigin;
 	public String allowHost;
 
+	[JsonProperty("imageSettings")]
+	public Dictionary<String, ImageSettings> ImageSettings { get; set; } = new();
+
 	[JsonProperty("actions")]
 	public Dictionary<String, RequestAction> Actions { get; set; } = new Dictionary<String, RequestAction>(StringComparer.OrdinalIgnoreCase);
 	[JsonProperty("dialogs")]

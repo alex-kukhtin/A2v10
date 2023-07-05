@@ -116,6 +116,9 @@ public partial class BaseController
 		ExpandoObject prms = new ExpandoObject();
 		String key = rm.ModelAction.ToPascalCase();
 		String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
+
+		rm.ImageSettings.TryGetValue(key, out var imageSettings);
+
 		AttachmentUpdateInfo ii = new AttachmentUpdateInfo
 		{
 			UserId = userId,
@@ -132,7 +135,7 @@ public partial class BaseController
 			HttpPostedFileBase file = files[i];
 			ii.Mime = file.ContentType;
 			ii.Name = Path.GetFileName(file.FileName);
-			ii.Stream = file.InputStream;
+			ii.Stream = CompressImage(imageSettings, file);
 			var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(rm.CurrentSource, procedure, ii);
 			retList.Add(new AttachmentUpdateIdToken()
 			{
@@ -272,6 +275,14 @@ public partial class BaseController
 		if (fileLen < settings.threshold)
 			return false;
 		return true;
+	}
+	Stream CompressImage(ImageSettings settings, HttpPostedFileBase file)
+	{
+		if (settings == null)
+			return file.InputStream;
+		if (IsImageForCompress(settings, file))
+			return CompressImage(file.InputStream, file.ContentType, settings.quality);
+		return file.InputStream;
 	}
 
 	Stream CompressImage(Stream stream, String contentType, Int32 factor)

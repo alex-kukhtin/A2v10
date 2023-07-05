@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230618-7938*/
+/*20230705-7939*/
 // services/datamodel.js
 
 /*
@@ -1018,12 +1018,12 @@
 	}
 
 	function setDirty(val, path, prop) {
-		if (this.$root.$readOnly || this.$root._lockEvents_)
-			return;
-		if (path && path.toLowerCase().startsWith('query'))
+		if (this.$root.$readOnly)
 			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
 		if (isNoDirty(this.$root))
+			return;
+		if (path && path.toLowerCase().startsWith('query'))
 			return;
 		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
 			return;
