@@ -3788,7 +3788,7 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function setDirty(val, path, prop) {
-		if (this.$root.$readOnly)
+		if (this.$root.$readOnly || this.$root._lockEvents_)
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
@@ -6597,7 +6597,7 @@ Vue.component('validator-control', {
 				let path = this.item._path_ || 'global';
 				let eventName = `${path}.${this.prop}.change`;
 				if (root && root.$setDirty)
-					root.$setDirty(true);
+					root.$setDirty(true, path, this.prop);
 				root.$emit(eventName, this.item, this.period, null);
 			},
 			toggle(ev) {

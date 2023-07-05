@@ -1018,7 +1018,7 @@
 	}
 
 	function setDirty(val, path, prop) {
-		if (this.$root.$readOnly)
+		if (this.$root.$readOnly || this.$root._lockEvents_)
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;

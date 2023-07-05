@@ -187,7 +187,7 @@
 				let path = this.item._path_ || 'global';
 				let eventName = `${path}.${this.prop}.change`;
 				if (root && root.$setDirty)
-					root.$setDirty(true);
+					root.$setDirty(true, path, this.prop);
 				root.$emit(eventName, this.item, this.period, null);
 			},
 			toggle(ev) {
