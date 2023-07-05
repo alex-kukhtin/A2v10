@@ -6300,7 +6300,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230528-7936
+// 20230528-7939
 // components/periodpicker.js
 
 
@@ -6314,7 +6314,6 @@ Vue.component('validator-control', {
 	const du = utils.date;
 
 	const baseControl = component('control');
-	const locale = window.$$locale;
 
 	const DEFAULT_DEBOUNCE = 150;
 
@@ -6485,8 +6484,10 @@ Vue.component('validator-control', {
 					this.callback(this.period);
 				let root = this.item.$root;
 				if (!root) return;
-				let eventName = this.item._path_ + '.' + this.prop + '.change';
-				root.$setDirty(true);
+				let path = this.item._path_ || 'global';
+				let eventName = `${path}.${this.prop}.change`;
+				if (root && root.$setDirty)
+					root.$setDirty(true);
 				root.$emit(eventName, this.item, this.period, null);
 			},
 			toggle(ev) {
