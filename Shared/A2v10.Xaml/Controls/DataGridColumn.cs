@@ -216,7 +216,7 @@ public class DataGridColumn : XamlElement
 		{
 			throw new XamlException("For editable columns the Content must be a binding");
 		}
-		if ((Content is TextBox) || (Content is Static))
+		if (Content is ValuedControl)
 		{
 			_noPadding = true;
 		}

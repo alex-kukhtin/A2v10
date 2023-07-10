@@ -210,7 +210,7 @@ namespace A2v10.Xaml
 			panel.RenderEnd(context);
 		}
 
-		void RenderFooter(RenderContext context)
+		void RenderFooter(RenderContext _1/*context*/)
 		{
 			/*TODO: do it!
 			var templ = new TagBuilder("template");

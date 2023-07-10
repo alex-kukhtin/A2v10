@@ -2160,7 +2160,7 @@ pre.a2-code {
   color: #a94442;
   border: 1px solid #dca7a7;
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
-  white-space: pre;
+  white-space: pre-line;
 }
 .a2-hyperlink {
   display: inline-flex;
@@ -3293,31 +3293,29 @@ table.data-grid:not(.no-hover) > tbody > tr:hover {
 table.data-grid:not(.no-hover) > tbody > tr.active:hover {
   background-color: var(--activeBkLight);
 }
-table.data-grid td {
+table.data-grid > tbody > tr > td {
   padding: 0.5rem;
   vertical-align: top;
 }
-table.data-grid td > i.ico,
-table.data-grid td > a > i.ico {
+table.data-grid > tbody > tr > td > i.ico,
+table.data-grid > tbody > tr > td > a > i.ico {
   padding-right: 4px;
   font-size: inherit;
 }
-table.data-grid td > i.ico.ico-single,
-table.data-grid td > a > i.ico.ico-single {
+table.data-grid > tbody > tr > td > i.ico.ico-single,
+table.data-grid > tbody > tr > td > a > i.ico.ico-single {
   padding-right: 0;
 }
-table.data-grid td .dg-cell {
+table.data-grid > tbody > tr > td .dg-cell {
   word-break: break-all;
   word-break: break-word;
-}
-table.data-grid th {
-  border-color: #ddd;
 }
 table.data-grid td.cell-editable {
   padding: 0;
 }
-table.data-grid td.cell-editable .control-group {
-  margin: -1px;
+table.data-grid td.cell-editable .control-group .input-group input,
+table.data-grid td.cell-editable .control-group .input-group select {
+  height: 2.2em;
 }
 table.data-grid td.small {
   font-size: 0.86rem;
@@ -3329,7 +3327,8 @@ table.data-grid td.cell-validator {
 table.data-grid colgroup > col.sorted {
   background-color: rgba(238, 238, 238, 0.45);
 }
-table.data-grid th {
+table.data-grid > thead > tr > th {
+  border-color: #ddd;
   background-color: #f5f5f5;
   color: #444;
   border-bottom: 1px solid #ddd;
@@ -3340,33 +3339,33 @@ table.data-grid th {
   -ms-user-select: none;
   user-select: none;
 }
-table.data-grid th .h-holder {
+table.data-grid > thead > tr > th .h-holder {
   position: relative;
   padding: 0.5rem;
 }
-table.data-grid th.sort {
+table.data-grid > thead > tr > th.sort {
   cursor: pointer;
   white-space: nowrap;
 }
-table.data-grid th.sort:hover {
+table.data-grid > thead > tr > th.sort:hover {
   background-color: #dcdcdc;
 }
-table.data-grid th.sort .h-holder:after {
+table.data-grid > thead > tr > th.sort .h-holder:after {
   content: '';
   border: 5px solid transparent;
   margin-left: 5px;
 }
-table.data-grid th.sort.desc,
-table.data-grid th.sort.asc {
+table.data-grid > thead > tr > th.sort.desc,
+table.data-grid > thead > tr > th.sort.asc {
   background-color: #eee;
 }
-table.data-grid th.sort.desc .h-holder:after {
+table.data-grid > thead > tr > th.sort.desc .h-holder:after {
   content: '';
   display: inline-block;
   border-top-color: #999;
   vertical-align: bottom;
 }
-table.data-grid th.sort.asc .h-holder:after {
+table.data-grid > thead > tr > th.sort.asc .h-holder:after {
   content: '';
   display: inline-block;
   border-bottom-color: #999;

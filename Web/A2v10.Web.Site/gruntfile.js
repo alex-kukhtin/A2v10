@@ -19,7 +19,7 @@ module.exports = function (grunt) {
 			},
 		},
 		watch: {
-			files: ["scripts/main.js", "scripts/bootstrap/main.js"],
+			files: ['scripts/main.js', 'scripts/tabmain.js', 'scripts/bootstrap/main.js'],
 			tasks: ["terser"]
 		}
 });

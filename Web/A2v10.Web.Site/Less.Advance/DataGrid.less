@@ -1,4 +1,5 @@
 ﻿@import "Variables.less";
+@import "Mixins.less";
 /*
     TODO:
     1. do somthing with border: (td:first-child (left:none???)
@@ -68,7 +69,7 @@ table.data-grid {
 		background-color: @dg-active-bg-color;
 	}
 
-	td {
+	> tbody > tr > td {
 		padding: .5rem;
 		vertical-align: top;
 		//border-color: @table-brd-color;
@@ -90,18 +91,17 @@ table.data-grid {
 	}
 
 
-	th {
-		border-color: @table-hdr-brd-color;
-	}
-
 	td.cell-editable {
 		padding: 0;
 
 		.control-group {
-			margin: -1px;
+			// margin: -1px;
 
 			.input-group {
 				//border-style:none!important;
+				input, select {
+					height:2.2em;
+				}
 			}
 		}
 	}
@@ -119,7 +119,9 @@ table.data-grid {
 		background-color: @sort-bg-color;
 	}
 
-	th {
+
+	> thead > tr > th {
+		border-color: @table-hdr-brd-color;
 		background-color: @dg-header-bg-color;
 		color: @dg-header-txt-color;
 		border-bottom: 1px solid @table-hdr-brd-color;

@@ -2770,7 +2770,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230618-7938*/
+/*20230705-7939*/
 // services/datamodel.js
 
 /*
@@ -3790,10 +3790,10 @@ app.modules['std:impl:array'] = function () {
 	function setDirty(val, path, prop) {
 		if (this.$root.$readOnly)
 			return;
-		if (path && path.toLowerCase().startsWith('query'))
-			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
 		if (isNoDirty(this.$root))
+			return;
+		if (path && path.toLowerCase().startsWith('query'))
 			return;
 		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
 			return;
@@ -4154,9 +4154,9 @@ app.modules['std:popup'] = function () {
 };
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20190307-7460*/
+/*20230629-7939*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -4509,8 +4509,7 @@ app.modules['std:mask'] = function () {
 
 
 	function fireChange(input) {
-		var evt = document.createEvent('HTMLEvents');
-		evt.initEvent('change', false, true);
+		let evt = new Event('change', { bubbles: false, cancelable: true });
 		input.dispatchEvent(evt);
 	}
 };
@@ -5364,9 +5363,9 @@ Vue.component('validator-control', {
     }
 });
 */
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20220110-7819*/
+/*20230710-7939*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -5389,6 +5388,7 @@ Vue.component('validator-control', {
 				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<a class="a2-hyperlink add-on a2-inline" href="" @click.stop.prevent="dummy" v-if=hasFilter><i class="ico ico-filter-outline"></i></a>
+		<a class="a2-hyperlink add-on a2-inline" href="" @click.stop.prevent="dummy" v-if=searchVisible><i class="ico ico-search"></i></a>
 		<a class="a2-hyperlink add-on a2-inline" tabindex="-1" href="" @click.stop.prevent="clear" v-if="clearVisible"><i class="ico ico-clear"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -5453,6 +5453,7 @@ Vue.component('validator-control', {
 			enterCommand: Function,
 			hasClear: Boolean,
 			hasFilter: Boolean,
+			hasSearch: Boolean,
 			filters: Array
 		},
 		computed: {
@@ -5461,6 +5462,10 @@ Vue.component('validator-control', {
 			},
 			autocompleteText() {
 				return this.password ? 'new-password' : 'off';
+			},
+			searchVisible() {
+				if (this.clearVisible) return false;
+				return this.hasSearch;
 			},
 			clearVisible() {
 				if (!this.hasClear) return false;
@@ -5575,8 +5580,7 @@ Vue.component('validator-control', {
 				let inp = this.$refs.input;
 				if (!inp) return;
 				// send for auto size
-				var evt = document.createEvent('HTMLEvents');
-				evt.initEvent('autosize', false, true);
+				let evt = new Event('autosize', { bubbles: false, cancelable: true });
 				inp.dispatchEvent(evt);
 			}
 		}
@@ -5619,7 +5623,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230613-7937*/
+/*20230713-7939*/
 /*components/combobox.js */
 
 (function () {
@@ -5685,7 +5689,7 @@ Vue.component('validator-control', {
 				get() {
 					if (this.itemsSource.length === 0 && this.item) {
 						let itemval = this.item[this.prop];
-						if (itemval && itemval.$empty)
+						if (itemval && itemval.$empty && !itemval.$isEmpty)
 							itemval.$empty();
 					}
 					return this.getComboValue();
@@ -6412,7 +6416,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230528-7936
+// 20230705-7939
 // components/periodpicker.js
 
 
@@ -6426,7 +6430,6 @@ Vue.component('validator-control', {
 	const du = utils.date;
 
 	const baseControl = component('control');
-	const locale = window.$$locale;
 
 	const DEFAULT_DEBOUNCE = 150;
 
@@ -6597,8 +6600,10 @@ Vue.component('validator-control', {
 					this.callback(this.period);
 				let root = this.item.$root;
 				if (!root) return;
-				let eventName = this.item._path_ + '.' + this.prop + '.change';
-				root.$setDirty(true);
+				let path = this.item._path_ || 'global';
+				let eventName = `${path}.${this.prop}.change`;
+				if (root && root.$setDirty)
+					root.$setDirty(true, path, this.prop);
 				root.$emit(eventName, this.item, this.period, null);
 			},
 			toggle(ev) {
@@ -11541,7 +11546,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2022-2023 Olekdsandr Kukhtin. All rights reserved.
 
-// 20230525-7935
+// 20230625-7939
 // components/treegrid.js
 
 (function () {
@@ -11557,7 +11562,7 @@ Vue.component('a2-panel', {
 	</tr></thead>
 	<tbody>
 		<tr v-for="(itm, ix) in rows" :class="rowClass(itm)" 
-				@click.prevent="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
+				@click.stop="select(itm)" v-on:dblclick.prevent="dblClick($event, itm)">
 			<td class="c-m" v-if=isMarkCell :class="rowMarkClass(itm)"></td>
 			<slot name="row" v-bind:itm="itm.elem" v-bind:that="that"></slot>
 		</tr>

@@ -98,6 +98,7 @@
 @Locale=en-US
 @Ok=OK
 @Login=Log in
+@UserName=Username
 @LoginPrompt=Login to system
 @RegisterPrompt=Register in the system
 @ForgotPrompt=Reset password
@@ -138,6 +139,7 @@
 @TryLater=Too many login attempts in a short time.\nTry to register in five minutes
 @Continue=Continue
 @ConfirmCode=Verification code
+@EnterConfirmCode=Enter verfication code
 @InvalidConfirmCode=Invalid verfication code
 @EMailAlreadyConfirmed=е-mail already confirmed
 @LocaleLabel=Interface language

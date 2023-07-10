@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7936",
+	"$version": "10.0.7939",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -315,8 +315,20 @@
 					"additionalProperties": false
 				}
 			}
+		},
+		"imageSettings": {
+			"type": "object",
+			"patternProperties": {
+				".+": {
+					"type": "object",
+					"properties": {
+						"quality": { "type": "number" },
+						"threshold": { "type": "number" },
+					},
+					"additionalProperties": false
+				}
+			}
 		}
-
 	},
 	"additionalProperties": false
 }

@@ -97,6 +97,7 @@
 @Locale=ru-RU
 @Ok=OK
 @Login=Войти
+@UserName=Имя
 @LoginPrompt=Вход в систему
 @RegisterPrompt=Регистрация в системе
 @ForgotPrompt=Восстановление пароля
@@ -137,6 +138,7 @@
 @TryLater=Слишком много попыток регистрации за короткое время.\nПопробуйте зарегистрироваться через пять минут
 @Continue=Продолжить
 @ConfirmCode=Код подтверждения
+@EnterConfirmCode=Введите код подтверждения
 @InvalidConfirmCode=Неправильный код подтверждения
 @EMailAlreadyConfirmed=е-mail уже подтвержден
 @LocaleLabel=Язык интерфейса

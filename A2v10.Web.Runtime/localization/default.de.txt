@@ -96,6 +96,7 @@
 @Locale=de-DE
 @Ok=OK
 @Login=Anmelden
+@UserName=Nutzername
 @LoginPrompt=Systemanmeldung
 @RegisterPrompt=Im System registrieren
 @ForgotPrompt=Passwort zurücksetzen
@@ -136,6 +137,7 @@
 @TryLater=Zu viele Anmeldungsversuche in kurzer Zeit. \ NVersuchen Sie nochmal, sich in fünf Minuten zu registrieren
 @Continue=Fortsetzen
 @ConfirmCode=Bestätigungscode
+@EnterConfirmCode=Bestätigungscode eingeben
 @InvalidConfirmCode=Ungültiger Bestätigungscode
 @EMailAlreadyConfirmed=E-Mail bereits bestätigt
 @LocaleLabel=Schnittstellensprache

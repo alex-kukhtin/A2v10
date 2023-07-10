@@ -97,6 +97,7 @@
 @Locale=pl-PL
 @Ok=OK
 @Login=Logowanie
+@UserName=Nazwa użytkownika
 @LoginPrompt=Zaloguj sie
 @RegisterPrompt=Rejestracja w systemie
 @ForgotPrompt=Odzyskiwanie hasła
@@ -137,6 +138,7 @@
 @TryLater=Zbyt wiele prób rejestracji w krótkim czasie.\nSpróbuj zarejestrować się za pięć minut
 @Continue=Kontynuować
 @ConfirmCode=Kod potwierdzający
+@EnterConfirmCode=Wpisz kod potwierdzający
 @InvalidConfirmCode=Nieprawidłowy kod weryfikacyjny
 @EMailAlreadyConfirmed=E-mail jest już potwierdzony
 @LocaleLabel=Język interfejsu

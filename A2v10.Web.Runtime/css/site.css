@@ -1606,7 +1606,7 @@ header .include.nav-pane .partial-block .control-group,
   margin: 0;
   background-color: #f2f3f9;
   display: flex;
-  z-index: 3;
+  z-index: 9;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 .nav-bar > li {
@@ -2183,7 +2183,7 @@ pre.a2-code {
   color: #a94442;
   border: 1px solid #dca7a7;
   box-shadow: 1px 4px 10px rgba(169, 68, 66, 0.3);
-  white-space: pre;
+  white-space: pre-line;
 }
 .a2-hyperlink:focus,
 .a2-hyperlink:active {
@@ -3292,31 +3292,25 @@ table.data-grid col.fit {
 table.data-grid.striped > tbody > tr.even {
   background-color: rgba(208, 208, 208, 0.15);
 }
-table.data-grid td {
+table.data-grid > tbody > tr > td {
   padding: 4px 6px;
   vertical-align: top;
 }
-table.data-grid td > i.ico,
-table.data-grid td > a > i.ico {
+table.data-grid > tbody > tr > td > i.ico,
+table.data-grid > tbody > tr > td > a > i.ico {
   padding-right: 4px;
   font-size: inherit;
 }
-table.data-grid td > i.ico.ico-single,
-table.data-grid td > a > i.ico.ico-single {
+table.data-grid > tbody > tr > td > i.ico.ico-single,
+table.data-grid > tbody > tr > td > a > i.ico.ico-single {
   padding-right: 0;
 }
-table.data-grid td .dg-cell {
+table.data-grid > tbody > tr > td .dg-cell {
   word-break: break-all;
   word-break: break-word;
 }
-table.data-grid th {
-  border-color: #ddd;
-}
 table.data-grid td.cell-editable {
   padding: 0;
-}
-table.data-grid td.cell-editable .control-group {
-  margin: -1px;
 }
 table.data-grid td.small {
   font-size: 0.86rem;
@@ -3328,7 +3322,8 @@ table.data-grid td.cell-validator {
 table.data-grid colgroup > col.sorted {
   background-color: rgba(238, 238, 238, 0.3);
 }
-table.data-grid th {
+table.data-grid > thead > tr > th {
+  border-color: #ddd;
   background-color: #f5f5f5;
   color: #444;
   border-bottom: 1px solid #ddd;
@@ -3339,27 +3334,27 @@ table.data-grid th {
   -ms-user-select: none;
   user-select: none;
 }
-table.data-grid th .h-holder {
+table.data-grid > thead > tr > th .h-holder {
   position: relative;
   padding: 4px 6px;
 }
-table.data-grid th.sort {
+table.data-grid > thead > tr > th.sort {
   cursor: pointer;
   white-space: nowrap;
 }
-table.data-grid th.sort:hover {
+table.data-grid > thead > tr > th.sort:hover {
   background-color: #dcdcdc;
 }
-table.data-grid th.sort .h-holder:after {
+table.data-grid > thead > tr > th.sort .h-holder:after {
   content: '';
   border: 5px solid transparent;
   margin-left: 2px;
 }
-table.data-grid th.sort.desc,
-table.data-grid th.sort.asc {
+table.data-grid > thead > tr > th.sort.desc,
+table.data-grid > thead > tr > th.sort.asc {
   background-color: #eee;
 }
-table.data-grid th.sort.desc .h-holder:after {
+table.data-grid > thead > tr > th.sort.desc .h-holder:after {
   content: '';
   display: inline-block;
   border: 5px solid transparent;
@@ -3367,7 +3362,7 @@ table.data-grid th.sort.desc .h-holder:after {
   margin-left: 2px;
   vertical-align: bottom;
 }
-table.data-grid th.sort.asc .h-holder:after {
+table.data-grid > thead > tr > th.sort.asc .h-holder:after {
   content: '';
   display: inline-block;
   border: 5px solid transparent;
@@ -3655,7 +3650,7 @@ table.data-grid > tbody > tr.bold > td {
   overflow: visible;
   background-color: #cfd6e5;
   color: #555;
-  z-index: 1;
+  z-index: 8;
 }
 .toolbar .checkbox {
   margin: 0 6px;
@@ -3667,7 +3662,7 @@ table.data-grid > tbody > tr.bold > td {
   border-bottom: 1px solid #ddd;
 }
 .toolbar.tb-border-bottom-shadow {
-  border-bottom: none!important;
+  border-bottom: none !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 .toolbar > .control-group.first-elem label {
@@ -4177,7 +4172,7 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-tab-bar {
   display: flex;
-  border-bottom: 0.3rem solid #ddd;
+  border-bottom: 3px solid #ddd;
   align-items: baseline;
   margin: 0.65rem 0;
 }
@@ -4189,8 +4184,8 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-tab-button {
   padding: 0.65rem 0;
-  border-bottom: 0.3rem solid #ddd;
-  margin-bottom: -0.3rem;
+  border-bottom: 3px solid #ddd;
+  margin-bottom: -3px;
   font-weight: bold;
   font-size: 1.2rem;
   display: block;
@@ -4218,7 +4213,7 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-tab-bar.tab-bar-main-menu .a2-tab-bar-item:hover {
   background-color: #e8e9f4;
-  margin-bottom: -0.3rem;
+  margin-bottom: -3px;
 }
 .a2-tab-bar.tab-bar-main-menu .a2-tab-button {
   font-weight: normal;
@@ -4256,13 +4251,13 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-tab-bar.tab-bar-tab {
   border-bottom: 1px solid #ddd;
-  border-top: 0.3rem solid transparent;
+  border-top: 3px solid transparent;
   background-color: #f9f9f9;
   margin: 0;
 }
 .a2-tab-bar.tab-bar-tab .a2-tab-bar-item {
   padding: 0;
-  margin-top: -0.3rem;
+  margin-top: -3px;
   margin-bottom: -1px;
 }
 .a2-tab-bar.tab-bar-tab .a2-tab-button {
@@ -4273,7 +4268,7 @@ tr:hover .commandbar.visible-hover {
 }
 .a2-tab-bar.tab-bar-tab .a2-tab-button.active {
   background-color: white;
-  border-top: 0.3rem solid gold;
+  border-top: 3px solid gold;
   border-left-color: #ddd;
   border-right-color: #ddd;
   border-bottom-color: white;

@@ -26,7 +26,7 @@ public static class HostHelpers
 		if (files == null)
 			return String.Empty;
 		// at least one file
-		foreach (var f in files)
+		foreach (var _ in files)
 			return $"<link  href=\"/{controllerName.ToLowerInvariant()}/appstyles\" rel=\"stylesheet\" />";
 		return String.Empty;
 	}
@@ -80,7 +80,7 @@ public static class HostHelpers
 			return localizer.Localize(null, JsonConvert.SerializeObject(app));
 		}
 
-		ExpandoObject defAppData = new ExpandoObject();
+		ExpandoObject defAppData = new();
 		defAppData.Set("version", host.AppVersion);
 		defAppData.Set("title", "A2v10 Web Application");
 		defAppData.Set("copyright", host.Copyright);
@@ -95,8 +95,15 @@ public static class HostHelpers
 			return String.Empty;
 		return head.Replace("$(UserName)", host.UserName);
 	}
+    public static String CustomAppBody(this IApplicationHost host)
+    {
+        String head = host.ApplicationReader.ReadTextFile("_layout", "_body.html");
+        if (head == null)
+            return String.Empty;
+        return head.Replace("$(UserName)", host.UserName);
+    }
 
-	public static String CustomAppScripts(this IApplicationHost host)
+    public static String CustomAppScripts(this IApplicationHost host)
 	{
 		var fileName = GetExternalAppFileName(host, "_layout", "_scripts.html");
 		String scripts = host.ApplicationReader.ReadTextFile("_layout", fileName);
@@ -134,7 +141,8 @@ public static class HostHelpers
 	{
 		sb.Replace("$(Build)", host.AppBuild);
 		sb.Replace("$(LayoutHead)", host.CustomAppHead());
-		sb.Replace("$(AppleTouchIcon)", host.AppleTouchIcon());
+        sb.Replace("$(LayoutBody)", host.CustomAppBody());
+        sb.Replace("$(AppleTouchIcon)", host.AppleTouchIcon());
 		sb.Replace("$(LayoutManifest)", host.CustomManifest());
 		sb.Replace("$(AssetsStyleSheets)", host.AppStyleSheetsLink(controllerName));
 		sb.Replace("$(HelpUrl)", host.HelpUrl);

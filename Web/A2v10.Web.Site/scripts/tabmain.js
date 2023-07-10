@@ -5371,9 +5371,9 @@ Vue.component('validator-control', {
     }
 });
 */
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20220110-7819*/
+/*20230710-7939*/
 /*components/textbox.js*/
 
 /* password-- fake fields are a workaround for chrome autofill getting the wrong fields -->*/
@@ -5396,6 +5396,7 @@ Vue.component('validator-control', {
 				:class="inputClass" :placeholder="placeholder" :disabled="disabled" :tabindex="tabIndex" :maxlength="maxLength" :spellcheck="spellCheck"/>
 		<slot></slot>
 		<a class="a2-hyperlink add-on a2-inline" href="" @click.stop.prevent="dummy" v-if=hasFilter><i class="ico ico-filter-outline"></i></a>
+		<a class="a2-hyperlink add-on a2-inline" href="" @click.stop.prevent="dummy" v-if=searchVisible><i class="ico ico-search"></i></a>
 		<a class="a2-hyperlink add-on a2-inline" tabindex="-1" href="" @click.stop.prevent="clear" v-if="clearVisible"><i class="ico ico-clear"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 	</div>
@@ -5460,6 +5461,7 @@ Vue.component('validator-control', {
 			enterCommand: Function,
 			hasClear: Boolean,
 			hasFilter: Boolean,
+			hasSearch: Boolean,
 			filters: Array
 		},
 		computed: {
@@ -5468,6 +5470,10 @@ Vue.component('validator-control', {
 			},
 			autocompleteText() {
 				return this.password ? 'new-password' : 'off';
+			},
+			searchVisible() {
+				if (this.clearVisible) return false;
+				return this.hasSearch;
 			},
 			clearVisible() {
 				if (!this.hasClear) return false;
@@ -5625,7 +5631,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230613-7937*/
+/*20230713-7939*/
 /*components/combobox.js */
 
 (function () {
@@ -5691,7 +5697,7 @@ Vue.component('validator-control', {
 				get() {
 					if (this.itemsSource.length === 0 && this.item) {
 						let itemval = this.item[this.prop];
-						if (itemval && itemval.$empty)
+						if (itemval && itemval.$empty && !itemval.$isEmpty)
 							itemval.$empty();
 					}
 					return this.getComboValue();
