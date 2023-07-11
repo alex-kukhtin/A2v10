@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netframework4.8</TargetFramework>
@@ -40,7 +40,7 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="Owin" Version="1.0" />
 		<PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
-		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.3" />
+		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.4" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="6.31.0" />
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.31.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.31.0" />
