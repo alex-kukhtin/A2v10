@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>netframework4.8</TargetFramework>
@@ -39,7 +39,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.3" />
-		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.3" />
+		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.4" />
 		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
 		<PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.9" />
 		<PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.9" />
