@@ -60,7 +60,6 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 	private readonly IApplicationHost _host;
 	private readonly IDbContext _dbContext;
 	private readonly ILocalizer _localizer;
-	private readonly IUserStateManager _userStateManager;
 	private readonly IUserLocale _userLocale;
 	private readonly IDataProtectionProvider _dataProtectionProvider;
 	private readonly IHooksProvider _hooksProvider;
@@ -78,7 +77,6 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		_host = serviceLocator.GetService<IApplicationHost>();
 		_dbContext = serviceLocator.GetService<IDbContext>();
 		_localizer = serviceLocator.GetService<ILocalizer>();
-		_userStateManager = serviceLocator.GetService<IUserStateManager>();
 		_userLocale = serviceLocator.GetService<IUserLocale>();
 		_dataProtectionProvider = serviceLocator.GetService<IDataProtectionProvider>();
 		_hooksProvider = serviceLocator.GetService<IHooksProvider>();
@@ -93,7 +91,6 @@ public class AccountController : IdentityController, IControllerTenant, IControl
 		_host = serviceLocator.GetService<IApplicationHost>();
 		_dbContext = serviceLocator.GetService<IDbContext>();
 		_localizer = serviceLocator.GetService<ILocalizer>();
-		_userStateManager = serviceLocator.GetService<IUserStateManager>();
 		_userLocale = serviceLocator.GetService<IUserLocale>();
 		_dataProtectionProvider = serviceLocator.GetService<IDataProtectionProvider>();
 		_hooksProvider = serviceLocator.GetService<IHooksProvider>();
