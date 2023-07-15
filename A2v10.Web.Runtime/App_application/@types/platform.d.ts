@@ -302,6 +302,12 @@ interface IErrorInfo {
 	index: number;
 }
 
+declare const enum FileActions {
+	download = "download",
+	print = "print",
+	open = "open"
+}
+
 interface IViewModel extends IController {
 	readonly $isLoading: boolean;
 	readonly $isDirty: boolean;
@@ -316,6 +322,7 @@ interface IViewModel extends IController {
 	$setCurrentUrl(url: string): void;
 	$export(arg: any, url: string, data?: any, opts?: { saveRequired: boolean }): void;
 	$navigateSimple(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
+	$file(url: string, arg: any, opts?: { action: FileActions }): void;
 }
 
 // utilities
