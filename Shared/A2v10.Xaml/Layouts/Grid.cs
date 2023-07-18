@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using A2v10.Infrastructure;
 
 namespace A2v10.Xaml;
@@ -122,8 +123,7 @@ public class Grid : Container
 	{
 		get
 		{
-			if (_rows == null)
-				_rows = new RowDefinitions();
+			_rows ??= new RowDefinitions();
 			return _rows;
 		}
 		set
@@ -136,8 +136,7 @@ public class Grid : Container
 	{
 		get
 		{
-			if (_columns == null)
-				_columns = new ColumnDefinitions();
+			_columns ??= new ColumnDefinitions();
 			return _columns;
 		}
 		set
@@ -265,8 +264,7 @@ public class ColumnDefinitions : List<ColumnDefinition>
 		var coll = new ColumnDefinitions();
 		if (val.StartsWith("Repeat"))
 		{
-			var regex = new Regex(@"^Repeat\((.+)\)$");
-			var match = regex.Match(val.Trim());
+			var match = Regex.Match(val.Trim(), @"^Repeat\((.+)\)$");
 			if (match.Groups.Count < 2)
 				throw new XamlException($"Invalid repeat value '{val}'");
 
@@ -344,9 +342,9 @@ public class ColumnDefinitionsConverter : TypeConverter
 			return null;
 		if (value is ColumnDefinitions)
 			return value;
-		else if (value is String)
+		else if (value is String strVal)
 		{
-			return ColumnDefinitions.FromString(value.ToString());
+			return ColumnDefinitions.FromString(strVal);
 		}
 		return base.ConvertFrom(context, culture, value);
 	}
