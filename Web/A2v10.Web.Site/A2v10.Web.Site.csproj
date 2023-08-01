@@ -114,6 +114,7 @@
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\accelcommand.js" />
     <Content Include="app\components\collectionviewplain.js" />
+    <Content Include="app\components\colorcombobox.js" />
     <Content Include="app\components\colorpicker.js" />
     <Content Include="app\components\dashboard.js" />
     <Content Include="app\components\doctitleplain.js" />

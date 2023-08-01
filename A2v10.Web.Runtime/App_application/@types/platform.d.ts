@@ -33,12 +33,19 @@ interface IElement {
 	$set(src: object): IElement;
 }
 
+declare const enum MoveDir {
+	up = 'up',
+	down = 'down'
+}
+
 interface IArrayElement extends IElement {
 	readonly $parent: IElementArray<IElement>;
 	$selected: boolean;
 	$checked: boolean;
 	$remove(): void;
 	$select(root?: IElementArray<IElement>): void;
+	$move(dir: MoveDir): IArrayElement;
+	$canMove(dir: MoveDir): boolean;
 }
 
 interface ITreeElement extends IArrayElement {

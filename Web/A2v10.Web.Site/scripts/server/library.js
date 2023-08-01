@@ -1562,7 +1562,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230318-7922*/
+/*20230801-7940*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -1901,6 +1901,7 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function defineArrayItemProto(elem) {
+
 		let proto = elem.prototype;
 
 		proto.$remove = function () {
@@ -1927,6 +1928,33 @@ app.modules['std:impl:array'] = function () {
 			}
 		};
 
+		proto.$canMove = function (dir) {
+			let arr = this._parent_;
+			if (arr.length < 2) return;
+			let i1 = arr.indexOf(this);
+			if (dir === 'up')
+				return i1 >= 1;
+			else if (dir === 'down')
+				return i1 < arr.length - 1;
+			return false;
+		}
+
+		proto.$move = function(dir) {
+			let arr = this._parent_;
+			if (arr.length < 2) return;
+			let i1 = arr.indexOf(this);
+			let i2 = i1;
+			if (dir === 'up') {
+				if (i1 < 1) return;
+				i1 -= 1;
+			} else if (dir === 'down') {
+				if (i1 >= arr.length - 1) return;
+				i2 += 1;
+			}
+			arr.splice(i1, 2, arr[i2], arr[i1]);
+			arr.$renumberRows();
+			return this;
+		}
 	}
 };
 

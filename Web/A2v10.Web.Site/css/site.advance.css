@@ -1138,6 +1138,9 @@ h5,
 .tag-label.teal.outline {
   color: #00b5ad;
 }
+.tag-label.transparent {
+  background-color: transparent;
+}
 .tag-label.outline {
   background-color: white;
   border: 1px solid currentColor;
@@ -7426,7 +7429,6 @@ table.tree-grid a.toggle.expanded:after {
   display: flex;
   flex-direction: column;
   padding: 2px;
-  gap: 2px;
 }
 .color-picker .color-picker-wrapper {
   padding: 0;
@@ -7439,8 +7441,10 @@ table.tree-grid a.toggle.expanded:after {
 .color-picker .color-picker-wrapper:focus-visible {
   outline: none;
 }
-.color-picker .tag-label {
+.color-picker .color-picker-wrapper .tag-label {
   width: 100%;
+}
+.color-picker .tag-label {
   line-height: 2em;
   height: 1.994em;
   margin: 2px;

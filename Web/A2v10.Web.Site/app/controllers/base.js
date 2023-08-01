@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230618-7938*/
+/*20230801-7940*/
 // controllers/base.js
 
 (function () {
@@ -241,9 +241,11 @@
 					let jsonData = utils.toJson({ baseUrl: baseUrl, data: dataToSave });
 					dataservice.post(url, jsonData).then(function (data) {
 						if (self.__destroyed__) return;
-						if (dataToSave.$merge)
+						if (dataToSave.$merge) {
 							dataToSave.$merge(data, true, true /*only exists*/);
-						resolve(dataToSave); // merged
+							resolve(dataToSave); // merged
+						} else
+							resolve(data); // from server
 					}).catch(function (msg) {
 						if (msg === __blank__)
 							return;

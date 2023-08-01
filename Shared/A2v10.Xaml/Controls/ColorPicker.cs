@@ -1,7 +1,6 @@
-﻿// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
-using A2v10.Infrastructure;
 
 namespace A2v10.Xaml;
 
@@ -16,7 +15,6 @@ public class ColorPicker: ValuedControl, ITableControl
 		onRender?.Invoke(input);
 		MergeAttributes(input, context);
 		MergeDisabled(input, context);
-		CheckValueType(context, TypeCheckerTypeCode.Date);
 		MergeValue(input, context);
 		MergeBindingAttributeString(input, context, "text", nameof(Text), Text);
 		input.RenderStart(context);
