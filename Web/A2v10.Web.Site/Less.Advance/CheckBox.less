@@ -105,3 +105,33 @@ label.radio.lg, label.checkbox.lg {
 	font-size: 1.21em;
 }
 
+label.like-checkbox {
+	display: inline-flex;
+	position: relative;
+	top: 2px;
+	cursor: pointer;
+
+	> span {
+		display: inline-block;
+
+		&:before {
+			display: inline-block;
+			content: '';
+			width: @checkbox-size;
+			height: @checkbox-size;
+			border: 1px solid @checkbox-brd-color;
+			border-radius: 1px;
+			background-color: white;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+	}
+
+	&.checked > span:before {
+		background-image: data-uri('image/svg+xml','checkbox_checked.svg');
+	}
+
+	&.indeterminate > span::before {
+		background-image: data-uri('image/svg+xml', 'checkbox_indeterminate.svg');
+	}
+}

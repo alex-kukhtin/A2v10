@@ -44,6 +44,7 @@ public class DataGridColumn : XamlElement
 	public Boolean? Bold { get; set; }
 	public Boolean? If { get; set; }
 	public ColumnRole Role { get; set; }
+	public String CheckAll { get; set; }
 
 	public Int32 MaxChars { get; set; }
 
@@ -69,6 +70,11 @@ public class DataGridColumn : XamlElement
 			column.MergeAttribute("sort-prop", SortProperty);
 		if (Small != null)
 			column.MergeAttribute(":small", Small.Value.ToString().ToLowerInvariant());
+		var checkAllBind = GetBinding(nameof(CheckAll));
+		if (checkAllBind != null)
+			column.MergeAttribute("check-all", checkAllBind.Path);
+		else if (CheckAll != null)
+			throw new XamlException($"The CheckAll property must be a binding ({Content})");
 
 		if (MaxChars != 0)
 			column.MergeAttribute(":max-chars", MaxChars);
