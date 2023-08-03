@@ -121,6 +121,9 @@
 			navigate: function() {
 				let qs = parseQueryString(window.location.search);
 				let url = qs.ReturnUrl || '/';
+				let xp = window.__xparam__;
+				if (xp)
+					url += xp;
 				window.location.assign(url);
 			},
 			reload: function () {

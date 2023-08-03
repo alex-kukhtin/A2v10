@@ -2400,7 +2400,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230318-7922*/
+/*20230801-7940*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2739,6 +2739,7 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function defineArrayItemProto(elem) {
+
 		let proto = elem.prototype;
 
 		proto.$remove = function () {
@@ -2765,6 +2766,33 @@ app.modules['std:impl:array'] = function () {
 			}
 		};
 
+		proto.$canMove = function (dir) {
+			let arr = this._parent_;
+			if (arr.length < 2) return;
+			let i1 = arr.indexOf(this);
+			if (dir === 'up')
+				return i1 >= 1;
+			else if (dir === 'down')
+				return i1 < arr.length - 1;
+			return false;
+		}
+
+		proto.$move = function(dir) {
+			let arr = this._parent_;
+			if (arr.length < 2) return;
+			let i1 = arr.indexOf(this);
+			let i2 = i1;
+			if (dir === 'up') {
+				if (i1 < 1) return;
+				i1 -= 1;
+			} else if (dir === 'down') {
+				if (i1 >= arr.length - 1) return;
+				i2 += 1;
+			}
+			arr.splice(i1, 2, arr[i2], arr[i1]);
+			arr.$renumberRows();
+			return this;
+		}
 	}
 };
 
@@ -6414,6 +6442,138 @@ Vue.component('validator-control', {
 		}
 	});
 })();
+// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+
+// 20230801-7940
+// components/colorcombobox.js*/
+
+(function () {
+
+	const popup = require('std:popup');
+	const eventBus = require('std:eventBus');
+	const platform = require('std:platform');
+	const utils = require('std:utils');
+
+	const colorComboboxTemplate =
+`<div class="color-picker" :class="cssClass()" :test-id="testId">
+	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
+	<div class="input-group">
+		<div v-focus tabindex="0" @click.stop.prevent="toggle"
+				@keydown="keydown" class="color-picker-wrapper">
+			<span class="tag-label" :class="color" v-text="text"/>
+			<span class="caret"/>
+		</div>
+		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
+		<div class="color-picker-pane" v-show="isOpen">
+			<div class="color-picker-list">
+				<span class="tag-label" :class="itemClass(itm)" @mousedown.prevent="hit(itm)"
+					v-for="(itm, ix) in itemsSource" :key="ix" v-text="itemText(itm)">
+				</span>
+			</div>
+		</div>
+	</div>
+	<slot name="popover"></slot>
+	<span class="descr" v-if="hasDescr" v-text="description"></span>
+</div>
+`;
+
+	const baseControl = component('control');
+
+	Vue.component('a2-color-combobox', {
+		extends: baseControl,
+		props: {
+			item: {
+				type: Object, default() { return {}; }
+			},
+			itemsSource: Array,
+			prop: String,
+			nameProp: String,
+			colorProp: String,
+			valueProp: String
+		},
+		data() {
+			return {
+				isOpen: false
+			};
+		},
+		template: colorComboboxTemplate,
+		computed: {
+			text() {
+				let cv = this.cmbValue;
+				return cv ? cv[this.nameProp] : '';
+			},
+			color() {
+				let cv = this.cmbValue;
+				return cv ? (cv[this.colorProp] || 'transparent') : 'transparent';
+			},
+			cmbValue: {
+				get() {
+					let v = this.item[this.prop];
+					if (utils.isObjectExact(v))
+						return v;
+					return this.itemsSource.find(s => s.$id === v);
+				},
+				set(val) {
+					let v = this.item[this.prop];
+					if (utils.isObjectExact(v))
+						platform.set(this.item, this.prop, val);
+					else
+						this.item[this.prop] = val[this.valueProp];
+				}
+			}
+		},
+		methods: {
+			itemText(itm) {
+				return itm[this.nameProp];
+			},
+			itemClass(itm) {
+				return itm[this.colorProp];
+			},
+			keydown(event) {
+				event.stopPropagation();
+				let items = this.itemsSource;
+				switch (event.which) {
+					case 40: // down
+						event.preventDefault();
+						var ix = items.indexOf(this.cmbValue);
+						if (ix < items.length - 1)
+							this.cmbValue = items[ix + 1];
+						else
+							this.cmbValue = items[0];
+						break;
+					case 38: // up
+						event.preventDefault();
+						var ix = items.indexOf(this.cmbValue);
+						if (ix > 0)
+							this.cmbValue = items[ix - 1];
+						else
+							this.cmbValue = items[items.length - 1];
+						break;
+				}
+			},
+			toggle() {
+				if (!this.isOpen) {
+					eventBus.$emit('closeAllPopups');
+				}
+				this.isOpen = !this.isOpen;
+			},
+			hit(itm) {
+				this.cmbValue = itm;
+				this.isOpen = false;
+			},
+			__clickOutside() {
+				this.isOpen = false;
+			}
+		},
+		mounted() {
+			popup.registerPopup(this.$el);
+			this.$el._close = this.__clickOutside;
+		},
+		beforeDestroy() {
+			popup.unregisterPopup(this.$el);
+		}
+	});
+})();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 // 20230705-7939
@@ -7081,7 +7241,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230504-7930
+// 20230802-7940
 // components/datagrid.js*/
 
 (function () {
@@ -7113,7 +7273,7 @@ Vue.component('validator-control', {
 		</colgroup>
 		<thead>
 			<tr v-show="isHeaderVisible">
-				<th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
+				<th v-if="isMarkCell" class="marker"><div v-if=fixedHeader class="h-fill"></div><div v-if=fixedHeader class="h-holder">&#160;</div></th>
 				<th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<slot></slot>
 			</tr>
@@ -7185,8 +7345,11 @@ Vue.component('validator-control', {
 	const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
 	<div class="h-fill" v-if="fixedHeader" v-text="headerText">
-	</div><div class="h-holder">
-		<slot>{{headerText}}</slot>
+	</div>
+	<div class="h-holder">
+		<slot><label v-if=checkAll class="like-checkbox" :class="checkAllClass" @click=doCheckAll><span></span></label>
+			<span v-else v-text="headerText"></span>
+		</slot>
 	</div>
 </th>
 `;
@@ -7217,7 +7380,8 @@ Vue.component('validator-control', {
 			fit: Boolean,
 			wrap: String,
 			command: Object,
-			maxChars: Number
+			maxChars: Number,
+			checkAll: String
 		},
 		created() {
 			this.$parent.$addColumn(this);
@@ -7249,6 +7413,14 @@ Vue.component('validator-control', {
 			classAlign() {
 				return this.align !== 'left' ? (' text-' + this.align).toLowerCase() : '';
 			},
+			checkAllClass() {
+				let state = this.$parent.$checkAllState(this.checkAll);
+				if (state === 1)
+					return 'checked'; // indeterminate';
+				else if (state === 2)
+					return 'indeterminate';
+				return undefined;
+			},
 			cssClass() {
 				let cssClass = this.classAlign;
 				if (this.isSortable) {
@@ -7256,6 +7428,8 @@ Vue.component('validator-control', {
 					if (this.dir)
 						cssClass += ' ' + this.dir;
 				}
+				if (this.checkAll)
+					cssClass += ' check-all'
 				return cssClass;
 			},
 			headerText() {
@@ -7273,6 +7447,10 @@ Vue.component('validator-control', {
 				if (!this.isSortable)
 					return;
 				this.$parent.doSort(this.sortProperty);
+			},
+			doCheckAll() {
+				if (!this.checkAll) return;
+				this.$parent.$checkAll(this.checkAll);
 			},
 			cellCssClass(row, editable) {
 				let cssClass = this.classAlign;
@@ -7905,6 +8083,27 @@ Vue.component('validator-control', {
 				// lev 1-based
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
+			},
+			$checkAll(path) {
+				if (!this.$items) return;
+				let s = this.$checkAllState(path);
+				let val = s != 1;
+				this.$items.forEach(itm => itm[path] = val);
+			},
+			$checkAllState(path) {
+				// 0 - unchecked; 1 - checked, 2-indeterminate
+				if (!this.$items) return 0;
+				let checked = 0;
+				let unchecked = 0;
+				this.$items.forEach(itm => {
+					if (itm[path])
+						checked += 1;
+					else
+						unchecked += 1;
+				});
+				if (checked === 0) return 0;
+				else if (unchecked == 0) return 1;
+				return checked != unchecked ? 2 : 0;
 			},
 			__autoSelect() {
 				if (!this.autoSelect || !this.$items || !this.$items.length) return;
@@ -12906,7 +13105,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230618-7938*/
+/*20230801-7940*/
 // controllers/base.js
 
 (function () {
@@ -13147,9 +13346,11 @@ Vue.directive('resize', {
 					let jsonData = utils.toJson({ baseUrl: baseUrl, data: dataToSave });
 					dataservice.post(url, jsonData).then(function (data) {
 						if (self.__destroyed__) return;
-						if (dataToSave.$merge)
+						if (dataToSave.$merge) {
 							dataToSave.$merge(data, true, true /*only exists*/);
-						resolve(dataToSave); // merged
+							resolve(dataToSave); // merged
+						} else
+							resolve(data); // from server
 					}).catch(function (msg) {
 						if (msg === __blank__)
 							return;

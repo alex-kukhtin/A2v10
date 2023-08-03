@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7936 */
+/* Version 10.0.7940 */
 
 declare function require(url: string): any;
 
@@ -33,12 +33,19 @@ interface IElement {
 	$set(src: object): IElement;
 }
 
+declare const enum MoveDir {
+	up = 'up',
+	down = 'down'
+}
+
 interface IArrayElement extends IElement {
 	readonly $parent: IElementArray<IElement>;
 	$selected: boolean;
 	$checked: boolean;
 	$remove(): void;
 	$select(root?: IElementArray<IElement>): void;
+	$move(dir: MoveDir): IArrayElement;
+	$canMove(dir: MoveDir): boolean;
 }
 
 interface ITreeElement extends IArrayElement {
@@ -302,6 +309,12 @@ interface IErrorInfo {
 	index: number;
 }
 
+declare const enum FileActions {
+	download = "download",
+	print = "print",
+	open = "open"
+}
+
 interface IViewModel extends IController {
 	readonly $isLoading: boolean;
 	readonly $isDirty: boolean;
@@ -315,6 +328,8 @@ interface IViewModel extends IController {
 	$dbRemoveSelected(arr: object[], confirm?: string | IConfirm, opts?: { checkPermission: boolean }): void;
 	$setCurrentUrl(url: string): void;
 	$export(arg: any, url: string, data?: any, opts?: { saveRequired: boolean }): void;
+	$navigateSimple(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
+	$file(url: string, arg: any, opts?: { action: FileActions }): void;
 }
 
 // utilities

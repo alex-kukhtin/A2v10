@@ -2400,7 +2400,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230318-7922*/
+/*20230801-7940*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2739,6 +2739,7 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function defineArrayItemProto(elem) {
+
 		let proto = elem.prototype;
 
 		proto.$remove = function () {
@@ -2765,6 +2766,33 @@ app.modules['std:impl:array'] = function () {
 			}
 		};
 
+		proto.$canMove = function (dir) {
+			let arr = this._parent_;
+			if (arr.length < 2) return;
+			let i1 = arr.indexOf(this);
+			if (dir === 'up')
+				return i1 >= 1;
+			else if (dir === 'down')
+				return i1 < arr.length - 1;
+			return false;
+		}
+
+		proto.$move = function(dir) {
+			let arr = this._parent_;
+			if (arr.length < 2) return;
+			let i1 = arr.indexOf(this);
+			let i2 = i1;
+			if (dir === 'up') {
+				if (i1 < 1) return;
+				i1 -= 1;
+			} else if (dir === 'down') {
+				if (i1 >= arr.length - 1) return;
+				i2 += 1;
+			}
+			arr.splice(i1, 2, arr[i2], arr[i1]);
+			arr.$renumberRows();
+			return this;
+		}
 	}
 };
 
@@ -6971,7 +6999,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230504-7930
+// 20230802-7940
 // components/datagrid.js*/
 
 (function () {
@@ -7003,7 +7031,7 @@ Vue.component('validator-control', {
 		</colgroup>
 		<thead>
 			<tr v-show="isHeaderVisible">
-				<th v-if="isMarkCell" class="marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
+				<th v-if="isMarkCell" class="marker"><div v-if=fixedHeader class="h-fill"></div><div v-if=fixedHeader class="h-holder">&#160;</div></th>
 				<th v-if="isRowDetailsCell" class="details-marker"><div v-if="fixedHeader" class="h-holder">&#160;</div></th>
 				<slot></slot>
 			</tr>
@@ -7075,8 +7103,11 @@ Vue.component('validator-control', {
 	const dataGridColumnTemplate = `
 <th :class="cssClass" @click.prevent="doSort">
 	<div class="h-fill" v-if="fixedHeader" v-text="headerText">
-	</div><div class="h-holder">
-		<slot>{{headerText}}</slot>
+	</div>
+	<div class="h-holder">
+		<slot><label v-if=checkAll class="like-checkbox" :class="checkAllClass" @click=doCheckAll><span></span></label>
+			<span v-else v-text="headerText"></span>
+		</slot>
 	</div>
 </th>
 `;
@@ -7107,7 +7138,8 @@ Vue.component('validator-control', {
 			fit: Boolean,
 			wrap: String,
 			command: Object,
-			maxChars: Number
+			maxChars: Number,
+			checkAll: String
 		},
 		created() {
 			this.$parent.$addColumn(this);
@@ -7139,6 +7171,14 @@ Vue.component('validator-control', {
 			classAlign() {
 				return this.align !== 'left' ? (' text-' + this.align).toLowerCase() : '';
 			},
+			checkAllClass() {
+				let state = this.$parent.$checkAllState(this.checkAll);
+				if (state === 1)
+					return 'checked'; // indeterminate';
+				else if (state === 2)
+					return 'indeterminate';
+				return undefined;
+			},
 			cssClass() {
 				let cssClass = this.classAlign;
 				if (this.isSortable) {
@@ -7146,6 +7186,8 @@ Vue.component('validator-control', {
 					if (this.dir)
 						cssClass += ' ' + this.dir;
 				}
+				if (this.checkAll)
+					cssClass += ' check-all'
 				return cssClass;
 			},
 			headerText() {
@@ -7163,6 +7205,10 @@ Vue.component('validator-control', {
 				if (!this.isSortable)
 					return;
 				this.$parent.doSort(this.sortProperty);
+			},
+			doCheckAll() {
+				if (!this.checkAll) return;
+				this.$parent.$checkAll(this.checkAll);
 			},
 			cellCssClass(row, editable) {
 				let cssClass = this.classAlign;
@@ -7795,6 +7841,27 @@ Vue.component('validator-control', {
 				// lev 1-based
 				for (var gr of this.$groups)
 					gr.expanded = gr.level < lev;
+			},
+			$checkAll(path) {
+				if (!this.$items) return;
+				let s = this.$checkAllState(path);
+				let val = s != 1;
+				this.$items.forEach(itm => itm[path] = val);
+			},
+			$checkAllState(path) {
+				// 0 - unchecked; 1 - checked, 2-indeterminate
+				if (!this.$items) return 0;
+				let checked = 0;
+				let unchecked = 0;
+				this.$items.forEach(itm => {
+					if (itm[path])
+						checked += 1;
+					else
+						unchecked += 1;
+				});
+				if (checked === 0) return 0;
+				else if (unchecked == 0) return 1;
+				return checked != unchecked ? 2 : 0;
 			},
 			__autoSelect() {
 				if (!this.autoSelect || !this.$items || !this.$items.length) return;
@@ -11951,7 +12018,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230618-7938*/
+/*20230801-7940*/
 // controllers/base.js
 
 (function () {
@@ -12192,9 +12259,11 @@ Vue.directive('resize', {
 					let jsonData = utils.toJson({ baseUrl: baseUrl, data: dataToSave });
 					dataservice.post(url, jsonData).then(function (data) {
 						if (self.__destroyed__) return;
-						if (dataToSave.$merge)
+						if (dataToSave.$merge) {
 							dataToSave.$merge(data, true, true /*only exists*/);
-						resolve(dataToSave); // merged
+							resolve(dataToSave); // merged
+						} else
+							resolve(data); // from server
 					}).catch(function (msg) {
 						if (msg === __blank__)
 							return;
