@@ -3346,6 +3346,9 @@ table.data-grid > thead > tr > th .h-holder {
   position: relative;
   padding: 0.5rem;
 }
+table.data-grid > thead > tr > th .h-holder > span {
+  word-break: unset;
+}
 table.data-grid > thead > tr > th.sort {
   cursor: pointer;
   white-space: nowrap;

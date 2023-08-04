@@ -117,7 +117,7 @@ table.data-grid {
 	colgroup > col.sorted {
 		background-color: @sort-bg-color;
 	}
-	
+
 
 	> thead > tr > th {
 		border-color: @table-hdr-brd-color;
@@ -131,6 +131,10 @@ table.data-grid {
 		.h-holder {
 			position: relative;
 			padding: 4px 6px;
+
+			> span {
+				word-break: unset;
+			}
 		}
 
 		&.sort {
