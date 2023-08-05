@@ -343,3 +343,21 @@
 		opacity: 1;
 	}
 }
+
+.modal-header-menu {
+	float: right;
+	cursor: pointer;
+
+	.modal-menu-link {
+		color: @text-color;
+		display: inline-block;
+		width: @modal-header-line;
+		height: @modal-header-line;
+		margin: 0 2px;
+		text-align: center;
+
+		&:hover {
+			background-color: @modal-header-hover-color;
+		}
+	}
+}

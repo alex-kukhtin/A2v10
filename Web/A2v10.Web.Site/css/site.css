@@ -4758,6 +4758,22 @@ ul.news-list > li {
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
   opacity: 1;
 }
+.modal-header-menu {
+  float: right;
+  cursor: pointer;
+}
+.modal-header-menu .modal-menu-link {
+  color: black;
+  display: inline-block;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin: 0 2px;
+  text-align: center;
+}
+.modal-header-menu .modal-menu-link:hover {
+  background-color: #fff9d0;
+  border-color: #e5c365;
+}
 .wizard-panel {
   display: grid;
   grid-template-rows: auto 1fr auto;

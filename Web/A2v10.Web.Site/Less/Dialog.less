@@ -285,3 +285,22 @@
 		opacity: 1;
 	}
 }
+
+.modal-header-menu {
+	float: right;
+	cursor: pointer;
+
+	.modal-menu-link {
+		color: black;
+		display: inline-block;
+		width: 1.9rem;
+		height: 1.9rem;
+		margin: 0 2px;
+		text-align: center;
+
+		&:hover {
+			background-color: lighten(@dialog-header-bg-color, 10%);
+			border-color: @tb-hover-brd-color;
+		}
+	}
+}
