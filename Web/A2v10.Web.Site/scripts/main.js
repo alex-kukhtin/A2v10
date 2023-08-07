@@ -7247,7 +7247,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230802-7940
+// 20230807-7941
 // components/datagrid.js*/
 
 (function () {
@@ -8107,9 +8107,11 @@ Vue.component('validator-control', {
 					else
 						unchecked += 1;
 				});
-				if (checked === 0) return 0;
-				else if (unchecked == 0) return 1;
-				return checked != unchecked ? 2 : 0;
+				if (checked === 0)
+					return 0;
+				else if (unchecked === 0)
+					return 1;
+				return 2;
 			},
 			__autoSelect() {
 				if (!this.autoSelect || !this.$items || !this.$items.length) return;
