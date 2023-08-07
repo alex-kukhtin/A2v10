@@ -2662,7 +2662,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230801-7940*/
+/*20230807-7941*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2765,14 +2765,19 @@ app.modules['std:impl:array'] = function () {
 
 	function addResize(arr) {
 
-		arr.$empty = function () {
-			if (this.$root.isReadOnly)
-				return this;
-			this._root_.$setDirty(true);
+		arr.__empty__ = function () {
+			// without dirty
 			this.splice(0, this.length);
 			if ('$RowCount' in this)
 				this.$RowCount = 0;
 			return this;
+		}
+
+		arr.$empty = function () {
+			if (this.$root.isReadOnly)
+				return this;
+			this._root_.$setDirty(true);
+			return this.__empty__();
 		};
 
 		arr.$append = function (src) {
@@ -3060,7 +3065,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230705-7939*/
+/*20230807-7941*/
 // services/datamodel.js
 
 /*
@@ -4078,6 +4083,7 @@ app.modules['std:impl:array'] = function () {
 	}
 
 	function setDirty(val, path, prop) {
+		if (val === this.$dirty) return;
 		if (this.$root.$readOnly)
 			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);

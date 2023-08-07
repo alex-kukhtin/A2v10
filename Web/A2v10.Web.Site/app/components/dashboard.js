@@ -1,6 +1,6 @@
 ﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20220917-7920
+// 20230807-7941
 // components/dashboard.js
 
 (function () {
@@ -291,8 +291,8 @@
 				let rs = window.getComputedStyle(this.$refs.dash);
 				let colSize = parseFloat(rs.gridTemplateColumns.split(' ')[0]);
 				let rowSize = parseFloat(rs.gridTemplateRows.split(' ')[0]);
-				let colGap = parseFloat(rs.gridColumnGap);
-				let rowGap = parseFloat(rs.gridRowGap);
+				let colGap = parseFloat(rs.columnGap);
+				let rowGap = parseFloat(rs.rowGap);
 				img.style.width = (colSize * el.colSpan + (el.colSpan - 1) * colGap) + 'px';
 				img.style.height = (rowSize * el.rowSpan + (el.rowSpan - 1) * rowGap) + 'px';
 				return img;

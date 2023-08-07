@@ -1288,7 +1288,7 @@
 					dataservice.post(url, jsonData).then(function (data) {
 						if (self.__destroyed__) return;
 						if (propName in data) {
-							arr.$empty();
+							arr.__empty__();
 							for (let el of data[propName])
 								arr.push(arr.$new(el));
 							let rcName = propName + '.$RowCount';

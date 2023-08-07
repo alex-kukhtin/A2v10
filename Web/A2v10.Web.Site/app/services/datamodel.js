@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230705-7939*/
+/*20230807-7941*/
 // services/datamodel.js
 
 /*
@@ -1018,6 +1018,7 @@
 	}
 
 	function setDirty(val, path, prop) {
+		if (val === this.$dirty) return;
 		if (this.$root.$readOnly)
 			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
