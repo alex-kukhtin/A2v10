@@ -179,10 +179,9 @@ public partial class BaseController
 		{
 			String jsonCompanies = JsonConvert.SerializeObject(new { menu = companies, links },
 				JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
-			var currComp = companies?.Find(c => c.Get<Boolean>("Current"));
-			if (currComp == null)
-				throw new InvalidDataException("There is no current company");
-			_userStateManager.SetUserCompanyId(currComp.Get<Int64>("Id"));
+			var currComp = (companies?.Find(c => c.Get<Boolean>("Current"))) 
+				?? throw new InvalidDataException("There is no current company");
+            _userStateManager.SetUserCompanyId(currComp.Get<Int64>("Id"));
 			macros.Set("Companies", jsonCompanies);
 		}
 		if (period != null) { 
@@ -202,10 +201,9 @@ public partial class BaseController
 	public async Task ShellScript(String dataSource, Action<ExpandoObject> setParams, IUserInfo userInfo, Boolean bAdmin, TextWriter writer)
 	{
 		if (!String.IsNullOrEmpty(_host.CustomLayout)) {
-			var customScript = await _host.ApplicationReader.ReadTextFileAsync("_layout", $"{_host.CustomLayout}.js");
-			if (customScript == null)
-				throw new RequestModelException($"File not found. [{_host.AppKey}/_layout/{_host.CustomLayout}.js]");
-			await writer.WriteAsync(customScript);
+			var customScript = await _host.ApplicationReader.ReadTextFileAsync("_layout", $"{_host.CustomLayout}.js") 
+				?? throw new RequestModelException($"File not found. [{_host.AppKey}/_layout/{_host.CustomLayout}.js]");
+            await writer.WriteAsync(customScript);
 		}
 
 		if (!bAdmin && _host.CustomUserMenu != null)
@@ -269,14 +267,9 @@ public partial class BaseController
 		if (setCompany)
 		{
 			var comps = dm.Root.Get<List<ExpandoObject>>("Companies");
-			var currComp = comps?.Find(c => c.Get<Boolean>("Current"));
-
-			if (currComp == null)
-			{
-				throw new InvalidDataException("There is no current company");
-			}
-
-			var menuJson = JsonConvert.SerializeObject(comps, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
+			var currComp = (comps?.Find(c => c.Get<Boolean>("Current"))) 
+				?? throw new InvalidDataException("There is no current company");
+            var menuJson = JsonConvert.SerializeObject(comps, JsonHelpers.ConfigSerializerSettings(_host.IsDebugConfiguration));
 			macros.Set("Companies", $"{{menu:{menuJson}, links:null}}");
 
 			_userStateManager.SetUserCompanyId(currComp.Get<Int64>("Id"));
@@ -333,7 +326,7 @@ public partial class BaseController
 					continue; // min.{ext} found
 			}
 			var txt = _host.ApplicationReader.FileReadAllText(fileName);
-			if (txt.StartsWith("/*@localize*/"))
+			if (txt.StartsWith("/*!@localize*/"))
 				txt = _localizer.Localize(null, txt, false);
 			writer.Write(txt);
 		}
@@ -343,10 +336,9 @@ public partial class BaseController
 	{
 		if (String.IsNullOrEmpty(_host.CustomLayout))
 			return;
-		var stylesText = _host.ApplicationReader.ReadTextFile("_layout", $"{_host.CustomLayout}.css");
-		if (stylesText == null)
-			throw new RequestModelException($"File not found. [{_host.AppKey}/_layout/{_host.CustomLayout}.css]");
-		writer.Write(stylesText);
+		var stylesText = _host.ApplicationReader.ReadTextFile("_layout", $"{_host.CustomLayout}.css") 
+			?? throw new RequestModelException($"File not found. [{_host.AppKey}/_layout/{_host.CustomLayout}.css]");
+        writer.Write(stylesText);
 	}
 
 	public void GetAppStyleConent(TextWriter writer)
