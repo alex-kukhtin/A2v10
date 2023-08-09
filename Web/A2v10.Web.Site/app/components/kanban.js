@@ -1,6 +1,6 @@
 ﻿// Copyright © 2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230325-7923
+// 20230809-7941
 // components/kanban.js
 
 (function () {
@@ -54,6 +54,10 @@
 				return this.items.filter(itm => itm[this.stateProp].$id === id);
 			},
 			dragStart(ev, card) {
+				if (!this.dropDelegate) {
+					ev.preventDefault();
+					return;
+				}
 				ev.dataTransfer.effectAllowed = "move";
 				this.currentElem = card;
 			},
