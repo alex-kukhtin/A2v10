@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20200109-7704
+// 20230809-7941
 // components/calendar.js
 
 (function () {
@@ -45,7 +45,8 @@
 			setDay: Function,
 			getDayClass: Function,
 			hover: Function,
-			view: String
+			view: String,
+			currentModel: Date
 		},
 		computed: {
 			isDayView() {
@@ -152,7 +153,8 @@
 			},
 			monthClass(day) {
 				let cls = '';
-				if (day.getFullYear() === this.model.getFullYear() && day.getMonth() === this.model.getMonth())
+				let cm = this.currentModel || this.model;
+				if (day.getFullYear() === cm.getFullYear() && day.getMonth() === cm.getMonth())
 					cls += ' active';
 				return cls;
 			},

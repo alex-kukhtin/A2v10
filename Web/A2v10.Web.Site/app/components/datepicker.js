@@ -1,8 +1,7 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20221027-7902
+// 20230809-7941
 // components/datepicker.js
-
 
 (function () {
 
@@ -24,7 +23,7 @@
 		<a href @click.stop.prevent="toggle($event)" tabindex="-1"><i class="ico ico-calendar"></i></a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen">		
-			<a2-calendar :model="modelDate" :view="view"
+			<a2-calendar :model="viewDate" :view="view" :current-model="modelDate"
 				:set-month="setMonth" :set-day="selectDay" :get-day-class="dayClass"/>
 		</div>
 	</div>
@@ -43,7 +42,8 @@
 		},
 		data() {
 			return {
-				isOpen: false
+				isOpen: false,
+				viewDate: null
 			};
 		},
 		methods: {
@@ -53,9 +53,13 @@
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 					if (utils.date.isZero(this.modelDate))
-						this.item[this.prop] = utils.date.today();
+						this.updateModel(utils.date.today());
 				}
 				this.isOpen = !this.isOpen;
+			},
+			updateModel(date) {
+				this.item[this.prop] = date;
+				this.viewDate = date;
 			},
 			fitDate(dt) {
 				let du = utils.date;
@@ -75,15 +79,11 @@
 				}
 			},
 			setMonth(dt) {
-				this.setDate(dt);
+				this.viewDate = dt;
 			},
 			selectDay(day) {
-				let oldMonth = this.modelDate.getUTCMonth();
 				var dt = new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0));
 				this.setDate(dt);
-				let newMonth = this.modelDate.getUTCMonth();
-				if (newMonth != oldMonth)
-					return;
 				this.isOpen = false;
 			},
 			setDate(d) {
@@ -91,7 +91,7 @@
 				let md = this.modelDate;
 				let nd = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), md.getUTCHours(), md.getUTCMinutes(), 0, 0));
 				nd = this.fitDate(nd);
-				this.item[this.prop] = nd;
+				this.updateModel(nd);
 			},
 			dayClass(day) {
 				let cls = '';
@@ -100,7 +100,7 @@
 					cls += ' today';
 				if (tls.equal(day, this.modelDate))
 					cls += ' active';
-				if (day.getMonth() !== this.modelDate.getMonth())
+				if (day.getMonth() !== this.viewDate.getMonth())
 					cls += " other";
 				return cls;
 			},
@@ -134,7 +134,7 @@
 					let md = utils.date.parse(str, this.yearCutOff);
 					md = this.fitDate(md);
 					if (utils.date.isZero(md)) {
-						this.item[this.prop] = md;
+						this.updateModel(md);
 						this.isOpen = false;
 					} else {
 						this.setDate(md);
@@ -143,6 +143,7 @@
 			}
 		},
 		mounted() {
+			this.viewDate = this.modelDate;
 			popup.registerPopup(this.$el);
 			this.$el._close = this.__clickOutside;
 		},
