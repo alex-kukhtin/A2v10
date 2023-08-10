@@ -4,7 +4,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7930') format('woff'), url('/css/fonts/A2v10.ttf?v=7930') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7941') format('woff'), url('/css/fonts/A2v10.ttf?v=7941') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -676,8 +676,20 @@
 .ico-upload:before {
   content: "\e910";
 }
+.ico-apply:before {
+  content: "\e911";
+}
+.ico-unapply:before {
+  content: "\e912";
+}
 .ico-brand-excel:before {
   content: "\e913";
+}
+.ico-folder-ban:before {
+  content: "\e915";
+}
+.ico-assets:before {
+  content: "\e916";
 }
 .ico-user:before {
   content: "\e998";

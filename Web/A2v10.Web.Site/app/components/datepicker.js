@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230809-7941
+// 20230810-7942
 // components/datepicker.js
 
 (function () {
@@ -45,6 +45,11 @@
 				isOpen: false,
 				viewDate: null
 			};
+		},
+		watch: {
+			modelDate() {
+				this.viewDate = this.modelDate;
+			}
 		},
 		methods: {
 			toggle(ev) {

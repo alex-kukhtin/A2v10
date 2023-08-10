@@ -34,6 +34,8 @@
 @SetNewPassword=Встановлення паролю
 @InviteEMail=Ласкаво просимо!
 @ChangePasswordDisabled=Зміну пароля заборонено!
+@InviteUserSubject=Запрошення на реєстрацію
+@InviteUserBody=Для завершення реєстрації перейдіть <a href="{0}">по посиланню</a>
 ;
 @Home=Головна
 @Documents=Документи

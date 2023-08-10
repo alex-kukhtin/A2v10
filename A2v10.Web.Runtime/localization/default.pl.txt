@@ -34,6 +34,8 @@
 @SetNewPassword=Ustawianie hasła
 @InviteEMail=Witaj!
 @ChangePasswordDisabled=Zmiana hasła jest zabroniona
+@InviteUserSubject=Invitation
+@InviteUserBody=<a href="{0}">Click here to continue registration</a>
 ;
 @Home=Główna
 @Documents=Dokumentacja

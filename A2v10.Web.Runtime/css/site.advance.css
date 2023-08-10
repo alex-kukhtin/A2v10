@@ -22,7 +22,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7930') format('woff'), url('/css/fonts/A2v10.ttf?v=7930') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7941') format('woff'), url('/css/fonts/A2v10.ttf?v=7941') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -689,8 +689,20 @@
 .ico-upload:before {
   content: "\e910";
 }
+.ico-apply:before {
+  content: "\e911";
+}
+.ico-unapply:before {
+  content: "\e912";
+}
 .ico-brand-excel:before {
   content: "\e913";
+}
+.ico-folder-ban:before {
+  content: "\e915";
+}
+.ico-assets:before {
+  content: "\e916";
 }
 .ico-user:before {
   content: "\e998";
@@ -3346,6 +3358,9 @@ table.data-grid > thead > tr > th .h-holder {
   position: relative;
   padding: 0.5rem;
 }
+table.data-grid > thead > tr > th .h-holder > span {
+  word-break: unset;
+}
 table.data-grid > thead > tr > th.sort {
   cursor: pointer;
   white-space: nowrap;
@@ -4781,6 +4796,21 @@ ul.news-list > li {
   transform: scale(1, 1);
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
   opacity: 1;
+}
+.modal-header-menu {
+  float: right;
+  cursor: pointer;
+}
+.modal-header-menu .modal-menu-link {
+  color: var(--text);
+  display: inline-block;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin: 0 2px;
+  text-align: center;
+}
+.modal-header-menu .modal-menu-link:hover {
+  background-color: rgba(128, 128, 128, 0.15);
 }
 .wizard-panel {
   display: grid;

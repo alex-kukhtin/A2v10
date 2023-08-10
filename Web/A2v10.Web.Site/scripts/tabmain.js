@@ -5991,7 +5991,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230809-7941
+// 20230810-7942
 // components/datepicker.js
 
 (function () {
@@ -6036,6 +6036,11 @@ Vue.component('validator-control', {
 				isOpen: false,
 				viewDate: null
 			};
+		},
+		watch: {
+			modelDate() {
+				this.viewDate = this.modelDate;
+			}
 		},
 		methods: {
 			toggle(ev) {

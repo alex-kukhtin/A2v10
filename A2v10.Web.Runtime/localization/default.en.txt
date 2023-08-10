@@ -44,6 +44,8 @@
 @SetPassword=Set password
 @InviteEMail=Welcome!
 @ChangePasswordDisabled=Change password is disabled
+@InviteUserSubject=Invitation
+@InviteUserBody=<a href="{0}">Click here to continue registration</a>
 ;
 @Create=Create
 @CreateDocument=Create document
