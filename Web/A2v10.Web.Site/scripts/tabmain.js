@@ -9488,11 +9488,8 @@ TODO:
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230527-7936
+// 20230811-7943
 // components/list.js
-
-/* TODO:
-*/
 
 (function () {
 
@@ -9624,13 +9621,13 @@ TODO:
 						console.error('Id not found in Root.modelInfo');
 						return;
 					}
-					let fe = src.find(itm => itm.$id === rootId);
-					if (!fe) {
-						console.error(`Element with id=${rootId} not found`);
-						fe = src[0];
+					let fe = src[0];
+					if (rootId) {
+						fe = src.find(itm => itm.$id === rootId);
+						if (!fe) 
+							console.error(`Element with id=${rootId} not found`);
 					}
-					if (fe)
-						this.select(fe);
+					if (fe) this.select(fe);
 				}
 			},
 			keyDown(e) {
