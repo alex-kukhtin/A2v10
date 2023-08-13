@@ -1,6 +1,6 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
-/* Version 10.0.7930 */
+/* Version 10.0.7943 */
 
 interface keyable {
 	[key: string]: any
@@ -57,6 +57,7 @@ interface ServerSqlParameters {
 	source?: string;
 	procedure: string;
 	parameters?: object;
+	forCurrentUser?: boolean;
 }
 
 interface ServerSaveModelParameters extends ServerSqlParameters {
@@ -77,3 +78,7 @@ interface ServerEnvironment {
 	invokeCommand(cmd: string, baseUrl: string, prms: object): any;
 	queueTask(command: string, prms: object, runAt?: Date): object;
 }
+
+declare class DateUtils {
+	format(d: any, f: string);
+};
