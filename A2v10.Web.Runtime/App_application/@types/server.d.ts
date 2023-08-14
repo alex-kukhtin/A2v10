@@ -80,5 +80,5 @@ interface ServerEnvironment {
 }
 
 declare class DateUtils {
-	format(d: any, f: string);
-};
+	format(d: any, f: string): string;
+}

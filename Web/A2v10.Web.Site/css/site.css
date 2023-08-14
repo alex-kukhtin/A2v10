@@ -6141,11 +6141,10 @@ TODO:
   background-color: white;
   display: flex;
   flex-direction: column;
-  /* ???
-	.panel-content {
-		height:100%; //TODO:???
-	}
-	*/
+}
+.panel .panel-content {
+  display: flex;
+  flex-direction: column;
 }
 .panel .panel-header {
   padding: 0 0.625rem;
