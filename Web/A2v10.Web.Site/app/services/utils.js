@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230527-7936
+// 20230814-7943
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -341,6 +341,7 @@ app.modules['std:utils'] = function () {
 			return '';
 		switch (dataType) {
 			case "DateTime":
+				if (!obj) return '';
 				if (!isDate(obj)) {
 					console.error(`Invalid Date for utils.format (${obj})`);
 					return obj;
@@ -351,6 +352,7 @@ app.modules['std:utils'] = function () {
 					return formatDateWithFormat(obj, opts.format);
 				return formatDate(obj) + ' ' + formatTime(obj);
 			case "Date":
+				if (!obj) return '';
 				if (isString(obj))
 					obj = string2Date(obj);
 				if (!isDate(obj)) {
@@ -547,6 +549,7 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateIsZero(d1) {
+		if (d1 === null) return true;
 		if (!isDate(d1)) return false;
 		return dateEqual(d1, dateZero());
 	}

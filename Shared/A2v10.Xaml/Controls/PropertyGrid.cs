@@ -30,9 +30,10 @@ public class PropertyGrid : UIElement, ITableControl
 
     public PropertyGridItems Children { get; set; } = new PropertyGridItems();
     public GridLinesVisibility GridLines { get; set; }
-    public UInt32 MaxChars { get; set; }
+    public UInt32 NameMaxChars { get; set; }
+	public UInt32 ValueMaxChars { get; set; }
 
-    public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
     {
         if (SkipRender(context))
             return;

@@ -24,17 +24,23 @@ public class PropertyGridItem : UIElementBase
 	public Boolean? Bold { get; set; }
 
 	public Boolean HideEmpty { get; set; }
-    public UInt32 MaxChars { get; set; }
+    public UInt32 NameMaxChars { get; set; }
+	public UInt32 ValueMaxChars { get; set; }
 
-    public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (SkipRender(context))
 			return;
 
-        if (MaxChars == 0 && Parent is PropertyGrid propertyGrid)
-            MaxChars = propertyGrid.MaxChars;
+		if (Parent is PropertyGrid propertyGrid)
+		{
+			if (NameMaxChars == 0)
+				NameMaxChars = propertyGrid.NameMaxChars;
+			if (ValueMaxChars == 0)
+				ValueMaxChars = propertyGrid.ValueMaxChars;
+		}
 
-        var contBind = GetBinding(nameof(Content));
+		var contBind = GetBinding(nameof(Content));
 
 		var tr = new TagBuilder("tr");
 		onRender?.Invoke(tr);
@@ -50,7 +56,15 @@ public class PropertyGridItem : UIElementBase
 		var nameCell = new TagBuilder("td", "prop-name");
 		var nameBind = GetBinding(nameof(Name));
 		if (nameBind != null)
-			nameCell.MergeAttribute("v-text", nameBind.GetPathFormat(context));
+		{
+			if (NameMaxChars > 0)
+			{
+				nameCell.MergeAttribute("v-text", $"$maxChars({contBind.GetPathFormat(context)}, {NameMaxChars})");
+				nameCell.MergeAttribute(":title", contBind.GetPathFormat(context));
+			}
+			else
+				nameCell.MergeAttribute("v-text", nameBind.GetPathFormat(context));
+		}
 		nameCell.RenderStart(context);
 		if (!String.IsNullOrEmpty(Name))
 			context.Writer.Write(context.LocalizeCheckApostrophe(Name));
@@ -60,9 +74,9 @@ public class PropertyGridItem : UIElementBase
 		valCell.AddCssClassBoolNo(Bold, "bold");
 		if (contBind != null)
 		{
-			if (MaxChars > 0)
+			if (ValueMaxChars > 0)
 			{
-                valCell.MergeAttribute("v-text", $"$maxChars({contBind.GetPathFormat(context)}, {MaxChars})");
+                valCell.MergeAttribute("v-text", $"$maxChars({contBind.GetPathFormat(context)}, {ValueMaxChars})");
 				valCell.MergeAttribute(":title", contBind.GetPathFormat(context));
             } else 
 				valCell.MergeAttribute("v-text", contBind.GetPathFormat(context));
