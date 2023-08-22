@@ -20,7 +20,8 @@ public enum ColumnRole
 	Default,
 	Id,
 	Number,
-	Date
+	Date,
+	CheckBox
 }
 
 [ContentProperty("Content")]
@@ -126,9 +127,9 @@ public class DataGridColumn : XamlElement
 
 		Bind ctBind = GetBinding(nameof(ControlType));
 		if (ctBind != null)
-			column.MergeAttribute(":control-type", ctBind.Path /*!without context!*/);
+			column.MergeAttribute(":control-type", ctBind.Path /*!without context!*/, true);
 		else if (ControlType != ColumnControlType.Default)
-			column.MergeAttribute("control-type", ControlType.ToString().ToLowerInvariant());
+			column.MergeAttribute("control-type", ControlType.ToString().ToLowerInvariant(), true);
 
 		var alignProp = GetBinding(nameof(Align));
 		if (alignProp != null)
@@ -185,21 +186,37 @@ public class DataGridColumn : XamlElement
 				column.MergeAttribute("align", "right", true);
 				break;
 			case ColumnRole.Date:
-				column.MergeAttribute(":fit", "true", true);
+                // fit, nowrap, center
+                column.MergeAttribute(":fit", "true", true);
 				column.MergeAttribute("wrap", "no-wrap", true);
 				column.MergeAttribute("align", "center", true);
 				break;
-		}
-	}
+            case ColumnRole.CheckBox:
+                // fit, nowrap, center
+                column.MergeAttribute(":fit", "true", true);
+                column.MergeAttribute("wrap", "no-wrap", true);
+                column.MergeAttribute("align", "center", true);
+                column.MergeAttribute("control-type", "checkbox");
+                break;
+        }
+    }
 
 	void CreateEditable()
 	{
-		switch (ControlType)
+        void CreateCheckBox()
+        {
+            var checkBox = new CheckBox();
+            checkBox.SetBinding("Value", GetBinding("Content"));
+            if (!Editable)
+                checkBox.Disabled = true;
+            Content = checkBox;
+        }
+        switch (ControlType)
 		{
 			case ColumnControlType.Default:
 			case ColumnControlType.Editor:
 				if (!Editable)
-					return;
+					break;
 				var textBox = new TextBox();
 				textBox.SetBinding("Value", GetBinding("Content"));
 				textBox.SetBinding("Align", GetBinding("Align")); // dynamic
@@ -207,16 +224,14 @@ public class DataGridColumn : XamlElement
 				Content = textBox;
 				break;
 			case ColumnControlType.CheckBox:
-				var checkBox = new CheckBox();
-				checkBox.SetBinding("Value", GetBinding("Content"));
-				if (!Editable)
-					checkBox.Disabled = true;
-				Content = checkBox;
-				break;
+                CreateCheckBox();
+                break;
 		}
-	}
+        if (Role == ColumnRole.CheckBox)
+            CreateCheckBox();
+    }
 
-	void CheckValid()
+    void CheckValid()
 	{
 		if (Editable && Content != null)
 		{

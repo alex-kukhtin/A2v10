@@ -147,3 +147,10 @@
 @ErrorAntiForgery=The request has already been executed in another browser window. The page will reload
 @IHaveCode=Ich habe einen Bestätigungscode
 @AvailableLocales={"uk-UA": "Ukrainisch","ru-RU": "Russisch","en-US": "Englisch","de-DE": "Deutsche"}
+;
+@CloseTabsRight=Close tabs to the right
+@CloseOtherTabs=Close other tabs
+@ReopenClosedTab=Reopen closed tab
+@CloseAllTabs=Close all tabs
+@OpenTabs=Open tabs
+@RecentlyClosedTabs=Recently closed

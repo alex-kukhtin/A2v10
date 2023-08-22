@@ -148,3 +148,10 @@
 @ErrorAntiForgery=Запрос уже выполнен в другом окне браузера. Страница будет перезагружена
 @IHaveCode=У меня есть код подтверждения
 @AvailableLocales={"uk-UA": 'Украинский',"ru-RU": 'Русский',"en-US": 'Английский',"de-DE": 'Немецкий'}
+;
+@CloseTabsRight=Закрыть вкладки справа
+@CloseOtherTabs=Закрыть остальные вкладки
+@ReopenClosedTab=Открыть закрытую вкладку
+@CloseAllTabs=Закрыть все вкладки
+@OpenTabs=Открытые вкладки
+@RecentlyClosedTabs=Недавно закрытые
