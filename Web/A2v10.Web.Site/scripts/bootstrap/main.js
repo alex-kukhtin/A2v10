@@ -2971,7 +2971,7 @@ app.modules['std:modelInfo'] = function () {
 		if (mi.Filter) {
 			for (let p in mi.Filter) {
 				let fv = mi.Filter[p];
-				if (fv.call)
+				if (fv && fv.call)
 					fv = fv.call(this);
 				x[p] = fv;
 			}
@@ -6694,6 +6694,12 @@ app.modules['std:impl:array'] = function () {
 					root = window.$$rootUrl,
 					url = `${root}/${routing.dataUrl()}/loadlazy`,
 					selfMi = elem[propName].$ModelInfo;
+
+				if (!selfMi) {
+					let evData = { elem: elem, prop: propName, modelInfo: null };
+					this.$data.$emit('Model.lazy.init', evData);
+					selfMi = evData.modelInfo; // may be changed
+				}
 
 				let mi = modelInfo.get.call(self.$data, selfMi);
 				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);

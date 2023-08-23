@@ -1596,7 +1596,7 @@ app.modules['std:modelInfo'] = function () {
 		if (mi.Filter) {
 			for (let p in mi.Filter) {
 				let fv = mi.Filter[p];
-				if (fv.call)
+				if (fv && fv.call)
 					fv = fv.call(this);
 				x[p] = fv;
 			}

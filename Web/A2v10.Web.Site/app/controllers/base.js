@@ -1260,6 +1260,12 @@
 					url = `${root}/${routing.dataUrl()}/loadlazy`,
 					selfMi = elem[propName].$ModelInfo;
 
+				if (!selfMi) {
+					let evData = { elem: elem, prop: propName, modelInfo: null };
+					this.$data.$emit('Model.lazy.init', evData);
+					selfMi = evData.modelInfo; // may be changed
+				}
+
 				let mi = modelInfo.get.call(self.$data, selfMi);
 				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);
 				let newUrl = xQuery.url + urltools.makeQueryString(mi);
