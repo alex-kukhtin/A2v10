@@ -1588,7 +1588,7 @@ app.modules['std:period'] = function () {
 
 // Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
-// 20210211-7747
+// 20210823-7842
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -1625,7 +1625,10 @@ app.modules['std:modelInfo'] = function () {
 		let x = { pageSize: mi.PageSize, offset: mi.Offset, dir: mi.SortDir, order: mi.SortOrder, group: mi.GroupBy };
 		if (mi.Filter) {
 			for (let p in mi.Filter) {
-				x[p] = mi.Filter[p];
+				let fv = mi.Filter[p];
+				if (fv.call)
+					fv = fv.call(this);
+				x[p] = fv;
 			}
 		}
 		return x;
@@ -5439,7 +5442,7 @@ template: `
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230801-7940*/
+/*20230823-7942*/
 // controllers/base.js
 
 (function () {
@@ -5863,12 +5866,12 @@ template: `
 				let url = `${root}/${routing.dataUrl()}/reload`;
 				let dat = self.$data;
 
-				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
+				let mi = args ? modelInfo.get.call(this.$data, args.$ModelInfo) : null;
 				if (!args && !mi) {
 					// try to get first $ModelInfo
 					let modInfo = this.$data._findRootModelInfo();
 					if (modInfo) {
-						mi = modelInfo.get(modInfo);
+						mi = modelInfo.get(this.$data, modInfo);
 					}
 				}
 
@@ -6697,25 +6700,11 @@ template: `
 				let self = this,
 					root = window.$$rootUrl,
 					url = `${root}/${routing.dataUrl()}/loadlazy`,
-					selfMi = elem[propName].$ModelInfo,
-					parentMi = elem.$parent.$ModelInfo;
+					selfMi = elem[propName].$ModelInfo;
 
-				// HACK. inherit filter from parent modelInfo
-				/*
-				?????
-				if (parentMi && parentMi.Filter) {
-					if (selfMi)
-						modelInfo.mergeFilter(selfMi.Filter, parentMi.Filter);
-					else
-						selfMi = parentMi;
-				}
-				*/
-
-				let mi = modelInfo.get(selfMi);
+				let mi = modelInfo.get.call(self.$data, selfMi);
 				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);
 				let newUrl = xQuery.url + urltools.makeQueryString(mi);
-				//console.dir(newUrl);
-				//let jsonData = utils.toJson({ baseUrl: urltools.replaceUrlQuery(self.$baseUrl, mi), id: elem.$id, prop: propName });
 				let jsonData = utils.toJson({ baseUrl: newUrl, id: elem.$id, prop: propName });
 
 				return new Promise(function (resolve, reject) {
