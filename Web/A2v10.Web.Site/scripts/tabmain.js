@@ -6472,7 +6472,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230801-7940
+// 20230829-7945
 // components/colorcombobox.js*/
 
 (function () {
@@ -6559,6 +6559,7 @@ Vue.component('validator-control', {
 			},
 			keydown(event) {
 				event.stopPropagation();
+				if (this.disabled) return;
 				let items = this.itemsSource;
 				switch (event.which) {
 					case 40: // down
@@ -6580,6 +6581,7 @@ Vue.component('validator-control', {
 				}
 			},
 			toggle() {
+				if (this.disabled) return;
 				if (!this.isOpen) {
 					eventBus.$emit('closeAllPopups');
 				}
@@ -12661,7 +12663,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230823-7942*/
+/*20230827-7945*/
 // controllers/base.js
 
 (function () {
@@ -13129,7 +13131,8 @@ Vue.directive('resize', {
 			async $nodirty(callback) {
 				let wasDirty = this.$data.$dirty;
 				await callback();
-				this.$defer(() => this.$data.$setDirty(wasDirty));
+				if (!this.$data) return;
+				this.$defer(() => this.$data ? this.$data.$setDirty(wasDirty) : undefined);
 			},
 			$requery(query) {
 				if (this.inDialog)

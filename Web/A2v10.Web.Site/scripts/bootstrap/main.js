@@ -5435,7 +5435,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230823-7942*/
+/*20230827-7945*/
 // controllers/base.js
 
 (function () {
@@ -5903,7 +5903,8 @@ app.modules['std:impl:array'] = function () {
 			async $nodirty(callback) {
 				let wasDirty = this.$data.$dirty;
 				await callback();
-				this.$defer(() => this.$data.$setDirty(wasDirty));
+				if (!this.$data) return;
+				this.$defer(() => this.$data ? this.$data.$setDirty(wasDirty) : undefined);
 			},
 			$requery(query) {
 				if (this.inDialog)
