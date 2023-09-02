@@ -166,6 +166,10 @@ public class ExcelReportGenerator : IDisposable
 				dataSetRows.TryGetValue(sheet.Name, out var ds);	
 				var modified = ProcessData(ds, sheetData);
 
+				foreach (var row in sheetData.Elements<Row>()) 
+				{ 
+					CorrectCellAddresses(row);
+				}
 
                 workSheet.AddChild(new IgnoredErrors(
                     new IgnoredError()
@@ -281,7 +285,7 @@ public class ExcelReportGenerator : IDisposable
 		foreach (var row in rows)
 		{
 			if (IsRowInRange(datasetRows, row.RowIndex))
-				return;
+				continue;
 			foreach (var cell in row.Elements<Cell>())
 			{
 				SetCellData(cell, _dataModel.Root);
@@ -456,17 +460,28 @@ public class ExcelReportGenerator : IDisposable
 				var sr = rd.RowsForClone[i];
 				var nr = sr.Clone() as Row;
 				nr.RowIndex = nri++;
-				CorrectCellAddresses(nr);
-				sheetData.InsertAfter<Row>(nr, lastRow);
+				var insertedRow = sheetData.InsertAfter<Row>(nr, lastRow);
+				CorrectRowIndex(insertedRow);
 				count++;
 				rd.Rows[i] = nr;
 				lastRow = nr; // the last one is already inserted
-			}
-		}
+            }
+        }
 		return lastRow;
 	}
+    void CorrectRowIndex(Row insertedRow)
+	{
+		if (insertedRow == null)
+			return;
+        var nextRow = insertedRow.NextSibling<Row>();
+		while (nextRow != null) {
+			nextRow.RowIndex += 1;
+			nextRow = nextRow.NextSibling<Row>();
+		}
+    }
 
-	void CorrectCellAddresses(Row row)
+
+    void CorrectCellAddresses(Row row)
 	{
 		foreach (var c in row.ChildElements)
 		{

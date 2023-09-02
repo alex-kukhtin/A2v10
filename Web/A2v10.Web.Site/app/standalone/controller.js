@@ -223,12 +223,12 @@
 				let url = root + '/data/reload';
 				let dat = self.$data;
 
-				let mi = args ? modelInfo.get(args.$ModelInfo) : null;
+				let mi = args ? modelInfo.get.call(this.$data, args.$ModelInfo) : null;
 				if (!args && !mi) {
 					// try to get first $ModelInfo
 					let modInfo = this.$data._findRootModelInfo();
 					if (modInfo) {
-						mi = modelInfo.get(modInfo);
+						mi = modelInfo.get.call(this.$data, modInfo);
 					}
 				}
 
@@ -321,7 +321,7 @@
 				}
 				*/
 
-				let mi = modelInfo.get(selfMi);
+				let mi = modelInfo.get.call(self.$data, selfMi);
 				let xQuery = urltools.parseUrlAndQuery(self.$baseUrl, mi);
 				let newUrl = xQuery.url + urltools.makeQueryString(mi);
 				//console.dir(newUrl);

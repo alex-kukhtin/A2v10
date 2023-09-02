@@ -12037,7 +12037,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230830-7946*/
+/*20230830-7947*/
 // controllers/base.js
 
 (function () {
@@ -12466,7 +12466,7 @@ Vue.directive('resize', {
 					// try to get first $ModelInfo
 					let modInfo = this.$data._findRootModelInfo();
 					if (modInfo) {
-						mi = modelInfo.get(this.$data, modInfo);
+						mi = modelInfo.get.call(this.$data, modInfo);
 					}
 				}
 
