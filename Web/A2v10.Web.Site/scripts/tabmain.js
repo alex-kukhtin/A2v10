@@ -11831,7 +11831,7 @@ Vue.component('a2-panel', {
 })();
 // Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230122-7918
+// 20230903-7941
 // components/tagscontrol.js*/
 
 (function () {
@@ -11848,9 +11848,9 @@ Vue.component('a2-panel', {
 		<div class="tags-placeholder" v-else v-text="placeholder"></div>
 		<div class="tags-pane" v-if=isOpen>
 			<ul class="tags-pane-items">
-				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)">
-					<span v-text="tagName(itm)" 
-						@click.stop.prevent="addTag(itm)"/>
+				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)"
+					@click.stop.prevent="addTag(itm)">
+					<span v-text="tagName(itm)"/>
 				</li>
 			</ul>
 			<div class="tags-settings" v-if="!disabled">
@@ -11882,9 +11882,9 @@ Vue.component('a2-panel', {
 		<div class="tags-placeholder" v-else v-text="placeholder"></div>
 		<div class="tags-pane" v-if=isOpen>
 			<ul class="tags-pane-items">
-				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)">
-					<span v-text="tagName(itm)" 
-						@click.stop.prevent="addTag(itm)"/>
+				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)"
+						@click.stop.prevent="addTag(itm)">
+					<span v-text="tagName(itm)"/>
 				</li>
 			</ul>
 		</div>
