@@ -84,7 +84,7 @@
 ;
 @Confirm=Підтвердження
 @ConfirmDeleteDocument=Видалити документ?
-@DocumentSaved=Документ сбережено вдало
+@DocumentSaved=Документ збережено вдало
 ;
 @Error.EnterName=Введіть назву елемента
 @Error.DuplicateCode=Елемент з таким кодом вже існує
