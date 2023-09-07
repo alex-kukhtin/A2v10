@@ -40,6 +40,8 @@ namespace A2v10.Request
 				_conentType = value;
 			}
 		}
+
+		public String FileName { get; set; }
 	}
 
 	public interface IServerCommand

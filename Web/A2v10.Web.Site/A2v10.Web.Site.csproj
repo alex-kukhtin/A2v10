@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestClr\TestFileNandler.cs" />
     <Compile Include="_Start\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -617,6 +618,14 @@
     <ProjectReference Include="..\..\..\A2v10.Speadsheet.Report\A2v10.Xaml.Speradsheet\A2v10.Xaml.Spreadsheet.csproj">
       <Project>{a63217e7-139e-4470-8500-b89225e5d6e2}</Project>
       <Name>A2v10.Xaml.Spreadsheet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj">
+      <Project>{8AB56ABE-3894-40EE-A5B7-36B57B70D1BE}</Project>
+      <Name>A2v10.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj">
+      <Project>{4ABB9B68-F32C-4262-8AFF-0AF8A1087D30}</Project>
+      <Name>A2v10.Request</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Shared\A2v10.Xaml.Bootstrap\A2v10.Xaml.Bootstrap.csproj">
       <Project>{7485b057-57b2-4cd2-8514-dc7d0184467f}</Project>
