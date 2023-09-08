@@ -2,17 +2,16 @@
 
 using System;
 
-namespace A2v10.Xaml
+namespace A2v10.Xaml;
+
+public class Separator : UIElementBase
 {
-	public class Separator : UIElementBase
+	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
-		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
-		{
-			if (SkipRender(context))
-				return;
-			new TagBuilder("div", "divider")
-				.MergeAttribute("role", "separator")
-				.Render(context);
-		}
+		if (SkipRender(context))
+			return;
+		new TagBuilder("div", "divider")
+			.MergeAttribute("role", "separator")
+			.Render(context);
 	}
 }
