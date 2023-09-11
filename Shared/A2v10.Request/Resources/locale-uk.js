@@ -71,7 +71,8 @@
 			"en-US": 'Англійська (English)',
 			"ru-RU": 'Російська (Русский)',
 			"de-DE": 'Німецька (Deutsche)',
-			"pl-PL": 'Польска (Polski)'
+			"pl-PL": 'Польска (Polski)',
+			"es-ES": 'Іспанська (Español)'
 		}
 	};
 

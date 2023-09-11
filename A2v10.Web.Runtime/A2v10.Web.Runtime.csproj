@@ -92,6 +92,7 @@
     <Content Include="App_application\%40schemas\app-json-schema.json" />
     <Content Include="localization\default.de.txt" />
     <Content Include="localization\default.en.txt" />
+    <Content Include="localization\default.es.txt" />
     <Content Include="localization\default.pl.txt" />
     <Content Include="localization\default.ru.txt" />
     <Content Include="localization\default.uk.txt" />
@@ -100,6 +101,7 @@
     <Content Include="scripts\d3.min.js" />
     <Content Include="scripts\locale-de.min.js" />
     <Content Include="scripts\locale-en.min.js" />
+    <Content Include="scripts\locale-es.min.js" />
     <Content Include="scripts\locale-pl.min.js" />
     <Content Include="scripts\locale-ru.min.js" />
     <Content Include="scripts\locale-uk.min.js" />

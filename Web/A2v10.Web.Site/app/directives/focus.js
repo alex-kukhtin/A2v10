@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 /*20190721-7507*/
 /* directives/focus.js */

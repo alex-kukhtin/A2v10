@@ -1,62 +1,68 @@
 [
-  {
-    "outputFile": "css/site.css",
-    "inputFile": "Less/Site.less",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "css/mobile.css",
-    "inputFile": "Less.Mobile/Site.Mobile.less",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "css/site.advance.css",
-    "inputFile": "Less.Advance/site.less",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "css/default.colorscheme.css",
-    "inputFile": "Less.Advance/_Default.colorscheme.less",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "css/blue.colorscheme.css",
-    "inputFile": "Less.Advance/_Blue.colorscheme.less",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "Scripts/locale-uk.min.js",
-    "inputFile": "app/localization/locale-uk.js",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "Scripts/locale-ru.min.js",
-    "inputFile": "app/localization/locale-ru.js",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "Scripts/locale-en.min.js",
-    "inputFile": "app/localization/locale-en.js",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "Scripts/locale-de.min.js",
-    "inputFile": "app/localization/locale-de.js",
-    "sourceMap": false,
-    "useNodeSass": false
-  },
-  {
-    "outputFile": "Scripts/locale-pl.min.js",
-    "inputFile": "app/localization/locale-pl.js",
-    "sourceMap": false,
-    "useNodeSass": false
-  }
+	{
+		"outputFile": "css/site.css",
+		"inputFile": "Less/Site.less",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "css/mobile.css",
+		"inputFile": "Less.Mobile/Site.Mobile.less",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "css/site.advance.css",
+		"inputFile": "Less.Advance/site.less",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "css/default.colorscheme.css",
+		"inputFile": "Less.Advance/_Default.colorscheme.less",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "css/blue.colorscheme.css",
+		"inputFile": "Less.Advance/_Blue.colorscheme.less",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "Scripts/locale-uk.min.js",
+		"inputFile": "app/localization/locale-uk.js",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "Scripts/locale-ru.min.js",
+		"inputFile": "app/localization/locale-ru.js",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "Scripts/locale-en.min.js",
+		"inputFile": "app/localization/locale-en.js",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "Scripts/locale-de.min.js",
+		"inputFile": "app/localization/locale-de.js",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "Scripts/locale-pl.min.js",
+		"inputFile": "app/localization/locale-pl.js",
+		"sourceMap": false,
+		"useNodeSass": false
+	},
+	{
+		"outputFile": "Scripts/locale-es.min.js",
+		"inputFile": "app/localization/locale-es.js",
+		"sourceMap": false,
+		"useNodeSass": false
+	}
 ]

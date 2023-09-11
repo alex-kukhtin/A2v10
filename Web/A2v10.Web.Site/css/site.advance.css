@@ -3046,6 +3046,12 @@ pre.a2-code {
   background-color: white;
   z-index: 1071;
 }
+.date-picker .input-group .month-wrapper {
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  padding: 0 5px;
+}
 .period-picker {
   cursor: pointer;
 }

@@ -139,6 +139,7 @@
     <Content Include="app\controllers\tests.js" />
     <Content Include="app\directives\pageorient.js" />
     <Content Include="app\localization\locale-de.js" />
+    <Content Include="app\localization\locale-es.js" />
     <Content Include="app\localization\locale-pl.js" />
     <Content Include="app\mobile\shell.js" />
     <Content Include="app\platform\routeplain.js" />
@@ -159,8 +160,11 @@
     <Content Include="Less.Advance\checkbox_checked.svg" />
     <Content Include="lib\microsoft-signalr\signalr.js" />
     <Content Include="lib\microsoft-signalr\signalr.min.js" />
+    <Content Include="Localization\default.es.txt" />
     <Content Include="Localization\default.pl.txt" />
+    <Content Include="Localization\es.xml" />
     <Content Include="openidconnect.txt" />
+    <Content Include="scripts\locale-es.min.js" />
     <Content Include="scripts\locale-pl.min.js" />
     <Content Include="scripts\server\validate.js" />
     <Content Include="app\services\eusign.js" />

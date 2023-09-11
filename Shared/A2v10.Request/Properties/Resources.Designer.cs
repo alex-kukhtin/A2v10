@@ -22,7 +22,7 @@ namespace A2v10.Request.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace A2v10.Request.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("A2v10.Request.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace A2v10.Request.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -72,7 +72,7 @@ namespace A2v10.Request.Properties {
         ///		&lt;div class=&quot;grid app-page&quot;&gt;
         ///			&lt;h3 class=&quot;a2-header&quot; v-text=&quot;appData.title [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string about {
+        public static string about {
             get {
                 return ResourceManager.GetString("about", resourceCulture);
             }
@@ -107,7 +107,7 @@ namespace A2v10.Request.Properties {
         ///			logoSrc() {
         ///		 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string aboutScript {
+        public static string aboutScript {
             get {
                 return ResourceManager.GetString("aboutScript", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace A2v10.Request.Properties {
         ///			hasLogo() {
         ///				return this.appData &amp;&amp; this [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string appLinkScript {
+        public static string appLinkScript {
             get {
                 return ResourceManager.GetString("appLinkScript", resourceCulture);
             }
@@ -165,7 +165,7 @@ namespace A2v10.Request.Properties {
         ///	$(AppPageScript)
         ///&lt;/script&gt;.
         /// </summary>
-        internal static string appPage {
+        public static string appPage {
             get {
                 return ResourceManager.GetString("appPage", resourceCulture);
             }
@@ -202,7 +202,7 @@ namespace A2v10.Request.Properties {
         ///			$requery() {
         ///				eventBus.$emit(&apos;r [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string appPageScript {
+        public static string appPageScript {
             get {
                 return ResourceManager.GetString("appPageScript", resourceCulture);
             }
@@ -220,7 +220,7 @@ namespace A2v10.Request.Properties {
         ///			&lt;static label=&quot;@[User]&quot; :text=&quot;User.Name&quot; style=&quot;grid-row:1&quot;&gt;&lt;/static&gt;
         ///			&lt;textbox label=&quot;@[OldPassw [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string changePassword {
+        public static string changePassword {
             get {
                 return ResourceManager.GetString("changePassword", resourceCulture);
             }
@@ -242,7 +242,7 @@ namespace A2v10.Request.Properties {
         ///			&lt;div class=&quot;control-group bold&quot; style=&quot;width:15rem;margin:0 auto;&quot;&gt;
         ///				&lt;label class=&quot;a2-label required&quot; v [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string confirmCode {
+        public static string confirmCode {
             get {
                 return ResourceManager.GetString("confirmCode", resourceCulture);
             }
@@ -277,7 +277,7 @@ namespace A2v10.Request.Properties {
         ///			appData: $(AppData),
         ///			submitted: [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string confirmCodeScript {
+        public static string confirmCodeScript {
             get {
                 return ResourceManager.GetString("confirmCodeScript", resourceCulture);
             }
@@ -296,7 +296,7 @@ namespace A2v10.Request.Properties {
         ///&lt;/div&gt;
         ///.
         /// </summary>
-        internal static string confirmEMail {
+        public static string confirmEMail {
             get {
                 return ResourceManager.GetString("confirmEMail", resourceCulture);
             }
@@ -317,7 +317,7 @@ namespace A2v10.Request.Properties {
         ///&lt;/div&gt;
         ///.
         /// </summary>
-        internal static string error {
+        public static string error {
             get {
                 return ResourceManager.GetString("error", resourceCulture);
             }
@@ -343,7 +343,7 @@ namespace A2v10.Request.Properties {
         ///
         ///&lt;script typ [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string errorDialog {
+        public static string errorDialog {
             get {
                 return ResourceManager.GetString("errorDialog", resourceCulture);
             }
@@ -363,7 +363,7 @@ namespace A2v10.Request.Properties {
         ///	&lt;/div&gt;
         ///&lt;/div&gt; [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string euSignDialog {
+        public static string euSignDialog {
             get {
                 return ResourceManager.GetString("euSignDialog", resourceCulture);
             }
@@ -384,7 +384,7 @@ namespace A2v10.Request.Properties {
         ///	&lt;script type=&quot;text/javascript&quot; src=&quot;/scripts/vue.js?v=2.5.13&quot;&gt;&lt;/script&gt;
         ///	&lt;s [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string euSignFrame {
+        public static string euSignFrame {
             get {
                 return ResourceManager.GetString("euSignFrame", resourceCulture);
             }
@@ -409,9 +409,9 @@ namespace A2v10.Request.Properties {
         ///		euSign.SetCharset(&quot;UTF-16LE&quot;);
         ///		euSign.SetXMLHTTPProxyService(URL_XML_HTTP_PROXY_SERVICE);
         ///
-        ///		var settings = euSig [rest of string was truncated]&quot;;.
+        ///		var settings  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string euSignFrameScript {
+        public static string euSignFrameScript {
             get {
                 return ResourceManager.GetString("euSignFrameScript", resourceCulture);
             }
@@ -430,35 +430,27 @@ namespace A2v10.Request.Properties {
         ///				&lt;label class=&quot;a2-label required&quot; v-text=&quot;locale.$Email&quot;&gt;&lt;/label&gt;
         ///				&lt;div clas [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string forgotPassword {
+        public static string forgotPassword {
             get {
                 return ResourceManager.GetString("forgotPassword", resourceCulture);
             }
         }
-
-		internal static string initPassword
-		{
-			get
-			{
-				return ResourceManager.GetString("initPassword", resourceCulture);
-			}
-		}
-
-		/// <summary>
-		///   Looks up a localized string similar to &lt;div class=&quot;mobile-page&quot;&gt;
-		///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
-		///	&lt;hr class=&quot;hline&quot; /&gt;
-		///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
-		///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
-		///	&lt;/div&gt;
-		///	&lt;div v-if=&quot;showConfirm&quot;&gt;
-		///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
-		///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
-		///		&lt;a tabindex=&quot;3&quot; :href=&quot;getReferUrl(&apos;/&apos;)&quot; class=&quot;a2-hyperlink block&quot; style=&quot;margin-top:1rem&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
-		///	&lt;/div&gt;
-		///	&lt;div v-else clas [rest of string was truncated]&quot;;.
-		/// </summary>
-		internal static string forgotPasswordMobile {
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;mobile-page&quot;&gt;
+        ///	&lt;h4 class=&quot;a2-header&quot; v-text=&quot;locale.$ForgotPrompt&quot;&gt;&lt;/h4&gt;
+        ///	&lt;hr class=&quot;hline&quot; /&gt;
+        ///	&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;width:390px;margin-top:10px&quot;&gt;
+        ///		&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v-if=&quot;showConfirm&quot;&gt;
+        ///		&lt;p v-text=&quot;confirmText&quot;&gt;&lt;/p&gt;
+        ///		&lt;p v-text=&quot;locale.$CheckEMail&quot;&gt;&lt;/p&gt;
+        ///		&lt;a tabindex=&quot;3&quot; :href=&quot;getReferUrl(&apos;/&apos;)&quot; class=&quot;a2-hyperlink block&quot; style=&quot;margin-top:1rem&quot; v-text=&quot;locale.$LoginLink&quot;&gt;&lt;/a&gt;
+        ///	&lt;/div&gt;
+        ///	&lt;div v-else clas [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string forgotPasswordMobile {
             get {
                 return ResourceManager.GetString("forgotPasswordMobile", resourceCulture);
             }
@@ -497,39 +489,31 @@ namespace A2v10.Request.Properties {
         ///			passwordError: &apos;&apos;,
         ///			m [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string forgotPasswordScript {
+        public static string forgotPasswordScript {
             get {
                 return ResourceManager.GetString("forgotPasswordScript", resourceCulture);
             }
         }
-
-		internal static string initPasswordScript
-		{
-			get
-			{
-				return ResourceManager.GetString("initPasswordScript", resourceCulture);
-			}
-		}
-
-		/// <summary>
-		///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
-		///&lt;!--
-		///A2v10 platform.
-		///Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
-		///Site: https://a2v10.com
-		///GitHub: https://github.com/alex-kukhtin/A2v10
-		///--&gt;
-		///&lt;html lang=&quot;$(Lang)&quot;&gt;
-		///&lt;head&gt;
-		///	$(SiteMeta)
-		///	&lt;meta charset=&quot;utf-8&quot; /&gt;
-		///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-		///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
-		///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
-		///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-		///	&lt;meta name=&quot;goo [rest of string was truncated]&quot;;.
-		/// </summary>
-		internal static string initLayout {
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
+        ///&lt;!--
+        ///A2v10 platform.
+        ///Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+        ///Site: https://a2v10.com
+        ///GitHub: https://github.com/alex-kukhtin/A2v10
+        ///--&gt;
+        ///&lt;html lang=&quot;$(Lang)&quot;&gt;
+        ///&lt;head&gt;
+        ///	$(SiteMeta)
+        ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
+        ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+        ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
+        ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
+        ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
+        ///	&lt;meta name=&quot;goo [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string initLayout {
             get {
                 return ResourceManager.GetString("initLayout", resourceCulture);
             }
@@ -553,9 +537,68 @@ namespace A2v10.Request.Properties {
         ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
         ///	&lt;meta name=&quot;goo [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string initLayoutMobile {
+        public static string initLayoutMobile {
             get {
                 return ResourceManager.GetString("initLayoutMobile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;div class=&quot;center-page&quot;&gt;
+        ///	&lt;div class=&quot;initial-form&quot;&gt;
+        ///		&lt;h3 class=&quot;a2-header text-center&quot; v-text=&quot;locale.$PasswordRecovery&quot;&gt;&lt;/h3&gt;
+        ///		&lt;hr style=&quot;margin-top:1rem&quot; /&gt;
+        ///		&lt;div v-if=&quot;serverError&quot; class=&quot;validation-summary&quot; style=&quot;margin-top:10px;white-space:normal&quot;&gt;
+        ///			&lt;span class=&quot;error&quot; v-text=&quot;serverError&quot;&gt;&lt;/span&gt;
+        ///		&lt;/div&gt;
+        ///		&lt;div class=&quot;control-group&quot; :class=&quot;{invalid: !validPassword}&quot;&gt;
+        ///			&lt;label class=&quot;a2-label required&quot; v-text=&quot;locale.$Password&quot;&gt;&lt;/label&gt;
+        ///			&lt;div class=&quot;input-group&quot;&gt;
+        ///				&lt;input class [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string initPassword {
+            get {
+                return ResourceManager.GetString("initPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+        ///
+        ///// 20221201-7910
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	const token = &apos;$(Token)&apos;;
+        ///
+        ///	$(Utils)
+        ///	$(Locale)
+        ///	$(Mask)
+        ///
+        ///	$(AvailableLocales)
+        ///
+        ///	const maskTools = maskTool();
+        ///
+        ///	const vm = new Vue({
+        ///		el: &quot;#app&quot;,
+        ///		data: {
+        ///			password: &apos;&apos;,
+        ///			confirm: &apos;&apos;,
+        ///			processing: false,
+        ///			info: $(PageData),
+        ///			appLinks: $(AppLinks),
+        ///			appData: $(AppData),
+        ///			submitted: false,
+        ///			serverError: &apos;&apos;,
+        ///			showConfirm: false,
+        ///			confirmRegis [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string initPasswordScript {
+            get {
+                return ResourceManager.GetString("initPasswordScript", resourceCulture);
             }
         }
         
@@ -563,20 +606,21 @@ namespace A2v10.Request.Properties {
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;!--
         ///A2v10 platform.
-        ///Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+        ///Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
         ///Site: https://a2v10.com
         ///GitHub: https://github.com/alex-kukhtin/A2v10
         ///--&gt;
         ///&lt;html lang=&quot;$(Locale)&quot;&gt;
         ///&lt;head&gt;
+        ///	$(SiteMeta)
         ///	&lt;meta charset=&quot;utf-8&quot; /&gt;
         ///	&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
         ///	&lt;meta name=&quot;description&quot; content=&quot;$(Description)&quot; /&gt;
         ///	&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot; /&gt;
         ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
-        ///	&lt;meta name=&quot;google&quot; content=&quot; [rest of string was truncated]&quot;;.
+        ///	&lt;meta name=&quot;goo [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string layout {
+        public static string layout {
             get {
                 return ResourceManager.GetString("layout", resourceCulture);
             }
@@ -599,7 +643,7 @@ namespace A2v10.Request.Properties {
         ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
         ///	&lt;meta name=&quot;rootUrl&quot; content=&quot;$(Roo [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string layoutAdmin {
+        public static string layoutAdmin {
             get {
                 return ResourceManager.GetString("layoutAdmin", resourceCulture);
             }
@@ -622,7 +666,7 @@ namespace A2v10.Request.Properties {
         ///	&lt;meta name=&quot;format-detection&quot; content=&quot;telephone=no&quot; /&gt;
         ///	&lt;meta name=&quot;google&quot; content [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string layoutMobile {
+        public static string layoutMobile {
             get {
                 return ResourceManager.GetString("layoutMobile", resourceCulture);
             }
@@ -654,7 +698,7 @@ namespace A2v10.Request.Properties {
         ///		$ConfirmEMailPrompt: &apos;E-mail bestätigen&apos;,
         ///		$Ve [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string locale_de {
+        public static string locale_de {
             get {
                 return ResourceManager.GetString("locale_de", resourceCulture);
             }
@@ -687,9 +731,41 @@ namespace A2v10.Request.Properties {
         ///		$Version: &apos;Version&apos;,
         ///		$Pas [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string locale_en {
+        public static string locale_en {
             get {
                 return ResourceManager.GetString("locale_en", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
+        ///
+        ///// 20210609-7782
+        ///// locale-es_RESOURCES.js
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///
+        ///	const locale = {
+        ///		$Locale: &apos;es-ES&apos;,
+        ///		$Ok: &apos;OK&apos;,
+        ///		$Cancel: &apos;Cancelar&apos;,
+        ///		$Error: &apos;Error&apos;,
+        ///		$Login: &apos;Login&apos;,
+        ///		$User: &apos;Usuario&apos;,
+        ///		$Confirm: &apos;Confirmar&apos;,
+        ///		$LoginPrompt: &apos;Entrar&apos;,
+        ///		$LoginLink: &apos;Enlace&apos;,
+        ///		$RegisterPrompt: &apos;Registrarse en el sistema&apos;,
+        ///		$ForgotPrompt: &apos;Recuperar contraseña&apos;,
+        ///		$ConfirmEMailPrompt: &apos;Confirmar email&apos;,
+        ///		$Version: &apos;V [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string locale_es {
+            get {
+                return ResourceManager.GetString("locale_es", resourceCulture);
             }
         }
         
@@ -717,7 +793,7 @@ namespace A2v10.Request.Properties {
         ///		$ConfirmEMailPrompt: &apos;Potwierdzenie e-mail&apos;,
         ///		$Version:  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string locale_pl {
+        public static string locale_pl {
             get {
                 return ResourceManager.GetString("locale_pl", resourceCulture);
             }
@@ -749,7 +825,7 @@ namespace A2v10.Request.Properties {
         ///		$ConfirmEMailPrompt: &apos;Подтверждение е-mail&apos;,
         ///		$Vers [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string locale_ru {
+        public static string locale_ru {
             get {
                 return ResourceManager.GetString("locale_ru", resourceCulture);
             }
@@ -781,7 +857,7 @@ namespace A2v10.Request.Properties {
         ///		$ConfirmEMailPrompt: &apos;Підтвердження е-mail&apos;,
         ///		$Vers [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string locale_uk {
+        public static string locale_uk {
             get {
                 return ResourceManager.GetString("locale_uk", resourceCulture);
             }
@@ -800,7 +876,7 @@ namespace A2v10.Request.Properties {
         ///			&lt;a href=&quot;/account/confirmcode&quot; v-text=&quot;locale.$IHaveCode&quot;&gt;&lt;/a&gt;
         ///			&lt;a href=&quot;&quot; @click.stop.prevent=&quot;send [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string login {
+        public static string login {
             get {
                 return ResourceManager.GetString("login", resourceCulture);
             }
@@ -821,14 +897,14 @@ namespace A2v10.Request.Properties {
         ///	&lt;form&gt;
         ///		&lt;div class=&quot;mobi [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string loginMobile {
+        public static string loginMobile {
             get {
                 return ResourceManager.GetString("loginMobile", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
         ///
         ///&quot;use strict&quot;;
         ///
@@ -859,7 +935,7 @@ namespace A2v10.Request.Properties {
         ///			hasLogo() {
         ///				return t [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string loginScript {
+        public static string loginScript {
             get {
                 return ResourceManager.GetString("loginScript", resourceCulture);
             }
@@ -895,7 +971,7 @@ namespace A2v10.Request.Properties {
         ///	function isValidChar(mask, char) {
         ///		if (mask = [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string mask {
+        public static string mask {
             get {
                 return ResourceManager.GetString("mask", resourceCulture);
             }
@@ -922,7 +998,7 @@ namespace A2v10.Request.Properties {
         ///		el.addEventListener(&quot;click&quot;, function (event) {
         ///			let t = ev [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string pageUtils {
+        public static string pageUtils {
             get {
                 return ResourceManager.GetString("pageUtils", resourceCulture);
             }
@@ -941,7 +1017,7 @@ namespace A2v10.Request.Properties {
         ///			&lt;div class=&quot;input-group&quot;&gt;
         ///				&lt;input v-focus class [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string registerTenant {
+        public static string registerTenant {
             get {
                 return ResourceManager.GetString("registerTenant", resourceCulture);
             }
@@ -980,16 +1056,16 @@ namespace A2v10.Request.Properties {
         ///			confirm: &apos;&apos;,
         ///			userLocale: window.$$locale.$Locale, /*current locale  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string registerTenantScript {
+        public static string registerTenantScript {
             get {
                 return ResourceManager.GetString("registerTenantScript", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+        ///   Looks up a localized string similar to // Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
         ///
-        ////*20210713-7795*/
+        ////*20221123-7907*/
         ///
         ///(function () {
         ///
@@ -1009,10 +1085,9 @@ namespace A2v10.Request.Properties {
         ///		components: {
         ///			&apos;a2-app-header&apos;: AppHeader,
         ///			&apos;a2-main-view&apos;: MainView
-        ///		},
-        ///	 [rest of string was truncated]&quot;;.
+        ///		 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string shell {
+        public static string shell {
             get {
                 return ResourceManager.GetString("shell", resourceCulture);
             }
@@ -1044,7 +1119,7 @@ namespace A2v10.Request.Properties {
         ///		data: {
         ///			title: menu. [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string shellAdmin {
+        public static string shellAdmin {
             get {
                 return ResourceManager.GetString("shellAdmin", resourceCulture);
             }
@@ -1081,7 +1156,7 @@ namespace A2v10.Request.Properties {
         ///			getReferUrl(url) {
         ///				return getRe [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string simpleScript {
+        public static string simpleScript {
             get {
                 return ResourceManager.GetString("simpleScript", resourceCulture);
             }
@@ -1109,7 +1184,7 @@ namespace A2v10.Request.Properties {
         ///
         ///})();.
         /// </summary>
-        internal static string standaloneDialogScript {
+        public static string standaloneDialogScript {
             get {
                 return ResourceManager.GetString("standaloneDialogScript", resourceCulture);
             }
@@ -1134,7 +1209,7 @@ namespace A2v10.Request.Properties {
         ///			padding:0;
         ///	 [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string stiReport {
+        public static string stiReport {
             get {
                 return ResourceManager.GetString("stiReport", resourceCulture);
             }
