@@ -310,7 +310,7 @@ public class BindCmd : BindBase
 				return $"$exportTo('{Format}', {CommandFileName(context)})";
 
 			case CommandType.File:
-				return $"$file({CommandUrl(context)}, {CommandArgument(context)}, {GetOptionsForFile(context)})";
+				return $"$file({CommandUrl(context)}, {CommandArgument(context)}, {GetOptionsForFile(context)}, {GetData(context)})";
 
 			case CommandType.Dialog:
 				if (Action == DialogAction.Unknown)

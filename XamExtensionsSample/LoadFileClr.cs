@@ -14,7 +14,10 @@ namespace XamExtensionsSample
         public Object Invoke(Int64 UserId, Int32 TenantId, Int64 Id, String ModelName)
         {
             var bytes = File.ReadAllBytes("c:/temp/sample.pdf");
-            return new ServerCommandResult(bytes, "application/pdf");
+            return new ServerCommandResult(bytes, "application/pdf")
+            {
+                FileName = ModelName
+            };
         }
     }
 }
