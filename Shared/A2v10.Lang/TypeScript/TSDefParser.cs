@@ -44,11 +44,9 @@ namespace A2v10.Lang
 
 		public ModelMetadata Parse(String fileName)
 		{
-			using (var sr = new StreamReader(GetFileStream(fileName)))
-			{
-				_tok = new Tokenizer(sr);
-				return Parse();
-			}
+			using var sr = new StreamReader(GetFileStream(fileName));
+			_tok = new Tokenizer(sr);
+			return Parse();
 		}
 
 		Stream GetFileStream(String fileName)
@@ -150,7 +148,7 @@ namespace A2v10.Lang
 
 		void ReadImport()
 		{
-			List<String> types = new List<String>();
+			List<String> types = new();
 			ReadLeftCurly();
 			while (!_tok.IsRightCurly && !_tok.IsEOF)
 			{

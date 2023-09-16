@@ -70,7 +70,7 @@ public partial class BaseController
 	{
 		var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 		// [{source}].[{schema}].[{base}.{key}.Load]
-		ExpandoObject prms = new ExpandoObject();
+		ExpandoObject prms = new();
 		setParams?.Invoke(prms);
 		String key = rm.ModelAction.ToPascalCase();
 		prms.Set("Id", rm._id);
@@ -90,7 +90,7 @@ public partial class BaseController
 	{
 		var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
 		// [{source}].[{schema}].[{base}.{key}.LoadSignature]
-		ExpandoObject prms = new ExpandoObject();
+		ExpandoObject prms = new();
 		setParams?.Invoke(prms);
 		String key = rm.ModelAction.ToPascalCase();
 		prms.Set("Id", rm._id);
@@ -113,13 +113,13 @@ public partial class BaseController
 	public async Task<IList<AttachmentUpdateIdToken>> SaveAttachments(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
 	{
 		var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
-		ExpandoObject prms = new ExpandoObject();
+		ExpandoObject prms = new();
 		String key = rm.ModelAction.ToPascalCase();
 		String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
 
 		rm.ImageSettings.TryGetValue(key, out var imageSettings);
 
-		AttachmentUpdateInfo ii = new AttachmentUpdateInfo
+		AttachmentUpdateInfo ii = new()
 		{
 			UserId = userId,
 			Id = rm._id,
@@ -151,10 +151,10 @@ public partial class BaseController
 	public async Task<IList<AttachmentUpdateIdToken>> SaveAttachmentsMime(Int32 tenantId, String pathInfo, HttpFileCollectionBase files, Int64 userId, Int64 companyId)
 	{
 		var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
-		ExpandoObject prms = new ExpandoObject();
+		ExpandoObject prms = new();
 		String key = rm.ModelAction.ToPascalCase();
 		String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
-		AttachmentUpdateInfo ii = new AttachmentUpdateInfo
+		AttachmentUpdateInfo ii = new()
 		{
 			UserId = userId,
 			Id = rm._id,
@@ -188,10 +188,10 @@ public partial class BaseController
 		if (factor < 0 || factor > 100)
 			throw new ArgumentOutOfRangeException(nameof(factor), $"Invalid factor value: {factor}. Expected [0..100]");
 		var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
-		ExpandoObject prms = new ExpandoObject();
+		ExpandoObject prms = new();
 		String key = rm.ModelAction.ToPascalCase();
 		String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
-		AttachmentUpdateInfo ii = new AttachmentUpdateInfo
+		var ii = new AttachmentUpdateInfo
 		{
 			UserId = userId,
 			Id = rm._id,
@@ -225,10 +225,10 @@ public partial class BaseController
 		if (factor < 0 || factor > 100)
 			throw new ArgumentOutOfRangeException(nameof(factor), $"Invalid factor value: {factor}. Expected [0..100]");
 		var rm = await RequestModel.CreateFromBaseUrl(_host, pathInfo);
-		ExpandoObject prms = new ExpandoObject();
+		ExpandoObject prms = new();
 		String key = rm.ModelAction.ToPascalCase();
 		String procedure = $"[{rm.schema}].[{rm.model}.{key}.Update]";
-		AttachmentUpdateInfo ii = new AttachmentUpdateInfo
+		AttachmentUpdateInfo ii = new()
 		{
 			UserId = userId,
 			Id = rm._id,
@@ -292,7 +292,7 @@ public partial class BaseController
 		if (factor == 100)
 			return stream;
 		var jpegEncoder = GetJpegEncoder();
-		using (Bitmap bmp = new Bitmap(stream))
+		using (Bitmap bmp = new(stream))
 		{
 			var ms = new MemoryStream();
 			var qualEncoder = Encoder.Quality;

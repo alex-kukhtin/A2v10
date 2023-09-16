@@ -92,9 +92,8 @@ namespace BackgroundProcessor
 			if (String.IsNullOrEmpty(source))
 				source = "Default";
 
-			var strSet = ConfigurationManager.ConnectionStrings[source];
-			if (strSet == null)
-				throw new ConfigurationErrorsException($"Connection string '{source}' not found");
+			var strSet = ConfigurationManager.ConnectionStrings[source] 
+				?? throw new ConfigurationErrorsException($"Connection string '{source}' not found");
 			return strSet.ConnectionString;
 		}
 

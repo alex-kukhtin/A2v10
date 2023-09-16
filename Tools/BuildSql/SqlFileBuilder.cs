@@ -68,8 +68,7 @@ namespace BuildSql
 			}
 			finally
 			{
-				if (fw != null)
-					fw.Close();
+				fw?.Close();
 			}
 		}
 
@@ -102,7 +101,6 @@ namespace BuildSql
 			Console.WriteLine($"Version: {item.version}");
 			String msg = $"/*{nl}version: {item.version}{nl}generated: {DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss")}{nl}*/";
 			writer.WriteLine(msg);
-
 			if (!String.IsNullOrEmpty(item.name))
 			{
 				var numVersion = item.NumVersion;

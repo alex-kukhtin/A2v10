@@ -23,7 +23,7 @@ public static class ViewInfoExtensions
 
 			String layoutScriptPath = HostingEnvironment.MapPath($"{appPath}{appKey}/{viewInfo.Path}/{fileName}.js");
 
-			StringBuilder scriptText = new StringBuilder(File.ReadAllText(layoutScriptPath));
+			StringBuilder scriptText = new(File.ReadAllText(layoutScriptPath));
 			scriptText.Replace("$(PageId)", viewInfo.PageId);
 			scriptText.Replace("$(DataModel)", viewInfo?.Scripts?.DataScript);
 			scriptText.Replace("$(BaseUrl)", viewInfo.BaseUrl);

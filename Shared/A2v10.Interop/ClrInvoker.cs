@@ -66,7 +66,7 @@ namespace A2v10.Interop
 			var mtdParams = method.GetParameters();
 			var prmsD = parameters as IDictionary<String, Object>;
 
-			List<Object> parsToCall = new List<Object>();
+			List<Object> parsToCall = new();
 
 			for (Int32 i = 0; i < mtdParams.Length; i++)
 			{
@@ -113,9 +113,8 @@ namespace A2v10.Interop
 		async Task<Object> CallInvokeAsync(Object instance, ExpandoObject parameters, Guid? guid)
 		{
 			var type = instance.GetType();
-			var method = type.GetMethod("InvokeAsync", BindingFlags.Public | BindingFlags.Instance);
-			if (method == null)
-				throw new InteropException($"Method: 'InvokeAsync' is not found in type '{type.FullName}'");
+			var method = type.GetMethod("InvokeAsync", BindingFlags.Public | BindingFlags.Instance) 
+				?? throw new InteropException($"Method: 'InvokeAsync' is not found in type '{type.FullName}'");
 			var parsToCall = GetParameters(method, parameters, guid);
 			return await (Task<Object>) method.Invoke(instance, parsToCall);
 		}
@@ -123,9 +122,8 @@ namespace A2v10.Interop
 		Object CallInvoke(Object instance, ExpandoObject parameters, Guid? guid)
 		{
 			var type = instance.GetType();
-			var method = type.GetMethod("Invoke", BindingFlags.Public | BindingFlags.Instance);
-			if (method == null)
-				throw new InteropException($"Method: 'Invoke' is not found in type '{type.FullName}'");
+			var method = type.GetMethod("Invoke", BindingFlags.Public | BindingFlags.Instance) 
+				?? throw new InteropException($"Method: 'Invoke' is not found in type '{type.FullName}'");
 			var parsToCall = GetParameters(method, parameters, guid);
 			return method.Invoke(instance, parsToCall);
 		}
@@ -145,7 +143,7 @@ namespace A2v10.Interop
 					ex = ex.InnerException;
 				throw new InteropException($"Could not create type '{type}'. exception: '{ex.Message}'");
 			}
-			if (!(instance is IInvokeTarget))
+			if (instance is not IInvokeTarget)
 			{
 				throw new InteropException($"The type: '{type}' must implement interface 'IInvokeTarget'");
 			}
@@ -176,8 +174,7 @@ namespace A2v10.Interop
 		{
 			var type = instance.GetType();
 			var miEnableThrow = type.GetMethod("EnableThrow", BindingFlags.Public | BindingFlags.Instance);
-			if (miEnableThrow != null)
-				miEnableThrow.Invoke(instance, null);
+			miEnableThrow?.Invoke(instance, null);
 		}
 
 		public void EnableThrow()

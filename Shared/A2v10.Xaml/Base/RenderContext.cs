@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Linq;
@@ -9,13 +9,13 @@ using A2v10.Infrastructure;
 
 namespace A2v10.Xaml;
 
-public struct GridRowCol
+public readonly struct GridRowCol
 {
-	private Int32? _row;
-	private Int32? _col;
-	private Int32? _rowSpan;
-	private Int32? _colSpan;
-	private AlignItem? _vAlign;
+	private readonly Int32? _row;
+	private readonly Int32? _col;
+	private readonly Int32? _rowSpan;
+	private readonly Int32? _colSpan;
+	private readonly AlignItem? _vAlign;
 
 	public GridRowCol(Int32? row, Int32? col, Int32? rowSpan, Int32? colSpan, AlignItem? vAlign)
 	{
@@ -69,7 +69,7 @@ public struct GridRowCol
 
 public sealed class GridContext : IDisposable
 {
-	RenderContext _renderContext;
+	private readonly RenderContext _renderContext;
 
 	public GridContext(RenderContext renderContext, GridRowCol rowCol)
 	{
@@ -87,7 +87,7 @@ public sealed class GridContext : IDisposable
 
 public sealed class ScopeContext : IDisposable
 {
-	RenderContext _renderContext;
+	private readonly RenderContext _renderContext;
 	public ScopeContext(RenderContext context, String scope, String path, Func<String, String> replace = null)
 	{
 		_renderContext = context;
@@ -100,7 +100,7 @@ public sealed class ScopeContext : IDisposable
 	}
 }
 
-internal struct ScopeElem
+internal readonly struct ScopeElem
 {
 	public readonly String Scope;
 	public readonly String Path;
@@ -123,15 +123,15 @@ public class RenderContext
 
 	public Boolean IsDebugConfiguration { get; }
 
-	private Stack<GridRowCol> _stackGrid = new Stack<GridRowCol>();
-	private Stack<ScopeElem> _stackScope = new Stack<ScopeElem>();
+	private readonly Stack<GridRowCol> _stackGrid = new();
+	private readonly Stack<ScopeElem> _stackScope = new();
 
-	readonly private IXamlElement _root;
+	private readonly IXamlElement _root;
 	private readonly IDataModel _dataModel;
 	private readonly ILocalizer _localizer;
 	private readonly ITypeChecker _typeChecker;
 
-	readonly private String _currentLocale;
+	private readonly String _currentLocale;
 
 	public RenderContext(IXamlElement root, RenderInfo ri)
 	{
@@ -229,13 +229,11 @@ public class RenderContext
 	internal String GetNormalizedPath(String path, Boolean isWrapped = false)
 	{
 		// check for invert
-		if (path == null)
-			path = String.Empty;
+		path ??= String.Empty;
 		if (path.StartsWith("!"))
 			return "!" + GetNormalizedPathInternal(path.Substring(1));
 
-		if (_typeChecker != null)
-			_typeChecker.CheckXamlExpression(GetExpressionForChecker(path));
+		_typeChecker?.CheckXamlExpression(GetExpressionForChecker(path));
 
 		return GetNormalizedPathInternal(path, isWrapped);
 	}
@@ -243,8 +241,7 @@ public class RenderContext
 	internal String GetTypedNormalizedPath(String path, TypeCheckerTypeCode typeCode, Boolean isWrapped = false)
 	{
 		// check for invert
-		if (path == null)
-			path = String.Empty;
+		path ??= String.Empty;
 		if (path.StartsWith("!"))
 			return "!" + GetNormalizedPathInternal(path.Substring(1));
 

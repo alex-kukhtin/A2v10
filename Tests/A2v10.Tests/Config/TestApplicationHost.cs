@@ -26,8 +26,7 @@ namespace A2v10.Tests.Config
 		{
 			if (String.IsNullOrEmpty(source))
 				source = "Default";
-			var cnnStr = ConfigurationManager.ConnectionStrings[source];
-			if (cnnStr == null)
+			var cnnStr = ConfigurationManager.ConnectionStrings[source] ??
 				throw new ConfigurationErrorsException($"Connection string '{source}' not found");
 			return cnnStr.ConnectionString;
 		}
@@ -112,11 +111,9 @@ namespace A2v10.Tests.Config
 		}
 
 
-#pragma warning disable CA1065
 		public String AppVersion => throw new NotSupportedException();
 		public String AppBuild => throw new NotSupportedException();
 		public String Copyright => throw new NotSupportedException();
-#pragma warning restore CA1065
 
 		public String GetAppSettings(String source)
 		{

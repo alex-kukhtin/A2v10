@@ -65,9 +65,8 @@ namespace BackgroundProcessor
 		public Stream FileStreamFullPathRO(String fullPath)
 		{
 			fullPath = fullPath.Replace('\\', '/').ToLowerInvariant();
-			var appStream = _dbContext.Load<AppStream>(_source, "a2sys.[LoadApplicationFile]", new { Path = fullPath });
-			if (appStream == null)
-				throw new FileNotFoundException($"file not found: {fullPath}");
+			var appStream = _dbContext.Load<AppStream>(_source, "a2sys.[LoadApplicationFile]", new { Path = fullPath }) 
+				?? throw new FileNotFoundException($"file not found: {fullPath}");
 			return new MemoryStream(Encoding.UTF8.GetBytes(appStream.Stream), writable:false);
 		}
 
@@ -79,18 +78,16 @@ namespace BackgroundProcessor
 		public String ReadTextFile(String path, String fileName)
 		{
 			String fullPath = CheckPath(Path.Combine(path, fileName));
-			var appStream = _dbContext.Load<AppStream>(_source, "a2sys.LoadApplicationFile", new { Path = fullPath });
-			if (appStream == null)
-				throw new FileNotFoundException($"file not found: {fullPath}");
+			var appStream = _dbContext.Load<AppStream>(_source, "a2sys.LoadApplicationFile", new { Path = fullPath }) 
+				?? throw new FileNotFoundException($"file not found: {fullPath}");
 			return appStream.Stream;
 		}
 
 		public async Task<String> ReadTextFileAsync(String path, String fileName)
 		{
 			String fullPath = CheckPath(Path.Combine(path, fileName));
-			var appStream = await _dbContext.LoadAsync<AppStream>(_source, "a2sys.LoadApplicationFile", new { Path = fullPath });
-			if (appStream == null)
-				throw new FileNotFoundException($"file not found: {fullPath}");
+			var appStream = await _dbContext.LoadAsync<AppStream>(_source, "a2sys.LoadApplicationFile", new { Path = fullPath })
+				?? throw new FileNotFoundException($"file not found: {fullPath}");
 			return appStream.Stream;
 		}
 

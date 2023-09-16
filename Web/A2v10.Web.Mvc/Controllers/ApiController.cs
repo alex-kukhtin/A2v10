@@ -50,7 +50,7 @@ namespace A2v10.Web.Mvc.Controllers
 	[AllowAnonymous]
 	public class ApiController : Controller, IControllerTenant
 	{
-		private readonly A2v10.Request.BaseController _baseController = new BaseController();
+		private readonly A2v10.Request.BaseController _baseController = new();
 		private readonly ILogger _logger;
 		private readonly IDbContext _dbContext;
 
@@ -192,7 +192,7 @@ namespace A2v10.Web.Mvc.Controllers
 			}
 			if (!String.IsNullOrEmpty(wrapper))
 			{
-				ExpandoObject wrap = new ExpandoObject();
+				ExpandoObject wrap = new();
 				wrap.Set(wrapper, dataToInvoke);
 				dataToInvoke = wrap;
 			}
@@ -208,7 +208,7 @@ namespace A2v10.Web.Mvc.Controllers
 			if (!appReader.FileExists(htmlPath))
 				throw new FileNotFoundException($"File not found '{fullPath}'");
 			Response.ContentType = MimeMapping.GetMimeMapping(htmlPath);
-			StringBuilder sb = new StringBuilder(appReader.FileReadAllText(htmlPath));
+			StringBuilder sb = new (appReader.FileReadAllText(htmlPath));
 			String serverUrl = Request.Url.GetLeftPart(UriPartial.Authority);
 			sb.Replace("$(ServerUrl)", serverUrl);
 			Response.Write(sb.ToString());
@@ -284,11 +284,10 @@ namespace A2v10.Web.Mvc.Controllers
 					_logger.LogApi($"request: {json}", Request.UserHostAddress, apiGuid);
 				}
 				ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
-				if (dataToInvoke == null)
-					dataToInvoke = new ExpandoObject();
+				dataToInvoke ??= new ExpandoObject();
 				if (!String.IsNullOrEmpty(ac.wrapper))
 				{
-					ExpandoObject wrap = new ExpandoObject();
+					ExpandoObject wrap = new();
 					wrap.Set(ac.wrapper, dataToInvoke);
 					dataToInvoke = wrap;
 				}

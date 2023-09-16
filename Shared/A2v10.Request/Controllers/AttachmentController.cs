@@ -15,7 +15,7 @@ namespace A2v10.Request
 {
 	public class AttachmentController
 	{
-		private readonly BaseController _baseController = new BaseController();
+		private readonly BaseController _baseController = new();
 
 
 		public IApplicationHost Host => _baseController.Host;
@@ -46,9 +46,8 @@ namespace A2v10.Request
 			try
 			{
 				var url = $"/_attachment{Base}/{id}";
-				var ai = await _baseController.DownloadAttachment(url, setParams, suffix);
-				if (ai == null)
-					throw new RequestModelException($"Attachment not found. (Id:{id})");
+				var ai = await _baseController.DownloadAttachment(url, setParams, suffix) 
+					?? throw new RequestModelException($"Attachment not found. (Id:{id})");
 				if (!_baseController.IsTokenValid(Response, ai.Token, token))
 					return;
 				Response.ContentType = ai.Mime;
@@ -75,10 +74,8 @@ namespace A2v10.Request
 			try
 			{
 				var url = $"/_attachment{Base}/{id}";
-				var ai = await _baseController.DownloadAttachment(url, setParams, suffix);
-				if (ai == null)
-					throw new RequestModelException($"Attachment not found. (Id:{id})");
-
+				var ai = await _baseController.DownloadAttachment(url, setParams, suffix) 
+					?? throw new RequestModelException($"Attachment not found. (Id:{id})");
 				if (!_baseController.IsTokenValid(Response, ai.Token, token))
 					return;
 
@@ -115,10 +112,8 @@ namespace A2v10.Request
 			try
 			{
 				var url = $"/_attachment{Base}/{id}";
-				var si = await _baseController.DownloadSignature(url, setParams);
-				if (si == null)
-					throw new RequestModelException($"Signature not found. (Id:{id})");
-
+				var si = await _baseController.DownloadSignature(url, setParams) 
+					?? throw new RequestModelException($"Signature not found. (Id:{id})");
 				Response.ContentType = "application/octet-stream";
 				Response.BinaryWrite(si.Stream);
 			}

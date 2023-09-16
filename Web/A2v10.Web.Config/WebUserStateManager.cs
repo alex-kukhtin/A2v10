@@ -44,7 +44,7 @@ namespace A2v10.Web.Config
 		{
 			if (userId == 0)
 				return false;
-			if (!(HttpContext.Current.Session[_sessionKey] is UserState userState))
+			if (HttpContext.Current.Session[_sessionKey] is not UserState userState)
 				userState = SetUserState(userId);
 			return userState.ReadOnly;
 		}
@@ -60,7 +60,7 @@ namespace A2v10.Web.Config
 				return 0;
 			if (UserId == 0)
 				throw new InvalidOperationException(nameof(UserCompanyId));
-			if (!(HttpContext.Current.Session[_userCompanyKey] is UserCompany userCompany))
+			if (HttpContext.Current.Session[_userCompanyKey] is not UserCompany userCompany)
 				userCompany = SetUserCompany(TenantId, UserId);
 			return userCompany.CompanyId;
 		}

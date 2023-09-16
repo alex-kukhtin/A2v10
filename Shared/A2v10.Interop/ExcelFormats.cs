@@ -8,7 +8,7 @@ namespace A2v10.Interop
 	public class ExcelFormats
 	{
 		//// https://msdn.microsoft.com/en-GB/library/documentformat.openxml.spreadsheet.numberingformat(v=office.14).aspx
-		private static readonly Dictionary<UInt32, String> DateFormatDictionary = new Dictionary<UInt32, String>()
+		private static readonly Dictionary<UInt32, String> DateFormatDictionary = new()
 		{
 			[14] = "dd/MM/yyyy",
 			[15] = "d-MMM-yy",
@@ -55,7 +55,7 @@ namespace A2v10.Interop
 			[187] = "d-MMM-yyyy"
 		};
 
-		private static readonly Dictionary<UInt32, String> NumberFormatDictionary = new Dictionary<UInt32, String>()
+		private static readonly Dictionary<UInt32, String> NumberFormatDictionary = new ()
 		{
 			[0] = "General",
 			[1] = "0",

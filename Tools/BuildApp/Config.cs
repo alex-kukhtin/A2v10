@@ -10,11 +10,11 @@ namespace BuildApp
 	public class Config
 	{
 		[JsonIgnore]
-		HashSet<String> _skipExtension = new HashSet<String>();
+		readonly HashSet<String> _skipExtension = new HashSet<String>();
 		[JsonIgnore]
-		HashSet<String> _skipDirectories = new HashSet<String>();
+		readonly HashSet<String> _skipDirectories = new HashSet<String>();
 		[JsonIgnore]
-		HashSet<String> _skipFiles = new HashSet<String>();
+		readonly HashSet<String> _skipFiles = new HashSet<String>();
 
 		[JsonProperty("outputDir")]
 		public String OutputDir { get; set; }

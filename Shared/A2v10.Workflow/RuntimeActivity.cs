@@ -42,7 +42,7 @@ namespace A2v10.Workflow
 			String activityNamespace = String.Join(".", activityName.Split('.').Reverse().Skip(1).Reverse());
 
 			// Create a TextExpressionCompilerSettings.  
-			TextExpressionCompilerSettings settings = new TextExpressionCompilerSettings
+			TextExpressionCompilerSettings settings = new()
 			{
 				Activity = dynamicActivity,
 				Language = "C#",

@@ -21,7 +21,7 @@ namespace A2v10.Workflow
 	{
 		private WorkflowApplication _application;
 		private static TimeSpan _wfTimeSpan = TimeSpan.FromSeconds(30);
-		private ManualResetEvent _endEvent = new ManualResetEvent(false);
+		private readonly ManualResetEvent _endEvent = new(false);
 		private const Int32 RUNNABLE_INSTANCES_DETECTION_PERIOD = 10;
 
 		private StateMachineStateTracker _tracker;
@@ -40,8 +40,7 @@ namespace A2v10.Workflow
 		protected virtual void Dispose(Boolean disposing)
 		{
 			var ee = _endEvent;
-			if (ee != null)
-				ee.Dispose();
+			ee?.Dispose();
 		}
 
 		public static async Task<WorkflowResult> StartWorkflow(IApplicationHost host, IDbContext dbContext, IMessaging messaging, StartWorkflowInfo info)
@@ -139,9 +138,8 @@ namespace A2v10.Workflow
 			};
 			try
 			{
-				InboxInfo inbox = await InboxInfo.Load(dbContext, info.Id, info.UserId);
-				if (inbox == null)
-					throw new WorkflowException("The task is already done by another user");
+				InboxInfo inbox = await InboxInfo.Load(dbContext, info.Id, info.UserId) 
+					?? throw new WorkflowException("The task is already done by another user");
 				using (profiler.CurrentRequest.Start(ProfileAction.Workflow, $"Load '{inbox.Kind}'"))
 				{
 					result.ProcessId = inbox.ProcessId;
@@ -192,7 +190,7 @@ namespace A2v10.Workflow
 		public static WorkflowResult AutoStart(Int64 processId, IApplicationHost host, IDbContext dbContext, IMessaging messaging, ILogger logger)
 		{
 			var p = dbContext.Load<Process>(null, "a2workflow.[ProcessStart.Load]", new { Id = processId });
-			StartWorkflowInfo info = new StartWorkflowInfo()
+			StartWorkflowInfo info = new()
 			{
 				ProcessId = p.Id,
 				UserId = 0, // System
@@ -208,8 +206,7 @@ namespace A2v10.Workflow
 
 		internal void Track(TrackingRecord record)
 		{
-			if (_trackingRecords == null)
-				_trackingRecords = new List<TrackInfo>();
+			_trackingRecords ??= new List<TrackInfo>();
 			var ti = new TrackInfo(record);
 			if (_tracker != null)
 			{

@@ -148,9 +148,10 @@
 @IHaveCode=Ich habe einen Bestätigungscode
 @AvailableLocales={"uk-UA": "Ukrainisch","ru-RU": "Russisch","en-US": "Englisch","de-DE": "Deutsche", "es-ES": "Spanisch"}
 ;
-@CloseTabsRight=Close tabs to the right
-@CloseOtherTabs=Close other tabs
-@ReopenClosedTab=Reopen closed tab
-@CloseAllTabs=Close all tabs
-@OpenTabs=Open tabs
-@RecentlyClosedTabs=Recently closed
+@CloseTabsRight=Tabs auf der rechten Seite schließen
+@CloseOtherTabs=Andere Tabs schließen
+@ReopenClosedTab=Geschlossenes Tab wieder öffnen
+@CloseAllTabs=Alle Tabs schließen
+@OpenTabs=Tabs öffnen
+@RecentlyClosedTabs=Kürzlich geschlossene Tabs
+;

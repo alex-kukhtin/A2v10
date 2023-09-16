@@ -49,8 +49,7 @@ namespace A2v10.Workflow
 		{
 			get
 			{
-				if (_dbContext == null)
-					_dbContext = ServiceLocator.Current.GetService<IDbContext>();
+				_dbContext ??= ServiceLocator.Current.GetService<IDbContext>();
 				return _dbContext;
 			}
 			set
@@ -117,7 +116,7 @@ namespace A2v10.Workflow
 			if (_model != null)
 				return _model;
 			String proc = $"[{this.Schema}].[{this.ModelName}.Load]";
-			ExpandoObject loadPrms = new ExpandoObject();
+			ExpandoObject loadPrms = new();
 			loadPrms.Set("Id", ModelId);
 			loadPrms.Set("UserId", 0L);
 			_model = DbContext.LoadModel(this.DataSource, proc, loadPrms);

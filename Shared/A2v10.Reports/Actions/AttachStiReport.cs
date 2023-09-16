@@ -37,7 +37,7 @@ public class AttachStiReport : AttachReportBase, IInvokeTarget
 			{
 				String repName = await _reportHelper.ExportDocumentAsync(stream, dm, ms);
 				ms.Seek(0, SeekOrigin.Begin);
-				AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
+				AttachmentUpdateInfo ai = new()
 				{
 					UserId = UserId,
 					TenantId = TenantId,
@@ -50,9 +50,8 @@ public class AttachStiReport : AttachReportBase, IInvokeTarget
 				if (String.IsNullOrEmpty(ai.Name))
 					ai.Name = "Attachment";
 				var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>
-					(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai);
-				if (aout == null)
-					throw new InvalidOperationException($"'[{Schema}].[{Model}.SaveAttachment]' procedure did not return result");
+					(String.Empty, $"[{Schema}].[{Model}.SaveAttachment]", ai) 
+					?? throw new InvalidOperationException($"'[{Schema}].[{Model}.SaveAttachment]' procedure did not return result");
 				return new { aout.Id, Token =_tokenProvider.GenerateToken(aout.Token) };
 			}
 		}

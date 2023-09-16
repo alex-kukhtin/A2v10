@@ -56,8 +56,8 @@ namespace A2v10.BackgroundTasks
 		public IApplicationHost Host { get; }
 		public IMessaging Messaging { get; }
 
-		readonly Object _lockTasks = new Object();
-		List<TaskItem> _tasksToExecute = new List<TaskItem>();
+		readonly Object _lockTasks = new();
+		private readonly List<TaskItem> _tasksToExecute = new();
 		Boolean _disposed = false;
 
 		public void Dispose()

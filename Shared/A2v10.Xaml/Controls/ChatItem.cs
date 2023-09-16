@@ -13,7 +13,7 @@ namespace A2v10.Xaml
 		public String Time { get; set; }
 		public String User { get; set; }
 
-		Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
+		private readonly Lazy<UIElementCollection> _addOns = new();
 
 		public UIElementCollection AddOns { get { return _addOns.Value; } }
 
@@ -33,7 +33,7 @@ namespace A2v10.Xaml
 			RenderAddOns(context);
 			h.RenderEnd(context);
 
-			TagBuilder cont = new TagBuilder("span", "chat-body");
+			TagBuilder cont = new("span", "chat-body");
 			var contBind = GetBinding(nameof(Content));
 			if (contBind != null)
 				cont.MergeAttribute("v-text", contBind.GetPathFormat(context));

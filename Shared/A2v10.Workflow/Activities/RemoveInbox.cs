@@ -15,7 +15,7 @@ namespace A2v10.Workflow
 		{
 			IDbContext dbContext = context.GetExtension<IDbContext>();
 			Int64 id = InboxId.Get(context);
-			InboxInfo ii = new InboxInfo()
+			InboxInfo ii = new()
 			{
 				Id = id
 			};

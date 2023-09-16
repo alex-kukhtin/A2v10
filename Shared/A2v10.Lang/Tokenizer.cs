@@ -49,7 +49,7 @@ namespace A2v10.Lang
 		const Char NULLCHAR = '\0';
 		private readonly StreamReader _reader;
 		Char _backward = NULLCHAR;
-		Token _tok = new Token();
+		private readonly Token _tok = new();
 
 		public Tokenizer(StreamReader reader)
 		{

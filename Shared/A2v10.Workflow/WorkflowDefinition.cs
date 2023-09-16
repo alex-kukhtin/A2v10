@@ -113,7 +113,7 @@ internal class WorkflowDefinition
 	{
 		HashAlgorithm algorithm = MD5.Create();
 		var hash = algorithm.ComputeHash(Encoding.UTF8.GetBytes(Definition));
-		StringBuilder sb = new StringBuilder(Name);
+		StringBuilder sb = new(Name);
 		sb.Append("_");
 		foreach (Byte b in hash)
 		{
@@ -130,12 +130,10 @@ internal class WorkflowDefinition
 	{
 		if (Type != WorkflowType.Definition)
 			throw new InvalidOperationException("Invalid WorkflowDefinition type. Expected 'WorkflowType.Definition'");
-		using (var sr = new StringReader(Definition))
-		{
-			Activity root = ActivityXamlServices.Load(sr) as Activity;
-			Cached = RuntimeActivity.Compile(GetHashedName(), root);
-			return root;
-		}
+		using var sr = new StringReader(Definition);
+		Activity root = ActivityXamlServices.Load(sr) as Activity;
+		Cached = RuntimeActivity.Compile(GetHashedName(), root);
+		return root;
 	}
 
 	public Activity LoadFromSource(IApplicationHost host, IDbContext dbContext)
@@ -143,17 +141,13 @@ internal class WorkflowDefinition
 		if (Type == WorkflowType.File)
 		{
 			String fullPath = GetWorkflowFullPath(host);
-			using (var sr = new StreamReader(fullPath))
-			{
-				Definition = sr.ReadToEnd();
-				sr.BaseStream.Seek(0, SeekOrigin.Begin);
-				using (var xr = ActivityXamlServices.CreateReader(sr.BaseStream))
-				{
-					var root = ActivityXamlServices.Load(xr);
-					RuntimeActivity.Compile(GetHashedName(), root);
-					return root;
-				}
-			}
+			using var sr = new StreamReader(fullPath);
+			Definition = sr.ReadToEnd();
+			sr.BaseStream.Seek(0, SeekOrigin.Begin);
+			using var xr = ActivityXamlServices.CreateReader(sr.BaseStream);
+			var root = ActivityXamlServices.Load(xr);
+			RuntimeActivity.Compile(GetHashedName(), root);
+			return root;
 		}
 		else if  (Type ==WorkflowType.Db)
 		{
@@ -163,12 +157,10 @@ internal class WorkflowDefinition
 			if (appStream.Stream == null)
 				throw new WorkflowException($"There is no definition for '{fullPath}'");
 			Definition = appStream.Stream;
-			using (var sr = new StringReader(appStream.Stream))
-			{
-				Activity root = ActivityXamlServices.Load(sr) as Activity;
-				Cached = RuntimeActivity.Compile(GetHashedName(), root);
-				return root;
-			}
+			using var sr = new StringReader(appStream.Stream);
+			Activity root = ActivityXamlServices.Load(sr) as Activity;
+			Cached = RuntimeActivity.Compile(GetHashedName(), root);
+			return root;
 		}
 		else if (Type == WorkflowType.ClrType)
 		{
@@ -176,16 +168,14 @@ internal class WorkflowDefinition
 		}
 		else if (Type == WorkflowType.Definition)
 		{
-			using (var sr = new StringReader(Definition))
-			{
-				Activity root = ActivityXamlServices.Load(sr) as Activity;
-				Cached = RuntimeActivity.Compile(GetHashedName(), root);
-				return root;
-			}
+			using var sr = new StringReader(Definition);
+			Activity root = ActivityXamlServices.Load(sr) as Activity;
+			Cached = RuntimeActivity.Compile(GetHashedName(), root);
+			return root;
 		}
 		else
 		{
-			throw new NotImplementedException($"WorkflowDefinition. Invalid WorkflowType. Type={Type.ToString()}");
+			throw new NotImplementedException($"WorkflowDefinition. Invalid WorkflowType. Type={Type}");
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace A2v10.BackgroundTasks
 {
 	public class BackgroundTasksHost
 	{
-		readonly Object _lock = new Object();
+		readonly Object _lock = new();
 		Boolean _stopProgress = false;
 
 		public BackgroundTasksHost()

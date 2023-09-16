@@ -39,7 +39,7 @@ namespace A2v10.Reports.Actions
 						throw new InvalidProgramException("There are no bytes to save");
 					using (var ms = new MemoryStream(bytes))
 					{
-						AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
+						AttachmentUpdateInfo ai = new()
 						{
 							UserId = UserId,
 							TenantId = TenantId,

@@ -17,7 +17,7 @@ namespace A2v10.Messaging
 	{
 		public static Attachment CreateAttachment(Stream stream, String displayName, ContentType contentType)
 		{
-			Attachment attachment = new Attachment(stream, contentType);
+			Attachment attachment = new(stream, contentType);
 
 			String tranferEncodingMarker = "B";
 			String encodingMarker = "UTF-8";

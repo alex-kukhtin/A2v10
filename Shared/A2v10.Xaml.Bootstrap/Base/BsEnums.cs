@@ -44,7 +44,7 @@ namespace A2v10.Xaml.Bootstrap
 
 		String ToClass()
 		{
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new();
 			sb.Append(ToClassInt(Default, String.Empty))
 			.Append(ToClassInt(Small, "-sm"))
 			.Append(ToClassInt(Medium, "-md"))

@@ -63,7 +63,7 @@ public class ExCell
 			return String.Empty;
 		if (DateTime.TryParseExact(text, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dt))
 		{
-			DateTime oaBaseDate = new DateTime(1899, 12, 30);
+			DateTime oaBaseDate = new(1899, 12, 30);
 			return oaBaseDate.Add(dt.TimeOfDay).ToOADate().ToString(CultureInfo.InvariantCulture);
 		}
 		throw new InteropException($"Invalid time {text}");

@@ -31,10 +31,8 @@ public class AttachPdfReport : AttachReportBase, IInvokeTarget
 
 		var url = $"/_report/{Base.RemoveHeadSlash()}/{Report}/{Id}";
 		var repInfo = await RequestModel.CreateFromBaseUrl(_host, url);
-		var rqRep = repInfo.GetReport();
-		if (rqRep == null)
-			throw new FileNotFoundException($"Report not found:{Report}");
-
+		var rqRep = repInfo.GetReport() 
+			?? throw new FileNotFoundException($"Report not found:{Report}");
 		var prms = rqRep.parameters.Clone();
 		prms.Add("UserId", UserId);
 		prms.Add("Id", Id);
@@ -47,7 +45,7 @@ public class AttachPdfReport : AttachReportBase, IInvokeTarget
 		var sr = CreateStream(dm, repPath);
 		using var stream = sr.Stream;
 		using var repStream = _reportHelper.Build(sr.Path, stream, dm.Root);
-		AttachmentUpdateInfo ai = new AttachmentUpdateInfo()
+		AttachmentUpdateInfo ai = new()
 		{
 			UserId = UserId,
 			TenantId = TenantId == 0 ? null : TenantId,
@@ -60,10 +58,8 @@ public class AttachPdfReport : AttachReportBase, IInvokeTarget
 		if (String.IsNullOrEmpty(ai.Name))
 			ai.Name = "Attachment";
 		var saveProc = rqRep.ReportProcedure.Replace(".Report", ".SaveAttachment");
-		var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>
-			(String.Empty, saveProc, ai);
-		if (aout == null)
-			throw new InvalidOperationException($"'{saveProc}' procedure did not return result");
+		var aout = await _dbContext.ExecuteAndLoadAsync<AttachmentUpdateInfo, AttachmentUpdateOutput>(String.Empty, saveProc, ai) 
+			?? throw new InvalidOperationException($"'{saveProc}' procedure did not return result");
 		return new { aout.Id, Token = _tokenProvider.GenerateToken(aout.Token) };
 	}
 }
