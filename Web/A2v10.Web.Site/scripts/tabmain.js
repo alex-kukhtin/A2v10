@@ -6861,7 +6861,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
 
-/*20230613-7937*/
+/*20230613-7948*/
 // components/selector.js
 
 (function selector_component() {
@@ -6928,6 +6928,7 @@ Vue.component('validator-control', {
 			placement: String,
 			caret: Boolean,
 			hasClear: Boolean,
+			useAll: Boolean,
 			mode: String,
 			fetchCommand: String,
 			fetchCommandData: Object,
@@ -6968,6 +6969,7 @@ Vue.component('validator-control', {
 				if (!to) return false;
 				if (utils.isDefined(to.$isEmpty))
 					return !to.$isEmpty;
+				if (this.useAll && to.Id === -1) return false;
 				return !utils.isPlainObjectEmpty(to);
 			},
 			hasText() { return !!this.textProp; },
@@ -7166,6 +7168,12 @@ Vue.component('validator-control', {
 				this.isOpen = false;
 				this.isOpenNew = false;
 				let obj = this.item[this.prop];
+				if (!obj) return;
+				if (this.useAll) {
+					obj.Id = -1;
+					obj.Name = '';
+					return;
+				} 
 				if (obj.$empty)
 					obj.$empty();
 				else if (utils.isObjectExact(obj))
