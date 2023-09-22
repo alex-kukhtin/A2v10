@@ -168,7 +168,7 @@
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230915-7947
+// 20230922-7948
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -961,7 +961,7 @@ app.modules['std:utils'] = function () {
 
 	function currencyRound(n, digits) {
 		if (isNaN(n))
-			return Nan;
+			return NaN;
 		if (!isDefined(digits))
 			digits = 2;
 		let m = false;
