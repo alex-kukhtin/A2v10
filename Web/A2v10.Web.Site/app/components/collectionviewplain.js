@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230518-7933
+// 20230922-7948
 // components/collectionviewplain.js
 
 /*
@@ -313,15 +313,20 @@ TODO:
 				if (this.persistentFilter && this.persistentFilter.length) {
 					let parentProp = this.ItemsSource._path_;
 					let propIx = parentProp.lastIndexOf('.');
-					parentProp = parentProp.substring(propIx + 1);
-					for (let topElem of this.ItemsSource.$parent.$parent) {
-						if (!topElem[parentProp].$ModelInfo)
-							topElem[parentProp].$ModelInfo = mi;
+					let propTop = parentProp.indexOf('[]');
+					let lastProp = parentProp.substring(propIx + 1);
+					let firstProp = parentProp.substring(0, propTop);
+					for (let topElem of this.$root[firstProp].$allItems()) {
+						if (!topElem[lastProp].$ModelInfo)
+							topElem[lastProp].$ModelInfo = mi;
 						else {
 							for (let pp of this.persistentFilter) {
-								if (!utils.isEqual(topElem[parentProp].$ModelInfo.Filter[pp], this.filter[pp])) {
-									topElem[parentProp].$ModelInfo.Filter[pp] = this.filter[pp];
-									topElem[parentProp].$loaded = false;
+								let te = topElem[lastProp];
+								if (!utils.isEqual(te.$ModelInfo.Filter[pp], this.filter[pp])) {
+									te.$ModelInfo.Filter[pp] = this.filter[pp];
+									if (te.$loaded)
+										te.$empty();
+									te.$loaded = false;
 								}
 							}
 						}

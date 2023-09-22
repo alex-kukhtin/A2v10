@@ -1568,7 +1568,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230807-7941*/
+/*20230922-7948*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -1619,6 +1619,16 @@ app.modules['std:impl:array'] = function () {
 			}
 			return null;
 		}
+
+		/* generator */
+		arr.$allItems = function* () {
+			for (let i = 0; i < this.length; i++) {
+				let el = this[i];
+				yield el;
+				if ('$items' in el)
+					yield* el.$items.$allItems();
+			}
+		};
 
 		arr.$sort = function (compare) {
 			this.sort(compare);
