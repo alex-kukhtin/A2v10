@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7947 */
+/* Version 10.0.7948 */
 
 declare function require(url: string): any;
 
@@ -114,6 +114,7 @@ interface IElementArray<T> extends Array<T> {
 	$renumberRows(): IElementArray<T>;
 	$copy(src: any[]): IElementArray<T>;
 	$sum(fn: (item: T) => number): number;
+	$allItems(): Generator<T>;
 }
 
 interface IRoot extends IElement {
