@@ -110,7 +110,11 @@ public class ExcelReportGenerator : IDisposable
 	{
 		var result = new Dictionary<String, Dictionary<String, RowSetDef>>();
 
-		foreach (var defName in workbook?.DefinedNames?.Elements<DefinedName>())
+		var defNames = workbook?.DefinedNames?.Elements<DefinedName>();
+		if (defNames == null)
+			return result;
+
+        foreach (var defName in defNames)
 		{
 			var df = GetDefinedName(defName);
 			if (df == null)

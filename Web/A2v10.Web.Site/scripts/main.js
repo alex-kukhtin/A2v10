@@ -8461,9 +8461,9 @@ Vue.component('popover', {
 	}
 });
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20220627-7853*/
+/*20230924-7948*/
 // components/treeview.js
 
 (function () {
@@ -8506,7 +8506,7 @@ Vue.component('popover', {
 			getHref: Function,
 			doubleclick: Function
 		},
-		data() { 
+		data() {
 			return {
 				_toggling: false
 			};
@@ -8554,7 +8554,7 @@ Vue.component('popover', {
 			expandItem(val) {
 				platform.set(this.item, '$expanded', val);
 			},
-			openElem: function() {
+			openElem: function () {
 				if (!this.isFolder)
 					return;
 				this.expandItem(true);
@@ -8639,7 +8639,7 @@ Vue.component('popover', {
 		},
 		created() {
 			if (this.options.initialExpand)
-			platform.set(this.item, '$expanded', true);
+				platform.set(this.item, '$expanded', true);
 		}
 	};
 
