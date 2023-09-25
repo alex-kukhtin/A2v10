@@ -198,7 +198,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230915-7947
+// 20230922-7948
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -991,7 +991,7 @@ app.modules['std:utils'] = function () {
 
 	function currencyRound(n, digits) {
 		if (isNaN(n))
-			return Nan;
+			return NaN;
 		if (!isDefined(digits))
 			digits = 2;
 		let m = false;
@@ -2406,7 +2406,7 @@ app.modules['std:validators'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230807-7941*/
+/*20230922-7948*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2457,6 +2457,16 @@ app.modules['std:impl:array'] = function () {
 			}
 			return null;
 		}
+
+		/* generator */
+		arr.$allItems = function* () {
+			for (let i = 0; i < this.length; i++) {
+				let el = this[i];
+				yield el;
+				if ('$items' in el)
+					yield* el.$items.$allItems();
+			}
+		};
 
 		arr.$sort = function (compare) {
 			this.sort(compare);
@@ -8207,9 +8217,9 @@ Vue.component('popover', {
 	}
 });
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20220627-7853*/
+/*20230924-7948*/
 // components/treeview.js
 
 (function () {
@@ -8252,7 +8262,7 @@ Vue.component('popover', {
 			getHref: Function,
 			doubleclick: Function
 		},
-		data() { 
+		data() {
 			return {
 				_toggling: false
 			};
@@ -8300,7 +8310,7 @@ Vue.component('popover', {
 			expandItem(val) {
 				platform.set(this.item, '$expanded', val);
 			},
-			openElem: function() {
+			openElem: function () {
 				if (!this.isFolder)
 					return;
 				this.expandItem(true);
@@ -8385,7 +8395,7 @@ Vue.component('popover', {
 		},
 		created() {
 			if (this.options.initialExpand)
-			platform.set(this.item, '$expanded', true);
+				platform.set(this.item, '$expanded', true);
 		}
 	};
 
