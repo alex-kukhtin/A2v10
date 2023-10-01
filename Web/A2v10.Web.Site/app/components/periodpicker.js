@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230705-7939
+// 20231001-7949
 // components/periodpicker.js
 
 
@@ -20,7 +20,7 @@
 	Vue.component('a2-period-picker', {
 		extends: baseControl,
 		template: `
-<div class="control-group period-picker" @click.stop.prevent="toggle($event)" :class="{open: isOpen}">
+<div class="control-group period-picker" @click.stop.prevent="toggle($event)" :class="{open: isOpen, disabled: disabled}">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/></label>
 	<div class="input-group">
 		<span class="period-text" v-text="text" :class="inputClass" :tabindex="tabIndex"/>
@@ -194,6 +194,7 @@
 				if (!this.isOpen) {
 					// close other popups
 					eventBus.$emit('closeAllPopups');
+					if (this.disabled) return;
 					this.modelDate = this.period.To; // TODO: calc start month
 					if (this.modelDate.isZero() || this.modelDate.getTime() === du.maxDate.getTime())
 						this.modelDate = du.today();

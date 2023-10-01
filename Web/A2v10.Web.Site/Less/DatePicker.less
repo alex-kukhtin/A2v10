@@ -176,6 +176,10 @@
 .period-picker {
 	cursor: pointer;
 
+	&.disabled {
+		cursor: default;
+	}
+
 	.period-text {
 		padding: 0 0 0 5px;
 		line-height: @control-height;
@@ -191,7 +195,7 @@
 	}
 
 	.caret {
-		margin:.9em .6em .5em .5em;
+		margin: .9em .6em .5em .5em;
 	}
 
 	.period-menu {
@@ -237,20 +241,23 @@
 	}
 
 	.custom-period {
-		display:inline-flex;
-		align-items:baseline;
-		padding-right:.8em;
+		display: inline-flex;
+		align-items: baseline;
+		padding-right: .8em;
+
 		span {
-			padding:0 .3em;
+			padding: 0 .3em;
 		}
+
 		input {
-			padding:0.3em;
-			border:1px solid #ddd;
-			text-align:center;
+			padding: 0.3em;
+			border: 1px solid #ddd;
+			text-align: center;
 		}
+
 		.focus {
 			input {
-				border-color:@link-color;
+				border-color: @link-color;
 			}
 		}
 	}

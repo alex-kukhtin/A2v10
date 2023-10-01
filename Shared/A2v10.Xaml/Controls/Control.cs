@@ -22,7 +22,7 @@ namespace A2v10.Xaml
 		public UIElement Link { get; set; }
 		public ControlSize Size { get; set; }
 
-		readonly Lazy<UIElementCollection> _addOns = new Lazy<UIElementCollection>();
+		readonly Lazy<UIElementCollection> _addOns = new();
 
 		public UIElementCollection AddOns { get { return _addOns.Value; } }
 
@@ -49,10 +49,7 @@ namespace A2v10.Xaml
 			MergeBindingAttributeString(tag, context, "label", nameof(Label), Label);
 			MergeBindingAttributeString(tag, context, "description", nameof(Description), Description);
 			MergeBoolAttribute(tag, context, nameof(Required), Required);
-			if (Validator != null)
-			{
-				Validator.MergeAttributes(tag);
-			}
+			Validator?.MergeAttributes(tag);
 		}
 
 		protected void RenderAddOns(RenderContext context)

@@ -3055,6 +3055,9 @@ pre.a2-code {
 .period-picker {
   cursor: pointer;
 }
+.period-picker.disabled {
+  cursor: default;
+}
 .period-picker .period-text {
   padding: 0 0 0 5px;
   line-height: 2em;
