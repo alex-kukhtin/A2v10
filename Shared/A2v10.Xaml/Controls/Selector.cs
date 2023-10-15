@@ -47,7 +47,10 @@ public class Selector : ValuedControl, ITableControl
 		onRender?.Invoke(input);
 		if (!String.IsNullOrEmpty(Delegate))
 			input.MergeAttribute(":fetch", $"$delegate('{Delegate}')");
-		if (!String.IsNullOrEmpty(Fetch))
+		var fetchBind = GetBinding(nameof(Fetch));
+		if (fetchBind != null)
+            input.MergeAttribute(":fetch-command", fetchBind.GetPathFormat(context));
+        else if (!String.IsNullOrEmpty(Fetch))
 			input.MergeAttribute("fetch-command", Fetch);
 		if (!String.IsNullOrEmpty(SetDelegate))
 			input.MergeAttribute(":hitfunc", $"$delegate('{SetDelegate}')");

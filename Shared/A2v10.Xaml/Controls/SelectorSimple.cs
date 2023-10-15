@@ -10,6 +10,8 @@ public class SelectorSimple : Selector
 	public String Url { get; set; }
 	public String Data { get; set; }
 
+	public Action<RenderContext> _renderAction = null;
+
 	protected override void OnEndInit()
 	{
 		base.OnEndInit();
@@ -17,15 +19,27 @@ public class SelectorSimple : Selector
 		if (String.IsNullOrEmpty(DisplayProperty))
 			DisplayProperty = "Name";
 
-		Fetch = $"{Url}/fetch";
-		var hlink = new Hyperlink()
+		var urlBind = GetBinding(nameof(Url));
+        var cmd = new BindCmd()
+        {
+            Command = CommandType.Browse,
+        };
+        if (urlBind != null)
+		{
+			_renderAction = (ctx) =>
+			{
+				this.BindImpl.SetBinding(nameof(Fetch), new Bind() { Path = $"{urlBind.GetPathFormat(ctx)} + '/fetch'" });
+				cmd.BindImpl.SetBinding(nameof(Url), new Bind() { Path = $"{urlBind.GetPathFormat(ctx)} + '/browse'" });
+			};
+		}
+		else
+		{
+			Fetch = $"{Url}/fetch";
+			cmd.Url = $"{Url}/browse";
+		}
+        var hlink = new Hyperlink()
 		{
 			Icon = Icon.Search,
-		};
-		var cmd = new BindCmd()
-		{
-			Command = CommandType.Browse,
-			Url = $"{Url}/browse",
 		};
 		var val = this.GetBinding(nameof(Value));
 		if (val != null)
@@ -39,4 +53,10 @@ public class SelectorSimple : Selector
 		hlink.BindImpl.SetBinding("Command", cmd);
 		AddOns.Insert(0, hlink);
 	}
+
+    public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+    {
+		_renderAction?.Invoke(context);
+        base.RenderElement(context, onRender);
+    }
 }
