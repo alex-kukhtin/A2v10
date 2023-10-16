@@ -143,9 +143,9 @@ app.modules['std:locale'] = function () {
 
 
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20200722-7691*/
+/*20231005-7950*/
 /* platform/webvue.js */
 
 (function () {
@@ -1926,9 +1926,9 @@ app.modules['std:barcode'] = function () {
 	}
 };
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
 
-// 20221124-7907
+// 20231005-7950
 /* platform/routex.js */
 
 (function () {
@@ -2087,11 +2087,16 @@ app.modules['std:barcode'] = function () {
 		return replaceUrlSearch(url, urlTools.makeQueryString(query));
 	}
 
+	function replaceBrowseUrl(newUrl) {
+		window.history.replaceState(null, null, newUrl);
+	}
+
 	store.parseQueryString = urlTools.parseQueryString;
 	store.makeQueryString = urlTools.makeQueryString;
 	store.replaceUrlSearch = replaceUrlSearch;
 	store.replaceUrlQuery = replaceUrlQuery;
 	store.makeBackUrl = makeBackUrl;
+	store.replaceBrowseUrl = replaceBrowseUrl;
 
 	app.components['std:store'] = store;
 })();
@@ -5445,7 +5450,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-/*20230915-7947*/
+/*20231005-7950*/
 // controllers/base.js
 
 (function () {
@@ -5886,7 +5891,7 @@ app.modules['std:impl:array'] = function () {
 						// special element -> use url
 						dataToQuery.baseUrl = urltools.replaceUrlQuery(self.$baseUrl, dat.Query);
 						let newUrl = urltools.replaceUrlQuery(null/*current*/, dat.Query);
-						window.history.replaceState(null, null, newUrl);
+						store.replaceBrowseUrl(newUrl);
 					}
 					let jsonData = utils.toJson(dataToQuery);
 					dataservice.post(url, jsonData).then(function (data) {

@@ -5100,7 +5100,7 @@ table.hover > tbody > tr.active:hover {
 }
 .a2-table > thead > tr > td,
 .a2-table > tfoot > tr > td {
-  padding: 0 6px;
+  padding: 8px 6px;
   background-color: #f5f5f5;
   border-color: var(--neutralBkDarker);
 }
