@@ -1,4 +1,4 @@
-﻿// Copyright © 2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Reflection;
@@ -49,7 +49,7 @@ public class Components : MarkupExtension
 			return null;
 		var dict = new ComponentDictionary();
 		foreach (var path in Pathes.Split(','))
-			dict.Append(LoadOneFile(appReader, basePath, path));
+			dict.Append(LoadOneFile(appReader, basePath, path.Trim()));
 		return dict;
 	}
 
