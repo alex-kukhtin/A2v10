@@ -1,12 +1,12 @@
 ﻿/*
 ------------------------------------------------
-Copyright © 2008-2022 Alex Kukhtin
+Copyright © 2008-2023 Oleksandr Kukhtin
 
-Last updated : 01 dec 2022
-module version : 7910
+Last updated : 04 nov 2023
+module version : 7911
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7910;
+exec a2sys.SetVersion N'std:security', 7911;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1338,8 +1338,7 @@ begin
 	when matched then update set
 		[Name]=s.[Name]
 	when not matched by target then insert 
-		(Code, [Name]) values (s.Code, s.[Name])
-	when not matched by source then delete;
+		(Code, [Name]) values (s.Code, s.[Name]);
 end
 go
 ------------------------------------------------
