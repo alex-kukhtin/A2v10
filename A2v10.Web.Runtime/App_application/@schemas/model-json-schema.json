@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7939",
+	"$version": "10.0.7951",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -86,6 +86,10 @@
 						},
 						"parameters": { "type": "object" },
 						"permissions": { "$ref": "#/definitions/permissions" },
+						"roles": {
+							"type": "array",
+							"items": { "type": "string" }
+						},
 						"scripts": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -133,7 +137,11 @@
 						},
 						"twoPhase": { "type": "boolean" },
 						"parameters": { "type": "object" },
-						"permissions": { "$ref": "#/definitions/permissions" }
+						"permissions": { "$ref": "#/definitions/permissions" },
+						"roles": {
+							"type": "array",
+							"items": { "type": "string" }
+						}
 					},
 					"additionalProperties": false
 				}
@@ -155,7 +163,11 @@
 						"processDbEvents": { "type": "boolean" },
 						"commandTimeout": { "type": "number" },
 						"parameters": { "type": "object" },
-						"permissions": { "$ref": "#/definitions/permissions" }
+						"permissions": { "$ref": "#/definitions/permissions" },
+						"roles": {
+							"type": "array",
+							"items": { "type": "string" }
+						}
 					},
 					"additionalProperties": false
 				}
@@ -221,6 +233,10 @@
 						"debugOnly": { "type": "boolean" },
 						"permissions": {
 							"$ref": "#/definitions/permissions"
+						},
+						"roles": {
+							"type": "array",
+							"items": { "type": "string" }
 						}
 					},
 					"additionalProperties": false
@@ -323,7 +339,7 @@
 					"type": "object",
 					"properties": {
 						"quality": { "type": "number" },
-						"threshold": { "type": "number" },
+						"threshold": { "type": "number" }
 					},
 					"additionalProperties": false
 				}
