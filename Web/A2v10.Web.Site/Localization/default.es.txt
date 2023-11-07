@@ -123,6 +123,7 @@
 @PasswordLength=la contraseña debe tener al menos 6 caracteres
 @InvalidLoginError=correo electrónico o contraseña no válidos
 @InvalidEMailError=Dirección de correo electrónico no válida
+@InvalidOldPassword=La contraseña antigua es incorrecta
 @UserLockuotError=El usuario está bloqueado. Inténtelo de nuevo en unos minutos.
 @EmailNotConfirmed=Su correo electrónico aún no ha sido confirmado.
 @AntiForgery=No se ha podido procesar la solicitud, actualice la página e inténtelo de nuevo.

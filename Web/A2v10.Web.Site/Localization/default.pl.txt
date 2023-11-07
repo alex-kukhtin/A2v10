@@ -123,6 +123,7 @@
 @PasswordLength=Hasło musi mieć co najmniej 6 znaków
 @InvalidLoginError=Nieprawidłowy e-mail lub hasło
 @InvalidEMailError=Nieprawidłowy email
+@InvalidOldPassword=Błędne stare hasło
 @UserLockuotError=Użytkownik został zablokowany.\nSpróbuj ponownie za kilka minut
 @EmailNotConfirmed=Twój e-mail nie został jeszcze zweryfikowany. (może e-mail trafił do spamu?)
 @AntiForgery=Nie można przetworzyć żądania.\nOdśwież stronę i spróbuj ponownie.\nMoże Twoja przeglądarka nie zezwala na pliki cookie?
