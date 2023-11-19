@@ -28,7 +28,7 @@ namespace A2v10.Workflow
 
     internal class WorkflowTracker : TrackingParticipant
     {
-        AppWorkflow _workflow;
+        readonly AppWorkflow _workflow;
         public WorkflowTracker(AppWorkflow workflow)
         {
             _workflow = workflow;

@@ -20,7 +20,7 @@ namespace A2v10.Tests
 	public class DatabaseTest
 	{
 
-		IDbContext _dbContext;
+		readonly IDbContext _dbContext;
 		readonly IDataScripter _scripter;
 		public DatabaseTest()
 		{

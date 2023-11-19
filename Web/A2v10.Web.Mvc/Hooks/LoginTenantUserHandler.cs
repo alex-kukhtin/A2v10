@@ -43,7 +43,7 @@ namespace A2v10.Web.Mvc.Hooks
 			if (user == null)
 				return Fail("User not found");
 			var dp = _dataProtectionProvider.Create("ExternalLogin");
-			var data = Encoding.UTF8.GetBytes($"{id.ToUpperInvariant().ToString()}\b{DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture)}");
+			var data = Encoding.UTF8.GetBytes($"{id.ToUpperInvariant()}\b{DateTime.UtcNow.ToString("o", CultureInfo.InvariantCulture)}");
 			var protect = dp.Protect(data);
 			var token = Base64UrlEncoder.Encode(protect);
 			var url = $"{_context.Request.Uri.Authority}/account/loginext?token={token}";

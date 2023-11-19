@@ -45,7 +45,7 @@ namespace A2v10.Xaml
 			if (Vert == Horz)
 				return Vert.ToString();
 			else
-				return $"{Vert.ToString()} {Horz.ToString()}";
+				return $"{Vert} {Horz}";
 		}
 	}
 

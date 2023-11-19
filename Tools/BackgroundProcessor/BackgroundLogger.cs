@@ -23,7 +23,7 @@ namespace BackgroundProcessor
 
 		public void LogMessaging(LogEntry entry)
 		{
-			Console.WriteLine($"{DateTime.Now.ToString("dd.MM.yyyy HH.mm.ss")} {entry.Message}");
+			Console.WriteLine($"{DateTime.Now:dd.MM.yyyy HH.mm.ss} {entry.Message}");
 		}
 
 		public void LogSecurity(LogEntry enry)

@@ -8,7 +8,7 @@ namespace A2v10.Javascript;
 
 public class ScriptConfig
 {
-	IApplicationHost _host;
+	readonly IApplicationHost _host;
 
 	public ScriptConfig(IApplicationHost host)
 	{

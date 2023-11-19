@@ -14,7 +14,7 @@ namespace A2v10.Tests
 	[TestCategory("DataModel")]
 	public class DataModelTest
 	{
-		IDbContext _dbContext;
+		readonly IDbContext _dbContext;
 		readonly IDataScripter _scripter;
 		public DataModelTest()
 		{

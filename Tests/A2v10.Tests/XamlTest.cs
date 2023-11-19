@@ -7,67 +7,66 @@ using A2v10.Infrastructure;
 using A2v10.Tests.Config;
 using A2v10.Xaml;
 
-namespace A2v10.Tests.Xaml
+namespace A2v10.Tests.Xaml;
+
+[TestClass]
+[TestCategory("Xaml")]
+public class XamlTest
 {
-	[TestClass]
-	[TestCategory("Xaml")]
-	public class XamlTest
+
+	readonly IRenderer _renderer;
+	public XamlTest()
 	{
+		TestConfig.Start();
+		_renderer = ServiceLocator.Current.GetService<IRenderer>();
+	}
 
-		IRenderer _renderer;
-		public XamlTest()
+	[TestMethod]
+	public void SimpleRender()
+	{
+		var ri = new RenderInfo
 		{
-			TestConfig.Start();
-			_renderer = ServiceLocator.Current.GetService<IRenderer>();
+			RootId = Guid.NewGuid().ToString()
+		};
+		using (var sv = new StringWriter())
+		{
+			ri.Writer = sv;
+			Assert.ThrowsException<XamlException>(() => _renderer.Render(ri));
 		}
+	}
 
-		[TestMethod]
-		public void SimpleRender()
+	String Render(String text)
+	{
+		var ri = new RenderInfo
 		{
-			var ri = new RenderInfo
-			{
-				RootId = Guid.NewGuid().ToString()
-			};
-			using (var sv = new StringWriter())
-			{
-				ri.Writer = sv;
-				Assert.ThrowsException<XamlException>(() => _renderer.Render(ri));
-			}
-		}
-
-		String Render(String text)
+			RootId = Guid.NewGuid().ToString()
+		};
+		using (var sv = new StringWriter())
 		{
-			var ri = new RenderInfo
-			{
-				RootId = Guid.NewGuid().ToString()
-			};
-			using (var sv = new StringWriter())
-			{
-				ri.Writer = sv;
-				_renderer.Render(ri);
-				return sv.ToString();
-			}
+			ri.Writer = sv;
+			_renderer.Render(ri);
+			return sv.ToString();
 		}
-		[TestMethod]
-		public void LengthUnits()
-		{
-			var l = Length.FromString("100px");
-			Assert.IsTrue(l.Value == "100px");
-			l = Length.FromString("100");
-			Assert.IsTrue(l.Value == "100px");
-			l = Length.FromString("10vh");
-			Assert.IsTrue(l.Value == "10vh");
-			l = Length.FromString("10vw");
-			Assert.IsTrue(l.Value == "10vw");
-			l = Length.FromString("50%");
-			Assert.IsTrue(l.Value == "50%");
-			l = Length.FromString("5em");
-			Assert.IsTrue(l.Value == "5em");
-			l = Length.FromString("10rem");
-			Assert.IsTrue(l.Value == "10rem");
-			l = Length.FromString("6em");
-			Assert.IsTrue(l.Value == "6em");
-			Assert.ThrowsException<XamlException>(() => Length.FromString("1fr"));
-		}
+	}
+	[TestMethod]
+	public void LengthUnits()
+	{
+		var l = Length.FromString("100px");
+		Assert.IsTrue(l.Value == "100px");
+		l = Length.FromString("100");
+		Assert.IsTrue(l.Value == "100px");
+		l = Length.FromString("10vh");
+		Assert.IsTrue(l.Value == "10vh");
+		l = Length.FromString("10vw");
+		Assert.IsTrue(l.Value == "10vw");
+		l = Length.FromString("50%");
+		Assert.IsTrue(l.Value == "50%");
+		l = Length.FromString("5em");
+		Assert.IsTrue(l.Value == "5em");
+		l = Length.FromString("10rem");
+		Assert.IsTrue(l.Value == "10rem");
+		l = Length.FromString("6em");
+		Assert.IsTrue(l.Value == "6em");
+		Assert.ThrowsException<XamlException>(() => Length.FromString("1fr"));
 	}
 }

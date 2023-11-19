@@ -1,4 +1,4 @@
-﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -14,7 +14,7 @@ namespace BuildApp
 
 		public Int32 Count { get; private set; }
 
-		Config _config;
+		readonly Config _config;
 
 		public AppFilesProcessor(String dir)
 		{

@@ -11,7 +11,7 @@ namespace A2v10.Request
 {
 	public class StartProcessCommand : IServerCommand
 	{
-		IWorkflowEngine _workflowEngine;
+		readonly IWorkflowEngine _workflowEngine;
 		public StartProcessCommand(IWorkflowEngine engine)
 		{
 			_workflowEngine = engine ?? throw new ArgumentNullException($"Service 'IWorkflowEngine' not registered");
@@ -42,7 +42,7 @@ namespace A2v10.Request
 
 	public class ResumeProcessCommand : IServerCommand
 	{
-		IWorkflowEngine _workflowEngine;
+		readonly IWorkflowEngine _workflowEngine;
 		public ResumeProcessCommand(IWorkflowEngine engine)
 		{
 			_workflowEngine = engine ?? throw new ArgumentNullException($"Service 'IWorkflowEngine' not registered");

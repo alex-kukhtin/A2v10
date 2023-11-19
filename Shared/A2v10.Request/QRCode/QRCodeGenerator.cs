@@ -88,7 +88,7 @@ namespace A2v10.Request.QRCode
 
 
 			//Interleave code words
-			StringBuilder interleavedWordsSb = new StringBuilder();
+			StringBuilder interleavedWordsSb = new();
 			for (int i = 0; i < Math.Max(eccInfo.CodewordsInGroup1, eccInfo.CodewordsInGroup2); i++)
 			{
 				foreach (var codeBlock in codeWordWithECC)
@@ -108,8 +108,8 @@ namespace A2v10.Request.QRCode
 
 
 			//Place interleaved data on module matrix
-			QRCodeData qr = new QRCodeData(version);
-			List<Rectangle> blockedModules = new List<Rectangle>();
+			QRCodeData qr = new(version);
+			List<Rectangle> blockedModules = new();
 			ModulePlacer.PlaceFinderPatterns(ref qr, ref blockedModules);
 			ModulePlacer.ReserveSeperatorAreas(qr.ModuleMatrix.Count, ref blockedModules);
 			ModulePlacer.PlaceAlignmentPatterns(ref qr, alignmentPatternTable.Where(x => x.Version == version).Select(x => x.PatternPositions).First(), ref blockedModules);
@@ -140,7 +140,7 @@ namespace A2v10.Request.QRCode
 			var fStrEcc = fStr.PadRight(15, '0').TrimStart('0');
 			while (fStrEcc.Length > 10)
 			{
-				StringBuilder sb = new StringBuilder();
+				StringBuilder sb = new();
 				generator = generator.PadRight(fStrEcc.Length, '0');
 				for (int i = 0; i < fStrEcc.Length; i++)
 					sb.Append((Convert.ToInt32(fStrEcc[i]) ^ Convert.ToInt32(generator[i])).ToString());
@@ -149,7 +149,7 @@ namespace A2v10.Request.QRCode
 			fStrEcc = fStrEcc.PadLeft(10, '0');
 			fStr += fStrEcc;
 
-			StringBuilder sbMask = new StringBuilder();
+			StringBuilder sbMask = new();
 			for (int i = 0; i < fStr.Length; i++)
 				sbMask.Append((Convert.ToInt32(fStr[i]) ^ Convert.ToInt32(fStrMask[i])).ToString());
 			return sbMask.ToString();
@@ -189,7 +189,7 @@ namespace A2v10.Request.QRCode
 				for (int i = 4; i < qrCode.ModuleMatrix.Count - 4; i++)
 				{
 					bool[] quietPart = new bool[4] { false, false, false, false };
-					List<bool> tmpLine = new List<bool>(quietPart);
+					List<bool> tmpLine = new(quietPart);
 					foreach (bool module in qrCode.ModuleMatrix[i])
 						tmpLine.Add(module);
 					tmpLine.AddRange(quietPart);
@@ -237,7 +237,7 @@ namespace A2v10.Request.QRCode
 				{
 					if (pattern.Name.Length == 8 && pattern.Name.Substring(0, 7) == "Pattern")
 					{
-						QRCodeData qrTemp = new QRCodeData(version);
+						QRCodeData qrTemp = new(version);
 						for (int y = 0; y < size; y++)
 						{
 							for (int x = 0; x < size; x++)
@@ -320,31 +320,31 @@ namespace A2v10.Request.QRCode
 			public static void ReserveSeperatorAreas(int size, ref List<Rectangle> blockedModules)
 			{
 				blockedModules.AddRange(new Rectangle[]{
-					new Rectangle(7, 0, 1, 8),
-					new Rectangle(0, 7, 7, 1),
-					new Rectangle(0, size-8, 8, 1),
-					new Rectangle(7, size-7, 1, 7),
-					new Rectangle(size-8, 0, 1, 8),
-					new Rectangle(size-7, 7, 7, 1)
+					new (7, 0, 1, 8),
+					new (0, 7, 7, 1),
+					new (0, size-8, 8, 1),
+					new (7, size-7, 1, 7),
+					new (size-8, 0, 1, 8),
+					new (size-7, 7, 7, 1)
 				});
 			}
 
 			public static void ReserveVersionAreas(int size, int version, ref List<Rectangle> blockedModules)
 			{
 				blockedModules.AddRange(new Rectangle[]{
-					new Rectangle(8, 0, 1, 6),
-					new Rectangle(8, 7, 1, 1),
-					new Rectangle(0, 8, 6, 1),
-					new Rectangle(7, 8, 2, 1),
-					new Rectangle(size-8, 8, 8, 1),
-					new Rectangle(8, size-7, 1, 7)
+					new (8, 0, 1, 6),
+					new (8, 7, 1, 1),
+					new (0, 8, 6, 1),
+					new (7, 8, 2, 1),
+					new (size-8, 8, 8, 1),
+					new (8, size-7, 1, 7)
 				});
 
 				if (version >= 7)
 				{
 					blockedModules.AddRange(new Rectangle[]{
-					new Rectangle(size-11, 0, 3, 6),
-					new Rectangle(0, size-11, 6, 3)
+					new (size-11, 0, 3, 6),
+					new (0, size-11, 6, 3)
 				});
 				}
 			}
@@ -418,8 +418,8 @@ namespace A2v10.Request.QRCode
 					}
 				}
 				blockedModules.AddRange(new Rectangle[]{
-					new Rectangle(6, 8, 1, size-16),
-					new Rectangle(8, 6, size-16, 1)
+					new (6, 8, 1, size-16),
+					new (8, 6, size-16, 1)
 				});
 			}
 
@@ -652,7 +652,7 @@ namespace A2v10.Request.QRCode
 
 		private Polynom ConvertToAlphaNotation(Polynom poly)
 		{
-			Polynom newPoly = new Polynom();
+			Polynom newPoly = new();
 			for (int i = 0; i < poly.PolyItems.Count; i++)
 				newPoly.PolyItems.Add(new PolynomItem()
 				{
@@ -664,7 +664,7 @@ namespace A2v10.Request.QRCode
 
 		private Polynom ConvertToDecNotation(Polynom poly)
 		{
-			Polynom newPoly = new Polynom();
+			Polynom newPoly = new();
 			for (int i = 0; i < poly.PolyItems.Count; i++)
 				newPoly.PolyItems.Add(new PolynomItem()
 				{
@@ -703,7 +703,7 @@ namespace A2v10.Request.QRCode
 
 		private Polynom CalculateMessagePolynom(string bitString)
 		{
-			Polynom messagePol = new Polynom();
+			Polynom messagePol = new();
 			for (int i = bitString.Length / 8 - 1; i >= 0; i--)
 			{
 				messagePol.PolyItems.Add(new PolynomItem()
@@ -719,17 +719,17 @@ namespace A2v10.Request.QRCode
 
 		private Polynom CalculateGeneratorPolynom(int numEccWords)
 		{
-			Polynom generatorPolynom = new Polynom();
+			Polynom generatorPolynom = new();
 			generatorPolynom.PolyItems.AddRange(new PolynomItem[]{
-				new PolynomItem(){ Coefficient = 0, Exponent = 1},
-				new PolynomItem(){ Coefficient = 0, Exponent = 0}
+				new (){ Coefficient = 0, Exponent = 1},
+				new (){ Coefficient = 0, Exponent = 0}
 			});
 			for (int i = 1; i <= numEccWords - 1; i++)
 			{
-				Polynom multiplierPolynom = new Polynom();
+				Polynom multiplierPolynom = new();
 				multiplierPolynom.PolyItems.AddRange(new PolynomItem[]{
-					new PolynomItem(){ Coefficient = 0, Exponent = 1},
-					new PolynomItem(){ Coefficient = i, Exponent = 0}
+					new (){ Coefficient = 0, Exponent = 1},
+					new (){ Coefficient = i, Exponent = 0}
 				});
 
 				generatorPolynom = MultiplyAlphaPolynoms(generatorPolynom, multiplierPolynom);
@@ -1085,7 +1085,7 @@ namespace A2v10.Request.QRCode
 					Version = (i + 16) / 16,
 					Details = new List<VersionInfoDetails>
 					{
-						new VersionInfoDetails(){
+						new(){
 							 ErrorCorrectionLevel = ECCLevel.L,
 							 CapacityDict = new Dictionary<EncodingMode,int>(){
 								 { EncodingMode.Numeric, capacityBaseValues[i] },
@@ -1094,7 +1094,7 @@ namespace A2v10.Request.QRCode
 								 { EncodingMode.Kanji, capacityBaseValues[i+3] },
 							 }
 						},
-						new VersionInfoDetails(){
+						new(){
 							 ErrorCorrectionLevel = ECCLevel.M,
 							 CapacityDict = new Dictionary<EncodingMode,int>(){
 								 { EncodingMode.Numeric, capacityBaseValues[i+4] },
@@ -1103,7 +1103,7 @@ namespace A2v10.Request.QRCode
 								 { EncodingMode.Kanji, capacityBaseValues[i+7] },
 							 }
 						},
-						new VersionInfoDetails(){
+						new(){
 							 ErrorCorrectionLevel = ECCLevel.Q,
 							 CapacityDict = new Dictionary<EncodingMode,int>(){
 								 { EncodingMode.Numeric, capacityBaseValues[i+8] },
@@ -1112,7 +1112,7 @@ namespace A2v10.Request.QRCode
 								 { EncodingMode.Kanji, capacityBaseValues[i+11] },
 							 }
 						},
-						new VersionInfoDetails(){
+						new(){
 							 ErrorCorrectionLevel = ECCLevel.H,
 							 CapacityDict = new Dictionary<EncodingMode,int>(){
 								 { EncodingMode.Numeric, capacityBaseValues[i+12] },
