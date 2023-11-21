@@ -59,8 +59,8 @@ public class PropertyGridItem : UIElementBase
 		{
 			if (NameMaxChars > 0)
 			{
-				nameCell.MergeAttribute("v-text", $"$maxChars({contBind.GetPathFormat(context)}, {NameMaxChars})");
-				nameCell.MergeAttribute(":title", contBind.GetPathFormat(context));
+				nameCell.MergeAttribute("v-text", $"$maxChars({nameBind.GetPathFormat(context)}, {NameMaxChars})");
+				nameCell.MergeAttribute(":title", nameBind.GetPathFormat(context));
 			}
 			else
 				nameCell.MergeAttribute("v-text", nameBind.GetPathFormat(context));
