@@ -1,6 +1,6 @@
 ﻿/*
-version: 10.0.7910
-generated: 16.10.2023 10:24:54
+version: 10.0.7911
+generated: 23.11.2023 08:53:01
 */
 
 set nocount on;
@@ -19,9 +19,9 @@ if not exists(select * from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA=N'a2sys
 go
 ----------------------------------------------
 if exists(select * from a2sys.Versions where [Module]=N'script:platform')
-	update a2sys.Versions set [Version]=7910, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
+	update a2sys.Versions set [Version]=7911, [File]=N'a2v10platform.sql', Title=null where [Module]=N'script:platform';
 else
-	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7910, N'a2v10platform.sql', null);
+	insert into a2sys.Versions([Module], [Version], [File], Title) values (N'script:platform', 7911, N'a2v10platform.sql', null);
 go
 
 
@@ -432,13 +432,13 @@ go
 
 /*
 ------------------------------------------------
-Copyright © 2008-2022 Alex Kukhtin
+Copyright © 2008-2023 Oleksandr Kukhtin
 
-Last updated : 01 dec 2022
-module version : 7910
+Last updated : 04 nov 2023
+module version : 7911
 */
 ------------------------------------------------
-exec a2sys.SetVersion N'std:security', 7910;
+exec a2sys.SetVersion N'std:security', 7911;
 go
 ------------------------------------------------
 if not exists(select * from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME=N'a2security')
@@ -1770,8 +1770,7 @@ begin
 	when matched then update set
 		[Name]=s.[Name]
 	when not matched by target then insert 
-		(Code, [Name]) values (s.Code, s.[Name])
-	when not matched by source then delete;
+		(Code, [Name]) values (s.Code, s.[Name]);
 end
 go
 ------------------------------------------------

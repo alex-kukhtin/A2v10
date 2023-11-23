@@ -122,6 +122,7 @@
 @PasswordLength=das Passwort muss mindestens 6 Zeichen lang sein
 @InvalidLoginError=Ungültige E-Mail oder Passwort
 @InvalidEMailError=Ungültige E-Mail
+@InvalidOldPassword=Ungültiges altes Passwort
 @UserLockuotError=Der Benutzer wurde gesperrt.\nIn wenigen Minuten erneut versuchen
 @EmailNotConfirmed=Eine E-Mail wurde nicht bestätigt. Vielleicht ist die Mail in Spam gelandet?
 @AntiForgery=Die Anfrage konnte nicht bearbeitet werden.\nAktualisieren Sie die Seite und versuchen Sie es erneut.\nWahrscheinlich sind dem Browser keine Cookies erlaubt.

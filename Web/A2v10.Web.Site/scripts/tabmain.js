@@ -2239,7 +2239,8 @@ app.modules['std:validators'] = function () {
 
 	return {
 		validate: validateItem,
-		removeWeak
+		removeWeak,
+		revalidate
 	};
 
 	function validateStd(rule, val) {
@@ -2265,6 +2266,35 @@ app.modules['std:validators'] = function () {
 
 	function removeWeak() {
 		validateMap = new WeakMap();
+	}
+
+	function revalidate(item, key, templ) {
+		if (!validateMap || !key || !templ || !templ.validators) return;
+		let rule = templ.validators[key];
+		if (!rule) return;
+
+		function doIt(rule) {
+			let elem = validateMap.get(rule);
+			if (!elem)
+				return;
+			if (elem.has(item)) {
+				let xval = elem.get(item);
+				if (xval) {
+					xval.val = undefined;
+					xval.result = null;
+				}
+			}
+		}
+
+		if (utils.isArray(rule)) {
+			rule.forEach(r => {
+				if (utils.isObject(r) && validateMap.has(r)) {
+					doIt(r);
+				}
+			});
+		} else if (utils.isObject(rule) && validateMap.has(rule)) {
+			doIt(rule);
+		}
 	}
 
 	function addToWeak(rule, item, val) {
@@ -2347,10 +2377,12 @@ app.modules['std:validators'] = function () {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;
 						if (utils.isString(result)) {
-							dm.msg = result;
-							valRes.result = dm;
-							retval.push(dm);
-							nu = true;
+							if (result) {
+								dm.msg = result;
+								valRes.result = dm;
+								retval.push(dm);
+								nu = true;
+							}
 						} else if (!result) {
 							retval.push(dm);
 							valRes.result = dm;
@@ -3764,6 +3796,14 @@ app.modules['std:impl:array'] = function () {
 		return errs.length ? errs : null;
 	}
 
+	function revalidateItem(itm, valname) {
+		this.$defer(() => {
+			validators.revalidate(itm, valname, this.$template);
+			this._needValidate_ = true;
+			this._validateAll_(false);
+		});
+	}
+
 	function forceValidateAll() {
 		let me = this;
 		me._needValidate_ = true;
@@ -3995,6 +4035,7 @@ app.modules['std:impl:array'] = function () {
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
+		root.prototype.$revalidate = revalidateItem;
 		root.prototype.$hasErrors = hasErrors;
 		root.prototype.$destroy = destroyRoot;
 		// props cache for t.construct

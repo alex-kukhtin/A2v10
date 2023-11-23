@@ -952,6 +952,14 @@
 		return errs.length ? errs : null;
 	}
 
+	function revalidateItem(itm, valname) {
+		this.$defer(() => {
+			validators.revalidate(itm, valname, this.$template);
+			this._needValidate_ = true;
+			this._validateAll_(false);
+		});
+	}
+
 	function forceValidateAll() {
 		let me = this;
 		me._needValidate_ = true;
@@ -1183,6 +1191,7 @@
 		root.prototype._validate_ = validate;
 		root.prototype._validateAll_ = validateAll;
 		root.prototype.$forceValidate = forceValidateAll;
+		root.prototype.$revalidate = revalidateItem;
 		root.prototype.$hasErrors = hasErrors;
 		root.prototype.$destroy = destroyRoot;
 		// props cache for t.construct

@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7948 */
+/* Version 10.0.7951 */
 
 declare function require(url: string): any;
 
@@ -128,6 +128,7 @@ interface IRoot extends IElement {
 	$defer(handler: () => any): void;
 	$emit(event: string, ...params: any[]): void;
 	$forceValidate(): void;
+	$revalidate(elem: IElement, rule: string): void;
 	$setDirty(dirty: boolean, path?: string): void;
 	$createModelInfo(elem: IElementArray<IElement>, modelInfo: IModelInfo): IModelInfo;
 	$hasErrors(props: string[]): boolean;

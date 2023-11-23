@@ -17,7 +17,8 @@ app.modules['std:validators'] = function () {
 
 	return {
 		validate: validateItem,
-		removeWeak
+		removeWeak,
+		revalidate
 	};
 
 	function validateStd(rule, val) {
@@ -43,6 +44,35 @@ app.modules['std:validators'] = function () {
 
 	function removeWeak() {
 		validateMap = new WeakMap();
+	}
+
+	function revalidate(item, key, templ) {
+		if (!validateMap || !key || !templ || !templ.validators) return;
+		let rule = templ.validators[key];
+		if (!rule) return;
+
+		function doIt(rule) {
+			let elem = validateMap.get(rule);
+			if (!elem)
+				return;
+			if (elem.has(item)) {
+				let xval = elem.get(item);
+				if (xval) {
+					xval.val = undefined;
+					xval.result = null;
+				}
+			}
+		}
+
+		if (utils.isArray(rule)) {
+			rule.forEach(r => {
+				if (utils.isObject(r) && validateMap.has(r)) {
+					doIt(r);
+				}
+			});
+		} else if (utils.isObject(rule) && validateMap.has(rule)) {
+			doIt(rule);
+		}
 	}
 
 	function addToWeak(rule, item, val) {
@@ -125,10 +155,12 @@ app.modules['std:validators'] = function () {
 						let dm = { severity: sev, msg: rule.msg };
 						let nu = false;
 						if (utils.isString(result)) {
-							dm.msg = result;
-							valRes.result = dm;
-							retval.push(dm);
-							nu = true;
+							if (result) {
+								dm.msg = result;
+								valRes.result = dm;
+								retval.push(dm);
+								nu = true;
+							}
 						} else if (!result) {
 							retval.push(dm);
 							valRes.result = dm;
