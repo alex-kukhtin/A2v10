@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7951</version>
+		<version>10.0.7952</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -68,6 +68,7 @@
 		<file src="bin/A2v10.Spreadsheet.Report.dll" target="lib/net48" />
 		<file src="bin/A2v10.Lang.dll" target="lib/net48" />
 		<file src="bin/DocumentFormat.OpenXml.dll" target="lib/net48" />
+		<file src="bin/DocumentFormat.OpenXml.Framework.dll" target="lib/net48" />
 		<file src="bin/Microsoft.Activities.Extensions.dll" target="lib/net48" />
 		<file src="bin/Microsoft.AspNet.Identity.Core.dll" target="lib/net48" />
 		<file src="bin/Microsoft.AspNet.Identity.Owin.dll" target="lib/net48" />
