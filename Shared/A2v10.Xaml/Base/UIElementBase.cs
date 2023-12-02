@@ -90,11 +90,19 @@ public abstract class UIElementBase : XamlElement, IXamlElement
 			context.Writer.Write(context.LocalizeCheckApostrophe(content.ToString().Replace("\\n", "<br>")));
 	}
 
-	protected void MergeBindingAttributeString(TagBuilder tag, RenderContext context, String attrName, String propName, String propValue)
+	protected void MergeBindingAttributeString(TagBuilder tag, RenderContext context, String attrName, String propName, String propValue, UInt32 MaxChars = 0)
 	{
 		var attrBind = GetBinding(propName);
 		if (attrBind != null)
-			tag.MergeAttribute($":{attrName}", attrBind.GetPathFormat(context));
+		{
+            if (MaxChars > 0)
+            {
+                tag.MergeAttribute($":{attrName}", $"$maxChars({attrBind.GetPathFormat(context)}, {MaxChars})");
+                tag.MergeAttribute($":title", attrBind.GetPathFormat(context));
+            }
+            else
+                tag.MergeAttribute($":{attrName}", attrBind.GetPathFormat(context));
+		}
 		else
 			tag.MergeAttribute(attrName, context.Localize(propValue));
 	}
