@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -46,6 +46,18 @@ public class RouteConfig
 				url: $"{name}/{{action}}/{{id}}",
 				defaults: new { controller = name }
 			);
+		}
+
+		var val = ConfigurationManager.AppSettings["routes"];
+		if (!String.IsNullOrEmpty(val)) {
+			foreach (var name in val.Split(new Char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				routes.MapRoute(
+					name: name,
+					url: $"{name}/{{action}}/{{id}}",
+					defaults: new { controller = name, action = "index", id = 0 }
+				);
+			}
 		}
 
 

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Configuration;
@@ -17,15 +17,10 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
-using Newtonsoft.Json;
-
 using A2v10.Web.Identity;
 using A2v10.Web.Mvc.OAuth2;
 using A2v10.Web.Identity.ApiKey;
 using A2v10.Web.Identity.ApiBasic;
-using A2v10.Infrastructure;
-using A2v10.Data.Interfaces;
-using Microsoft.Owin.Security.DataProtection;
 
 namespace A2v10.Web.Mvc.Start
 {
@@ -210,7 +205,6 @@ namespace A2v10.Web.Mvc.Start
 			app.CreatePerOwinContext<AppSignInManager>(AppSignInManager.Create);
 
 			app.UseCacheForStaticFiles();
-
 
 			var openIdAuth = ConfigurationManager.AppSettings["openIdAuthentication"];
 			if (openIdAuth != null)
