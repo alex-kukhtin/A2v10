@@ -2,34 +2,33 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace A2v10.Request.QRCode
+namespace A2v10.Request.QRCode;
+
+// from https://github.com/codebude/QRCoder
+public class QRCodeData
 {
-	// from https://github.com/codebude/QRCoder
-	public class QRCodeData
+	public List<BitArray> ModuleMatrix { get; set; }
+	private readonly Int32 _version;
+
+	public QRCodeData(int version)
 	{
-		public List<BitArray> ModuleMatrix { get; set; }
-		private readonly Int32 _version;
+		this._version = version;
+		var size = ModulesPerSideFromVersion(version);
+		ModuleMatrix = new List<BitArray>();
+		for (int i = 0; i < size; i++)
+			ModuleMatrix.Add(new BitArray(size));
+	}
 
-		public QRCodeData(int version)
+	public Int32 Version
+	{
+		get
 		{
-			this._version = version;
-			var size = ModulesPerSideFromVersion(version);
-			ModuleMatrix = new List<BitArray>();
-			for (int i = 0; i < size; i++)
-				ModuleMatrix.Add(new BitArray(size));
+			return _version;
 		}
+	}
 
-		public Int32 Version
-		{
-			get
-			{
-				return _version;
-			}
-		}
-
-		private int ModulesPerSideFromVersion(int version)
-		{
-			return 21 + (version - 1) * 4;
-		}
+	private int ModulesPerSideFromVersion(int version)
+	{
+		return 21 + (version - 1) * 4;
 	}
 }
