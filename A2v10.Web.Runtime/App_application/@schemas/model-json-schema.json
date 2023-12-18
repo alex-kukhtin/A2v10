@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7951",
+	"$version": "10.0.7952",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -47,6 +47,7 @@
 						"targetId": { "type": "string" },
 						"skipDataStack": { "type": "boolean" },
 						"plain": { "type": "boolean" },
+						"endpointHandler": { "type": "string" },
 						"signal": { "type": "boolean" },
 						"merge": {
 							"type": "object",
@@ -121,6 +122,7 @@
 						"processDbEvents": { "type": "boolean" },
 						"commandTimeout": { "type": "number" },
 						"signal": { "type": "boolean" },
+						"endpointHandler": { "type": "string" },
 						"hook": {
 							"type": "string",
 							"pattern": "^\\s*clr-type\\s*:\\s*([\\w\\.]+)\\s*;\\s*assembly\\s*=\\s*([\\w\\.]+)\\s*$"
@@ -163,6 +165,7 @@
 						"processDbEvents": { "type": "boolean" },
 						"commandTimeout": { "type": "number" },
 						"parameters": { "type": "object" },
+						"endpointHandler": { "type": "string" },
 						"permissions": { "$ref": "#/definitions/permissions" },
 						"roles": {
 							"type": "array",
