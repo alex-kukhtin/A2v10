@@ -25,6 +25,8 @@
 @SetPassword=Especificar contraseña
 @Error=Error
 @Warning=Aviso
+@Or=or
+
 ;
 @ResetPassword=Restablecer contraseña
 @ResetPasswordBody=Código de confirmación para recuperar la contraseña: <b>{0}</b>
@@ -101,6 +103,7 @@
 @Login=Inicio de sesión
 @UserName=Nombre
 @LoginPrompt=Iniciar sesión en el sistema
+@SignInWith=Sign in with
 @RegisterPrompt=Registrarse en el sistema
 @ForgotPrompt=Recuperar contraseña
 @ConfirmEMailPrompt=Confirmar correo electrónico

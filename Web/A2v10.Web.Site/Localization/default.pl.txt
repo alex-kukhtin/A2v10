@@ -25,6 +25,8 @@
 @SetPassword=Ustaw hasło
 @Error=Błąd
 @Warning=Ostrzeżenie
+@Or=or
+
 ;
 @ResetPassword=Odzyskiwanie hasła
 @ResetPasswordBody=Kod potwierdzający odzyskanie hasła: <b>{0}</b>
@@ -101,6 +103,7 @@
 @Login=Logowanie
 @UserName=Nazwa użytkownika
 @LoginPrompt=Zaloguj sie
+@SignInWith=Sign in with
 @RegisterPrompt=Rejestracja w systemie
 @ForgotPrompt=Odzyskiwanie hasła
 @ConfirmEMailPrompt=Potwierdzenie e-mail
