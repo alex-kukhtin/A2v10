@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20200526-7662
+// 20231226-7954
 // locale-es.js
 
 "use strict";
@@ -9,6 +9,7 @@
 
 	window.$$locale = {
 		$Locale: 'es-ES',
+		$DateLocale: 'es-ES',
 		$Ok: 'OK',
 		$Cancel: 'Cancelar',
 		$Close: 'Cerrar',

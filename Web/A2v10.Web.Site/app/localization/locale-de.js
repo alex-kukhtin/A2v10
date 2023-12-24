@@ -1,6 +1,6 @@
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20200526-7662
+// 20231226-7954
 // locale-de.js
 
 "use strict";
@@ -9,6 +9,7 @@
 
 	window.$$locale = {
 		$Locale: 'de-DE',
+		$DateLocale: 'de-DE',
 		$Ok: 'OK',
 		$Cancel: 'Abbrechen',
 		$Close: 'Schließen',

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230911-7946
+// 20231226-7954
 // components/datepicker.js
 
 (function () {
@@ -12,6 +12,7 @@
 
 	const baseControl = component('control');
 	const locale = window.$$locale;
+	const dateLocale = locale.$DateLocale || locale.$Locale;
 
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
@@ -135,9 +136,9 @@
 					if (utils.date.isZero(this.modelDate))
 						return '';
 					if (this.view === 'month')
-						return utils.text.capitalize(this.modelDate.toLocaleString(locale.$Locale, { timeZone:'UTC',  year: 'numeric', month: 'long' }));
+						return utils.text.capitalize(this.modelDate.toLocaleString(dateLocale, { timeZone: 'UTC', year: 'numeric', month: 'long' }));
 					else
-						return this.modelDate.toLocaleString(locale.$Locale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' });
+						return this.modelDate.toLocaleString(dateLocale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str, this.yearCutOff);

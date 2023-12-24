@@ -198,14 +198,14 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230922-7948
+// 20231224-7954
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
 	const locale = require('std:locale');
 	const platform = require('std:platform');
-	const dateLocale = locale.$Locale;
+	const dateLocale = locale.$DateLocale || locale.$Locale;
 	const numLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
@@ -6045,7 +6045,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230911-7946
+// 20231226-7954
 // components/datepicker.js
 
 (function () {
@@ -6057,6 +6057,7 @@ Vue.component('validator-control', {
 
 	const baseControl = component('control');
 	const locale = window.$$locale;
+	const dateLocale = locale.$DateLocale || locale.$Locale;
 
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
@@ -6180,9 +6181,9 @@ Vue.component('validator-control', {
 					if (utils.date.isZero(this.modelDate))
 						return '';
 					if (this.view === 'month')
-						return utils.text.capitalize(this.modelDate.toLocaleString(locale.$Locale, { timeZone:'UTC',  year: 'numeric', month: 'long' }));
+						return utils.text.capitalize(this.modelDate.toLocaleString(dateLocale, { timeZone: 'UTC', year: 'numeric', month: 'long' }));
 					else
-						return this.modelDate.toLocaleString(locale.$Locale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' });
+						return this.modelDate.toLocaleString(dateLocale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str, this.yearCutOff);
@@ -6210,7 +6211,7 @@ Vue.component('validator-control', {
 // Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 // 20200907-7706
-// components/datepicker.js
+// components/timepicker.js
 
 
 (function () {
@@ -6222,6 +6223,7 @@ Vue.component('validator-control', {
 
 	const baseControl = component('control');
 	const locale = window.$$locale;
+	const dateLocale = locale.$DateLocale || locale.$Locale;
 
 	const timesheet = {
 		props: {
@@ -6385,7 +6387,7 @@ Vue.component('validator-control', {
 					let md = this.modelDate;
 					if (utils.date.isZero(md))
 						return '';
-					return md.toLocaleTimeString(locale.$Locale, { timeZone: 'UTC', hour: '2-digit', minute:"2-digit"});
+					return md.toLocaleTimeString(dateLocale, { timeZone: 'UTC', hour: '2-digit', minute: "2-digit" });
 				},
 				set(str) {
 					let md = new Date(this.modelDate);

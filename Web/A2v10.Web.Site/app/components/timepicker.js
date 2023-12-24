@@ -1,7 +1,7 @@
 ﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
 
 // 20200907-7706
-// components/datepicker.js
+// components/timepicker.js
 
 
 (function () {
@@ -13,6 +13,7 @@
 
 	const baseControl = component('control');
 	const locale = window.$$locale;
+	const dateLocale = locale.$DateLocale || locale.$Locale;
 
 	const timesheet = {
 		props: {
@@ -176,7 +177,7 @@
 					let md = this.modelDate;
 					if (utils.date.isZero(md))
 						return '';
-					return md.toLocaleTimeString(locale.$Locale, { timeZone: 'UTC', hour: '2-digit', minute:"2-digit"});
+					return md.toLocaleTimeString(dateLocale, { timeZone: 'UTC', hour: '2-digit', minute: "2-digit" });
 				},
 				set(str) {
 					let md = new Date(this.modelDate);

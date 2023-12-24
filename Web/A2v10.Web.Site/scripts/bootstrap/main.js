@@ -177,14 +177,14 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20230922-7948
+// 20231224-7954
 // services/utils.js
 
 app.modules['std:utils'] = function () {
 
 	const locale = require('std:locale');
 	const platform = require('std:platform');
-	const dateLocale = locale.$Locale;
+	const dateLocale = locale.$DateLocale || locale.$Locale;
 	const numLocale = locale.$Locale;
 	const _2digit = '2-digit';
 
