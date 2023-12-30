@@ -10699,7 +10699,7 @@ TODO:
 			:width=pdfWidth :height=height :style=cssStyle></object>
 		<div v-else class="no-preview">
 			<span class="ico ico-file-preview"></span>
-			<span v-text=unavailable><span>
+			<span v-text="unavailable"></span>
 		</div>
 	</div>`,
 		props: {
