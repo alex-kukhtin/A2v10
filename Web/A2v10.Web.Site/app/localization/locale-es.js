@@ -73,7 +73,8 @@
 		$FileTooLarge: 'El archivo es demasiado grande. El tamaño del archivo no debe exceder {0} KB',
 		$DesktopNotSupported: 'Esta operación no es compatible con la versión de escritorio',
 		$Settings:'Configuración',
-		$Feedback: 'Feedback'
+		$Feedback: 'Feedback',
+		$PreviewIsUnavailable: 'Preview is unavailable for this file'
 	};
 
 	if (window.d3) {

@@ -73,7 +73,8 @@
 		$FileTooLarge: 'Datei ist zu groß. Die Dateigröße sollte nicht mehr als {0} KB betragen',
 		$DesktopNotSupported: 'Diese Aktion wird in der Desktop-Version nicht unterstützt',
 		$Settings:'Einstellungen',
-		$Feedback:'Feedback'
+		$Feedback:'Feedback',
+		$PreviewIsUnavailable: 'Preview is unavailable for this file'
 	};
 
 })();

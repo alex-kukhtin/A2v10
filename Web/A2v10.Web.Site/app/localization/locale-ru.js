@@ -73,7 +73,8 @@
 		$FileTooLarge: 'Файл слишком большой. Размер файла должен быть не более {0} KB',
 		$DesktopNotSupported: 'Это действие не поддерживается в настольной версии',
 		$Settings: 'Настройка',
-		$Feedback: 'Обратная связь'
+		$Feedback: 'Обратная связь',
+		$PreviewIsUnavailable: 'Preview is unavailable for this file'
 	};
 
 	if (window.d3) {

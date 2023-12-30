@@ -10525,9 +10525,9 @@ TODO:
 
 	app.components['std:toastr'] = toastrComponent;
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20210704-7793
+// 20231230-7954
 // components/image.js
 
 (function () {
@@ -10680,6 +10680,62 @@ TODO:
 						qry.token = this.value[this.value._meta_.$token];
 				}
 				return url.combine(root, '_file', this.url, id) + url.makeQueryString(qry);
+			},
+			cssStyle() {
+				let r = {};
+				if (this.width)
+					r.maxWidth = this.width;
+				if (this.height)
+					r.maxHeight = this.height;
+				return r;
+			}
+		}
+	});
+
+	Vue.component('a2-file-preview', {
+		template: `<div class="a2-file-preview">
+		<img v-if="isImage"" :src=href :style=cssStyle />
+		<object v-else-if="isPdf"" type="application/pdf" :data=href
+			:width=pdfWidth :height=height :style=cssStyle></object>
+		<div v-else class="no-preview">
+			<span class="ico ico-file-preview"></span>
+			<span v-text=unavailable><span>
+		</div>
+	</div>`,
+		props: {
+			url: String,
+			width: String,
+			height: String,
+			value: Object
+		},
+		computed: {
+			mime() {
+				if (utils.isObjectExact(this.value))
+					return this.value.Mime;
+				console.error('value must be an Object')
+			},
+			isImage() {
+				return this.mime.startsWith('image');
+			},
+			isPdf() {
+				return this.mime.endsWith('pdf');
+			},
+			pdfWidth() {
+				return this.width ?? '100%';
+			},
+			href: function () {
+				let root = window.$$rootUrl;
+				let id = this.value;
+				let qry = {};
+				if (utils.isObjectExact(this.value)) {
+					id = utils.getStringId(this.value);
+					if (this.value._meta_ && this.value._meta_.$token)
+						qry.token = this.value[this.value._meta_.$token];
+				}
+				return url.combine(root, '_file', this.url, id) + url.makeQueryString(qry);
+			},
+			unavailable() {
+				return locale.$PreviewIsUnavailable;
 			},
 			cssStyle() {
 				let r = {};

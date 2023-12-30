@@ -73,7 +73,8 @@
 		$FileTooLarge: 'Plik jest za duży. Rozmiar pliku nie może przekraczać {0} KB',
 		$DesktopNotSupported: 'Ta czynność nie jest obsługiwana w wersji desktopowej',
 		$Settings: 'Ustawienie',
-		$Feedback: 'Informacja zwrotna'
+		$Feedback: 'Informacja zwrotna',
+		$PreviewIsUnavailable: 'Preview is unavailable for this file'
 	};
 
 	if (window.d3) {
