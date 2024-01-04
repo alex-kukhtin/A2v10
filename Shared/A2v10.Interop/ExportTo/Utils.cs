@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
@@ -58,6 +58,7 @@ public static class Utils
 						lst.Align = HorizontalAlign.Right;
 						break;
 					case "text-left":
+					case "text-default":
 						lst.Align = HorizontalAlign.Left;
 						break;
 				}

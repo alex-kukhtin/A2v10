@@ -1,5 +1,5 @@
 ﻿
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -15,188 +15,187 @@ using System.Xml.Schema;
 using A2v10.Data.Interfaces;
 using A2v10.Infrastructure;
 
-namespace A2v10.Interop
+namespace A2v10.Interop;
+
+public class XmlCreator
 {
+	private readonly IList<String> _schemaPathes;
+	private readonly IDataModel _dataModel;
+	private readonly String _encoding;
+	private readonly XmlSchemaSet _schemaSet;
+	private readonly IList<String> _validationErrors;
 
-	public class XmlCreator
+	public Boolean Validate { get; set; }
+
+	public XmlCreator(IList<String> schemaPathes, IDataModel dataModel, String encoding)
 	{
-		private readonly IList<String> _schemaPathes;
-		private readonly IDataModel _dataModel;
-		private readonly String _encoding;
-		private readonly XmlSchemaSet _schemaSet;
-		private readonly IList<String> _validationErrors;
+		_schemaPathes = schemaPathes;
+		_dataModel = dataModel;
+		_encoding = encoding;
+		_schemaSet = new XmlSchemaSet();
+		_validationErrors = new List<String>();
+		Validate = true;
+	}
 
-		public Boolean Validate { get; set; }
+	public Boolean HasErrors => _validationErrors.Count > 0;
 
-		public XmlCreator(IList<String> schemaPathes, IDataModel dataModel, String encoding)
+	public String ErrorMessage
+	{
+		get
 		{
-			_schemaPathes = schemaPathes;
-			_dataModel = dataModel;
-			_encoding = encoding;
-			_schemaSet = new XmlSchemaSet();
-			_validationErrors = new List<String>();
-			Validate = true;
+			if (!HasErrors) return null;
+			return String.Join("<br>", _validationErrors);
+		}
+	}
+
+	public Byte[] CreateXml()
+	{
+		void eventHandler(Object sender, ValidationEventArgs e)
+		{
+			if (e.Exception != null)
+				_validationErrors.Add(e.Exception.Message);
 		}
 
-		public Boolean HasErrors => _validationErrors.Count > 0;
-
-		public String ErrorMessage
+		foreach (var f in _schemaPathes)
 		{
-			get
-			{
-				if (!HasErrors) return null;
-				return String.Join("<br>", _validationErrors);
-			}
-		}
-
-		public Byte[] CreateXml()
-		{
-			void eventHandler(Object sender, ValidationEventArgs e)
-			{
-				if (e.Exception != null)
-					_validationErrors.Add(e.Exception.Message);
-			}
-
-			foreach (var f in _schemaPathes)
-			{
                 using var textReader = XmlReader.Create(f);
                 XmlSchema sc = XmlSchema.Read(textReader, eventHandler);
                 _schemaSet.Add(sc);
             }
 
-			_schemaSet.Compile();
-			return CreateXmlFromSchema();
-		}
+		_schemaSet.Compile();
+		return CreateXmlFromSchema();
+	}
 
-		public void DoValidate(Stream stream)
-		{
-			stream.Seek(0, SeekOrigin.Begin);
-			XDocument doc = XDocument.Load(stream);
-			doc.Validate(_schemaSet, ValidationHandler);
-		}
+	public void DoValidate(Stream stream)
+	{
+		stream.Seek(0, SeekOrigin.Begin);
+		XDocument doc = XDocument.Load(stream);
+		doc.Validate(_schemaSet, ValidationHandler);
+	}
 
-		void ValidationHandler(Object sender, ValidationEventArgs e)
-		{
-			_validationErrors.Add(e.Message);
-		}
+	void ValidationHandler(Object sender, ValidationEventArgs e)
+	{
+		_validationErrors.Add(e.Message);
+	}
 
-		Byte[] CreateXmlFromSchema()
+	Byte[] CreateXmlFromSchema()
+	{
+		var sb = new StringBuilder();
+		var settings = new XmlWriterSettings()
 		{
-			var sb = new StringBuilder();
-			var settings = new XmlWriterSettings()
+			Encoding = Encoding.GetEncoding(_encoding),
+			Indent = true
+		};
+		var ms = new MemoryStream();
+		using (var writer = XmlWriter.Create(ms, settings))
+		{
+			writer.WriteStartDocument();
+			foreach (XmlQualifiedName v in _schemaSet.GlobalElements.Names)
 			{
-				Encoding = Encoding.GetEncoding(_encoding),
-				Indent = true
-			};
-			var ms = new MemoryStream();
-			using (var writer = XmlWriter.Create(ms, settings))
-			{
-				writer.WriteStartDocument();
-				foreach (XmlQualifiedName v in _schemaSet.GlobalElements.Names)
-				{
-					var elem = _schemaSet.GlobalElements[v] as XmlSchemaElement;
-					ProcessElement(writer, elem, 0, _dataModel.Root);
-				}
-				writer.WriteEndDocument();
-				writer.Flush();
+				var elem = _schemaSet.GlobalElements[v] as XmlSchemaElement;
+				ProcessElement(writer, elem, 0, _dataModel.Root);
 			}
-			if (Validate)
-				DoValidate(ms);
-			ms.Seek(0, SeekOrigin.Begin);
-			var arr = ms.ToArray();
-			ms.Close();
-			return arr;
+			writer.WriteEndDocument();
+			writer.Flush();
+		}
+		if (Validate)
+			DoValidate(ms);
+		ms.Seek(0, SeekOrigin.Begin);
+		var arr = ms.ToArray();
+		ms.Close();
+		return arr;
+	}
+
+
+	public void ProcessArray(XmlWriter writer, XmlSchemaElement elem, Object model, Int32 level)
+	{
+		Boolean WriteArrayItem(String key, IDictionary<String, Object> dict)
+		{
+			Boolean written = false;
+			foreach (var av in dict)
+			{
+				if ((key + av.Key == elem.Name) && av.Value != null)
+				{
+					var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value, elem.IsNillable);
+					if (String.IsNullOrEmpty(typedVal) && elem.IsNillable)
+						WriteNil(writer);
+					else
+						writer.WriteString(typedVal);
+					written = true;
+					break;
+				}
+			}
+			return written;
 		}
 
-
-		public void ProcessArray(XmlWriter writer, XmlSchemaElement elem, Object model, Int32 level)
+		if (model == null)
+			return;
+		var d = model as IDictionary<String, Object>;
+		foreach (var kp in d)
 		{
-			Boolean WriteArrayItem(String key, IDictionary<String, Object> dict)
+			if (!elem.Name.StartsWith(kp.Key))
+				continue;
+			Boolean fullElement = kp.Key == elem.Name;
+			switch (kp.Value)
 			{
-				Boolean written = false;
-				foreach (var av in dict)
-				{
-					if ((key + av.Key == elem.Name) && av.Value != null)
+				case IList<Object> arr:
+					for (var i = 0; i < arr.Count; i++)
 					{
-						var typedVal = TypedValue(elem.SchemaTypeName.Name, av.Value, elem.IsNillable);
-						if (String.IsNullOrEmpty(typedVal) && elem.IsNillable)
-							WriteNil(writer);
-						else
-							writer.WriteString(typedVal);
-						written = true;
-						break;
-					}
-				}
-				return written;
-			}
-
-			if (model == null)
-				return;
-			var d = model as IDictionary<String, Object>;
-			foreach (var kp in d)
-			{
-				if (!elem.Name.StartsWith(kp.Key))
-					continue;
-				Boolean fullElement = kp.Key == elem.Name;
-				switch (kp.Value)
-				{
-					case IList<Object> arr:
-						for (var i = 0; i < arr.Count; i++)
+						if (fullElement)
 						{
-							if (fullElement)
-							{
-								var wrapper = new ExpandoObject();
-								wrapper.Set(elem.Name, arr[i]);
-								ProcessElement(writer, elem, level + 1, wrapper, simple: false);
-							}
-							else
-							{
-								writer.WriteStartElement(elem.Name);
-								writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
-								Boolean written = WriteArrayItem(kp.Key, arr[i] as IDictionary<String, Object>);
-								if (!written)
-									writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
-								writer.WriteEndElement();
-							}
+							var wrapper = new ExpandoObject();
+							wrapper.Set(elem.Name, arr[i]);
+							ProcessElement(writer, elem, level + 1, wrapper, simple: false);
 						}
-						break;
-					case IList<ExpandoObject> arrExp:
-						for (var i = 0; i < arrExp.Count; i++)
+						else
 						{
 							writer.WriteStartElement(elem.Name);
 							writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
-							Boolean written = WriteArrayItem(kp.Key, arrExp[i] as IDictionary<String, Object>);
+							Boolean written = WriteArrayItem(kp.Key, arr[i] as IDictionary<String, Object>);
 							if (!written)
 								writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
 							writer.WriteEndElement();
 						}
-						break;
-					case ExpandoObject eo:
-						ProcessElement(writer, elem, level + 1, eo, true);
-						break;
-				}
+					}
+					break;
+				case IList<ExpandoObject> arrExp:
+					for (var i = 0; i < arrExp.Count; i++)
+					{
+						writer.WriteStartElement(elem.Name);
+						writer.WriteAttributeString("ROWNUM", (i + 1).ToString());
+						Boolean written = WriteArrayItem(kp.Key, arrExp[i] as IDictionary<String, Object>);
+						if (!written)
+							writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
+						writer.WriteEndElement();
+					}
+					break;
+				case ExpandoObject eo:
+					ProcessElement(writer, elem, level + 1, eo, true);
+					break;
 			}
 		}
+	}
 
-		void ProcessElement(XmlWriter writer, XmlSchemaElement elem, Int32 level, ExpandoObject model, Boolean simple = false)
+	void ProcessElement(XmlWriter writer, XmlSchemaElement elem, Int32 level, ExpandoObject model, Boolean simple = false)
+	{
+		if (elem.MaxOccurs > 1 && !simple)
 		{
-			if (elem.MaxOccurs > 1 && !simple)
-			{
-				ProcessArray(writer, elem, model, level);
+			ProcessArray(writer, elem, model, level);
+			return;
+		}
+
+		var innerModel = model.GetObject(elem.Name);
+		if (innerModel == null)
+		{
+			if (elem.MinOccurs == 0)
 				return;
-			}
+		}
 
-			var innerModel = model.GetObject(elem.Name);
-			if (innerModel == null)
-			{
-				if (elem.MinOccurs == 0)
-					return;
-			}
+		writer.WriteStartElement(elem.Name);
 
-			writer.WriteStartElement(elem.Name);
-
-			if (level == 0 && FirstSchema != null)
-				writer.WriteAttributeString("xsi", "noNamespaceSchemaLocation", XmlSchema.InstanceNamespace, FirstSchema);
+		if (level == 0 && FirstSchema != null)
+			writer.WriteAttributeString("xsi", "noNamespaceSchemaLocation", XmlSchema.InstanceNamespace, FirstSchema);
 
 
             if (innerModel is IList<Object> listObj && listObj.Count == 0)
@@ -206,215 +205,215 @@ namespace A2v10.Interop
             }
 
             switch (elem.ElementSchemaType)
-			{
-				case XmlSchemaComplexType complexType:
-					var pi = complexType.Particle as XmlSchemaSequence;
-					if (pi != null)
+		{
+			case XmlSchemaComplexType complexType:
+				var pi = complexType.Particle as XmlSchemaSequence;
+				if (pi != null)
+				{
+					if (complexType.AttributeUses != null)
 					{
-						if (complexType.AttributeUses != null)
+						foreach (var an in complexType.AttributeUses.Names)
 						{
-							foreach (var an in complexType.AttributeUses.Names)
-							{
-								var attr = complexType.AttributeUses[an as XmlQualifiedName] as XmlSchemaAttribute;
-								WriteAttribute(writer, attr, model);
-							}
-						}
-						foreach (var p in pi?.Items)
-						{
-							switch (p)
-							{
-								case XmlSchemaElement schemaElem:
-									if (simple)
-									{
-										writer.WriteStartElement(schemaElem.Name);
-										WriteSimpleElement(writer, schemaElem, model);
-										writer.WriteEndElement();
-									}
-									else
-										ProcessElement(writer, schemaElem, level + 1, innerModel as ExpandoObject);
-									break;
-								case XmlSchemaChoice schemaChoice:
-									WriteElementChoice(writer, schemaChoice, innerModel as ExpandoObject);
-									break;
-							}
+							var attr = complexType.AttributeUses[an as XmlQualifiedName] as XmlSchemaAttribute;
+							WriteAttribute(writer, attr, model);
 						}
 					}
-					else if (complexType.ContentModel is XmlSchemaSimpleContent)
+					foreach (var p in pi?.Items)
 					{
-						WriteSimpleElement(writer, elem, model);
+						switch (p)
+						{
+							case XmlSchemaElement schemaElem:
+								if (simple)
+								{
+									writer.WriteStartElement(schemaElem.Name);
+									WriteSimpleElement(writer, schemaElem, model);
+									writer.WriteEndElement();
+								}
+								else
+									ProcessElement(writer, schemaElem, level + 1, innerModel as ExpandoObject);
+								break;
+							case XmlSchemaChoice schemaChoice:
+								WriteElementChoice(writer, schemaChoice, innerModel as ExpandoObject);
+								break;
+						}
 					}
-					break;
-				case XmlSchemaSimpleType simpleType:
+				}
+				else if (complexType.ContentModel is XmlSchemaSimpleContent)
+				{
 					WriteSimpleElement(writer, elem, model);
-					break;
-			}
-			writer.WriteEndElement();
+				}
+				break;
+			case XmlSchemaSimpleType simpleType:
+				WriteSimpleElement(writer, elem, model);
+				break;
 		}
+		writer.WriteEndElement();
+	}
 
-		void WriteAttribute(XmlWriter writer, XmlSchemaAttribute attr, ExpandoObject model)
+	void WriteAttribute(XmlWriter writer, XmlSchemaAttribute attr, ExpandoObject model)
+	{
+		Object val = model.Get<Object>(attr.Name);
+		if (val != null)
 		{
-			Object val = model.Get<Object>(attr.Name);
-			if (val != null)
-			{
-				var strVal = TypedValue(attr.SchemaTypeName.Name, val, false);
-				if (!String.IsNullOrEmpty(strVal))
-					writer.WriteAttributeString(attr.Name, strVal);
-			}
+			var strVal = TypedValue(attr.SchemaTypeName.Name, val, false);
+			if (!String.IsNullOrEmpty(strVal))
+				writer.WriteAttributeString(attr.Name, strVal);
 		}
+	}
 
-		void WriteNil(XmlWriter writer)
+	void WriteNil(XmlWriter writer)
+	{
+		writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
+	}
+
+	void WriteSimpleElement(XmlWriter writer, XmlSchemaElement elem, ExpandoObject model)
+	{
+		if (elem.FixedValue != null)
 		{
-			writer.WriteAttributeString("xsi", "nil", XmlSchema.InstanceNamespace, "true");
+			writer.WriteString(elem.FixedValue);
+			return;
 		}
-
-		void WriteSimpleElement(XmlWriter writer, XmlSchemaElement elem, ExpandoObject model)
+		Object val = model.Get<Object>(elem.Name);
+		if (val != null)
 		{
-			if (elem.FixedValue != null)
-			{
-				writer.WriteString(elem.FixedValue);
-				return;
-			}
-			Object val = model.Get<Object>(elem.Name);
-			if (val != null)
-			{
-				var strVal = TypedValue(elem.SchemaTypeName.Name, val, elem.IsNillable);
-				if (String.IsNullOrEmpty(strVal) && elem.IsNillable)
-					WriteNil(writer);
-				else
-					writer.WriteString(strVal);
-			}
-			else if (elem.IsNillable)
+			var strVal = TypedValue(elem.SchemaTypeName.Name, val, elem.IsNillable);
+			if (String.IsNullOrEmpty(strVal) && elem.IsNillable)
 				WriteNil(writer);
 			else
-			{
-				// TODO: check nullability ????
-				//throw new XmlCreatorException($"Value for the field '{elem.Name}' is not nullable");
-			}
+				writer.WriteString(strVal);
 		}
-
-		void WriteElementChoice(XmlWriter writer, XmlSchemaChoice choice, ExpandoObject model)
+		else if (elem.IsNillable)
+			WriteNil(writer);
+		else
 		{
-			foreach (var ch in choice.Items)
+			// TODO: check nullability ????
+			//throw new XmlCreatorException($"Value for the field '{elem.Name}' is not nullable");
+		}
+	}
+
+	void WriteElementChoice(XmlWriter writer, XmlSchemaChoice choice, ExpandoObject model)
+	{
+		foreach (var ch in choice.Items)
+		{
+			if (ch is XmlSchemaSequence ss)
 			{
-				if (ch is XmlSchemaSequence ss)
+				foreach (var pp in ss.Items.OfType<XmlSchemaElement>())
 				{
-					foreach (var pp in ss.Items.OfType<XmlSchemaElement>())
+					var ppVal = model.Get<Object>(pp.Name);
+					var ppTypedVal = TypedValue(pp.SchemaTypeName.Name, ppVal, pp.IsNillable);
+					if (ppTypedVal != null)
 					{
-						var ppVal = model.Get<Object>(pp.Name);
-						var ppTypedVal = TypedValue(pp.SchemaTypeName.Name, ppVal, pp.IsNillable);
-						if (ppTypedVal != null)
-						{
-							writer.WriteStartElement(pp.Name);
-							writer.WriteString(ppTypedVal);
-							writer.WriteEndElement();
-						}
-					}
-					continue;
-				}
-				if (!(ch is XmlSchemaElement se))
-					continue;
-				var val = model.Get<Object>(se.Name);
-				if (val != null)
-				{
-					var typedVal = TypedValue(se.SchemaTypeName.Name, val, se.IsNillable);
-					if (typedVal != null)
-					{
-						writer.WriteStartElement(se.Name);
-						writer.WriteString(typedVal);
+						writer.WriteStartElement(pp.Name);
+						writer.WriteString(ppTypedVal);
 						writer.WriteEndElement();
-						return;
 					}
+				}
+				continue;
+			}
+			if (!(ch is XmlSchemaElement se))
+				continue;
+			var val = model.Get<Object>(se.Name);
+			if (val != null)
+			{
+				var typedVal = TypedValue(se.SchemaTypeName.Name, val, se.IsNillable);
+				if (typedVal != null)
+				{
+					writer.WriteStartElement(se.Name);
+					writer.WriteString(typedVal);
+					writer.WriteEndElement();
+					return;
 				}
 			}
 		}
+	}
 
-		String TypedValue(String typeName, Object val, Boolean isNillable)
+	String TypedValue(String typeName, Object val, Boolean isNillable)
+	{
+		if (val == null)
+			return null;
+		if (isNillable && String.IsNullOrEmpty(val.ToString()))
+			return null;
+		if (val is Double || val is Int32 || val is Int64)
 		{
-			if (val == null)
-				return null;
-			if (isNillable && String.IsNullOrEmpty(val.ToString()))
-				return null;
-			if (val is Double || val is Int32 || val is Int64)
-			{
-				if (isNillable && val.ToString() == "0")
-					return null; // decimal values
-			}
-			switch (typeName)
-			{
-				case "integer":
-					var iVal = Convert.ToInt32(val);
-					if (isNillable && iVal == 0)
-						return null;
-					return val.ToString();
-				case "DGpercentAlloc":
-					var dVal1 = Convert.ToDecimal(val);
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal1); ;
-				case "DGdecimal2":
-				case "Decimal2Column":
-					var dVal2 = Convert.ToDecimal(val);
-					if (isNillable && dVal2 == 0)
-						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2); ;
-				case "DGdecimal2_P":
-				case "Decimal2Column_P":
-					var dVal2p = Convert.ToDecimal(val);
-					if (isNillable && dVal2p == 0)
-						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2p);
-				case "DGdecimal3":
-				case "Decimal3Column":
-					var dVal3 = Convert.ToDecimal(val);
-					if (isNillable && dVal3 == 0)
-						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.000}", dVal3); ;
-				case "Decimal6Column":
-					var dVal6c = Convert.ToDecimal(val);
-					if (isNillable && dVal6c == 0)
-						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.000000}", dVal6c);
-				case "DGdecimal6":
-				case "Decimal6Column_R":
-					var dVal6 = Convert.ToDecimal(val);
-					if (isNillable && dVal6 == 0)
-						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.0#####}", dVal6);
-				case "Decimal12Column_R":
-					var dVal12 = Convert.ToDecimal(val);
-					if (isNillable && dVal12 == 0)
-						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0.0###########}", dVal12); ;
-				case "DGdecimal0":
-					var dVal0 = Convert.ToDecimal(val);
-					if (isNillable && dVal0 == 0)
-						return null;
-					return String.Format(CultureInfo.InvariantCulture, "{0:0}", dVal0); ;
-				case "DGchk":
-				case "ChkColumn":
-					var bVal = Convert.ToBoolean(val);
-					return bVal ? "1" : null;
-				case "DGI3nomColumn":
-					var intVal2 = Convert.ToInt32(val);
-					if (isNillable && intVal2 == 0)
-						return null;
-					return intVal2.ToString();
-				case "DGMonth":
-					var intVal = Convert.ToInt32(val);
-					if (intVal == 0)
-						return null;
-					return intVal.ToString();
-			}
-			return val.ToString();
+			if (isNillable && val.ToString() == "0")
+				return null; // decimal values
 		}
-
-		String FirstSchema
+		switch (typeName)
 		{
-			get
-			{
-				if (_schemaPathes.Count == 0)
+			case "integer":
+				var iVal = Convert.ToInt32(val);
+				if (isNillable && iVal == 0)
 					return null;
-				var ss = _schemaPathes[0];
-				return Path.GetFileName(ss); // file name without path
-			}
+				return val.ToString();
+			case "DGpercentAlloc":
+				var dVal1 = Convert.ToDecimal(val);
+				return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal1); ;
+			case "DGdecimal2":
+			case "DGDecimal2":
+			case "Decimal2Column":
+				var dVal2 = Convert.ToDecimal(val);
+				if (isNillable && dVal2 == 0)
+					return null;
+				return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2); ;
+			case "DGdecimal2_P":
+			case "Decimal2Column_P":
+				var dVal2p = Convert.ToDecimal(val);
+				if (isNillable && dVal2p == 0)
+					return null;
+				return String.Format(CultureInfo.InvariantCulture, "{0:0.00}", dVal2p);
+			case "DGdecimal3":
+			case "Decimal3Column":
+				var dVal3 = Convert.ToDecimal(val);
+				if (isNillable && dVal3 == 0)
+					return null;
+				return String.Format(CultureInfo.InvariantCulture, "{0:0.000}", dVal3); ;
+			case "Decimal6Column":
+				var dVal6c = Convert.ToDecimal(val);
+				if (isNillable && dVal6c == 0)
+					return null;
+				return String.Format(CultureInfo.InvariantCulture, "{0:0.000000}", dVal6c);
+			case "DGdecimal6":
+			case "Decimal6Column_R":
+				var dVal6 = Convert.ToDecimal(val);
+				if (isNillable && dVal6 == 0)
+					return null;
+				return String.Format(CultureInfo.InvariantCulture, "{0:0.0#####}", dVal6);
+			case "Decimal12Column_R":
+				var dVal12 = Convert.ToDecimal(val);
+				if (isNillable && dVal12 == 0)
+					return null;
+				return String.Format(CultureInfo.InvariantCulture, "{0:0.0###########}", dVal12); ;
+			case "DGdecimal0":
+				var dVal0 = Convert.ToDecimal(val);
+				if (isNillable && dVal0 == 0)
+					return null;
+				return String.Format(CultureInfo.InvariantCulture, "{0:0}", dVal0); ;
+			case "DGchk":
+			case "ChkColumn":
+				var bVal = Convert.ToBoolean(val);
+				return bVal ? "1" : null;
+			case "DGI3nomColumn":
+				var intVal2 = Convert.ToInt32(val);
+				if (isNillable && intVal2 == 0)
+					return null;
+				return intVal2.ToString();
+			case "DGMonth":
+				var intVal = Convert.ToInt32(val);
+				if (intVal == 0)
+					return null;
+				return intVal.ToString();
+		}
+		return val.ToString();
+	}
+
+	String FirstSchema
+	{
+		get
+		{
+			if (_schemaPathes.Count == 0)
+				return null;
+			var ss = _schemaPathes[0];
+			return Path.GetFileName(ss); // file name without path
 		}
 	}
 }

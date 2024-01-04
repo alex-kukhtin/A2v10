@@ -196,9 +196,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20231224-7954
+// 20240104-7954
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -975,10 +975,10 @@ app.modules['std:utils'] = function () {
 
 	function debounce(fn, timeout) {
 		let timerId = null;
-		return function () {
+		return function (arg) {
 			clearTimeout(timerId);
 			timerId = setTimeout(() => {
-				fn.call();
+				fn.call(undefined, arg);
 			}, timeout);
 		};
 	}

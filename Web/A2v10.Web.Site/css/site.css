@@ -2057,6 +2057,7 @@ header .include.nav-pane .partial-block .control-group,
   width: 100%;
   text-align: center;
   align-self: center;
+  color: #ccc;
 }
 .a2-file-preview .no-preview .ico {
   font-size: 4rem;
@@ -5249,6 +5250,9 @@ table.hover > tbody > tr.active:hover {
 }
 .a2-sticky-container {
   overflow: auto;
+}
+.a2-sticky-container tr {
+  scroll-margin-top: 35px;
 }
 table.a2-table.sticky {
   width: 100%;
