@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime.Interfaces</id>
-		<version>10.0.7953</version>
+		<version>10.0.7954</version>
 		<title>A2v10.Web Runtime Interfaces</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -10,7 +10,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Platform Runtime Interfaces</description>
 		<releaseNotes>Current NUGET release</releaseNotes>
-		<copyright>Copyright © 2015-2023 Oleksandr Kukhtin</copyright>
+		<copyright>Copyright © 2015-2024 Oleksandr Kukhtin</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<license type="expression">MIT</license>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>

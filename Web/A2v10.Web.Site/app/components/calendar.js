@@ -57,20 +57,21 @@
 			},
 			days() {
 				let dt = new Date(this.model);
-				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+				//dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+				console.dir(dt);
 				let d = dt.getDate();
 				dt.setDate(1); // 1-st day of month
 				let w = dt.getDay() - 1; // weekday
 				if (w === -1) w = 6;
-				else if (w === 0) w = 7;
+				//else if (w === 0) w = 7;
 				dt.setDate(-w + 1);
 				let arr = [];
 				for (let r = 0; r < 6; r++) {
 					let row = [];
 					for (let c = 0; c < 7; c++) {
-						let xd = new Date(dt);
-						xd.setHours(0, -xd.getTimezoneOffset(), 0, 0);
-						row.push(new Date(xd));
+						//let xd = new Date(dt);
+						//xd.setHours(0, -xd.getTimezoneOffset(), 0, 0);
+						row.push(new Date(dt));
 						dt.setDate(dt.getDate() + 1);
 					}
 					arr.push(row);

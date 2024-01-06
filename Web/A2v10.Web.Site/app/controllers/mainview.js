@@ -78,7 +78,7 @@
 		store,
 		template: `
 <div :class=cssClass class=main-view>
-	<component :is=navBarComponent :title=title :menu=menu v-if=isNavBarVisible 
+	<component :is=navBarComponent :menu=menu v-if=isNavBarVisible 
 		:period=period :is-navbar-menu=isNavBarMenu></component>
 	<component :is=sideBarComponent v-if=sideBarVisible :menu=menu :mode=sideBarMode></component>
 	<a2-content-view :pages=pages></a2-content-view>

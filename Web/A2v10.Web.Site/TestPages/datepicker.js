@@ -24,7 +24,7 @@
 				</thead>
 				<tbody>
 					<tr v-for="row in days">
-						<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getDate()" :title="dayTitle(day)"/></td>
+						<td v-for="day in row" :class="dayClass(day)"><a @click.stop.prevent="selectDay(day)" v-text="day.getUTCDate()" :title="dayTitle(day)"/></td>
 					</tr>
 				</tbody>
 				<tfoot><tr><td colspan="7"><a @click.stop.prevent='today'>today</a></td></tr></tfoot>
@@ -74,7 +74,7 @@
 			},
 			wdTitle(d) {
 				let dt = this.days[0][d - 1];
-				return dt.toLocaleString("uk-UA", { weekday: "short" });
+				return dt.toLocaleString("uk-UA", { weekday: "short", timeZone: 'UTC' });
 			},
 			dayClass(day) {
 				let cls = '';
@@ -88,7 +88,7 @@
 				return cls;
 			},
 			dayTitle(day) {
-				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday:'long' });
+				return day.toLocaleString("uk-UA", { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', timeZone: 'UTC' });
 			},
 			__clickOutside() {
 				this.isOpen = false;
@@ -102,7 +102,7 @@
 				get() {
 					if (utils.date.isZero(this.modelDate))
 						return '';
-					return this.modelDate.toLocaleString("uk-UA", {year: 'numeric', month:'2-digit', day:'2-digit'});
+					return this.modelDate.toLocaleString("uk-UA", { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC' });
 				},
 				set(str) {
 					let md = utils.date.parse(str);
@@ -112,15 +112,15 @@
 				}
 			},
 			title() {
-				let mn = this.modelDate.toLocaleString("uk-UA", { month: "long", year:'numeric' });
+				let mn = this.modelDate.toLocaleString("uk-UA", { month: "long", year:'numeric', timeZone: 'UTC' });
 				return mn.charAt(0).toUpperCase() + mn.slice(1);
 			},
 			days() {
 				let dt = new Date(this.modelDate);
-				dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
-				let d = dt.getDate();
-				dt.setDate(1); // 1-st day of month
-				let w = dt.getDay() - 1; // weekday
+				//dt.setHours(0, -dt.getTimezoneOffset(), 0, 0);
+				let d = dt.getUTCDate();
+				dt.setUTCDate(1); // 1-st day of month
+				let w = dt.getUTCDay() - 1; // weekday
 				if (w === -1) w = 6;
 				else if (w === 0) w = 7;
 				dt.setDate(-w + 1);
@@ -129,7 +129,7 @@
 					let row = [];
 					for (let c = 0; c < 7; c++) {
 						row.push(new Date(dt));
-						dt.setDate(dt.getDate() + 1);
+						dt.setUTCDate(dt.getUTCDate() + 1);
 					}
 					arr.push(row);
 				}

@@ -240,6 +240,7 @@
 			}
 		},
 		mounted() {
+			console.dir(this.period);
 			popup.registerPopup(this.$el);
 			this.$el._close = this.__clickOutside;
 		},

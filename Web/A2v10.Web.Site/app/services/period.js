@@ -144,7 +144,16 @@ app.modules['std:period'] = function () {
 	}
 
 	TPeriod.prototype.toJson = function () {
-		return JSON.stringify(this);
+		let f = new Date(this.From);
+		let t = new Date(this.To);
+		f.setHours(0, -f.getTimezoneOffset(), 0, 0);
+		t.setHours(0, -t.getTimezoneOffset(), 0, 0);
+		let p = {
+			Name: this.Name,
+			From: f,
+			To: t
+		}
+		return JSON.stringify(p);
 	};
 
 	

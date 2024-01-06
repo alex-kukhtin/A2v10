@@ -89,14 +89,14 @@
 				this.viewDate = dt;
 			},
 			selectDay(day) {
-				var dt = new Date(Date.UTC(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0));
+				var dt = new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0, 0, 0);
 				this.setDate(dt);
 				this.isOpen = false;
 			},
 			setDate(d) {
 				// save time
 				let md = this.modelDate;
-				let nd = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), md.getUTCHours(), md.getUTCMinutes(), 0, 0));
+				let nd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), md.getHours(), md.getMinutes(), 0, 0);
 				nd = this.fitDate(nd);
 				this.updateModel(nd);
 			},
@@ -136,9 +136,9 @@
 					if (utils.date.isZero(this.modelDate))
 						return '';
 					if (this.view === 'month')
-						return utils.text.capitalize(this.modelDate.toLocaleString(dateLocale, { timeZone: 'UTC', year: 'numeric', month: 'long' }));
+						return utils.text.capitalize(this.modelDate.toLocaleString(dateLocale, { year: 'numeric', month: 'long' }));
 					else
-						return this.modelDate.toLocaleString(dateLocale, { timeZone: 'UTC', year: 'numeric', month: '2-digit', day: '2-digit' });
+						return this.modelDate.toLocaleString(dateLocale, { year: 'numeric', month: '2-digit', day: '2-digit' });
 				},
 				set(str) {
 					let md = utils.date.parse(str, this.yearCutOff);

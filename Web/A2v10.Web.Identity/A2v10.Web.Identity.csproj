@@ -5,10 +5,10 @@
 		<LangVersion>10.0</LangVersion>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Version>10.0.7953</Version>
+		<Version>10.0.7954</Version>
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
-		<Copyright>Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.</Copyright>
+		<Copyright>Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.</Copyright>
 		<Description>A2v10 Platfrom Interop</Description>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
@@ -35,6 +35,7 @@
 		<ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj" />
 		<ProjectReference Include="..\..\Shared\A2v10.Interop\A2v10.Interop.csproj" />
 		<ProjectReference Include="..\..\Shared\A2v10.Messaging\A2v10.Messaging.csproj" />
+		<ProjectReference Include="..\A2v10.Web.Config\A2v10.Web.Config.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

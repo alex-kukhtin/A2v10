@@ -8,8 +8,8 @@
 		<Version>10.0.7954</Version>
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
-		<Copyright>Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.</Copyright>
-		<Description>A2v10 Platfrom Interop</Description>
+		<Copyright>Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.</Copyright>
+		<Description>A2v10 Platfrom Javascript</Description>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<RepositoryUrl>https://github.com/alex-kukhtin/A2v10.Data</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
@@ -31,22 +31,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
-		<PackageReference Include="Microsoft.AspNet.Razor" Version="3.3.0" />
-		<PackageReference Include="Microsoft.AspNet.WebPages" Version="3.3.0" />
-		<PackageReference Include="Microsoft.Web.Infrastructure" Version="2.0.1" />
+		<PackageReference Include="Jint" Version="3.0.0-beta-2058" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="System.Buffers" Version="4.5.1" />
+		<PackageReference Include="System.Memory" Version="4.5.5" />
+		<PackageReference Include="System.Numerics.Vectors" version="4.5.0" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj" />
-	  <ProjectReference Include="..\..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj" />
-	  <ProjectReference Include="..\..\Shared\A2v10.Request\A2v10.Request.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="System.Configuration" />
-	  <Reference Include="System.Net.Http" />
-	  <Reference Include="System.Web" />
+	  <ProjectReference Include="..\..\A2v10.Data\A2v10.Data.Interfaces\A2v10.Data.Interfaces.csproj" />
+	  <ProjectReference Include="..\Shared\A2v10.Infrastructure\A2v10.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

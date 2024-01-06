@@ -194,7 +194,7 @@ describe("Date tools", function () {
 	it('format date', function () {
 		let d1 = new Date(2018, 1, 2); // 2 feb
 		let f = du.formatDate(d1);
-		expect(f).toBe('01.02.2018');
+		expect(f).toBe('02.02.2018');
 	});
 
 	it('from days', function () {
