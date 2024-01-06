@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20181120-7363
+// 20240107-7954
 // platform/polyfills.js
 
 
@@ -45,10 +45,16 @@
 
 (function (date) {
 
+	let td = new Date(0, 0, 1, 0, 0, 0, 0);
+
 	date.isZero = date.isZero || function () {
-		let td = new Date(0, 0, 1, 0, 0, 0, 0);
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return this.getTime() === td.getTime();
+	};
+
+	date.toJSON = function (key) {
+		let nd = new Date(this);
+		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(), nd.getSeconds(), 0);
+		return nd.toISOString().replace('Z', '');
 	};
 
 })(Date.prototype);

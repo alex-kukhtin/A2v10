@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
 
 using A2v10.Javascript;
 using Newtonsoft.Json;
@@ -14,7 +14,7 @@ public static class JsonHelpers
 			Formatting = Formatting.Indented,
 			StringEscapeHandling = StringEscapeHandling.EscapeHtml,
 			DateFormatHandling = DateFormatHandling.IsoDateFormat,
-			DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+			DateTimeZoneHandling = DateTimeZoneHandling.Unspecified,
 			NullValueHandling = NullValueHandling.Ignore,
 			DefaultValueHandling = DefaultValueHandling.Ignore
 		};
@@ -25,7 +25,7 @@ public static class JsonHelpers
 			Formatting = Formatting.None,
 			StringEscapeHandling = StringEscapeHandling.EscapeHtml,
 			DateFormatHandling = DateFormatHandling.IsoDateFormat,
-			DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+			DateTimeZoneHandling = DateTimeZoneHandling.Unspecified,
 			NullValueHandling = NullValueHandling.Ignore,
 			DefaultValueHandling = DefaultValueHandling.Ignore
 		};
@@ -36,7 +36,7 @@ public static class JsonHelpers
 			Formatting = Formatting.None,
 			StringEscapeHandling = StringEscapeHandling.Default,
 			DateFormatHandling = DateFormatHandling.IsoDateFormat,
-			DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+			DateTimeZoneHandling = DateTimeZoneHandling.Unspecified,
 			NullValueHandling = NullValueHandling.Ignore,
 			DefaultValueHandling = DefaultValueHandling.Include,
 			Converters = new JsonConverter[] {
@@ -50,7 +50,7 @@ public static class JsonHelpers
 			Formatting = Formatting.None,
 			StringEscapeHandling = StringEscapeHandling.Default,
 			DateFormatHandling = DateFormatHandling.IsoDateFormat,
-			DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+			DateTimeZoneHandling = DateTimeZoneHandling.Unspecified,
 			NullValueHandling = NullValueHandling.Ignore,
 			DefaultValueHandling = DefaultValueHandling.Ignore,
 			ContractResolver = new DefaultContractResolver()

@@ -76,9 +76,9 @@
 	*/
 
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20181120-7363
+// 20240107-7954
 // platform/polyfills.js
 
 
@@ -123,10 +123,16 @@
 
 (function (date) {
 
+	let td = new Date(0, 0, 1, 0, 0, 0, 0);
+
 	date.isZero = date.isZero || function () {
-		let td = new Date(0, 0, 1, 0, 0, 0, 0);
-		td.setHours(0, -td.getTimezoneOffset(), 0, 0);
 		return this.getTime() === td.getTime();
+	};
+
+	date.toJSON = function (key) {
+		let nd = new Date(this);
+		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(), nd.getSeconds(), 0);
+		return nd.toISOString().replace('Z', '');
 	};
 
 })(Date.prototype);
@@ -745,8 +751,9 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateFromServer(src) {
+		if (isDate(src))
+			return src;
 		let dx = new Date(src);
-		dx.setHours(dx.getHours(), dx.getMinutes() + dx.getTimezoneOffset(), dx.getSeconds(), 0);
 		return dx;
 	}
 
@@ -811,7 +818,8 @@ app.modules['std:utils'] = function () {
 				var dtx = new Date(dt.getFullYear(), newMonth, day, 0, 0, 0);
 				return dtx;
 			case 'day':
-				du = 1000 * 60 * 60 * 24;
+				// Daylight time!!!
+				return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + nm, 0, 0, 0, 0);
 				break;
 			case 'hour':
 				du = 1000 * 60 * 60;
@@ -1408,16 +1416,7 @@ app.modules['std:period'] = function () {
 	}
 
 	TPeriod.prototype.toJson = function () {
-		let f = new Date(this.From);
-		let t = new Date(this.To);
-		f.setHours(0, -f.getTimezoneOffset(), 0, 0);
-		t.setHours(0, -t.getTimezoneOffset(), 0, 0);
-		let p = {
-			Name: this.Name,
-			From: f,
-			To: t
-		}
-		return JSON.stringify(p);
+		return JSON.stringify(this);
 	};
 
 	

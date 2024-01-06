@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
-// 20231001-7949
+// 20240107-7955
 // components/periodpicker.js
 
 
@@ -240,7 +240,6 @@
 			}
 		},
 		mounted() {
-			console.dir(this.period);
 			popup.registerPopup(this.$el);
 			this.$el._close = this.__clickOutside;
 		},

@@ -577,8 +577,9 @@ app.modules['std:utils'] = function () {
 	}
 
 	function dateFromServer(src) {
+		if (isDate(src))
+			return src;
 		let dx = new Date(src);
-		dx.setHours(dx.getHours(), dx.getMinutes() + dx.getTimezoneOffset(), dx.getSeconds(), 0);
 		return dx;
 	}
 
@@ -643,7 +644,8 @@ app.modules['std:utils'] = function () {
 				var dtx = new Date(dt.getFullYear(), newMonth, day, 0, 0, 0);
 				return dtx;
 			case 'day':
-				du = 1000 * 60 * 60 * 24;
+				// Daylight time!!!
+				return new Date(dt.getFullYear(), dt.getMonth(), dt.getDate() + nm, 0, 0, 0, 0);
 				break;
 			case 'hour':
 				du = 1000 * 60 * 60;
