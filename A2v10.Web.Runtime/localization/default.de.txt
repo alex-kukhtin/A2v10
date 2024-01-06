@@ -25,6 +25,7 @@
 @SetPassword=Passwort festlegen
 @Error=Fehler
 @Warning=Warnung
+@Or=or
 ;
 @ResetPassword=Passwortwiederherstellung
 @ResetPasswordBody=Code zur Wiederherstellung des Passworts: <b>{0}</b>
@@ -100,6 +101,7 @@
 @Login=Anmelden
 @UserName=Nutzername
 @LoginPrompt=Systemanmeldung
+@SignInWith=Sign in with
 @RegisterPrompt=Im System registrieren
 @ForgotPrompt=Passwort zurücksetzen
 @ConfirmEMailPrompt=E-mail bestätigen

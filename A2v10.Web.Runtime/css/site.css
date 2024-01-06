@@ -2045,6 +2045,26 @@ header .include.nav-pane .partial-block .control-group,
 .a2-file-upload .file-upload .upload-tip {
   padding-bottom: 0.2rem;
 }
+.a2-file-preview {
+  display: flex;
+  flex-direction: row;
+}
+.a2-file-preview img {
+  object-fit: contain;
+  object-position: 0 0;
+}
+.a2-file-preview .no-preview {
+  width: 100%;
+  text-align: center;
+  align-self: center;
+  color: #ccc;
+}
+.a2-file-preview .no-preview .ico {
+  font-size: 4rem;
+  color: #ccc;
+  display: block;
+  margin: 0 0 20px 0;
+}
 .a2-simple-upload {
   display: block;
   height: 27px;
@@ -5230,6 +5250,9 @@ table.hover > tbody > tr.active:hover {
 }
 .a2-sticky-container {
   overflow: auto;
+}
+.a2-sticky-container tr {
+  scroll-margin-top: 35px;
 }
 table.a2-table.sticky {
   width: 100%;

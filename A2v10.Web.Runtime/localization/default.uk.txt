@@ -25,6 +25,7 @@
 @SetPassword=Встановити пароль
 @Error=Помилка
 @Warning=Попередження
+@Or=або
 ;
 @ResetPassword=Відновлення пароля
 @ResetPasswordBody=Код підтверження для відновлення пароля: <b>{0}</b>
@@ -101,6 +102,7 @@
 @Login=Увійти
 @UserName=Ім'я
 @LoginPrompt=Вхід в систему
+@SignInWith=Вхід через
 @RegisterPrompt=Реєстрація в системі
 @ForgotPrompt=Відновлення паролю
 @ConfirmEMailPrompt=Підтвердження е-mail

@@ -2027,6 +2027,25 @@ header .include.nav-pane .partial-block .control-group,
 .a2-file-upload .file-upload .upload-tip {
   padding-bottom: 0.2rem;
 }
+.a2-file-preview {
+  display: flex;
+  flex-direction: row;
+}
+.a2-file-preview img {
+  object-fit: contain;
+  object-position: 0 0;
+}
+.a2-file-preview .no-preview {
+  width: 100%;
+  text-align: center;
+  align-self: center;
+}
+.a2-file-preview .no-preview .ico {
+  font-size: 4rem;
+  color: #ccc;
+  display: block;
+  margin: 0 0 20px 0;
+}
 .a2-simple-upload {
   display: block;
   height: 27px;

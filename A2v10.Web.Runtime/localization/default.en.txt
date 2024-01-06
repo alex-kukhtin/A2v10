@@ -23,6 +23,7 @@
 @SetPassword=Set password
 @Error=Error
 @Warning=Warning
+@Or=or
 ;
 @Home=Home
 @Documents=Documents
@@ -102,6 +103,7 @@
 @Login=Log in
 @UserName=Username
 @LoginPrompt=Login to system
+@SignInWith=Sign in with
 @RegisterPrompt=Register in the system
 @ForgotPrompt=Reset password
 @ConfirmEMailPrompt=Confirm е-mail
