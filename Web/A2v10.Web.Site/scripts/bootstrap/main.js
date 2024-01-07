@@ -5506,9 +5506,9 @@ app.modules['std:impl:array'] = function () {
 
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20231106-7951*/
+/*20240107-7954*/
 // controllers/base.js
 
 (function () {
@@ -6466,7 +6466,7 @@ app.modules['std:impl:array'] = function () {
 						id = utils.getStringId(arg);
 					const self = this;
 					const root = window.$$rootUrl;
-					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
+					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.split('?')[0].replace('/_page/', '/_export/');
 					newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
 					window.location = newurl; // to display errors
 				};

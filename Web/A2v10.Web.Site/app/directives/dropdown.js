@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20221027-7902*/
+/*20240107-7954*/
 /* directives/dropdown.js */
 
 (function () {
@@ -68,11 +68,22 @@
 		}
 	});
 
+	function canClick(el) {
+		const hlink = "a2-hyperlink";
+		if (el.classList.contains(hlink))
+			return false;
+		el = el.parentElement;
+		if (el && el.classList.contains(hlink))
+			return false;
+		return true;
+	}
+
 	Vue.directive('contextmenu', {
 		_contextMenu(ev) {
 			ev.preventDefault();
 			ev.stopPropagation();
-			ev.target.click();
+			if (canClick(ev.target))
+				ev.target.click();
 			let menu = document.querySelector('#' + this._val);
 			let br = menu.parentNode.getBoundingClientRect();
 			let style = menu.style;

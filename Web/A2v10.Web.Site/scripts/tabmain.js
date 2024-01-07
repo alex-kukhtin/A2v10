@@ -12379,9 +12379,9 @@ Vue.directive('disable', {
 });
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20221027-7902*/
+/*20240107-7954*/
 /* directives/dropdown.js */
 
 (function () {
@@ -12449,11 +12449,22 @@ Vue.directive('disable', {
 		}
 	});
 
+	function canClick(el) {
+		const hlink = "a2-hyperlink";
+		if (el.classList.contains(hlink))
+			return false;
+		el = el.parentElement;
+		if (el && el.classList.contains(hlink))
+			return false;
+		return true;
+	}
+
 	Vue.directive('contextmenu', {
 		_contextMenu(ev) {
 			ev.preventDefault();
 			ev.stopPropagation();
-			ev.target.click();
+			if (canClick(ev.target))
+				ev.target.click();
 			let menu = document.querySelector('#' + this._val);
 			let br = menu.parentNode.getBoundingClientRect();
 			let style = menu.style;
@@ -12823,9 +12834,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20231106-7951*/
+/*20240107-7954*/
 // controllers/base.js
 
 (function () {
@@ -13783,7 +13794,7 @@ Vue.directive('resize', {
 						id = utils.getStringId(arg);
 					const self = this;
 					const root = window.$$rootUrl;
-					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
+					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.split('?')[0].replace('/_page/', '/_export/');
 					newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
 					window.location = newurl; // to display errors
 				};
