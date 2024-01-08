@@ -2597,6 +2597,9 @@ pre.a2-code {
   pointer-events: none;
   opacity: 0.5;
 }
+.control-group.disabled .selector-combo {
+  pointer-events: none;
+}
 .data-grid .control-group {
   margin: 0;
 }

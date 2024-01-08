@@ -224,7 +224,7 @@ app.modules['std:utils'] = function () {
 	const currencyFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
 	const numberFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
 
-	const utcdatRegEx = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/;
+	const utcdatRegEx = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?$/;
 
 	let numFormatCache = {};
 
@@ -6222,9 +6222,9 @@ Vue.component('validator-control', {
 	});
 })();
 
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20200907-7706
+// 20240154-7954
 // components/timepicker.js
 
 
@@ -6361,7 +6361,7 @@ Vue.component('validator-control', {
 			},
 			setHour(h) {
 				let nd = new Date(this.modelDate);
-				nd.setUTCHours(h);
+				nd.setHours(h);
 				this.item[this.prop] = nd;
 			},
 			setMinute(m) {
@@ -6372,12 +6372,12 @@ Vue.component('validator-control', {
 			},
 			hourClass(h) {
 				let cls = '';
-				if (this.modelDate.getUTCHours() === +h)
+				if (this.modelDate.getHours() === +h)
 					cls += ' active';
 				return cls;
 			},
 			minuteClass(m) {
-				return this.modelDate.getUTCMinutes() === +m ? 'active' : undefined;
+				return this.modelDate.getMinutes() === +m ? 'active' : undefined;
 			},
 			cssClass2() {
 				let cx = this.cssClass();
@@ -6401,7 +6401,7 @@ Vue.component('validator-control', {
 					let md = this.modelDate;
 					if (utils.date.isZero(md))
 						return '';
-					return md.toLocaleTimeString(dateLocale, { timeZone: 'UTC', hour: '2-digit', minute: "2-digit" });
+					return md.toLocaleTimeString(dateLocale, { hour: '2-digit', minute: "2-digit" });
 				},
 				set(str) {
 					let md = new Date(this.modelDate);
@@ -6409,9 +6409,9 @@ Vue.component('validator-control', {
 						if (utils.date.isZero(md))
 							md = utils.date.today();
 						let time = utils.date.parseTime(str);
-						md.setUTCHours(time.getHours(), time.getMinutes());
+						md.setHours(time.getHours(), time.getMinutes());
 					} else {
-						md.setUTCHours(0, 0);
+						md.setHours(0, 0);
 					}
 					this.item[this.prop] = md;
 					this.isOpen = false;
@@ -12841,9 +12841,9 @@ Vue.directive('disable', {
 });
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20221027-7902*/
+/*20240107-7954*/
 /* directives/dropdown.js */
 
 (function () {
@@ -12911,11 +12911,22 @@ Vue.directive('disable', {
 		}
 	});
 
+	function canClick(el) {
+		const hlink = "a2-hyperlink";
+		if (el.classList.contains(hlink))
+			return false;
+		el = el.parentElement;
+		if (el && el.classList.contains(hlink))
+			return false;
+		return true;
+	}
+
 	Vue.directive('contextmenu', {
 		_contextMenu(ev) {
 			ev.preventDefault();
 			ev.stopPropagation();
-			ev.target.click();
+			if (canClick(ev.target))
+				ev.target.click();
 			let menu = document.querySelector('#' + this._val);
 			let br = menu.parentNode.getBoundingClientRect();
 			let style = menu.style;
@@ -13285,9 +13296,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20231106-7951*/
+/*20240107-7954*/
 // controllers/base.js
 
 (function () {
@@ -14245,7 +14256,7 @@ Vue.directive('resize', {
 						id = utils.getStringId(arg);
 					const self = this;
 					const root = window.$$rootUrl;
-					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.replace('/_page/', '/_export/');
+					let newurl = url ? urltools.combine('/_export', url, id) : self.$baseUrl.split('?')[0].replace('/_page/', '/_export/');
 					newurl = urltools.combine(root, newurl) + urltools.makeQueryString(dat);
 					window.location = newurl; // to display errors
 				};
