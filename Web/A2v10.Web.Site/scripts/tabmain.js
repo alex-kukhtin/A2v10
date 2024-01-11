@@ -87,7 +87,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240107-7954
+// 20240111-7956
 // platform/polyfills.js
 
 
@@ -140,7 +140,11 @@ app.modules['std:locale'] = function () {
 
 	date.toJSON = function (key) {
 		let nd = new Date(this);
-		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(), nd.getSeconds(), 0);
+		let ds = 0;
+		if (nd.getFullYear() < 1925) {
+			ds = -4;
+		}
+		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(), nd.getSeconds() - ds, 0);
 		return nd.toISOString().replace('Z', '');
 	};
 
