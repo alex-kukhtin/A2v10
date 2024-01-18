@@ -7,8 +7,8 @@
     <ProjectGuid>{BB9D6805-7FA2-47D7-A853-8216C466E91A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>A2v10.Web.Runtime.Iterfaces</RootNamespace>
-    <AssemblyName>A2v10.Web.Runtime.Iterfaces</AssemblyName>
+    <RootNamespace>A2v10.Web.Runtime.Interfaces</RootNamespace>
+    <AssemblyName>A2v10.Web.Runtime.Interfaces</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

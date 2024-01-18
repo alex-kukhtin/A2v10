@@ -187,7 +187,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240104-7954
+// 20240117-7957
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -195,7 +195,8 @@ app.modules['std:utils'] = function () {
 	const locale = require('std:locale');
 	const platform = require('std:platform');
 	const dateLocale = locale.$DateLocale || locale.$Locale;
-	const numLocale = locale.$Locale;
+	const numLocale = locale.$NumberLocale || locale.$Locale;
+
 	const _2digit = '2-digit';
 
 	const dateOptsDate = { year: 'numeric', month: _2digit, day: _2digit };
@@ -205,7 +206,12 @@ app.modules['std:utils'] = function () {
 	const formatTime = new Intl.DateTimeFormat(dateLocale, dateOptsTime).format;
 
 	const currencyFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 2, maximumFractionDigits: 6, useGrouping: true }).format;
-	const numberFormat = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true }).format;
+	const nf = new Intl.NumberFormat(numLocale, { minimumFractionDigits: 0, maximumFractionDigits: 6, useGrouping: true });
+	const numberFormat = nf.format;
+
+	const parts = nf.formatToParts(1000.5);
+	const decimalSymbol = parts[3].value;
+	const groupingSymbol = parts[1].value;
 
 	const utcdatRegEx = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?$/;
 
@@ -458,6 +464,8 @@ app.modules['std:utils'] = function () {
 			case 'Currency':
 			case 'Number':
 				return toNumber(obj);
+			case 'Percent':
+				return toNumber(obj) / 100.0;
 			case 'Date':
 				return dateParse(obj);
 		}
@@ -556,7 +564,7 @@ app.modules['std:utils'] = function () {
 				if (dateIsZero(obj))
 					return '';
 				if (dateHasTime(obj))
-					return obj.toISOString();
+					return obj.toJSON();
 				return '' + obj.getFullYear() + pad2(obj.getMonth() + 1) + pad2(obj.getDate());
 			case 'Time':
 				if (!isDate(obj)) {
@@ -593,6 +601,12 @@ app.modules['std:utils'] = function () {
 					return '';
 
 				return formatNumber(obj, opts.format);
+			case 'Percent':
+				if (!isNumber(obj))
+					obj = toNumber(obj);
+				if (opts.hideZeros && obj === 0)
+					return '';
+				return formatNumber((+obj) * 100, opts.format) + '%';
 			default:
 				console.error(`Invalid DataType for utils.format (${dataType})`);
 		}
@@ -618,8 +632,10 @@ app.modules['std:utils'] = function () {
 	}
 
 	function toNumber(val) {
-		if (isString(val))
-			val = val.replace(/\s/g, '').replace(',', '.');
+		if (isString(val)) {
+			val = val.replaceAll(groupingSymbol, '');
+			val = val.replace(/\s|%/g, '').replace(',', '.');
+		}
 		return isFinite(val) ? +val : 0;
 	}
 

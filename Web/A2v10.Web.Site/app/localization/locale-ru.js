@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20231226-7954
+// 20240118-7957
 // locale-ru.js
 
 "use strict";
@@ -10,6 +10,7 @@
 	window.$$locale = {
 		$Locale: 'ru-RU',
 		$DateLocale: 'ru-RU',
+		$NumberLocale: 'ru-RU',
 		$Ok: 'OK',
 		$Cancel: 'Отмена',
 		$Close: 'Закрыть',

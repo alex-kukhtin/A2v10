@@ -1,7 +1,7 @@
 ﻿
-/* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
+/* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7951 */
+/* Version 10.0.7957 */
 
 declare function require(url: string): any;
 
@@ -343,7 +343,8 @@ declare const enum DataType {
 	Date = "Date",
 	DateUrl = "DateUrl",
 	Time = "Time",
-	Period = "Period"
+	Period = "Period",
+	Percent = "Percent"
 }
 
 declare const enum DateTimeUnit {

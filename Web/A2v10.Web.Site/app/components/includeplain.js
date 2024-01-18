@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20230527-7936
+// 20240118-7957
 /*components/includeplain.js*/
 
 (function () {
@@ -159,6 +159,10 @@
 				_destroyElement(this.$el);
 			},
 			loaded(data) {
+				if (data)
+					data.__requery = () => {
+						this.needLoad += 1;
+					};
 				if (this.complete)
 					this.complete({ src: this.source, root: data });
 			},
