@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.IO;
@@ -179,7 +179,11 @@ public class Html2Excel
 				break;
 			case DataType.Number:
 				break;
-			case DataType.String:
+            case DataType.Percent:
+                cf.NumberFormatId = 9; /*standard*/
+                cf.ApplyNumberFormat = true;
+                break;
+            case DataType.String:
 				cf.Alignment.WrapText = true;
 				break;
 		}
@@ -252,7 +256,11 @@ public class Html2Excel
 				// DataType not needed
 				cell.CellValue = new CellValue(exCell.Value);
 				break;
-			default:
+            case DataType.Percent:
+                cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+                cell.CellValue = new CellValue(exCell.Value);
+                break;
+            default:
 				cell.CellValue = new CellValue(exCell.Value);
 				break;
 		}

@@ -1,4 +1,4 @@
-﻿// Copyright © 2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2023-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Globalization;
@@ -29,7 +29,7 @@ public class ExCell
 	public DataType DataType { get; set; }
 	public UInt32 StyleIndex { get; set; }
 
-	String NormalizeNumber(String number, IFormatProvider format)
+	static String NormalizeNumber(String number, IFormatProvider format)
 	{
 		if (Decimal.TryParse(number, NumberStyles.Number, format, out Decimal result))
 			return result.ToString(CultureInfo.InvariantCulture);
@@ -39,7 +39,20 @@ public class ExCell
 			return new Regex(@"[\s]").Replace(number, String.Empty).Replace(",", ".");
 	}
 
-	String NormalizeDate(String text)
+    static String NormalizePercent(String number, IFormatProvider format)
+    {
+        if (number.EndsWith("%"))
+            number = number.Substring(0, number.Length - 1);
+        var val = NormalizeNumber(number, format);
+        if (String.IsNullOrEmpty(val))
+            return val;
+        if (Decimal.TryParse(val, out Decimal result))
+            return (result / 100).ToString(CultureInfo.InvariantCulture);
+        return "#ERR";
+    }
+
+
+    static String NormalizeDate(String text)
 	{
 		if (String.IsNullOrEmpty(text))
 			return String.Empty;
@@ -48,7 +61,7 @@ public class ExCell
 		throw new InteropException($"Invalid date {text}");
 	}
 
-	String NormalizeDateTime(String text)
+	static String NormalizeDateTime(String text)
 	{
 		if (String.IsNullOrEmpty(text))
 			return String.Empty;
@@ -120,7 +133,11 @@ public class ExCell
 				DataType = DataType.Time;
 				Value = NormalizeTime(text);
 				break;
-			default:
+            case "percent":
+                DataType = DataType.Percent;
+                Value = NormalizePercent(text, format);
+                break;
+            default:
 				Value = text;
 				break;
 		}

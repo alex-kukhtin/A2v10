@@ -1,33 +1,32 @@
-﻿// Copyright © 2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
 
 
-namespace A2v10.Interop.ExportTo
+namespace A2v10.Interop.ExportTo;
+
+public enum DataType
 {
-	public enum DataType
-	{
-		NotSet,
-		String,
-		Currency,
-		Number,
-		Date,
-		DateTime,
-		Time
-	}
+	NotSet,
+	String,
+	Currency,
+	Number,
+	Date,
+	DateTime,
+	Time,
+    Percent
+}
 
-	public enum HorizontalAlign
-	{
-		NotSet,
-		Left,
-		Center,
-		Right
-	}
+public enum HorizontalAlign
+{
+	NotSet,
+	Left,
+	Center,
+	Right
+}
 
-	public enum VerticalAlign
-	{
-		NotSet,
-		Top,
-		Middle,
-		Bottom
-	}
-
+public enum VerticalAlign
+{
+	NotSet,
+	Top,
+	Middle,
+	Bottom
 }
