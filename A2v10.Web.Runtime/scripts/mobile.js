@@ -1757,9 +1757,11 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20230518-7933
+const { version } = require('d3');
+
+// 20240120-7958
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1795,6 +1797,7 @@ app.modules['std:http'] = function () {
 				body: data
 			});
 			let ct = response.headers.get("content-type") || '';
+			let version = response.headers.get("app-version") || '';
 			switch (response.status) {
 				case 200:
 					if (raw)
@@ -1831,8 +1834,11 @@ app.modules['std:http'] = function () {
 			throw err;
 		}
 		finally {
-			if (!skipEvents)
+			if (!skipEvents) {
 				eventBus.$emit('endRequest', url);
+				if (version)
+					eventBus.$emit('checkVersion', version);
+			}
 		}
 	}
 
