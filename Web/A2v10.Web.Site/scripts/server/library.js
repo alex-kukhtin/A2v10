@@ -115,7 +115,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240117-7957
+// 20240121-7958
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -819,6 +819,7 @@ app.modules['std:utils'] = function () {
 		return text.charAt(0).toUpperCase() + text.slice(1);
 	}
 	function maxChars(text, length) {
+		if (!text) return text;
 		text = '' + text || '';
 		if (text.length < length)
 			return text;
