@@ -208,7 +208,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240117-7957
+// 20240121-7958
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -912,6 +912,7 @@ app.modules['std:utils'] = function () {
 		return text.charAt(0).toUpperCase() + text.slice(1);
 	}
 	function maxChars(text, length) {
+		if (!text) return text;
 		text = '' + text || '';
 		if (text.length < length)
 			return text;
@@ -1759,8 +1760,6 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-const { version } = require('d3');
-
 // 20240120-7958
 /* services/http.js */
 
@@ -1786,6 +1785,7 @@ app.modules['std:http'] = function () {
 	async function doRequest(method, url, data, raw, skipEvents) {
 		if (!skipEvents)
 			eventBus.$emit('beginRequest', url);
+		let appver = '';
 		try {
 			var response = await fetch(url, {
 				method,
@@ -1797,7 +1797,7 @@ app.modules['std:http'] = function () {
 				body: data
 			});
 			let ct = response.headers.get("content-type") || '';
-			let version = response.headers.get("app-version") || '';
+			appver = response.headers.get("app-version") || '';
 			switch (response.status) {
 				case 200:
 					if (raw)
@@ -1836,8 +1836,8 @@ app.modules['std:http'] = function () {
 		finally {
 			if (!skipEvents) {
 				eventBus.$emit('endRequest', url);
-				if (version)
-					eventBus.$emit('checkVersion', version);
+				if (appver)
+					eventBus.$emit('checkVersion', appver);
 			}
 		}
 	}
