@@ -6706,9 +6706,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20230613-7948*/
+/*20240124-7959*/
 // components/selector.js
 
 (function selector_component() {
@@ -6999,7 +6999,7 @@ Vue.component('validator-control', {
 				this.current = this.items.indexOf(itm);
 				this.$nextTick(() => {
 					if (this.hitfunc) {
-						this.hitfunc.call(this.item.$root, itm);
+						this.hitfunc.call(this.item.$root, itm, this.item, this.prop);
 						return;
 					}
 					if (obj && obj.$merge)
