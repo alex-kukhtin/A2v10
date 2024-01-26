@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20230807-7941
+// 20240126-7959
 // components/datagrid.js*/
 
 (function () {
@@ -47,7 +47,7 @@
 						<span v-if="isGroupCountVisible(g)" class="grcount" v-text="g.count" /></td>
 					</tr>
 					<template v-for="(row, rowIndex) in g.items">
-						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row" />
+						<data-grid-row v-show="isGroupBodyVisible(g)" :group="true" :level="g.level" :cols="columns" :row="row" :key="gIndex + ':' + rowIndex" :index="rowIndex" :mark="mark" ref="row"  :is-item-active="isItemActive" :hit-item="hitItem"/>
 						<data-grid-row-details v-if="rowDetailsShow(row)" v-show="isGroupBodyVisible(g)" :cols="columns.length" :row="row" :key="'rd:' + gIndex + ':' + rowIndex" :mark="mark">
 							<slot name="row-details" :row="row"></slot>
 						</data-grid-row-details>
