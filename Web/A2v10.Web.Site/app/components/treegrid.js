@@ -1,11 +1,12 @@
 ﻿// Copyright © 2022-2024 Olekdsandr Kukhtin. All rights reserved.
 
-// 20240104-7954
+// 20240128-7959
 // components/treegrid.js
 
 (function () {
 
 	const utils = require('std:utils');
+	const eventBus = require('std:eventBus');
 
 	let debouncedUpdate = utils.debounce((pane) => {
 		if (!pane) return;
@@ -98,9 +99,11 @@
 					itm.$expanded = !itm.$expanded;
 			},
 			select(itm) {
+				eventBus.$emit('closeAllPopups');
 				itm.elem.$select(this.root);
 			},
 			dblClick(evt, itm) {
+				eventBus.$emit('closeAllPopups');
 				evt.stopImmediatePropagation();
 				window.getSelection().removeAllRanges();
 				if (this.doubleclick)
