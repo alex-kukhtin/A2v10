@@ -4998,9 +4998,9 @@ app.modules['std:impl:array'] = function () {
 
 	Vue.component("wait-cursor", waitCursor);
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20190610-7499
+// 20240201-7959
 // components/toastr.js
 
 
@@ -5080,7 +5080,7 @@ app.modules['std:impl:array'] = function () {
 
 				setTimeout(() => {
 					this.removeToast(toast.$index);
-				}, 2000);
+				}, toast.time || 2000);
 			},
 			removeToast(tstIndex) {
 				let ix = this.items.findIndex(x => x.$index === tstIndex);
@@ -6146,9 +6146,9 @@ app.modules['std:impl:array'] = function () {
 
 	app.components['std:appHeader'] = a2AppHeader;
 })();	
-// Copyright © 2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2021-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20210608-7782*/
+/*20240201-7959*/
 /* controllers/mainview.js */
 
 (function () {
@@ -6453,9 +6453,10 @@ app.modules['std:impl:array'] = function () {
 
 				if (dlg.attrs.canClose) {
 					let canResult = dlg.attrs.canClose();
-					//console.dir(canResult);
+
 					if (canResult === true)
 						closeImpl(result);
+
 					else if (canResult.then) {
 						result.then(function (innerResult) {
 							if (innerResult === true)

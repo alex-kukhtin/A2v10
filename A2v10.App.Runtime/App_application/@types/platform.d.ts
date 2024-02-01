@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7957 */
+/* Version 10.0.7959 */
 
 declare function require(url: string): any;
 
@@ -269,11 +269,11 @@ interface IController {
 	$inlineOpen(id: string): void;
 	$inlineClose(id: string, result?: any): void;
 	$inlineDepth(): number;
-	$saveModified(msg?: string, title?: string): boolean;
+	$saveModified(msg?: string, title?: string, validRequired?: boolean): boolean;
 	$asyncValid(cmd: string, arg: object): any | Promise<any>;
-	$toast(text: string, style?: CommonStyle): void;
-	$toast(toast: { text: string, style?: CommonStyle }): void;
-	$notifyOwner(id: any, toast?: string | { text: string, style?: CommonStyle }): void;
+	$toast(text: string, style?: CommonStyle, timeout?: number): void;
+	$toast(toast: { text: string, style?: CommonStyle, timeout?: number }): void;
+	$notifyOwner(id: any, toast?: string | { text: string, style?: CommonStyle, timeout?: number }): void;
 	$navigate(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
 	$defer(handler: () => void): void;
 	$setFilter(target: any, prop: string, value: any): void;

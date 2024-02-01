@@ -304,7 +304,7 @@ public partial class BaseController
 			var files = _host.ApplicationReader.EnumerateFiles("_assets", "*.js");
 			if (files == null)
 				return String.Empty;
-			foreach (var f in files)
+			foreach (var _ in files)
 				// at least one file
 				return $"<script type=\"text/javascript\" src=\"/_shell/appscripts\"></script>";
 			return String.Empty;

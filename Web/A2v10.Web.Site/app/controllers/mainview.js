@@ -1,6 +1,6 @@
-﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20210608-7782*/
+/*20240201-7959*/
 /* controllers/mainview.js */
 
 (function () {
@@ -305,9 +305,10 @@
 
 				if (dlg.attrs.canClose) {
 					let canResult = dlg.attrs.canClose();
-					//console.dir(canResult);
+
 					if (canResult === true)
 						closeImpl(result);
+
 					else if (canResult.then) {
 						result.then(function (innerResult) {
 							if (innerResult === true)

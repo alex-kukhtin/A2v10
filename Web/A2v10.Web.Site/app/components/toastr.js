@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20190610-7499
+// 20240201-7959
 // components/toastr.js
 
 
@@ -80,7 +80,7 @@
 
 				setTimeout(() => {
 					this.removeToast(toast.$index);
-				}, 2000);
+				}, toast.time || 2000);
 			},
 			removeToast(tstIndex) {
 				let ix = this.items.findIndex(x => x.$index === tstIndex);

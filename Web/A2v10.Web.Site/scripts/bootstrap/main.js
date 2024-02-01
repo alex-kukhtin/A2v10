@@ -5534,7 +5534,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240107-7954*/
+/*20240201-7959*/
 // controllers/base.js
 
 (function () {
@@ -6338,10 +6338,10 @@ app.modules['std:impl:array'] = function () {
 					alert(msg);
 			},
 
-			$toast(toast, style) {
+			$toast(toast, style, time) {
 				if (!toast) return;
 				if (utils.isString(toast))
-					toast = { text: toast, style: style || 'success' };
+					toast = { text: toast, style: style || 'success', time: time };
 				eventBus.$emit('toast', toast);
 			},
 
@@ -6674,7 +6674,7 @@ app.modules['std:impl:array'] = function () {
 				this.$reload();
 			},
 
-			$saveModified(message, title) {
+			$saveModified(message, title, validRequired) {
 				if (!this.$isDirty)
 					return true;
 				if (this.isIndex)
@@ -6703,8 +6703,12 @@ app.modules['std:impl:array'] = function () {
 						closeImpl(false);
 					} else if (result === 'save') {
 						// save then close
+						if (validRequired && self.$data.$invalid) {
+							let errs = makeErrors(self.$data.$forceValidate());
+							self.$alert(locale.$MakeValidFirst, undefined, errs);
+							return false;
+						}
 						self.$save().then(function (saveResult) {
-							//console.dir(saveResult);
 							closeImpl(saveResult);
 						});
 					}

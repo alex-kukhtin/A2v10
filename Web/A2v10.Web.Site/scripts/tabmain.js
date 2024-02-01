@@ -10334,9 +10334,9 @@ TODO:
 	});
 
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20190610-7499
+// 20240201-7959
 // components/toastr.js
 
 
@@ -10416,7 +10416,7 @@ TODO:
 
 				setTimeout(() => {
 					this.removeToast(toast.$index);
-				}, 2000);
+				}, toast.time || 2000);
 			},
 			removeToast(tstIndex) {
 				let ix = this.items.findIndex(x => x.$index === tstIndex);
@@ -12869,7 +12869,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240107-7954*/
+/*20240201-7959*/
 // controllers/base.js
 
 (function () {
@@ -13673,10 +13673,10 @@ Vue.directive('resize', {
 					alert(msg);
 			},
 
-			$toast(toast, style) {
+			$toast(toast, style, time) {
 				if (!toast) return;
 				if (utils.isString(toast))
-					toast = { text: toast, style: style || 'success' };
+					toast = { text: toast, style: style || 'success', time: time };
 				eventBus.$emit('toast', toast);
 			},
 
@@ -14009,7 +14009,7 @@ Vue.directive('resize', {
 				this.$reload();
 			},
 
-			$saveModified(message, title) {
+			$saveModified(message, title, validRequired) {
 				if (!this.$isDirty)
 					return true;
 				if (this.isIndex)
@@ -14038,8 +14038,12 @@ Vue.directive('resize', {
 						closeImpl(false);
 					} else if (result === 'save') {
 						// save then close
+						if (validRequired && self.$data.$invalid) {
+							let errs = makeErrors(self.$data.$forceValidate());
+							self.$alert(locale.$MakeValidFirst, undefined, errs);
+							return false;
+						}
 						self.$save().then(function (saveResult) {
-							//console.dir(saveResult);
 							closeImpl(saveResult);
 						});
 					}
