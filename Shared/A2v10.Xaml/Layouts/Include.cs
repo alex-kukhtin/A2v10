@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
@@ -16,6 +16,8 @@ public class Include : UIElementBase
 
 	public Boolean Queued { get; set; }
 
+	public Overflow? Overflow { get; set; }
+
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (SkipRender(context))
@@ -27,6 +29,7 @@ public class Include : UIElementBase
 		var div = new TagBuilder(tagName, null, IsInGrid);
 
 		MergeAttributes(div, context);
+		div.AddCssClass(Overflow.ToClass());
 
 		AddBindingCssClass(div, context, CssClass);
 
