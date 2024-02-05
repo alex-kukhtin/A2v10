@@ -10,8 +10,8 @@
 	bottom: 32px;
 
 	> ul {
-		margin:0;
-		padding:0;
+		margin: 0;
+		padding: 0;
 	}
 
 	li.toast {
@@ -51,10 +51,11 @@
 
 	.list-enter, .list-leave-to /* .list-leave-active до версии 2.1.8 */ {
 		opacity: 0;
-		transform: translateY(10px);
+		transform: translateY(3px);
 	}
 
 	.list-leave-active {
 		position: absolute;
+		width: @toastr-width;
 	}
 }
