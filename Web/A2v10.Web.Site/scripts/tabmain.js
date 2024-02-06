@@ -12869,7 +12869,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240201-7959*/
+/*20240206-7960*/
 // controllers/base.js
 
 (function () {
@@ -14308,6 +14308,7 @@ Vue.directive('resize', {
 					$focus: this.$focus,
 					$report: this.$report,
 					$upload: this.$upload,
+					$file: this.$file,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
 					$emitGlobal: this.$emitGlobal,
