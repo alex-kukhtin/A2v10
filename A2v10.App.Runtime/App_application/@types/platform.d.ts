@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7959 */
+/* Version 10.0.7960 */
 
 declare function require(url: string): any;
 
@@ -282,6 +282,7 @@ interface IController {
 	$focus(htmlid: string): void;
 	$report(report: string, arg: object, opts?: { export?: Boolean, attach?: Boolean, print?: Boolean, format?: ReportFormat }, url?: string, data?: object): void;
 	$upload(url: string, accept?: string, data?: { Id?: any, Key?: any }, opts?: { catchError?: boolean }): Promise<any>;
+	$file(url: string, arg: any, opts?: { action: FileActions }, data?: object): void;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
 	$emitGlobal(event: string, data?: any): void;
@@ -331,7 +332,6 @@ interface IViewModel extends IController {
 	$setCurrentUrl(url: string): void;
 	$export(arg: any, url: string, data?: any, opts?: { saveRequired: boolean }): void;
 	$navigateSimple(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
-	$file(url: string, arg: any, opts?: { action: FileActions }, data?: object): void;
 }
 
 // utilities

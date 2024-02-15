@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240111-7956
+// 20240215-7960
 // platform/polyfills.js
 
 
@@ -57,11 +57,10 @@
 		if (nd.getFullYear() < 1925) {
 			ds = -4;
 		}
-		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(), nd.getSeconds() - ds, 0);
+		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(),
+			nd.getSeconds() - ds, nd.getMilliseconds());
 		return nd.toISOString().replace('Z', '');
 	};
 
 })(Date.prototype);
-
-
 

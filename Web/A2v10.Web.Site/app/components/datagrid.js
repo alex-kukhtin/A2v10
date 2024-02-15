@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240126-7959
+// 20240215-7960
 // components/datagrid.js*/
 
 (function () {
@@ -18,7 +18,7 @@
 	const eqlower = utils.text.equalNoCase;
 
 	const dataGridTemplate = `
-<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}" :test-id="testId">
+<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border, 'compact': compact}" :test-id="testId">
 	<div class="data-grid-header-border" v-if="fixedHeader" />
 	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
 	<div class="data-grid-empty" v-if="$isEmpty">

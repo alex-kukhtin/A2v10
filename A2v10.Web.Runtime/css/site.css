@@ -4959,10 +4959,11 @@ ul.news-list > li {
 .toastr-stack .list-enter,
 .toastr-stack .list-leave-to {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(3px);
 }
 .toastr-stack .list-leave-active {
   position: absolute;
+  width: 320px;
 }
 table th {
   border: 1px solid #ddd;
