@@ -3611,6 +3611,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead {
   height: 0;
+  position: unset;
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th {
   border-top-style: none;
