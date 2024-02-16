@@ -87,7 +87,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240111-7956
+// 20240215-7960
 // platform/polyfills.js
 
 
@@ -144,13 +144,12 @@ app.modules['std:locale'] = function () {
 		if (nd.getFullYear() < 1925) {
 			ds = -4;
 		}
-		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(), nd.getSeconds() - ds, 0);
+		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(),
+			nd.getSeconds() - ds, nd.getMilliseconds());
 		return nd.toISOString().replace('Z', '');
 	};
 
 })(Date.prototype);
-
-
 
 
 // Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
@@ -7130,7 +7129,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240126-7959
+// 20240215-7960
 // components/datagrid.js*/
 
 (function () {
@@ -7148,7 +7147,7 @@ Vue.component('validator-control', {
 	const eqlower = utils.text.equalNoCase;
 
 	const dataGridTemplate = `
-<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border}" :test-id="testId">
+<div v-lazy="itemsSource" :class="{'data-grid-container':true, 'fixed-header': fixedHeader, 'bordered': border, 'compact': compact}" :test-id="testId">
 	<div class="data-grid-header-border" v-if="fixedHeader" />
 	<div :class="{'data-grid-body': true, 'fixed-header': fixedHeader}">
 	<div class="data-grid-empty" v-if="$isEmpty">
