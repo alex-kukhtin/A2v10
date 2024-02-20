@@ -7286,6 +7286,17 @@ table.tree-grid a.toggle.expanded:after {
 .color-picker .caret {
   margin: 3px 3px 0 6px;
 }
+.color-picker.disabled .color-picker-wrapper {
+  pointer-events: none;
+}
+.color-picker.disabled .caret {
+  opacity: 0.5;
+}
+.color-picker.drop-up .color-picker-pane {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 2px;
+}
 .debug-panel {
   position: absolute;
   top: 0;

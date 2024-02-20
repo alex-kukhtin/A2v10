@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -28,6 +28,7 @@ public class ColorComboBox : ValuedControl, ITableControl
 {
 	public Object ItemsSource { get; set; }
 	public TextAlign Align { get; set; }
+	public Boolean DropUp { get; set; }
 
 	ColorComboBoxItems _children;
 
@@ -53,6 +54,8 @@ public class ColorComboBox : ValuedControl, ITableControl
 		combo.MergeAttribute("v-cloak", String.Empty);
 		MergeAttributes(combo, context);
 		MergeAlign(combo, context, Align);
+		if (DropUp)
+			combo.AddCssClass("drop-up");
 		SetSize(combo, nameof(ColorComboBox));
 		MergeDisabled(combo, context);
 		var isBind = GetBinding(nameof(ItemsSource));

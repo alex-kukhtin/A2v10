@@ -1,4 +1,4 @@
-﻿// Copyright © 2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2023-2024 Oleksandr Kukhtin. All rights reserved.
 
 @import "Variables.less";
 
@@ -48,6 +48,24 @@
 
 	.caret {
 		margin: 3px 3px 0 6px;
+	}
+
+	&.disabled {
+		.color-picker-wrapper {
+			pointer-events: none;
+		}
+
+		.caret {
+			opacity: .5;
+		}
+	}
+
+	&.drop-up {
+		.color-picker-pane {
+			top: auto;
+			bottom: 100%;
+			margin-bottom: 2px;
+		}
 	}
 }
 

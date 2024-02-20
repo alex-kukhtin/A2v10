@@ -4280,9 +4280,9 @@ app.modules['std:popup'] = function () {
 };
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20230629-7939*/
+/*20240220-7961*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -4619,11 +4619,11 @@ app.modules['std:mask'] = function () {
 	}
 
 	function focusHandler(/*e*/) {
-		if (!this.value)
-			this.value = getMasked(this.__opts.mask, '');
-		setTimeout(() => {
+		Vue.nextTick(() => {
+			if (!this.value)
+				this.value = getMasked(this.__opts.mask, '');
 			setCaretPosition(this, 0, 'r');
-		}, 10);
+		});
 	}
 
 	function pasteHandler(e) {
