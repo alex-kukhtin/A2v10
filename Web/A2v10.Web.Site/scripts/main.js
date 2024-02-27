@@ -2482,9 +2482,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20230922-7948*/
+/*20240227-7961*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2593,6 +2593,35 @@ app.modules['std:impl:array'] = function () {
 			return this.$vm.$reload(this);
 		}
 
+		arr.$move = function (el, dir) {
+			if (!el) return;
+			let rowNoProp = el._meta_.$rowNo;
+			if (!rowNoProp) return;
+			let ix1 = this.indexOf(el);
+			let ix2 = 0;
+			if (dir === 'up') {
+				if (ix1 <= 0) return;
+				ix2 = ix1;
+				ix1 = ix2 - 1;
+			}
+			else if (dir === 'down') {
+				if (ix1 >= this.length - 1) return;
+				ix2 = ix1 + 1;
+			} else
+				return;
+			// swap ix1-ix2
+			let t = [this[ix1], this[ix2]];
+			this.splice(ix1, 2, t[1], t[0]);
+			this.$renumberRows();
+		}
+
+		arr.$canMove = function (el, dir) {
+			if (dir === 'up')
+				return this.indexOf(el) > 0;
+			else if (dir === 'down')
+				return this.indexOf(el) < this.length - 1;
+			return false;
+		}
 	}
 
 	function addResize(arr) {
@@ -13326,7 +13355,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240206-7960*/
+/*20240226-7961*/
 // controllers/base.js
 
 (function () {
@@ -13468,6 +13497,30 @@ Vue.directive('resize', {
 				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
+			},
+
+			$move(dir, arg) {
+				if (!arg) return;
+				arg.$parent.$move(arg, dir);
+			},
+
+			$moveSelected(dir, arg) {
+				if (!arg) return;
+				let sel = arg.$selected;
+				if (sel)
+					arg.$move(sel, dir);
+			},
+
+			$canMove(dir, arg) {
+				if (!arg) return false;
+				return arg.$parent.$canMove(arg, dir);
+			},
+
+			$canMoveSelected(dir, arg) {
+				if (!arg) return false;
+				let sel = arg.$selected;
+				if (!sel) return false;
+				return arg.$canMove(sel, dir);
 			},
 
 			async $invokeServer(url, arg, confirm, opts) {

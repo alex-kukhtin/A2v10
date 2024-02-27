@@ -5527,6 +5527,10 @@ TODO:
   box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
   border: 1px solid #ddd;
 }
+.menu.menu-columns {
+  column-rule: 1px solid #ddd;
+  column-gap: 0.5rem;
+}
 .menu .dropdown-item {
   display: flex;
   cursor: pointer;

@@ -1625,9 +1625,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20230922-7948*/
+/*20240227-7961*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -1736,6 +1736,35 @@ app.modules['std:impl:array'] = function () {
 			return this.$vm.$reload(this);
 		}
 
+		arr.$move = function (el, dir) {
+			if (!el) return;
+			let rowNoProp = el._meta_.$rowNo;
+			if (!rowNoProp) return;
+			let ix1 = this.indexOf(el);
+			let ix2 = 0;
+			if (dir === 'up') {
+				if (ix1 <= 0) return;
+				ix2 = ix1;
+				ix1 = ix2 - 1;
+			}
+			else if (dir === 'down') {
+				if (ix1 >= this.length - 1) return;
+				ix2 = ix1 + 1;
+			} else
+				return;
+			// swap ix1-ix2
+			let t = [this[ix1], this[ix2]];
+			this.splice(ix1, 2, t[1], t[0]);
+			this.$renumberRows();
+		}
+
+		arr.$canMove = function (el, dir) {
+			if (dir === 'up')
+				return this.indexOf(el) > 0;
+			else if (dir === 'down')
+				return this.indexOf(el) < this.length - 1;
+			return false;
+		}
 	}
 
 	function addResize(arr) {

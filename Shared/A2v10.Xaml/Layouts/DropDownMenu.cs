@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -18,7 +18,7 @@ public class DropDownMenu : Container, IDropDownPros
 	public DropDownDirection Direction { get; set; }
 	public BackgroundStyle Background { get; set; }
 	public Boolean Separate { get; set; }
-
+	public Int32 Columns { get; set; }
 
 	public Boolean IsDropUp => (Direction == DropDownDirection.UpLeft) || (Direction == DropDownDirection.UpRight);
 
@@ -33,6 +33,11 @@ public class DropDownMenu : Container, IDropDownPros
 			menu.AddCssClass(Direction.ToString().ToKebabCase());
 		if (Background != BackgroundStyle.Default)
 			menu.AddCssClass("background-" + Background.ToString().ToKebabCase());
+		if (Columns > 1)
+		{
+			menu.AddCssClass("menu-columns");
+			menu.MergeStyle("column-count", Columns.ToString());
+		}
 		menu.RenderStart(context);
 		RenderChildren(context);
 		menu.RenderEnd(context);

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Text;
@@ -36,6 +36,8 @@ public enum CommandType
 	ExecuteSelected,
 	Remove,
 	RemoveSelected,
+	Move,
+	MoveSelected,
 	Dialog,
 	Select,
 	SelectChecked,
@@ -273,6 +275,12 @@ public class BindCmd : BindBase
 					return $"{{cmd:$remove, arg1:'this'}}";
 				else
 					return $"$remove({CommandArgumentOrThis(context)}, {GetConfirm(context)})";
+
+			case CommandType.Move:
+				return $"$move('{CommandName}', {CommandArgument(context)})";
+
+			case CommandType.MoveSelected:
+				return $"$moveSelected('{CommandName}', {CommandArgument(context)})";
 
 			case CommandType.Append:
 				return $"{CommandArgument(context)}.$append()";
@@ -576,6 +584,12 @@ public class BindCmd : BindBase
 			case CommandType.Remove:
 				if (context.IsDataModelIsReadOnly)
 					tag.MergeAttribute(":disabled", "true", replaceExisting:true);
+				break;
+			case CommandType.Move:
+				MergeDisabled(tag, $"!$canMove('{CommandName}', {CommandArgument(context, true)})");
+				break;
+			case CommandType.MoveSelected:
+				MergeDisabled(tag, $"!$canMoveSelected('{CommandName}', {CommandArgument(context, true)})");
 				break;
 			case CommandType.SelectChecked:
 				{

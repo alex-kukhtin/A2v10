@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240206-7960*/
+/*20240226-7961*/
 // controllers/base.js
 
 (function () {
@@ -142,6 +142,30 @@
 				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
+			},
+
+			$move(dir, arg) {
+				if (!arg) return;
+				arg.$parent.$move(arg, dir);
+			},
+
+			$moveSelected(dir, arg) {
+				if (!arg) return;
+				let sel = arg.$selected;
+				if (sel)
+					arg.$move(sel, dir);
+			},
+
+			$canMove(dir, arg) {
+				if (!arg) return false;
+				return arg.$parent.$canMove(arg, dir);
+			},
+
+			$canMoveSelected(dir, arg) {
+				if (!arg) return false;
+				let sel = arg.$selected;
+				if (!sel) return false;
+				return arg.$canMove(sel, dir);
 			},
 
 			async $invokeServer(url, arg, confirm, opts) {

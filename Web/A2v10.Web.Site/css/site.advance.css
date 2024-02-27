@@ -5529,6 +5529,10 @@ TODO:
   border: 1px solid var(--neutralBkDarker);
   font-weight: normal;
 }
+.menu.menu-columns {
+  column-rule: 1px solid var(--neutralBkDarker);
+  column-gap: 6px;
+}
 .menu .dropdown-item {
   display: flex;
   cursor: pointer;

@@ -1,4 +1,4 @@
-﻿
+﻿@import "Variables.less";
 
 /*
 TODO: 
@@ -16,6 +16,11 @@ TODO:
 	box-shadow: @dropdown-shadow;
 	border: 1px solid @dropdown-brd-color;
 
+	&.menu-columns {
+		column-rule: 1px solid @dropdown-brd-color;
+		column-gap: .5rem;
+	}
+
 	.dropdown-item {
 		display: flex;
 		cursor: pointer;
@@ -26,7 +31,7 @@ TODO:
 		background-color: transparent;
 		width: 100%;
 		text-align: left;
-		border:none;
+		border: none;
 
 		&:hover {
 			text-decoration: none;
@@ -38,7 +43,7 @@ TODO:
 			margin-right: .5em;
 			color: inherit;
 			min-width: 1.25em;
-			font-size:1.077em;
+			font-size: 1.077em;
 
 			&:before {
 				color: @icon-color;
