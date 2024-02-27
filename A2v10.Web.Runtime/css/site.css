@@ -3612,6 +3612,7 @@ table.data-grid > tbody > tr.bold > td {
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead {
   height: 0;
+  position: unset;
 }
 .data-grid-container.fixed-header > .data-grid-body.fixed-header > table > thead > tr > th {
   border-top-style: none;
@@ -5526,6 +5527,10 @@ TODO:
   box-shadow: 3px 3px 10px 0 rgba(174, 174, 174, 0.5), 0 5px 40px 0 rgba(0, 0, 0, 0.15);
   border: 1px solid #ddd;
 }
+.menu.menu-columns {
+  column-rule: 1px solid #ddd;
+  column-gap: 0.5rem;
+}
 .menu .dropdown-item {
   display: flex;
   cursor: pointer;
@@ -7284,6 +7289,17 @@ table.tree-grid a.toggle.expanded:after {
 }
 .color-picker .caret {
   margin: 3px 3px 0 6px;
+}
+.color-picker.disabled .color-picker-wrapper {
+  pointer-events: none;
+}
+.color-picker.disabled .caret {
+  opacity: 0.5;
+}
+.color-picker.drop-up .color-picker-pane {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 2px;
 }
 .debug-panel {
   position: absolute;
