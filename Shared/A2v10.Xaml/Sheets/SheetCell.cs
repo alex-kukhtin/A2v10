@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,7 @@ public class SheetCell : UiContentElement, ISheetCell
 	public Boolean GroupIndent { get; set; } // ???
 
 	public String Fill { get; set; }
+	public UInt32 MaxChars { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -110,7 +111,10 @@ public class SheetCell : UiContentElement, ISheetCell
 		var contBind = GetBinding(nameof(Content));
 		if (contBind != null)
 		{
-			tag.MergeAttribute("v-text", contBind.GetPathFormat(context));
+			tag.MergeAttribute("v-text", MaxChars > 0 ?
+				$"$maxChars({contBind.GetPathFormat(context)}, {MaxChars})" :
+				contBind.GetPathFormat(context));
+
 			if (contBind.DataType != A2v10.Xaml.DataType.String)
 				tag.MergeAttribute("data-type", contBind.DataType.ToString().ToLowerInvariant());
 			if (contBind.NegativeRed)
