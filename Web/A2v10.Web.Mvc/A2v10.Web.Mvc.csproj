@@ -41,18 +41,18 @@
 		<PackageReference Include="Owin" Version="1.0" />
 		<PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
 		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.4" />
-		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="7.3.1" />
-		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.3.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="7.3.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.3.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.3.1" />
-		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.3.1" />
+		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="7.4.0" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.4.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="7.4.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="7.4.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.4.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.4.0" />
 		<PackageReference Include="Microsoft.Owin.Host.SystemWeb" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security.Cookies" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security.OAuth" Version="4.2.2" />
 		<PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.2" />
-		<PackageReference Include="Quartz" Version="3.8.0" />
+		<PackageReference Include="Quartz" Version="3.8.1" />
 		<PackageReference Include="RazorGenerator.Mvc" Version="2.4.9" />
 		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
 		<PackageReference Include="WebActivatorEx" Version="2.2.0" />
