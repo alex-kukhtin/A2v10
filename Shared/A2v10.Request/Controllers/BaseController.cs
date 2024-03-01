@@ -212,7 +212,7 @@ public partial class BaseController
 		var dmv = new DataModelAndView()
 		{
 			RequestView = rw,
-                Index = rw.index
+            Index = rw.index
 		};
 		String loadProc = rw.LoadProcedure;
 
