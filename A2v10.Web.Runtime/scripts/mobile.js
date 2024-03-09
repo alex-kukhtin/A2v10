@@ -207,7 +207,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240121-7958
+// 20240309-7961
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -809,6 +809,9 @@ app.modules['std:utils'] = function () {
 	function dateDiff(unit, d1, d2) {
 		if (d1.getTime() > d2.getTime())
 			[d1, d2] = [d2, d1];
+		let tz1 = d1.getTimezoneOffset();
+		let tz2 = d2.getTimezoneOffset();
+		let timezoneDiff = (tz1 - tz2) * 60 * 1000;
 		switch (unit) {
 			case "second":
 				return (d2 - d1) / 1000;
@@ -835,7 +838,7 @@ app.modules['std:utils'] = function () {
 				return month + delta;
 			case "day":
 				let du = 1000 * 60 * 60 * 24;
-				return Math.floor((d2 - d1) / du);
+				return Math.floor((d2 - d1 + timezoneDiff) / du);
 			case "year":
 				var dd = new Date(d1.getFullYear(), d2.getMonth(), d2.getDate(), d2.getHours(), d2.getMinutes(), d2.getSeconds(), d2.getMilliseconds());
 				let dy = dd < d1 ?
@@ -6111,9 +6114,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20231226-7954
+// 20240309-7961
 // components/datepicker.js
 
 (function () {
@@ -6126,6 +6129,7 @@ Vue.component('validator-control', {
 	const baseControl = component('control');
 	const locale = window.$$locale;
 	const dateLocale = locale.$DateLocale || locale.$Locale;
+	const monthLocale = locale.$Locale; // for text
 
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
@@ -6249,7 +6253,7 @@ Vue.component('validator-control', {
 					if (utils.date.isZero(this.modelDate))
 						return '';
 					if (this.view === 'month')
-						return utils.text.capitalize(this.modelDate.toLocaleString(dateLocale, { year: 'numeric', month: 'long' }));
+						return utils.text.capitalize(this.modelDate.toLocaleString(monthLocale, { year: 'numeric', month: 'long' }));
 					else
 						return this.modelDate.toLocaleString(dateLocale, { year: 'numeric', month: '2-digit', day: '2-digit' });
 				},

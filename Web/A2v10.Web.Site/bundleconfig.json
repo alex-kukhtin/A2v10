@@ -166,16 +166,16 @@
 	{
 		"outputFileName": "scripts/vue.min.js",
 		"inputFiles": [
-			"bower_components/vue/dist/vue.min.js",
-			"bower_components/vuex/dist/vuex.min.js"
+			"lib/vue2-7-16/dist/vue.min.js",
+			"lib/vuex3-6-2/dist/vuex.min.js"
 		],
 		"minify": { "enabled": false }
 	},
 	{
 		"outputFileName": "scripts/vue.js",
 		"inputFiles": [
-			"bower_components/vue/dist/vue.js",
-			"bower_components/vuex/dist/vuex.js"
+			"lib/vue2-7-16/dist/vue.js",
+			"lib/vuex3-6-2/dist/vuex.js"
 		],
 		"minify": { "enabled": false }
 	},

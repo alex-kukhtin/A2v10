@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.props')" />
+  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.props" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -168,6 +168,45 @@
     <Content Include="Less.Advance\checkbox_checked.svg" />
     <Content Include="lib\microsoft-signalr\signalr.js" />
     <Content Include="lib\microsoft-signalr\signalr.min.js" />
+    <Content Include="lib\vue2-7-16\compiler-sfc\index.js" />
+    <Content Include="lib\vue2-7-16\compiler-sfc\index.min.js" />
+    <Content Include="lib\vue2-7-16\compiler-sfc\index.mjs" />
+    <Content Include="lib\vue2-7-16\dist\vue.common.dev.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.common.dev.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.common.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.common.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.common.prod.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.common.prod.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.esm.browser.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.esm.browser.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.esm.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.esm.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.common.dev.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.common.dev.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.common.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.common.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.common.prod.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.common.prod.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.esm.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.esm.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.min.js" />
+    <Content Include="lib\vue2-7-16\dist\vue.runtime.mjs" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\dist\compiler-sfc.js" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\dist\compiler-sfc.min.js" />
+    <Content Include="lib\vuex3-6-2\dist\logger.js" />
+    <Content Include="lib\vuex3-6-2\dist\logger.min.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.common.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.common.min.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.esm.browser.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.esm.browser.min.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.esm.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.esm.min.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.min.js" />
+    <Content Include="lib\vuex3-6-2\dist\vuex.mjs" />
     <Content Include="Localization\default.es.txt" />
     <Content Include="Localization\default.pl.txt" />
     <Content Include="Localization\es.xml" />
@@ -422,6 +461,24 @@
     <Content Include="Less.Advance\Kanban.less" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="lib\vue2-7-16\compiler-sfc\package.json" />
+    <Content Include="lib\vue2-7-16\LICENSE" />
+    <Content Include="lib\vue2-7-16\package.json" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\api-extractor.json" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\node_modules\.bin\lessc" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\node_modules\.bin\parser" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\node_modules\.bin\prettier" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\node_modules\.bin\sass" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\node_modules\.bin\stylus" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\package.json" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\test\__snapshots__\compileScript.spec.ts.snap" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\test\__snapshots__\cssVars.spec.ts.snap" />
+    <Content Include="lib\vue2-7-16\packages\compiler-sfc\test\tsconfig.json" />
+    <Content Include="lib\vue2-7-16\README.md" />
+    <Content Include="lib\vuex3-6-2\CHANGELOG.md" />
+    <Content Include="lib\vuex3-6-2\LICENSE" />
+    <Content Include="lib\vuex3-6-2\package.json" />
+    <Content Include="lib\vuex3-6-2\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -716,6 +773,208 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="lib\vue2-7-16\compiler-sfc\index.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\dist\compiler-sfc.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\babelUtils.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\compileScript.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\compileStyle.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\compileTemplate.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\cssVars.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\parse.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\parseComponent.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\prefixIdentifiers.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\rewriteDefault.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\stylePlugins\scoped.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\stylePlugins\trim.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\stylePreprocessors.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\templateCompilerModules\assetUrl.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\templateCompilerModules\srcset.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\templateCompilerModules\utils.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\types.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\src\warn.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\compileScript.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\compileStyle.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\compileTemplate.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\cssVars.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\parseComponent.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\prefixIdentifiers.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\rewriteDefault.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\stylePluginScoped.spec.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\packages\compiler-sfc\test\util.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\codeframe.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\codegen\events.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\codegen\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\create-compiler.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\directives\bind.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\directives\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\directives\model.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\directives\on.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\error-detector.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\helpers.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\optimizer.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\parser\entity-decoder.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\parser\filter-parser.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\parser\html-parser.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\parser\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\parser\text-parser.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\compiler\to-function.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\components\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\components\keep-alive.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\config.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\global-api\assets.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\global-api\extend.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\global-api\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\global-api\mixin.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\global-api\use.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\events.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\init.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\inject.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\lifecycle.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\proxy.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\bind-dynamic-keys.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\bind-object-listeners.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\bind-object-props.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\check-keycodes.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\render-list.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\render-slot.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\render-static.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\resolve-filter.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\resolve-scoped-slots.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render-helpers\resolve-slots.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\render.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\instance\state.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\observer\array.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\observer\dep.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\observer\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\observer\scheduler.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\observer\traverse.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\observer\watcher.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\debug.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\env.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\error.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\lang.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\next-tick.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\options.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\perf.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\util\props.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\create-component.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\create-element.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\create-functional-component.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\extract-props.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\get-first-component-child.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\is-async-placeholder.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\merge-hook.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\normalize-children.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\normalize-scoped-slots.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\resolve-async-component.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\helpers\update-listeners.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\modules\directives.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\modules\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\modules\template-ref.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\patch.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\core\vdom\vnode.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\global.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\directives\html.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\directives\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\directives\model.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\directives\text.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\modules\class.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\modules\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\modules\model.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\modules\style.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\options.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\compiler\util.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\entry-compiler.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\entry-runtime-esm.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\entry-runtime-with-compiler-esm.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\entry-runtime-with-compiler.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\entry-runtime.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime-with-compiler.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\class-util.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\components\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\components\transition-group.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\components\transition.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\directives\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\directives\model.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\directives\show.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\modules\attrs.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\modules\class.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\modules\dom-props.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\modules\events.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\modules\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\modules\style.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\modules\transition.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\node-ops.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\patch.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\runtime\transition-util.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\util\attrs.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\util\class.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\util\compat.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\util\element.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\util\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\platforms\web\util\style.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\shared\constants.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\shared\util.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\compiler.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\component.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\global-api.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\modules.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\options.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\ssr.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\utils.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\types\vnode.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\apiAsyncComponent.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\apiInject.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\apiLifecycle.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\apiSetup.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\apiWatch.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\currentInstance.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\debug.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\h.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\index.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\reactivity\computed.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\reactivity\effect.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\reactivity\effectScope.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\reactivity\operations.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\reactivity\reactive.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\reactivity\readonly.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\reactivity\ref.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\sfc-helpers\useCssModule.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\src\v3\sfc-helpers\useCssVars.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\built-in-components.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\common.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\index.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\jsx.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\options.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\plugin.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\umd.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-component-options.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-component-props.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-component-public-instance.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-define-async-component.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-define-component.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-directive.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-generated.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-manual-apis.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-setup-context.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\v3-setup-helpers.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\vnode.d.ts" />
+    <TypeScriptCompile Include="lib\vue2-7-16\types\vue.d.ts" />
+    <TypeScriptCompile Include="lib\vuex3-6-2\types\helpers.d.ts" />
+    <TypeScriptCompile Include="lib\vuex3-6-2\types\index.d.ts" />
+    <TypeScriptCompile Include="lib\vuex3-6-2\types\logger.d.ts" />
+    <TypeScriptCompile Include="lib\vuex3-6-2\types\vue.d.ts" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -742,10 +1001,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.props'))" />
-    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.props'))" />
+    <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.targets'))" />
   </Target>
-  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.3.3\build\Microsoft.TypeScript.MSBuild.targets')" />
+  <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.4.2\build\Microsoft.TypeScript.MSBuild.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20231226-7954
+// 20240309-7961
 // components/datepicker.js
 
 (function () {
@@ -13,6 +13,7 @@
 	const baseControl = component('control');
 	const locale = window.$$locale;
 	const dateLocale = locale.$DateLocale || locale.$Locale;
+	const monthLocale = locale.$Locale; // for text
 
 	Vue.component('a2-date-picker', {
 		extends: baseControl,
@@ -136,7 +137,7 @@
 					if (utils.date.isZero(this.modelDate))
 						return '';
 					if (this.view === 'month')
-						return utils.text.capitalize(this.modelDate.toLocaleString(dateLocale, { year: 'numeric', month: 'long' }));
+						return utils.text.capitalize(this.modelDate.toLocaleString(monthLocale, { year: 'numeric', month: 'long' }));
 					else
 						return this.modelDate.toLocaleString(dateLocale, { year: 'numeric', month: '2-digit', day: '2-digit' });
 				},

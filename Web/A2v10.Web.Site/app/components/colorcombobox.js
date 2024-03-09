@@ -1,6 +1,6 @@
-﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20230829-7945
+// 20240309-7961
 // components/colorcombobox.js*/
 
 (function () {
@@ -45,7 +45,8 @@
 			prop: String,
 			nameProp: String,
 			colorProp: String,
-			valueProp: String
+			valueProp: String,
+			outline: Boolean
 		},
 		data() {
 			return {
@@ -60,7 +61,10 @@
 			},
 			color() {
 				let cv = this.cmbValue;
-				return cv ? (cv[this.colorProp] || 'transparent') : 'transparent';
+				let clr = cv ? (cv[this.colorProp] || 'transparent') : 'transparent';
+				if (this.outline)
+					clr += ' outline';
+				return clr;
 			},
 			cmbValue: {
 				get() {
@@ -83,7 +87,7 @@
 				return itm[this.nameProp];
 			},
 			itemClass(itm) {
-				return itm[this.colorProp];
+				return itm[this.colorProp] + (this.outline ? ' outline': '');
 			},
 			keydown(event) {
 				event.stopPropagation();

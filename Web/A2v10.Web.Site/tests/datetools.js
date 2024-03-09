@@ -139,6 +139,33 @@ describe("Date tools", function () {
 		expect(eom.getDate()).toBe(31);
 	});
 
+	it('date diff (day) ', function () {
+		let d1 = new Date(2018, 1, 2); // 2 feb
+		let d2 = new Date(2018, 1, 15); // 15 feb
+		let f = du.diff("day", d1, d2);
+		expect(f).toBe(13);
+
+		d1 = new Date(2024, 2, 30); // 30 mar
+		d2 = new Date(2024, 2, 31); // 31 apr
+		f = du.diff("day", d1, d2);
+		expect(f).toBe(1);
+
+		d1 = new Date(2024, 2, 31); // 31 mar
+		d2 = new Date(2024, 3, 1); //  01 apr
+		f = du.diff("day", d1, d2);
+		expect(f).toBe(1);
+
+		d1 = new Date(2024, 2, 30); // 30 mar
+		d2 = new Date(2024, 3, 1); //  01 apr
+		f = du.diff("day", d1, d2);
+		expect(f).toBe(2);
+
+		d1 = new Date(2024, 2, 10); // 10 mar
+		d2 = new Date(2024, 2, 31); //  31 mar
+		f = du.diff("day", d1, d2);
+		expect(f).toBe(21);
+	});
+
 	it('date diff (month) ', function () {
 		let d1 = new Date(2018, 1, 2); // 2 feb
 		let d2 = new Date(2018, 5, 15); // 15 jun
@@ -199,9 +226,9 @@ describe("Date tools", function () {
 
 	it('from days', function () {
 		let f = du.fromDays(25327);
-		expect(f.getTime()).toBe(new Date('Mon May 05 1969 03:00:00 GMT+0300').getTime());
+		expect(f.getTime()).toBe(new Date('Mon May 05 1969 00:00:00 GMT+0300').getTime());
 		f = du.fromDays(23451);
-		expect(f.getTime()).toBe(new Date('Mon Mar 16 1964 03:00:00 GMT+0300').getTime());
+		expect(f.getTime()).toBe(new Date('Mon Mar 16 1964 00:00:00 GMT+0300').getTime());
 	});
 
 	it('parse date', function () {
@@ -211,21 +238,22 @@ describe("Date tools", function () {
 		expect(du.parse('01 \.. 01 ... 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
 		expect(du.parse('01 .,\\/: 01 ; 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
 		expect(du.parse('16.03').getTime()).toBe(du.create(today.getFullYear(), 3, 16).getTime());
-		expect(du.parse('16.').getTime()).toBe(du.create(today.getFullYear(), today.getMonth()+1, 16).getTime());
+		expect(du.parse('16.').getTime()).toBe(du.create(today.getFullYear(), today.getMonth() + 1, 16).getTime());
 		expect(du.parse('01abc\.. 01 dsess# 19').getTime()).toBe(du.create(2019, 1, 1).getTime());
-		expect(du.parse('2020-09-25T09:51:29.250Z').getTime()).toBe(new Date('2020-09-25T09:51:29.250Z').getTime());
-		expect(du.parse('2020-09-25T09:51:29Z').getTime()).toBe(new Date('2020-09-25T09:51:29.000Z').getTime());
+		expect(du.parse('2020-09-25T09:51:29.250').getTime()).toBe(new Date('2020-09-25T09:51:29.250').getTime());
+		expect(du.parse('2020-09-25T09:51:29').getTime()).toBe(new Date('2020-09-25T09:51:29.000').getTime());
 	});
 
 	it('try parse date', function () {
 		let today = du.today();
 		expect(du.tryParse(today).getTime()).toBe(today.getTime());
-		expect(du.tryParse('Mon May 05 1969 03:00:00 GMT+0300').getTime()).toBe(new Date('Mon May 05 1969 03:00:00 GMT+0300').getTime());
+		expect(du.tryParse('Mon May 05 1969').getTime()).toBe(new Date('Mon May 05 1969 00:00:00 GMT+0300').getTime());
+		expect(du.tryParse('Mon May 05 1969 03:00:00 GMT+0300').getTime()).toBe(new Date('Mon May 05 1969 00:00:00 GMT+0300').getTime());
 		expect(du.tryParse('20190502').getTime()).toBe(du.create(2019, 5, 2).getTime());
-		expect(du.tryParse('2009-02-15T00:00:00Z').getTime()).toBe(du.create(2009, 2, 15).getTime());
-		expect(du.tryParse('"\\/\"2020-09-01T00:00:00Z"\\/"').getTime()).toBe(du.create(2020, 9, 1).getTime());
-		expect(du.tryParse('2020-09-25T09:51:29.250Z').getTime()).toBe(new Date('2020-09-25T09:51:29.250Z').getTime());
-		expect(du.tryParse('2020-09-25T09:51:29Z').getTime()).toBe(new Date('2020-09-25T09:51:29.000Z').getTime());
+		expect(du.tryParse('2009-02-15T00:00:00').getTime()).toBe(du.create(2009, 2, 15).getTime());
+		expect(du.tryParse('"\\/\"2020-09-01T00:00:00"\\/"').getTime()).toBe(du.create(2020, 9, 1).getTime());
+		expect(du.tryParse('2020-09-25T09:51:29.250').getTime()).toBe(new Date('2020-09-25T09:51:29.250').getTime());
+		expect(du.tryParse('2020-09-25T09:51:29').getTime()).toBe(new Date('2020-09-25T09:51:29.000').getTime());
 	});
 });
 

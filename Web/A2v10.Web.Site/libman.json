@@ -6,6 +6,16 @@
 			"provider": "cdnjs",
 			"library": "microsoft-signalr@6.0.16",
 			"destination": "lib/microsoft-signalr/"
+		},
+		{
+			"provider": "jsdelivr",
+			"library": "vue@2.7.16",
+			"destination": "lib/vue2-7-16/"
+		},
+		{
+			"provider": "jsdelivr",
+			"library": "vuex@3.6.2",
+			"destination": "lib/vuex3-6-2/"
 		}
 	]
 }
