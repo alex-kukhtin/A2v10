@@ -1,6 +1,6 @@
-﻿/* Copyright © 2015-2022 Alex Kukhtin. All rights reserved.*/
+﻿/* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
 
-// 20221004-7897
+// 20240312-7963
 // components/sheet.js
 
 (function () {
@@ -79,7 +79,7 @@
 			function rowCssClass(mark) {
 				let cls = mark || '';
 				if (this.hasChildren())
-					cls += ' group';
+					cls += ` group gl-${this.item.$level}`;
 				if (this.item.$collapsed)
 					cls += ' collapsed';
 				return cls;
