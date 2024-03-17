@@ -158,4 +158,10 @@
 @CloseAllTabs=Закрити всі вкладки
 @OpenTabs=Відкриті вкладки
 @RecentlyClosedTabs=Нещодавно закриті
-
+;
+@TwoFactorPrompt=Двохфакторна автентифікація
+@Verify=Продовжити
+@AuthenticatorText=Відкрийте застосунок для автентифікації (TOTP) щоб побачити код підтвердження.
+@UseAnotherAccount=Use another account
+@AuthenticationCode=Код підтвердження
+;
