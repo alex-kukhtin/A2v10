@@ -22,8 +22,7 @@ public class HooksProvider : IHooksProvider
 		{
 			if (String.IsNullOrEmpty(_hooksClr))
 				return null;
-			if (_sessionHooks == null)
-				_sessionHooks = ServiceLocator.Current.GetService<ISessionHooks>(sp =>
+			_sessionHooks ??= ServiceLocator.Current.GetService<ISessionHooks>(sp =>
 					ClrHelpers.LoadObjectSP<ISessionHooks>(_hooksClr, sp));
 			return _sessionHooks;
 		}
