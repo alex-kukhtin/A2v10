@@ -82,6 +82,8 @@
 							that.navigate();
 						else if (result === 'SetPassword')
 							that.changePassword(response.Token);
+						else if (result === 'TwoFactor')
+							that.twoFactor();
 						else if (result === 'Failure')
 							that.failure(that.locale.$InvalidLoginError);
 						else if (result === 'LockedOut')
@@ -137,6 +139,9 @@
 			},
 			changePassword(token) {
 				window.location.assign(`/account/initpassword?token=${token}`);
+			},
+			twoFactor() {
+				window.location.assign(`/account/twofactor`);
 			},
 			failure(msg) {
 				this.password = '';
