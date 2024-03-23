@@ -110,6 +110,7 @@ public class Grid : Container
 	public AlignItem AlignItems { get; set; }
 	public GapSize Gap { get; set; }
 	public Length MinWidth { get; set; }
+	public Length Width { get; set; }
 	public Overflow? Overflow { get; set; }
 
 	RowDefinitions _rows;
@@ -153,6 +154,8 @@ public class Grid : Container
 			grid.MergeStyle("height", Height.Value);
 		if (MinWidth != null)
 			grid.MergeStyle("min-width", MinWidth.ToString());
+		if (Width != null)
+			grid.MergeStyle("width", Width.ToString());
 		if (_rows != null)
 			grid.MergeStyle("grid-template-rows", _rows.ToAttribute());
 		if (_columns != null)

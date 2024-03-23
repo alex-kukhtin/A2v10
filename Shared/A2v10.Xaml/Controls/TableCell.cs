@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using A2v10.Infrastructure;
 using System;
@@ -6,10 +6,7 @@ using System.Text;
 
 namespace A2v10.Xaml;
 
-public class TableCellCollection : UIElementCollection
-{
-
-}
+public class TableCellCollection : UIElementCollection {}
 
 public class TableCell : UiContentElement
 {
@@ -21,7 +18,7 @@ public class TableCell : UiContentElement
 	public Boolean? Italic { get; set; }
 	public Boolean Gray { get; set; }
 	public String CssClass { get; set; }
-
+	public Length Width { get; set; }
 	public Boolean? FirstInRow { get; set; }
 
 	//public Boolean Validate { get; set; }
@@ -36,6 +33,9 @@ public class TableCell : UiContentElement
 		onRender?.Invoke(td);
 		if (FirstInRow.HasValue && !FirstInRow.Value)
 			td.AddCssClass("no-first");
+
+		if (Width != null)
+			td.MergeStyle("width", Width.ToString());
 
 		td.AddCssClass(CssClass);
 
