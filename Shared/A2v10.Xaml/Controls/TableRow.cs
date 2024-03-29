@@ -64,7 +64,7 @@ public class TableRow : UIElement
 	protected override void OnEndInit()
 	{
 		base.OnEndInit();
-		TableCellCollection newCells = new TableCellCollection();
+		TableCellCollection newCells = new();
 		foreach (var c in Cells)
 		{
 			if (c is TableCell || c is TableMarkCell)
@@ -121,8 +121,8 @@ public class TableRowCollectionConverter : TypeConverter
 			return null;
 		if (value is String)
 		{
-			TableRowCollection trc = new TableRowCollection();
-			TableRow row = new TableRow();
+			TableRowCollection trc = new();
+			TableRow row = new();
 			trc.Add(row);
 			foreach (var st in value.ToString().Split(','))
 			{

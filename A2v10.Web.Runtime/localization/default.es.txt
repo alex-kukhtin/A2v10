@@ -159,4 +159,11 @@
 @CloseAllTabs=Cerrar todas las pestañas
 @OpenTabs=Abrir pestañas
 @RecentlyClosedTabs=Pestañas cerradas recientemente
+;
+@TwoFactorPrompt=Two-factor authentication
+@Verify=Verify
+@AuthenticatorText=Open your two-factor authenticator (TOTP) app to view your authentication code.
+@UseAnotherAccount=Use another account
+@AuthenticationCode=Authentication code
+;
 

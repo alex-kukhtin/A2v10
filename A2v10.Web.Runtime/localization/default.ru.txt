@@ -158,3 +158,10 @@
 @CloseAllTabs=Закрыть все вкладки
 @OpenTabs=Открытые вкладки
 @RecentlyClosedTabs=Недавно закрытые
+;
+@TwoFactorPrompt=Two-factor authentication
+@Verify=Verify
+@AuthenticatorText=Open your two-factor authenticator (TOTP) app to view your authentication code.
+@UseAnotherAccount=Use another account
+@AuthenticationCode=Authentication code
+;

@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7960 */
+/* Version 10.0.7963 */
 
 declare function require(url: string): any;
 
@@ -254,6 +254,22 @@ declare const enum ReportFormat {
 	'OpenSheet' = 'opensheet'
 }
 
+declare const enum AcceptFormat {
+	'excel' = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+	'word' = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	'png' = 'image/png',
+	'jpeg' = 'image/jpeg',
+	'image' = 'image/*',
+	'pngjpeg' = 'image/png, image/jpeg',
+	'video' = 'video/*',
+	'audio' = 'audio/*',
+	'text' = 'text/plain',
+	'csv' = 'text/csv',
+	'zip' = 'application/zip',
+	'json' = 'application/json',
+	'pdf' = 'application/pdf'
+}
+
 interface IController {
 	$save(): Promise<object>;
 	$savePart(data: object, url: string, dialog?: boolean): Promise<object>;
@@ -281,7 +297,7 @@ interface IController {
 	$expand(elem: ITreeElement, prop: string, value: boolean): Promise<any>;
 	$focus(htmlid: string): void;
 	$report(report: string, arg: object, opts?: { export?: Boolean, attach?: Boolean, print?: Boolean, format?: ReportFormat }, url?: string, data?: object): void;
-	$upload(url: string, accept?: string, data?: { Id?: any, Key?: any }, opts?: { catchError?: boolean }): Promise<any>;
+	$upload(url: string, accept?: string | AcceptFormat, data?: { Id?: any, Key?: any }, opts?: { catchError?: boolean }): Promise<any>;
 	$file(url: string, arg: any, opts?: { action: FileActions }, data?: object): void;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;

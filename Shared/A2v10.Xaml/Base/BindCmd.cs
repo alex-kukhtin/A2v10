@@ -95,6 +95,7 @@ public enum Permission
 	CanDelete = 4,
 	CanApply = 8,
 	CanUnapply = 16,
+	CanCreate = 32
 }
 
 //[DefaultProperty("Command")]

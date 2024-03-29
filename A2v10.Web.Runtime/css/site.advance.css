@@ -6562,6 +6562,9 @@ table.sheet td.indent.lev-3 {
 table.sheet td.indent.lev-4 {
   padding-left: 42px;
 }
+table.sheet td.indent.lev-5 {
+  padding-left: 54px;
+}
 table.sheet .col-shadow {
   visibility: collapse;
   display: none;
