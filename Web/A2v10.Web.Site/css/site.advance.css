@@ -2484,6 +2484,12 @@ pre.a2-code {
 .control-group.lg {
   font-size: 1.3rem;
 }
+.control-group.sm {
+  font-size: 0.9rem;
+}
+.control-group.no-border .input-group {
+  border: none;
+}
 .control-group.with-width .input-group {
   width: 100%;
 }

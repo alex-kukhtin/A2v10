@@ -64,7 +64,7 @@
 		margin-bottom: .2em;
 		display: block;
 		font-weight: normal;
-		font-size:90%;
+		font-size: 90%;
 	}
 
 	.control-link {
@@ -256,7 +256,7 @@
 
 	.input-group {
 		border: 1px solid @control-border;
-		border-radius:2px;
+		border-radius: 2px;
 		display: flex;
 		align-items: stretch;
 		background-color: @control-bg-color;
@@ -347,6 +347,16 @@
 
 	&.lg {
 		font-size: 1.3rem;
+	}
+
+	&.sm {
+		font-size: .9rem;
+	}
+
+	&.no-border {
+		.input-group {
+			border: none;
+		}
 	}
 
 	&.with-width {
