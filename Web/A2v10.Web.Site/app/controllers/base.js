@@ -54,16 +54,14 @@
 
 	function isPermissionsDisabled(opts, arg) {
 		if (opts && opts.checkPermission) {
-			if (utils.isObjectExact(arg)) {
-				if (arg.$permissions) {
-					let perm = arg.$permissions;
-					let prop = opts.checkPermission;
-					if (prop in perm) {
-						if (!perm[prop])
-							return true;
-					} else {
-						console.error(`invalid permssion name: '${prop}'`);
-					}
+			if (arg.$permissions) {
+				let perm = arg.$permissions;
+				let prop = opts.checkPermission;
+				if (prop in perm) {
+					if (!perm[prop])
+						return true;
+				} else {
+					console.error(`invalid permssion name: '${prop}'`);
 				}
 			}
 		}
@@ -131,14 +129,20 @@
 			$marker() {
 				return true;
 			},
+			$isDisabledAlert(opts, arg) {
+				if (isPermissionsDisabled(opts, arg)) {
+					this.$alert(locale.$PermissionDenied);
+					return true;
+				}
+				return false;
+			},
 			$exec(cmd, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 
-				if (isPermissionsDisabled(opts, arg)) {
-					this.$alert(locale.$PermissionDenied);
+				if (this.$isDisabledAlert(opts, arg))
 					return;
-				}
+
 				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
@@ -213,6 +217,7 @@
 				else
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
 			},
+			$isPermissionsDisabled: isPermissionsDisabled,
 			$canExecute(cmd, arg, opts) {
 				//if (this.$isLoading) return false; // do not check here. avoid blinking
 				if (this.$isReadOnly(opts))
@@ -677,10 +682,9 @@
 				if (!elem)
 					return;
 
-				if (isPermissionsDisabled(opts, elem)) {
-					this.$alert(locale.$PermissionDenied);
+				if (this.$isDisabledAlert(opts, elem))
 					return;
-				}
+
 				if (this.$isLoading) return;
 				eventBus.$emit('closeAllPopups');
 
@@ -725,8 +729,7 @@
 				if (this.$isLoading) return;
 				eventBus.$emit('closeAllPopups');
 				let sel = arr.$selected;
-				if (!sel)
-					return;
+				if (!sel) return;
 				this.$dbRemove(sel, confirm, opts);
 			},
 
@@ -760,7 +763,12 @@
 					let root = this.$data;
 					if (!root.$valid) return false;
 				}
-				return arr && !!arr.$selected;
+				let has = arr && !!arr.$selected;
+				if (!has)
+					return false;
+				if (isPermissionsDisabled(opts, arr.$selected))
+					return false;
+				return true;
 			},
 
 			$hasChecked(arr) {
@@ -886,10 +894,8 @@
 
 				function doDialog() {
 					// result always is raw data
-					if (isPermissionsDisabled(opts, arg)) {
-						that.$alert(locale.$PermissionDenied);
+					if (that.$isDisabledAlert(opts, arg))
 						return;
-					}
 					if (utils.isFunction(query))
 						query = query();
 					let reloadAfter = opts && opts.reloadAfter;
@@ -923,6 +929,8 @@
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
 							if (!arg.$selected) return;
+							if (that.$isDisabledAlert(opts, arg.$selected))
+								return;
 							return __runDialog(url, arg.$selected, query, (result) => {
 								arg.$selected.$merge(result);
 								arg.__fireChange__('selected');

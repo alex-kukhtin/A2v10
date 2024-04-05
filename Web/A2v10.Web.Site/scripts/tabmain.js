@@ -2915,9 +2915,9 @@ app.modules['std:impl:array'] = function () {
 	}
 };
 
-/* Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20230807-7941*/
+/*20240405-7963*/
 // services/datamodel.js
 
 /*
@@ -2944,6 +2944,10 @@ app.modules['std:impl:array'] = function () {
 	const FLAG_DELETE = 4;
 	const FLAG_APPLY = 8;
 	const FLAG_UNAPPLY = 16;
+	const FLAG_CREATE = 32;
+	const FLAG_64 = 64;
+	const FLAG_128 = 128;
+	const FLAG_256 = 256;
 
 	const platform = require('std:platform');
 	const validators = require('std:validators');
@@ -2963,6 +2967,20 @@ app.modules['std:impl:array'] = function () {
 	function logtime(msg, time) {
 		if (!log) return;
 		log.time(msg, time);
+	}
+
+	function createPermissionObject(perm) {
+		return Object.freeze({
+			canView: !!(perm & FLAG_VIEW),
+			canEdit: !!(perm & FLAG_EDIT),
+			canDelete: !!(perm & FLAG_DELETE),
+			canApply: !!(perm & FLAG_APPLY),
+			canUnapply: !!(perm & FLAG_UNAPPLY),
+			canCreate: !!(perm & FLAG_CREATE),
+			canFlag64: !!(perm & FLAG_64),
+			canFlag128: !!(perm & FLAG_128),
+			canFlag256: !!(perm & FLAG_256)
+		});
 	}
 
 	function defHidden(obj, prop, value, writable) {
@@ -3454,6 +3472,14 @@ app.modules['std:impl:array'] = function () {
 			return !this.$valid;
 		});
 
+		defPropertyGet(arr, "$permissions", function () {
+			let mi = arr.$ModelInfo;
+			if (!mi || !utils.isDefined(mi.Permissions))
+				return {};
+			let perm = mi.Permissions;
+			return createPermissionObject(perm);
+		});
+
 		if (ctor.prototype._meta_.$cross)
 			defPropertyGet(arr, "$cross", function () {
 				return ctor.prototype._meta_.$cross;
@@ -3598,13 +3624,7 @@ app.modules['std:impl:array'] = function () {
 					if (mi && utils.isDefined(mi.Permissions))
 						perm = mi.Permissions;
 				}
-				return Object.freeze({
-					canView: !!(perm & FLAG_VIEW),
-					canEdit: !!(perm & FLAG_EDIT),
-					canDelete: !!(perm & FLAG_DELETE),
-					canApply: !!(perm & FLAG_APPLY),
-					canUnapply: !!(perm & FLAG_UNAPPLY)
-				});
+				return createPermissionObject(perm);
 			});
 		}
 	}
@@ -12959,16 +12979,14 @@ Vue.directive('resize', {
 
 	function isPermissionsDisabled(opts, arg) {
 		if (opts && opts.checkPermission) {
-			if (utils.isObjectExact(arg)) {
-				if (arg.$permissions) {
-					let perm = arg.$permissions;
-					let prop = opts.checkPermission;
-					if (prop in perm) {
-						if (!perm[prop])
-							return true;
-					} else {
-						console.error(`invalid permssion name: '${prop}'`);
-					}
+			if (arg.$permissions) {
+				let perm = arg.$permissions;
+				let prop = opts.checkPermission;
+				if (prop in perm) {
+					if (!perm[prop])
+						return true;
+				} else {
+					console.error(`invalid permssion name: '${prop}'`);
 				}
 			}
 		}
@@ -13036,14 +13054,20 @@ Vue.directive('resize', {
 			$marker() {
 				return true;
 			},
+			$isDisabledAlert(opts, arg) {
+				if (isPermissionsDisabled(opts, arg)) {
+					this.$alert(locale.$PermissionDenied);
+					return true;
+				}
+				return false;
+			},
 			$exec(cmd, arg, confirm, opts) {
 				if (this.$isReadOnly(opts)) return;
 				if (this.$isLoading) return;
 
-				if (isPermissionsDisabled(opts, arg)) {
-					this.$alert(locale.$PermissionDenied);
+				if (this.$isDisabledAlert(opts, arg))
 					return;
-				}
+
 				eventBus.$emit('closeAllPopups');
 				const root = this.$data;
 				return root._exec_(cmd, arg, confirm, opts);
@@ -13118,6 +13142,7 @@ Vue.directive('resize', {
 				else
 					this.$confirm(confirm).then(() => root._exec_(cmd, arg.$selected));
 			},
+			$isPermissionsDisabled: isPermissionsDisabled,
 			$canExecute(cmd, arg, opts) {
 				//if (this.$isLoading) return false; // do not check here. avoid blinking
 				if (this.$isReadOnly(opts))
@@ -13582,10 +13607,9 @@ Vue.directive('resize', {
 				if (!elem)
 					return;
 
-				if (isPermissionsDisabled(opts, elem)) {
-					this.$alert(locale.$PermissionDenied);
+				if (this.$isDisabledAlert(opts, elem))
 					return;
-				}
+
 				if (this.$isLoading) return;
 				eventBus.$emit('closeAllPopups');
 
@@ -13630,8 +13654,7 @@ Vue.directive('resize', {
 				if (this.$isLoading) return;
 				eventBus.$emit('closeAllPopups');
 				let sel = arr.$selected;
-				if (!sel)
-					return;
+				if (!sel) return;
 				this.$dbRemove(sel, confirm, opts);
 			},
 
@@ -13665,7 +13688,12 @@ Vue.directive('resize', {
 					let root = this.$data;
 					if (!root.$valid) return false;
 				}
-				return arr && !!arr.$selected;
+				let has = arr && !!arr.$selected;
+				if (!has)
+					return false;
+				if (isPermissionsDisabled(opts, arr.$selected))
+					return false;
+				return true;
 			},
 
 			$hasChecked(arr) {
@@ -13791,10 +13819,8 @@ Vue.directive('resize', {
 
 				function doDialog() {
 					// result always is raw data
-					if (isPermissionsDisabled(opts, arg)) {
-						that.$alert(locale.$PermissionDenied);
+					if (that.$isDisabledAlert(opts, arg))
 						return;
-					}
 					if (utils.isFunction(query))
 						query = query();
 					let reloadAfter = opts && opts.reloadAfter;
@@ -13828,6 +13854,8 @@ Vue.directive('resize', {
 						case 'edit-selected':
 							if (argIsNotAnArray()) return;
 							if (!arg.$selected) return;
+							if (that.$isDisabledAlert(opts, arg.$selected))
+								return;
 							return __runDialog(url, arg.$selected, query, (result) => {
 								arg.$selected.$merge(result);
 								arg.__fireChange__('selected');

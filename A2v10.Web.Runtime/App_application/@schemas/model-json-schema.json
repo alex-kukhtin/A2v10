@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7963",
+	"$version": "10.0.7964",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -10,7 +10,7 @@
 			"patternProperties": {
 				".+": {
 					"type": "string",
-					"enum": [ "view", "edit", "delete", "apply" ]
+					"enum": [ "view", "edit", "delete", "apply", "create", "unapply", "flag64", "flag128", "flag256" ]
 				}
 			}
 		}

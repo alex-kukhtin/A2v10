@@ -95,7 +95,10 @@ public enum Permission
 	CanDelete = 4,
 	CanApply = 8,
 	CanUnapply = 16,
-	CanCreate = 32
+	CanCreate = 32,
+	CanFlag64 = 64,
+	CanFlag128 = 128,
+	CanFlag256 = 256
 }
 
 //[DefaultProperty("Command")]
@@ -405,15 +408,15 @@ public class BindCmd : BindBase
 
 	String GetOptionsValid(RenderContext _1/*context*/)
 	{
-		if (!ValidRequired)
+		if (!ValidRequired && Permission == Permission.None)
 			return nullString;
 		StringBuilder sb = new("{");
 		if (ValidRequired)
-		{
 			sb.Append("validRequired: true, ");
-		}
+		if (Permission != Permission.None)
+			sb.Append($"checkPermission: '{Permission.ToString().ToCamelCase()}'");
 		sb.RemoveTailComma();
-		sb.Append("}");
+		sb.Append('}');
 		return sb.ToString();
 	}
 
@@ -610,6 +613,9 @@ public class BindCmd : BindBase
 						tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)}, {GetOptionsValid(context)})", replaceExisting:true);
 				}
 				break;
+			case CommandType.DbRemove:
+				tag.MergeAttribute(":disabled", $"$isPermissionsDisabled({GetOptions(context)}, {CommandArgument(context, true)})");
+				break;
 			case CommandType.RemoveSelected:
 				if (context.IsDataModelIsReadOnly)
 					tag.MergeAttribute(":disabled", "true", replaceExisting:true);
@@ -617,7 +623,7 @@ public class BindCmd : BindBase
 				{
 					var arg = GetBinding(nameof(Argument));
 					if (arg != null)
-						tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})", replaceExisting:true);
+						tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)}, {GetOptions(context)})", replaceExisting: true);
 				}
 				break;
 			case CommandType.Dialog:
@@ -625,7 +631,11 @@ public class BindCmd : BindBase
 				{
 					var arg = GetBinding(nameof(Argument));
 					if (arg != null)
-						tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)})", replaceExisting:true);
+						tag.MergeAttribute(":disabled", $"!$hasSelected({arg.GetPath(context)}, {GetOptions(context)})", replaceExisting: true);
+				}
+				else if (Permission != Permission.None)
+				{
+					tag.MergeAttribute(":disabled", $"$isPermissionsDisabled({GetOptions(context)}, {CommandArgument(context, true)})");
 				}
 				else if (CheckArgument)
 				{
