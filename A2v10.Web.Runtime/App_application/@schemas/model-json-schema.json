@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7964",
+	"$version": "10.0.7965",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -12,6 +12,12 @@
 					"type": "string",
 					"enum": [ "view", "edit", "delete", "apply", "create", "unapply", "flag64", "flag128", "flag256" ]
 				}
+			}
+		},
+		"auto": {
+			"type": "object",
+			"properties": {
+				"render": {"type": "string", "enum": ["page", "partial", "dialog", "popup"]}
 			}
 		}
 	},
@@ -87,6 +93,7 @@
 						},
 						"parameters": { "type": "object" },
 						"permissions": { "$ref": "#/definitions/permissions" },
+						"auto": { "$ref": "#/definitions/auto" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -140,6 +147,7 @@
 						"twoPhase": { "type": "boolean" },
 						"parameters": { "type": "object" },
 						"permissions": { "$ref": "#/definitions/permissions" },
+						"auto": { "$ref": "#/definitions/auto" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -167,6 +175,7 @@
 						"parameters": { "type": "object" },
 						"endpointHandler": { "type": "string" },
 						"permissions": { "$ref": "#/definitions/permissions" },
+						"auto": { "$ref": "#/definitions/auto" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -234,9 +243,8 @@
 						"args": { "type": "object" },
 						"file": { "type": "string" },
 						"debugOnly": { "type": "boolean" },
-						"permissions": {
-							"$ref": "#/definitions/permissions"
-						},
+						"permissions": { "$ref": "#/definitions/permissions" },
+						"auto": { "$ref": "#/definitions/auto" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -268,9 +276,8 @@
 							"type": "string",
 							"enum": [ "stimulsoft", "xml", "json", "pdf", "xlsx" ]
 						},
-						"permissions": {
-							"$ref": "#/definitions/permissions"
-						}
+						"permissions": { "$ref": "#/definitions/permissions" },
+						"auto": { "$ref": "#/definitions/auto" }
 					},
 					"additionalProperties": false
 				}
@@ -329,9 +336,8 @@
 								"additionalProperties": false
 							}
 						},
-						"permissions": {
-							"$ref": "#/definitions/permissions"
-						}
+						"permissions": { "$ref": "#/definitions/permissions" },
+						"auto": { "$ref": "#/definitions/auto" }
 					},
 					"additionalProperties": false
 				}
