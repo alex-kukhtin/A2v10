@@ -208,7 +208,8 @@
 								"processDbEvents",
 								"startBpmn",
 								"resumeBpmn",
-								"signal"
+								"signal",
+								"auto"
 							]
 						},
 						"schema": { "type": "string" },
