@@ -114,15 +114,13 @@ public class ScriptEnvironment
 	public String generateApiKey()
 	{
 		Int32 size = 48;
-		using (var provider = new RNGCryptoServiceProvider())
-		{
-			Byte[] data = new Byte[size];
-			provider.GetNonZeroBytes(data);
-			String res = Convert.ToBase64String(data);
-			res = res.Remove(res.Length - 2);
-			return res;
-		}
-	}
+        using var provider = new RNGCryptoServiceProvider();
+        Byte[] data = new Byte[size];
+        provider.GetNonZeroBytes(data);
+        String res = Convert.ToBase64String(data);
+        res = res.Remove(res.Length - 2);
+        return res;
+    }
 
 	public JsValue require(String fileName, ExpandoObject prms, ExpandoObject args)
 	{
@@ -143,12 +141,11 @@ return function(_this, prms, args) {{
 
 	public JsValue createObject(String name, ExpandoObject prms)
 	{
-		switch (name)
-		{
-			case "KsSmsSender":
-				return new ObjectWrapper(_engine, new KsSmsSender(_locator, prms));
-		}
-		return null;
-	}
+        return name switch
+        {
+            "KsSmsSender" => ObjectWrapper.Create(_engine, new KsSmsSender(_locator, prms)),
+            _ => null,
+        };
+    }
 #pragma warning restore IDE1006 // Naming Styles
 }

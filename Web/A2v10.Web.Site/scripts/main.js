@@ -13383,7 +13383,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240226-7961*/
+/*20240226-7963*/
 // controllers/base.js
 
 (function () {
@@ -13436,19 +13436,17 @@ Vue.directive('resize', {
 	}
 
 	function isPermissionsDisabled(opts, arg) {
-		if (opts && opts.checkPermission) {
-			if (arg.$permissions) {
-				let perm = arg.$permissions;
-				let prop = opts.checkPermission;
-				if (prop in perm) {
-					if (!perm[prop])
-						return true;
-				} else {
-					console.error(`invalid permssion name: '${prop}'`);
-				}
-			}
+		if (!arg || !opts || !opts.checkPermission) return false;
+
+		let prop = opts.checkPermission;
+		if (!utils.isDefined(arg.$permissions)) {
+			console.warn('[!!Permissions] not found');
+			return true;
 		}
-		return false;
+		let perm = arg.$permissions;
+		if (prop in perm)
+			return !perm[prop];
+		return true;
 	}
 
 	const base = Vue.extend({

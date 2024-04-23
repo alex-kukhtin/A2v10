@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.css" />
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .dform-container {
+            display:grid;
+            grid-template-columns:1fr 30rem;
+            align-items:stretch;
+            width:100%;
+            height:100%;
+        }
+		.dform-body {
+            background-color:beige;
+            grid-column: 1;
+            display:grid;
+            grid-gap:.5rem;
+            overflow:auto;
+		}
+		.dform-list {
+			background-color: aliceblue;
+			grid-column: 2;
+		}
+		.dform-placeholder {
+			background-color: lightcyan;
+			width: 100%;
+			height: 100%;
+			border: 1px solid blue;
+		}
+
+		.dform-placeholder.hover {
+			background-color: #ddd;
+		}
+
+        .dform-item {
+            border: 1px solid black;
+            border-radius:4px;
+        }
+
+        .dform-item.selected {
+            outline:1px solid red;
+            background-color:antiquewhite;
+        }
+		.dform-drag-host {
+			position: fixed;
+			left: -100%;
+			top: -100%;
+			background-color: #ccc;
+			border: 2px solid #777;
+			border-radius: 4px;
+			opacity: .9;
+		}
+    </style>
+</head>
+<body>
+    <div id="app" style="height:100%">
+        <a2-formdesigner :items=items :list="list" :edit-mode="editMode"
+                      :editable="true" :cell-size="{cx:'150px', cy:'50px'}" :columns="6">
+            <template v-slot:element="elem">
+                <div>
+                    Item Template '{{elem.item.row}}:{{elem.item.col}}' <b>{{elem.item.text}}</b>
+                </div>
+            </template>
+            <template v-slot:listitem="lelem">
+                <div style="height:50px">List template <b>{{lelem.item.text}}</b></div>
+            </template>
+            <template v-slot:toolbar="tb">
+                <div class="toolbar transparent">
+                    <button class="btn btn-tb" @click.stop.prevent="startEdit" v-if="!editMode">Slot Start</button>
+                    <button class="btn btn-tb" @click.stop.prevent="endEdit" v-if="editMode">Slot Save</button>
+                    <button class="btn btn-tb" @click.stop.prevent="endEdit" v-if="editMode">Slot Cancel</button>
+                </div>
+            </template>
+        </a2-formdesigner>
+    </div>
+    <script src="../scripts/vue.js"></script>
+    <script src="./formdesigner.js"></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                editMode: true,
+                items: [
+                    { id: 1, row: 1, col: 1, rowSpan: 1, colSpan: 1, text: 'Item 1' },
+                    { id: 2, row: 1, col: 2, rowSpan: 2, text: 'Item 2' },
+                    { id: 3, row: 3, col: 3, colSpan: 2, text: 'Item 3' },
+                    { id: 4, row: 4, col: 2, rowSpan: 2, colSpan: 2, text: 'Item 4' }
+                ],
+                list: [
+                    { text: 'Item 5' },
+                    { colSpan: 2, text: 'Item 6 (cols 2)' },
+                    { rowSpan: 2, text: 'Item 7 (rows 2)' },
+                    { colSpan: 2, rowSpan: 2, text: 'Item 8 (2 x 2)' },
+                    { text: 'Item 9' },
+                ]
+            },
+            methods: {
+                startEdit() {
+                    this.editMode = true;
+        		},
+                endEdit() {
+					this.editMode = false;
+				}
+            }
+        });
+    </script>
+</body>
+</html>
