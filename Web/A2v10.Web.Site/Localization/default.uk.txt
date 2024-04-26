@@ -164,4 +164,7 @@
 @AuthenticatorText=Відкрийте застосунок для автентифікації (TOTP) щоб побачити код підтвердження.
 @UseAnotherAccount=Use another account
 @AuthenticationCode=Код підтвердження
+@LogOutPrompt=Вихід із системи
+@LoginAgain=Увійти знову
+@LogOutMessage=Ви завершили сеанс роботи з системою.
 ;

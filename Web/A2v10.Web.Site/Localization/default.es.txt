@@ -165,5 +165,8 @@
 @AuthenticatorText=Open your two-factor authenticator (TOTP) app to view your authentication code.
 @UseAnotherAccount=Use another account
 @AuthenticationCode=Authentication code
+@LogOutPrompt=Log Out
+@LoginAgain=Login Again
+@LogOutMessage=You have successfully logged out of the application.
 ;
 
