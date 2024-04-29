@@ -7032,7 +7032,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240124-7959*/
+/*20240429-7970*/
 // components/selector.js
 
 (function selector_component() {
@@ -7062,10 +7062,12 @@ Vue.component('validator-control', {
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
-				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :max-chars="maxChars" :slotStyle="slotStyle">
+				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :max-chars="maxChars" :line-clamp="lineClamp" :slotStyle="slotStyle">
 					<ul class="selector-ul">
-						<li @mousedown.prevent="hit(itm)" :class="{active: isItemActive(itmIndex)}"
-							v-for="(itm, itmIndex) in items" :key="itmIndex" v-text="itemName(itm)"></li>
+						<li @mousedown.prevent="hit(itm)" :class="{'active': isItemActive(itmIndex)}"
+							v-for="(itm, itmIndex) in items" :key="itmIndex">
+							<span :style="itemStyle(itm)" :class="itemClass(itm, itmIndex)" :title="itemTitle(itm)" v-text="itemName(itm)"></span>
+						</li>
 					</ul>
 				</slot>
 			</div>
@@ -7103,7 +7105,8 @@ Vue.component('validator-control', {
 			mode: String,
 			fetchCommand: String,
 			fetchCommandData: Object,
-			maxChars: Number
+			maxChars: Number,
+			lineClamp: Number
 		},
 		data() {
 			return {
@@ -7315,6 +7318,22 @@ Vue.component('validator-control', {
 						return;
 				}
 			},
+			itemTitle(itm) {
+				if (this.lineClamp > 0)
+					return this.itemName(itm)
+				return '';
+			},
+			itemStyle(itm) {
+				if (this.lineClamp > 0)
+					return { '-webkit-line-clamp': this.lineClamp };
+				return undefined;
+			},
+			itemClass(itm, itmIndex) {
+				let cls = '';
+				if (this.lineClamp > 0)
+					cls += ' line-clamp';
+				return cls;
+			},
 			hit(itm) {
 				let obj = this.item[this.prop];
 				this.query = this.valueText;
@@ -7454,7 +7473,7 @@ Vue.component('validator-control', {
 })();
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240215-7960
+// 20240429-7970
 // components/datagrid.js*/
 
 (function () {
@@ -7594,6 +7613,7 @@ Vue.component('validator-control', {
 			wrap: String,
 			command: Object,
 			maxChars: Number,
+			lineClamp: Number,
 			checkAll: String
 		},
 		created() {
@@ -7831,11 +7851,16 @@ Vue.component('validator-control', {
 			}
 
 			let content = utils.eval(row, col.content, col.dataType, col.evalOpts);
-			let spanProps = { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col) } };
+			let spanProps = { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col), 'line-clamp': col.lineClamp > 0 } };
 			if (col.maxChars) {
 				spanProps.attrs = { title: content };
 				content = utils.text.maxChars(content, col.maxChars);
 			}
+			else if (col.lineClamp > 0) {
+				spanProps.attrs = { title: content }
+				spanProps.style = { '-webkit-line-clamp': col.lineClamp };
+			}
+
 			let chElems = [h('span', spanProps, content)];
 			let icoSingle = !col.content ? ' ico-single' : '';
 			if (col.icon)

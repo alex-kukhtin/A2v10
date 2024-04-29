@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -38,6 +38,7 @@ public class Selector : ValuedControl, ITableControl
 
 	public SelectorStyle Style { get; set; }
 	public Int32 MaxChars { get; set; }
+	public Int32 LineClamp { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -80,6 +81,8 @@ public class Selector : ValuedControl, ITableControl
         }
         if (MaxChars != 0)
 			input.MergeAttribute(":max-chars", MaxChars.ToString());
+		if (LineClamp != 0)
+			input.MergeAttribute(":line-clamp", LineClamp.ToString());
 
 		var isBind = GetBinding(nameof(ItemsSource));
 		if (isBind != null)

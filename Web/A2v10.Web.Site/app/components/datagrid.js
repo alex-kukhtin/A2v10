@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240215-7960
+// 20240429-7970
 // components/datagrid.js*/
 
 (function () {
@@ -140,6 +140,7 @@
 			wrap: String,
 			command: Object,
 			maxChars: Number,
+			lineClamp: Number,
 			checkAll: String
 		},
 		created() {
@@ -377,11 +378,16 @@
 			}
 
 			let content = utils.eval(row, col.content, col.dataType, col.evalOpts);
-			let spanProps = { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col) } };
+			let spanProps = { 'class': { 'dg-cell': true, 'negative-red': isNegativeRed(col), 'line-clamp': col.lineClamp > 0 } };
 			if (col.maxChars) {
 				spanProps.attrs = { title: content };
 				content = utils.text.maxChars(content, col.maxChars);
 			}
+			else if (col.lineClamp > 0) {
+				spanProps.attrs = { title: content }
+				spanProps.style = { '-webkit-line-clamp': col.lineClamp };
+			}
+
 			let chElems = [h('span', spanProps, content)];
 			let icoSingle = !col.content ? ' ico-single' : '';
 			if (col.icon)

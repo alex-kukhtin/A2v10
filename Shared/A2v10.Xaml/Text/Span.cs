@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -21,6 +21,7 @@ public class Span : Inline
 	public Boolean Big { get; set; }
 	public SpaceMode Space { get; set; }
 	public UInt32 MaxChars { get; set; }
+	public Int32 LineClamp { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -45,6 +46,12 @@ public class Span : Inline
 		}
 		span.AddCssClassBool(Small, "small");
 		span.AddCssClassBool(Big, "text-big");
+
+		if (LineClamp != 0)
+		{
+			span.AddCssClass("line-clamp");
+			span.MergeStyle("-webkit-line-clamp", LineClamp.ToString());
+		}
 
 		span.RenderStart(context);
 		if (Content is String)
