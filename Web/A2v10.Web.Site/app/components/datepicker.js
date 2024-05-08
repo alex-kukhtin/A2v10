@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240309-7961
+// 20240309-7962
 // components/datepicker.js
 
 (function () {
@@ -24,6 +24,7 @@
 		<input v-focus v-model.lazy="model" v-if="!isMonth" :class="inputClass" :readonly="inputDisabled"/>
 		<div class="month-wrapper" v-if=isMonth v-text=model></div>
 		<a href @click.stop.prevent="toggle($event)" tabindex="-1"><i class="ico ico-calendar"></i></a>
+		<a href v-if="clearVisible" @click.stop.prevent="clear($event)" tabindex="-1">✕</a>
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="calendar" v-if="isOpen">		
 			<a2-calendar :model="viewDate" :view="view" :current-model="modelDate"
@@ -41,7 +42,8 @@
 			// override control.align (default value)
 			align: { type: String, default: 'center' },
 			view: String,
-			yearCutOff: String
+			yearCutOff: String,
+			hasClear: Boolean
 		},
 		data() {
 			return {
@@ -64,6 +66,10 @@
 						this.updateModel(utils.date.today());
 				}
 				this.isOpen = !this.isOpen;
+			},
+			clear(ev) {
+				this.isOpen = false;
+				this.updateModel(utils.date.zero());
 			},
 			updateModel(date) {
 				this.item[this.prop] = date;
@@ -132,10 +138,13 @@
 			inputDisabled() {
 				return this.disabled || this.view === 'month';
 			},
+			clearVisible() {
+				return this.hasClear && !utils.date.isZero(this.modelDate);
+			},
 			model: {
 				get() {
 					if (utils.date.isZero(this.modelDate))
-						return '';
+						return '\u00A0'; /* avoid baseline problem */
 					if (this.view === 'month')
 						return utils.text.capitalize(this.modelDate.toLocaleString(monthLocale, { year: 'numeric', month: 'long' }));
 					else
