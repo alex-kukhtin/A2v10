@@ -134,7 +134,7 @@ public partial class BaseController
 		String baseUrl = dataToSave.Get<String>("baseUrl");
 
 		// initial = [query, controller]
-		ExpandoObject initialParams = new ExpandoObject();
+		ExpandoObject initialParams = new();
 		if (baseUrl.Contains("?"))
 		{
 			var parts = baseUrl.Split('?');
@@ -153,9 +153,8 @@ public partial class BaseController
 
 		var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 		RequestView rw = rm.GetCurrentAction();
-		String loadProc = rw.LoadProcedure;
-		if (loadProc == null)
-			throw new RequestModelException("The data model is empty");
+		String loadProc = rw.LoadProcedure 
+			?? throw new RequestModelException("The data model is empty");
 		// realParams = [model.json, id, initial]
 		var loadPrms = new ExpandoObject();
 		loadPrms.Append(rw.parameters); // model.json
@@ -189,13 +188,11 @@ public partial class BaseController
 		Object id = jsonData.Get<Object>("id");
 		String propName = jsonData.Get<String>("prop");
 		var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
-		var action = rm.GetCurrentAction();
-		if (action == null)
-			throw new RequestModelException("There are no current action");
-		String deleteProc = action.DeleteProcedure(propName);
-		if (deleteProc == null)
-			throw new RequestModelException("The data model is empty");
-		ExpandoObject execPrms = new ExpandoObject();
+		var action = rm.GetCurrentAction() 
+			?? throw new RequestModelException("There are no current action");
+		String deleteProc = action.DeleteProcedure(propName) 
+			?? throw new RequestModelException("The data model is empty");
+		ExpandoObject execPrms = new();
 		setParams?.Invoke(execPrms);
 		execPrms.Set("Id", id);
 		execPrms.Append(action.parameters);
@@ -252,13 +249,11 @@ public partial class BaseController
 		String baseUrl = jsonData.Get<String>("baseUrl");
 		Object id = jsonData.Get<Object>("id");
 		var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
-		var action = rm.GetCurrentAction();
-		if (action == null)
-			throw new RequestModelException("There are no current action");
-		String expandProc = action.ExpandProcedure;
-		if (expandProc == null)
-			throw new RequestModelException("The data model is empty");
-		ExpandoObject execPrms = new ExpandoObject();
+		var action = rm.GetCurrentAction() 
+			?? throw new RequestModelException("There are no current action");
+		String expandProc = action.ExpandProcedure 
+			?? throw new RequestModelException("The data model is empty");
+		ExpandoObject execPrms = new();
 		AddParamsFromUrl(execPrms, baseUrl);
 		setParams?.Invoke(execPrms);
 		execPrms.Set("Id", id);
@@ -271,17 +266,15 @@ public partial class BaseController
 	{
 		ExpandoObject jsonData = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
 		String baseUrl = jsonData.Get<String>("baseUrl");
-		ExpandoObject execPrms = new ExpandoObject();
+		ExpandoObject execPrms = new();
 		AddParamsFromUrl(execPrms, baseUrl);
 		Object id = jsonData.Get<Object>("id");
 		String propName = jsonData.Get<String>("prop");
 		var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
-		var action = rm.GetCurrentAction();
-		if (action == null)
-			throw new RequestModelException("There are no current action");
-		String loadProc = action.LoadLazyProcedure(propName.ToPascalCase());
-		if (loadProc == null)
-			throw new RequestModelException("The data model is empty");
+		var action = rm.GetCurrentAction() 
+			?? throw new RequestModelException("There are no current action");
+		String loadProc = action.LoadLazyProcedure(propName.ToPascalCase()) 
+			?? throw new RequestModelException("The data model is empty");
 		setParams?.Invoke(execPrms);
 		execPrms.Set("Id", id);
 		//execPrms.Append(action.parameters); // not needed
@@ -336,8 +329,7 @@ public partial class BaseController
 			baseUrl = NormalizeBaseUrl(baseUrl);
 		String command = dataToInvoke.Get<String>("cmd");
 		ExpandoObject dataToExec = dataToInvoke.Get<ExpandoObject>("data");
-		if (dataToExec == null)
-			dataToExec = new ExpandoObject();
+		dataToExec ??= new ExpandoObject();
 		setParams?.Invoke(dataToExec);
 		var rm = await RequestModel.CreateFromBaseUrl(_host, baseUrl);
 		var cmd = rm.GetCommand(command);

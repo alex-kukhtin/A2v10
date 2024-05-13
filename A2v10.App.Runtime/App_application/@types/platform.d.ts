@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7963 */
+/* Version 10.0.7964 */
 
 declare function require(url: string): any;
 
@@ -448,6 +448,7 @@ interface Utils {
 	simpleEval(obj: any, path: string): any;
 
 	mergeTemplate(tml1: Template, tml2: Template): Template;
+	mapTagColor(style: string): string;
 
 	readonly date: UtilsDate;
 	readonly text: UtilsText;

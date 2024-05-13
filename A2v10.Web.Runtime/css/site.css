@@ -1359,6 +1359,12 @@ kbd {
   box-shadow: 1px 1px 1px 0 #999;
   background-color: #f8f8f8;
 }
+.line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 html {
   font-family: system, 'Segoe UI', Tahoma, Verdana, sans-serif;
   font-size: 13px;
@@ -2495,6 +2501,12 @@ pre.a2-code {
 }
 .control-group.lg {
   font-size: 1.3rem;
+}
+.control-group.sm {
+  font-size: 0.9rem;
+}
+.control-group.no-border .input-group {
+  border: none;
 }
 .control-group.with-width .input-group {
   width: 100%;
