@@ -78,7 +78,7 @@ label.radio {
 	}
 }
 
-input[type="checkbox"],
+input[type="checkbox"]:not(.switch),
 input[type="radio"] {
 	opacity: 0;
 	z-index: 1;
@@ -172,5 +172,50 @@ label.checkbox.small {
 
 	span:after {
 		transform: scale(.9, .9);
+	}
+}
+
+
+label.switchbox {
+	display: inline-block;
+	cursor: pointer;
+	padding: 2px 0;
+	line-height: @checkbox-size;
+	white-space: nowrap;
+
+	> span {
+		padding: 0 6px;
+	}
+
+	& input.switch {
+		cursor: pointer;
+		width: 2.125em;
+		height: 1.25em;
+		border-radius: 1em;
+		appearance: none;
+		align-self: center;
+		margin: 0;
+		padding: 0;
+		vertical-align: -4px;
+		background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3.5' fill='rgba(255, 255, 255, 0.99)'/></svg>");
+		background-color: @light-gray-color;
+		background-repeat: no-repeat;
+		background-position: left center;
+		transition: background-color 0.2s ease 0s, background-position 0.2s linear 0s;
+
+		&:checked {
+			background-position: right center;
+			background-color: @link-hover-color;
+		}
+
+		&:disabled {
+			cursor: not-allowed;
+			background-color: @light-gray-color;
+
+			+ span {
+				cursor: not-allowed;
+				opacity: 0.5;
+			}
+		}
 	}
 }

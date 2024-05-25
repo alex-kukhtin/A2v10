@@ -336,6 +336,8 @@
     <Content Include="TestPages\colorpicker.html" />
     <Content Include="TestPages\barcode.html" />
     <Content Include="TestPages\barcode.js" />
+    <Content Include="TestPages\bigcalendar.html" />
+    <Content Include="TestPages\bigcalendar.js" />
     <Content Include="TestPages\formdesigner.js" />
     <Content Include="TestPages\fromdesinger.html" />
     <Content Include="TestPages\timetable.js" />

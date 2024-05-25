@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.advance.css" />
+    <meta name="rootUrl" content=""/>
+    <style>
+        :root {
+            --linkDark:red;
+        }
+        [v-cloak] {
+            display: none;
+        }
+
+        .a2-big-calendar {
+            display:grid;
+            grid-template-rows:auto 1fr;
+        }
+
+        .top-bar {
+            grid-row:1;
+        }
+
+
+		td.bc-day {
+			border: 0 solid #ddd;
+            border-bottom-width:1px;
+            border-right-width:1px;
+			width: 14.2857142857%;
+            vertical-align:top;
+            height:120px;
+            padding:2px 4px;
+            line-height:1;
+		}
+
+        td.bc-day:first-child {
+            border-left-width:1px;
+        }
+
+		td.bc-h-top {
+			border-right: 1px solid #ddd;
+			border-bottom: 1px dotted #ccc;
+			height: 30px;
+			position: relative;
+		}
+
+		td.bc-h-bottom {
+			border-right: 1px solid #ddd;
+			border-bottom: 1px solid #ddd;
+			height: 30px;
+            position:relative;
+		}
+
+        table.bc-table {
+            width:100%;
+            height:100%;
+            border-collapse:separate;
+        }
+
+        .bc-table thead {
+            position:sticky;
+            top:0;
+            z-index:51;
+        }
+
+			.bc-table thead th {
+				height: 35px;
+				background-color: white;
+				border: 1px solid #ddd;
+				border-left-width: 0;
+				text-align: center;
+				white-space: nowrap;
+				padding: 0 5px;
+                background-color:#f8f8fa;
+			}
+
+			.bc-table thead th:first-child {
+                border-left-width:1px;
+			}
+
+
+		.bc-table tbody tr:last-child td, .bc-table tbody tr:nth-last-child(2) th {
+			border-bottom-width: 0;
+		}
+
+		.bc-week tbody th {
+			vertical-align: top;
+			border: 1px solid #ddd;
+			border-top-width: 0;
+			background-color: #f8f8fa;
+		}
+
+        .top-bar {
+            display:flex;
+            flex-direction:row;
+            padding:4px 0;
+            line-height:2;
+            align-items:stretch;
+        }
+        .top-bar .title 
+        {
+            flex-grow:1;
+            text-align:center;
+            font-size:120%;
+        }
+        .top-bar button {
+            height:100%;
+        }
+
+        .bc-day.other {
+            background-color:#fafafa;
+        }
+		.bc-day.today {
+			background-color: #fffff5;
+		}
+
+        .bc-day .day-date {
+            margin-bottom:4px;
+        }
+        .day-event {
+            border-radius:4px;
+            cursor:pointer;
+        }
+
+        .bc-container {
+            height:100%;
+            overflow:auto;
+            position:relative;
+            grid-row:2;
+            border-bottom:1px solid #ddd;
+        }
+
+        .h-event {
+            position:absolute;
+            right:0;
+            left:0;
+            z-index:50;
+            border-radius:4px;
+        }
+
+		.current-time {
+            position:absolute;
+            left:0;
+            right:0;
+            border-top:2px dotted blue;
+            top:770px;
+            --time: "12:03"
+		}
+
+        .h-title {
+            display:inline-block;
+            width:50px;
+            padding:5px;
+            text-align:right;
+            white-space:nowrap;
+        }
+
+		.current-time::after {
+			content: var(--time);
+			background-color: #f8f8fa;
+			color: blue;
+			font-weight: 500;
+			padding: 5px;
+			width: 50px;
+			box-sizing: border-box;
+			text-align: right;
+			position: absolute;
+			left: 0;
+			border-left: 1px solid #ddd;
+			top: -17px;
+		}
+    </style>
+</head>
+<body>
+
+
+    <div id="app" style="padding:20px">
+        <div>
+            <span v-text="Tasks.Start"></span>
+            <span v-text="Tasks.View"></span>
+        </div>
+        <div style="padding:20px;background-color:lightyellow">
+            <span>TEXT BEFORE</span>
+            <label label="Two Factor Enabled" class="switchbox">
+                <input type="checkbox" class="switch" xcheck="true" v-model="Visible">
+                <span>Two Factor Enabled</span>
+            </label>
+            <span>TEXT MIDDLE</span>
+            <label label="Two Factor Enabled" class="checkbox">
+                <input type="checkbox" xcheck="true">
+                <span>Two Factor Enabled</span>
+            </label>
+            <span>TEXT AFTER</span>
+        </div>
+        <a2-big-calendar style="width:100%;height:80vh" v-if="Visible"
+                         :item="Tasks" prop="Start" :events="Tasks.Events"
+                         :view-item="Tasks" view-prop="View" :delegates="events">
+            <template v-slot:monthev="mevt">
+                <div v-text="mevt.item.Name" style="color:white;padding:4px"></div>
+            </template>
+            <template v-slot:weekev="wevt">
+                <div v-text="wevt.item.Name" style="color:white;margin:4px"></div>
+            </template>
+            <template v-slot:topbar="el">
+                <div class="separator"></div>
+                <button class="btn btn-tb btn-icon" @click="clickToolbar"><i class="ico ico-ellipsis-vertical"></i></button>
+            </template>
+        </a2-big-calendar>
+    </div>
+
+    <script src="../scripts/vue.js"></script>
+    <script src="../scripts/locale-uk.min.js"></script>
+    <script src="../scripts/main.js"></script>
+    <script src="bigcalendar.js"></script>
+    <script>
+        let date = new Date();
+        new Vue({
+            el: "#app",
+            data: {
+                Visible: true,
+                Tasks: {
+                    Start: date,
+                    View: 'week',
+                    Events: [
+                        { Date: new Date('2024-05-20 14:30'), Duration:45, Name: 'Event # 1.1', Color: 'orange' },
+						{ Date: new Date('2024-05-20 15:30'), Duration: 30, Name: 'Event # 1.2', Color: 'blue' },
+        				{ Date: new Date('2024-05-20 17:30'), Duration: 60, Name: 'Event # 1.2', Color: 'tan' },
+                        { Date: new Date('2024-05-24 17:15'), Duration:90, Name: 'Event # 2', Color: 'cadetblue' }
+                    ]
+                }
+            },
+            computed: {
+                events() {
+                    return {
+                        ClickEvent: this.clickEvent,
+                        ClickDay: this.clickDate
+                    }
+                }
+            },
+            methods: {
+                clickEvent(ev) {
+                    ev.Duration += 15;
+                },
+                clickDate(date) {
+                    this.Tasks.Events.push({ Date: date, Name: 'From click', Duration:30, Color:'darkorange' });
+                },
+                clickToolbar() {
+                    alert('clickToolbar')
+                }
+            }
+        });
+    </script>
+</body>
+</html>

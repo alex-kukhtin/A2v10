@@ -4,8 +4,10 @@ using System;
 
 namespace A2v10.Xaml;
 
-public class CheckBox : CheckBoxBase
+public class SwitchBox : CheckBoxBase
 {
-	internal override String ControlType => "checkbox";
+	internal override String ControlType => "switchbox";
 	internal override String InputControlType => "checkbox";
+
+	internal override String InputControlClass => "switch";
 }
