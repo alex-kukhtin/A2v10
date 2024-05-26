@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240118-7957
+// 20240118-7967
 // locale-uk.js
 
 "use strict";
@@ -34,6 +34,8 @@
 		$DataModel: 'Модель даних',
 		$Admin: 'адміністратор',
 		$Today: 'Сьогодні',
+		$Week: 'Тиждень',
+		$Month: 'Місяць',
 		$Yesterday: 'Вчора',
 		$CreateLC: 'cтворити',
 		$NoElements: 'немає елементів',

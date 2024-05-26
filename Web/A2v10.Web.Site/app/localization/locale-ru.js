@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240118-7957
+// 20240118-7967
 // locale-ru.js
 
 "use strict";
@@ -35,6 +35,8 @@
 		$Admin: 'администратор',
 		$Today: 'Сегодня',
 		$Yesterday: 'Вчера',
+		$Week: 'Неделя',
+		$Month: 'Месяц',
 		$CreateLC: 'создать',
 		$NoElements: 'нет элементов',
 		$PagerElements: 'элементы',

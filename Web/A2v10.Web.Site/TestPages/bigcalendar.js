@@ -5,6 +5,7 @@
 	 * locale:  Month, Week
 	 * workingHours
 	 */
+	const TODAY_COLOR = "#fffff080"; // sync with LESS!
 	const locale = window.$$locale;
 	const dateLocale = locale.$DateLocale || locale.$Locale;
 	const monthLocale = locale.$Locale; // for text
@@ -20,14 +21,14 @@
 	<div>
 		<button class="btn btn-tb btn-icon" @click="nextPart(-1)"><i class="ico ico-arrow-left"></i></button>
 		<button class="btn btn-tb btn-icon" @click="nextPart(1)"><i class="ico ico-arrow-right"></i></button>
-		<button class="btn btn-tb" @click="todayPart" v-text="locale.$Today"></button>
+		<button class="btn btn-tb btn-icon" @click="todayPart"><i class="ico ico-calendar-today"></i> <span v-text="locale.$Today"></span></button>
 	</div>
 	<div class="title">
 		<span v-text=topTitle></span>
 	</div>
 	<div>
-		<button class="btn btn-tb btn-icon" @click="setView('week')"><i class="ico ico-calendar"></i> Week</button>
-		<button class="btn btn-tb btn-icon" @click="setView('month')"><i class="ico ico-calendar"></i> Month</button>
+		<button class="btn btn-tb btn-icon" @click="setView('week')"><i class="ico ico-calendar-week"></i> <span v-text="locale.$Week"></span></button>
+		<button class="btn btn-tb btn-icon" @click="setView('month')"><i class="ico ico-calendar"></i> <span v-text="locale.$Month"></span></button>
 	</div>
 	<div>
 		<slot name="topbar"></slot>
@@ -42,9 +43,13 @@
 		<tr v-for="row in days">
 			<td v-for="day in row" class=bc-day :class="dayClass(day)" @click.stop.prevent="clickDay(day)">
 				<div v-text="day.getDate()" class="day-date"></div>
-				<div v-for="(ev, ix) in dayEvents(day)" :key=ix class="day-event"
-					:style="{backgroundColor: ev.Color}" @click.stop.prevent="clickEvent(ev)">
-					<slot name="monthev" v-bind:item="ev"></slot>
+				<div class="bc-day-body">
+					<div v-for="(ev, ix) in dayEvents(day)" :key=ix class="day-event"
+							:style="{backgroundColor: ev.Color || ''}" @click.stop.prevent="clickEvent(ev)">
+						<slot name="monthev" v-bind:item="ev" class="me-body">
+							<span class="me-body" v-text="eventTitle(ev)" :title="eventTitle(ev)"/>
+						</slot>
+					</div>
 				</div>
 			</td>
 		</tr>
@@ -55,13 +60,12 @@
 	<table class="bc-week bc-table">
 		<colgroup>
 			<col style="width:2%"/>
-			<col v-for="d in 7" style="width:14%">
+			<col v-for="d in 7" style="width:14%" :style="weekColumnStyle(d)">
 		</colgroup>
 		<thead>
 			<tr class="weekdays">
 				<th></th>
-				<th v-for="d in 7" v-text="wdWeekTitle(d)">
-				</th>
+				<th v-for="d in 7" v-text="wdWeekTitle(d)" :class="{today: isWeekDayToday(d)}"></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -73,7 +77,9 @@
 					<td v-for="d in 7" class="bc-h-top" @click.stop.prevent="clickHours(d, h, false)">
 						<div class="h-event" v-for="(ev, ix) in hourEvents(d, h-1, false)" :key=ix
 								:style="hourStyle(ev, false)" @click.stop.prevent="clickEvent(ev)">
-							<slot name="weekev" v-bind:item="ev"></slot>
+							<slot name="weekev" v-bind:item="ev">
+								<span class="h-ev-body" v-text="eventTitle(ev)" :title="eventTitle(ev)"></span>
+							</slot>
 						</div>
 					</td>
 				</tr>
@@ -81,7 +87,9 @@
 					<td v-for="d in 7" class="bc-h-bottom" @click.stop.prevent="clickHours(d, h, true)">
 						<div class="h-event" v-for="(ev, ix) in hourEvents(d, h-1, true)" :key=ix
 							:style="hourStyle(ev, true)" @click.stop.prevent="clickEvent(ev)">
-							<slot name="weekev" v-bind:item="ev"></slot>
+							<slot name="weekev" v-bind:item="ev">
+								<span class="h-ev-body" v-text="eventTitle(ev)" :title="eventTitle(ev)"></span>
+							</slot>
 						</div>
 					</td>
 				</tr>
@@ -237,6 +245,19 @@
 					top: `${x}px`,
 					'--time': `"${dt.toLocaleTimeString(dateLocale, { hour: '2-digit', minute:'2-digit' })}"`
 				};
+			},
+			isWeekDayToday(d) {
+				let day = du.add(this.firstMonday, d - 1, 'day');
+				return du.equal(day, du.today());
+			},
+			weekColumnStyle(d) {
+				if (this.isWeekDayToday(d))
+					return { backgroundColor: TODAY_COLOR };
+				return undefined;
+			},
+			eventTitle(ev) {
+				let time = ev.Date.toLocaleTimeString(dateLocale, { hour: '2-digit', minute: '2-digit' });
+				return `${time} ${ev.Name}`;
 			},
 			__fitScroll() {
 				if (this.isView('month')) {

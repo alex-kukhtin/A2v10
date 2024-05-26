@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240118-7957
+// 20240118-7967
 // locale-es.js
 
 "use strict";
@@ -34,6 +34,8 @@
 		$DataModel: 'Modelo de datos',
 		$Admin: 'administrador',
 		$Today: 'Hoy',
+		$Week: 'Una semana',
+		$Month: 'Mes',
 		$Yesterday: 'Ayer',
 		$CreateLC: 'crear',
 		$NoElements: 'no items',

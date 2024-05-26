@@ -91,6 +91,12 @@
 			background-color: #f8f8fa;
 		}
 
+        .bc-week th.today {
+            border-top:2px solid red;
+            font-weight:500;
+            color:red;
+        }
+
         .top-bar {
             display:flex;
             flex-direction:row;
@@ -111,17 +117,42 @@
         .bc-day.other {
             background-color:#fafafa;
         }
+
 		.bc-day.today {
 			background-color: #fffff5;
+            border-top:2px solid blue;
 		}
 
         .bc-day .day-date {
             margin-bottom:4px;
         }
-        .day-event {
-            border-radius:4px;
-            cursor:pointer;
-        }
+
+		.bc-day.today .day-date {
+			font-weight:500;
+		}
+
+
+		.day-event {
+			border-radius: 4px;
+			cursor: pointer;
+			background-color: yellow;
+			font-size: 90%;
+			line-height:normal;
+		}
+
+			.day-event .me-body {
+				margin: 3px;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 1;
+                overflow:hidden;
+			}
+
+            .bc-day-body {
+                display:flex;
+                flex-direction:column;
+                gap:2px;
+            }
 
         .bc-container {
             height:100%;
@@ -131,13 +162,18 @@
             border-bottom:1px solid #ddd;
         }
 
-        .h-event {
-            position:absolute;
-            right:0;
-            left:0;
-            z-index:50;
-            border-radius:4px;
-        }
+		.h-event {
+			position: absolute;
+			right: 0;
+			left: 0;
+			z-index: 50;
+			border-radius: 4px;
+			padding: 4px;
+			line-height: normal;
+            font-size:90%;
+            background-color:cyan;
+            overflow:hidden;
+		}
 
 		.current-time {
             position:absolute;
@@ -145,7 +181,7 @@
             right:0;
             border-top:2px dotted blue;
             top:770px;
-            --time: "12:03"
+            --time: "00:00"
 		}
 
         .h-title {
@@ -196,9 +232,9 @@
         <a2-big-calendar style="width:100%;height:80vh" v-if="Visible"
                          :item="Tasks" prop="Start" :events="Tasks.Events"
                          :view-item="Tasks" view-prop="View" :delegates="events">
-            <template v-slot:monthev="mevt">
-                <div v-text="mevt.item.Name" style="color:white;padding:4px"></div>
-            </template>
+            <!--
+    <template v-slot:monthev="mevt">
+        <div v-text="mevt.item.Name" class="me-body"></div>
             <template v-slot:weekev="wevt">
                 <div v-text="wevt.item.Name" style="color:white;margin:4px"></div>
             </template>
@@ -206,6 +242,8 @@
                 <div class="separator"></div>
                 <button class="btn btn-tb btn-icon" @click="clickToolbar"><i class="ico ico-ellipsis-vertical"></i></button>
             </template>
+    </template>
+                -->
         </a2-big-calendar>
     </div>
 
@@ -223,8 +261,8 @@
                     Start: date,
                     View: 'week',
                     Events: [
-                        { Date: new Date('2024-05-20 14:30'), Duration:45, Name: 'Event # 1.1', Color: 'orange' },
-						{ Date: new Date('2024-05-20 15:30'), Duration: 30, Name: 'Event # 1.2', Color: 'blue' },
+                        { Date: new Date('2024-05-20 14:30'), Duration:30, Name: 'Event # 1.1 with long name for test overflow', Color2: 'orange' },
+						{ Date: new Date('2024-05-20 15:30'), Duration: 30, Name: 'Event # 1.2', Color2: 'blue' },
         				{ Date: new Date('2024-05-20 17:30'), Duration: 60, Name: 'Event # 1.2', Color: 'tan' },
                         { Date: new Date('2024-05-24 17:15'), Duration:90, Name: 'Event # 2', Color: 'cadetblue' }
                     ]
@@ -241,6 +279,7 @@
             methods: {
                 clickEvent(ev) {
                     ev.Duration += 15;
+                    alert('click');
                 },
                 clickDate(date) {
                     this.Tasks.Events.push({ Date: date, Name: 'From click', Duration:30, Color:'darkorange' });

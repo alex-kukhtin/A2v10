@@ -22,7 +22,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7946') format('woff'), url('/css/fonts/A2v10.ttf?v=7946') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7967') format('woff'), url('/css/fonts/A2v10.ttf?v=7967') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -179,8 +179,14 @@
 .ico-disapprove:before {
   content: "\e937";
 }
+.ico-calendar-today:before {
+  content: "\e93c";
+}
 .ico-calendar:before {
   content: "\e93d";
+}
+.ico-calendar-week:before {
+  content: "\e93e";
 }
 .ico-call:before {
   content: "\ea19";
@@ -349,6 +355,12 @@
 }
 .ico-edit:before {
   content: "\e94a";
+}
+.ico-edit-undo:before {
+  content: "\e947";
+}
+.ico-edit-redo:before {
+  content: "\e948";
 }
 .ico-rename:before {
   content: "\e953";
