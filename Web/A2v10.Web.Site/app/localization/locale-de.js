@@ -47,6 +47,7 @@
 		$EnterPassword: 'Passwort eingeben',
 		$MatchError: 'Das Passwort stimmt nicht mit der Bestätigung überein',
 		$PasswordLength: 'Das Passwort muss mindestens 6 Zeichen lang sein',
+		$PasswordAgain: 'Bestätigung',
 		$InvalidOldPassword: 'Ungültiges altes Passwort',
 		$ChangePasswordNotAllowed: 'Passwortänderung ist verboten',
 		$ChangePasswordSuccess: 'Passwort erfolgreich geändert',

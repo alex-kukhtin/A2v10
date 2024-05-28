@@ -47,6 +47,7 @@
 		$EnterPassword: 'Wprowadź hasło',
 		$MatchError: 'Hasło nie zgadza się z potwierdzeneim',
 		$PasswordLength: 'Hasło musi mieć co najmniej 6 znaków',
+		$PasswordAgain: 'Potwierdzenie',
 		$InvalidOldPassword: 'Błędne stare hasło',
 		$ChangePasswordNotAllowed: 'Zmiana hasła zabroniona',
 		$ChangePasswordSuccess: 'Hasło zmieniono pomyślnie',

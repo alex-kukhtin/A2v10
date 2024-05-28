@@ -47,6 +47,7 @@
 		$EnterPassword: 'Введите пароль',
 		$MatchError: 'Пароль не совпадает с подтверждением',
 		$PasswordLength: 'Пароль должен иметь длину не менее 6 символов',
+		$PasswordAgain: 'Пароль еще раз',
 		$InvalidOldPassword: 'Неправильний старый пароль',
 		$ChangePasswordNotAllowed: 'Смена пароля запрещена',
 		$ChangePasswordSuccess: 'Пароль изменен успешно',

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240527-7967
+// 20240528-7968
 // components/colorcombobox.js*/
 
 (function () {
@@ -61,7 +61,7 @@
 			},
 			color() {
 				let cv = this.cmbValue;
-				let clr = cv ? (cv[this.colorProp] || 'default') : 'transparent';
+				let clr = cv ? (cv[this.colorProp] || 'transparent') : 'transparent';
 				if (this.outline)
 					clr += ' outline';
 				return clr;
