@@ -49,6 +49,7 @@ public class TagsFilter : ValuedControl, ITableControl
 
 	public String NameProperty { get; set; }
 	public String ColorProperty { get; set; }
+	public Boolean OpenTop { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -58,6 +59,7 @@ public class TagsFilter : ValuedControl, ITableControl
 		onRender?.Invoke(input);
 		input.MergeAttribute("content-prop", NameProperty);
 		input.MergeAttribute("color-prop", ColorProperty);
+		input.AddCssClassBool(OpenTop, "open-top");
 
 		var isBind = GetBinding(nameof(ItemsSource));
 		if (isBind != null)

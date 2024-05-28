@@ -85,6 +85,7 @@
 @Memo=Memo
 ;
 @Confirm=Confirmación
+@PasswordAgain=Confirmación
 @ConfirmDeleteDocument=¿Desea eliminar el documento?
 @DocumentSaved=Documento guardado correctamente
 ;

@@ -7697,6 +7697,11 @@ table.tree-grid a.toggle.expanded:after {
 .tags-control .tags-pane .btn-settings:hover {
   background-color: var(--neutralBkLight);
 }
+.tags-control.open-top .tags-pane {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 1px;
+}
 .tags-list {
   display: flex;
   flex-direction: row;

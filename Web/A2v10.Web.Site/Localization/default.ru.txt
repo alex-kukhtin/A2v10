@@ -84,6 +84,7 @@
 @Memo=Примечание
 ;
 @Confirm=Подтверждение
+@PasswordAgain=Пароль еще раз
 @ConfirmDeleteDocument=Удалить документ?
 @DocumentSaved=Документ сохранен успешно
 ;
