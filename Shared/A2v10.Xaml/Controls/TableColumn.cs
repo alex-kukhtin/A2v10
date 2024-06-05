@@ -13,6 +13,7 @@ public class TableColumn : XamlElement
 {
 	public Boolean Fit { get; set; }
 	public Length Width { get; set; }
+	public Length MinWidth { get; set; }
 	public ColumnBackgroundStyle Background { get; set; }
 
 	public Boolean? If { get; set; }
@@ -37,6 +38,8 @@ public class TableColumn : XamlElement
 			col.AddCssClass("fit");
 		if (Width != null)
 			col.MergeStyle("width", Width.Value);
+		if (MinWidth != null)
+			col.MergeStyle("min-width", MinWidth.Value);
 		MergeBindingAttributeBool(col, context, "v-if", nameof(If), If);
 		if (Background != ColumnBackgroundStyle.None)
 			col.AddCssClass(Background.ToString().ToKebabCase());

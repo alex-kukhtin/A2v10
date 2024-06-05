@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -13,6 +13,7 @@ public class StackPanel : Container, ITableControl
 	public Boolean Inline { get; set; }
 	public GapSize Gap { get; set; }
 	public Length Height { get; set; }
+	public Length Width { get; set; }	
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -33,6 +34,8 @@ public class StackPanel : Container, ITableControl
 			div.MergeStyle("gap", Gap.ToString());
 		if (Height != null)
 			div.MergeStyle("height", Height.Value);
+		if (Width != null)
+			div.MergeStyle("width", Width.Value);
 
 		div.RenderStart(context);
 		RenderChildren(context);
