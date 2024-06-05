@@ -12325,7 +12325,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240226-7963*/
+/*20240528-7968*/
 // controllers/base.js
 
 (function () {
@@ -13348,7 +13348,9 @@ Vue.directive('resize', {
 					let padding = tbl.classList.contains('compact') ? 4 : 12;
 					htmlTools.getRowHeight(tbl, padding);
 				}
-				let html = '<table>' + tbl.innerHTML + '</table>';
+				const dateLocale = locale.$DateLocale || locale.$Locale;
+				const numLocale = locale.$NumberLocale || locale.$Locale;
+				let html = `<table data-num-locale="${numLocale}" data-date-locale="${dateLocale}">${tbl.innerHTML}</table>`;
 				let data = { format, html, fileName, zoom: +(window.devicePixelRatio).toFixed(2) };
 				const routing = require('std:routing');
 				let url = `${root}/${routing.dataUrl()}/exportTo`;
@@ -13482,9 +13484,10 @@ Vue.directive('resize', {
 			},
 
 			$showHelp(path) {
-				window.open(this.$helpHref(path), "_blank");
+				if (window.$$helpWindow && !window.$$helpWindow.closed)
+					window.$$helpWindow.close();
+				window.$$helpWindow = window.open(this.$helpHref(path), "_blank");
 			},
-
 			$helpHref(path) {
 				return urltools.helpHref(path);
 			},

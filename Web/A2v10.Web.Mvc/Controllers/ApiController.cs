@@ -277,14 +277,33 @@ namespace A2v10.Web.Mvc.Controllers
 				Response.AddHeader("Access-Control-Allow-Origin", ac.AllowOriginForCheck);
 
 				String json = null;
-				Request.InputStream.Seek(0, SeekOrigin.Begin); // ensure
-				using (var tr = new StreamReader(Request.InputStream))
+
+				ExpandoObject dataToInvoke = null;
+				if (Request.ContentType == "application/x-www-form-urlencoded")
 				{
-					json = tr.ReadToEnd();
-					_logger.LogApi($"request: {json}", Request.UserHostAddress, apiGuid);
+					dataToInvoke = new ExpandoObject();
+					var formData = new StringBuilder();
+					foreach (var key in Request.Form.AllKeys)
+					{
+						dataToInvoke.Set(key, Request.Form[key]);
+						if (formData.Length != 0)
+							formData.Append("&");
+						formData.Append($"{key}={Request.Form[key]}");
+					}
+					_logger.LogApi($"request: {formData}", Request.UserHostAddress, apiGuid);
 				}
-				ExpandoObject dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+				else
+				{
+					Request.InputStream.Seek(0, SeekOrigin.Begin); // ensure
+					using (var tr = new StreamReader(Request.InputStream))
+					{
+						json = tr.ReadToEnd();
+						_logger.LogApi($"request: {json}", Request.UserHostAddress, apiGuid);
+					}
+					dataToInvoke = JsonConvert.DeserializeObject<ExpandoObject>(json, new ExpandoObjectConverter());
+				}
 				dataToInvoke ??= new ExpandoObject();
+
 				if (!String.IsNullOrEmpty(ac.wrapper))
 				{
 					ExpandoObject wrap = new();

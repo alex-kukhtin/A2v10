@@ -85,6 +85,7 @@
 @Memo=Notatka
 ;
 @Confirm=Potwierdzenie
+@PasswordAgain=Potwierdzenie
 @ConfirmDeleteDocument=Usunąć dokument?
 @DocumentSaved=Dokument został pomyślnie zapisany
 ;

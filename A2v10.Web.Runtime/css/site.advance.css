@@ -22,7 +22,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7946') format('woff'), url('/css/fonts/A2v10.ttf?v=7946') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7967') format('woff'), url('/css/fonts/A2v10.ttf?v=7967') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -179,8 +179,14 @@
 .ico-disapprove:before {
   content: "\e937";
 }
+.ico-calendar-today:before {
+  content: "\e93c";
+}
 .ico-calendar:before {
   content: "\e93d";
+}
+.ico-calendar-week:before {
+  content: "\e93e";
 }
 .ico-call:before {
   content: "\ea19";
@@ -349,6 +355,12 @@
 }
 .ico-edit:before {
   content: "\e94a";
+}
+.ico-edit-undo:before {
+  content: "\e947";
+}
+.ico-edit-redo:before {
+  content: "\e948";
 }
 .ico-rename:before {
   content: "\e953";
@@ -5410,7 +5422,7 @@ label.radio.no-wrap span {
 label.radio span::before {
   border-radius: 50%;
 }
-input[type="checkbox"],
+input[type="checkbox"]:not(.switch),
 input[type="radio"] {
   opacity: 0;
   z-index: 1;
@@ -5423,12 +5435,12 @@ input[type="radio"] {
   left: 2px;
   top: 2px;
 }
-input[type="checkbox"]:disabled + span,
+input[type="checkbox"]:not(.switch):disabled + span,
 input[type="radio"]:disabled + span {
   cursor: not-allowed;
   opacity: 0.5;
 }
-input[type="checkbox"]:focus + span::before,
+input[type="checkbox"]:not(.switch):focus + span::before,
 input[type="radio"]:focus + span::before {
   outline: thin dotted #999;
   outline-offset: 0;
@@ -5478,6 +5490,44 @@ label.like-checkbox.checked > span:before {
 }
 label.like-checkbox.indeterminate > span::before {
   background-image: url("data:image/svg+xml,%EF%BB%BF%3Csvg%20viewBox%3D'0%200%2020%2020'%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%3E%0D%0A%09%3Cpath%20fill%3D'none'%20%0D%0A%09%09stroke%3D'%23555'%20stroke-linecap%3D'round'%20stroke-linejoin%3D'round'%20stroke-width%3D'3'%0D%0A%09d%3D'M6%2010h8'%2F%3E%0D%0A%3C%2Fsvg%3E%0D%0A%0D%0A");
+}
+label.switchbox {
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px 0;
+  line-height: 1em;
+  white-space: nowrap;
+}
+label.switchbox > span {
+  padding: 0 6px;
+}
+label.switchbox input.switch {
+  cursor: pointer;
+  width: 2.125em;
+  height: 1.25em;
+  border-radius: 1em;
+  appearance: none;
+  align-self: center;
+  margin: 0;
+  padding: 0;
+  vertical-align: -4px;
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3.5' fill='rgba(255, 255, 255, 0.99)'/></svg>");
+  background-color: #ddd;
+  background-repeat: no-repeat;
+  background-position: left center;
+  transition: background-color 0.2s ease 0s, background-position 0.2s linear 0s;
+}
+label.switchbox input.switch:checked {
+  background-position: right center;
+  background-color: var(--linkDark);
+}
+label.switchbox input.switch:disabled {
+  cursor: not-allowed;
+  background-color: #ddd;
+}
+label.switchbox input.switch:disabled + span {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 .a2-pager {
   padding: 1rem 0 0 0;
@@ -7646,6 +7696,11 @@ table.tree-grid a.toggle.expanded:after {
 }
 .tags-control .tags-pane .btn-settings:hover {
   background-color: var(--neutralBkLight);
+}
+.tags-control.open-top .tags-pane {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 1px;
 }
 .tags-list {
   display: flex;
