@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7965",
+	"$version": "10.0.7969",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -295,7 +295,7 @@
 						"source": { "type": "string" },
 						"type": {
 							"type": "string",
-							"enum": [ "parse", "clr", "sql", "azureBlob", "blobStorage", "json" ]
+							"enum": [ "parse", "clr", "sql", "azureBlob", "blobStorage", "json", "excel" ]
 						},
 						"parse": {
 							"type": "string",

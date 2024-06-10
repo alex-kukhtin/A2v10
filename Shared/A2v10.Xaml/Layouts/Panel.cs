@@ -42,6 +42,7 @@ namespace A2v10.Xaml
         public GapSize Gap { get; set; }
 
         public String TestId { get; set; }
+		public Object Description { get; set; }
 
 		public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 		{
