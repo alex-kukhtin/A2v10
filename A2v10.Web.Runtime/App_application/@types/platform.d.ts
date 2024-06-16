@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7964 */
+/* Version 10.0.7965 */
 
 declare function require(url: string): any;
 
@@ -348,6 +348,7 @@ interface IViewModel extends IController {
 	$setCurrentUrl(url: string): void;
 	$export(arg: any, url: string, data?: any, opts?: { saveRequired: boolean }): void;
 	$navigateSimple(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
+	$navigateExternal(url: string, newWindow?: boolean): void;
 }
 
 // utilities
@@ -356,6 +357,7 @@ declare const enum DataType {
 	Currency = "Currency",
 	Number = "Number",
 	DateTime = "DateTime",
+	DateTime2 = "DateTime2",
 	Date = "Date",
 	DateUrl = "DateUrl",
 	Time = "Time",

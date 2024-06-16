@@ -114,6 +114,7 @@ public enum DataType
 	String,
 	Date,
 	DateTime,
+	DateTime2,
 	Time,
 	Number,
 	Currency,
