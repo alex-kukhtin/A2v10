@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7964 */
+/* Version 10.0.7969 */
 
 declare function require(url: string): any;
 
@@ -305,6 +305,7 @@ interface IController {
 	$emitParentTab(event: string, data?: any): void;
 	$nodirty(func: () => Promise<any>): void;
 	$showSidePane(url: string, arg?: string | number, data?: object): void;
+	$hideSidePane(): void;
 }
 
 interface IMessage {
@@ -348,6 +349,7 @@ interface IViewModel extends IController {
 	$setCurrentUrl(url: string): void;
 	$export(arg: any, url: string, data?: any, opts?: { saveRequired: boolean }): void;
 	$navigateSimple(url: string, data?: object, newWindow?: boolean, updateAfter?: IElementArray<IElement>): void;
+	$navigateExternal(url: string, newWindow?: boolean): void;
 }
 
 // utilities
@@ -356,6 +358,7 @@ declare const enum DataType {
 	Currency = "Currency",
 	Number = "Number",
 	DateTime = "DateTime",
+	DateTime2 = "DateTime2",
 	Date = "Date",
 	DateUrl = "DateUrl",
 	Time = "Time",

@@ -12331,7 +12331,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240528-7968*/
+/*20240625-7969*/
 // controllers/base.js
 
 (function () {
@@ -12708,6 +12708,10 @@ Vue.directive('resize', {
 			$showSidePane(url, arg, data) {
 				let newurl = urltools.combine('_navpane', url, arg || '0') + urltools.makeQueryString(data);
 				eventBus.$emit('showSidePane', newurl);
+			},
+
+			$hideSidePane() {
+				eventBus.$emit('hideSidePane', null);
 			},
 
 			$invoke(cmd, data, base, opts) {
@@ -13809,7 +13813,8 @@ Vue.directive('resize', {
 					$emitGlobal: this.$emitGlobal,
 					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
-					$showSidePane: this.$showSidePane
+					$showSidePane: this.$showSidePane,
+					$hideSidePane: this.$hideSidePane
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

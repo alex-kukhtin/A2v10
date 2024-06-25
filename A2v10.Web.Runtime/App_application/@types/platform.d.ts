@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7965 */
+/* Version 10.0.7969 */
 
 declare function require(url: string): any;
 
@@ -305,6 +305,7 @@ interface IController {
 	$emitParentTab(event: string, data?: any): void;
 	$nodirty(func: () => Promise<any>): void;
 	$showSidePane(url: string, arg?: string | number, data?: object): void;
+	$hideSidePane(): void;
 }
 
 interface IMessage {

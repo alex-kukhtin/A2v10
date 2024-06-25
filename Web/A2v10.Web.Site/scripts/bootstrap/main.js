@@ -5615,7 +5615,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240528-7968*/
+/*20240625-7969*/
 // controllers/base.js
 
 (function () {
@@ -5992,6 +5992,10 @@ app.modules['std:impl:array'] = function () {
 			$showSidePane(url, arg, data) {
 				let newurl = urltools.combine('_navpane', url, arg || '0') + urltools.makeQueryString(data);
 				eventBus.$emit('showSidePane', newurl);
+			},
+
+			$hideSidePane() {
+				eventBus.$emit('hideSidePane', null);
 			},
 
 			$invoke(cmd, data, base, opts) {
@@ -7093,7 +7097,8 @@ app.modules['std:impl:array'] = function () {
 					$emitGlobal: this.$emitGlobal,
 					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
-					$showSidePane: this.$showSidePane
+					$showSidePane: this.$showSidePane,
+					$hideSidePane: this.$hideSidePane
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,
