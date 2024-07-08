@@ -1,8 +1,9 @@
 ﻿
+@import "Variables.less";
 
 @taskpad-collapsed-bg-color: var(--neutralBkLight);
 @taskpad-brd-color: @light-gray-color;
-@taskpad-collapsed-width: 36px; /*see: taskpad.js*/
+@taskpad-collapsed-width: 36px;
 
 @handle-size: 24px;
 
@@ -64,7 +65,8 @@
 
 	&.collapsed {
 		background-color: @taskpad-collapsed-bg-color;
-
+		width: @taskpad-collapsed-width;
+		padding:0 !important;
 		.taskpad-collapse-handle {
 			&:before {
 				content: "\e9a5"; // chevron-right

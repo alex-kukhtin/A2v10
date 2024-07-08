@@ -1792,7 +1792,7 @@ app.modules['std:modelInfo'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240120-7958
+// 20240705-7969
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1818,6 +1818,7 @@ app.modules['std:http'] = function () {
 		if (!skipEvents)
 			eventBus.$emit('beginRequest', url);
 		let appver = '';
+		let modulever = '';
 		try {
 			var response = await fetch(url, {
 				method,
@@ -1830,6 +1831,7 @@ app.modules['std:http'] = function () {
 			});
 			let ct = response.headers.get("content-type") || '';
 			appver = response.headers.get("app-version") || '';
+			modulever = response.headers.get("module-version") || '';
 			switch (response.status) {
 				case 200:
 					if (raw)
@@ -1868,8 +1870,8 @@ app.modules['std:http'] = function () {
 		finally {
 			if (!skipEvents) {
 				eventBus.$emit('endRequest', url);
-				if (appver)
-					eventBus.$emit('checkVersion', appver);
+				if (appver || modulever)
+					eventBus.$emit('checkVersion', { app: appver, module: modulever });
 			}
 		}
 	}
@@ -10769,12 +10771,12 @@ TODO:
 })();
 // Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
 
-// 20200111-7850
+// 20200111-7969
 // components/taskpad.js
 
 Vue.component("a2-taskpad", {
 	template:
-		`<div :class="cssClass">
+`<div :class="cssClass" :style="{width:width}">
 	<a class="ico taskpad-collapse-handle" @click.stop="toggle"></a>
 	<div v-if="expanded" class="taskpad-body">
 		<slot>
@@ -10788,20 +10790,22 @@ Vue.component("a2-taskpad", {
 	props: {
 		title: String,
 		initialCollapsed: Boolean,
-		position: String
+		position: String,
+		initialWidth: { type: String, default: '20rem' }
 	},
 	data() {
 		return {
-			expanded: true,
-			__savedCols: ''
+			expanded: true
 		};
 	},
 	computed: {
+		width() {
+			return this.expanded ? this.initialWidth : undefined;
+		},
 		cssClass() {
 			let cls = "taskpad";
 			cls += ' position-' + this.position;
 			if (this.expanded) cls += ' expanded'; else cls += ' collapsed';
-
 			return cls;
 		},
 		tasksText() {
@@ -10811,24 +10815,12 @@ Vue.component("a2-taskpad", {
 	methods: {
 		setExpanded(exp) {
 			this.expanded = exp;
-			// HACK
-			let topStyle = this.$el.parentElement.style;
-			if (this.expanded)
-				topStyle.gridTemplateColumns = this.__savedCols;
-			else {
-				if (this.position === 'left')
-					topStyle.gridTemplateColumns = "36px 1fr"; // TODO: ???
-				else
-					topStyle.gridTemplateColumns = "1fr 36px"; // TODO: ???
-			}
 		},
 		toggle() {
 			this.setExpanded(!this.expanded);
 		}
 	},
 	mounted() {
-		let topStyle = this.$el.parentElement.style;
-		this.__savedCols = topStyle.gridTemplateColumns;
 		if (this.initialCollapsed)
 			this.setExpanded(false);
 	}

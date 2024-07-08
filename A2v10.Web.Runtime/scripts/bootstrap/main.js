@@ -1635,7 +1635,7 @@ app.modules['std:url'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240120-7958
+// 20240705-7969
 /* services/http.js */
 
 app.modules['std:http'] = function () {
@@ -1661,6 +1661,7 @@ app.modules['std:http'] = function () {
 		if (!skipEvents)
 			eventBus.$emit('beginRequest', url);
 		let appver = '';
+		let modulever = '';
 		try {
 			var response = await fetch(url, {
 				method,
@@ -1673,6 +1674,7 @@ app.modules['std:http'] = function () {
 			});
 			let ct = response.headers.get("content-type") || '';
 			appver = response.headers.get("app-version") || '';
+			modulever = response.headers.get("module-version") || '';
 			switch (response.status) {
 				case 200:
 					if (raw)
@@ -1711,8 +1713,8 @@ app.modules['std:http'] = function () {
 		finally {
 			if (!skipEvents) {
 				eventBus.$emit('endRequest', url);
-				if (appver)
-					eventBus.$emit('checkVersion', appver);
+				if (appver || modulever)
+					eventBus.$emit('checkVersion', { app: appver, module: modulever });
 			}
 		}
 	}
