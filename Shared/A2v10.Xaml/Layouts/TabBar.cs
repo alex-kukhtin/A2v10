@@ -20,7 +20,7 @@ public enum TabBarStyle
 [ContentProperty("Buttons")]
 public class TabBar : UIElement
 {
-	public TabButtonCollection Buttons { get; set; } = new TabButtonCollection();
+	public TabButtonCollection Buttons { get; set; } = [];
 	public Object Value { get; set; }
 	public ShadowStyle DropShadow { get; set; }
 	public Object Description { get; set; }
