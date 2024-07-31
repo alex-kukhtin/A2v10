@@ -384,6 +384,10 @@
   content: "\ea04";
   color: #e41400 !important;
 }
+.ico-failure-outline-red:before {
+  content: "\ea05";
+  color: #e41400 !important;
+}
 .ico-file:before {
   content: "\e9dd";
 }
@@ -621,6 +625,10 @@
 .ico-info-outline:before {
   content: "\ea09";
 }
+.ico-info-outline-blue:before {
+  content: "\ea09";
+  color: #1ba1e2 !important;
+}
 .ico-paste:before {
   content: "\e94e";
 }
@@ -633,6 +641,10 @@
 }
 .ico-success-outline:before {
   content: "\ea13";
+}
+.ico-success-outline-green:before {
+  content: "\ea13";
+  color: #16cd16 !important;
 }
 .ico-waiting:before {
   content: "\ea15";
@@ -653,6 +665,10 @@
 }
 .ico-warning-outline:before {
   content: "\ea17";
+}
+.ico-warning-outline-yellow:before {
+  content: "\ea17";
+  color: #ffcc00 !important;
 }
 .ico-trash:before {
   content: "\e992";
