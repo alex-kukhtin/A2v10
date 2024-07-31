@@ -1965,6 +1965,8 @@ header .include.nav-pane .partial-block .control-group,
 }
 .taskpad.collapsed {
   background-color: #f9f9f9;
+  width: 36px;
+  padding: 0 !important;
 }
 .taskpad.collapsed .taskpad-collapse-handle:before {
   content: "\e9ab";
