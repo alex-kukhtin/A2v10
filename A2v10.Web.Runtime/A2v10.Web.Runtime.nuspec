@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7969</version>
+		<version>10.0.7970</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -40,7 +40,8 @@
 			<group targetFramework=".NETFramework4.8">
 				<dependency id="System.Memory" version="4.5.5" />
 				<dependency id="System.Runtime.CompilerServices.Unsafe" version="6.0.0" />
-				<dependency id="Quartz" version="3.11.0" />
+				<dependency id="Quartz" version="3.13.0" />
+				<dependency id="Jint" version="4.0.1" />
 				<dependency id="Microsoft.Extensions.Logging.Abstractions" version="8.0.1" />
 				<dependency id="System.Diagnostics.DiagnosticSource" version="8.0.1" />
 			</group>
@@ -88,8 +89,6 @@
 		<file src="bin/Microsoft.IdentityModel.Abstractions.dll" target="lib/net48" />
 		<file src="bin/Newtonsoft.Json.dll" target="lib/net48" />
 		<file src="bin/Owin.dll" target="lib/net48" />
-		<file src="bin/Jint.dll" target="lib/net48" />
-		<file src="bin/Esprima.dll" target="lib/net48" />
 
 		<file src="bin/A2v10.Infrastructure.dll" target="ref/net48" />
 		<file src="bin/A2v10.Data.Interfaces.dll" target="ref/net48" />
