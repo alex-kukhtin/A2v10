@@ -112,6 +112,7 @@ public class Grid : Container
 	public Length MinWidth { get; set; }
 	public Length Width { get; set; }
 	public Overflow? Overflow { get; set; }
+	public Length MinHeight { get; set; }
 
 	RowDefinitions _rows;
 	ColumnDefinitions _columns;
@@ -120,7 +121,7 @@ public class Grid : Container
 	{
 		get
 		{
-			_rows ??= new RowDefinitions();
+			_rows ??= [];
 			return _rows;
 		}
 		set
@@ -133,7 +134,7 @@ public class Grid : Container
 	{
 		get
 		{
-			_columns ??= new ColumnDefinitions();
+			_columns ??= [];
 			return _columns;
 		}
 		set
@@ -154,6 +155,8 @@ public class Grid : Container
 			grid.MergeStyle("height", Height.Value);
 		if (MinWidth != null)
 			grid.MergeStyle("min-width", MinWidth.ToString());
+		if (MinHeight != null)
+			grid.MergeStyle("min-height", MinHeight.ToString());
 		if (Width != null)
 			grid.MergeStyle("width", Width.ToString());
 		if (_rows != null)
