@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240625-7969*/
+/*20240828-7971*/
 // controllers/base.js
 
 (function () {
@@ -607,32 +607,40 @@
 
 			$file(url, arg, opts, dat) {
 				eventBus.$emit('closeAllPopups');
-				const root = window.$$rootUrl;
-				let id = arg;
-				let token = undefined;
-				if (arg && utils.isObject(arg)) {
-					id = utils.getStringId(arg);
-					if (arg._meta_ && arg._meta_.$token)
-						token = arg[arg._meta_.$token];
+				doFile = () => {
+					const root = window.$$rootUrl;
+					let id = arg;
+					let token = undefined;
+					if (arg && utils.isObject(arg)) {
+						id = utils.getStringId(arg);
+						if (arg._meta_ && arg._meta_.$token)
+							token = arg[arg._meta_.$token];
+					}
+					let fileUrl = urltools.combine(root, '_file', url, id);
+					let qry = dat || {};
+					let action = (opts || {}).action;
+					if (token)
+						qry.token = token;
+					if (action == 'download')
+						qry.export = 1;
+					fileUrl += urltools.makeQueryString(qry);
+					switch (action) {
+						case 'download':
+							htmlTools.downloadUrl(fileUrl);
+							break;
+						case 'print':
+							htmlTools.printDirect(fileUrl);
+							break;
+						default:
+							window.open(fileUrl, '_blank');
+					}
 				}
-				let fileUrl = urltools.combine(root, '_file', url, id);
-				let qry = dat || {};
-				let action = (opts || {}).action;
-				if (token)
-					qry.token = token;
-				if (action == 'download')
-					qry.export = 1;
-				fileUrl += urltools.makeQueryString(qry);
-				switch (action) {
-					case 'download':
-						htmlTools.downloadUrl(fileUrl);
-						break;
-					case 'print':
-						htmlTools.printDirect(fileUrl);
-						break;
-					default:
-						window.open(fileUrl, '_blank');
-				}
+				if (opts && opts.saveRequired && this.$isDirty) {
+					this.$save().then(() => {
+						doFile();
+					});
+				} else
+					doFile();
 			},
 
 			$attachment(url, arg, opts) {
@@ -1096,9 +1104,8 @@
 					this.$save().then(() => {
 						doReport();
 					});
-				} else {
+				} else
 					doReport();
-				}
 			},
 
 			$modalSaveAndClose(result, opts) {

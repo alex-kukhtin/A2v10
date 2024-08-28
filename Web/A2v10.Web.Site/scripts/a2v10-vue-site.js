@@ -3223,7 +3223,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20240405-7963*/
+/*20240828-7971*/
 // services/datamodel.js
 
 /*
@@ -3610,7 +3610,8 @@ app.modules['std:impl:array'] = function () {
 
 		function setDefaults(root) {
 			if (!root.$template || !root.$template.defaults)
-				return;
+				return false;
+			let called;
 			for (let p in root.$template.defaults) {
 				let px = p.lastIndexOf('.');
 				if (px === -1)
@@ -3622,12 +3623,14 @@ app.modules['std:impl:array'] = function () {
 				let def = root.$template.defaults[p];
 				let obj = utils.simpleEval(root, path);
 				if (obj.$isNew) {
+					called = true;
 					if (utils.isFunction(def))
 						platform.set(obj, prop, def.call(root, obj, prop));
 					else
 						platform.set(obj, prop, def);
 				}
 			}
+			return called;
 		}
 
 		let constructEvent = ctorname + '.construct';
@@ -3662,7 +3665,8 @@ app.modules['std:impl:array'] = function () {
 
 			elem._modelLoad_ = (caller) => {
 				_lastCaller = caller;
-				setDefaults(elem);
+				if (setDefaults(elem))
+					elem.$emit('Model.defaults', elem);
 				elem._fireLoad_();
 				__initialized__ = true;
 			};
@@ -5619,7 +5623,7 @@ template: `
 })();
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240625-7969*/
+/*20240828-7971*/
 // controllers/base.js
 
 (function () {
@@ -6226,32 +6230,40 @@ template: `
 
 			$file(url, arg, opts, dat) {
 				eventBus.$emit('closeAllPopups');
-				const root = window.$$rootUrl;
-				let id = arg;
-				let token = undefined;
-				if (arg && utils.isObject(arg)) {
-					id = utils.getStringId(arg);
-					if (arg._meta_ && arg._meta_.$token)
-						token = arg[arg._meta_.$token];
+				doFile = () => {
+					const root = window.$$rootUrl;
+					let id = arg;
+					let token = undefined;
+					if (arg && utils.isObject(arg)) {
+						id = utils.getStringId(arg);
+						if (arg._meta_ && arg._meta_.$token)
+							token = arg[arg._meta_.$token];
+					}
+					let fileUrl = urltools.combine(root, '_file', url, id);
+					let qry = dat || {};
+					let action = (opts || {}).action;
+					if (token)
+						qry.token = token;
+					if (action == 'download')
+						qry.export = 1;
+					fileUrl += urltools.makeQueryString(qry);
+					switch (action) {
+						case 'download':
+							htmlTools.downloadUrl(fileUrl);
+							break;
+						case 'print':
+							htmlTools.printDirect(fileUrl);
+							break;
+						default:
+							window.open(fileUrl, '_blank');
+					}
 				}
-				let fileUrl = urltools.combine(root, '_file', url, id);
-				let qry = dat || {};
-				let action = (opts || {}).action;
-				if (token)
-					qry.token = token;
-				if (action == 'download')
-					qry.export = 1;
-				fileUrl += urltools.makeQueryString(qry);
-				switch (action) {
-					case 'download':
-						htmlTools.downloadUrl(fileUrl);
-						break;
-					case 'print':
-						htmlTools.printDirect(fileUrl);
-						break;
-					default:
-						window.open(fileUrl, '_blank');
-				}
+				if (opts && opts.saveRequired && this.$isDirty) {
+					this.$save().then(() => {
+						doFile();
+					});
+				} else
+					doFile();
 			},
 
 			$attachment(url, arg, opts) {
@@ -6715,9 +6727,8 @@ template: `
 					this.$save().then(() => {
 						doReport();
 					});
-				} else {
+				} else
 					doReport();
-				}
 			},
 
 			$modalSaveAndClose(result, opts) {
