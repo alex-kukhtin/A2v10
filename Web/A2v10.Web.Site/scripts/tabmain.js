@@ -13592,7 +13592,7 @@ Vue.directive('resize', {
 
 			$file(url, arg, opts, dat) {
 				eventBus.$emit('closeAllPopups');
-				doFile = () => {
+				const doFile = () => {
 					const root = window.$$rootUrl;
 					let id = arg;
 					let token = undefined;
