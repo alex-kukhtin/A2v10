@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7969 */
+/* Version 10.0.7971 */
 
 declare function require(url: string): any;
 
@@ -244,6 +244,7 @@ interface Template {
 		[prop: string]: (this: IRoot, ...args: any[]) => any
 	};
 	loaded?: (data: object) => void;
+	utils?: any;
 }
 
 declare const enum ReportFormat {

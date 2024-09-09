@@ -207,7 +207,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240616-7965
+// 20240909-7971
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -534,6 +534,8 @@ app.modules['std:utils'] = function () {
 		if (!format)
 			return formatDate(date);
 		switch (format) {
+			case 'ddMMyyyy':
+				return '' + pad2(date.getDate()) + pad2(date.getMonth() + 1) + date.getFullYear();
 			case 'dd.MM.yyyy HH:mm:ss':
 				return `${formatDate(date)}  ${formatTime2(date)}`;
 			case 'MMMM yyyy':
@@ -5847,9 +5849,9 @@ Vue.component('validator-control', {
 	app.components['static', staticControl];
 
 })();
-// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20230713-7939*/
+/*20240909-7971*/
 /*components/combobox.js */
 
 (function () {
@@ -5906,6 +5908,7 @@ Vue.component('validator-control', {
 			nameProp: String,
 			valueProp: String,
 			boldProp: String,
+			cssClassProp: String,
 			showvalue: Boolean,
 			align: String,
 			groupby : String
@@ -5948,8 +5951,11 @@ Vue.component('validator-control', {
 				return v;
 			},
 			getClass(itm) {
-				return this.boldProp ?
-					(utils.eval(itm, this.boldProp) ? 'bold' : undefined) : undefined;
+				if (this.boldProp)
+					return utils.eval(itm, this.boldProp) ? 'bold' : undefined;
+				if (this.cssClassProp)
+					return utils.eval(itm, this.cssClassProp);
+				return undefined;
 			},
 			getWrapText() {
 				return this.showvalue ? this.getComboValue() : this.getText();

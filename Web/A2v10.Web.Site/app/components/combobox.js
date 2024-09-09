@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20230713-7939*/
+/*20240909-7971*/
 /*components/combobox.js */
 
 (function () {
@@ -57,6 +57,7 @@
 			nameProp: String,
 			valueProp: String,
 			boldProp: String,
+			cssClassProp: String,
 			showvalue: Boolean,
 			align: String,
 			groupby : String
@@ -99,8 +100,11 @@
 				return v;
 			},
 			getClass(itm) {
-				return this.boldProp ?
-					(utils.eval(itm, this.boldProp) ? 'bold' : undefined) : undefined;
+				if (this.boldProp)
+					return utils.eval(itm, this.boldProp) ? 'bold' : undefined;
+				if (this.cssClassProp)
+					return utils.eval(itm, this.cssClassProp);
+				return undefined;
 			},
 			getWrapText() {
 				return this.showvalue ? this.getComboValue() : this.getText();

@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,7 @@ public class ComboBoxItem : UIElementBase
 	public String Content { get; set; }
 	public Object Value { get; set; }
 	public Boolean Bold { get; set; }
+	public Object CssClass { get; set; }
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (SkipRender(context))
@@ -120,6 +121,9 @@ public class ComboBox : ValuedControl, ITableControl
 				var boldBind = elem.GetBinding("Bold");
 				if (boldBind != null)
 					combo.MergeAttribute(":bold-prop", $"'{boldBind.Path}'"); /*without context!*/
+				var cssClassBind = elem.GetBinding(nameof(ComboBoxItem.CssClass));
+				if (cssClassBind != null)
+					combo.MergeAttribute(":css-class-prop", $"'{cssClassBind.Path}'"); /*without context!*/
 			}
 		}
 		MergeValue(combo, context);

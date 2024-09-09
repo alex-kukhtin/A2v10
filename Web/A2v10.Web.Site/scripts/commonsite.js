@@ -177,7 +177,7 @@
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240616-7965
+// 20240909-7971
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -504,6 +504,8 @@ app.modules['std:utils'] = function () {
 		if (!format)
 			return formatDate(date);
 		switch (format) {
+			case 'ddMMyyyy':
+				return '' + pad2(date.getDate()) + pad2(date.getMonth() + 1) + date.getFullYear();
 			case 'dd.MM.yyyy HH:mm:ss':
 				return `${formatDate(date)}  ${formatTime2(date)}`;
 			case 'MMMM yyyy':
