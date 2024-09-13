@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 
 using System;
@@ -51,7 +51,8 @@ public class Popover : Inline
 	public Length Top { get; set; }
 
 	public String Url { get; set; }
-	public Length OffsetX { get; set; }
+    public Object Argument { get; set; }
+    public Length OffsetX { get; set; }
 
 	public PopoverUnderlineMode Underline { get; set; }
 
@@ -94,7 +95,13 @@ public class Popover : Inline
 		else if (!String.IsNullOrEmpty(Url))
 			po.MergeAttribute("url", Url);
 
-		if (Width != null)
+        var arg = GetBinding(nameof(Argument));
+        if (arg != null)
+            po.MergeAttribute(":arg", arg.GetPathFormat(context));
+        else if (Argument != null)
+            po.MergeAttribute("arg", Argument.ToString());
+
+        if (Width != null)
 			po.MergeAttribute("width", Width.Value);
 
 		if (Top != null)

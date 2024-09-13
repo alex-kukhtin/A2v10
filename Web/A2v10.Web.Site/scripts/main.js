@@ -8583,9 +8583,9 @@ template: `
 })();
 
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-//20221107-7903
+//20240913-7971
 /*components/popover.js*/
 
 Vue.component('popover', {
@@ -8623,7 +8623,8 @@ Vue.component('popover', {
 		width: String,
 		top: String,
 		hover: Boolean,
-		offsetX: String
+		offsetX: String,
+		arg: undefined,
 	},
 	computed: {
 		hasIcon() {
@@ -8672,7 +8673,10 @@ Vue.component('popover', {
 			if (this.url) {
 				const urltools = require('std:url');
 				let root = window.$$rootUrl;
-				this.popoverUrl = urltools.combine(root, '/_popup', this.url);
+				let arg = this.arg || '0';
+				if (typeof arg === 'object')
+					arg = arg.Id;
+				this.popoverUrl = urltools.combine(root, '/_popup', this.url, arg);
 			}
 		};
 		this.$el._hide = () => {
