@@ -8673,7 +8673,7 @@ Vue.component('popover', {
 			if (this.url) {
 				const urltools = require('std:url');
 				let root = window.$$rootUrl;
-				let arg = this.arg || '0';
+				let arg = this.arg || '';
 				if (typeof arg === 'object')
 					arg = arg.Id;
 				this.popoverUrl = urltools.combine(root, '/_popup', this.url, arg);
