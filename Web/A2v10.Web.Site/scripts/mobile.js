@@ -12338,7 +12338,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20241005-7972*/
+/*20241005-7973*/
 // controllers/base.js
 
 (function () {
@@ -12720,10 +12720,10 @@ Vue.directive('resize', {
 			$hideSidePane() {
 				eventBus.$emit('hideSidePane', null);
 			},
-			$longOperation(action) {
+			async $longOperation(action) {
 				try {
 					eventBus.$emit('beginRequest', '');
-					action();
+					await action();
 				} finally {
 					eventBus.$emit('endRequest', '');
 				}

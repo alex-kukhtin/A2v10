@@ -5623,7 +5623,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20241005-7972*/
+/*20241005-7973*/
 // controllers/base.js
 
 (function () {
@@ -6005,10 +6005,10 @@ app.modules['std:impl:array'] = function () {
 			$hideSidePane() {
 				eventBus.$emit('hideSidePane', null);
 			},
-			$longOperation(action) {
+			async $longOperation(action) {
 				try {
 					eventBus.$emit('beginRequest', '');
-					action();
+					await action();
 				} finally {
 					eventBus.$emit('endRequest', '');
 				}
