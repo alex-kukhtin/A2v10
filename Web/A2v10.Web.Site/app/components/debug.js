@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20210606-7781
+// 20241005-7971
 // components/debug.js*/
 
 (function () {
@@ -173,6 +173,7 @@
 		},
 		created() {
 			eventBus.$on('endRequest', (url) => {
+				if (!url) return;
 				if (url.indexOf('/_shell/trace') !== -1) return;
 				if (!this.traceVisible) return;
 				this.loadTrace();

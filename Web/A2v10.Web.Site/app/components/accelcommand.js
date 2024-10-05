@@ -1,4 +1,4 @@
-﻿// Copyright © 2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20210502-7773
 // components/accelcommand.js

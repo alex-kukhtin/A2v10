@@ -1,4 +1,4 @@
-﻿// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2022 Oleksandr Kukhtin. All rights reserved.
 
 /*20220816-7880*/
 /* controllers/navmenu.js */

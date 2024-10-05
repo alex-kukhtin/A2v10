@@ -1,7 +1,7 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 /*20191216-7600*/
-/*components/newbutton.js*/
+/*components/companybutton.js*/
 
 (function () {
 

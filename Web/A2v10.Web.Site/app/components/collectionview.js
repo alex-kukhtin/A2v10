@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20221127-7908
 // components/collectionview.js

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240828-7971*/
+/*20241005-7972*/
 // controllers/base.js
 
 (function () {
@@ -382,7 +382,14 @@
 			$hideSidePane() {
 				eventBus.$emit('hideSidePane', null);
 			},
-
+			$longOperation(action) {
+				try {
+					eventBus.$emit('beginRequest', '');
+					action();
+				} finally {
+					eventBus.$emit('endRequest', '');
+				}
+			},
 			$invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
@@ -1490,7 +1497,8 @@
 					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane,
-					$hideSidePane: this.$hideSidePane
+					$hideSidePane: this.$hideSidePane,
+					$longOperation: this.$longOperation
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

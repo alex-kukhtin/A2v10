@@ -1,4 +1,4 @@
-﻿// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2020-2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20211210-7812
 // components/inlinedialog.js

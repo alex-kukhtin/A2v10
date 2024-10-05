@@ -92,7 +92,7 @@ app.modules['std:locale'] = function () {
 	};
 })();
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 /*20190704-7504*/
 /* services/const.js */
@@ -1014,7 +1014,7 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210729-7797*/
 // services/period.js
@@ -1451,7 +1451,7 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210223-7751*/
 /*validators.js*/

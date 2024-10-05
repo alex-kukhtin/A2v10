@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200224-7635
 // components/a2-span-sum.js*/

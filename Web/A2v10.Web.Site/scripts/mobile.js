@@ -184,7 +184,7 @@ app.modules['std:locale'] = function () {
 
 })();
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 /*20190704-7504*/
 /* services/const.js */
@@ -1106,7 +1106,7 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 /*20220626-7852*/
 /* services/url.js */
@@ -1355,7 +1355,7 @@ app.modules['std:url'] = function () {
 
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210729-7797*/
 // services/period.js
@@ -2046,7 +2046,7 @@ app.modules['std:http'] = function () {
 
 
 
-// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 // 20231005-7950
 /* platform/routex.js */
@@ -2220,7 +2220,7 @@ app.modules['std:http'] = function () {
 
 	app.components['std:store'] = store;
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210104-7738*/
 /* services/log.js */
@@ -2310,7 +2310,7 @@ app.modules['std:console'] = function () {
 		}
 	}
 };
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210223-7751*/
 /*validators.js*/
@@ -4272,7 +4272,7 @@ app.modules['std:impl:array'] = function () {
 
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210627-7787*/
 /* services/popup.js */
@@ -4916,7 +4916,7 @@ app.modules['std:html'] = function () {
 
 
 
-// Copyright © 2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2018 Oleksandr Kukhtin. All rights reserved.
 
 /*20180227-7121*/
 /* services/routing.js */
@@ -5322,7 +5322,7 @@ app.modules['std:barcode'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200206-7653
 // components/control.js
@@ -8695,7 +8695,7 @@ Vue.component('popover', {
 	});
 })();
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20221127-7908
 // components/collectionview.js
@@ -9230,7 +9230,7 @@ TODO:
 	});
 
 })();
-// Copyright © 2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20210502-7773
 // components/accelcommand.js
@@ -10911,7 +10911,7 @@ Vue.component('a2-panel', {
 		}
 	}
 });
-// Copyright © 2020-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20211210-7812
 // components/inlinedialog.js
@@ -11111,7 +11111,7 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210914-7803*/
 /*components/newbutton.js*/
@@ -11214,10 +11214,10 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 /*20191216-7600*/
-/*components/newbutton.js*/
+/*components/companybutton.js*/
 
 (function () {
 
@@ -11350,9 +11350,9 @@ Vue.component('a2-panel', {
 	});
 })();
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20210606-7781
+// 20241005-7971
 // components/debug.js*/
 
 (function () {
@@ -11525,6 +11525,7 @@ Vue.component('a2-panel', {
 		},
 		created() {
 			eventBus.$on('endRequest', (url) => {
+				if (!url) return;
 				if (url.indexOf('/_shell/trace') !== -1) return;
 				if (!this.traceVisible) return;
 				this.loadTrace();
@@ -11676,7 +11677,7 @@ Vue.component('a2-panel', {
 	app.components['std:doctitle'] = documentTitle;
 
 })();
-// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2019-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200224-7635
 // components/a2-span-sum.js*/
@@ -12337,7 +12338,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240828-7971*/
+/*20241005-7972*/
 // controllers/base.js
 
 (function () {
@@ -12719,7 +12720,14 @@ Vue.directive('resize', {
 			$hideSidePane() {
 				eventBus.$emit('hideSidePane', null);
 			},
-
+			$longOperation(action) {
+				try {
+					eventBus.$emit('beginRequest', '');
+					action();
+				} finally {
+					eventBus.$emit('endRequest', '');
+				}
+			},
 			$invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
@@ -13827,7 +13835,8 @@ Vue.directive('resize', {
 					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane,
-					$hideSidePane: this.$hideSidePane
+					$hideSidePane: this.$hideSidePane,
+					$longOperation: this.$longOperation
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,
@@ -13973,7 +13982,7 @@ Vue.directive('resize', {
 
 	app.components['baseController'] = base;
 })();
-// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2022 Oleksandr Kukhtin. All rights reserved.
 
 /*20220816-7880*/
 /* controllers/navmenu.js */

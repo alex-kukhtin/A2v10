@@ -1076,7 +1076,7 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 /*20220626-7852*/
 /* services/url.js */
@@ -1325,7 +1325,7 @@ app.modules['std:url'] = function () {
 
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210729-7797*/
 // services/period.js
@@ -2016,7 +2016,7 @@ app.modules['std:http'] = function () {
 
 
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210104-7738*/
 /* services/log.js */
@@ -2106,7 +2106,7 @@ app.modules['std:console'] = function () {
 		}
 	}
 };
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210223-7751*/
 /*validators.js*/
@@ -5646,7 +5646,7 @@ app.modules['std:impl:array'] = function () {
 
 	app.components['standaloneController'] = standalone;
 })();
-// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2022 Oleksandr Kukhtin. All rights reserved.
 
 /*20220816-7880*/
 /* controllers/navmenu.js */
