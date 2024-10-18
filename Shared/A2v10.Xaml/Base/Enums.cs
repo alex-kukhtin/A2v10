@@ -368,6 +368,7 @@ public enum Icon
         Flame,
 	Folder,
 	FolderBan,
+	FolderMoveTo,
 	FolderOutline,
 	FoldersOutline,
 	FolderQuery,

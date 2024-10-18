@@ -1041,6 +1041,8 @@
 					// attention! from css!
 					let padding = tbl.classList.contains('compact') ? 4 : 12;
 					htmlTools.getRowHeight(tbl, padding);
+					// after colWidth, rowHeight!
+					tbl = htmlTools.purgeTable(tbl);
 				}
 				const dateLocale = locale.$DateLocale || locale.$Locale;
 				const numLocale = locale.$NumberLocale || locale.$Locale;

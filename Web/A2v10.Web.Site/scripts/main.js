@@ -4766,9 +4766,9 @@ app.modules['std:tools'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20201004-7806
+// 20241018-7971
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -4784,7 +4784,8 @@ app.modules['std:html'] = function () {
 		printDirect,
 		removePrintFrame,
 		updateDocTitle,
-		uploadFile
+		uploadFile,
+		purgeTable
 	};
 
 	function getColumnsWidth(elem) {
@@ -4912,7 +4913,19 @@ app.modules['std:html'] = function () {
 	}
 };
 
-
+function purgeTable(tbl) {
+	let node = tbl.cloneNode(true)
+	for (let td of node.getElementsByTagName('TD')) {
+		if (!td.childNodes.length) continue;
+		td.removeAttribute('title');
+		let c = td.childNodes[0];
+		if (c.classList && (c.classList.contains('popover-wrapper') || c.classList.contains('hlink-dd-wrapper'))) {
+			if (c.childNodes.length)
+				td.innerText = c.childNodes[0].innerText;
+		}
+	}
+	return node;
+}
 
 
 
@@ -14495,6 +14508,8 @@ Vue.directive('resize', {
 					// attention! from css!
 					let padding = tbl.classList.contains('compact') ? 4 : 12;
 					htmlTools.getRowHeight(tbl, padding);
+					// after colWidth, rowHeight!
+					tbl = htmlTools.purgeTable(tbl);
 				}
 				const dateLocale = locale.$DateLocale || locale.$Locale;
 				const numLocale = locale.$NumberLocale || locale.$Locale;
