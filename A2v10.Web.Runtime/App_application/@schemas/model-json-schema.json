@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7969",
+	"$version": "10.0.7971",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -246,6 +246,7 @@
 						"debugOnly": { "type": "boolean" },
 						"permissions": { "$ref": "#/definitions/permissions" },
 						"auto": { "$ref": "#/definitions/auto" },
+						"signal": { "type": "boolean" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
