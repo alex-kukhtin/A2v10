@@ -72,14 +72,14 @@ public class Selector : ValuedControl, ITableControl
 		}
 		if (ShowCaret.HasValue && ShowCaret.Value)
 			input.MergeAttribute(":caret", "true");
-		if (ShowClear)
-			input.MergeAttribute(":has-clear", "true");
 		if (UseAll)
 		{
             input.MergeAttribute(":has-clear", "true");
             input.MergeAttribute(":use-all", "true");
         }
-        if (MaxChars != 0)
+		else if (ShowClear)
+			input.MergeAttribute(":has-clear", "true");
+		if (MaxChars != 0)
 			input.MergeAttribute(":max-chars", MaxChars.ToString());
 		if (LineClamp != 0)
 			input.MergeAttribute(":line-clamp", LineClamp.ToString());
