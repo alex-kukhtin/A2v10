@@ -5638,7 +5638,7 @@ template: `
 })();
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20241005-7973*/
+/*20241020-7975*/
 // controllers/base.js
 
 (function () {
@@ -6018,7 +6018,7 @@ template: `
 			},
 
 			$hideSidePane() {
-				eventBus.$emit('hideSidePane', null);
+				eventBus.$emit('showSidePane', null);
 			},
 			async $longOperation(action) {
 				try {
