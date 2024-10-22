@@ -15,6 +15,7 @@ public class Calendar : UIElementBase
 	public UIElement MonthEventTemplate { get; set; }
 	public UIElement WeekEventTemplate { get; set; }
 	public UIElementCollection ButtonsTemplate { get; set; }
+	public UIElementCollection ToolbarTemplate { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -65,6 +66,15 @@ public class Calendar : UIElementBase
 			wt.MergeAttribute("v-slot:topbar", "el");
 			wt.RenderStart(context);
 			foreach (var el in ButtonsTemplate)
+				el.RenderElement(context, tag => tag.AddCssClass("btn-tb"));
+			wt.RenderEnd(context);
+		}
+		if (ToolbarTemplate != null)
+		{
+			var wt = new TagBuilder("template");
+			wt.MergeAttribute("v-slot:leftbar", "el");
+			wt.RenderStart(context);
+			foreach (var el in ToolbarTemplate)
 				el.RenderElement(context, tag => tag.AddCssClass("btn-tb"));
 			wt.RenderEnd(context);
 		}

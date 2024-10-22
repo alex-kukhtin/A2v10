@@ -186,7 +186,7 @@ app.modules['std:locale'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240909-7971
+// 20240909-7972
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -1066,26 +1066,26 @@ app.modules['std:utils'] = function () {
 			'cyan': '#60bbe5',
 			'green': '#5db750',
 			'olive': '#b5cc18',
-			'white': 'white',
+			'white': '#ffffff',
 			'teal': '#00b5ad',
-			'tan': 'tan',
+			'tan': '#d2b48c',      // tan,
 			'red': '#da533f',
-			'blue': 'cornflowerblue',
+			'blue': '#6495ed',     //cornflowerblue
 			'orange': '#ffb74d',
-			'seagreen': 'darkseagreen',
+			'seagreen': '#8fbc8f', // darkseagreen
 			'null': '#8f94b0',
 			'gold': '#eac500',
-			'salmon': 'salmon',
-			'purple': 'mediumpurple',
-			'pink': 'hotpink',
-			'magenta': 'darkmagenta',
-			'lightgray': '#ccc'
+			'salmon': '#fa8072',   //salmon
+			'purple': '#9370db',   // mediumpurple
+			'pink': '#ff69b4',     // hotpink
+			'magenta': '#8b008b',  // darkmagenta
+			'lightgray': '#cccccc'
 		};
 		return tagColors[style || 'null'] || '#8f94b0';
 	}
 };
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210729-7797*/
 // services/period.js
@@ -1386,7 +1386,7 @@ app.modules['std:period'] = function () {
 	}
 };
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 /*20220626-7852*/
 /* services/url.js */
@@ -2004,7 +2004,7 @@ app.modules['std:barcode'] = function () {
 	}
 };
 
-// Copyright © 2015-2023 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
 
 // 20231005-7950
 /* platform/routex.js */
@@ -2453,7 +2453,7 @@ app.modules['std:barcode'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20221127-7908
 // components/collectionview.js
@@ -2988,7 +2988,7 @@ TODO:
 	});
 
 })();
-// Copyright © 2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20210502-7773
 // components/accelcommand.js
@@ -3509,9 +3509,9 @@ app.modules['std:mask'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20201004-7806
+// 20241018-7971
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -3527,7 +3527,8 @@ app.modules['std:html'] = function () {
 		printDirect,
 		removePrintFrame,
 		updateDocTitle,
-		uploadFile
+		uploadFile,
+		purgeTable
 	};
 
 	function getColumnsWidth(elem) {
@@ -3655,11 +3656,23 @@ app.modules['std:html'] = function () {
 	}
 };
 
+function purgeTable(tbl) {
+	let node = tbl.cloneNode(true)
+	for (let td of node.getElementsByTagName('TD')) {
+		if (!td.childNodes.length) continue;
+		td.removeAttribute('title');
+		let c = td.childNodes[0];
+		if (c.classList && (c.classList.contains('popover-wrapper') || c.classList.contains('hlink-dd-wrapper'))) {
+			if (c.childNodes.length)
+				td.innerText = c.childNodes[0].innerText;
+		}
+	}
+	return node;
+}
 
 
 
-
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 /*20210223-7751*/
 /*validators.js*/
@@ -5623,7 +5636,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-/*20240828-7971*/
+/*20241020-7975*/
 // controllers/base.js
 
 (function () {
@@ -6003,9 +6016,16 @@ app.modules['std:impl:array'] = function () {
 			},
 
 			$hideSidePane() {
-				eventBus.$emit('hideSidePane', null);
+				eventBus.$emit('showSidePane', null);
 			},
-
+			async $longOperation(action) {
+				try {
+					eventBus.$emit('beginRequest', '');
+					await action();
+				} finally {
+					eventBus.$emit('endRequest', '');
+				}
+			},
 			$invoke(cmd, data, base, opts) {
 				let self = this;
 				let root = window.$$rootUrl;
@@ -6657,6 +6677,8 @@ app.modules['std:impl:array'] = function () {
 					// attention! from css!
 					let padding = tbl.classList.contains('compact') ? 4 : 12;
 					htmlTools.getRowHeight(tbl, padding);
+					// after colWidth, rowHeight!
+					tbl = htmlTools.purgeTable(tbl);
 				}
 				const dateLocale = locale.$DateLocale || locale.$Locale;
 				const numLocale = locale.$NumberLocale || locale.$Locale;
@@ -7113,7 +7135,8 @@ app.modules['std:impl:array'] = function () {
 					$emitParentTab: this.$emitParentTab,
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane,
-					$hideSidePane: this.$hideSidePane
+					$hideSidePane: this.$hideSidePane,
+					$longOperation: this.$longOperation
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,
@@ -7259,7 +7282,7 @@ app.modules['std:impl:array'] = function () {
 
 	app.components['baseController'] = base;
 })();
-// Copyright © 2020-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2020-2022 Oleksandr Kukhtin. All rights reserved.
 
 /*20220816-7880*/
 /* controllers/navmenu.js */

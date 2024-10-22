@@ -177,7 +177,7 @@
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240909-7971
+// 20240909-7972
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -1057,20 +1057,20 @@ app.modules['std:utils'] = function () {
 			'cyan': '#60bbe5',
 			'green': '#5db750',
 			'olive': '#b5cc18',
-			'white': 'white',
+			'white': '#ffffff',
 			'teal': '#00b5ad',
-			'tan': 'tan',
+			'tan': '#d2b48c',      // tan,
 			'red': '#da533f',
-			'blue': 'cornflowerblue',
+			'blue': '#6495ed',     //cornflowerblue
 			'orange': '#ffb74d',
-			'seagreen': 'darkseagreen',
+			'seagreen': '#8fbc8f', // darkseagreen
 			'null': '#8f94b0',
 			'gold': '#eac500',
-			'salmon': 'salmon',
-			'purple': 'mediumpurple',
-			'pink': 'hotpink',
-			'magenta': 'darkmagenta',
-			'lightgray': '#ccc'
+			'salmon': '#fa8072',   //salmon
+			'purple': '#9370db',   // mediumpurple
+			'pink': '#ff69b4',     // hotpink
+			'magenta': '#8b008b',  // darkmagenta
+			'lightgray': '#cccccc'
 		};
 		return tagColors[style || 'null'] || '#8f94b0';
 	}
