@@ -11,6 +11,7 @@
 @DataModel=Data model
 @Profiling=Profiling
 @Profile=Profile
+@License=License
 @ChangePassword=Change password
 @SubstUser=Change user
 @User=User
