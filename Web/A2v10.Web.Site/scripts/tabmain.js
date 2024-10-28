@@ -5050,7 +5050,7 @@ app.modules['std:barcode'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240118-7957
+// 20241028-7971
 /*components/includeplain.js*/
 
 (function () {
@@ -5223,6 +5223,16 @@ app.modules['std:barcode'] = function () {
 			},
 			makeUrl() {
 				let arg = this.arg || '';
+
+				if (this.source.indexOf('{0}') >= 0 && this.source.indexOf('?') >= 0) {
+					if (utils.isObjectExact(arg)) {
+						if (!utils.isDefined(arg.Id))
+							console.error('Id is not defined for source object');
+						arg = arg.Id;
+					}
+					return urlTools.combine('_page', this.source.replace('{0}', arg));
+				}
+
 				let url = urlTools.combine('_page', this.source, arg);
 				if (this.dat)
 					url += urlTools.makeQueryString(this.dat);
@@ -12405,9 +12415,9 @@ Vue.component('a2-panel', {
 })();
 
 
-// Copyright © 2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2023-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20230809-7941
+// 20241028-7971
 // components/kanban.js
 
 (function () {
@@ -12415,7 +12425,7 @@ Vue.component('a2-panel', {
 	let kanbanTemplate = `
 <div class="kanban">
 	<div class="kanban-header kanban-part">
-		<div class=lane-header v-for="(lane, lx) in lanes" :key=lx>
+		<div class=lane-header v-for="(lane, lx) in lanes" :key=lx :class="laneClass(lane)">
 			<div class=lane-header-body>
 				<slot name=header v-bind:lane=lane></slot>
 			</div>
@@ -12423,10 +12433,11 @@ Vue.component('a2-panel', {
 		</div>
 	</div>
 	<div class="kanban-body kanban-part">
-		<div class=lane v-for="(lane, lx) in lanes" :key=lx @dragover=dragOver @drop="drop($event, lane)">
+		<div class=lane v-for="(lane, lx) in lanes" :key=lx @dragover="dragOver($event, lane)"
+				@drop="drop($event, lane)" :class="laneClass(lane)">
 			<ul class=card-list>
 				<li class=card v-for="(card, cx) in cards(lane)" :key=cx :draggable="true"
-						@dragstart="dragStart($event, card)">
+						@dragstart="dragStart($event, card)" @dragend=dragEnd>
 					<slot name=card v-bind:card=card></slot>
 				</li>
 			</ul>
@@ -12450,7 +12461,8 @@ Vue.component('a2-panel', {
 		},
 		data() {
 			return {
-				currentElem: null
+				currentElem: null,
+				laneOver: null
 			};
 		},
 		computed: {
@@ -12460,7 +12472,11 @@ Vue.component('a2-panel', {
 				let id = lane.$id;
 				return this.items.filter(itm => itm[this.stateProp].$id === id);
 			},
+			dragEnd() {
+				this.laneOver = null;
+			},
 			dragStart(ev, card) {
+				this.laneOver = null;
 				if (!this.dropDelegate) {
 					ev.preventDefault();
 					return;
@@ -12468,14 +12484,19 @@ Vue.component('a2-panel', {
 				ev.dataTransfer.effectAllowed = "move";
 				this.currentElem = card;
 			},
-			dragOver(ev) {
+			dragOver(ev, lane) {
+				this.laneOver = lane;
 				ev.preventDefault();
 			},
 			drop(ev, lane) {
+				this.laneOver = null;
 				if (!this.currentElem) return;
 				if (this.dropDelegate)
 					this.dropDelegate(this.currentElem, lane);
 				this.currentElem = null;
+			},
+			laneClass(lane) {
+				return lane == this.laneOver ? 'over' : undefined;
 			}
 		}
 	});

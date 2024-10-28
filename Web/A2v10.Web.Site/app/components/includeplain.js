@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240118-7957
+// 20241028-7971
 /*components/includeplain.js*/
 
 (function () {
@@ -173,6 +173,16 @@
 			},
 			makeUrl() {
 				let arg = this.arg || '';
+
+				if (this.source.indexOf('{0}') >= 0 && this.source.indexOf('?') >= 0) {
+					if (utils.isObjectExact(arg)) {
+						if (!utils.isDefined(arg.Id))
+							console.error('Id is not defined for source object');
+						arg = arg.Id;
+					}
+					return urlTools.combine('_page', this.source.replace('{0}', arg));
+				}
+
 				let url = urlTools.combine('_page', this.source, arg);
 				if (this.dat)
 					url += urlTools.makeQueryString(this.dat);
