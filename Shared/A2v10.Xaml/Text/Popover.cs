@@ -144,7 +144,9 @@ public class Popover : Inline
 		base.OnEndInit();
 		if (Background == PopoverBackgroundStyle.Yellow)
 			Background = PopoverBackgroundStyle.Default;
-	}
+        if (Content is XamlElement xamlElem)
+            xamlElem.SetParent(this);
+    }
 }
 
 internal class PopoverConverter : TypeConverter
