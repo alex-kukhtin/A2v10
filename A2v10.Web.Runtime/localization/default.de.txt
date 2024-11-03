@@ -11,6 +11,7 @@
 @DataModel=Datenmodell
 @Profiling=Profilierung
 @Profile=Profil
+@License=Lizenz
 @ChangePassword=Passwort ändern
 @SubstUser=Benutzer wechseln
 @AllUsers=Alle Benutzer

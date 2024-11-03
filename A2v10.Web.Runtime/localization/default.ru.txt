@@ -11,6 +11,7 @@
 @DataModel=Модель данных
 @Profiling=Профилирование
 @Profile=Профиль
+@License=Лицензия
 @ChangePassword=Сменить пароль
 @SubstUser=Сменить пользователя
 @AllUsers=Все пользователи
