@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<link rel="stylesheet" href="../css/site.css" />
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="app" style="height:100%;padding:10px">
+		<h3>Test NOTIFICATIONS</h3>
+
+
+		<button onclick="notifyMe()">
+			Notify me!
+		</button>
+
+		<audio id="notify" src="http://localhost:54883/TestPages/notify.wav" preload="auto"/>
+	</div>
+
+	<script>
+		function notifyMe() {
+			if (!("Notification" in window)) {
+				// Check if the browser supports notifications
+				alert("This browser does not support desktop notification");
+			} else if (Notification.permission === "granted") {
+				// Check whether notification permissions have already been granted;
+				// if so, create a notification
+				console.dir('before')
+				const notification = new Notification("Hi there!", {
+					body: 'Notification body',
+					icon: 'http://localhost:54883/TestPages/favicon.ico',
+					data: {
+						url: 'http://localhost:54883/TestPages/dashboard.html'
+					}
+				});
+				notification.addEventListener('click', (e) => {
+					console.dir('clicked');
+					console.dir(e.target);
+					window.open(e.target.data.url);
+				});
+				//document.getElementById('notify').play();
+				console.dir('after');
+				// …
+			} else if (Notification.permission !== "denied") {
+				// We need to ask the user for permission
+				Notification.requestPermission().then((permission) => {
+					// If the user accepts, let's create a notification
+					if (permission === "granted") {
+						//const notification = new Notification("Hi there!");
+						// …
+					}
+				});
+			}
+
+			// At last, if the user has denied notifications, and you
+			// want to be respectful there is no need to bother them anymore.
+		}
+	</script>
+</body>
+</html>

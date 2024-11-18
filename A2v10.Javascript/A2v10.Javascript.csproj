@@ -31,12 +31,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Jint" Version="4.0.1" />
+		<PackageReference Include="Jint" Version="4.1.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="System.Buffers" Version="4.5.1" />
-		<PackageReference Include="System.Memory" Version="4.5.5" />
-		<PackageReference Include="System.Numerics.Vectors" version="4.5.0" />
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+		<PackageReference Include="System.Buffers" Version="4.6.0" />
+		<PackageReference Include="System.Memory" Version="4.6.0" />
+		<PackageReference Include="System.Numerics.Vectors" version="4.6.0" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

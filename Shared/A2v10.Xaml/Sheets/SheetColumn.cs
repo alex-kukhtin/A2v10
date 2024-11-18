@@ -1,10 +1,11 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+
+using A2v10.Infrastructure;
 
 namespace A2v10.Xaml;
 
@@ -14,6 +15,7 @@ public class SheetColumn : XamlElement
     public Length Width { get; set; }
     public Length MinWidth { get; set; }
     public ColumnBackgroundStyle Background { get; set; }
+    public Boolean? If { get; set; }
 
     public SheetColumn()
     {
@@ -52,6 +54,8 @@ public class SheetColumn : XamlElement
             col.MergeStyle("width", Width.Value);
         if (MinWidth != null)
             col.MergeStyle("min-width", MinWidth.Value);
+
+        MergeBindingAttributeBool(col, context, "v-if", nameof(If), If);
 
         var bgBind = GetBinding(nameof(Background));
         if (bgBind != null)
