@@ -21,13 +21,22 @@ public class HtmlElement : UIElementBase
 {
 	public HtmlAttributeCollection Attributes { get; set; } = new HtmlAttributeCollection();
 	public String TagName { get; set; }
-	public UIElementCollection Children { get; set; } = new UIElementCollection();
+    public Length Width { get; set; }
+    public Length Height { get; set; }
+
+    public UIElementCollection Children { get; set; } = new UIElementCollection();
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		var tag = new TagBuilder(TagName, null, IsInGrid);
 		onRender?.Invoke(tag);
 		MergeAttributes(tag, context);
-		foreach (var attr in Attributes)
+
+        if (Height != null)
+            tag.MergeStyle("height", Height.Value);
+        if (Width != null)
+            tag.MergeStyle("width", Width.Value);
+
+        foreach (var attr in Attributes)
 		{
 			var valBind = attr.GetBinding("Value");
 			if (valBind != null)

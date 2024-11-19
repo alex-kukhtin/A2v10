@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200819-7703
 // components/waitcursor.js

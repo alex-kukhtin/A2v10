@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20240828-7971*/
+/*20241119-7972*/
 // services/datamodel.js
 
 /*
@@ -1054,6 +1054,8 @@
 		if (this.$root.$readOnly)
 			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
+		if (this.$vm && this.$vm.isIndex)
+			return;
 		if (isNoDirty(this.$root))
 			return;
 		if (path && path.toLowerCase().startsWith('query'))

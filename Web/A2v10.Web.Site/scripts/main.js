@@ -207,7 +207,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240909-7972
+// 20241119-7972
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -277,7 +277,7 @@ app.modules['std:utils'] = function () {
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
-			format: formatDate,
+			format: formatDateWithFormat,
 			add: dateAdd,
 			diff: dateDiff,
 			create: dateCreate,
@@ -534,6 +534,8 @@ app.modules['std:utils'] = function () {
 		if (!format)
 			return formatDate(date);
 		switch (format) {
+			case 'dd.MM':
+				return `${pad2(date.getDate())}.${pad2(date.getMonth() + 1)}`;
 			case 'ddMMyyyy':
 				return '' + pad2(date.getDate()) + pad2(date.getMonth() + 1) + date.getFullYear();
 			case 'dd.MM.yyyy HH:mm:ss':
@@ -2963,7 +2965,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20240828-7971*/
+/*20241119-7972*/
 // services/datamodel.js
 
 /*
@@ -4017,6 +4019,8 @@ app.modules['std:impl:array'] = function () {
 		if (this.$root.$readOnly)
 			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
+		if (this.$vm && this.$vm.isIndex)
+			return;
 		if (isNoDirty(this.$root))
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
@@ -4945,7 +4949,7 @@ app.modules['std:routing'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 /*20210502-7773*/
 /* services/accel.js */
@@ -5498,7 +5502,7 @@ app.modules['std:barcode'] = function () {
 	app.components['control'] = control;
 
 })();
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 /*20190226-7444*/
 /*components/validator.js*/
@@ -8435,7 +8439,7 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200625-7676
 /*components/pager.js*/
@@ -9516,7 +9520,7 @@ const maccel = require('std:accel');
 		},
 	});
 })();
-// Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
 
 // 20210704-7793
 // components/upload.js
@@ -10108,7 +10112,7 @@ TODO:
 	});
 })();
 
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20221002-7894
 // components/modal.js
@@ -10369,7 +10373,7 @@ TODO:
 
 	app.components['std:modal'] = modalComponent;
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200819-7703
 // components/waitcursor.js
@@ -10391,7 +10395,7 @@ TODO:
 
 	Vue.component("wait-cursor", waitCursor);
 })();
-// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2018 Oleksandr Kukhtin. All rights reserved.
 
 
 /* 20181126-7373 */
@@ -10937,7 +10941,7 @@ TODO:
 		}
 	});
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200108-7609
 // components/fileupload.js
@@ -11044,7 +11048,7 @@ TODO:
 		}
 	});
 })();
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20200111-7969
 // components/taskpad.js
@@ -11102,7 +11106,7 @@ Vue.component("a2-taskpad", {
 });
 
 
-// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 // 20190309-7488
 // components/panel.js

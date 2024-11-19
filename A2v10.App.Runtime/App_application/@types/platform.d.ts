@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7973 */
+/* Version 10.0.7974 */
 
 declare function require(url: string): any;
 
@@ -402,7 +402,7 @@ interface UtilsDate {
 	compare(d1: Date, d2: Date): number;
 	diff(unit: DateUnit, d1: Date, d2: Date): number;
 	endOfMonth(d: Date): Date;
-	format(d: number | Date): string;
+	format(d: number | Date, format?: string): string;
 	formatDate(d: number | Date): string;
 	parse(str: string): Date;
 	tryParse(str: string): Date | string;

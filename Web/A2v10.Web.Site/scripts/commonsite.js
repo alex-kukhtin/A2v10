@@ -177,7 +177,7 @@
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240909-7972
+// 20241119-7972
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -247,7 +247,7 @@ app.modules['std:utils'] = function () {
 			equal: dateEqual,
 			isZero: dateIsZero,
 			formatDate: formatDate,
-			format: formatDate,
+			format: formatDateWithFormat,
 			add: dateAdd,
 			diff: dateDiff,
 			create: dateCreate,
@@ -504,6 +504,8 @@ app.modules['std:utils'] = function () {
 		if (!format)
 			return formatDate(date);
 		switch (format) {
+			case 'dd.MM':
+				return `${pad2(date.getDate())}.${pad2(date.getMonth() + 1)}`;
 			case 'ddMMyyyy':
 				return '' + pad2(date.getDate()) + pad2(date.getMonth() + 1) + date.getFullYear();
 			case 'dd.MM.yyyy HH:mm:ss':
@@ -3220,7 +3222,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20240828-7971*/
+/*20241119-7972*/
 // services/datamodel.js
 
 /*
@@ -4274,6 +4276,8 @@ app.modules['std:impl:array'] = function () {
 		if (this.$root.$readOnly)
 			return;
 		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
+		if (this.$vm && this.$vm.isIndex)
+			return;
 		if (isNoDirty(this.$root))
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
@@ -4804,7 +4808,7 @@ app.modules['std:impl:array'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
 
 // 20221002-7894
 // components/modal.js
@@ -5065,7 +5069,7 @@ app.modules['std:impl:array'] = function () {
 
 	app.components['std:modal'] = modalComponent;
 })();
-// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200819-7703
 // components/waitcursor.js

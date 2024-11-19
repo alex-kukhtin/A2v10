@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2019 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2019 Oleksandr Kukhtin. All rights reserved.
 
 // 20190309-7488
 // components/panel.js

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20241028-7971
+// 20241119-7972
 /*components/includeplain.js*/
 
 (function () {
@@ -174,7 +174,7 @@
 			makeUrl() {
 				let arg = this.arg || '';
 
-				if (this.source.indexOf('{0}') >= 0 && this.source.indexOf('?') >= 0) {
+				if (this.source.indexOf('{0}') >= 0) {
 					if (utils.isObjectExact(arg)) {
 						if (!utils.isDefined(arg.Id))
 							console.error('Id is not defined for source object');
