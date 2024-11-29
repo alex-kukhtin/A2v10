@@ -1,6 +1,6 @@
 ﻿
-/* Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved. */
-/* Version 10.0.7943 */
+/* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
+/* Version 10.0.7944 */
 
 interface keyable {
 	[key: string]: any
@@ -33,6 +33,8 @@ interface ServerFetchResponse {
 declare const enum ServerFetchMethod {
 	get = "GET",
 	post = "POST",
+	delete = "DELETE",
+	patch = "PATCH"
 }
 
 interface ServerFetchRequest {

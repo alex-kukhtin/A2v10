@@ -39,8 +39,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="3.1.1" />
-		<PackageReference Include="Jint" Version="4.1.0" />
 		<PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.4" />
 		<PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.4" />
 		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />

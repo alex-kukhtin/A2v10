@@ -31,8 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="3.1.1" />
-		<PackageReference Include="Jint" Version="4.1.0" />
 		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
 		<PackageReference Include="Microsoft.AspNet.Razor" Version="3.3.0" />
 		<PackageReference Include="Microsoft.AspNet.WebPages" Version="3.3.0" />
@@ -56,11 +54,6 @@
 		<PackageReference Include="Microsoft.Owin.Security.OpenIdConnect" Version="4.2.2" />
 		<PackageReference Include="Quartz" Version="3.13.1" />
 		<PackageReference Include="RazorGenerator.Mvc" Version="2.4.9" />
-		<PackageReference Include="System.Buffers" Version="4.6.0" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0" />
-		<PackageReference Include="System.Memory" Version="4.6.0" />
-		<PackageReference Include="System.Numerics.Vectors" Version="4.6.0" />
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 		<PackageReference Include="WebActivatorEx" Version="2.2.0" />
 	</ItemGroup>
 

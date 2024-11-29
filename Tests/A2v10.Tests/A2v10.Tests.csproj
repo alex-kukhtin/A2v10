@@ -27,8 +27,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DocumentFormat.OpenXml" Version="3.1.1" />
-		<PackageReference Include="Jint" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
 		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.2.1" />
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.2.1" />
@@ -39,11 +37,6 @@
 		<PackageReference Include="MSTest.TestAdapter" Version="3.6.3" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.6.3" />
 		<PackageReference Include="Quartz" Version="3.13.1" />
-		<PackageReference Include="System.Buffers" Version="4.6.0" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="9.0.0" />
-		<PackageReference Include="System.Memory" Version="4.6.0" />
-		<PackageReference Include="System.Numerics.Vectors" Version="4.6.0" />
-		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

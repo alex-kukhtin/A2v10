@@ -90,8 +90,9 @@ public class FetchCommand
 			AddAuthorization(httpWebRequest, prms?.Get<ExpandoObject>("authorization"));
 			SetHeaders(httpWebRequest, prms?.Get<ExpandoObject>("headers"));
 
-			if (mtd == "POST" || mtd == "PUT") {
-				httpWebRequest.Method = mtd;
+            httpWebRequest.Method = mtd;
+
+            if (mtd == "POST" || mtd == "PUT" || mtd == "PATCH") {
 				var bodyObj = prms?.Get<Object>("body");
 				String bodyStr = null;
 
