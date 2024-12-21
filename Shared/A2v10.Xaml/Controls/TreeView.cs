@@ -1,13 +1,13 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-using A2v10.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Markup;
 
-namespace A2v10.Xaml;
+using A2v10.Infrastructure;
 
+namespace A2v10.Xaml;
 
 /*
     treeview.js options: {
@@ -21,7 +21,9 @@ namespace A2v10.Xaml;
         folderSelect: Boolean || Function,
         wrapLabel: Boolean,
         hasIcon: Boolean,
-	initialExpand: Boolean
+		isGroup: Boolean,
+		isFolder: Boolean,
+		initialExpand: Boolean
     }
     */
 
@@ -32,7 +34,8 @@ public class TreeViewItem : UIElement
 	public Icon Icon { get; set; }
 	public String Label { get; set; }
 	public Boolean? IsFolder { get => IsGroup; set => IsGroup = value; }
-	public Boolean? IsGroup { get; set; }
+    public Boolean? IsFolder2 { get; set; }
+    public Boolean? IsGroup { get; set; }
 	public Boolean InitialExpand { get; set; }
 
 	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
@@ -59,7 +62,13 @@ public class TreeViewItem : UIElement
 			sb.Append($"isGroup: '{isGroupBind.Path}',"); // GetTypedPath(context, TypeCheckerTypeCode.Skip)}',");
 		else if (IsGroup != null)
 			throw new XamlException("The IsGroup property must be a binding");
-		if (InitialExpand)
+        var isFolderBind = GetBinding(nameof(IsFolder2));
+        if (isFolderBind != null)
+            sb.Append($"isFolder: '{isFolderBind.Path}',");
+        else if (IsFolder2 != null)
+            throw new XamlException("The IsFolder2 property must be a binding");
+
+        if (InitialExpand)
 			sb.Append("initialExpand: true,");
 		// visible => if or show
 		var showBind = GetBinding(nameof(Show)) ?? GetBinding(nameof(If));

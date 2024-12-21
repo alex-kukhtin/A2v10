@@ -207,7 +207,7 @@ app.modules['std:const'] = function () {
 
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20241119-7972
+// 20241221-7973
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -288,7 +288,9 @@ app.modules['std:utils'] = function () {
 			maxDate: dateCreate(2999, 12, 31),
 			fromDays: fromDays,
 			parseTime: timeParse,
-			fromServer: dateFromServer
+			fromServer: dateFromServer,
+			int2time,
+			time2int
 		},
 		text: {
 			contains: textContains,
@@ -530,6 +532,22 @@ app.modules['std:utils'] = function () {
 		return formatFunc(num);
 	}
 
+	function formatDateFormat2(date, format) {
+		if (!date) return '';
+		const parts = {
+			yyyy: date.getFullYear(),
+			yy: ('' + date.getFullYear()).substring(2),
+			MM: pad2(date.getMonth() + 1),
+			dd: pad2(date.getDate()),
+			HH: pad2(date.getHours()),
+			hh: pad2(date.getHours() > 12 ? date.getHours() - 12 : date.getHours()),
+			mm: pad2(date.getMinutes()),
+			ss: pad2(date.getSeconds()),
+			tt: date.getHours() < 12 ? 'AM' : 'PM'
+		};
+		return format.replace(/yyyy|yy|MM|dd|HH|hh|mm|ss|tt/g, (match) => parts[match]);
+	}
+
 	function formatDateWithFormat(date, format) {
 		if (!format)
 			return formatDate(date);
@@ -540,10 +558,12 @@ app.modules['std:utils'] = function () {
 				return '' + pad2(date.getDate()) + pad2(date.getMonth() + 1) + date.getFullYear();
 			case 'dd.MM.yyyy HH:mm:ss':
 				return `${formatDate(date)}  ${formatTime2(date)}`;
+			case 'MM.yyyy':
+				return `${pad2(date.getMonth() + 1)}.${date.getFullYear()}`;
 			case 'MMMM yyyy':
 				return capitalize(date.toLocaleDateString(locale.$Locale, { month: 'long', year: 'numeric' }));
 			default:
-				console.error('invalid date format: ' + format);
+				return formatDateFormat2(date, format);
 		}
 		return formatDate(date);
 	}
@@ -1105,6 +1125,22 @@ app.modules['std:utils'] = function () {
 			'lightgray': '#cccccc'
 		};
 		return tagColors[style || 'null'] || '#8f94b0';
+	}
+
+	function int2time(val) {
+		if (!val) return '';
+		let h = Math.floor(val / 60), m = val % 60;
+		if (m < 10)
+			m = '0' + m;
+		return (h || m) ? `${h}:${m}` : '';
+	}
+
+	function time2int(val) {
+		let v = (val || '').split(':');
+		let h = v[0], m = 0;
+		if (v.length > 1)
+			m = v[1];
+		return +h * 60 + (+m);
 	}
 };
 

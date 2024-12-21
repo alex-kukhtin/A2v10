@@ -7463,11 +7463,17 @@ table.tree-grid a.toggle.expanded:after {
   align-self: start;
   justify-self: end;
   position: relative;
+  grid-row: 1;
   right: -8px;
 }
 .dashboard-container .start-toolbar.no-items {
   position: absolute;
   right: 4px;
+}
+.dashboard-container .main-toolbar {
+  align-self: start;
+  justify-self: end;
+  grid-row: 1;
 }
 .dashboard-container .dashboard-list {
   width: 320px;

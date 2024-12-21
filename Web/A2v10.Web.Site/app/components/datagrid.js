@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20240429-7970
+// 20241221-7975
 // components/datagrid.js*/
 
 (function () {
@@ -136,6 +136,7 @@
 			mark: String,
 			controlType: String,
 			width: String,
+			minWidth:String,
 			fit: Boolean,
 			wrap: String,
 			command: Object,
@@ -760,7 +761,8 @@
 			},
 			columnStyle(column) {
 				return {
-					width: utils.isDefined(column.width) ? column.width : undefined
+					width: utils.isDefined(column.width) ? column.width : undefined,
+					minWidth: utils.isDefined(column.minWidth) ? column.minWidth : undefined
 				};
 			},
 			doSort(order) {

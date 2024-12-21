@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Markup;
+
 using A2v10.Infrastructure;
 
 namespace A2v10.Xaml;
@@ -37,7 +38,8 @@ public class DataGridColumn : XamlElement
 	public ColumnControlType ControlType { get; set; }
 	public Object Mark { get; set; }
 	public Length Width { get; set; }
-	public Icon Icon { get; set; }
+    public Length MinWidth { get; set; }
+    public Icon Icon { get; set; }
 	public WrapMode Wrap { get; set; }
 	public Boolean? Sort { get; set; }
 	public String SortProperty { get; set; }
@@ -91,7 +93,9 @@ public class DataGridColumn : XamlElement
 		MergeBoolAttribute(column, context, nameof(Fit), Fit);
 		if (Width != null)
 			column.MergeAttribute("width", Width.Value);
-		var iconBind = GetBinding(nameof(Icon));
+        if (MinWidth != null)
+            column.MergeAttribute("min-width", MinWidth.Value);
+        var iconBind = GetBinding(nameof(Icon));
 		if (iconBind != null)
 			column.MergeAttribute("bind-icon", iconBind.Path /*without context*/);
 		else if (Icon != Icon.NoIcon)

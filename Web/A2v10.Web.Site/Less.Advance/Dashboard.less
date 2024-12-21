@@ -1,4 +1,4 @@
-﻿// Copyright © 2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2024 Oleksandr Kukhtin. All rights reserved.
 
 @import "Variables.less";
 
@@ -21,12 +21,19 @@
 		align-self: start;
 		justify-self: end;
 		position: relative;
+		grid-row: 1;
 		right: -8px;
 
 		&.no-items {
 			position: absolute;
 			right: 4px;
 		}
+	}
+
+	.main-toolbar {
+		align-self: start;
+		justify-self: end;
+		grid-row: 1;
 	}
 
 	.dashboard-list {
@@ -81,10 +88,10 @@
 			.widget-group-title {
 				margin: 1rem 1rem .5rem 1rem;
 				color: var(--themeLight);
-				font-size:115%;
-				display:flex;
-				justify-content:space-between;
-				cursor:pointer;
+				font-size: 115%;
+				display: flex;
+				justify-content: space-between;
+				cursor: pointer;
 			}
 		}
 

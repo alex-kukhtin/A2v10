@@ -1,6 +1,6 @@
-﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2024 Oleksandr Kukhtin. All rights reserved.
 
-// 20230807-7941
+// 20241221-7971
 // components/dashboard.js
 
 (function () {
@@ -24,8 +24,12 @@
 	<div class="drag-host" ref=drag-host></div>
 	<div class=dashboard :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}" ref=dash>
 		<div v-if="editable && !editMode" class="start-toolbar toolbar" 
-			:style="{'grid-column':cols + 1}" :class="{'no-items': !hasItems}">
+				:style="{'grid-column':cols + 1}" :class="{'no-items': !hasItems}">
 			<slot name="startbtn"></slot>
+		</div>
+		<div v-if="!editMode" class="main-toolbar"
+			:style="{'grid-column':cols + 1}">
+			<slot name="toolbar2"></slot>
 		</div>
 		<template v-for="ph in placeholders" v-if=editMode>
 			<a2-dashboard-placeholder v-show="placeholderVisible(ph.row, ph.col)"
