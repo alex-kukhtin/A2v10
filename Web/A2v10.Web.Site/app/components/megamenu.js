@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200930-7708
 // components/megamenu.js

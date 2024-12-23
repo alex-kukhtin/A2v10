@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2018 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2018 Oleksandr Kukhtin. All rights reserved.
 
 // 20180605-7327
 // components/iframetarget.js*/

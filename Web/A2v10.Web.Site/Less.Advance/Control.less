@@ -518,6 +518,10 @@
 .control-group.disabled {
 	.input-group {
 		background-color: @disabled-bg-color;
+
+		input[readonly], textarea[readonly] {
+			pointer-events: auto;
+		}
 	}
 
 	a:not(.rendershow) {

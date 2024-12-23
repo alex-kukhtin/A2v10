@@ -2637,6 +2637,10 @@ pre.a2-code {
 .control-group.disabled .input-group {
   background-color: #fafafa;
 }
+.control-group.disabled .input-group input[readonly],
+.control-group.disabled .input-group textarea[readonly] {
+  pointer-events: auto;
+}
 .control-group.disabled a:not(.rendershow) {
   pointer-events: none;
   opacity: 0.5;

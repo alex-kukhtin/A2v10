@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7974 */
+/* Version 10.0.7975 */
 
 declare function require(url: string): any;
 
@@ -406,6 +406,8 @@ interface UtilsDate {
 	formatDate(d: number | Date): string;
 	parse(str: string): Date;
 	tryParse(str: string): Date | string;
+	int2time(val: number): string;
+	time2int(time: string): number;
 }
 
 interface UtilsText {
