@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2022 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -30,9 +30,13 @@ public class SheetCellGroup : XamlElement, ISheetCell
 		}
 		else
 		{
-			RenderChildren(context);
-		}
-	}
+            var t = new TagBuilder("template");
+            MergeBindingAttributeBool(t, context, "v-if", nameof(If), If);
+            t.RenderStart(context);
+            RenderChildren(context);
+            t.RenderEnd(context);
+        }
+    }
 
 	void RenderChildren(RenderContext context)
 	{
