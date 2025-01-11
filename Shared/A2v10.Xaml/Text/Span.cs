@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Windows.Markup;
@@ -60,4 +60,23 @@ public class Span : Inline
 		if (Space == SpaceMode.After || Space == SpaceMode.Both)
 			context.Writer.Write("&#160;");
 	}
+}
+
+
+[ContentProperty("Content")]
+public class Bold : Span
+{
+    public Bold()
+    {
+        Bold = true;
+    }
+}
+
+[ContentProperty("Content")]
+public class Italic : Span
+{
+    public Italic()
+    {
+        Italic = true;
+    }
 }

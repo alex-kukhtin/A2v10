@@ -1,7 +1,7 @@
 ﻿
-/* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
+/* Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7975 */
+/* Version 10.0.7976 */
 
 declare function require(url: string): any;
 
@@ -44,7 +44,7 @@ interface IArrayElement extends IElement {
 	$checked: boolean;
 	$remove(): void;
 	$select(root?: IElementArray<IElement>): void;
-	$move(dir: MoveDir): IArrayElement;
+	$move(dir: MoveDir): void;
 	$canMove(dir: MoveDir): boolean;
 }
 
