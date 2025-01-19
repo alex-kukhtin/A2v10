@@ -118,8 +118,9 @@ public class RenderContext
 {
 	public String RootId { get; set; }
 	public String Path { get; set; }
+    public Component RenderedComponent { get; set; }
 
-	public TextWriter Writer { get; private set; }
+    public TextWriter Writer { get; private set; }
 
 	public Boolean IsDebugConfiguration { get; }
 
