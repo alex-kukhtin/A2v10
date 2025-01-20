@@ -1,6 +1,6 @@
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20220416-7838
+// 20250121-7976
 // app.js
 
 "use strict";
@@ -13522,9 +13522,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20241020-7975*/
+/*20250121-7976*/
 // controllers/base.js
 
 (function () {
@@ -13746,6 +13746,12 @@ Vue.directive('resize', {
 					return false;
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
+			},
+			$canExecSel(cmd, arg, opts) {
+				let sel = arg.$selected;
+				if (!sel)
+					return false;
+				return this.$canExecute(cmd, sel, opts);
 			},
 			$setCurrentUrl(url) {
 				if (this.inDialog)

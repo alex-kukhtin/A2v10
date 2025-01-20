@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -589,7 +589,10 @@ public class BindCmd : BindBase
 			case CommandType.Execute:
 				MergeDisabled(tag, $"!$canExecute('{CommandName}', {CommandArgument(context, true)}, {GetOptions(context)})");
 				break;
-			case CommandType.Append:
+            case CommandType.ExecuteSelected:
+                MergeDisabled(tag, $"!$canExecSel('{CommandName}', {CommandArgument(context, true)}, {GetOptions(context)})");
+                break;
+            case CommandType.Append:
 			case CommandType.Prepend:
 			case CommandType.Remove:
 				if (context.IsDataModelIsReadOnly)
@@ -611,7 +614,6 @@ public class BindCmd : BindBase
 			case CommandType.OpenSelected:
 			case CommandType.OpenSelectedFrame:
 			case CommandType.Select:
-			case CommandType.ExecuteSelected:
 			case CommandType.DbRemoveSelected:
 				{
 					var arg = GetBinding(nameof(Argument));

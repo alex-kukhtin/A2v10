@@ -28,13 +28,14 @@ public class Component : UIElementBase
 			throw new XamlException($"Component '{Name}' not found");
 		if (!(comp is UIElementBase compUi))
 			throw new XamlException($"The component '{Name}' is not an UIElement");
-		var scopeBind = GetBinding(nameof(Scope));
+        var savedRendered = context.RenderedComponent;
+        var scopeBind = GetBinding(nameof(Scope));
 		if (scopeBind == null)
 		{
 			compUi.SetParent(this);
 			context.RenderedComponent = this;
 			compUi.RenderElement(context, onRender);
-            context.RenderedComponent = null;
+            context.RenderedComponent = savedRendered;
             return;
 		}
 
@@ -51,7 +52,7 @@ public class Component : UIElementBase
 			compUi.IsInGrid = IsInGrid;
             context.RenderedComponent = this;
             compUi.RenderElement(context);
-            context.RenderedComponent = null;
+            context.RenderedComponent = savedRendered;
         }
         tag.RenderEnd(context);
 	}
