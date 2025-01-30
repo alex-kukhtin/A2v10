@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250121-7976*/
+/*20250122-7977*/
 // controllers/base.js
 
 (function () {
@@ -224,9 +224,9 @@
 				return root._canExec_(cmd, arg, opts);
 			},
 			$canExecSel(cmd, arg, opts) {
+				if (!arg) return false;
 				let sel = arg.$selected;
-				if (!sel)
-					return false;
+				if (!sel) return false;
 				return this.$canExecute(cmd, sel, opts);
 			},
 			$setCurrentUrl(url) {

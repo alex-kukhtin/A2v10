@@ -3274,9 +3274,9 @@ app.modules['std:impl:array'] = function () {
 	}
 };
 
-/* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20241119-7972*/
+/*20250130-7977*/
 // services/datamodel.js
 
 /*
@@ -3462,6 +3462,7 @@ app.modules['std:impl:array'] = function () {
 		if (objname in props) {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
+				if (!propInfo) continue;
 				if (utils.isPrimitiveCtor(propInfo)) {
 					loginfo(`create scalar property: ${objname}.${p}`);
 					elem._meta_.props[p] = propInfo;
@@ -3487,6 +3488,7 @@ app.modules['std:impl:array'] = function () {
 		if (objname in props) {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
+				if (!propInfo) continue;
 				if (utils.isPrimitiveCtor(propInfo)) {
 					continue;
 				}
@@ -5678,7 +5680,7 @@ template: `
 })();
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250121-7976*/
+/*20250122-7977*/
 // controllers/base.js
 
 (function () {
@@ -5902,9 +5904,9 @@ template: `
 				return root._canExec_(cmd, arg, opts);
 			},
 			$canExecSel(cmd, arg, opts) {
+				if (!arg) return false;
 				let sel = arg.$selected;
-				if (!sel)
-					return false;
+				if (!sel) return false;
 				return this.$canExecute(cmd, sel, opts);
 			},
 			$setCurrentUrl(url) {

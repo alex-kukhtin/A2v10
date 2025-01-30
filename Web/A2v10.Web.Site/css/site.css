@@ -1437,6 +1437,9 @@ body.waiting * {
 [v-cloak] {
   display: none;
 }
+*[contenteditable="true"] {
+  caret-color: auto;
+}
 hr {
   margin: 0.8rem 0;
   border: 1px solid #ddd;
@@ -6652,6 +6655,9 @@ table.sheet td.indent.lev-4 {
 table.sheet td.indent.lev-5 {
   padding-left: 54px;
 }
+table.sheet td.indent.lev-6 {
+  padding-left: 66px;
+}
 table.sheet .col-shadow {
   visibility: collapse;
   display: none;
@@ -7327,6 +7333,9 @@ table.tree-grid tr.lev-4 .mark {
 }
 table.tree-grid tr.lev-5 .mark {
   min-width: 108px;
+}
+table.tree-grid tr.lev-6 .mark {
+  min-width: 126px;
 }
 table.tree-grid a.toggle {
   display: inline-block;
