@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7976 */
+/* Version 10.0.7977 */
 
 declare function require(url: string): any;
 
@@ -308,6 +308,7 @@ interface IController {
 	$showSidePane(url: string, arg?: string | number, data?: object): void;
 	$hideSidePane(): void;
 	$longOperation(action: () => Promise<any>): Promise<any>;
+	$requeryNew(id: any): void;
 }
 
 interface IMessage {
