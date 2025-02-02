@@ -119,6 +119,27 @@ table.data-grid {
 		background-color: @sort-bg-color;
 	}
 
+	colgroup {
+		> col.red {
+			background-color: @mark-danger-bg-color;
+		}
+
+		> col.green {
+			background-color: @mark-success-bg-color;
+		}
+
+		> col.blue {
+			background-color: @mark-info-bg-color;
+		}
+
+		> col.yellow {
+			background-color: @mark-warning-bg-color;
+		}
+
+		> col.gray {
+			background-color: @alter-bg-color;
+		}
+	}
 
 	> thead > tr > th {
 		border-color: @table-hdr-brd-color;

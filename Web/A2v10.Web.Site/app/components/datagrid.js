@@ -28,7 +28,7 @@
 		<colgroup>
 			<col v-if="isMarkCell" class="fit"/>
 			<col v-if="isRowDetailsCell" class="fit" />
-			<col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
+			<col v-bind:class="columnClass(col, colIndex)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
 		</colgroup>
 		<thead>
 			<tr v-show="isHeaderVisible">
@@ -138,6 +138,7 @@
 			width: String,
 			minWidth:String,
 			fit: Boolean,
+			backColor: String,
 			wrap: String,
 			command: Object,
 			maxChars: Number,
@@ -751,12 +752,15 @@
 				let vis = item[this.rowDetailsVisible];
 				return !!vis;
 			},
-			columnClass(column) {
+			columnClass(column, ix) {
 				let cls = '';
 				if (column.fit || column.controlType === 'validator')
 					cls += 'fit';
 				if (this.sort && column.isSortable && utils.isDefined(column.dir))
 					cls += ' sorted';
+				if (column.backColor) {
+					cls += ` ${column.backColor}`;
+				}
 				return cls;
 			},
 			columnStyle(column) {

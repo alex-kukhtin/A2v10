@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250122-7977*/
+/*20250202-7978*/
 // controllers/base.js
 
 (function () {
@@ -285,6 +285,11 @@
 						self.$alertUi(msg);
 					});
 				});
+			},
+			$requeryNew(id) {
+				this.$store.commit('setnewid', { id: id });
+				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
+				this.$requery();
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -1506,7 +1511,8 @@
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
-					$longOperation: this.$longOperation
+					$longOperation: this.$longOperation,
+					$requeryNew: this.$requeryNew
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

@@ -1,6 +1,6 @@
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20220416-7838
+// 20250121-7976
 // app.js
 
 "use strict";
@@ -3919,9 +3919,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20240227-7961*/
+/*20250202-7977*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -4299,7 +4299,7 @@ app.modules['std:impl:array'] = function () {
 		});
 
 		defPropertyGet(arr, "$hasChecked", function () {
-			return this.$checked && this.$checked.length;
+			return !!(this.$checked && this.$checked.length);
 		});
 	}
 
@@ -4361,9 +4361,9 @@ app.modules['std:impl:array'] = function () {
 	}
 };
 
-/* Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.*/
+/* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20241119-7972*/
+/*20250130-7977*/
 // services/datamodel.js
 
 /*
@@ -4549,6 +4549,7 @@ app.modules['std:impl:array'] = function () {
 		if (objname in props) {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
+				if (!propInfo) continue;
 				if (utils.isPrimitiveCtor(propInfo)) {
 					loginfo(`create scalar property: ${objname}.${p}`);
 					elem._meta_.props[p] = propInfo;
@@ -4574,6 +4575,7 @@ app.modules['std:impl:array'] = function () {
 		if (objname in props) {
 			for (let p in props[objname]) {
 				let propInfo = props[objname][p];
+				if (!propInfo) continue;
 				if (utils.isPrimitiveCtor(propInfo)) {
 					continue;
 				}
@@ -5674,9 +5676,9 @@ app.modules['std:impl:array'] = function () {
 
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20241020-7975*/
+/*20250202-7978*/
 // controllers/base.js
 
 (function () {
@@ -5899,6 +5901,12 @@ app.modules['std:impl:array'] = function () {
 				let root = this.$data;
 				return root._canExec_(cmd, arg, opts);
 			},
+			$canExecSel(cmd, arg, opts) {
+				if (!arg) return false;
+				let sel = arg.$selected;
+				if (!sel) return false;
+				return this.$canExecute(cmd, sel, opts);
+			},
 			$setCurrentUrl(url) {
 				if (this.inDialog)
 					url = urltools.combine('_dialog', url);
@@ -5955,6 +5963,11 @@ app.modules['std:impl:array'] = function () {
 						self.$alertUi(msg);
 					});
 				});
+			},
+			$requeryNew(id) {
+				this.$store.commit('setnewid', { id: id });
+				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
+				this.$requery();
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -7176,7 +7189,8 @@ app.modules['std:impl:array'] = function () {
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
-					$longOperation: this.$longOperation
+					$longOperation: this.$longOperation,
+					$requeryNew: this.$requeryNew
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

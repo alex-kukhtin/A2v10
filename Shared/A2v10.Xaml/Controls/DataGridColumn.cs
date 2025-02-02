@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -50,8 +50,9 @@ public class DataGridColumn : XamlElement
 	public String CheckAll { get; set; }
 	public Int32 MaxChars { get; set; }
 	public Int32 LineClamp { get; set; }
+    public ColumnBackgroundStyle Background { get; set; }
 
-	Boolean _noPadding;
+    Boolean _noPadding;
 
 	internal void RenderColumn(RenderContext context, Int32 colIndex)
 	{
@@ -83,8 +84,10 @@ public class DataGridColumn : XamlElement
 			column.MergeAttribute(":max-chars", MaxChars);
 		if (LineClamp != 0)
 			column.MergeAttribute(":line-clamp", LineClamp);
+        if (Background != ColumnBackgroundStyle.None)
+            column.MergeAttribute("back-color", Background.ToString().ToLowerInvariant());
 
-		var boldBind = GetBinding(nameof(Bold));
+        var boldBind = GetBinding(nameof(Bold));
 		if (boldBind != null)
 			column.MergeAttribute("bold", $"{{{boldBind.GetPath(context)}}}");
 		else if (Bold != null)

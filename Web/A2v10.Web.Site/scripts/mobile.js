@@ -7335,7 +7335,7 @@ Vue.component('validator-control', {
 		<colgroup>
 			<col v-if="isMarkCell" class="fit"/>
 			<col v-if="isRowDetailsCell" class="fit" />
-			<col v-bind:class="columnClass(col)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
+			<col v-bind:class="columnClass(col, colIndex)" v-bind:style="columnStyle(col)" v-for="(col, colIndex) in columns" :key="colIndex"></col>
 		</colgroup>
 		<thead>
 			<tr v-show="isHeaderVisible">
@@ -7445,6 +7445,7 @@ Vue.component('validator-control', {
 			width: String,
 			minWidth:String,
 			fit: Boolean,
+			backColor: String,
 			wrap: String,
 			command: Object,
 			maxChars: Number,
@@ -8058,12 +8059,15 @@ Vue.component('validator-control', {
 				let vis = item[this.rowDetailsVisible];
 				return !!vis;
 			},
-			columnClass(column) {
+			columnClass(column, ix) {
 				let cls = '';
 				if (column.fit || column.controlType === 'validator')
 					cls += 'fit';
 				if (this.sort && column.isSortable && utils.isDefined(column.dir))
 					cls += ' sorted';
+				if (column.backColor) {
+					cls += ` ${column.backColor}`;
+				}
 				return cls;
 			},
 			columnStyle(column) {
@@ -12504,7 +12508,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250122-7977*/
+/*20250202-7978*/
 // controllers/base.js
 
 (function () {
@@ -12789,6 +12793,11 @@ Vue.directive('resize', {
 						self.$alertUi(msg);
 					});
 				});
+			},
+			$requeryNew(id) {
+				this.$store.commit('setnewid', { id: id });
+				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
+				this.$requery();
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -14010,7 +14019,8 @@ Vue.directive('resize', {
 					$nodirty: this.$nodirty,
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
-					$longOperation: this.$longOperation
+					$longOperation: this.$longOperation,
+					$requeryNew: this.$requeryNew
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

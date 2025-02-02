@@ -3430,6 +3430,21 @@ table.data-grid td.cell-validator {
 table.data-grid colgroup > col.sorted {
   background-color: rgba(238, 238, 238, 0.45);
 }
+table.data-grid colgroup > col.red {
+  background-color: rgba(254, 220, 220, 0.25);
+}
+table.data-grid colgroup > col.green {
+  background-color: rgba(216, 255, 216, 0.25);
+}
+table.data-grid colgroup > col.blue {
+  background-color: rgba(114, 234, 234, 0.07);
+}
+table.data-grid colgroup > col.yellow {
+  background-color: rgba(255, 216, 0, 0.07);
+}
+table.data-grid colgroup > col.gray {
+  background-color: rgba(224, 224, 224, 0.1);
+}
 table.data-grid > thead > tr > th {
   border-color: #ddd;
   background-color: #f5f5f5;
