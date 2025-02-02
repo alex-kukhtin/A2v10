@@ -1,0 +1,837 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="../css/site.advance.css" />
+
+	<style>
+		.a2-json-b {
+			background-color: #f3f5fc;
+			font-family: Consolas, 'Courier New', Courier, monospace;
+		}
+		.a2-json-b ul {
+			padding:0 20px;
+		}
+
+		.a2-json-b li {
+			list-style:none;
+			line-height:normal;
+			margin:0;
+			padding:0;
+		}
+		.jb-chevron {
+			padding-right:4px;
+			min-width:20px;
+		}
+		.jb-label {
+			display:inline-flex;
+			align-items:center;
+		}
+		.jbp-name {
+			color:darkmagenta;
+			font-weight:600;
+		}
+		.jbp-value {
+			padding-left:6px;
+			color:#555;
+		}
+		.jbp-edit {
+			font-size:13px;
+			cursor:pointer;
+			display:none;
+			color:#555;
+		}
+		.jbp-value:hover .jbp-edit {
+			/*display:inline; TODO: edit value */
+		}
+		.jbp-string {
+			color:indianred;
+		}
+		.jbp-object {
+			font-style:italic;
+			color:darkcyan;
+		}
+	</style>
+</head>
+
+<body style="overflow:auto;">
+
+
+	<div id="app">
+		<a2-json-browser :root="root"></a2-json-browser>
+
+		<hr />
+		<button class="btn" @click="changeData">Change data</button>
+	</div>
+
+
+
+	<script src="../scripts/vue.js"></script>
+	<script src="../scripts/locale-uk.min.js"></script>
+	<script src="../scripts/main.js"></script>
+	<script src="debugtree.js"></script>
+	<script>
+		function modelData(template, data) {
+			const cmn = require('std:datamodel');
+			function TRoot(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TRoot, { props: { 'Documents': TDocumentArray, 'Menu': TMenuArray, 'Operations': TOperationArray } }, false);
+
+			function TDocument(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TDocument, {
+				props: { 'Id': Number, 'Date': Date, 'Sum': Number, 'Memo': { type: String, len: 255 }, 'SNo': { type: String, len: 64 }, 'No': { type: String, len: 64 }, 'Notice': { type: String, len: 255 }, 'Done': Boolean, 'BindKind': { type: String, len: 16 }, 'BindFactor': Number, 'Operation': TOperation, 'State': TState, 'Agent': TAgent, 'Company': TCompany, 'WhFrom': TWarehouse, 'WhTo': TWarehouse, 'LinkedDocs': TDocBaseArray },
+				$id: 'Id'
+			}, true);
+			function TDocumentArray(source, path, parent) {
+				return cmn.createArray(source, path, TDocument, TDocumentArray, parent);
+			}
+
+			function TOperation(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TOperation, {
+				props: { 'Id': Number, 'Name': { type: String, len: 255 }, 'Form': { type: String, len: 16 }, 'DocumentUrl': { type: String, len: 255 } },
+				$id: 'Id', $name: 'Name'
+			}, true);
+			function TOperationArray(source, path, parent) {
+				return cmn.createArray(source, path, TOperation, TOperationArray, parent);
+			}
+
+			function TState(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TState, {
+				props: { 'Id': Number, 'Name': { type: String, len: 255 }, 'Color': { type: String, len: 32 } },
+				$id: 'Id', $name: 'Name'
+			}, false);
+
+			function TAgent(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TAgent, {
+				props: { 'Id': Number, 'Name': { type: String, len: 255 } },
+				$id: 'Id', $name: 'Name'
+			}, true);
+			function TAgentArray(source, path, parent) {
+				return cmn.createArray(source, path, TAgent, TAgentArray, parent);
+			}
+
+			function TCompany(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TCompany, {
+				props: { 'Id': Number, 'Name': { type: String, len: 255 } },
+				$id: 'Id', $name: 'Name'
+			}, true);
+			function TCompanyArray(source, path, parent) {
+				return cmn.createArray(source, path, TCompany, TCompanyArray, parent);
+			}
+
+			function TWarehouse(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TWarehouse, {
+				props: { 'Id': Number, 'Name': { type: String, len: 255 } },
+				$id: 'Id', $name: 'Name'
+			}, true);
+			function TWarehouseArray(source, path, parent) {
+				return cmn.createArray(source, path, TWarehouse, TWarehouseArray, parent);
+			}
+
+			function TDocBase(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TDocBase, {
+				props: { 'Id': Number, 'Date': Date, 'Sum': Number, 'Done': Boolean, 'BindKind': { type: String, len: 16 }, 'BindFactor': Number, 'OpName': { type: String, len: 255 }, 'Form': { type: String, len: 16 }, 'DocumentUrl': { type: String, len: 255 } },
+				$id: 'Id'
+			}, true);
+			function TDocBaseArray(source, path, parent) {
+				return cmn.createArray(source, path, TDocBase, TDocBaseArray, parent);
+			}
+
+			function TMenu(source, path, parent) {
+				cmn.createObject(this, source, path, parent);
+			}
+			cmn.defineObject(TMenu, {
+				props: { 'Id': Number, 'Name': { type: String, len: 255 }, 'FormId': { type: String, len: 16 }, 'FormName': { type: String, len: 255 }, 'DocumentUrl': { type: String, len: 255 } },
+				$id: 'Id', $name: 'Name'
+			}, true);
+			function TMenuArray(source, path, parent) {
+				return cmn.createArray(source, path, TMenu, TMenuArray, parent);
+			}
+
+			const ctors = { TRoot, TDocument, TDocumentArray, TOperation, TOperationArray, TState, TAgent, TAgentArray, TCompany, TCompanyArray, TWarehouse, TWarehouseArray, TDocBase, TDocBaseArray, TMenu, TMenuArray };
+			cmn.implementRoot(TRoot, template, ctors);
+			let root = new TRoot(data);
+			cmn.setModelInfo(root, {
+			}, rawData);
+			return root;
+		}
+
+		const rawData = {
+			"Documents": [
+				{
+					"Id": 1063,
+					"Date": "2024-08-28T00:00:00",
+					"Sum": 0.0000,
+					"Memo": "asdd",
+					"SNo": null,
+					"No": "3",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 1062,
+					"Date": "2024-02-15T00:00:00",
+					"Sum": 0.0000,
+					"Memo": null,
+					"SNo": null,
+					"No": "2",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {
+						"Id": 100,
+						"Name": "Покупець №1 з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 1061,
+					"Date": "2024-02-05T00:00:00",
+					"Sum": 154.0000,
+					"Memo": "dd",
+					"SNo": null,
+					"No": "1",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {
+						"Id": 104,
+						"Name": "Постачальник номер 1"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 915,
+					"Date": "2023-05-22T00:00:00",
+					"Sum": 468.0000,
+					"Memo": "Test",
+					"SNo": null,
+					"No": "6",
+					"Notice": null,
+					"Done": true,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 20,
+						"Name": "В обробці",
+						"Color": "gold"
+					},
+					"Agent": {
+						"Id": 101,
+						"Name": "Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": [
+						{
+							"Id": 919,
+							"Date": "2023-05-25T00:00:00",
+							"Sum": 468.0000,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (банк)",
+							"Form": "payin",
+							"DocumentUrl": "/document/money/payin"
+						}
+					]
+				},
+				{
+					"Id": 804,
+					"Date": "2023-04-03T00:00:00",
+					"Sum": 150.0000,
+					"Memo": null,
+					"SNo": null,
+					"No": "4",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 20,
+						"Name": "В обробці",
+						"Color": "gold"
+					},
+					"Agent": {
+						"Id": 101,
+						"Name": "Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 746,
+					"Date": "2023-03-03T00:00:00",
+					"Sum": 30.0000,
+					"Memo": null,
+					"SNo": null,
+					"No": "3",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {
+						"Id": 100,
+						"Name": "Покупець №1 з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 695,
+					"Date": "2023-02-17T00:00:00",
+					"Sum": 0.0000,
+					"Memo": null,
+					"SNo": null,
+					"No": "2",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {
+						"Id": 101,
+						"Name": "Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 657,
+					"Date": "2023-01-05T00:00:00",
+					"Sum": 1794.5500,
+					"Memo": "Примітка до замовлення",
+					"SNo": null,
+					"No": "1",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 20,
+						"Name": "В обробці",
+						"Color": "gold"
+					},
+					"Agent": {
+						"Id": 100,
+						"Name": "Покупець №1 з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": [
+						{
+							"Id": 662,
+							"Date": "2023-01-05T00:00:00",
+							"Sum": 1000.0000,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (банк)",
+							"Form": "payin",
+							"DocumentUrl": "/document/money/payin"
+						},
+						{
+							"Id": 663,
+							"Date": "2023-01-05T00:00:00",
+							"Sum": 50.0000,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (банк)",
+							"Form": "payin",
+							"DocumentUrl": "/document/money/payin"
+						},
+						{
+							"Id": 669,
+							"Date": "2023-01-05T00:00:00",
+							"Sum": 500.0000,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": -1,
+							"OpName": "Повернення оплати покупцю (готівка)",
+							"Form": "cashout",
+							"DocumentUrl": "/document/money/cashout"
+						},
+						{
+							"Id": 682,
+							"Date": "2023-01-05T00:00:00",
+							"Sum": 1234.5500,
+							"Done": false,
+							"BindKind": "Shipment",
+							"BindFactor": 1,
+							"OpName": "Продаж товарів/послуг",
+							"Form": "waybillout",
+							"DocumentUrl": "/document/sales/waybillout"
+						},
+						{
+							"Id": 683,
+							"Date": "2023-01-05T00:00:00",
+							"Sum": 1244.5500,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (банк)",
+							"Form": "payin",
+							"DocumentUrl": "/document/money/payin"
+						}
+					]
+				},
+				{
+					"Id": 605,
+					"Date": "2022-12-08T00:00:00",
+					"Sum": 0.0000,
+					"Memo": null,
+					"SNo": null,
+					"No": "14",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 555,
+					"Date": "2022-12-03T00:00:00",
+					"Sum": 1161.0000,
+					"Memo": "Примітка до документа",
+					"SNo": null,
+					"No": "13",
+					"Notice": null,
+					"Done": true,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {
+						"Id": 101,
+						"Name": "Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 455,
+					"Date": "2022-11-20T00:00:00",
+					"Sum": 5340.0000,
+					"Memo": null,
+					"SNo": null,
+					"No": "12",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 10,
+						"Name": "Новий",
+						"Color": "blue"
+					},
+					"Agent": {
+						"Id": 100,
+						"Name": "Покупець №1 з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": [
+						{
+							"Id": 693,
+							"Date": "2023-02-17T00:00:00",
+							"Sum": 5340.0000,
+							"Done": false,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (банк)",
+							"Form": "payin",
+							"DocumentUrl": "/document/money/payin"
+						},
+						{
+							"Id": 694,
+							"Date": "2023-02-17T00:00:00",
+							"Sum": 5340.0000,
+							"Done": false,
+							"BindKind": "Shipment",
+							"BindFactor": 1,
+							"OpName": "Продаж товарів/послуг",
+							"Form": "waybillout",
+							"DocumentUrl": "/document/sales/waybillout"
+						}
+					]
+				},
+				{
+					"Id": 344,
+					"Date": "2022-10-15T00:00:00",
+					"Sum": 344.0000,
+					"Memo": "asdasd",
+					"SNo": null,
+					"No": "9",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 20,
+						"Name": "В обробці",
+						"Color": "gold"
+					},
+					"Agent": {},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": []
+				},
+				{
+					"Id": 328,
+					"Date": "2022-10-02T00:00:00",
+					"Sum": 30.0000,
+					"Memo": "Нотатки до замовлення № 7 від другого жовтня 2022 року. \nМоже бути декілька рядків",
+					"SNo": null,
+					"No": "7",
+					"Notice": null,
+					"Done": false,
+					"BindKind": null,
+					"BindFactor": null,
+					"Operation": {
+						"Id": 1004,
+						"Name": "Замовлення клієнта",
+						"Form": "invoice",
+						"DocumentUrl": "/document/sales/invoice"
+					},
+					"State": {
+						"Id": 20,
+						"Name": "В обробці",
+						"Color": "gold"
+					},
+					"Agent": {
+						"Id": 101,
+						"Name": "Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках Покупець №2 (1) з довгим найменуванням, щоб перевірити перенос по рядках"
+					},
+					"Company": {
+						"Id": 10,
+						"Name": "Моє підприємство"
+					},
+					"WhFrom": {},
+					"WhTo": {},
+					"LinkedDocs": [
+						{
+							"Id": 316,
+							"Date": "2022-10-01T00:00:00",
+							"Sum": 110.0000,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (банк)",
+							"Form": "payin",
+							"DocumentUrl": "/document/money/payin"
+						},
+						{
+							"Id": 340,
+							"Date": "2022-10-05T00:00:00",
+							"Sum": 250.0000,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (готівка)",
+							"Form": "cashin",
+							"DocumentUrl": "/document/money/cashin"
+						},
+						{
+							"Id": 348,
+							"Date": "2022-10-27T00:00:00",
+							"Sum": 290.0000,
+							"Done": false,
+							"BindKind": "Shipment",
+							"BindFactor": 1,
+							"OpName": "Продаж товарів/послуг",
+							"Form": "waybillout",
+							"DocumentUrl": "/document/sales/waybillout"
+						},
+						{
+							"Id": 349,
+							"Date": "2022-10-27T00:00:00",
+							"Sum": 151.0000,
+							"Done": true,
+							"BindKind": "Payment",
+							"BindFactor": 1,
+							"OpName": "Оплата від покупця (готівка)",
+							"Form": "cashin",
+							"DocumentUrl": "/document/money/cashin"
+						}
+					]
+				}
+			],
+			"Documents.$RowCount": 13,
+			"Menu": [
+				{
+					"Id": 1004,
+					"Name": "Замовлення клієнта",
+					"FormId": "invoice",
+					"FormName": "Замовлення клієнта",
+					"DocumentUrl": "/document/sales/invoice"
+				},
+				{
+					"Id": 103,
+					"Name": "Продаж товарів/послуг",
+					"FormId": "waybillout",
+					"FormName": "Продаж товарів/послуг",
+					"DocumentUrl": "/document/sales/waybillout"
+				}
+			],
+			"Operations": [
+				{
+					"Id": -1,
+					"Name": "\u003cВсі операції\u003e"
+				},
+				{
+					"Id": 103,
+					"Name": "Продаж товарів/послуг"
+				},
+				{
+					"Id": 1004,
+					"Name": "Замовлення клієнта"
+				}
+			],
+			"$ModelInfo": {
+				"Documents": {
+					"Offset": 0,
+					"PageSize": 20,
+					"SortOrder": "date",
+					"SortDir": "desc",
+					"Filter": {
+						"Period": {
+							"From": "\u0022\\/\u00221901-01-01T00:00:00\u0022\\/\u0022",
+							"To": "\u0022\\/\u00222999-12-31T00:00:00\u0022\\/\u0022"
+						},
+						"Operation": -1,
+						"Agent": {
+							"Id": 276,
+							"Name": "Agent Name"
+						},
+						"Company": {
+							"Id": 5,
+							"Name": "Company Name"
+						},
+						"State": "W"
+					}
+				}
+			}
+		};
+
+
+		const template = {
+			properties: {
+				'TRoot.$RootProp': String,
+				'TRow.$Sum'() {return 222.33 },
+				'TRowArray.$Sum'() { return this.$sum(r => r.Sum); }
+			}
+		}
+
+		let dat = modelData(template, rawData);
+		console.dir(dat);
+
+		new Vue({
+			el: "#app",
+			data: {
+				root: dat,
+			},
+			methods: {
+				changeData() {
+					this.root.Document.Memo += "*";
+				}
+			}
+		});
+
+		console.dir(dat.States?.$elements?.constructor?.constructor?.name);
+
+		dat.Documents[1].$select();
+		dat.Documents[3].$checked = true;
+		dat.Documents[2].$checked = true;
+
+	</script>
+
+</body>
+</html>

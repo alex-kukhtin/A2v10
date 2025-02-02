@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2017 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 @import "Utlis.less";
 @import "Variables.less";
@@ -136,3 +136,71 @@
         }
     }
 }
+
+
+.a2-json-b {
+    font-family: @monospace-font;
+    padding: 6px;
+    margin: 0;
+
+    ul {
+        padding: 0 0 0 16px;
+    }
+
+    li {
+        list-style: none;
+        line-height: normal;
+        margin: 0;
+        padding: 0;
+        cursor: default;
+    }
+
+    .jb-label {
+        display: inline-flex;
+        align-items: center;
+
+        .jbp-overlay {
+            display: inline-flex;
+            align-items: start;
+        }
+
+        .jb-chevron {
+            min-width: 16px;
+            cursor: pointer;
+        }
+    }
+
+    .jbp-name {
+        color: darkmagenta;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .jbp-value {
+        padding-left: 6px;
+        color: #555;
+    }
+
+    .jbp-edit {
+        font-size: 13px;
+        cursor: pointer;
+        display: none;
+        color: #555;
+    }
+
+    .jbp-value:hover .jbp-edit {
+        /*display:inline; TODO: edit value */
+    }
+
+    .jbp-string {
+        color: indianred;
+    }
+
+    .jbp-object {
+        font-style: italic;
+        color: darkcyan;
+    }
+}
+
+
+

@@ -8130,6 +8130,58 @@ td.vert > .vcell {
   border-bottom: 1px dotted #ccc;
   padding: 2px 0;
 }
+.a2-json-b {
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  padding: 6px;
+  margin: 0;
+}
+.a2-json-b ul {
+  padding: 0 0 0 16px;
+}
+.a2-json-b li {
+  list-style: none;
+  line-height: normal;
+  margin: 0;
+  padding: 0;
+  cursor: default;
+}
+.a2-json-b .jb-label {
+  display: inline-flex;
+  align-items: center;
+}
+.a2-json-b .jb-label .jbp-overlay {
+  display: inline-flex;
+  align-items: start;
+}
+.a2-json-b .jb-label .jb-chevron {
+  min-width: 16px;
+  cursor: pointer;
+}
+.a2-json-b .jbp-name {
+  color: darkmagenta;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.a2-json-b .jbp-value {
+  padding-left: 6px;
+  color: #555;
+}
+.a2-json-b .jbp-edit {
+  font-size: 13px;
+  cursor: pointer;
+  display: none;
+  color: #555;
+}
+.a2-json-b .jbp-value:hover .jbp-edit {
+  /*display:inline; TODO: edit value */
+}
+.a2-json-b .jbp-string {
+  color: indianred;
+}
+.a2-json-b .jbp-object {
+  font-style: italic;
+  color: darkcyan;
+}
 .feedback-panel {
   position: absolute;
   top: 42px;

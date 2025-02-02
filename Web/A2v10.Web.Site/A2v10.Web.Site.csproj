@@ -126,6 +126,7 @@
     <Content Include="app\components\colorcombobox.js" />
     <Content Include="app\components\colorpicker.js" />
     <Content Include="app\components\dashboard.js" />
+    <Content Include="app\components\browsejson.js" />
     <Content Include="app\components\doctitleplain.js" />
     <Content Include="app\components\includeplain.js" />
     <Content Include="app\components\kanban.js" />
@@ -329,6 +330,7 @@
     <Content Include="scripts\tabmain.min.js" />
     <Content Include="TestMobile\index.html" />
     <Content Include="TestMobile\testmobile.js" />
+    <Content Include="TestPages\debugtree.html" />
     <Content Include="TestPages\d3hierarchy.html" />
     <Content Include="TestPages\d3hierarchy.js" />
     <Content Include="TestPages\d3line.js" />
@@ -341,6 +343,7 @@
     <Content Include="TestPages\clonetable.html" />
     <Content Include="TestPages\formdesigner.js" />
     <Content Include="TestPages\fromdesinger.html" />
+    <Content Include="TestPages\debugtree.js" />
     <Content Include="TestPages\notifications.html" />
     <Content Include="TestPages\timetable.js" />
     <Content Include="TestPages\timetable.html" />

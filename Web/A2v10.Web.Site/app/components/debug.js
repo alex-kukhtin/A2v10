@@ -1,40 +1,14 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241005-7971
+// 20250202-7977
 // components/debug.js*/
 
 (function () {
-
-    /**
-     */
 
 	const http = require('std:http');
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
-	const utils = require('std:utils');
-
-	const isZero = utils.date.isZero;
-
-	const specKeys = {
-		'$vm': null,
-		'$ctrl': null,
-		'$host': null,
-		'$root': null,
-		'$parent': null,
-		'$items': null
-	};
-
-	function toJsonDebug(data) {
-		return JSON.stringify(data, function (key, value) {
-			if (key[0] === '$')
-				return !(key in specKeys) ? value : undefined;
-			else if (key[0] === '_')
-				return undefined;
-			if (isZero(this[key])) return null;
-			return value;
-		}, 2);
-	}
 
 	const traceItem = {
 		name: 'a2-trace-item',
@@ -71,7 +45,7 @@
 		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
 	</div>
 	<div class="debug-model debug-body" v-if="modelVisible">
-		<pre class="a2-code" v-text="modelJson()"></pre>
+		<a2-json-browser :root="modelRoot()"></a2-json-browser>
 	</div>
 	<div class="debug-trace debug-body" v-if="traceVisible">
 		<ul class="a2-debug-trace">
@@ -123,17 +97,16 @@
 			},
 			panelClass() {
 				return this.left ? 'left' : 'right';
-			}
+			},
 		},
 		methods: {
-			modelJson() {
+			modelRoot() {
 				// method. not cached
 				if (!this.modelVisible)
-					return;
-				if (this.modelStack.length) {
-					return toJsonDebug(this.modelStack[0].$data);
-				}
-				return '';
+					return {};
+				if (this.modelStack.length)
+					return this.modelStack[0].$data;
+				return {};
 			},
 			refresh() {
 				if (this.modelVisible)

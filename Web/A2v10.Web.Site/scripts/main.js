@@ -2557,9 +2557,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20240227-7961*/
+/*20250202-7977*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2937,7 +2937,7 @@ app.modules['std:impl:array'] = function () {
 		});
 
 		defPropertyGet(arr, "$hasChecked", function () {
-			return this.$checked && this.$checked.length;
+			return !!(this.$checked && this.$checked.length);
 		});
 	}
 
@@ -11655,43 +11655,153 @@ Vue.component('a2-panel', {
 	});
 })();
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241005-7971
-// components/debug.js*/
+// 20250202-7977
+// components/browsejson.js*/
 
 (function () {
 
-    /**
-     */
+	let du = require('std:utils').date;
+
+	function getProps(root) {
+		const ff = (p) => {
+			if (p.startsWith('_')) return false;
+			let v = root[p];
+			if (typeof v === 'function') return false;
+			let c = v ? v.constructor : null;
+			if (c) c = c.constructor;
+			if (c && c.name === 'GeneratorFunction') return false;
+			return true;
+		};
+		const fm = (p) => {
+			let v = root[p];
+			let isDate = v instanceof Date;
+			let tof = typeof v;
+			return {
+				name: p,
+				value: v,
+				isObject: !isDate && tof === 'object' && !Array.isArray(v),
+				isArray: Array.isArray(v),
+				isDate: isDate,
+				isString: tof === 'string'
+			};
+		};
+		return Object.keys(root).filter(ff).map(fm);
+	}
+
+	const jsonItemTemplate = `
+		<li @click.stop.prevent="toggle">
+			<span class="jb-label">
+				<span v-text="chevron" class="jb-chevron"/>
+				<span class="jbp-overlay">
+					<span v-text="root.name" class="jbp-name"/>:
+					<span class="jbp-value" :class="valueClass">
+						<span v-text="valueText" />
+						<span v-if="isScalar" class="ico ico-edit jbp-edit" @click.stop.prevent="editValue"/>
+					</span>
+				</span>
+			</span>
+			<ul v-if="expanded">
+				<a2-json-browser-item v-if="!root.isScalar" v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+			</ul>
+		</li>
+	`;
+
+	const jsonTreeItem = {
+		template: jsonItemTemplate,
+		name: 'a2-json-browser-item',
+		props: {
+			root: Object
+		},
+		data() {
+			return {
+				expanded: false
+			};
+		},
+		methods: {
+			toggle() {
+				if (this.root.isString) return;
+				this.expanded = !this.expanded;
+			},
+			editValue() {
+				let n = this.root.name;
+				let parentVal = this.$parent.root.value;
+				//parentVal[n] = null;
+			}
+		},
+		computed: {
+			isScalar() {
+				return !this.root.isObject && !this.root.isArray;
+			},
+			chevron() {
+				// \u2003 - em-space
+				return (this.isScalar || this.root.isDate) ? '\u2003' : this.expanded ? '⏷' : '⏵';
+			},
+			valueText() {
+				let r = this.root;
+				if (r.isObject)
+					return r.value.constructor.name; // "Object";
+				else if (r.isArray) {
+					let ename = '';
+					if (r.value && r.value._elem_)
+						ename = r.value._elem_.name;
+					return `${ename}Array(${r.value.length})`;
+				}
+				else if (r.isString)
+					return `"${r.value}"`;
+				else if (r.isDate)
+					return du.isZero(r.value) ? 'null' : JSON.stringify(r.value);
+				return r.value;
+			},
+			valueClass() {
+				let cls = '';
+				if (this.root.isString)
+					cls += ' jbp-string';
+				else if (this.root.isObject || this.root.isArray)
+					cls += ' jbp-object';
+				return cls;
+			},
+			items() {
+				return getProps(this.root.value);
+			}
+		}
+	};
+
+
+	const browserTemplate = `
+	<ul class="a2-json-b">
+		<a2-json-browser-item v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+	</ul>
+	`;
+
+	Vue.component('a2-json-browser', {
+		template: browserTemplate,
+		components: {
+			'a2-json-browser-item': jsonTreeItem
+		},
+		props: {
+			root: Object
+		},
+		computed: {
+			items() {
+				return getProps(this.root);
+			}
+		}
+	});
+})();
+
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+
+// 20250202-7977
+// components/debug.js*/
+
+(function () {
 
 	const http = require('std:http');
 	const urlTools = require('std:url');
 	const eventBus = require('std:eventBus');
 	const locale = window.$$locale;
-	const utils = require('std:utils');
-
-	const isZero = utils.date.isZero;
-
-	const specKeys = {
-		'$vm': null,
-		'$ctrl': null,
-		'$host': null,
-		'$root': null,
-		'$parent': null,
-		'$items': null
-	};
-
-	function toJsonDebug(data) {
-		return JSON.stringify(data, function (key, value) {
-			if (key[0] === '$')
-				return !(key in specKeys) ? value : undefined;
-			else if (key[0] === '_')
-				return undefined;
-			if (isZero(this[key])) return null;
-			return value;
-		}, 2);
-	}
 
 	const traceItem = {
 		name: 'a2-trace-item',
@@ -11728,7 +11838,7 @@ Vue.component('a2-panel', {
 		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
 	</div>
 	<div class="debug-model debug-body" v-if="modelVisible">
-		<pre class="a2-code" v-text="modelJson()"></pre>
+		<a2-json-browser :root="modelRoot()"></a2-json-browser>
 	</div>
 	<div class="debug-trace debug-body" v-if="traceVisible">
 		<ul class="a2-debug-trace">
@@ -11780,17 +11890,16 @@ Vue.component('a2-panel', {
 			},
 			panelClass() {
 				return this.left ? 'left' : 'right';
-			}
+			},
 		},
 		methods: {
-			modelJson() {
+			modelRoot() {
 				// method. not cached
 				if (!this.modelVisible)
-					return;
-				if (this.modelStack.length) {
-					return toJsonDebug(this.modelStack[0].$data);
-				}
-				return '';
+					return {};
+				if (this.modelStack.length)
+					return this.modelStack[0].$data;
+				return {};
 			},
 			refresh() {
 				if (this.modelVisible)
