@@ -78,7 +78,8 @@
 		$DesktopNotSupported: 'This action is not supported on the desktop version',
 		$Settings: 'Settings',
 		$Feedback: 'Feedback',
-		$PreviewIsUnavailable: 'Preview is unavailable for this file'
+		$PreviewIsUnavailable: 'Preview is unavailable for this file',
+		$ShowSpecProps: 'Show special properties'
 	};
 
 })();

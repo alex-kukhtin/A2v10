@@ -12,7 +12,7 @@
 	position: absolute;
 	right: 0;
 	//top: @header-height;
-	top:0;
+	top: 0;
 	bottom: @footer-height;
 	right: 0;
 	z-index: @debug-index;
@@ -25,7 +25,7 @@
 	flex-direction: column;
 
 	.a2-code {
-		font-size:12px;
+		font-size: 12px;
 	}
 
 	&.left {
@@ -60,8 +60,30 @@
 	}
 
 	.toolbar {
-		min-height: 2.5rem;
-		height: 2.5rem;
+		min-height: 2.8rem;
+		height: 2.8rem;
+
+		.btn-checkbox {
+			cursor: pointer;
+			padding: 4px 5px 5px 6px;
+			border: 1px solid transparent;
+
+			&:hover {
+				border: 1px solid #e5c365;
+				outline: 0;
+			}
+
+			&.checked {
+				background-color: #cde6f7;
+				outline: 1px solid #999;
+				outline-offset: -1px;
+
+				&:hover {
+					background-color: #fdf4bf;
+					border-color: #e5c365;
+				}
+			}
+		}
 	}
 
 	.debug-body {

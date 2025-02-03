@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250202-7977
+// 20250203-7978
 // components/debug.js*/
 
 (function () {
@@ -41,11 +41,16 @@
 	</div>
 	<div class="toolbar">
 		<button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
+		<label v-if="modelVisible" class="btn btn-tb btn-checkbox" :class="{checked: useSpec}"
+			:title="text('$ShowSpecProps')">
+			<input type="checkbox" v-model="useSpec"/>
+			<i class="ico ico-items"/>
+		</label>
 		<div class="aligner"></div>
 		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
 	</div>
 	<div class="debug-model debug-body" v-if="modelVisible">
-		<a2-json-browser :root="modelRoot()"></a2-json-browser>
+		<a2-json-browser :root="modelRoot()" :use-spec="useSpec"/>
 	</div>
 	<div class="debug-trace debug-body" v-if="traceVisible">
 		<ul class="a2-debug-trace">
@@ -74,7 +79,8 @@
 		data() {
 			return {
 				trace: [],
-				left: false
+				left: false,
+				useSpec: false
 			};
 		},
 		computed: {

@@ -7460,8 +7460,26 @@ table.tree-grid a.toggle.expanded:after {
   border-color: #e5c365;
 }
 .debug-panel .toolbar {
-  min-height: 2.5rem;
-  height: 2.5rem;
+  min-height: 2.8rem;
+  height: 2.8rem;
+}
+.debug-panel .toolbar .btn-checkbox {
+  cursor: pointer;
+  padding: 4px 5px 5px 6px;
+  border: 1px solid transparent;
+}
+.debug-panel .toolbar .btn-checkbox:hover {
+  border: 1px solid #e5c365;
+  outline: 0;
+}
+.debug-panel .toolbar .btn-checkbox.checked {
+  background-color: #cde6f7;
+  outline: 1px solid #999;
+  outline-offset: -1px;
+}
+.debug-panel .toolbar .btn-checkbox.checked:hover {
+  background-color: #fdf4bf;
+  border-color: #e5c365;
 }
 .debug-panel .debug-body {
   overflow: auto;

@@ -1,14 +1,19 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250202-7977
+// 20250203-7978
 // components/browsejson.js*/
 
 (function () {
 
 	let du = require('std:utils').date;
 
-	function getProps(root) {
+	const sppArray = "$valid,$invalid,$dirty,$lock,$selected,$selectedIndex,$checked,$hasSelected,$hasChecked,$isEmpty,$permissions,$RowCount,$expanded,$collapsed,$level,$loaded"
+		.split(',');
+	const specProps = new Set(sppArray);
+
+	function getProps(root, skipSpec) {
 		const ff = (p) => {
+			if (skipSpec && specProps.has(p)) return false;
 			if (p.startsWith('_')) return false;
 			let v = root[p];
 			if (typeof v === 'function') return false;
@@ -46,7 +51,7 @@
 				</span>
 			</span>
 			<ul v-if="expanded">
-				<a2-json-browser-item v-if="!root.isScalar" v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+				<a2-json-browser-item v-if="!root.isScalar" v-for="(itm, ix) in items" :key=ix :root="itm" :use-spec="useSpec"/>
 			</ul>
 		</li>
 	`;
@@ -55,7 +60,8 @@
 		template: jsonItemTemplate,
 		name: 'a2-json-browser-item',
 		props: {
-			root: Object
+			root: Object,
+			useSpec: Boolean
 		},
 		data() {
 			return {
@@ -106,7 +112,7 @@
 				return cls;
 			},
 			items() {
-				return getProps(this.root.value);
+				return getProps(this.root.value, !this.useSpec);
 			}
 		}
 	};
@@ -114,7 +120,7 @@
 
 	const browserTemplate = `
 	<ul class="a2-json-b">
-		<a2-json-browser-item v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+		<a2-json-browser-item v-for="(itm, ix) in items" :key=ix :root="itm" :use-spec="useSpec"/>
 	</ul>
 	`;
 
@@ -124,11 +130,12 @@
 			'a2-json-browser-item': jsonTreeItem
 		},
 		props: {
-			root: Object
+			root: Object,
+			useSpec: Boolean
 		},
 		computed: {
 			items() {
-				return getProps(this.root);
+				return getProps(this.root, !this.useSpec);
 			}
 		}
 	});

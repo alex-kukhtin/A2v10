@@ -78,7 +78,8 @@
 		$DesktopNotSupported: 'Ta czynność nie jest obsługiwana w wersji desktopowej',
 		$Settings: 'Ustawienie',
 		$Feedback: 'Informacja zwrotna',
-		$PreviewIsUnavailable: 'Preview is unavailable for this file'
+		$PreviewIsUnavailable: 'Preview is unavailable for this file',
+		$ShowSpecProps: 'Show special properties'
 	};
 
 	if (window.d3) {

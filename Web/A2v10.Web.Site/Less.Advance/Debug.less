@@ -65,6 +65,20 @@
     .toolbar {
         min-height: 3rem;
         border-bottom: 1px solid @light-brd-color;
+
+        .btn-checkbox {
+            cursor: pointer;
+
+            &.checked {
+                background-color: var(--activeBkLight);
+                outline:1px solid var(--neutralBkDark);
+                outline-offset:-1px;
+
+                &:hover {
+                    background-color: var(--neutralBkDark);
+                }
+            }
+        }
     }
 
     .debug-body {

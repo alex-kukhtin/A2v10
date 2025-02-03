@@ -78,7 +78,8 @@
 		$DesktopNotSupported: 'Esta operación no es compatible con la versión de escritorio',
 		$Settings:'Configuración',
 		$Feedback: 'Feedback',
-		$PreviewIsUnavailable: 'Preview is unavailable for this file'
+		$PreviewIsUnavailable: 'Preview is unavailable for this file',
+		$ShowSpecProps: 'Show special properties'
 	};
 
 	if (window.d3) {

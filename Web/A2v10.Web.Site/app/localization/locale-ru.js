@@ -78,7 +78,8 @@
 		$DesktopNotSupported: 'Это действие не поддерживается в настольной версии',
 		$Settings: 'Настройка',
 		$Feedback: 'Обратная связь',
-		$PreviewIsUnavailable: 'Preview is unavailable for this file'
+		$PreviewIsUnavailable: 'Preview is unavailable for this file',
+		$ShowSpecProps: 'Показать все свойства'
 	};
 
 	if (window.d3) {

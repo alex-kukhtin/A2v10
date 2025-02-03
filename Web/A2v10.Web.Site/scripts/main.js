@@ -11661,15 +11661,20 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250202-7977
+// 20250203-7978
 // components/browsejson.js*/
 
 (function () {
 
 	let du = require('std:utils').date;
 
-	function getProps(root) {
+	const sppArray = "$valid,$invalid,$dirty,$lock,$selected,$selectedIndex,$checked,$hasSelected,$hasChecked,$isEmpty,$permissions,$RowCount,$expanded,$collapsed,$level,$loaded"
+		.split(',');
+	const specProps = new Set(sppArray);
+
+	function getProps(root, skipSpec) {
 		const ff = (p) => {
+			if (skipSpec && specProps.has(p)) return false;
 			if (p.startsWith('_')) return false;
 			let v = root[p];
 			if (typeof v === 'function') return false;
@@ -11707,7 +11712,7 @@ Vue.component('a2-panel', {
 				</span>
 			</span>
 			<ul v-if="expanded">
-				<a2-json-browser-item v-if="!root.isScalar" v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+				<a2-json-browser-item v-if="!root.isScalar" v-for="(itm, ix) in items" :key=ix :root="itm" :use-spec="useSpec"/>
 			</ul>
 		</li>
 	`;
@@ -11716,7 +11721,8 @@ Vue.component('a2-panel', {
 		template: jsonItemTemplate,
 		name: 'a2-json-browser-item',
 		props: {
-			root: Object
+			root: Object,
+			useSpec: Boolean
 		},
 		data() {
 			return {
@@ -11767,7 +11773,7 @@ Vue.component('a2-panel', {
 				return cls;
 			},
 			items() {
-				return getProps(this.root.value);
+				return getProps(this.root.value, !this.useSpec);
 			}
 		}
 	};
@@ -11775,7 +11781,7 @@ Vue.component('a2-panel', {
 
 	const browserTemplate = `
 	<ul class="a2-json-b">
-		<a2-json-browser-item v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+		<a2-json-browser-item v-for="(itm, ix) in items" :key=ix :root="itm" :use-spec="useSpec"/>
 	</ul>
 	`;
 
@@ -11785,11 +11791,12 @@ Vue.component('a2-panel', {
 			'a2-json-browser-item': jsonTreeItem
 		},
 		props: {
-			root: Object
+			root: Object,
+			useSpec: Boolean
 		},
 		computed: {
 			items() {
-				return getProps(this.root);
+				return getProps(this.root, !this.useSpec);
 			}
 		}
 	});
@@ -11797,7 +11804,7 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250202-7977
+// 20250203-7978
 // components/debug.js*/
 
 (function () {
@@ -11838,11 +11845,16 @@ Vue.component('a2-panel', {
 	</div>
 	<div class="toolbar">
 		<button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
+		<label v-if="modelVisible" class="btn btn-tb btn-checkbox" :class="{checked: useSpec}"
+			:title="text('$ShowSpecProps')">
+			<input type="checkbox" v-model="useSpec"/>
+			<i class="ico ico-items"/>
+		</label>
 		<div class="aligner"></div>
 		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
 	</div>
 	<div class="debug-model debug-body" v-if="modelVisible">
-		<a2-json-browser :root="modelRoot()"></a2-json-browser>
+		<a2-json-browser :root="modelRoot()" :use-spec="useSpec"/>
 	</div>
 	<div class="debug-trace debug-body" v-if="traceVisible">
 		<ul class="a2-debug-trace">
@@ -11871,7 +11883,8 @@ Vue.component('a2-panel', {
 		data() {
 			return {
 				trace: [],
-				left: false
+				left: false,
+				useSpec: false
 			};
 		},
 		computed: {
