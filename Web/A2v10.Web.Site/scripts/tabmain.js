@@ -11355,18 +11355,20 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250203-7978
+// 20250204-7979
 // components/browsejson.js*/
 
 (function () {
 
-	let du = require('std:utils').date;
+	let utils = require('std:utils');
+	let du = utils.date;
 
 	const sppArray = "$valid,$invalid,$dirty,$lock,$selected,$selectedIndex,$checked,$hasSelected,$hasChecked,$isEmpty,$permissions,$RowCount,$expanded,$collapsed,$level,$loaded"
 		.split(',');
 	const specProps = new Set(sppArray);
 
 	function getProps(root, skipSpec) {
+		if (!root) return [];
 		const ff = (p) => {
 			if (skipSpec && specProps.has(p)) return false;
 			if (p.startsWith('_')) return false;
@@ -11432,6 +11434,19 @@ Vue.component('a2-panel', {
 				let n = this.root.name;
 				let parentVal = this.$parent.root.value;
 				//parentVal[n] = null;
+			},
+			expandAll(val) {
+				if (this.root.isString) return;
+				this.expanded = val;
+				Vue.nextTick(() => {
+					for (let c of this.$children)
+						c.expandAll(val);
+				});
+			},
+			clearExpanded() {
+				this.expanded = false;
+				for (let c of this.$children)
+					c.clearExpanded();
 			}
 		},
 		computed: {
@@ -11440,12 +11455,17 @@ Vue.component('a2-panel', {
 			},
 			chevron() {
 				// \u2003 - em-space
-				return (this.isScalar || this.root.isDate) ? '\u2003' : this.expanded ? '⏷' : '⏵';
+				let noExpand = this.isScalar || this.root.isDate;
+				if (this.root.isObject && this.root.value === null)
+					noExpand = true;
+				return noExpand ? '\u2003' : this.expanded ? '⏷' : '⏵';
 			},
 			valueText() {
 				let r = this.root;
-				if (r.isObject)
+				if (r.isObject) {
+					if (!r.value) return "null";
 					return r.value.constructor.name; // "Object";
+				}
 				else if (r.isArray) {
 					let ename = '';
 					if (r.value && r.value._elem_)
@@ -11488,9 +11508,26 @@ Vue.component('a2-panel', {
 			root: Object,
 			useSpec: Boolean
 		},
+		data() {
+			return {
+				expandFlag: false
+			};
+		},
 		computed: {
 			items() {
 				return getProps(this.root, !this.useSpec);
+			}
+		},
+		methods: {
+			expandAll() {
+				this.expandFlag = !this.expandFlag;
+				for (let c of this.$children)
+					c.expandAll(this.expandFlag);
+			},
+			clearExpanded() {
+				this.expandFlag = false;
+				for (let c of this.$children)
+					c.clearExpanded();
 			}
 		}
 	});
@@ -11498,7 +11535,7 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250203-7978
+// 20250204-7979
 // components/debug.js*/
 
 (function () {
@@ -11539,16 +11576,20 @@ Vue.component('a2-panel', {
 	</div>
 	<div class="toolbar">
 		<button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
-		<label v-if="modelVisible" class="btn btn-tb btn-checkbox" :class="{checked: useSpec}"
-			:title="text('$ShowSpecProps')">
-			<input type="checkbox" v-model="useSpec"/>
-			<i class="ico ico-items"/>
-		</label>
+		<template v-if="modelVisible">
+			<div class="divider"/>
+			<label class="btn btn-tb btn-checkbox" :class="{checked: useSpec}"
+				:title="text('$ShowSpecProps')">
+				<input type="checkbox" v-model="useSpec"/>
+				<i class="ico ico-list"/>
+			</label>
+			<button class="btn btn-tb" @click.prevent="expandAll"><i class="ico ico-arrow-sort"></i></button>
+		</template>
 		<div class="aligner"></div>
 		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
 	</div>
 	<div class="debug-model debug-body" v-if="modelVisible">
-		<a2-json-browser :root="modelRoot()" :use-spec="useSpec"/>
+		<a2-json-browser :root="modelRoot()" :use-spec="useSpec" ref="modelJson"/>
 	</div>
 	<div class="debug-trace debug-body" v-if="traceVisible">
 		<ul class="a2-debug-trace">
@@ -11618,6 +11659,12 @@ Vue.component('a2-panel', {
 				else if (this.traceVisible)
 					this.loadTrace();
 			},
+			expandAll() {
+				if (!this.modelVisible) return;
+				let brw = this.$refs.modelJson;
+				if (!brw) return;
+				brw.expandAll();
+			},
 			toggle() {
 				this.left = !this.left;
 			},
@@ -11641,6 +11688,9 @@ Vue.component('a2-panel', {
 		watch: {
 			refreshCount() {
 				// dataModel stack changed
+				let brw = this.$refs.modelJson;
+				if (brw)
+					brw.clearExpanded();
 				this.$forceUpdate();
 			},
 			traceView(newVal) {

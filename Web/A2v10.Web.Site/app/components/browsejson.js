@@ -1,17 +1,19 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250203-7978
+// 20250204-7979
 // components/browsejson.js*/
 
 (function () {
 
-	let du = require('std:utils').date;
+	let utils = require('std:utils');
+	let du = utils.date;
 
 	const sppArray = "$valid,$invalid,$dirty,$lock,$selected,$selectedIndex,$checked,$hasSelected,$hasChecked,$isEmpty,$permissions,$RowCount,$expanded,$collapsed,$level,$loaded"
 		.split(',');
 	const specProps = new Set(sppArray);
 
 	function getProps(root, skipSpec) {
+		if (!root) return [];
 		const ff = (p) => {
 			if (skipSpec && specProps.has(p)) return false;
 			if (p.startsWith('_')) return false;
@@ -77,6 +79,19 @@
 				let n = this.root.name;
 				let parentVal = this.$parent.root.value;
 				//parentVal[n] = null;
+			},
+			expandAll(val) {
+				if (this.root.isString) return;
+				this.expanded = val;
+				Vue.nextTick(() => {
+					for (let c of this.$children)
+						c.expandAll(val);
+				});
+			},
+			clearExpanded() {
+				this.expanded = false;
+				for (let c of this.$children)
+					c.clearExpanded();
 			}
 		},
 		computed: {
@@ -85,12 +100,17 @@
 			},
 			chevron() {
 				// \u2003 - em-space
-				return (this.isScalar || this.root.isDate) ? '\u2003' : this.expanded ? '⏷' : '⏵';
+				let noExpand = this.isScalar || this.root.isDate;
+				if (this.root.isObject && this.root.value === null)
+					noExpand = true;
+				return noExpand ? '\u2003' : this.expanded ? '⏷' : '⏵';
 			},
 			valueText() {
 				let r = this.root;
-				if (r.isObject)
+				if (r.isObject) {
+					if (!r.value) return "null";
 					return r.value.constructor.name; // "Object";
+				}
 				else if (r.isArray) {
 					let ename = '';
 					if (r.value && r.value._elem_)
@@ -133,9 +153,26 @@
 			root: Object,
 			useSpec: Boolean
 		},
+		data() {
+			return {
+				expandFlag: false
+			};
+		},
 		computed: {
 			items() {
 				return getProps(this.root, !this.useSpec);
+			}
+		},
+		methods: {
+			expandAll() {
+				this.expandFlag = !this.expandFlag;
+				for (let c of this.$children)
+					c.expandAll(this.expandFlag);
+			},
+			clearExpanded() {
+				this.expandFlag = false;
+				for (let c of this.$children)
+					c.clearExpanded();
 			}
 		}
 	});
