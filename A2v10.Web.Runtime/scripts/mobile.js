@@ -5904,6 +5904,83 @@ Vue.component('validator-control', {
 	app.components['static', staticControl];
 
 })();
+// Copyright © 2024-2025 Oleksandr Kukhtin. All rights reserved.
+
+// 20240208-7999
+// components/inlineedit.js
+(function () {
+
+	/* placeholder: https://codepen.io/flesler/pen/kdJmbw */
+	const inlineTempl = `
+	<div class="a2-edit-inline-wrapper" :class=wrapperClass>
+		<div ref=edit class="a2-edit-inline" contenteditable="true" v-text="modelVal"
+			@blur=emitChange @focus=onFocus @keypress=onKeyPress @keyup=onKeyUp :data-placeholder="placeholder"/>
+		<span class="ico ico-edit" :title="editTip" @click=startEdit v-if="!focus" />
+	</div>
+	`;
+
+	Vue.component('a2-edit-inline', {
+		template: inlineTempl,
+		props: {
+			item: Object,
+			prop: String,
+			enterCommand: Function,
+			editTip: String,
+			placeholder: String
+		},
+		data() {
+			return {
+				focus: false
+			};
+		},
+		computed: {
+			wrapperClass() {
+				return this.focus ? 'focus' : undefined;
+			},
+			modelVal() {
+				return this.item[this.prop];
+			}
+		},
+		methods: {
+			onFocus() {
+				this.focus = true;
+			},
+			startEdit() {
+				this.$refs.edit.focus();
+			},
+			endEdit() {
+				if (this.enterCommand)
+					this.enterCommand();
+				this.$refs.edit.blur();
+			},
+			cancelEdit() {
+				this.$refs.edit.textContent = this.modelVal;
+				this.focus = false; // lock change
+				this.$refs.edit.blur();
+			},
+			onKeyUp(ev) {
+				if (ev.keyCode === 27) { /*Esc*/
+					ev.preventDefault();
+					ev.stopImmediatePropagation();
+					this.cancelEdit();
+				}
+			},
+			onKeyPress(ev) {
+				if (ev.keyCode === 13) { /*Enter*/
+					ev.preventDefault();
+					ev.stopImmediatePropagation();
+					this.endEdit();
+				}
+			},
+			emitChange(ev) {
+				if (!this.focus) return;
+				this.item[this.prop] = ev.target.textContent;
+				this.focus = false;
+			}
+		}
+	});
+})();
+
 // Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
 
 /*20240909-7971*/
@@ -11413,15 +11490,22 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250202-7977
+// 20250204-7979
 // components/browsejson.js*/
 
 (function () {
 
-	let du = require('std:utils').date;
+	let utils = require('std:utils');
+	let du = utils.date;
 
-	function getProps(root) {
+	const sppArray = "$valid,$invalid,$dirty,$lock,$selected,$selectedIndex,$checked,$hasSelected,$hasChecked,$isEmpty,$permissions,$RowCount,$expanded,$collapsed,$level,$loaded"
+		.split(',');
+	const specProps = new Set(sppArray);
+
+	function getProps(root, skipSpec) {
+		if (!root) return [];
 		const ff = (p) => {
+			if (skipSpec && specProps.has(p)) return false;
 			if (p.startsWith('_')) return false;
 			let v = root[p];
 			if (typeof v === 'function') return false;
@@ -11459,7 +11543,7 @@ Vue.component('a2-panel', {
 				</span>
 			</span>
 			<ul v-if="expanded">
-				<a2-json-browser-item v-if="!root.isScalar" v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+				<a2-json-browser-item v-if="!root.isScalar" v-for="(itm, ix) in items" :key=ix :root="itm" :use-spec="useSpec"/>
 			</ul>
 		</li>
 	`;
@@ -11468,7 +11552,8 @@ Vue.component('a2-panel', {
 		template: jsonItemTemplate,
 		name: 'a2-json-browser-item',
 		props: {
-			root: Object
+			root: Object,
+			useSpec: Boolean
 		},
 		data() {
 			return {
@@ -11484,6 +11569,19 @@ Vue.component('a2-panel', {
 				let n = this.root.name;
 				let parentVal = this.$parent.root.value;
 				//parentVal[n] = null;
+			},
+			expandAll(val) {
+				if (this.root.isString) return;
+				this.expanded = val;
+				Vue.nextTick(() => {
+					for (let c of this.$children)
+						c.expandAll(val);
+				});
+			},
+			clearExpanded() {
+				this.expanded = false;
+				for (let c of this.$children)
+					c.clearExpanded();
 			}
 		},
 		computed: {
@@ -11492,12 +11590,17 @@ Vue.component('a2-panel', {
 			},
 			chevron() {
 				// \u2003 - em-space
-				return (this.isScalar || this.root.isDate) ? '\u2003' : this.expanded ? '⏷' : '⏵';
+				let noExpand = this.isScalar || this.root.isDate;
+				if (this.root.isObject && this.root.value === null)
+					noExpand = true;
+				return noExpand ? '\u2003' : this.expanded ? '⏷' : '⏵';
 			},
 			valueText() {
 				let r = this.root;
-				if (r.isObject)
+				if (r.isObject) {
+					if (!r.value) return "null";
 					return r.value.constructor.name; // "Object";
+				}
 				else if (r.isArray) {
 					let ename = '';
 					if (r.value && r.value._elem_)
@@ -11519,7 +11622,7 @@ Vue.component('a2-panel', {
 				return cls;
 			},
 			items() {
-				return getProps(this.root.value);
+				return getProps(this.root.value, !this.useSpec);
 			}
 		}
 	};
@@ -11527,7 +11630,7 @@ Vue.component('a2-panel', {
 
 	const browserTemplate = `
 	<ul class="a2-json-b">
-		<a2-json-browser-item v-for="(itm, ix) in items" :key=ix :root="itm"></a2-json-browser-item>
+		<a2-json-browser-item v-for="(itm, ix) in items" :key=ix :root="itm" :use-spec="useSpec"/>
 	</ul>
 	`;
 
@@ -11537,11 +11640,29 @@ Vue.component('a2-panel', {
 			'a2-json-browser-item': jsonTreeItem
 		},
 		props: {
-			root: Object
+			root: Object,
+			useSpec: Boolean
+		},
+		data() {
+			return {
+				expandFlag: false
+			};
 		},
 		computed: {
 			items() {
-				return getProps(this.root);
+				return getProps(this.root, !this.useSpec);
+			}
+		},
+		methods: {
+			expandAll() {
+				this.expandFlag = !this.expandFlag;
+				for (let c of this.$children)
+					c.expandAll(this.expandFlag);
+			},
+			clearExpanded() {
+				this.expandFlag = false;
+				for (let c of this.$children)
+					c.clearExpanded();
 			}
 		}
 	});
@@ -11549,7 +11670,7 @@ Vue.component('a2-panel', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250202-7977
+// 20250204-7979
 // components/debug.js*/
 
 (function () {
@@ -11590,11 +11711,20 @@ Vue.component('a2-panel', {
 	</div>
 	<div class="toolbar">
 		<button class="btn btn-tb" @click.prevent="refresh"><i class="ico ico-reload"></i> {{text('$Refresh')}}</button>
+		<template v-if="modelVisible">
+			<div class="divider"/>
+			<label class="btn btn-tb btn-checkbox" :class="{checked: useSpec}"
+				:title="text('$ShowSpecProps')">
+				<input type="checkbox" v-model="useSpec"/>
+				<i class="ico ico-list"/>
+			</label>
+			<button class="btn btn-tb" @click.prevent="expandAll"><i class="ico ico-arrow-sort"></i></button>
+		</template>
 		<div class="aligner"></div>
 		<button class="btn btn-tb" @click.prevent="toggle"><i class="ico" :class="toggleIcon"></i></button>
 	</div>
 	<div class="debug-model debug-body" v-if="modelVisible">
-		<a2-json-browser :root="modelRoot()"></a2-json-browser>
+		<a2-json-browser :root="modelRoot()" :use-spec="useSpec" ref="modelJson"/>
 	</div>
 	<div class="debug-trace debug-body" v-if="traceVisible">
 		<ul class="a2-debug-trace">
@@ -11623,7 +11753,8 @@ Vue.component('a2-panel', {
 		data() {
 			return {
 				trace: [],
-				left: false
+				left: false,
+				useSpec: false
 			};
 		},
 		computed: {
@@ -11663,6 +11794,12 @@ Vue.component('a2-panel', {
 				else if (this.traceVisible)
 					this.loadTrace();
 			},
+			expandAll() {
+				if (!this.modelVisible) return;
+				let brw = this.$refs.modelJson;
+				if (!brw) return;
+				brw.expandAll();
+			},
 			toggle() {
 				this.left = !this.left;
 			},
@@ -11686,6 +11823,9 @@ Vue.component('a2-panel', {
 		watch: {
 			refreshCount() {
 				// dataModel stack changed
+				let brw = this.$refs.modelJson;
+				if (brw)
+					brw.clearExpanded();
 				this.$forceUpdate();
 			},
 			traceView(newVal) {

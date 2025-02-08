@@ -1,4 +1,4 @@
-﻿
+﻿@import "Variables.less";
 
 .tag-label {
 	background-color: #8f94b0;
@@ -252,4 +252,53 @@
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.a2-edit-inline-wrapper {
+	display: inline-flex;
+	align-items: center;
+
+	&.lg {
+		font-size: 1.3em;
+	}
+
+	.a2-edit-inline {
+		flex-grow: 1;
+		display: inline-block;
+		padding: 4px 0;
+		outline: none;
+		border-bottom: 1px solid transparent;
+		white-space: nowrap;
+		overflow: hidden;
+
+		&:focus-visible {
+			border-bottom-color: @link-color !important;
+		}
+	}
+
+
+	.a2-edit-inline:empty:before {
+		content: attr(data-placeholder);
+		pointer-events: none;
+		color: @placeholder-color;
+		display: block; /* For Firefox */
+	}
+
+	.ico {
+		display: none;
+		margin-left: 6px;
+		cursor: pointer;
+	}
+
+	&:hover, &.focus {
+		.ico {
+			display: inline;
+		}
+	}
+
+	&:hover {
+		.a2-edit-inline {
+			border-bottom-color: @default-brd-color;
+		}
+	}
 }

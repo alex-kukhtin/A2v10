@@ -41,7 +41,7 @@
 				<dependency id="System.Memory" version="4.6.0" />
 				<dependency id="System.Runtime.CompilerServices.Unsafe" version="6.1.0" />
 				<dependency id="Quartz" version="3.13.1" />
-				<dependency id="Jint" version="4.1.0" />
+				<dependency id="Jint" version="4.2.0" />
 				<dependency id="Microsoft.Extensions.Logging.Abstractions" version="9.0.0" />
 				<dependency id="System.Diagnostics.DiagnosticSource" version="9.0.0" />
 			</group>
