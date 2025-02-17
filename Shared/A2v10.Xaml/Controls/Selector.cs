@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using A2v10.Infrastructure;
@@ -91,8 +91,10 @@ public class Selector : ValuedControl, ITableControl
 		var fetchData = GetBinding(nameof(FetchData));
 		if (fetchData != null)
 			input.MergeAttribute(":fetch-command-data", fetchData.GetPath(context));
+        else if (FetchData != null && FetchData.StartsWith("{"))
+            input.MergeAttribute(":fetch-command-data", FetchData);
 
-		MergeAttributes(input, context);
+        MergeAttributes(input, context);
 		MergeDisabled(input, context);
 		MergeAlign(input, context, Align);
 		MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);

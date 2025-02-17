@@ -1,4 +1,4 @@
-﻿// Copyright © 2022-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2022-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
@@ -16,7 +16,12 @@ public class SelectorSimple : Selector
 	{
 		base.OnEndInit();
 
-		if (String.IsNullOrEmpty(DisplayProperty))
+        String urlData = null;
+        (Url, urlData) = Url.ParseUrlQuery();
+        if (urlData != null)
+            Data = urlData;
+
+        if (String.IsNullOrEmpty(DisplayProperty))
 			DisplayProperty = "Name";
 
 		var urlBind = GetBinding(nameof(Url));
@@ -50,7 +55,12 @@ public class SelectorSimple : Selector
 			cmd.BindImpl.SetBinding("Data", dat);
 			this.BindImpl.SetBinding(nameof(FetchData), dat);
 		}
-		hlink.BindImpl.SetBinding("Command", cmd);
+        else if (Data != null)
+        {
+            cmd.Data = Data;
+            this.FetchData = Data;
+        }
+        hlink.BindImpl.SetBinding("Command", cmd);
 		AddOns.Insert(0, hlink);
 	}
 

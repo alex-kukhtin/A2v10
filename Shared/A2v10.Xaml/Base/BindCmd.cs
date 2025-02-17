@@ -463,7 +463,11 @@ public class BindCmd : BindBase
 			return dataBind.GetPath(context);
 		}
 		else if (Data != null)
+		{
+			if (Data.StartsWith("{"))
+				return Data;
 			return $"'{Data}'";
+		}
 		return nullString;
 	}
 
