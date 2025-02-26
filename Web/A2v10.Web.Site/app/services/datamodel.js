@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250130-7977*/
+/*20250226-7980*/
 // services/datamodel.js
 
 /*
@@ -246,6 +246,16 @@
 			if (this.$expanded) return null;
 			let coll = this[this._meta_.$items];
 			return this.$vm.$expand(this, this._meta_.$items, true);
+		};
+		elem.$findTreeRoot = function () {
+			let p = this;
+			let r = null;
+			while (p && p !== this.$root) {
+				if (p._meta_ && p._meta_.$items)
+					r = p;
+				p = p._parent_;
+			}
+			return r ? r._parent_ : null;
 		};
 		elem.$selectPath = async function (arr, cb) {
 			if (!arr.length) return null;

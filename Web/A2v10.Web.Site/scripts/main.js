@@ -2951,12 +2951,16 @@ app.modules['std:impl:array'] = function () {
 		};
 
 		proto.$select = function (root) {
+			if (!root && this.$findTreeRoot)
+				root = this.$findTreeRoot();
 			let arr = root || this._parent_;
+
 			let sel = arr.$selected;
 			if (sel === this) return;
 			if (sel) sel.$selected = false;
 			this.$selected = true;
 			emitSelect(arr, this);
+
 			if (this._meta_.$items) {
 				// expand all parent items
 				let p = this._parent_._parent_;
@@ -3001,7 +3005,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250130-7977*/
+/*20250226-7980*/
 // services/datamodel.js
 
 /*
@@ -3247,6 +3251,16 @@ app.modules['std:impl:array'] = function () {
 			if (this.$expanded) return null;
 			let coll = this[this._meta_.$items];
 			return this.$vm.$expand(this, this._meta_.$items, true);
+		};
+		elem.$findTreeRoot = function () {
+			let p = this;
+			let r = null;
+			while (p && p !== this.$root) {
+				if (p._meta_ && p._meta_.$items)
+					r = p;
+				p = p._parent_;
+			}
+			return r ? r._parent_ : null;
 		};
 		elem.$selectPath = async function (arr, cb) {
 			if (!arr.length) return null;
