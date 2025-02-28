@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20241223-7973*/
+/*20250228-7981*/
 // components/selector.js
 
 (function selector_component() {
@@ -109,9 +109,9 @@
 				if (!this.hasClear) return false;
 				let to = this.item[this.prop];
 				if (!to) return false;
+				if (this.useAll && to.Id === -1) return false;
 				if (utils.isDefined(to.$isEmpty))
 					return !to.$isEmpty;
-				if (this.useAll && to.Id === -1) return false;
 				return !utils.isPlainObjectEmpty(to);
 			},
 			hasText() { return !!this.textProp; },

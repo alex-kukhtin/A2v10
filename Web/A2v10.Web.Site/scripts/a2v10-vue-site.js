@@ -5694,7 +5694,7 @@ template: `
 })();
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250202-7978*/
+/*20250228-7981*/
 // controllers/base.js
 
 (function () {
@@ -6005,6 +6005,9 @@ template: `
 					return;
 				}
 				self.$data.$emit('Model.beforeSave', self.$data);
+
+				if (!this.$data.$dirty)
+					return; // may be changed
 
 				let saveSels = self.$data._saveSelections();
 

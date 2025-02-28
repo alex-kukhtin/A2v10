@@ -7225,9 +7225,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20241223-7973*/
+/*20250228-7981*/
 // components/selector.js
 
 (function selector_component() {
@@ -7336,9 +7336,9 @@ Vue.component('validator-control', {
 				if (!this.hasClear) return false;
 				let to = this.item[this.prop];
 				if (!to) return false;
+				if (this.useAll && to.Id === -1) return false;
 				if (utils.isDefined(to.$isEmpty))
 					return !to.$isEmpty;
-				if (this.useAll && to.Id === -1) return false;
 				return !utils.isPlainObjectEmpty(to);
 			},
 			hasText() { return !!this.textProp; },
@@ -13345,7 +13345,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250202-7978*/
+/*20250228-7981*/
 // controllers/base.js
 
 (function () {
@@ -13656,6 +13656,9 @@ Vue.directive('resize', {
 					return;
 				}
 				self.$data.$emit('Model.beforeSave', self.$data);
+
+				if (!this.$data.$dirty)
+					return; // may be changed
 
 				let saveSels = self.$data._saveSelections();
 
