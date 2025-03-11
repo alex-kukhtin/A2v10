@@ -3547,9 +3547,9 @@ app.modules['std:mask'] = function () {
 	}
 };
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241018-7971
+// 20250307-7975
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -3695,14 +3695,17 @@ app.modules['std:html'] = function () {
 };
 
 function purgeTable(tbl) {
-	let node = tbl.cloneNode(true)
+	let node = tbl.cloneNode(true);
 	for (let td of node.getElementsByTagName('TD')) {
 		if (!td.childNodes.length) continue;
 		td.removeAttribute('title');
-		let c = td.childNodes[0];
-		if (c.classList && (c.classList.contains('popover-wrapper') || c.classList.contains('hlink-dd-wrapper'))) {
-			if (c.childNodes.length)
-				td.innerText = c.childNodes[0].innerText;
+		let qs = td.querySelector('.popover-wrapper, .hlink-dd-wrapper');
+		if (!qs) continue;
+		if (!qs.childNodes.length) continue;
+		for (let c of qs.childNodes) {
+			if (c.nodeType != c.ELEMENT_NODE) continue;
+			td.innerText = c.innerText;
+			break;
 		}
 	}
 	return node;

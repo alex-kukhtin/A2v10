@@ -5,39 +5,38 @@
  */
 
 let itemTemplate = `
-<div class="dform-item" :draggable="editMode" @click.stop.prevent=clickItem
+<div class="fd-item" @click.stop.prevent=clickItem
 	:style="{gridArea: gridArea}" @dragstart=dragStart @dragend=dragEnd
 	:class="itemClass">
 	<slot></slot>
-	<div class=drag-area v-if=editMode>
+	<div class=drag-area>
 		<button v-if="!isnew" class="clear-button" @click=remove>✕</button>
 	</div>
 </div>
 `;
 
 let placeholderTemplate = `
-<div class='dform-placeholder' @drop=drop @dragover=dragOver @dragenter=dragEnter
+<div class='fd-placeholder' @drop=drop @dragover=dragOver @dragenter=dragEnter
 :style="{gridRow: row, gridColumn: col}" :class="{hover}">{{row}} {{col}}</div>
 `;
 
 let formTemplate = `
-<div class="dform-container" :class="{editing: editMode}">
-	<div class="dform-drag-host" ref=drag-host></div>
-	<div class=dform-body :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}" ref=dash>
-		<template v-for="row in rows" v-if = editMode >
+<div class="fd-container">
+	<div class="fd-drag-host" ref=drag-host></div>
+	<div class=fd-body :style="{gridTemplateColumns: templateColumns, gridTemplateRows: templateRows}" ref=dash>
+		<template v-for="row in rows">
 			<a2-dform-placeholder v-show="placeholderVisible(row, col)" ref=ph
 				v-for="col in cols" :row="row" :col="col" :key="row + ':' + col"/>
 		</template>
 		<slot>
-			<a2-dform-item v-for="(itm, ix) in items" :key=ix :item="itm" 
-					:edit-mode="editMode"
+			<a2-dform-item v-for="(itm, ix) in items" :key=ix :item="itm"
 					:row="itm.row" :col="itm.col" :col-span="itm.colSpan" :row-span="itm.rowSpan">
 				<slot name="element" v-bind:item="itm"></slot>
 			</a2-dform-item>
 		</slot>
 	</div>
 	<div>
-		<ul class="dform-list" v-if="editMode">
+		<ul class="dform-list">
 			<a2-dform-item v-for="(itm, ix) in list" :key=ix :edit-mode="true"				
 				:item=itm :col-span="itm.colSpan" :row-span="itm.rowSpan" :isnew=true>
 				<slot name="listitem" v-bind:item="itm"></slot>
@@ -97,7 +96,6 @@ Vue.component('a2-dform-item', {
 		colSpan: { type: Number, default: 1 },
 		isnew: Boolean,
 		item: Object,
-		editMode: Boolean
 	},
 	data() {
 		return {
@@ -115,7 +113,6 @@ Vue.component('a2-dform-item', {
 	},
 	methods: {
 		dragStart(ev) {
-			if (!this.editMode) return;
 			ev.dataTransfer.effectAllowed = "move";
 			if (this.isnew) {
 				this.posX = 0;
@@ -130,7 +127,6 @@ Vue.component('a2-dform-item', {
 			this.$parent.$start(this);
 		},
 		dragEnd(ev) {
-			if (!this.editMode) return;
 			this.$parent.$clearHover();
 		},
 		remove() {
@@ -210,7 +206,6 @@ Vue.component('a2-formdesigner', {
 	},
 	methods: {
 		placeholderVisible(row, col) {
-			if (!this.editMode) return false;
 			let intercect = (elem) =>
 				row >= elem.startRow && row <= elem.endRow &&
 				col >= elem.startCol && col <= elem.endCol;

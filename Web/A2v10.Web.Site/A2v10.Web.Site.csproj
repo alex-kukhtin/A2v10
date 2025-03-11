@@ -342,7 +342,9 @@
     <Content Include="TestPages\bigcalendar.html" />
     <Content Include="TestPages\bigcalendar.js" />
     <Content Include="TestPages\clonetable.html" />
+    <Content Include="TestPages\formdesigner2.js" />
     <Content Include="TestPages\formdesigner.js" />
+    <Content Include="TestPages\fromdesinger2.html" />
     <Content Include="TestPages\fromdesinger.html" />
     <Content Include="TestPages\debugtree.js" />
     <Content Include="TestPages\notifications.html" />
