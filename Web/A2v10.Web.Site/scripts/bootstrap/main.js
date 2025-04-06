@@ -4370,7 +4370,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250226-7980*/
+/*20250406-7982*/
 // services/datamodel.js
 
 /*
@@ -4491,7 +4491,10 @@ app.modules['std:impl:array'] = function () {
 				break;
 			case TMarker: // marker for dynamic property
 				let mp = trg._meta_.markerProps[prop];
-				shadow[prop] = mp;
+				if (utils.isDefined(mp.type) && utils.isDefined(mp.value))
+					shadow[prop] = mp.value;
+				else
+					shadow[prop] = mp;
 				break;
 			case period.constructor:
 				shadow[prop] = new propCtor(source[prop]);
