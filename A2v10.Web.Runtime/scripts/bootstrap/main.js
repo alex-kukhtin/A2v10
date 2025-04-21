@@ -85,9 +85,9 @@ app.modules['std:locale'] = function () {
 	return window.$$locale;
 };
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20240215-7960
+// 20250421-7976
 // platform/polyfills.js
 
 
@@ -139,14 +139,9 @@ app.modules['std:locale'] = function () {
 	};
 
 	date.toJSON = function (key) {
-		let nd = new Date(this);
-		let ds = 0;
-		if (nd.getFullYear() < 1925) {
-			ds = -4;
-		}
-		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(),
-			nd.getSeconds() - ds, nd.getMilliseconds());
-		return nd.toISOString().replace('Z', '');
+		// we need local time as UTC+0
+		// sv locale is used to get ISO format
+		return this.toLocaleString('sv').replace(' ', 'T') + '.000';
 	};
 
 })(Date.prototype);
@@ -3547,9 +3542,9 @@ app.modules['std:mask'] = function () {
 	}
 };
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241018-7971
+// 20250307-7975
 /* services/html.js */
 
 app.modules['std:html'] = function () {
@@ -3695,14 +3690,17 @@ app.modules['std:html'] = function () {
 };
 
 function purgeTable(tbl) {
-	let node = tbl.cloneNode(true)
+	let node = tbl.cloneNode(true);
 	for (let td of node.getElementsByTagName('TD')) {
 		if (!td.childNodes.length) continue;
 		td.removeAttribute('title');
-		let c = td.childNodes[0];
-		if (c.classList && (c.classList.contains('popover-wrapper') || c.classList.contains('hlink-dd-wrapper'))) {
-			if (c.childNodes.length)
-				td.innerText = c.childNodes[0].innerText;
+		let qs = td.querySelector('.popover-wrapper, .hlink-dd-wrapper');
+		if (!qs) continue;
+		if (!qs.childNodes.length) continue;
+		for (let c of qs.childNodes) {
+			if (c.nodeType != c.ELEMENT_NODE) continue;
+			td.innerText = c.innerText;
+			break;
 		}
 	}
 	return node;
@@ -4313,12 +4311,16 @@ app.modules['std:impl:array'] = function () {
 		};
 
 		proto.$select = function (root) {
+			if (!root && this.$findTreeRoot)
+				root = this.$findTreeRoot();
 			let arr = root || this._parent_;
+
 			let sel = arr.$selected;
 			if (sel === this) return;
 			if (sel) sel.$selected = false;
 			this.$selected = true;
 			emitSelect(arr, this);
+
 			if (this._meta_.$items) {
 				// expand all parent items
 				let p = this._parent_._parent_;
@@ -4363,7 +4365,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250130-7977*/
+/*20250406-7982*/
 // services/datamodel.js
 
 /*
@@ -4484,7 +4486,10 @@ app.modules['std:impl:array'] = function () {
 				break;
 			case TMarker: // marker for dynamic property
 				let mp = trg._meta_.markerProps[prop];
-				shadow[prop] = mp;
+				if (utils.isDefined(mp.type) && utils.isDefined(mp.value))
+					shadow[prop] = mp.value;
+				else
+					shadow[prop] = mp;
 				break;
 			case period.constructor:
 				shadow[prop] = new propCtor(source[prop]);
@@ -4609,6 +4614,16 @@ app.modules['std:impl:array'] = function () {
 			if (this.$expanded) return null;
 			let coll = this[this._meta_.$items];
 			return this.$vm.$expand(this, this._meta_.$items, true);
+		};
+		elem.$findTreeRoot = function () {
+			let p = this;
+			let r = null;
+			while (p && p !== this.$root) {
+				if (p._meta_ && p._meta_.$items)
+					r = p;
+				p = p._parent_;
+			}
+			return r ? r._parent_ : null;
 		};
 		elem.$selectPath = async function (arr, cb) {
 			if (!arr.length) return null;
@@ -5678,7 +5693,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250202-7978*/
+/*20250228-7981*/
 // controllers/base.js
 
 (function () {
@@ -5989,6 +6004,9 @@ app.modules['std:impl:array'] = function () {
 					return;
 				}
 				self.$data.$emit('Model.beforeSave', self.$data);
+
+				if (!this.$data.$dirty)
+					return; // may be changed
 
 				let saveSels = self.$data._saveSelections();
 

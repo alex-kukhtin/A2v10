@@ -42,12 +42,12 @@ describe("Date tools", function () {
 		d2 = du.add(d1, -1, 'year');
 		expect(d2.getFullYear()).toBe(d1.getFullYear() - 1);
 
-		d1 = du.create(2020, 02, 29);
+		d1 = du.create(2020, 2, 29);
 		d2 = du.add(d1, 1, 'year');
-		expect(d2.getTime()).toBe(du.create(2021, 03, 01).getTime());
+		expect(d2.getTime()).toBe(du.create(2021, 3, 1).getTime());
 
 		d2 = du.add(d1, -1, 'year');
-		expect(d2.getTime()).toBe(du.create(2019, 03, 01).getTime());
+		expect(d2.getTime()).toBe(du.create(2019, 3, 1).getTime());
 	});
 
 	it('date add (month)', function () {
@@ -254,6 +254,25 @@ describe("Date tools", function () {
 		expect(du.tryParse('"\\/\"2020-09-01T00:00:00"\\/"').getTime()).toBe(du.create(2020, 9, 1).getTime());
 		expect(du.tryParse('2020-09-25T09:51:29.250').getTime()).toBe(new Date('2020-09-25T09:51:29.250').getTime());
 		expect(du.tryParse('2020-09-25T09:51:29').getTime()).toBe(new Date('2020-09-25T09:51:29.000').getTime());
+	});
+
+	it('try date json', function () {
+
+		expect(du.create(2011, 7, 15).toJSON()).toBe('2011-07-15T00:00:00.000');
+		expect(du.createTime(2011, 7, 15, 23, 59, 59).toJSON()).toBe('2011-07-15T23:59:59.000');
+
+		expect(du.create(1986, 3, 30).toJSON()).toBe('1986-03-30T00:00:00.000');
+		expect(du.createTime(1986, 3, 30, 23, 30, 10).toJSON()).toBe('1986-03-30T23:30:10.000');
+		expect(du.createTime(1986, 3, 30, 2, 0, 0).toJSON()).toBe('1986-03-30T03:00:00.000'); // + 1 hour
+
+		expect(du.create(1987, 3, 29).toJSON()).toBe('1987-03-29T00:00:00.000');
+		expect(du.create(1989, 3, 26).toJSON()).toBe('1989-03-26T00:00:00.000');
+		expect(du.create(1991, 3, 31).toJSON()).toBe('1991-03-31T00:00:00.000');
+
+		expect(du.create(2025, 3, 30).toJSON()).toBe('2025-03-30T00:00:00.000');
+		expect(du.createTime(2025, 3, 30, 2, 0, 0).toJSON()).toBe('2025-03-30T02:00:00.000');
+		expect(du.createTime(2025, 3, 30, 3, 0, 0).toJSON()).toBe('2025-03-30T04:00:00.000'); // + 1 hour
+		expect(du.createTime(2025, 3, 30, 4, 0, 0).toJSON()).toBe('2025-03-30T04:00:00.000');
 	});
 });
 

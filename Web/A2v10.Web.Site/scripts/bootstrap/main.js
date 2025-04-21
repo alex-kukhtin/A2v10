@@ -85,9 +85,9 @@ app.modules['std:locale'] = function () {
 	return window.$$locale;
 };
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20240215-7960
+// 20250421-7976
 // platform/polyfills.js
 
 
@@ -139,14 +139,9 @@ app.modules['std:locale'] = function () {
 	};
 
 	date.toJSON = function (key) {
-		let nd = new Date(this);
-		let ds = 0;
-		if (nd.getFullYear() < 1925) {
-			ds = -4;
-		}
-		nd.setHours(nd.getHours(), nd.getMinutes() - nd.getTimezoneOffset(),
-			nd.getSeconds() - ds, nd.getMilliseconds());
-		return nd.toISOString().replace('Z', '');
+		// we need local time as UTC+0
+		// sv locale is used to get ISO format
+		return this.toLocaleString('sv').replace(' ', 'T') + '.000';
 	};
 
 })(Date.prototype);

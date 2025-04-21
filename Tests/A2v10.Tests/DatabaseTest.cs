@@ -3,7 +3,6 @@
 
 using System;
 using System.Threading.Tasks;
-using System.Dynamic;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

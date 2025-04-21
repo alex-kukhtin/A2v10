@@ -3369,6 +3369,9 @@ pre.a2-code {
   line-height: 1;
   padding: 0.6rem;
 }
+.control-group.has-value .input-group {
+  background-color: lightyellow;
+}
 .control-group.selector-hyperlink .input-group {
   border: none;
 }

@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250228-7981*/
+/*20250421-7982*/
 // components/selector.js
 
 (function selector_component() {
@@ -102,6 +102,12 @@
 				}
 				return utils.simpleEval(el, this.display);
 			},
+			hasValue() {
+				if (!this.item) return false;
+				let el = this.item[this.prop];
+				if (utils.isObjectExact(el) && el.Id)
+					return true;
+			},
 			canNew() {
 				return !!this.createNew;
 			},
@@ -187,6 +193,8 @@
 					cx += ' selector-hyperlink';
 				else if (this.mode === 'combo-box')
 					cx += ' selector-combobox';
+				if (this.hasValue)
+					cx += ' has-value';
 				return cx;
 			},
 			isItemActive(ix) {
