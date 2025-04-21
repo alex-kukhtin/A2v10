@@ -7280,7 +7280,8 @@ Vue.component('validator-control', {
 			fetchCommand: String,
 			fetchCommandData: Object,
 			maxChars: Number,
-			lineClamp: Number
+			lineClamp: Number,
+			highlight: Boolean,
 		},
 		data() {
 			return {
@@ -7309,6 +7310,7 @@ Vue.component('validator-control', {
 				return utils.simpleEval(el, this.display);
 			},
 			hasValue() {
+				if (!this.highlight) return false;
 				if (!this.item) return false;
 				let el = this.item[this.prop];
 				if (utils.isObjectExact(el) && el.Id)

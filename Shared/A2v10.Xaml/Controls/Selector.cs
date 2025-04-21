@@ -40,7 +40,10 @@ public class Selector : ValuedControl, ITableControl
 	public Int32 MaxChars { get; set; }
 	public Int32 LineClamp { get; set; }
 
-	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+	public Boolean Highlight { get; set; }
+
+
+    public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (CheckDisabledModel(context))
 			return;
@@ -72,7 +75,9 @@ public class Selector : ValuedControl, ITableControl
 		}
 		if (ShowCaret.HasValue && ShowCaret.Value)
 			input.MergeAttribute(":caret", "true");
-		if (UseAll)
+        if (Highlight)
+            input.MergeAttribute(":highlight", "true");
+        if (UseAll)
 		{
             input.MergeAttribute(":has-clear", "true");
             input.MergeAttribute(":use-all", "true");
