@@ -7335,7 +7335,7 @@ Vue.component('validator-control', {
 				if (!this.highlight) return false;
 				if (!this.item) return false;
 				let el = this.item[this.prop];
-				if (utils.isObjectExact(el) && el.Id)
+				if (utils.isObjectExact(el) && el.Id && el.Id != -1)
 					return true;
 			},
 			canNew() {
@@ -7677,9 +7677,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241221-7975
+// 20250424-7975
 // components/datagrid.js*/
 
 (function () {
@@ -7813,6 +7813,7 @@ Vue.component('validator-control', {
 			small: { type: Boolean, default: undefined },
 			bold: String, //{ type: Boolean, default: undefined },
 			mark: String,
+			done: String,
 			controlType: String,
 			width: String,
 			minWidth:String,
@@ -7965,7 +7966,7 @@ Vue.component('validator-control', {
 				return h(tag, cellProps, [h(cellValid, { props: { item: row, col: col } })]);
 			}
 
-			if (!col.content && !col.icon && !col.bindIcon) {
+			if (!col.content && !col.icon && !col.bindIcon && !col.done) {
 				return h(tag, cellProps);
 			}
 
@@ -8014,11 +8015,13 @@ Vue.component('validator-control', {
 					/*@click.prevent, no stop*/
 					template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.evalOpts)"></span></a>',
 					computed: {
-						hasIcon() { return col.icon || col.bindIcon; },
+						hasIcon() { return col.icon || col.bindIcon || col.done; },
 						iconClass() {
 							let icoSingle = !col.content ? ' ico-single' : '';
 							if (col.bindIcon)
 								return 'ico-' + utils.eval(row, col.bindIcon) + icoSingle;
+							else if (col.done)
+								return (utils.eval(row, col.done) ? 'ico-success-outline-green' : 'ico-warning-outline-yellow') + icoSingle;
 							else if (col.icon)
 								return 'ico-' + col.icon + icoSingle;
 							return null;
@@ -8075,6 +8078,8 @@ Vue.component('validator-control', {
 				chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon + icoSingle }));
 			else if (col.bindIcon)
 				chElems.unshift(h('i', { 'class': 'ico ico-' + utils.eval(row, col.bindIcon) + icoSingle }));
+			else if (col.done)
+				chElems.unshift(h('i', { 'class': 'ico ico-' + (utils.eval(row, col.done) ? 'success-outline-green' : 'warning-outline-yellow') + icoSingle }));
 			/*TODO: validate ???? */
 			if (col.validate) {
 				chElems.push(h(validator, validatorProps));

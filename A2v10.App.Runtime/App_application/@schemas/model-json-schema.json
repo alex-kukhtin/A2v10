@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7972",
+	"$version": "10.0.7973",
 	"title": "JSON Schema for model.json",
 	"type": "object",
 
@@ -17,7 +17,25 @@
 		"auto": {
 			"type": "object",
 			"properties": {
-				"render": {"type": "string", "enum": ["page", "partial", "dialog", "popup"]}
+				"render": {
+					"type": "string",
+					"enum": [ "page", "partial", "dialog", "popup" ]
+				}
+			}
+		},
+		"meta": {
+			"type": "object",
+			"properties": {
+				"table": {
+					"type": "string"
+				},
+				"schema": {
+					"type": "string"
+				},
+				"edit": {
+					"type": "string",
+					"enum": [ "default", "page", "dialog"]
+				}
 			}
 		}
 	},
@@ -32,6 +50,7 @@
 		"module": { "type": "string" },
 		"allowAddress": { "type": "string" },
 		"allowOrigin": { "type,": "string" },
+		"meta": { "$ref": "#/definitions/meta" },
 		"actions": {
 			"type": "object",
 			"patternProperties": {
@@ -94,6 +113,7 @@
 						"parameters": { "type": "object" },
 						"permissions": { "$ref": "#/definitions/permissions" },
 						"auto": { "$ref": "#/definitions/auto" },
+						"meta": { "$ref": "#/definitions/meta" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -148,6 +168,7 @@
 						"parameters": { "type": "object" },
 						"permissions": { "$ref": "#/definitions/permissions" },
 						"auto": { "$ref": "#/definitions/auto" },
+						"meta": { "$ref": "#/definitions/meta" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -176,6 +197,7 @@
 						"endpointHandler": { "type": "string" },
 						"permissions": { "$ref": "#/definitions/permissions" },
 						"auto": { "$ref": "#/definitions/auto" },
+						"meta": { "$ref": "#/definitions/meta" },
 						"roles": {
 							"type": "array",
 							"items": { "type": "string" }
@@ -246,6 +268,7 @@
 						"debugOnly": { "type": "boolean" },
 						"permissions": { "$ref": "#/definitions/permissions" },
 						"auto": { "$ref": "#/definitions/auto" },
+						"meta": { "$ref": "#/definitions/meta" },
 						"signal": { "type": "boolean" },
 						"roles": {
 							"type": "array",
@@ -279,7 +302,8 @@
 							"enum": [ "stimulsoft", "xml", "json", "pdf", "xlsx" ]
 						},
 						"permissions": { "$ref": "#/definitions/permissions" },
-						"auto": { "$ref": "#/definitions/auto" }
+						"auto": { "$ref": "#/definitions/auto" },
+						"meta": { "$ref": "#/definitions/meta" }
 					},
 					"additionalProperties": false
 				}
@@ -339,7 +363,8 @@
 							}
 						},
 						"permissions": { "$ref": "#/definitions/permissions" },
-						"auto": { "$ref": "#/definitions/auto" }
+						"auto": { "$ref": "#/definitions/auto" },
+						"meta": { "$ref": "#/definitions/meta" }
 					},
 					"additionalProperties": false
 				}

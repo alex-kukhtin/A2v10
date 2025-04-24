@@ -1,8 +1,12 @@
 ﻿{
+	"$schema": "../../../../a2v10.web.runtime/app_application/@schemas/model-json-schema.json#",
+	"meta": {"table": "", "schema": ""},
 	"actions": {
 		"index": {
 			"model": "",
-			"view": "index"
+			"view": "index",
+			"meta": {"table": "aaa", "schema": "sss"},
+			"auto": {"render": "dialog"}
 		}
 	}
 }

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241221-7975
+// 20250424-7975
 // components/datagrid.js*/
 
 (function () {
@@ -134,6 +134,7 @@
 			small: { type: Boolean, default: undefined },
 			bold: String, //{ type: Boolean, default: undefined },
 			mark: String,
+			done: String,
 			controlType: String,
 			width: String,
 			minWidth:String,
@@ -286,7 +287,7 @@
 				return h(tag, cellProps, [h(cellValid, { props: { item: row, col: col } })]);
 			}
 
-			if (!col.content && !col.icon && !col.bindIcon) {
+			if (!col.content && !col.icon && !col.bindIcon && !col.done) {
 				return h(tag, cellProps);
 			}
 
@@ -335,11 +336,13 @@
 					/*@click.prevent, no stop*/
 					template: '<a @click.prevent="doCommand($event)" :href="getHref()"><i v-if="hasIcon" :class="iconClass" class="ico"></i><span v-text="eval(row, col.content, col.dataType, col.evalOpts)"></span></a>',
 					computed: {
-						hasIcon() { return col.icon || col.bindIcon; },
+						hasIcon() { return col.icon || col.bindIcon || col.done; },
 						iconClass() {
 							let icoSingle = !col.content ? ' ico-single' : '';
 							if (col.bindIcon)
 								return 'ico-' + utils.eval(row, col.bindIcon) + icoSingle;
+							else if (col.done)
+								return (utils.eval(row, col.done) ? 'ico-success-outline-green' : 'ico-warning-outline-yellow') + icoSingle;
 							else if (col.icon)
 								return 'ico-' + col.icon + icoSingle;
 							return null;
@@ -396,6 +399,8 @@
 				chElems.unshift(h('i', { 'class': 'ico ico-' + col.icon + icoSingle }));
 			else if (col.bindIcon)
 				chElems.unshift(h('i', { 'class': 'ico ico-' + utils.eval(row, col.bindIcon) + icoSingle }));
+			else if (col.done)
+				chElems.unshift(h('i', { 'class': 'ico ico-' + (utils.eval(row, col.done) ? 'success-outline-green' : 'warning-outline-yellow') + icoSingle }));
 			/*TODO: validate ???? */
 			if (col.validate) {
 				chElems.push(h(validator, validatorProps));
