@@ -2988,7 +2988,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250406-7982*/
+/*20250507-7983*/
 // services/datamodel.js
 
 /*
@@ -3366,12 +3366,20 @@ app.modules['std:impl:array'] = function () {
 			defPropertyGet(elem, "$groupName", function () {
 				if (!utils.isDefined(this.$level))
 					return ERR_STR;
+				// !!! $level присваивается только в TreeSection!
 				// this.constructor.name == objectType;
 				const mi = this._root_.__modelInfo.Levels;
 				if (mi) {
 					const levs = mi[this.constructor.name];
-					if (levs && this.$level <= levs.length)
-						return this[levs[this.$level - 1]];
+					if (levs && this.$level <= levs.length) {
+						let xv = this[levs[this.$level - 1]];
+						if (!xv) return '';
+						if (utils.isObjectExact(xv))
+							return xv.$name;
+						else if (utils.isDate(xv))
+							return utils.format(xv, 'Date');
+						return xv;
+					}
 				}
 				console.error('invalid data for $groupName');
 				return ERR_STR;
