@@ -3278,7 +3278,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250507-7983*/
+/*20250510-7984*/
 // services/datamodel.js
 
 /*
@@ -3687,8 +3687,8 @@ app.modules['std:impl:array'] = function () {
 		}
 
 		function setDefaults(root) {
-			if (!root.$template || !root.$template.defaults)
-				return false;
+			if (!root.$template || !root.$template.defaults) return false;
+			if (root.$isCopy) return false;
 			let called;
 			for (let p in root.$template.defaults) {
 				let px = p.lastIndexOf('.');
