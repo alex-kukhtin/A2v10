@@ -2988,7 +2988,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250510-7984*/
+/*20250512-7985*/
 // services/datamodel.js
 
 /*
@@ -3453,10 +3453,14 @@ app.modules['std:impl:array'] = function () {
 
 			elem._modelLoad_ = (caller) => {
 				_lastCaller = caller;
-				if (setDefaults(elem))
-					elem.$emit('Model.defaults', elem);
+				elem._setDefaults_();
 				elem._fireLoad_();
 				__initialized__ = true;
+			};
+
+			elem._setDefaults_ = () => {
+				if (setDefaults(elem))
+					elem.$emit('Model.defaults', elem);
 			};
 
 			elem._fireLoad_ = () => {
@@ -13369,7 +13373,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250228-7981*/
+/*20250512-7985*/
 // controllers/base.js
 
 (function () {
@@ -13873,6 +13877,7 @@ Vue.directive('resize', {
 							modelInfo.reconcileAll(data.$ModelInfo);
 							dat._setModelInfo_(undefined, data);
 							dat._setRuntimeInfo_(data.$runtime);
+							dat._setDefaults_();
 							dat._fireLoad_();
 							dat._restoreSelections(saveSels);
 							resolve(dat);
