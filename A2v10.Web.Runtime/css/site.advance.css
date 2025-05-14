@@ -22,7 +22,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7970') format('woff'), url('/css/fonts/A2v10.ttf?v=7970') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7972') format('woff'), url('/css/fonts/A2v10.ttf?v=7972') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -903,6 +903,18 @@
 }
 .ico-smile-sad:before {
   content: "\eacb";
+}
+.ico-bookmark::before {
+  content: "\e920";
+}
+.ico-code::before {
+  content: "\e921";
+}
+.ico-code-check::before {
+  content: "\e92b";
+}
+.ico-variable::before {
+  content: "\e92c";
 }
 /* controls */
 /* header-footer */

@@ -3000,7 +3000,7 @@ app.modules['std:impl:array'] = function () {
 
 /* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250406-7982*/
+/*20250512-7985*/
 // services/datamodel.js
 
 /*
@@ -3378,12 +3378,20 @@ app.modules['std:impl:array'] = function () {
 			defPropertyGet(elem, "$groupName", function () {
 				if (!utils.isDefined(this.$level))
 					return ERR_STR;
+				// !!! $level присваивается только в TreeSection!
 				// this.constructor.name == objectType;
 				const mi = this._root_.__modelInfo.Levels;
 				if (mi) {
 					const levs = mi[this.constructor.name];
-					if (levs && this.$level <= levs.length)
-						return this[levs[this.$level - 1]];
+					if (levs && this.$level <= levs.length) {
+						let xv = this[levs[this.$level - 1]];
+						if (!xv) return '';
+						if (utils.isObjectExact(xv))
+							return xv.$name;
+						else if (utils.isDate(xv))
+							return utils.format(xv, 'Date');
+						return xv;
+					}
 				}
 				console.error('invalid data for $groupName');
 				return ERR_STR;
@@ -3401,8 +3409,8 @@ app.modules['std:impl:array'] = function () {
 		}
 
 		function setDefaults(root) {
-			if (!root.$template || !root.$template.defaults)
-				return false;
+			if (!root.$template || !root.$template.defaults) return false;
+			if (root.$isCopy) return false;
 			let called;
 			for (let p in root.$template.defaults) {
 				let px = p.lastIndexOf('.');
@@ -3457,10 +3465,14 @@ app.modules['std:impl:array'] = function () {
 
 			elem._modelLoad_ = (caller) => {
 				_lastCaller = caller;
-				if (setDefaults(elem))
-					elem.$emit('Model.defaults', elem);
+				elem._setDefaults_();
 				elem._fireLoad_();
 				__initialized__ = true;
+			};
+
+			elem._setDefaults_ = () => {
+				if (setDefaults(elem))
+					elem.$emit('Model.defaults', elem);
 			};
 
 			elem._fireLoad_ = () => {
@@ -12678,7 +12690,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250228-7981*/
+/*20250512-7985*/
 // controllers/base.js
 
 (function () {
@@ -13182,6 +13194,7 @@ Vue.directive('resize', {
 							modelInfo.reconcileAll(data.$ModelInfo);
 							dat._setModelInfo_(undefined, data);
 							dat._setRuntimeInfo_(data.$runtime);
+							dat._setDefaults_();
 							dat._fireLoad_();
 							dat._restoreSelections(saveSels);
 							resolve(dat);
