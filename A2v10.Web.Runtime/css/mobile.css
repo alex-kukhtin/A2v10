@@ -1,7 +1,4 @@
-﻿/* mixins */
-/* icon colors */
-/* free: e939, e93a, e93b, e93f, e942, e952 */
-@font-face {
+﻿@font-face {
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
@@ -3946,22 +3943,6 @@ iframe.eusign-iframe {
   background-color: #ddd;
   align-self: stretch;
 }
-/* controls */
-/* header-footer */
-/* nav bar */
-/* side bar */
-/* data grid */
-/* toolbar */
-/* table */
-/* tree-view*/
-/* dialog */
-/* z-index */
-/*
-@hover-open-index: auto;
-@invalid-index: auto;
-@focus-index: auto;
-@hover-index: auto;
-*/
 .a2-tab-bar {
   display: flex;
   border-bottom: 3px solid #ddd;

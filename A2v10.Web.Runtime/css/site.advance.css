@@ -1,24 +1,4 @@
-﻿/* controls */
-/* header-footer */
-/* nav bar */
-/* side bar */
-/* data grid */
-/* toolbar */
-/* table */
-/* tree-view*/
-/* dialog */
-/* z-index */
-/*
-@hover-open-index: auto;
-@invalid-index: auto;
-@focus-index: auto;
-@hover-index: auto;
-*/
-/* @modal-wrapper-index + 2 */
-/* marker */
-/* mixins */
-/* icon colors */
-@font-face {
+﻿@font-face {
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
@@ -916,24 +896,6 @@
 .ico-variable::before {
   content: "\e92c";
 }
-/* controls */
-/* header-footer */
-/* nav bar */
-/* side bar */
-/* data grid */
-/* toolbar */
-/* table */
-/* tree-view*/
-/* dialog */
-/* z-index */
-/*
-@hover-open-index: auto;
-@invalid-index: auto;
-@focus-index: auto;
-@hover-index: auto;
-*/
-/* @modal-wrapper-index + 2 */
-/* marker */
 * {
   box-sizing: border-box;
 }
