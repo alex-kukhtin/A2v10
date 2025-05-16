@@ -52,6 +52,7 @@ public class DataGridColumn : XamlElement
 	public String CheckAll { get; set; }
 	public Int32 MaxChars { get; set; }
 	public Int32 LineClamp { get; set; }
+    public String CssClass { get; set; }
     public ColumnBackgroundStyle Background { get; set; }
 
     Boolean _noPadding;
@@ -84,6 +85,8 @@ public class DataGridColumn : XamlElement
 			column.MergeAttribute(":max-chars", MaxChars);
 		if (LineClamp != 0)
 			column.MergeAttribute(":line-clamp", LineClamp);
+        if (!String.IsNullOrEmpty(CssClass))
+            column.MergeAttribute("col-css-class", CssClass);
         if (Background != ColumnBackgroundStyle.None)
             column.MergeAttribute("back-color", Background.ToString().ToLowerInvariant());
 

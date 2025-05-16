@@ -8237,6 +8237,11 @@ td.vert > .vcell {
   font-style: italic;
   color: darkcyan;
 }
+.a2-json-view {
+  background-color: white;
+  overflow: auto;
+  border: 1px solid var(--neutralBkDarker);
+}
 .feedback-panel {
   position: absolute;
   top: 42px;

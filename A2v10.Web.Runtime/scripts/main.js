@@ -7813,6 +7813,7 @@ Vue.component('validator-control', {
 			command: Object,
 			maxChars: Number,
 			lineClamp: Number,
+			colCssClass: String,
 			checkAll: String
 		},
 		created() {
@@ -7911,6 +7912,10 @@ Vue.component('validator-control', {
 				if (this.small)
 					cssClass += ' small';
 				addClassBool(this.bold, ' bold');
+
+				if (this.colCssClass)
+					cssClass += ' ' + this.colCssClass
+
 				return cssClass.trim();
 			}
 		}

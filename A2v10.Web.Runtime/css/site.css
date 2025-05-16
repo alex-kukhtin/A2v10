@@ -7612,6 +7612,11 @@ table.tree-grid a.toggle.expanded:after {
   font-style: italic;
   color: darkcyan;
 }
+.a2-json-view {
+  background-color: white;
+  overflow: auto;
+  border: 1px solid #ddd;
+}
 .feedback-panel {
   position: absolute;
   top: 40px;
