@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -76,8 +76,18 @@ public class Switch : UIElementBase
 
     public CaseCollection Cases { get; set; } = new CaseCollection();
 
+    public Length Height { get; set; }
+
     public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
     {
+        TagBuilder parentTag = null;
+        if (Height != null)
+        {
+            parentTag = new TagBuilder("div", "a2-switch");
+            parentTag.MergeStyle("height", Height.Value);
+            parentTag.RenderStart(context);
+        }
+
         var expr = GetBinding(nameof(Expression));
         if (expr == null)
             throw new XamlException("Binding 'Expression' must be a Bind");
@@ -102,6 +112,8 @@ public class Switch : UIElementBase
             itm.RenderElement(context);
             t.RenderEnd(context);
         }
+        if (parentTag != null)
+            parentTag.RenderEnd(context);
     }
 
     public override void OnSetStyles(RootContainer root)
