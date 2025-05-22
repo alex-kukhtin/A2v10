@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ public class ComboBoxItem : UIElementBase
 	public Object Value { get; set; }
 	public Boolean Bold { get; set; }
 	public Object CssClass { get; set; }
-	public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
+    public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
 		if (SkipRender(context))
 			return;
@@ -67,8 +67,9 @@ public class ComboBox : ValuedControl, ITableControl
 	public TextAlign Align { get; set; }
 	public ComboBoxStyle Style { get; set; }
 	public String GroupBy { get; set; }
+    public Boolean Highlight { get; set; }
 
-	ComboBoxItems _children;
+    ComboBoxItems _children;
 
 	public ComboBoxItems Children
 	{
@@ -98,7 +99,9 @@ public class ComboBox : ValuedControl, ITableControl
 			combo.MergeAttribute("groupby", GroupBy);
 		MergeAttributes(combo, context);
 		MergeAlign(combo, context, Align);
-		MergeBoolAttribute(combo, context, nameof(ShowValue), ShowValue);
+        if (Highlight)
+            combo.MergeAttribute(":highlight", "true");
+        MergeBoolAttribute(combo, context, nameof(ShowValue), ShowValue);
 		SetSize(combo, nameof(ComboBox));
 		MergeDisabled(combo, context);
 		var isBind = GetBinding(nameof(ItemsSource));

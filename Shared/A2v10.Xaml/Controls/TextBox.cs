@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
@@ -32,6 +32,7 @@ public class TextBox : ValuedControl, ITableControl
     public Boolean ShowClear { get; set; }
     public Boolean ShowFilter { get; set; }
     public Boolean ShowSearch { get; set; }
+    public Boolean Highlight { get; set; }
 
     protected virtual String TagName => Multiline ? "a2-textarea" : "textbox";
 
@@ -72,6 +73,8 @@ public class TextBox : ValuedControl, ITableControl
             input.MergeAttribute(":has-filter", "true");
         if (ShowSearch)
             input.MergeAttribute(":has-search", "true");
+        if (Highlight)
+            input.MergeAttribute(":highlight", "true");
         MergeAlign(input, context, Align);
         MergeBindingAttributeString(input, context, "placeholder", nameof(Placeholder), Placeholder);
         MergeValue(input, context);
@@ -89,5 +92,16 @@ public class TextBox : ValuedControl, ITableControl
             if (valBind != null && !String.IsNullOrEmpty(valBind.Mask))
                 throw new XamlException("TextBox. UpdateTrigger='Input' is not compatible with the Masked input future");
         }
+    }
+}
+
+public class SearchBox : TextBox
+{
+    protected override void OnEndInit()
+    {
+        base.OnEndInit();
+        ShowClear = true;
+        ShowSearch = true;
+        Highlight = true;
     }
 }

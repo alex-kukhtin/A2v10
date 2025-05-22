@@ -5404,9 +5404,9 @@ app.modules['std:barcode'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20200206-7653
+// 20250522-7983
 // components/control.js
 
 (function () {
@@ -5430,7 +5430,8 @@ app.modules['std:barcode'] = function () {
 			mask: String,
 			hideZeros: Boolean,
 			testId: String,
-			accel: String
+			accel: String,
+			highlight: Boolean
 		},
 		computed: {
 			path() {
@@ -5450,6 +5451,14 @@ app.modules['std:barcode'] = function () {
 				else if (this.mask && val)
 					return mask.getMasked(this.mask, val);
 				return val;
+			},
+			hasValue() {
+				if (!this.item) return false;
+				let val = this.item[this.prop];
+				if (!val) return false;
+				if (utils.isObjectExact(val))
+					return !!val.Id;
+				return true;
 			},
 			modelValueRaw() {
 				if (!this.item) return null;
@@ -5545,6 +5554,8 @@ app.modules['std:barcode'] = function () {
 					cls += ' val-info';
 				if (this.required) cls += ' required';
 				if (this.disabled) cls += ' disabled';
+				if (this.highlight && this.hasValue)
+					cls += ' has-value';
 				return cls;
 			},
 			deferUpdate() {
