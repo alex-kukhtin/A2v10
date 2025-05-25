@@ -1,6 +1,6 @@
 ﻿/* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250512-7985*/
+/*20250525-7986*/
 // services/datamodel.js
 
 /*
@@ -1145,7 +1145,7 @@
 		let result = {};
 		for (let p of ps) {
 			let arr = utils.simpleEval(root, p);
-			if ('$selected' in arr) {
+			if (utils.isObject(arr) && '$selected' in arr) {
 				let sel = arr.$selected;
 				if (sel)
 					result[p] = sel.$id;
