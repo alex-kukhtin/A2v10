@@ -9,8 +9,9 @@ public class SelectorSimple : Selector
 
 	public String Url { get; set; }
 	public String Data { get; set; }
+    public Boolean Folder { get; set; }
 
-	public Action<RenderContext> _renderAction = null;
+    public Action<RenderContext> _renderAction = null;
 
 	protected override void OnEndInit()
 	{
@@ -24,7 +25,9 @@ public class SelectorSimple : Selector
         if (String.IsNullOrEmpty(DisplayProperty))
 			DisplayProperty = "Name";
 
-		var urlBind = GetBinding(nameof(Url));
+        var suffix = Folder ? "folder" : String.Empty;
+
+        var urlBind = GetBinding(nameof(Url));
         var cmd = new BindCmd()
         {
             Command = CommandType.Browse,
@@ -33,14 +36,14 @@ public class SelectorSimple : Selector
 		{
 			_renderAction = (ctx) =>
 			{
-				this.BindImpl.SetBinding(nameof(Fetch), new Bind() { Path = $"{urlBind.GetPathFormat(ctx)} + '/fetch'" });
-				cmd.BindImpl.SetBinding(nameof(Url), new Bind() { Path = $"{urlBind.GetPathFormat(ctx)} + '/browse'" });
+                this.BindImpl.SetBinding(nameof(Fetch), new Bind() { Path = $"{urlBind.GetPathFormat(ctx)} + '/fetch{suffix}'" });
+				cmd.BindImpl.SetBinding(nameof(Url), new Bind() { Path = $"{urlBind.GetPathFormat(ctx)} + '/browse{suffix}'" });
 			};
 		}
 		else
 		{
-			Fetch = $"{Url}/fetch";
-			cmd.Url = $"{Url}/browse";
+			Fetch = $"{Url}/fetch{suffix}";
+			cmd.Url = $"{Url}/browse{suffix}";
 		}
         var hlink = new Hyperlink()
 		{
