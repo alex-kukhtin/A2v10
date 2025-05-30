@@ -5707,7 +5707,7 @@ template: `
 })();
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250512-7985*/
+/*20250512-7987*/
 // controllers/base.js
 
 (function () {
@@ -5733,6 +5733,12 @@ template: `
 	let __createStartTime = 0;
 
 	function __runDialog(url, arg, query, cb) {
+		if (url.indexOf('?') !== -1)
+		{
+			let x = urltools.parseUrlAndQuery(url);
+			url = x.url;
+			query = x.query;
+		}
 		return new Promise(function (resolve, reject) {
 			const dlgData = { promise: null, data: arg, query: query, rd:true };
 			eventBus.$emit('modal', url, dlgData);
