@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>A2v10.Web.Runtime</id>
-		<version>10.0.7979</version>
+		<version>10.0.7980</version>
 		<title>A2v10.Web Runtime</title>
 		<authors>Oleksandr Kukhtin</authors>
 		<owners>Oleksandr Kukhtin</owners>
@@ -38,12 +38,12 @@
 		</contentFiles>
 		<dependencies>
 			<group targetFramework=".NETFramework4.8">
-				<dependency id="System.Memory" version="4.6.0" />
-				<dependency id="System.Runtime.CompilerServices.Unsafe" version="6.1.0" />
-				<dependency id="Quartz" version="3.13.1" />
-				<dependency id="Jint" version="4.2.0" />
-				<dependency id="Microsoft.Extensions.Logging.Abstractions" version="9.0.0" />
-				<dependency id="System.Diagnostics.DiagnosticSource" version="9.0.0" />
+				<dependency id="System.Memory" version="4.6.3" />
+				<dependency id="System.Runtime.CompilerServices.Unsafe" version="6.1.2" />
+				<dependency id="Quartz" version="3.14.0" />
+				<dependency id="Jint" version="4.2.2" />
+				<dependency id="Microsoft.Extensions.Logging.Abstractions" version="9.0.5" />
+				<dependency id="System.Diagnostics.DiagnosticSource" version="9.0.5" />
 			</group>
 		</dependencies>
 	</metadata>

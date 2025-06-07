@@ -5,7 +5,7 @@
 		<LangVersion>10.0</LangVersion>
 		<Nullable>disable</Nullable>
 		<ImplicitUsings>disable</ImplicitUsings>
-		<Version>10.0.7979</Version>
+		<Version>10.0.7980</Version>
 		<Product>A2v10</Product>
 		<Authors>Oleksandr Kukthin</Authors>
 		<Copyright>Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.</Copyright>
@@ -27,15 +27,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
-		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.8.0" />
-		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.8.0" />
-		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.8.0" />
-		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="8.8.0" />
-		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.8.0" />
-		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.8.0" />
-		<PackageReference Include="MSTest.TestAdapter" Version="3.8.3" />
-		<PackageReference Include="MSTest.TestFramework" Version="3.8.3" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
+		<PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.12.0" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.12.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Logging" Version="8.12.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols" Version="8.12.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.12.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.12.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.9.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.9.1" />
 		<PackageReference Include="Quartz" Version="3.14.0" />
 	</ItemGroup>
 

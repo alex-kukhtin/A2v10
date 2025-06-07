@@ -35,6 +35,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.Core" />
@@ -42,6 +44,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -124,10 +127,7 @@
     <Content Include="App_application\%40sql\platform\source\a2v10system.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10ui.sql" />
     <Content Include="App_application\%40sql\platform\source\a2v10workflow.sql" />
-    <Content Include="Bootstrap\dashboard\homepage.bootstrap.html">
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Bootstrap\dashboard\homepage.bootstrap.html" />
     <Content Include="Bootstrap\dashboard\homepage.template.js" />
     <Content Include="Bootstrap\sales\assets\assets.template.js" />
     <Content Include="Bootstrap\sales\catalog\index.template.js" />
@@ -202,10 +202,7 @@
     <Content Include="Develop\entity\editGoods.template.js" />
     <TypeScriptCompile Include="Develop\purchase\Goods\index.d.ts" />
     <None Include="Develop\purchase\testguids\model.json" />
-    <Content Include="Develop\purchase\Supplier\index.view.html">
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Develop\purchase\Supplier\index.view.html" />
     <None Include="Develop\reports\model.json" />
     <None Include="Develop\sales\assets\model.json" />
     <Content Include="Develop\sales\catalog\index.template.js" />

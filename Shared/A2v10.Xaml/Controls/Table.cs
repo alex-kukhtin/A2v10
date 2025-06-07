@@ -112,9 +112,9 @@ public class Table : Control, ITableControl
 			sb.Render(context);
 		}
 		else
-            {
+        {
 			RenderTable(context, "a2-table", IsInGrid, true, onRender);
-            }
+		}
 	}
 	private void RenderTable(RenderContext context, String tblClass, Boolean inGrid, Boolean mergeAttrs, Action<TagBuilder> onRender)
 	{ 
