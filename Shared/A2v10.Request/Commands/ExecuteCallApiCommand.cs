@@ -54,7 +54,7 @@ public class ExecuteCallApiCommand : IServerCommand
 		SetHeaders(msg, headers, dataToExec);
 		if (bodyStr != null && mtd == HttpMethod.Post)
 			msg.Content = new StringContent(bodyStr, Encoding.UTF8, "application/json");
-		using var result = await _httpService.HttpClient.SendAsync(msg);
+		using var result = await _httpService.HttpClientCookieless.SendAsync(msg);
 		if (result.IsSuccessStatusCode)
 		{
 			return new ServerCommandResult(await result.Content?.ReadAsStringAsync())

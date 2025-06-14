@@ -42,8 +42,8 @@
 				<dependency id="System.Runtime.CompilerServices.Unsafe" version="6.1.2" />
 				<dependency id="Quartz" version="3.14.0" />
 				<dependency id="Jint" version="4.2.2" />
-				<dependency id="Microsoft.Extensions.Logging.Abstractions" version="9.0.5" />
-				<dependency id="System.Diagnostics.DiagnosticSource" version="9.0.5" />
+				<dependency id="Microsoft.Extensions.Logging.Abstractions" version="9.0.6" />
+				<dependency id="System.Diagnostics.DiagnosticSource" version="9.0.6" />
 			</group>
 		</dependencies>
 	</metadata>
