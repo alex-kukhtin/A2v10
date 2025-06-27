@@ -1,7 +1,7 @@
 ﻿
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20210823-7842
+// 20250627-7982
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -70,11 +70,12 @@ app.modules['std:modelInfo'] = function () {
 	function checkPeriod(obj) {
 		let f = obj.Filter;
 		if (!f) return obj;
-		if (!('Period' in f))
+		Object.keys(f).filter(k => k.startsWith('Period')).forEach(k => {
+			let p = f[k];
+			if (period.like(p))
+				f[k] = new period.constructor(p);
 			return obj;
-		let p = f.Period;
-		if (period.like(p))
-			f.Period = new period.constructor(p);
+		});
 		return obj;
 	}
 
