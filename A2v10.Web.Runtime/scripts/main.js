@@ -1767,13 +1767,6 @@ app.modules['std:modelInfo'] = function () {
 				f[k] = new period.constructor(p);
 			return obj;
 		});
-		/*
-		if (!('Period' in f))
-			return obj;
-		let p = f.Period;
-		if (period.like(p))
-			f.Period = new period.constructor(p);
-		*/
 		return obj;
 	}
 
