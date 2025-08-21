@@ -31,7 +31,7 @@ public class XamlTest
 		using (var sv = new StringWriter())
 		{
 			ri.Writer = sv;
-			Assert.ThrowsException<XamlException>(() => _renderer.Render(ri));
+			Assert.ThrowsExactly<XamlException>(() => _renderer.Render(ri));
 		}
 	}
 
@@ -67,6 +67,6 @@ public class XamlTest
 		Assert.IsTrue(l.Value == "10rem");
 		l = Length.FromString("6em");
 		Assert.IsTrue(l.Value == "6em");
-		Assert.ThrowsException<XamlException>(() => Length.FromString("1fr"));
+		Assert.ThrowsExactly<XamlException>(() => Length.FromString("1fr"));
 	}
 }
