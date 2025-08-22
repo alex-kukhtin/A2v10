@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -30,8 +30,9 @@ public class ExRow
 	public RowKind Kind { get; set; }
 	public HorizontalAlign Align { get; set; }
 	public UInt32 Height { get; set; }
+    public Boolean IsGroup { get; set; }
 
-	public IList<ExCell> Cells { get; } = new List<ExCell>();
+    public IList<ExCell> Cells { get; } = new List<ExCell>();
 
 	public (ExCell Cell, Int32 Index) AddCell()
 	{
@@ -65,5 +66,6 @@ public class ExRow
 			Role = cls.Role;
 		if (cls.Align != HorizontalAlign.NotSet)
 			Align = cls.Align;
-	}
+        IsGroup = cls.IsGroup;
+    }
 }

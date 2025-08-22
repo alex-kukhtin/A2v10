@@ -22,6 +22,8 @@ describe("Currency tools", function () {
 		expect(ct.round(-7.2150, 2)).toBe(-7.22);
 		expect(ct.round(248.9950, 2)).toBe(249);
 		expect(ct.round(248.85, 0)).toBe(249);
+		expect(ct.round(8415.585, 2)).toBe(8415.59);
+		expect(ct.round(84158415.585, 2)).toBe(84158415.59);
 	});
 
 	it("format", function () {

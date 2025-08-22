@@ -1,10 +1,10 @@
-﻿// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 
 namespace A2v10.Interop.ExportTo;
 
-public class ExClassList
+public struct ExClassList
 {
 	public HorizontalAlign Align { get; set; }
 	public VerticalAlign VAlign { get; set; }
@@ -12,6 +12,7 @@ public class ExClassList
 	public RowRole Role { get; set; }
 	public UInt32 Indent { get; set; }
 	public Boolean Underline { get; set; }
+    public Boolean IsGroup { get; set; }
 }
 
 
@@ -87,7 +88,9 @@ public static class Utils
 		}
 		if (strClass.Contains("indent"))
 			lst.Indent = level;
-		if (strClass.Contains("underline"))
+        if (strClass.Contains("group"))
+            lst.IsGroup = true;
+        if (strClass.Contains("underline"))
 			lst.Underline = true;
 		return lst;
 	}

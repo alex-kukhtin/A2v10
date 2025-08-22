@@ -179,9 +179,9 @@ app.modules['std:locale'] = function () {
 
 })();
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241221-7973
+// 20250822-7982
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -1043,7 +1043,10 @@ app.modules['std:utils'] = function () {
 			n = -n;
 			m = true;
 		}
-		// toFixed = avoid js rounding error
+		// avoid js rounding error
+		const exp = Math.floor(Math.log2(n));
+		const eps = Math.pow(2, exp - 52);
+		n += eps; 
 		let r = Number(Math.round(n.toFixed(12) + `e${digits}`) + `e-${digits}`);
 		return m ? -r : r;
 	}

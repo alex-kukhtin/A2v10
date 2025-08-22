@@ -1,4 +1,4 @@
-﻿// Copyright © 2023-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2023-2025 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.Globalization;
@@ -95,10 +95,11 @@ public class ExCell
 			RowKind = row.Kind,
 			Align = align,
 			VAlign = cls.VAlign,
-			Bold = cls.Bold,
-			Indent = cls.Indent,
-			Underline = cls.Underline
-		};
+            Bold = cls.Bold || row.IsGroup || row.Role == RowRole.Total,
+            Indent = cls.Indent,
+			Underline = cls.Underline,
+            IsGroup = row.IsGroup
+        };
 	}
 
 	public void SetValue(String text, String dataType, IFormatProvider format)
