@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2023 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20230922-7948
+// 20250913-7983
 // components/collectionviewplain.js
 
 /*
@@ -43,6 +43,9 @@ TODO:
 			}
 			else if (utils.isDate(fVal)) {
 				nq[x] = utils.format(fVal, 'DateUrl');
+			}
+			else if (Array.isArray(fVal)) {
+				nq[x] = fVal.map(x => x.Id).join(',');
 			}
 			else if (utils.isObjectExact(fVal)) {
 				if (!('Id' in fVal)) {

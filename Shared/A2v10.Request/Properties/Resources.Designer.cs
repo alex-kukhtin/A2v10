@@ -381,7 +381,7 @@ namespace A2v10.Request.Properties {
         ///	&lt;link href=&quot;/css/$(Theme).min.css?v=$(ThemeTimeStamp)&quot; rel=&quot;stylesheet&quot; /&gt;
         ///&lt;/head&gt;
         ///&lt;body&gt;
-        ///	&lt;script type=&quot;text/javascript&quot; src=&quot;/scripts/vue.js?v=2.5.13&quot;&gt;&lt;/script&gt;
+        ///	&lt;script type=&quot;text/javascript&quot; src=&quot;/scripts/vue.js?v=2.7.16&quot;&gt;&lt;/script&gt;
         ///	&lt;s [rest of string was truncated]&quot;;.
         /// </summary>
         public static string euSignFrame {

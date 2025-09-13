@@ -64,5 +64,11 @@
 		"inputFile": "app/localization/locale-es.js",
 		"sourceMap": false,
 		"useNodeSass": false
+	},
+	{
+		"outputFile": "Scripts/locale-bg.min.js",
+		"inputFile": "app/localization/locale-bg.js",
+		"sourceMap": false,
+		"useNodeSass": false
 	}
 ]

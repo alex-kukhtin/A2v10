@@ -1,0 +1,150 @@
+﻿;
+@About=За системата
+@Confidentiality=Поверителност
+@Contacts=Контакти
+@Version=Версия
+@Debug=Отстраняване на грешки
+@Quit=Изход
+@Tracing=Проследяване
+@Settings=Настройки
+@Feedback=Обратна връзка
+@DataModel=Модел на данните
+@Profiling=Профилиране
+@Profile=Профил
+@ChangePassword=Смяна на парола
+@SubstUser=Влез като друг потребител
+@AllUsers=Всички потребители
+@AdminUsers=Администратори
+@User=Потребител
+@Users=Потребители
+@ApiUsers=Потребители на API
+@Groups=Групи
+@Roles=Роли
+@OldPassword=Стара парола
+@NewPassword=Нова парола
+@SetPassword=Задай парола
+@Error=Грешка
+@Warning=Предупреждение
+;
+@ResetPassword=Възстановяване на парола
+@ResetPasswordBody=Код за потвърждение за възстановяване на парола: <b>{0}</b>
+@ConfirmEMail=Потвърждаване на имейл
+@ConfirmEMailBody=Код за потвърждение: <b>{0}</b>
+@EMailAlreadyConfirmed=Вашият имейл вече е потвърден.
+@SetNewPassword=Задаване на парола
+@InviteEMail=Добре дошли!
+@ChangePasswordDisabled=Смяната на паролата е изключена
+;
+@Home=Начало
+@Documents=Документи
+@Catalogs=Справочници
+@Sales=Продажби
+@Purchase=Покупки
+@Inventory=Склад
+@Accounting=Счетоводство
+@Dashboard=Табло
+;
+@Create=Създай
+@CreateDocument=Създай документ
+@CreateFolder=Създай папка
+@Edit=Редактирай
+@Save=Запази
+@SaveAndClose=Запази и затвори
+@Reload=Презареди
+@Refresh=Опресни
+@Delete=Изтрий
+@Close=Затвори
+@Print=Печат
+@Search=Търсене
+@Help=Помощ
+@Export=Експорт
+;
+@General=Общи
+@Properties=Свойства
+@FolderProperties=Свойства на папка
+@NewFilder=Нова папка
+@NewElement=Нов елемент
+@Cancel=Отказ
+@Select=Избери
+@Filter=Филтър
+;
+@Code=Код
+@Date=Дата
+@Name=Име
+@FullName=Пълно наименование
+@Tag=Етикет
+@Sum=Сума
+@Qty=Количество
+@Price=Цена
+@No=Номер
+@Purchaser=Купувач
+@Memo=Бележка
+;
+@Confirm=Потвърждение
+@ConfirmDeleteDocument=Изтриване на документа?
+@DocumentSaved=Документът е запазен.
+;
+@Error.EnterName=Въведете наименование на елемента
+@Error.DuplicateCode=Елемент с такъв код вече съществува
+@Error.Exception=Възникна неочаквана грешка
+@Error.Link=Към начало
+@Error.FileFormatException=Невалиден файлов формат
+@Error.DataReadOnly=Базата данни е само за четене
+@UIError.AccessDenied=Достъп отказан
+;
+@Placeholder.Search=Въведете текст за търсене
+;
+@Locale=bg-BG
+@Ok=OK
+@Login=Вход
+@LoginPrompt=Вход в системата
+@RegisterPrompt=Регистрация
+@ForgotPrompt=Възстановяване на парола
+@ConfirmEMailPrompt=Потвърждаване на имейл
+@Password=Парола
+@RememberCredentials=Запомни ме
+@PasswordRecovery=Възстановяване на парола
+@Register=Регистрация
+@RegisterLink=Регистрация
+@ForgotPassword=Забравена парола?
+@ResetPasswordAction=Задай парола
+@EMailLink=Изпрати
+@Email=Имейл
+@Phone=Телефон
+@EnterEMail=Въведете имейл
+@InvalidEMail=Невалиден имейл
+@EnterPhone=Въведете телефонен номер
+@EnterName=Въведете потребителско име
+@EnterPassword=Въведете парола
+@MatchError=Паролата не съвпада с потвърждението
+@PasswordLength=Паролата трябва да е поне 6 символа
+@InvalidLoginError=Невалиден имейл или парола
+@InvalidEMailError=Невалиден имейл
+@UserLockuotError=Потребителят е блокиран.
+Опитайте отново след няколко минути
+@EmailNotConfirmed=Вашият имейл все още не е потвърден (възможно е писмото да е в папка „Спам“)
+@AntiForgery=Заявката не може да бъде обработена.
+Обновете страницата и опитайте отново.
+Възможно е бисквитките да са забранени?
+@PasswordTip=За потвърждение въведете паролата още веднъж
+@CheckEMail=След малко проверете пощата
+@ConfirmReset=На адрес {0} е изпратен код за възстановяване на парола
+@ConfirmRegister=На адрес {0} е изпратен код за потвърждаване на имейл. Кодът е валиден 24 часа
+@ResetPasswordSuccess=Паролата е зададена
+@ResetPasswordError=Грешка при възстановяване на парола
+@ResetPasswordNotAllowed=Смяната на паролата е забранена
+@ErrorText=Възникна грешка при обработка на заявката
+@ConfirmEMailText=Имейл адресът е потвърден
+@AlreadyTaken=Имейл {0} е невалиден или вече се използва
+@PhoneNumberAlreadyTaken=Телефон {0} вече се използва
+@TryLater=Твърде много опити за регистрация за кратко време.
+Опитайте отново след пет минути
+@Continue=Продължи
+@ConfirmCode=Код за потвърждение
+@InvalidConfirmCode=Невалиден код за потвърждение
+@EMailAlreadyConfirmed=Имейлът вече е потвърден
+@LocaleLabel=Език на интерфейса
+@SendCodeAgain=Изпрати кода отново
+@ErrorAntiForgery=Заявката вече е изпълнена в друг прозорец на браузъра. Страницата ще бъде презаредена
+@IHaveCode=Имам код за потвърждение
+@AvailableLocales={"uk-UA": "Украински","ru-RU": "Руски","en-US": "Английски","de-DE": "Немски","bg-BG": "Български"}

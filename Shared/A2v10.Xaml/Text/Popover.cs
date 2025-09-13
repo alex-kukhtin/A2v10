@@ -1,10 +1,11 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
 
 using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Markup;
+
 using A2v10.Infrastructure;
 
 namespace A2v10.Xaml;
@@ -60,8 +61,8 @@ public class Popover : Inline
 
 	public String Badge { get; set; }
 	public Boolean ShowOnHover { get; set; }
-
     public UInt32 MaxChars { get; set; }
+    public Int32 LineClamp { get; set; }
 
     public override void RenderElement(RenderContext context, Action<TagBuilder> onRender = null)
 	{
@@ -80,8 +81,10 @@ public class Popover : Inline
 			po.MergeAttribute("offset-x", OffsetX.Value);
 		if (Underline != PopoverUnderlineMode.Enable)
 			po.AddCssClass("underline-" + Underline.ToString().ToLowerInvariant());
+        if (LineClamp != 0)
+            po.MergeAttribute(":line-clamp", LineClamp.ToString());
 
-		var urlBind = GetBinding(nameof(Url));
+        var urlBind = GetBinding(nameof(Url));
 
 		if (ShowOnHover)
 		{

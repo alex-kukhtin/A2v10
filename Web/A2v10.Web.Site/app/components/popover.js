@@ -1,12 +1,13 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-//20240913-7971
+//20250913-7983
 /*components/popover.js*/
 
 Vue.component('popover', {
 	template: `
 <div v-dropdown class="popover-wrapper" :style="{top: top}" :class="{show: isShowHover}" :title="title">
-	<span toggle class="popover-title" v-on:mouseover="mouseover" v-on:mouseout="mouseout"><i v-if="hasIcon" :class="iconClass"></i> <span v-text="content"></span><slot name="badge"></slot></span>
+	<span toggle class="popover-title" :class=poClass :style=poStyle v-on:mouseover="mouseover"
+		v-on:mouseout="mouseout" ><i v-if="hasIcon" :class="iconClass"></i> <span v-text="content"></span><slot name="badge"></slot></span>
 	<div class="popup-body" :style="{width: width, left:offsetLeft}">
 		<div class="arrow" :style="{left:offsetArrowLeft}"/>
 		<div v-if="visible">
@@ -40,6 +41,7 @@ Vue.component('popover', {
 		hover: Boolean,
 		offsetX: String,
 		arg: undefined,
+		lineClamp: Number
 	},
 	computed: {
 		hasIcon() {
@@ -58,6 +60,12 @@ Vue.component('popover', {
 			if (this.icon)
 				cls += ' ico-' + this.icon;
 			return cls;
+		},
+		poClass() {
+			return this.lineClamp ? 'line-clamp' : undefined;
+		},
+		poStyle() {
+			return this.lineClamp ? { '-webkit-line-clamp': '' + this.lineClamp } : undefined;
 		},
 		visible() {
 			return this.url && this.state === 'shown';

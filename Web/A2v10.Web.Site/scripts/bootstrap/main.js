@@ -1422,9 +1422,9 @@ app.modules['std:period'] = function () {
 	}
 };
 
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20220626-7852*/
+/*20250913-7983*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -1481,9 +1481,11 @@ app.modules['std:url'] = function () {
 	function toUrl(obj) {
 		if (!utils.isDefined(obj) || obj === null) return '';
 		if (utils.isDate(obj)) {
-			return utils.format(obj, "DateUrl");		
+			return utils.format(obj, "DateUrl");
 		} else if (period.isPeriod(obj)) {
 			return obj.format('DateUrl');
+		} else if (Array.isArray(obj)) {
+			return obj.map(x => x.Id).join(',');
 		} else if (utils.isObjectExact(obj)) {
 			if (obj.constructor.name === 'Object') {
 				if (!utils.isDefined(obj.Id))
@@ -2489,9 +2491,9 @@ app.modules['std:barcode'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2022 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20221127-7908
+// 20250913-7983
 // components/collectionview.js
 
 /*
@@ -2534,6 +2536,9 @@ TODO:
 			}
 			else if (utils.isDate(fVal)) {
 				nq[x] = utils.format(fVal, 'DateUrl');
+			}
+			else if (Array.isArray(fVal)) {
+				nq[x] = fVal.map(x => x.Id).join(',');
 			}
 			else if (utils.isObjectExact(fVal)) {
 				if (!('Id' in fVal)) {

@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20240118-7967
+// 20250913-7983
 // locale-uk.js
 
 "use strict";
@@ -79,7 +79,8 @@
 		$Settings:'Налаштування',
 		$Feedback: 'Зворотній зв\'язок',
 		$PreviewIsUnavailable: 'Для цього файлу попередній перегляд неможливий',
-		$ShowSpecProps: 'Показати спеціальні властивості'
+		$ShowSpecProps: 'Показати спеціальні властивості',
+		$Search: 'Пошук'
 	};
 
 	if (window.d3) {

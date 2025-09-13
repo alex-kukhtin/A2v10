@@ -148,6 +148,7 @@
     <Content Include="app\controllers\navbar.js" />
     <Content Include="app\controllers\tests.js" />
     <Content Include="app\directives\pageorient.js" />
+    <Content Include="app\localization\locale-bg.js" />
     <Content Include="app\localization\locale-de.js" />
     <Content Include="app\localization\locale-es.js" />
     <Content Include="app\localization\locale-pl.js" />
@@ -209,10 +210,12 @@
     <Content Include="lib\vuex3-6-2\dist\vuex.js" />
     <Content Include="lib\vuex3-6-2\dist\vuex.min.js" />
     <Content Include="lib\vuex3-6-2\dist\vuex.mjs" />
+    <Content Include="Localization\default.bg.txt" />
     <Content Include="Localization\default.es.txt" />
     <Content Include="Localization\default.pl.txt" />
     <Content Include="Localization\es.xml" />
     <Content Include="openidconnect.txt" />
+    <Content Include="scripts\locale-bg.min.js" />
     <Content Include="scripts\locale-es.min.js" />
     <Content Include="scripts\locale-pl.min.js" />
     <Content Include="scripts\server\validate.js" />

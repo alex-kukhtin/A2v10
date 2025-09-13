@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20240118-7967
+// 20250913-7983
 // locale-ru.js
 
 "use strict";
@@ -79,7 +79,8 @@
 		$Settings: 'Настройка',
 		$Feedback: 'Обратная связь',
 		$PreviewIsUnavailable: 'Preview is unavailable for this file',
-		$ShowSpecProps: 'Показать все свойства'
+		$ShowSpecProps: 'Показать все свойства',
+		$Search: 'Поиск'
 	};
 
 	if (window.d3) {
