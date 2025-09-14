@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7977 */
+/* Version 10.0.7984 */
 
 declare function require(url: string): any;
 
@@ -91,6 +91,8 @@ interface IElementArray<T> extends Array<T> {
 	readonly $cross: { [prop: string]: string[] };
 	readonly $ModelInfo: IModelInfo;
 	readonly $loaded: boolean;
+	readonly $ids: string;
+	readonly $names: string;
 
 	Selected(prop: string): IElementArray<T>;
 
