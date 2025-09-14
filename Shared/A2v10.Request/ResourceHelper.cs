@@ -44,7 +44,8 @@ public static class ResourceHelper
 			"de" => Resources.locale_de,
 			"pl" => Resources.locale_pl,
 			"es" => Resources.locale_es,
-			_ => throw new InvalidOperationException("Only the following cultures are supported: 'uk', 'ru', 'en', 'de', 'pl', 'es'"),
+            "bg" => Resources.locale_bg,
+            _ => throw new InvalidOperationException("Only the following cultures are supported: 'uk', 'ru', 'en', 'de', 'pl', 'es', 'bg'"),
 		};
 	}
 }

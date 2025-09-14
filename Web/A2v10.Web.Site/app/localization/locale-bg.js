@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250913-7983
+// 20250913-7984
 // locale-bg.js
 
 "use strict";

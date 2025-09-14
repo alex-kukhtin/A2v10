@@ -673,6 +673,37 @@ namespace A2v10.Request.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to // Copyright © 2015-2025 Alex Kukhtin. All rights reserved.
+        ///
+        ///// 20250826-7782
+        ///// locale-bg.js
+        ///
+        ///&quot;use strict&quot;;
+        ///
+        ///(function () {
+        ///
+        ///	const locale = {
+        ///		$Locale: &apos;bg-BG&apos;,
+        ///		$Ok: &apos;OK&apos;,
+        ///		$Cancel: &apos;Отказ&apos;,
+        ///		$Error: &apos;Грешка&apos;,
+        ///		$Login: &apos;Вход&apos;,
+        ///		$User: &apos;Потребител&apos;,
+        ///		$Confirm: &apos;Потвърждение&apos;,
+        ///		$LoginPrompt: &apos;Вход в системата&apos;,
+        ///		$LoginLink: &apos;Вход&apos;,
+        ///		$RegisterPrompt: &apos;Регистрация&apos;,
+        ///		$ForgotPrompt: &apos;Възстановяване на парола&apos;,
+        ///		$ConfirmEMailPrompt: &apos;Потвърждаване на имейл&apos;,
+        ///		$Version: &apos;Верси [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string locale_bg {
+            get {
+                return ResourceManager.GetString("locale-bg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to // Copyright © 2015-2021 Alex Kukhtin. All rights reserved.
         ///
         ///// 20210609-7782

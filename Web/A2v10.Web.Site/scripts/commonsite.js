@@ -2817,7 +2817,7 @@ Vue.component('a2-pager', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250202-7977*/
+/*20250914-7984*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -3196,6 +3196,14 @@ app.modules['std:impl:array'] = function () {
 
 		defPropertyGet(arr, "$hasChecked", function () {
 			return !!(this.$checked && this.$checked.length);
+		});
+
+		defPropertyGet(arr, "$names", function () {
+			return this.map(x => x.Name).join(', ');
+		});
+
+		defPropertyGet(arr, "$ids", function () {
+			return this.map(x => x.Id).join(',');
 		});
 	}
 

@@ -210,6 +210,7 @@
     <Content Include="lib\vuex3-6-2\dist\vuex.js" />
     <Content Include="lib\vuex3-6-2\dist\vuex.min.js" />
     <Content Include="lib\vuex3-6-2\dist\vuex.mjs" />
+    <Content Include="Localization\bg.xml" />
     <Content Include="Localization\default.bg.txt" />
     <Content Include="Localization\default.es.txt" />
     <Content Include="Localization\default.pl.txt" />

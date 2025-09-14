@@ -90,6 +90,7 @@
     <Content Include="Global.asax" />
     <Content Include="App_application\%40schemas\api-model-json-schema.json" />
     <Content Include="App_application\%40schemas\app-json-schema.json" />
+    <Content Include="localization\default.bg.txt" />
     <Content Include="localization\default.de.txt" />
     <Content Include="localization\default.en.txt" />
     <Content Include="localization\default.es.txt" />
@@ -99,6 +100,7 @@
     <Content Include="scripts\bootstrap\main.js" />
     <Content Include="scripts\bootstrap\main.min.js" />
     <Content Include="scripts\d3.min.js" />
+    <Content Include="scripts\locale-bg.min.js" />
     <Content Include="scripts\locale-de.min.js" />
     <Content Include="scripts\locale-en.min.js" />
     <Content Include="scripts\locale-es.min.js" />

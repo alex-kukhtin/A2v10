@@ -45,15 +45,15 @@
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Bcl.AsyncInterfaces" publicKeyToken="CC7B13FFCD2DDD51" culture="neutral"/>
-				<bindingRedirect oldVersion="0.0.0.0-9.0.0.8" newVersion="9.0.0.8"/>
+				<bindingRedirect oldVersion="0.0.0.0-9.0.0.6" newVersion="9.0.0.6"/>
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="System.Diagnostics.DiagnosticSource" publicKeyToken="CC7B13FFCD2DDD51" culture="neutral"/>
-				<bindingRedirect oldVersion="0.0.0.0-9.0.0.8" newVersion="9.0.0.8"/>
+				<bindingRedirect oldVersion="0.0.0.0-9.0.0.6" newVersion="9.0.0.6"/>
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Extensions.Logging.Abstractions" publicKeyToken="ADB9793829DDAE60" culture="neutral"/>
-				<bindingRedirect oldVersion="0.0.0.0-2.1.1.0" newVersion="9.0.0.8"/>
+				<bindingRedirect oldVersion="0.0.0.0-2.1.1.0" newVersion="9.0.0.6"/>
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.IdentityModel.Protocols" publicKeyToken="31BF3856AD364E35" culture="neutral"/>
