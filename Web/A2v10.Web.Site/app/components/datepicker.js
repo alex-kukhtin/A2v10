@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20240309-7962
+// 20251001-7985
 // components/datepicker.js
 
 (function () {
@@ -63,7 +63,7 @@
 					// close other popups
 					eventBus.$emit('closeAllPopups');
 					if (utils.date.isZero(this.modelDate))
-						this.updateModel(utils.date.today());
+						this.viewDate = utils.date.today();
 				}
 				this.isOpen = !this.isOpen;
 			},
@@ -102,7 +102,7 @@
 			},
 			setDate(d) {
 				// save time
-				let md = this.modelDate;
+				let md = this.modelDate || d;
 				let nd = new Date(d.getFullYear(), d.getMonth(), d.getDate(), md.getHours(), md.getMinutes(), 0, 0);
 				nd = this.fitDate(nd);
 				this.updateModel(nd);
