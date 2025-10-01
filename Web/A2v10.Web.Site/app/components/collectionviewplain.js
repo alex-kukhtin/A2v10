@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250913-7983
+// 20251001-7984
 // components/collectionviewplain.js
 
 /*
@@ -377,9 +377,6 @@ TODO:
 			// from datagrid, etc
 			this.$on('sort', this.doSort);
 			eventBus.$on('setFilter', this.__setFilter);
-		},
-		updated() {
-			this.updateFilter();
 		},
 		beforeDestroy() {
 			eventBus.$off('setFilter', this.__setFilter);
