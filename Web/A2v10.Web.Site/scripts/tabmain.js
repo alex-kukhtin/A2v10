@@ -5442,7 +5442,7 @@ app.modules['std:barcode'] = function () {
 })();
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250522-7983
+// 20251024-7988
 // components/control.js
 
 (function () {
@@ -5454,10 +5454,10 @@ app.modules['std:barcode'] = function () {
 	const control = {
 		props: {
 			label: String,
-			required: Boolean,
+			required: { type: null },
 			align: { type: String, default: 'left' },
 			description: String,
-			disabled: Boolean,
+			disabled: {type: null},
 			tabIndex: Number,
 			dataType: String,
 			format: String,
@@ -5467,7 +5467,7 @@ app.modules['std:barcode'] = function () {
 			hideZeros: Boolean,
 			testId: String,
 			accel: String,
-			highlight: Boolean
+			highlight: {type: null}
 		},
 		computed: {
 			path() {
@@ -12796,9 +12796,9 @@ Vue.component('a2-panel', {
 })();
 
 
-// Copyright © 2023-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2023-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241028-7971
+// 20251024-7974
 // components/kanban.js
 
 (function () {
@@ -12812,10 +12812,14 @@ Vue.component('a2-panel', {
 			</div>
 			<button v-if="false">›</button>
 		</div>
+		<div class="kanban-trash drop-shadow shadow1" v-if="showTrash" @dragover="dragTrash($event)"
+				@drop="dropTrash($event)" :class="trashClass()" @dragleave="clearDrag">
+			<i class="ico ico-trash"></i>
+		</div>
 	</div>
 	<div class="kanban-body kanban-part">
 		<div class=lane v-for="(lane, lx) in lanes" :key=lx @dragover="dragOver($event, lane)"
-				@drop="drop($event, lane)" :class="laneClass(lane)">
+				@drop="drop($event, lane)" :class="laneClass(lane)" @dragleave="clearDrag">
 			<ul class=card-list>
 				<li class=card v-for="(card, cx) in cards(lane)" :key=cx :draggable="true"
 						@dragstart="dragStart($event, card)" @dragend=dragEnd>
@@ -12838,26 +12842,31 @@ Vue.component('a2-panel', {
 			lanes: Array,
 			items: Array,
 			dropDelegate: Function,
-			stateProp: String
+			trashDelegate: Function,
+			stateProp: String,
+			showTrash: Boolean
 		},
 		data() {
 			return {
 				currentElem: null,
-				laneOver: null
+				laneOver: null,
+				insideTrash: false
 			};
-		},
-		computed: {
 		},
 		methods: {
 			cards(lane) {
 				let id = lane.$id;
 				return this.items.filter(itm => itm[this.stateProp].$id === id);
 			},
-			dragEnd() {
+			clearDrag() {
 				this.laneOver = null;
+				this.insideTrash = false;
+			},
+			dragEnd() {
+				this.clearDrag();
 			},
 			dragStart(ev, card) {
-				this.laneOver = null;
+				this.clearDrag();
 				if (!this.dropDelegate) {
 					ev.preventDefault();
 					return;
@@ -12867,17 +12876,32 @@ Vue.component('a2-panel', {
 			},
 			dragOver(ev, lane) {
 				this.laneOver = lane;
+				this.insideTrash = false;
+				ev.preventDefault();
+			},
+			dragTrash(ev) {
+				this.insideTrash = true;
 				ev.preventDefault();
 			},
 			drop(ev, lane) {
-				this.laneOver = null;
+				this.clearDrag();
 				if (!this.currentElem) return;
 				if (this.dropDelegate)
 					this.dropDelegate(this.currentElem, lane);
 				this.currentElem = null;
 			},
+			dropTrash(ev) {
+				this.clearDrag();
+				if (!this.currentElem) return;
+				if (this.trashDelegate)
+					this.trashDelegate(this.currentElem);
+				this.currentElem = null;
+			},
 			laneClass(lane) {
 				return lane == this.laneOver ? 'over' : undefined;
+			},
+			trashClass() {
+				return this.insideTrash ? 'over' : undefined;
 			}
 		}
 	});
@@ -13411,7 +13435,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250512-7987*/
+/*20251024-7988*/
 // controllers/base.js
 
 (function () {
@@ -13707,6 +13731,15 @@ Vue.directive('resize', {
 				this.$store.commit('setnewid', { id: id });
 				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
 				this.$requery();
+			},
+			$saveCaller() {
+				if (this.$caller)
+					return this.$caller.$save();
+				return null;
+			},
+			$dirtyCaller() {
+				if (this.$caller)
+					this.$caller.$data.$setDirty(true);
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -14933,7 +14966,9 @@ Vue.directive('resize', {
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
 					$longOperation: this.$longOperation,
-					$requeryNew: this.$requeryNew
+					$requeryNew: this.$requeryNew,
+					$saveCaller: this.$saveCaller,
+					$dirtyCaller: this.$dirtyCaller
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

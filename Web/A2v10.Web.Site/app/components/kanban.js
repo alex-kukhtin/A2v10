@@ -1,6 +1,6 @@
-﻿// Copyright © 2023-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2023-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241028-7971
+// 20251024-7974
 // components/kanban.js
 
 (function () {
@@ -14,10 +14,14 @@
 			</div>
 			<button v-if="false">›</button>
 		</div>
+		<div class="kanban-trash drop-shadow shadow1" v-if="showTrash" @dragover="dragTrash($event)"
+				@drop="dropTrash($event)" :class="trashClass()" @dragleave="clearDrag">
+			<i class="ico ico-trash"></i>
+		</div>
 	</div>
 	<div class="kanban-body kanban-part">
 		<div class=lane v-for="(lane, lx) in lanes" :key=lx @dragover="dragOver($event, lane)"
-				@drop="drop($event, lane)" :class="laneClass(lane)">
+				@drop="drop($event, lane)" :class="laneClass(lane)" @dragleave="clearDrag">
 			<ul class=card-list>
 				<li class=card v-for="(card, cx) in cards(lane)" :key=cx :draggable="true"
 						@dragstart="dragStart($event, card)" @dragend=dragEnd>
@@ -40,26 +44,31 @@
 			lanes: Array,
 			items: Array,
 			dropDelegate: Function,
-			stateProp: String
+			trashDelegate: Function,
+			stateProp: String,
+			showTrash: Boolean
 		},
 		data() {
 			return {
 				currentElem: null,
-				laneOver: null
+				laneOver: null,
+				insideTrash: false
 			};
-		},
-		computed: {
 		},
 		methods: {
 			cards(lane) {
 				let id = lane.$id;
 				return this.items.filter(itm => itm[this.stateProp].$id === id);
 			},
-			dragEnd() {
+			clearDrag() {
 				this.laneOver = null;
+				this.insideTrash = false;
+			},
+			dragEnd() {
+				this.clearDrag();
 			},
 			dragStart(ev, card) {
-				this.laneOver = null;
+				this.clearDrag();
 				if (!this.dropDelegate) {
 					ev.preventDefault();
 					return;
@@ -69,17 +78,32 @@
 			},
 			dragOver(ev, lane) {
 				this.laneOver = lane;
+				this.insideTrash = false;
+				ev.preventDefault();
+			},
+			dragTrash(ev) {
+				this.insideTrash = true;
 				ev.preventDefault();
 			},
 			drop(ev, lane) {
-				this.laneOver = null;
+				this.clearDrag();
 				if (!this.currentElem) return;
 				if (this.dropDelegate)
 					this.dropDelegate(this.currentElem, lane);
 				this.currentElem = null;
 			},
+			dropTrash(ev) {
+				this.clearDrag();
+				if (!this.currentElem) return;
+				if (this.trashDelegate)
+					this.trashDelegate(this.currentElem);
+				this.currentElem = null;
+			},
 			laneClass(lane) {
 				return lane == this.laneOver ? 'over' : undefined;
+			},
+			trashClass() {
+				return this.insideTrash ? 'over' : undefined;
 			}
 		}
 	});

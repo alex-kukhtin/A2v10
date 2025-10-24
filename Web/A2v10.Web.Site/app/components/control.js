@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250522-7983
+// 20251024-7988
 // components/control.js
 
 (function () {
@@ -12,10 +12,10 @@
 	const control = {
 		props: {
 			label: String,
-			required: Boolean,
+			required: { type: null },
 			align: { type: String, default: 'left' },
 			description: String,
-			disabled: Boolean,
+			disabled: {type: null},
 			tabIndex: Number,
 			dataType: String,
 			format: String,
@@ -25,7 +25,7 @@
 			hideZeros: Boolean,
 			testId: String,
 			accel: String,
-			highlight: Boolean
+			highlight: {type: null}
 		},
 		computed: {
 			path() {

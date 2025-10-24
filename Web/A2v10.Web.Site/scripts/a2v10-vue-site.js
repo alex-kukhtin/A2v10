@@ -5724,7 +5724,7 @@ template: `
 })();
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250512-7987*/
+/*20251024-7988*/
 // controllers/base.js
 
 (function () {
@@ -6020,6 +6020,15 @@ template: `
 				this.$store.commit('setnewid', { id: id });
 				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
 				this.$requery();
+			},
+			$saveCaller() {
+				if (this.$caller)
+					return this.$caller.$save();
+				return null;
+			},
+			$dirtyCaller() {
+				if (this.$caller)
+					this.$caller.$data.$setDirty(true);
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -7246,7 +7255,9 @@ template: `
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
 					$longOperation: this.$longOperation,
-					$requeryNew: this.$requeryNew
+					$requeryNew: this.$requeryNew,
+					$saveCaller: this.$saveCaller,
+					$dirtyCaller: this.$dirtyCaller
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

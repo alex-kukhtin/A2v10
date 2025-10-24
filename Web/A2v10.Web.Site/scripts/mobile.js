@@ -5420,7 +5420,7 @@ app.modules['std:barcode'] = function () {
 })();
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250522-7983
+// 20251024-7988
 // components/control.js
 
 (function () {
@@ -5432,10 +5432,10 @@ app.modules['std:barcode'] = function () {
 	const control = {
 		props: {
 			label: String,
-			required: Boolean,
+			required: { type: null },
 			align: { type: String, default: 'left' },
 			description: String,
-			disabled: Boolean,
+			disabled: {type: null},
 			tabIndex: Number,
 			dataType: String,
 			format: String,
@@ -5445,7 +5445,7 @@ app.modules['std:barcode'] = function () {
 			hideZeros: Boolean,
 			testId: String,
 			accel: String,
-			highlight: Boolean
+			highlight: {type: null}
 		},
 		computed: {
 			path() {
@@ -12731,7 +12731,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20250512-7987*/
+/*20251024-7988*/
 // controllers/base.js
 
 (function () {
@@ -13027,6 +13027,15 @@ Vue.directive('resize', {
 				this.$store.commit('setnewid', { id: id });
 				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
 				this.$requery();
+			},
+			$saveCaller() {
+				if (this.$caller)
+					return this.$caller.$save();
+				return null;
+			},
+			$dirtyCaller() {
+				if (this.$caller)
+					this.$caller.$data.$setDirty(true);
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -14253,7 +14262,9 @@ Vue.directive('resize', {
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
 					$longOperation: this.$longOperation,
-					$requeryNew: this.$requeryNew
+					$requeryNew: this.$requeryNew,
+					$saveCaller: this.$saveCaller,
+					$dirtyCaller: this.$dirtyCaller
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

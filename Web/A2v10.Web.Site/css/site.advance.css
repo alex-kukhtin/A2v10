@@ -7940,6 +7940,22 @@ table.tree-grid a.toggle.expanded:after {
   padding: 4px 8px;
   border-top: 1px solid var(--neutralBkDarker);
 }
+.kanban .kanban-trash {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  overflow: visible;
+  padding: 16px;
+  background-color: white;
+  border-radius: 2px;
+  color: #ccc;
+}
+.kanban .kanban-trash.over {
+  background-color: #e0e0e0;
+}
+.kanban .kanban-trash .ico {
+  font-size: 26px;
+}
 .block {
   display: block!important;
   width: 100%;
