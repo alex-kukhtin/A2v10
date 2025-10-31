@@ -1831,9 +1831,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20240220-7961*/
+/*20251031-7985*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -2038,7 +2038,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function clearSelectionFull(ev, input) {
-		if (ev.which !== 46) return false;
+		if (ev.which !== 46 && ev.which !== 8) return false;
 		let s = input.selectionStart;
 		let e = input.selectionEnd;
 		let l = input.value.length;
