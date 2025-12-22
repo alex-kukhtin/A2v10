@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7984 */
+/* Version 10.0.7986 */
 
 declare function require(url: string): any;
 
@@ -162,7 +162,12 @@ interface templatePropertyGetterSetter {
 }
 interface templatePropertyGetter { (this: IElement): any; }
 
-declare type templateProperty = templatePropertyGetter | templatePropertyGetterSetter | StringConstructor | BooleanConstructor | NumberConstructor;
+interface templatePropTypeWithDefaults {
+	type: StringConstructor | BooleanConstructor | NumberConstructor;
+	default: any;
+}
+
+declare type templateProperty = templatePropertyGetter | templatePropertyGetterSetter | StringConstructor | BooleanConstructor | NumberConstructor | templatePropTypeWithDefaults;
 
 /* template events */
 interface templateEventChange { (this: IElement, elem: IElement, newVal?: any, oldVal?: any, prop?: string): void; }
