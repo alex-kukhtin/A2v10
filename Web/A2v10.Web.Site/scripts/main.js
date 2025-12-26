@@ -13264,13 +13264,13 @@ Vue.component('a2-panel', {
 			<button v-if="false">›</button>
 		</div>
 		<div class="kanban-trash drop-shadow shadow1" v-if="showTrash" @dragover="dragTrash($event)"
-				@drop="dropTrash($event)" :class="trashClass()" @dragleave="clearDrag">
+				@drop="dropTrash($event)" :class="trashClass()" @dragleave="clearDrag($event)">
 			<i class="ico ico-trash"></i>
 		</div>
 	</div>
 	<div class="kanban-body kanban-part">
 		<div class=lane v-for="(lane, lx) in lanes" :key=lx @dragover="dragOver($event, lane)"
-				@drop="drop($event, lane)" :class="laneClass(lane)" @dragleave="clearDrag">
+				@drop="drop($event, lane)" :class="laneClass(lane)" @dragleave="clearDrag($event)">
 			<ul class=card-list>
 				<li class=card v-for="(card, cx) in cards(lane)" :key=cx :draggable="true"
 						@dragstart="dragStart($event, card)" @dragend=dragEnd>
@@ -13309,7 +13309,9 @@ Vue.component('a2-panel', {
 				let id = lane.$id;
 				return this.items.filter(itm => itm[this.stateProp].$id === id);
 			},
-			clearDrag() {
+			clearDrag(ev) {
+				if (ev && ev.currentTarget.contains(ev.relatedTarget))
+					return;
 				this.laneOver = null;
 				this.insideTrash = false;
 			},
