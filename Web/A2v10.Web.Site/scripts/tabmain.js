@@ -9185,7 +9185,7 @@ Vue.component('popover', {
 
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20251001-7984
+// 20251226-7986
 // components/collectionviewplain.js
 
 /*
@@ -9429,6 +9429,11 @@ TODO:
 			jsonFilter: {
 				handler(newData, oldData) {
 					this.filterChanged();
+				}
+			},
+			ItemsSource: {
+				handler(newData, oldData) {
+					this.updateFilter();
 				}
 			}
 		},
