@@ -12803,7 +12803,7 @@ Vue.component('a2-panel', {
 
 // Copyright © 2023-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20251024-7974
+// 20251226-7986
 // components/kanban.js
 
 (function () {
