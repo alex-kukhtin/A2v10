@@ -1,7 +1,7 @@
 ﻿
-/* Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved. */
+/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7987 */
+/* Version 10.0.7988 */
 
 declare function require(url: string): any;
 
@@ -157,17 +157,19 @@ declare type templateCommand = templateCommandFunc | templateCommandObj;
 
 /* template properties */
 interface templatePropertyGetterSetter {
-	get(this: IElement): any;
-	set?(this: IElement, val: any): void;
+	get(this: IElement | IElementArray<any>): any;
+	set?(this: IElement | IElementArray<any>, val: any): void;
 }
-interface templatePropertyGetter { (this: IElement): any; }
+interface templatePropertyGetter { (this: IElement | IElementArray<any>): any; }
 
 interface templatePropDefault {
 	type: StringConstructor | BooleanConstructor | NumberConstructor;
 	value?: any;
 }
 
-declare type templateProperty = templatePropertyGetter | templatePropertyGetterSetter | StringConstructor | BooleanConstructor | NumberConstructor | templatePropDefault;
+declare type templateProperty = templatePropertyGetter | templatePropertyGetterSetter
+	| StringConstructor | BooleanConstructor | NumberConstructor
+	| templatePropDefault;
 
 /* template events */
 interface templateEventChange { (this: IElement, elem: IElement, newVal?: any, oldVal?: any, prop?: string): void; }
