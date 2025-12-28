@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7989 */
+/* Version 10.0.7990 */
 
 declare function require(url: string): any;
 
@@ -46,6 +46,10 @@ interface IArrayElement extends IElement {
 	$select(root?: IElementArray<IElement>): void;
 	$move(dir: MoveDir): void;
 	$canMove(dir: MoveDir): boolean;
+	// override
+	$merge(src: object): IArrayElement;
+	$empty(): IArrayElement;
+	$set(src: object): IArrayElement;
 }
 
 interface ITreeElement extends IArrayElement {
