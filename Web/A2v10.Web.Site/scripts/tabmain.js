@@ -7263,9 +7263,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250421-7982*/
+/*20260111-7985*/
 // components/selector.js
 
 (function selector_component() {
@@ -7295,7 +7295,7 @@ Vue.component('validator-control', {
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
-				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :max-chars="maxChars" :line-clamp="lineClamp" :slotStyle="slotStyle">
+				<slot name="pane" :items="items" :is-item-active="isItemActive2" :item-name="itemName" :hit="hit" :max-chars="maxChars" :line-clamp="lineClamp" :slotStyle="slotStyle">
 					<ul class="selector-ul">
 						<li @mousedown.prevent="hit(itm)" :class="{'active': isItemActive(itmIndex)}"
 							v-for="(itm, itmIndex) in items" :key="itmIndex">
@@ -7394,7 +7394,7 @@ Vue.component('validator-control', {
 			pane() {
 				return {
 					items: this.items,
-					isItemActive: this.isItemActive,
+					isItemActive: this.isItemActive2,
 					itemName: this.itemName,
 					hit: this.hit
 				};
@@ -7466,6 +7466,13 @@ Vue.component('validator-control', {
 			},
 			isItemActive(ix) {
 				return ix === this.current;
+			},
+			isItemActive2(ix, row) {
+				if (!row)
+					return this.isItemActive(ix);
+				if (this.current === -1)
+					return false;
+				return this.items[this.current] === row;
 			},
 			itemName(itm) {
 				let v = utils.simpleEval(itm, this.display);
@@ -7714,9 +7721,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250424-7975
+// 20260111-7985
 // components/datagrid.js*/
 
 (function () {
@@ -8170,7 +8177,7 @@ Vue.component('validator-control', {
 				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
 			},
 			_itemActive() {
-				return this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
+				return this.isItemActive ? this.isItemActive(this.index, this.row) : !!this.row.$selected;
 			}
 		},
 		watch: {
@@ -8185,7 +8192,7 @@ Vue.component('validator-control', {
 		methods: {
 			rowClass() {
 				let cssClass = 'dg-row';
-				const isActive = this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
+				const isActive = this.isItemActive ? this.isItemActive(this.index, this.row) : !!this.row.$selected;
 				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
 				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {

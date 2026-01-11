@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250424-7975
+// 20260111-7985
 // components/datagrid.js*/
 
 (function () {
@@ -454,7 +454,7 @@
 				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
 			},
 			_itemActive() {
-				return this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
+				return this.isItemActive ? this.isItemActive(this.index, this.row) : !!this.row.$selected;
 			}
 		},
 		watch: {
@@ -469,7 +469,7 @@
 		methods: {
 			rowClass() {
 				let cssClass = 'dg-row';
-				const isActive = this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
+				const isActive = this.isItemActive ? this.isItemActive(this.index, this.row) : !!this.row.$selected;
 				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
 				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {
