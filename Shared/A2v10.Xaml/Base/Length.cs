@@ -1,4 +1,4 @@
-﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
 using System;
 using System.ComponentModel;
@@ -61,8 +61,9 @@ public class Length
 			return new Length() { Value = "fit-content" };
 		else if (strVal == "0")
 			return new Length() { Value = strVal };
-		else if (strVal.StartsWith("Calc("))
-			return new Length() { Value = strVal };
+        else if ((strVal.StartsWith("Calc(") || strVal.StartsWith("Min(") || strVal.StartsWith("Max(") || strVal.StartsWith("Clamp("))
+                && strVal.EndsWith(")"))
+            return new Length() { Value = strVal };
 		else if (IsValidLength(strVal))
 			return new Length() { Value = strVal.Replace(" ", "") };
 		else if (Double.TryParse(strVal, NumberStyles.Any, CultureInfo.InvariantCulture, out dblVal))
