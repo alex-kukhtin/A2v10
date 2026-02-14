@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20251024-7988*/
+/*20260216-7989*/
 // controllers/base.js
 
 (function () {
@@ -305,6 +305,12 @@
 			$dirtyCaller() {
 				if (this.$caller)
 					this.$caller.$data.$setDirty(true);
+			},
+			$shareUrl() {
+				let x = { url: '', host: '', query: ''};
+				eventBus.$emit('activeTabUrl', x);
+				if (!x.url) return '';
+				return `${x.host}${x.url}${x.query || ''}`;
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -1533,7 +1539,8 @@
 					$longOperation: this.$longOperation,
 					$requeryNew: this.$requeryNew,
 					$saveCaller: this.$saveCaller,
-					$dirtyCaller: this.$dirtyCaller
+					$dirtyCaller: this.$dirtyCaller,
+					$shareUrl: this.$shareUrl
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

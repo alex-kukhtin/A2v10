@@ -1,7 +1,7 @@
 ﻿
 /* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7990 */
+/* Version 10.0.7991 */
 
 declare function require(url: string): any;
 
@@ -328,6 +328,7 @@ interface IController {
 	$requeryNew(id: any): void;
 	$saveCaller(): Promise<object>;
 	$dirtyCaller(): void;
+	$shareUrl(): string;
 }
 
 interface IMessage {
