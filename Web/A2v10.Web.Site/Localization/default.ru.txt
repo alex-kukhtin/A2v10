@@ -160,6 +160,8 @@
 @CloseAllTabs=Закрыть все вкладки
 @OpenTabs=Открытые вкладки
 @RecentlyClosedTabs=Недавно закрытые
+@CopyTabUrl=Скопировать URL вкладки
+
 ;
 @TwoFactorPrompt=Two-factor authentication
 @Verify=Verify

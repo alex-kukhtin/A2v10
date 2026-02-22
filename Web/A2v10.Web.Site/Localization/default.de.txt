@@ -159,6 +159,7 @@
 @CloseAllTabs=Alle Tabs schließen
 @OpenTabs=Tabs öffnen
 @RecentlyClosedTabs=Kürzlich geschlossene Tabs
+@CopyTabUrl=Copy tab URL
 ;
 @TwoFactorPrompt=Two-factor authentication
 @Verify=Verify
