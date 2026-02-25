@@ -5724,7 +5724,7 @@ template: `
 })();
 // Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20260216-7989*/
+/*20260225-7990*/
 // controllers/base.js
 
 (function () {
@@ -6031,10 +6031,9 @@ template: `
 					this.$caller.$data.$setDirty(true);
 			},
 			$shareUrl() {
-				let x = { url: '', host: '', query: ''};
+				let x = { url: ''};
 				eventBus.$emit('activeTabUrl', x);
-				if (!x.url) return '';
-				return `${x.host}${x.url}${x.query || ''}`;
+				return x.url;
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
