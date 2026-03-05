@@ -179,9 +179,9 @@ app.modules['std:locale'] = function () {
 
 })();
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250822-7982
+// 20260305-7985
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -1077,7 +1077,8 @@ app.modules['std:utils'] = function () {
 			defaults: assign(src.defaults, tml.defaults),
 			commands: assign(src.commands, tml.commands),
 			delegates: assign(src.delegates, tml.delegates),
-			options: assign(src.options, tml.options)
+			options: assign(src.options, tml.options),
+			utils: assign(src.utils, tml.utils)
 		});
 	}
 
