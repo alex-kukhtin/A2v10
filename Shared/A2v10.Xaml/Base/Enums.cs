@@ -441,6 +441,7 @@ public enum Icon
 	Rename,
 	Report,
 	Requery,
+	Robot,
 	Save,
 	SaveAs,
 	SaveClose,

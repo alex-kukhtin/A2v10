@@ -2,7 +2,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7972') format('woff'), url('/css/fonts/A2v10.ttf?v=7972') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7975') format('woff'), url('/css/fonts/A2v10.ttf?v=7975') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -344,6 +344,9 @@
 }
 .ico-rename:before {
   content: "\e953";
+}
+.ico-robot:before {
+  content: "\e971";
 }
 .ico-pencil:before {
   content: "\e949";

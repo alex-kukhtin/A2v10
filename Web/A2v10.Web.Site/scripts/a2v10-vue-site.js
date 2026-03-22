@@ -6584,6 +6584,18 @@ template: `
 				return this.$confirm(prms);
 			},
 
+			$handleClick(name, ev) {
+				ev.preventDefault();
+				ev.stopPropagation();
+				let tml = this.$data.$template;
+				if (!tml) return;
+				let cmd = tml.delegates;
+				if (!cmd) return;
+				let func = cmd[name];
+				if (!func) return;
+				func.call(this.$data, ev.target, name);
+			},
+
 			$alert(msg, title, list) {
 				// TODO: tools
 				if (utils.isObject(msg) && !title && !list) {
