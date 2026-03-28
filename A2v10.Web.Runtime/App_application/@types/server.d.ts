@@ -1,6 +1,6 @@
 ﻿
-/* Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved. */
-/* Version 10.0.7944 */
+/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
+/* Version 10.0.7992 */
 
 interface keyable {
 	[key: string]: any

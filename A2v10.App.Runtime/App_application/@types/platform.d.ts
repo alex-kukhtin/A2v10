@@ -1,7 +1,7 @@
 ﻿
-/* Copyright © 2019-2025 Oleksandr Kukhtin. All rights reserved. */
+/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7986 */
+/* Version 10.0.7991 */
 
 declare function require(url: string): any;
 
@@ -46,6 +46,10 @@ interface IArrayElement extends IElement {
 	$select(root?: IElementArray<IElement>): void;
 	$move(dir: MoveDir): void;
 	$canMove(dir: MoveDir): boolean;
+	// override
+	$merge(src: object): IArrayElement;
+	$empty(): IArrayElement;
+	$set(src: object): IArrayElement;
 }
 
 interface ITreeElement extends IArrayElement {
@@ -142,7 +146,7 @@ declare const enum TemplateCommandResult {
 	save = 'save'
 }
 
-interface templateCommandFunc { (this: IRoot, arg?: any): void | TemplateCommandResult | Promise<any>; }
+type templateCommandFunc = (this: IRoot, arg?: any) => void | TemplateCommandResult | Promise<any>;
 
 interface templateCommandObj {
 	exec: templateCommandFunc,
@@ -156,25 +160,31 @@ interface templateCommandObj {
 declare type templateCommand = templateCommandFunc | templateCommandObj;
 
 /* template properties */
+
+type templatePropertyGetter = (this: IElement | IElementArray<IElement>) => any;
+type templatePropertySetter = (this: IElement | IElementArray<IElement>, val: any) => void;
+
 interface templatePropertyGetterSetter {
-	get(this: IElement): any;
-	set?(this: IElement, val: any): void;
+	get: templatePropertyGetter;
+	set?: templatePropertySetter;
 }
-interface templatePropertyGetter { (this: IElement): any; }
 
-interface templatePropTypeWithDefaults {
+interface templatePropDefault {
 	type: StringConstructor | BooleanConstructor | NumberConstructor;
-	default: any;
+	value?: any;
 }
 
-declare type templateProperty = templatePropertyGetter | templatePropertyGetterSetter | StringConstructor | BooleanConstructor | NumberConstructor | templatePropTypeWithDefaults;
+declare type templateProperty = templatePropertyGetter | templatePropertyGetterSetter
+	| StringConstructor | BooleanConstructor | NumberConstructor
+	| templatePropDefault;
 
 /* template events */
-interface templateEventChange { (this: IElement, elem: IElement, newVal?: any, oldVal?: any, prop?: string): void; }
-interface templateEventAdd { (this: IElement, array?: IElementArray<IElement>, elem?: IElement): void; }
-interface templateEventUnload { (this: IElement, elem?: IElement): void; }
+type templateEventChange = (this: IElement, elem: IElement, newVal?: any, oldVal?: any, prop?: string) => void;
+type templateEventChanging = (this: IElement, elem: IElement, newVal?: any, oldVal?: any, prop?: string) => boolean;
+type templateEventAdd = (this: IElement, array?: IElementArray<IElement>, elem?: IElement) => void;
+type templateEventUnload = (this: IElement, elem?: IElement) => void;
 
-declare type templateEvent = templateEventChange | templateEventAdd | templateEventUnload;
+declare type templateEvent = templateEventChange | templateEventChanging | templateEventAdd | templateEventUnload;
 
 declare const enum StdValidator {
 	notBlank = 'notBlank',
@@ -204,14 +214,14 @@ declare const enum MessageStyle {
 }
 
 /* template defaults */
-interface templateDefaultFunc { (this: IRoot, elem: IElement, prop: string): any; }
+type templateDefaultFunc = (this: IRoot, elem: IElement, prop: string) => any;
 declare type templateDefault = templateDefaultFunc | string | number | boolean | Date | object;
 
 /* template validators */
 
 declare type templateValidatorResult = { msg: string, severity: Severity };
 
-interface tempateValidatorFunc { (elem: IElement, value?: any): boolean | string | templateValidatorResult | Promise<any>; }
+type tempateValidatorFunc = (elem: IElement, value?: any) => boolean | string | templateValidatorResult | Promise<any>;
 
 interface templateValidatorObj {
 	valid: tempateValidatorFunc | StdValidator,
@@ -288,7 +298,7 @@ interface IController {
 	$modalClose(result?: any): any;
 	$msg(msg: string, title?: string, style?: CommonStyle): Promise<boolean>;
 	$alert(msg: string | IMessage): Promise<boolean>;
-	$confirm(msg: string | IConfirm): Promise<boolean|string>;
+	$confirm(msg: string | IConfirm): Promise<boolean | string>;
 	$showDialog(url: string, data?: object, query?: object): Promise<any>;
 	$inlineOpen(id: string): void;
 	$inlineClose(id: string, result?: any): void;
@@ -316,6 +326,9 @@ interface IController {
 	$hideSidePane(): void;
 	$longOperation(action: () => Promise<any>): Promise<any>;
 	$requeryNew(id: any): void;
+	$saveCaller(): Promise<object>;
+	$dirtyCaller(): void;
+	$shareUrl(): string;
 }
 
 interface IMessage {

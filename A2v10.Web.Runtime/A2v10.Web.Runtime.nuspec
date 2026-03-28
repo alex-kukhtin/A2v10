@@ -10,7 +10,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>A2v10 Platform Runtime</description>
 		<releaseNotes>Current NUGET release</releaseNotes>
-		<copyright>Copyright © 2015-2025 Oleksandr Kukhtin</copyright>
+		<copyright>Copyright © 2015-2026 Oleksandr Kukhtin</copyright>
 		<tags>A2v10 Platform Business WebApp</tags>
 		<repository type="git" url="https://github.com/alex-kukhtin/A2v10" branch="master"/>
 		<readme>docs\README.md</readme>

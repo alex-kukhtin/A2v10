@@ -200,9 +200,9 @@ app.modules['std:const'] = function () {
 
 
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250822-7982
+// 20260305-7985
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -1098,7 +1098,8 @@ app.modules['std:utils'] = function () {
 			defaults: assign(src.defaults, tml.defaults),
 			commands: assign(src.commands, tml.commands),
 			delegates: assign(src.delegates, tml.delegates),
-			options: assign(src.options, tml.options)
+			options: assign(src.options, tml.options),
+			utils: assign(src.utils, tml.utils)
 		});
 	}
 
@@ -4462,9 +4463,9 @@ app.modules['std:popup'] = function () {
 };
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20240220-7961*/
+/*20251031-7985*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -4669,7 +4670,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function clearSelectionFull(ev, input) {
-		if (ev.which !== 46) return false;
+		if (ev.which !== 46 && ev.which !== 8) return false;
 		let s = input.selectionStart;
 		let e = input.selectionEnd;
 		let l = input.value.length;
@@ -5420,7 +5421,7 @@ app.modules['std:barcode'] = function () {
 })();
 // Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250522-7983
+// 20251024-7988
 // components/control.js
 
 (function () {
@@ -5432,10 +5433,10 @@ app.modules['std:barcode'] = function () {
 	const control = {
 		props: {
 			label: String,
-			required: Boolean,
+			required: { type: null },
 			align: { type: String, default: 'left' },
 			description: String,
-			disabled: Boolean,
+			disabled: {type: null},
 			tabIndex: Number,
 			dataType: String,
 			format: String,
@@ -5445,7 +5446,7 @@ app.modules['std:barcode'] = function () {
 			hideZeros: Boolean,
 			testId: String,
 			accel: String,
-			highlight: Boolean
+			highlight: {type: null}
 		},
 		computed: {
 			path() {
@@ -7241,9 +7242,9 @@ Vue.component('validator-control', {
 })();
 
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250421-7982*/
+/*20260111-7985*/
 // components/selector.js
 
 (function selector_component() {
@@ -7273,7 +7274,7 @@ Vue.component('validator-control', {
 		<validator :invalid="invalid" :errors="errors" :options="validatorOptions"></validator>
 		<div class="selector-pane" v-if="isOpen" ref="pane" :class="paneClass">
 			<div class="selector-body" :style="bodyStyle">
-				<slot name="pane" :items="items" :is-item-active="isItemActive" :item-name="itemName" :hit="hit" :max-chars="maxChars" :line-clamp="lineClamp" :slotStyle="slotStyle">
+				<slot name="pane" :items="items" :is-item-active="isItemActive2" :item-name="itemName" :hit="hit" :max-chars="maxChars" :line-clamp="lineClamp" :slotStyle="slotStyle">
 					<ul class="selector-ul">
 						<li @mousedown.prevent="hit(itm)" :class="{'active': isItemActive(itmIndex)}"
 							v-for="(itm, itmIndex) in items" :key="itmIndex">
@@ -7372,7 +7373,7 @@ Vue.component('validator-control', {
 			pane() {
 				return {
 					items: this.items,
-					isItemActive: this.isItemActive,
+					isItemActive: this.isItemActive2,
 					itemName: this.itemName,
 					hit: this.hit
 				};
@@ -7444,6 +7445,13 @@ Vue.component('validator-control', {
 			},
 			isItemActive(ix) {
 				return ix === this.current;
+			},
+			isItemActive2(ix, row) {
+				if (!row)
+					return this.isItemActive(ix);
+				if (this.current === -1)
+					return false;
+				return this.items[this.current] === row;
 			},
 			itemName(itm) {
 				let v = utils.simpleEval(itm, this.display);
@@ -7692,9 +7700,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250424-7975
+// 20260111-7985
 // components/datagrid.js*/
 
 (function () {
@@ -8148,7 +8156,7 @@ Vue.component('validator-control', {
 				return this.mark ? utils.simpleEval(this.row, this.mark) : '';
 			},
 			_itemActive() {
-				return this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
+				return this.isItemActive ? this.isItemActive(this.index, this.row) : !!this.row.$selected;
 			}
 		},
 		watch: {
@@ -8163,7 +8171,7 @@ Vue.component('validator-control', {
 		methods: {
 			rowClass() {
 				let cssClass = 'dg-row';
-				const isActive = this.isItemActive ? this.isItemActive(this.index) : !!this.row.$selected;
+				const isActive = this.isItemActive ? this.isItemActive(this.index, this.row) : !!this.row.$selected;
 				//console.warn(`i = ${this.index} l = ${this.row.$parent.length}`);
 				if (isActive) cssClass += ' active';
 				if (this.$parent.isMarkRow && this.mark) {
@@ -13247,9 +13255,9 @@ Vue.component('a2-panel', {
 })();
 
 
-// Copyright © 2023-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2023-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20241028-7971
+// 20251226-7986
 // components/kanban.js
 
 (function () {
@@ -13263,10 +13271,14 @@ Vue.component('a2-panel', {
 			</div>
 			<button v-if="false">›</button>
 		</div>
+		<div class="kanban-trash drop-shadow shadow1" v-if="showTrash" @dragover="dragTrash($event)"
+				@drop="dropTrash($event)" :class="trashClass()" @dragleave="clearDrag($event)">
+			<i class="ico ico-trash"></i>
+		</div>
 	</div>
 	<div class="kanban-body kanban-part">
 		<div class=lane v-for="(lane, lx) in lanes" :key=lx @dragover="dragOver($event, lane)"
-				@drop="drop($event, lane)" :class="laneClass(lane)">
+				@drop="drop($event, lane)" :class="laneClass(lane)" @dragleave="clearDrag($event)">
 			<ul class=card-list>
 				<li class=card v-for="(card, cx) in cards(lane)" :key=cx :draggable="true"
 						@dragstart="dragStart($event, card)" @dragend=dragEnd>
@@ -13289,26 +13301,33 @@ Vue.component('a2-panel', {
 			lanes: Array,
 			items: Array,
 			dropDelegate: Function,
-			stateProp: String
+			trashDelegate: Function,
+			stateProp: String,
+			showTrash: Boolean
 		},
 		data() {
 			return {
 				currentElem: null,
-				laneOver: null
+				laneOver: null,
+				insideTrash: false
 			};
-		},
-		computed: {
 		},
 		methods: {
 			cards(lane) {
 				let id = lane.$id;
 				return this.items.filter(itm => itm[this.stateProp].$id === id);
 			},
-			dragEnd() {
+			clearDrag(ev) {
+				if (ev && ev.currentTarget.contains(ev.relatedTarget))
+					return;
 				this.laneOver = null;
+				this.insideTrash = false;
+			},
+			dragEnd() {
+				this.clearDrag();
 			},
 			dragStart(ev, card) {
-				this.laneOver = null;
+				this.clearDrag();
 				if (!this.dropDelegate) {
 					ev.preventDefault();
 					return;
@@ -13318,17 +13337,32 @@ Vue.component('a2-panel', {
 			},
 			dragOver(ev, lane) {
 				this.laneOver = lane;
+				this.insideTrash = false;
+				ev.preventDefault();
+			},
+			dragTrash(ev) {
+				this.insideTrash = true;
 				ev.preventDefault();
 			},
 			drop(ev, lane) {
-				this.laneOver = null;
+				this.clearDrag();
 				if (!this.currentElem) return;
 				if (this.dropDelegate)
 					this.dropDelegate(this.currentElem, lane);
 				this.currentElem = null;
 			},
+			dropTrash(ev) {
+				this.clearDrag();
+				if (!this.currentElem) return;
+				if (this.trashDelegate)
+					this.trashDelegate(this.currentElem);
+				this.currentElem = null;
+			},
 			laneClass(lane) {
 				return lane == this.laneOver ? 'over' : undefined;
+			},
+			trashClass() {
+				return this.insideTrash ? 'over' : undefined;
 			}
 		}
 	});
@@ -13860,9 +13894,9 @@ Vue.directive('resize', {
 });
 
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250512-7987*/
+/*20260225-7990*/
 // controllers/base.js
 
 (function () {
@@ -14158,6 +14192,20 @@ Vue.directive('resize', {
 				this.$store.commit('setnewid', { id: id });
 				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
 				this.$requery();
+			},
+			$saveCaller() {
+				if (this.$caller)
+					return this.$caller.$save();
+				return null;
+			},
+			$dirtyCaller() {
+				if (this.$caller)
+					this.$caller.$data.$setDirty(true);
+			},
+			$shareUrl() {
+				let x = { url: ''};
+				eventBus.$emit('activeTabUrl', x);
+				return x.url;
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -14705,6 +14753,18 @@ Vue.directive('resize', {
 			$msg(msg, title, style) {
 				let prms = { message: msg, title: title || locale.$Message, style: style || 'info' };
 				return this.$confirm(prms);
+			},
+
+			$handleClick(name, ev) {
+				ev.preventDefault();
+				ev.stopPropagation();
+				let tml = this.$data.$template;
+				if (!tml) return;
+				let cmd = tml.delegates;
+				if (!cmd) return;
+				let func = cmd[name];
+				if (!func) return;
+				func.call(this.$data, ev.target, name);
 			},
 
 			$alert(msg, title, list) {
@@ -15384,7 +15444,10 @@ Vue.directive('resize', {
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
 					$longOperation: this.$longOperation,
-					$requeryNew: this.$requeryNew
+					$requeryNew: this.$requeryNew,
+					$saveCaller: this.$saveCaller,
+					$dirtyCaller: this.$dirtyCaller,
+					$shareUrl: this.$shareUrl
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

@@ -179,9 +179,9 @@ app.modules['std:locale'] = function () {
 
 })();
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250822-7982
+// 20260305-7985
 // services/utils.js
 
 app.modules['std:utils'] = function () {
@@ -1077,7 +1077,8 @@ app.modules['std:utils'] = function () {
 			defaults: assign(src.defaults, tml.defaults),
 			commands: assign(src.commands, tml.commands),
 			delegates: assign(src.delegates, tml.delegates),
-			options: assign(src.options, tml.options)
+			options: assign(src.options, tml.options),
+			utils: assign(src.utils, tml.utils)
 		});
 	}
 
@@ -3191,9 +3192,9 @@ app.modules['std:modelInfo'] = function () {
 };
 
 
-// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-/*20240220-7961*/
+/*20251031-7985*/
 /* services/mask.js */
 
 app.modules['std:mask'] = function () {
@@ -3398,7 +3399,7 @@ app.modules['std:mask'] = function () {
 	}
 
 	function clearSelectionFull(ev, input) {
-		if (ev.which !== 46) return false;
+		if (ev.which !== 46 && ev.which !== 8) return false;
 		let s = input.selectionStart;
 		let e = input.selectionEnd;
 		let l = input.value.length;
@@ -5720,9 +5721,9 @@ app.modules['std:impl:array'] = function () {
 
 
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250512-7987*/
+/*20260225-7990*/
 // controllers/base.js
 
 (function () {
@@ -6018,6 +6019,20 @@ app.modules['std:impl:array'] = function () {
 				this.$store.commit('setnewid', { id: id });
 				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
 				this.$requery();
+			},
+			$saveCaller() {
+				if (this.$caller)
+					return this.$caller.$save();
+				return null;
+			},
+			$dirtyCaller() {
+				if (this.$caller)
+					this.$caller.$data.$setDirty(true);
+			},
+			$shareUrl() {
+				let x = { url: ''};
+				eventBus.$emit('activeTabUrl', x);
+				return x.url;
 			},
 			$save(opts) {
 				if (this.$data.$readOnly)
@@ -6565,6 +6580,18 @@ app.modules['std:impl:array'] = function () {
 			$msg(msg, title, style) {
 				let prms = { message: msg, title: title || locale.$Message, style: style || 'info' };
 				return this.$confirm(prms);
+			},
+
+			$handleClick(name, ev) {
+				ev.preventDefault();
+				ev.stopPropagation();
+				let tml = this.$data.$template;
+				if (!tml) return;
+				let cmd = tml.delegates;
+				if (!cmd) return;
+				let func = cmd[name];
+				if (!func) return;
+				func.call(this.$data, ev.target, name);
 			},
 
 			$alert(msg, title, list) {
@@ -7244,7 +7271,10 @@ app.modules['std:impl:array'] = function () {
 					$showSidePane: this.$showSidePane,
 					$hideSidePane: this.$hideSidePane,
 					$longOperation: this.$longOperation,
-					$requeryNew: this.$requeryNew
+					$requeryNew: this.$requeryNew,
+					$saveCaller: this.$saveCaller,
+					$dirtyCaller: this.$dirtyCaller,
+					$shareUrl: this.$shareUrl
 				};
 				Object.defineProperty(ctrl, "$isDirty", {
 					enumerable: true,

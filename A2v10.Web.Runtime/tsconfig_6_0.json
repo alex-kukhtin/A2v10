@@ -1,0 +1,25 @@
+{
+	"compileOnSave": true,
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2017",
+		"sourceMap": false,
+		"removeComments": true,
+		"listFiles": false,
+		"traceResolution": false,
+		"useUnknownInCatchVariables": false,
+		"noImplicitAny": false,
+		"noImplicitThis": false,
+		"lib": [ "es2017", "dom" ],
+		"typeRoots": [ "./@types" ],
+		"paths": {
+		}
+	},
+	"include": [
+		"./**/*.ts",
+		"./@types/platfrom.d.ts"
+	],
+	"exclude": [
+		"./packages/**/*.ts"
+	]
+}

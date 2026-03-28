@@ -2,7 +2,7 @@
   font-family: 'A2v10';
   font-display: fallback;
   src: url('/css/fonts/A2v10.eot');
-  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7972') format('woff'), url('/css/fonts/A2v10.ttf?v=7972') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
+  src: url('/css/fonts/A2v10.eot?#iefix') format('eot'), url('/css/fonts/A2v10.woff?v=7975') format('woff'), url('/css/fonts/A2v10.ttf?v=7975') format('truetype'), url('/css/fonts/A2v10.svg#A2v10') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -344,6 +344,9 @@
 }
 .ico-rename:before {
   content: "\e953";
+}
+.ico-robot:before {
+  content: "\e971";
 }
 .ico-pencil:before {
   content: "\e949";
@@ -7939,6 +7942,22 @@ table.tree-grid a.toggle.expanded:after {
 .kanban .kanban-card .kanban-card-footer {
   padding: 4px 8px;
   border-top: 1px solid var(--neutralBkDarker);
+}
+.kanban .kanban-trash {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  overflow: visible;
+  padding: 16px;
+  background-color: white;
+  border-radius: 2px;
+  color: #ccc;
+}
+.kanban .kanban-trash.over {
+  background-color: #e0e0e0;
+}
+.kanban .kanban-trash .ico {
+  font-size: 26px;
 }
 .block {
   display: block!important;

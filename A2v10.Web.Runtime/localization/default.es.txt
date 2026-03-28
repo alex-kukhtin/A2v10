@@ -161,6 +161,7 @@
 @CloseAllTabs=Cerrar todas las pestañas
 @OpenTabs=Abrir pestañas
 @RecentlyClosedTabs=Pestañas cerradas recientemente
+@CopyTabUrl=Copy tab URL
 ;
 @TwoFactorPrompt=Two-factor authentication
 @Verify=Verify
