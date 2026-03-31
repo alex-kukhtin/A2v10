@@ -1,7 +1,7 @@
-﻿
-/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
+﻿/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7991 */
+/* Version 10.0.7992  */
+/* Date    2026.03.29 */
 
 declare function require(url: string): any;
 
@@ -176,7 +176,7 @@ interface templatePropDefault {
 
 declare type templateProperty = templatePropertyGetter | templatePropertyGetterSetter
 	| StringConstructor | BooleanConstructor | NumberConstructor
-	| templatePropDefault;
+	| templatePropDefault | undefined;
 
 /* template events */
 type templateEventChange = (this: IElement, elem: IElement, newVal?: any, oldVal?: any, prop?: string) => void;
@@ -232,7 +232,7 @@ interface templateValidatorObj {
 	applyIf?: (elem: IElement, value?: any) => boolean
 }
 
-declare type templateValidator = String | tempateValidatorFunc | templateValidatorObj;
+declare type templateValidator = String | tempateValidatorFunc | templateValidatorObj | undefined;
 
 interface Template {
 	options?: {
@@ -416,7 +416,7 @@ interface UtilsDate {
 	zero(): Date,
 	equal(d1: Date, d2: Date): boolean;
 	isZero(d: Date): boolean;
-	add(d: Date, nm: number, unit: DateTimeUnit);
+	add(d: Date, nm: number, unit: DateTimeUnit): Date | null;
 	create(year: number, month: number, day: number): Date;
 	createTime(year: number, month: number, day: number, hour?: number, minute?: number, second?: number): Date
 	fromDays(days: number): Date;
@@ -494,8 +494,8 @@ interface Http {
 }
 
 interface EventBus {
-	$on(event: string, handler: (...params: any[]) => any);
-	$off(event: string, handler: (...params: any[]) => any);
-	$once(event: string, handler: (...params: any[]) => any);
-	$emit(event: string, ...params: any[]);
+	$on(event: string, handler: (...params: any[]) => any) : void;
+	$off(event: string, handler: (...params: any[]) => any) : void;
+	$once(event: string, handler: (...params: any[]) => any) : void;
+	$emit(event: string, ...params: any[]) : void;
 }
