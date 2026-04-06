@@ -1358,9 +1358,9 @@ app.modules['std:period'] = function () {
 };
 
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250627-7982
+// 20260406-7988
 /* services/modelinfo.js */
 
 app.modules['std:modelInfo'] = function () {
@@ -1479,7 +1479,7 @@ app.modules['std:modelInfo'] = function () {
 	function findRootModelInfo() {
 		for (let p in this._meta_.props) {
 			let x = this[p];
-			if (x.$ModelInfo)
+			if (x && x.$ModelInfo)
 				return x.$ModelInfo;
 		}
 		return null;
