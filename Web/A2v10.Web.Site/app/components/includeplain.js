@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2024 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20241119-7972
+// 20260407-7978
 /*components/includeplain.js*/
 
 (function () {
@@ -145,7 +145,8 @@
 			dat: undefined,
 			complete: Function,
 			lock: Boolean,
-			reload: Number
+			reload: Number,
+			onError: Function
 		},
 		data() {
 			return {
@@ -169,7 +170,10 @@
 			error(msg) {
 				if (msg instanceof Error)
 					msg = msg.message;
-				alert(msg);
+				if (this.onError)
+					this.onError(this.source, msg);
+				else
+					alert(msg);
 			},
 			makeUrl() {
 				let arg = this.arg || '';
