@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250913-7983
+// 20260418-7990
 // locale-ru.js
 
 "use strict";
@@ -80,7 +80,9 @@
 		$Feedback: 'Обратная связь',
 		$PreviewIsUnavailable: 'Preview is unavailable for this file',
 		$ShowSpecProps: 'Показать все свойства',
-		$Search: 'Поиск'
+		$Search: 'Поиск',
+		$DarkTheme: 'Темная тема',
+		$LightTheme: 'Светлая тема'
 	};
 
 	if (window.d3) {

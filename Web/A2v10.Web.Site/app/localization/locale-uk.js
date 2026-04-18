@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
 
-// 20250913-7983
+// 20260418-7990
 // locale-uk.js
 
 "use strict";
@@ -80,7 +80,9 @@
 		$Feedback: 'Зворотній зв\'язок',
 		$PreviewIsUnavailable: 'Для цього файлу попередній перегляд неможливий',
 		$ShowSpecProps: 'Показати спеціальні властивості',
-		$Search: 'Пошук'
+		$Search: 'Пошук',
+		$DarkTheme: 'Темна тема',
+		$LightTheme: 'Світла тема'
 	};
 
 	if (window.d3) {

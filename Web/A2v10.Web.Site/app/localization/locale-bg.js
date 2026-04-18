@@ -75,7 +75,9 @@
 		$Feedback: 'Обратна връзка',
 		$PreviewIsUnavailable: 'Preview is unavailable for this file',
 		$ShowSpecProps: 'Show special properties',
-		$Search: 'Търсене'
+		$Search: 'Търсене',
+		$DarkTheme: 'Dark theme',
+		$LightTheme: 'Light theme'
 	};
 
 	if (window.d3) {

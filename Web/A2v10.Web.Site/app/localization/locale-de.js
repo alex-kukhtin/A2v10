@@ -80,7 +80,9 @@
 		$Feedback:'Feedback',
 		$PreviewIsUnavailable: 'Preview is unavailable for this file',
 		$ShowSpecProps: 'Show special properties',
-		$Search: 'Suche starten'
+		$Search: 'Suche starten',
+		$DarkTheme: 'Dark theme',
+		$LightTheme: 'Light theme'
 	};
 
 })();
