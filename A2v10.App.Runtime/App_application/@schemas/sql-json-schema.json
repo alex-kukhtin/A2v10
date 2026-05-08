@@ -1,6 +1,6 @@
 ﻿{
 	"$schema": "http://json-schema.org/draft-04/schema",
-	"$version": "10.0.7644",
+	"$version": "10.0.7789",
 	"title": "JSON Schema for sql.json",
 	"type": "array",
 	"items": {
@@ -8,6 +8,7 @@
 		"properties": {
 			"$schema": { "type": "string" },
 			"name": { "type": "string" },
+			"description": {"type": "string"},
 			"version": { "type": "string" },
 			"outputFile": { "type": "string" },
 			"inputFiles": {

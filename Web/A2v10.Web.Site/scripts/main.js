@@ -2559,9 +2559,9 @@ app.modules['std:validators'] = function () {
 
 
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250914-7984*/
+/*20260508-7993*/
 /* services/impl/array.js */
 
 app.modules['std:impl:array'] = function () {
@@ -2672,8 +2672,6 @@ app.modules['std:impl:array'] = function () {
 
 		arr.$move = function (el, dir) {
 			if (!el) return;
-			let rowNoProp = el._meta_.$rowNo;
-			if (!rowNoProp) return;
 			let ix1 = this.indexOf(el);
 			let ix2 = 0;
 			if (dir === 'up') {
@@ -2684,7 +2682,22 @@ app.modules['std:impl:array'] = function () {
 			else if (dir === 'down') {
 				if (ix1 >= this.length - 1) return;
 				ix2 = ix1 + 1;
-			} else
+			}
+			else if (dir === 'top') {
+				if (ix1 <= 0) return;
+				let el = this.splice(ix1, 1)[0];
+				this.splice(0, 0, el);
+				this.$renumberRows();
+				return;
+			}
+			else if (dir === 'bottom') {
+				if (ix1 >= this.length - 1) return;
+				let el = this.splice(ix1, 1)[0];
+				this.splice(this.length, 0, el);
+				this.$renumberRows();
+				return;
+			}
+			else
 				return;
 			// swap ix1-ix2
 			let t = [this[ix1], this[ix2]];
@@ -2697,6 +2710,10 @@ app.modules['std:impl:array'] = function () {
 				return this.indexOf(el) > 0;
 			else if (dir === 'down')
 				return this.indexOf(el) < this.length - 1;
+			else if (dir === 'top')
+				return this.indexOf(el) != 0;
+			else if (dir === 'bottom')
+				return this.indexOf(el) != this.length - 1;
 			return false;
 		}
 	}
@@ -2985,29 +3002,14 @@ app.modules['std:impl:array'] = function () {
 
 		proto.$canMove = function (dir) {
 			let arr = this._parent_;
-			if (arr.length < 2) return;
-			let i1 = arr.indexOf(this);
-			if (dir === 'up')
-				return i1 >= 1;
-			else if (dir === 'down')
-				return i1 < arr.length - 1;
-			return false;
+			if (arr.length < 2) return false;
+			return arr.$canMove(this, dir);
 		}
 
 		proto.$move = function(dir) {
 			let arr = this._parent_;
 			if (arr.length < 2) return;
-			let i1 = arr.indexOf(this);
-			let i2 = i1;
-			if (dir === 'up') {
-				if (i1 < 1) return;
-				i1 -= 1;
-			} else if (dir === 'down') {
-				if (i1 >= arr.length - 1) return;
-				i2 += 1;
-			}
-			arr.splice(i1, 2, arr[i2], arr[i1]);
-			arr.$renumberRows();
+			arr.$move(this, dir);
 			return this;
 		}
 	}

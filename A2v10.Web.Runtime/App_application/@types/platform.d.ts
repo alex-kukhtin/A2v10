@@ -1,7 +1,7 @@
 ﻿/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7992  */
-/* Date    2026.03.29 */
+/* Version 10.0.7994  */
+/* Date    2026.05.08 */
 
 declare function require(url: string): any;
 
@@ -35,7 +35,9 @@ interface IElement {
 
 declare const enum MoveDir {
 	up = 'up',
-	down = 'down'
+	down = 'down',
+	top = 'top',
+	bottom = 'bottom'
 }
 
 interface IArrayElement extends IElement {
