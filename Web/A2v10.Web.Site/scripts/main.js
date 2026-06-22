@@ -11476,7 +11476,7 @@ Vue.component('a2-panel', {
 (function () {
 
 	const sheetTemplate = `
-<table class="sheet">
+<table class="sheet" :class="cssClass">
 	<slot name="columns"></slot>
 	<thead>
 		<slot name="header"></slot>
@@ -11511,7 +11511,17 @@ Vue.component('a2-panel', {
 	}
 
 	Vue.component('a2-sheet', {
-		template: sheetTemplate
+		template: sheetTemplate,
+		props: {
+			stale: Boolean
+		},
+		computed: {
+			cssClass() {
+				return {
+					'sheet-stale': this.stale
+				}
+			}
+		}
 	});
 
 	Vue.component("a2-sheet-section", {
