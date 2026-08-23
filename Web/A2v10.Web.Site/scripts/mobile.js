@@ -11521,9 +11521,9 @@ Vue.component('a2-panel', {
 	});
 
 })();
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20210208-7745
+// 20260823-7985
 // components/graphics.js
 
 (function () {
@@ -11537,7 +11537,9 @@ Vue.component('a2-panel', {
 
 	Vue.component("a2-graphics", {
 		template:
-			`<div :id="id" class="a2-graphics" ref=canvas></div>`,
+			`<div :id="id" class="a2-graphics" ref=canvas >
+				<div v-if="d3error" class="app-exception"><div class="message">The d3 library is not loaded. Check that the d3.min.js script is included in _layout/_scripts.html.</div></div>
+			</div>`,
 		props: {
 			render: Function,
 			arg: [Object, String, Number, Array, Boolean, Date],
@@ -11552,10 +11554,14 @@ Vue.component('a2-panel', {
 		computed: {
 			controller() {
 				return this.$root;
+			},
+			d3error() {
+				return typeof (window.d3) == 'undefined';
 			}
 		},
 		methods: {
 			draw() {
+				if (this.d3error) return;
 				const domElem = this.$refs.canvas;
 				const chart = d3.select(domElem);
 				chart.selectAll('*').remove();
@@ -11571,8 +11577,10 @@ Vue.component('a2-panel', {
 		beforeDestroy() {
 			if (this.unwatch)
 				this.unwatch();
-			const chart = d3.select('#' + this.id);
-			chart.selectAll('*').remove();
+			if (!this.d3error) {
+				const chart = d3.select('#' + this.id);
+				chart.selectAll('*').remove();
+			}
 			this.$el.remove();
 		}
 	});

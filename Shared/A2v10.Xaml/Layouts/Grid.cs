@@ -20,7 +20,7 @@ public enum AutoFlowMode
 	ColumnDense 
 }
 
-//[AttachedProperties("Col,Row,ColSpan,RowSpan,VAlign")]
+[AttachedProperties("Col,Row,ColSpan,RowSpan,VAlign")]
 public class Grid : Container
 {
 

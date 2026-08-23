@@ -35,7 +35,7 @@ namespace A2v10.Xaml
         }
     }
 
-	//[AttachedProperties("Align")]
+	[AttachedProperties("Align")]
 	public class Toolbar : Container
 	{
 
