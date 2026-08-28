@@ -12579,9 +12579,9 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20230903-7941
+// 20260828-7985
 // components/tagscontrol.js*/
 
 (function () {
@@ -12591,7 +12591,7 @@ Vue.component('a2-panel', {
 	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
 		<ul class="tags-items" v-if="hasItems">
 			<li v-for="(itm, ix) in value" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
-				<span v-text="tagName(itm)"/>
+				<span v-text="tagName(itm)" :title="tagTitle(itm)"/>
 				<button @click.stop.prevent="itm.$remove()" class="btn-close">×</button>
 			</li>
 		</ul>
@@ -12600,7 +12600,7 @@ Vue.component('a2-panel', {
 			<ul class="tags-pane-items">
 				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)"
 					@click.stop.prevent="addTag(itm)">
-					<span v-text="tagName(itm)"/>
+					<span v-text="tagName(itm)" :title="tagTitle(itm)"/>
 				</li>
 			</ul>
 			<div class="tags-settings" v-if="!disabled">
@@ -12615,7 +12615,7 @@ Vue.component('a2-panel', {
 
 	const templateList = `
 <div class="tags-list" :test-id="testId">
-	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tag-body tag-sm" :class="tagColor(itm)" v-text="tagName(itm)"/>
+	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tag-body tag-sm" :class="tagColor(itm)" v-text="tagName(itm)" :title="tagTitle(itm)"/>
 </div>
 `;
 
@@ -12625,7 +12625,7 @@ Vue.component('a2-panel', {
 	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
 		<ul class="tags-items" v-if="hasItems">
 			<li v-for="(itm, ix) in valueList" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
-				<span v-text="tagName(itm)"/>
+				<span v-text="tagName(itm)" :title="tagTitle(itm)"/>
 				<button @click.stop.prevent="removeTag(itm)" class="btn-close">×</button>
 			</li>
 		</ul>
@@ -12634,7 +12634,7 @@ Vue.component('a2-panel', {
 			<ul class="tags-pane-items">
 				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)"
 						@click.stop.prevent="addTag(itm)">
-					<span v-text="tagName(itm)"/>
+					<span v-text="tagName(itm)" :title="tagTitle(itm)" />
 				</li>
 			</ul>
 		</div>
@@ -12659,10 +12659,12 @@ Vue.component('a2-panel', {
 			itemsSource: Array,
 			contentProp: { type: String, default: 'Name' },
 			colorProp: { type: String, default: 'Color' },
+			titleProp: { type: String, default: 'Memo'},
 			disabled: Boolean,
 			settingsText: { type: String, default: "Settings" },
 			placeholder: String,
-			settingsFunc: Function
+			settingsFunc: Function,
+			settingsCommand: Function
 		},
 		data() {
 			return {
@@ -12689,6 +12691,9 @@ Vue.component('a2-panel', {
 			tagColor(itm) {
 				return itm[this.colorProp];
 			},
+			tagTitle(itm) {
+				return itm[this.titleProp];
+			},
 			addTag(itm) {
 				if (this.disabled)
 					return;
@@ -12706,7 +12711,9 @@ Vue.component('a2-panel', {
 				this.isOpen = !this.isOpen;
 			},
 			doSettings() {
-				if (this.settingsFunc)
+				if (this.settingsCommand)
+					this.settingsCommand.call(this.item.$root);
+				else if (this.settingsFunc)
 					this.settingsFunc.call(this.item.$root, this.itemsSource);
 			},
 			__clickOutside() {
@@ -12729,6 +12736,7 @@ Vue.component('a2-panel', {
 			itemsSource: Array,
 			contentProp: { type: String, default: 'Name' },
 			colorProp: { type: String, default: 'Color' },
+			titleProp: { type: String, default: 'Memo' },
 		},
 		methods: {
 			tagName(itm) {
@@ -12736,6 +12744,9 @@ Vue.component('a2-panel', {
 			},
 			tagColor(itm) {
 				return itm[this.colorProp];
+			},
+			tagTitle(itm) {
+				return itm[this.titleProp];
 			}
 		}
 	});
@@ -12750,6 +12761,7 @@ Vue.component('a2-panel', {
 			itemsSource: Array,
 			contentProp: { type: String, default: 'Name' },
 			colorProp: { type: String, default: 'Color' },
+			titleProp: { type: String, default: 'Memo' },
 			placeholder: String
 		},
 		data() {
@@ -12784,6 +12796,9 @@ Vue.component('a2-panel', {
 			},
 			tagColor(itm) {
 				return itm[this.colorProp];
+			},
+			tagTitle(itm) {
+				return itm[this.titleProp];
 			},
 			addTag(itm) {
 				if (this.disabled)
