@@ -152,6 +152,14 @@ TODO:
 				}
 				// HACK!
 				this.filteredCount = arr.length;
+				// Auto-reset offset if beyond filtered results
+				if (this.pageSize > 0 && this.offset >= arr.length && arr.length > 0) {
+					this.localQuery.offset = 0;
+				}
+				// Also reset if filtered to empty and offset > 0
+				if (arr.length === 0 && this.offset > 0) {
+					this.localQuery.offset = 0;
+				}
 				// pager
 				if (this.pageSize > 0)
 					arr = arr.slice(this.offset, this.offset + this.pageSize);
