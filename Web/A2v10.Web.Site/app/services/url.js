@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250913-7983*/
+/*20260830-7984*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -186,6 +186,8 @@ app.modules['std:url'] = function () {
 		}
 		if (url.endsWith('new') && urlId === 'new')
 			urlId = '';
+		if (url.indexOf('{0}') >= 0)
+			return url.replace('{0}', urlId);
 		// special behaviour for main menu urls
 		if (url.split('/').length === 3 && urlId === 'new')
 			urlId = '';

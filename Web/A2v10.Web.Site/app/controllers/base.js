@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20260225-7990*/
+/*20260902-7992*/
 // controllers/base.js
 
 (function () {
@@ -587,14 +587,21 @@
 			$navigate(url, data, newWindow, update, opts) {
 				if (this.$isReadOnly(opts)) return;
 				eventBus.$emit('closeAllPopups');
-				let urlToNavigate = urltools.createUrlForNavigate(url, data);
-				if (newWindow === true) {
-					let nwin = window.open(urlToNavigate, "_blank");
-					if (nwin)
-						nwin.$$token = { token: this.__currentToken__, update: update };
-				}
+
+				const doNavigate = () => {
+					let urlToNavigate = urltools.createUrlForNavigate(url, data);
+					if (newWindow === true) {
+						let nwin = window.open(urlToNavigate, "_blank");
+						if (nwin)
+							nwin.$$token = { token: this.__currentToken__, update: update };
+					}
+					else
+						this.$store.commit('navigate', { url: urlToNavigate });
+				};
+				if (opts && opts.saveRequired && this.$isDirty)
+					this.$save().then(() => doNavigate());
 				else
-					this.$store.commit('navigate', { url: urlToNavigate });
+					doNavigate();
 			},
 			$navigateSimple(url, newWindow, update) {
 				eventBus.$emit('closeAllPopups');
