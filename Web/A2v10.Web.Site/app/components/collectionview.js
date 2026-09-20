@@ -1,6 +1,6 @@
-﻿// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250913-7983
+// 20260920-7987
 // components/collectionview.js
 
 /*
@@ -268,7 +268,7 @@ TODO:
 				return getModelInfoProp(this.ItemsSource, 'Offset');
 			},
 			pages() {
-				cnt = this.sourceCount;
+				let cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			},
 			sourceCount() {
@@ -447,7 +447,7 @@ TODO:
 				return this;
 			},
 			pages() {
-				cnt = this.sourceCount;
+				let cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			},
 			Filter() {

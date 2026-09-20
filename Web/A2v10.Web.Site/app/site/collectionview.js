@@ -257,7 +257,7 @@ TODO:
 				return getModelInfoProp(this.ItemsSource, 'Offset');
 			},
 			pages() {
-				cnt = this.sourceCount;
+				let cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			},
 			sourceCount() {
