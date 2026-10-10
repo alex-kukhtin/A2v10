@@ -2630,9 +2630,9 @@ app.modules['std:routing'] = function () {
 	}
 };
 
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20210223-7751*/
+/*20261010-7986*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -2737,6 +2737,9 @@ app.modules['std:validators'] = function () {
 			const sev = rule.severity || ERROR;
 			if (utils.isFunction(rule.applyIf)) {
 				if (!rule.applyIf(item, val)) return;
+			}
+			if (utils.isFunction(rule.when)) {
+				if (!rule.when.call(item, val)) return;
 			}
 			if (utils.isString(rule)) {
 				if (!validateStd({ valid: 'notBlank' }, val))

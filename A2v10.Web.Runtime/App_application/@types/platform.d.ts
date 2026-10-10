@@ -1,7 +1,7 @@
 ﻿/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7994  */
-/* Date    2026.05.08 */
+/* Version 10.0.7998  */
+/* Date    2026.10.10 */
 
 declare function require(url: string): any;
 
@@ -231,7 +231,8 @@ interface templateValidatorObj {
 	msg?: string,
 	regExp?: RegExp,
 	severity?: Severity,
-	applyIf?: (elem: IElement, value?: any) => boolean
+	applyIf?(elem: IElement, value?: any): boolean,
+	when?(this: IElement, value?: any): boolean
 }
 
 declare type templateValidator = String | tempateValidatorFunc | templateValidatorObj | undefined;
