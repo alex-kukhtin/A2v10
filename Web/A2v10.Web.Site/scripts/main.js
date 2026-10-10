@@ -6859,9 +6859,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20240528-7968
+// 20261010-7969
 // components/colorcombobox.js*/
 
 (function () {
@@ -6932,7 +6932,7 @@ Vue.component('validator-control', {
 					let v = this.item[this.prop];
 					if (utils.isObjectExact(v))
 						return v;
-					return this.itemsSource.find(s => s.$id === v);
+					return this.itemsSource.find(s => s[this.valueProp] === v);
 				},
 				set(val) {
 					let v = this.item[this.prop];
