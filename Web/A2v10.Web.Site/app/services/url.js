@@ -1,6 +1,6 @@
 ﻿// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20260830-7984*/
+/*20261012-7985*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -212,8 +212,12 @@ app.modules['std:url'] = function () {
 	}
 
 	function replaceSegment(url, id, action) {
-		let parts = url.split('/');
-		if (isDialogPath(url)) {
+		// only the path: a value in the query may hold '/' itself (?Base=/document/order)
+		let qpos = url.indexOf('?');
+		let path = qpos === -1 ? url : url.substring(0, qpos);
+		let query = qpos === -1 ? '' : url.substring(qpos);
+		let parts = path.split('/');
+		if (isDialogPath(path)) {
 			parts.pop();
 			if (id)
 				parts.push(id);
@@ -223,7 +227,7 @@ app.modules['std:url'] = function () {
 			if (action) parts.push(action);
 			if (id) parts.push(id);
 		}
-		return parts.join('/');
+		return parts.join('/') + query;
 	}
 
 	function isNewPath(url) {

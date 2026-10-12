@@ -60,8 +60,15 @@
     <TypeScriptSourceRoot />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.2.0.1\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NUglify, Version=1.21.9.0, Culture=neutral, PublicKeyToken=15bc7810aec21b5e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NUglify.1.21.9\lib\net40\NUglify.dll</HintPath>
     </Reference>
     <Reference Include="RazorGenerator.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\RazorGenerator.Mvc.2.4.9\lib\net40\RazorGenerator.Mvc.dll</HintPath>
@@ -103,6 +110,7 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -1012,16 +1020,16 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier.3.2.449\build\BuildBundlerMinifier.targets'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.props'))" />
     <Error Condition="!Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets'))" />
+    <Error Condition="!Exists('..\..\packages\BuildBundlerMinifier2022.2.9.11\build\BuildBundlerMinifier2022.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\BuildBundlerMinifier2022.2.9.11\build\BuildBundlerMinifier2022.targets'))" />
   </Target>
   <Import Project="..\..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets" Condition="Exists('..\..\packages\Microsoft.TypeScript.MSBuild.5.8.3\build\Microsoft.TypeScript.MSBuild.targets')" />
+  <Import Project="..\..\packages\BuildBundlerMinifier2022.2.9.11\build\BuildBundlerMinifier2022.targets" Condition="Exists('..\..\packages\BuildBundlerMinifier2022.2.9.11\build\BuildBundlerMinifier2022.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
