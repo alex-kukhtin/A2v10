@@ -11082,6 +11082,180 @@ TODO:
 		}
 	});
 })();
+// Copyright © 2026 Oleksandr Kukhtin. All rights reserved.
+
+// components/blobimage.js
+
+(function () {
+
+	const url = require('std:url');
+	const http = require('std:http');
+	const tools = require('std:tools');
+
+	const locale = window.$$locale;
+
+	Vue.component('a2-blob-image', {
+		template: `
+<div class="a2-image">
+	<img v-if="hasImage" :src="href" :style="cssStyle"/>
+	<a class="remove-image" v-if="hasImage" @click.prevent="removeImage">&#x2715;</a>
+	<label v-else :class="uploadClass" :style="uploadStyle"
+			@dragover.prevent="hover = true" @dragleave.prevent="hover = false">
+		<input type="file" accept="image/*" @change="uploadImage"/>
+		<i class="ico ico-image"></i>
+		<span class="upload-tip" v-text="tip"></span>
+	</label>
+</div>
+`,
+		props: {
+			url: String,
+			item: Object,
+			prop: String,
+			width: String,
+			height: String
+		},
+		data() {
+			return {
+				hover: false
+			};
+		},
+		computed: {
+			blob() {
+				// RefId: always an object; an empty reference has $id = 0
+				return this.item[this.prop];
+			},
+			href() {
+				let b = this.blob;
+				if (!b || !b.$id)
+					return undefined;
+				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+			},
+			hasImage() {
+				return !!this.href;
+			},
+			tip() {
+				return locale.$ClickToDownloadPicture;
+			},
+			cssStyle() {
+				return { maxWidth: this.width, maxHeight: this.height };
+			},
+			uploadStyle() {
+				let w = { width: this.width, height: this.height };
+				if (!w.width) w.width = w.height;
+				if (!w.height) w.height = w.width;
+				return w;
+			},
+			uploadClass() {
+				return 'file-upload' + (this.hover ? ' hover' : '');
+			}
+		},
+		methods: {
+			removeImage() {
+				this.blob.$empty();
+			},
+			uploadImage(ev) {
+				this.hover = false;
+				let file = ev.target.files[0];
+				if (!file)
+					return;
+				let fd = new FormData();
+				fd.append('file', file, file.name);
+				// the door: endpoint from Url, key = prop
+				let uploadUrl = url.combine(window.$$rootUrl, '_blob', this.url, this.prop);
+				http.upload(uploadUrl, fd).then(result => {
+					// result = { Id, Token, Name, Mime }
+					ev.target.value = '';
+					let b = this.blob;
+					b[b._meta_.$id] = result.Id;
+					b[b._meta_.$token] = result.Token;
+					if ('Name' in b) b.Name = result.Name;
+					if ('Mime' in b) b.Mime = result.Mime;
+				}).catch(msg => {
+					ev.target.value = '';
+					if (msg.indexOf('UI:') === 0)
+						tools.alert(msg.substring(3).replace('\\n', '\n'));
+					else
+						alert(msg);
+				});
+			}
+		}
+	});
+})();
+
+
+
+// Copyright © 2026 Oleksandr Kukhtin. All rights reserved.
+
+// components/blobpreview.js
+
+(function () {
+
+	const url = require('std:url');
+
+	const locale = window.$$locale;
+
+	Vue.component('a2-blob-preview', {
+		template: `<div class="a2-file-preview">
+	<img v-if="isImage" :src="href" :style="cssStyle"/>
+	<object v-else-if="isPdf" type="application/pdf" :data="href"
+		:width="pdfWidth" :height="height" :style="cssStyle"></object>
+	<div v-else-if="hasBlob" class="no-preview">
+		<span class="ico ico-file-preview"></span>
+		<a :href="href" v-text="name"></a>
+	</div>
+	<div v-else class="no-preview">
+		<span class="ico ico-file-preview"></span>
+		<span v-text="unavailable"></span>
+	</div>
+</div>`,
+		props: {
+			value: Object,
+			width: String,
+			height: String
+		},
+		computed: {
+			// RefId: an object; an empty reference has $id = 0
+			hasBlob() {
+				return !!(this.value && this.value.$id);
+			},
+			mime() {
+				return this.hasBlob ? (this.value.Mime || '') : '';
+			},
+			name() {
+				return this.hasBlob ? this.value.Name : '';
+			},
+			// svg too: <img> runs no script, and the server never serves it inline
+			isImage() {
+				return this.mime.startsWith('image/');
+			},
+			isPdf() {
+				return this.mime === 'application/pdf';
+			},
+			href() {
+				if (!this.hasBlob)
+					return undefined;
+				let b = this.value;
+				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+			},
+			pdfWidth() {
+				return this.width || '100%';
+			},
+			unavailable() {
+				return locale.$PreviewIsUnavailable;
+			},
+			cssStyle() {
+				let r = {};
+				if (this.width)
+					r.maxWidth = this.width;
+				if (this.height)
+					r.maxHeight = this.height;
+				return r;
+			}
+		}
+	});
+})();
+
+
 // Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200108-7609
@@ -14163,7 +14337,34 @@ Vue.directive('resize', {
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
-
+			async $uploadBlob(url, accept, opts) {
+				eventBus.$emit('closeAllPopups');
+				const root = window.$$rootUrl;
+				try {
+					let file = await htmlTools.uploadFile(accept);
+					let dat = new FormData();
+					dat.append('file', file, file.name);
+					// an attachment: the owner is this dialog's id, the base its own ?base=
+					let qry = {};
+					let own = urltools.parseUrlAndQuery(this.$baseUrl, this.$baseQuery);
+					if (own.query.base) {
+						let segs = own.url.split('/').filter(s => s);
+						qry.base = own.query.base;
+						qry.owner = segs[segs.length - 1];
+					}										
+					let uploadUrl = urltools.combine(root, '_blob', url) + urltools.makeQueryString(qry);
+					return await httpTools.upload(uploadUrl, dat);
+				} catch (err) {
+					err = err || 'unknown error';
+					if (opts && opts.catchError)
+						throw err;
+					else if (err.indexOf('UI:') === 0)
+						this.$alert(err.substring(3).replace('\\n', '\n'));
+					else
+						alert(err);
+					return false;
+				}
+			},
 			async $upload(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
@@ -15080,6 +15281,7 @@ Vue.directive('resize', {
 					$focus: this.$focus,
 					$report: this.$report,
 					$upload: this.$upload,
+					$uploadBlob: this.$uploadBlob,
 					$file: this.$file,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,

@@ -128,6 +128,7 @@
     <Content Include="app\bootstrap\sidebar.js" />
     <Content Include="app\bootstrap\mainview.js" />
     <Content Include="app\bootstrap\shell.js" />
+    <Content Include="app\components\blobpreview.js" />
     <Content Include="app\components\calendar.js" />
     <Content Include="app\components\accelcommand.js" />
     <Content Include="app\components\collectionviewplain.js" />
@@ -136,6 +137,7 @@
     <Content Include="app\components\dashboard.js" />
     <Content Include="app\components\browsejson.js" />
     <Content Include="app\components\doctitleplain.js" />
+    <Content Include="app\components\blobimage.js" />
     <Content Include="app\components\report.js" />
     <Content Include="app\components\includeplain.js" />
     <Content Include="app\components\inlineedit.js" />

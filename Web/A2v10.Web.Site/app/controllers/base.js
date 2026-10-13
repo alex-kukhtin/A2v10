@@ -629,7 +629,34 @@
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
-
+			async $uploadBlob(url, accept, opts) {
+				eventBus.$emit('closeAllPopups');
+				const root = window.$$rootUrl;
+				try {
+					let file = await htmlTools.uploadFile(accept);
+					let dat = new FormData();
+					dat.append('file', file, file.name);
+					// an attachment: the owner is this dialog's id, the base its own ?base=
+					let qry = {};
+					let own = urltools.parseUrlAndQuery(this.$baseUrl, this.$baseQuery);
+					if (own.query.base) {
+						let segs = own.url.split('/').filter(s => s);
+						qry.base = own.query.base;
+						qry.owner = segs[segs.length - 1];
+					}										
+					let uploadUrl = urltools.combine(root, '_blob', url) + urltools.makeQueryString(qry);
+					return await httpTools.upload(uploadUrl, dat);
+				} catch (err) {
+					err = err || 'unknown error';
+					if (opts && opts.catchError)
+						throw err;
+					else if (err.indexOf('UI:') === 0)
+						this.$alert(err.substring(3).replace('\\n', '\n'));
+					else
+						alert(err);
+					return false;
+				}
+			},
 			async $upload(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
@@ -1546,6 +1573,7 @@
 					$focus: this.$focus,
 					$report: this.$report,
 					$upload: this.$upload,
+					$uploadBlob: this.$uploadBlob,
 					$file: this.$file,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,
