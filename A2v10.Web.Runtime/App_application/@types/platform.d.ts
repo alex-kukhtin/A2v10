@@ -319,7 +319,6 @@ interface IController {
 	$focus(htmlid: string): void;
 	$report(report: string, arg: object, opts?: { export?: Boolean, attach?: Boolean, print?: Boolean, format?: ReportFormat }, url?: string, data?: object): void;
 	$upload(url: string, accept?: string | AcceptFormat, data?: { Id?: any, Key?: any }, opts?: { catchError?: boolean }): Promise<any>;
-	$uploadBlob(url: string, accept?: string | AcceptFormat, opts?: { catchError?: boolean }): Promise<any>;
 	$file(url: string, arg: any, opts?: { action: FileActions }, data?: object): void;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
