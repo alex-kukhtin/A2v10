@@ -1145,7 +1145,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20261012-7985*/
+/*20261014-7990*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -1170,7 +1170,8 @@ app.modules['std:url'] = function () {
 		replaceSegment,
 		removeFirstSlash,
 		isNewPath,
-		splitCommand
+		splitCommand,
+		blobUrl
 	};
 
 	function normalize(elem) {
@@ -1393,6 +1394,15 @@ app.modules['std:url'] = function () {
 			url: seg.join('/')
 		};
 	}
+
+
+	// a blob of the model: $id and the token by its meta name; an empty reference has $id = 0
+	function blobUrl(blob) {
+		if (!blob || !blob.$id)
+			return undefined;
+		return combine(window.$$rootUrl, '_blob', blob.$id) + makeQueryString({ token: blob[blob._meta_.$token] });
+	}
+
 };
 
 
@@ -11125,10 +11135,7 @@ TODO:
 				return this.item[this.prop];
 			},
 			href() {
-				let b = this.blob;
-				if (!b || !b.$id)
-					return undefined;
-				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+				return url.blobUrl(this.blob);
 			},
 			hasImage() {
 				return !!this.href;
@@ -11234,8 +11241,7 @@ TODO:
 			href() {
 				if (!this.hasBlob)
 					return undefined;
-				let b = this.value;
-				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+				return url.blobUrl(this.value);
 			},
 			pdfWidth() {
 				return this.width || '100%';
@@ -14337,11 +14343,29 @@ Vue.directive('resize', {
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
+			$blobUrl(blob) {
+				return urltools.blobUrl(blob);
+			},
 			async $uploadBlob(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
-				const root = window.$$rootUrl;
 				try {
 					let file = await htmlTools.uploadFile(accept);
+					return await this.$uploadBlobFile(url, file, data, { catchError: true });
+				} catch (err) {
+					err = err || 'unknown error';
+					if (opts && opts.catchError)
+						throw err;
+					else if (err.indexOf('UI:') === 0)
+						this.$alert(err.substring(3).replace('\\n', '\n'));
+					else
+						alert(err);
+					return false;
+				}
+			},
+			// a ready file (paste, drop): no picker. No closeAllPopups either — the editor may itself live in a popup
+			async $uploadBlobFile(url, file, data, opts) {
+				const root = window.$$rootUrl;
+				try {
 					let dat = new FormData();
 					dat.append('file', file, file.name);
 					// an attachment: exactly Id and Base of data, nothing else reaches the query
@@ -14359,6 +14383,7 @@ Vue.directive('resize', {
 					return false;
 				}
 			},
+
 			async $upload(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
@@ -15276,6 +15301,8 @@ Vue.directive('resize', {
 					$report: this.$report,
 					$upload: this.$upload,
 					$uploadBlob: this.$uploadBlob,
+					$uploadBlobFile: this.$uploadBlobFile,
+					$blobUrl: this.$blobUrl,
 					$file: this.$file,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,

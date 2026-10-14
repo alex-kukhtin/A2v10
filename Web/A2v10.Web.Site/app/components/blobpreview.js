@@ -48,8 +48,7 @@
 			href() {
 				if (!this.hasBlob)
 					return undefined;
-				let b = this.value;
-				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+				return url.blobUrl(this.value);
 			},
 			pdfWidth() {
 				return this.width || '100%';

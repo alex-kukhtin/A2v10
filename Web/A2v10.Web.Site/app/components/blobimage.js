@@ -41,10 +41,7 @@
 				return this.item[this.prop];
 			},
 			href() {
-				let b = this.blob;
-				if (!b || !b.$id)
-					return undefined;
-				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+				return url.blobUrl(this.blob);
 			},
 			hasImage() {
 				return !!this.href;

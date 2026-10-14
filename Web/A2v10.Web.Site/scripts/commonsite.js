@@ -1115,7 +1115,7 @@ app.modules['std:utils'] = function () {
 
 // Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20261012-7985*/
+/*20261014-7990*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -1140,7 +1140,8 @@ app.modules['std:url'] = function () {
 		replaceSegment,
 		removeFirstSlash,
 		isNewPath,
-		splitCommand
+		splitCommand,
+		blobUrl
 	};
 
 	function normalize(elem) {
@@ -1363,6 +1364,15 @@ app.modules['std:url'] = function () {
 			url: seg.join('/')
 		};
 	}
+
+
+	// a blob of the model: $id and the token by its meta name; an empty reference has $id = 0
+	function blobUrl(blob) {
+		if (!blob || !blob.$id)
+			return undefined;
+		return combine(window.$$rootUrl, '_blob', blob.$id) + makeQueryString({ token: blob[blob._meta_.$token] });
+	}
+
 };
 
 
