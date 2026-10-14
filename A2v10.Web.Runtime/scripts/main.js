@@ -1143,9 +1143,9 @@ app.modules['std:utils'] = function () {
 	}
 };
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250913-7983*/
+/*20261012-7985*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -1331,6 +1331,8 @@ app.modules['std:url'] = function () {
 		}
 		if (url.endsWith('new') && urlId === 'new')
 			urlId = '';
+		if (url.indexOf('{0}') >= 0)
+			return url.replace('{0}', urlId);
 		// special behaviour for main menu urls
 		if (url.split('/').length === 3 && urlId === 'new')
 			urlId = '';
@@ -1355,8 +1357,12 @@ app.modules['std:url'] = function () {
 	}
 
 	function replaceSegment(url, id, action) {
-		let parts = url.split('/');
-		if (isDialogPath(url)) {
+		// only the path: a value in the query may hold '/' itself (?Base=/document/order)
+		let qpos = url.indexOf('?');
+		let path = qpos === -1 ? url : url.substring(0, qpos);
+		let query = qpos === -1 ? '' : url.substring(qpos);
+		let parts = path.split('/');
+		if (isDialogPath(path)) {
 			parts.pop();
 			if (id)
 				parts.push(id);
@@ -1366,7 +1372,7 @@ app.modules['std:url'] = function () {
 			if (action) parts.push(action);
 			if (id) parts.push(id);
 		}
-		return parts.join('/');
+		return parts.join('/') + query;
 	}
 
 	function isNewPath(url) {
@@ -2350,9 +2356,9 @@ app.modules['std:console'] = function () {
 		}
 	}
 };
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20210223-7751*/
+/*20261010-7986*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -2457,6 +2463,9 @@ app.modules['std:validators'] = function () {
 			const sev = rule.severity || ERROR;
 			if (utils.isFunction(rule.applyIf)) {
 				if (!rule.applyIf(item, val)) return;
+			}
+			if (utils.isFunction(rule.when)) {
+				if (!rule.when.call(item, val)) return;
 			}
 			if (utils.isString(rule)) {
 				if (!validateStd({ valid: 'notBlank' }, val))
@@ -6854,9 +6863,9 @@ Vue.component('validator-control', {
 		}
 	});
 })();
-// Copyright © 2019-2024 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20240528-7968
+// 20261010-7969
 // components/colorcombobox.js*/
 
 (function () {
@@ -6927,7 +6936,7 @@ Vue.component('validator-control', {
 					let v = this.item[this.prop];
 					if (utils.isObjectExact(v))
 						return v;
-					return this.itemsSource.find(s => s.$id === v);
+					return this.itemsSource.find(s => s[this.valueProp] === v);
 				},
 				set(val) {
 					let v = this.item[this.prop];
@@ -7246,7 +7255,7 @@ Vue.component('validator-control', {
 
 // Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20260111-7985*/
+/*20261004-7986*/
 // components/selector.js
 
 (function selector_component() {
@@ -7266,8 +7275,8 @@ Vue.component('validator-control', {
 <div :class="cssClass2()"  :test-id="testId">
 	<label v-if="hasLabel"><span v-text="label"/><slot name="hint"/><slot name="link"></slot></label>
 	<div class="input-group">
-		<div v-if="isCombo" class="selector-combo" @click.stop.prevent="open"><span tabindex="-1" class="select-text" v-text="valueText" @keydown="keyDown" ref="xcombo"/></div>
-		<input v-focus v-model="query" :class="inputClass" :placeholder="placeholder" v-else
+		<div v-if="isCombo" class="selector-combo" :class="colorClass" @click.stop.prevent="open"><span tabindex="-1" class="select-text" v-text="valueText" @keydown="keyDown" ref="xcombo"/></div>
+		<input v-focus v-model="query" :class="[inputClass, colorClass]" :placeholder="placeholder" v-else
 			@input="debouncedUpdate" @blur.stop="blur" @keydown="keyDown" @keyup="keyUp" ref="input" 
 			:readonly="disabled" @click="clickInput($event)" :tabindex="tabIndex"/>
 		<slot></slot>
@@ -7301,6 +7310,7 @@ Vue.component('validator-control', {
 			itemsSource: Array,
 			textItem: Object,
 			textProp: String,
+			colorProp: String,
 			display: String,
 			itemToValidate: Object,
 			propToValidate: String,
@@ -7403,6 +7413,9 @@ Vue.component('validator-control', {
 					r.maxHeight = this.maxHeight;
 				return r;
 			},
+			colorClass() {
+				return this.item ? this.colorOf(this.item[this.prop]) : undefined;
+			},
 			debouncedUpdate() {
 				let delay = this.delay || DEFAULT_DELAY;
 				return utils.debounce(() => {
@@ -7432,6 +7445,11 @@ Vue.component('validator-control', {
 			__clickOutside() {
 				this.isOpen = false;
 				this.isOpenNew = false;
+			},
+			colorOf(el) {
+				if (!this.colorProp) return undefined;
+				let clr = utils.simpleEval(el, this.colorProp);
+				return clr ? `color color-${clr}` : undefined;
 			},
 			cssClass2() {
 				let cx = this.cssClass();
@@ -7563,6 +7581,9 @@ Vue.component('validator-control', {
 				let cls = '';
 				if (this.lineClamp > 0)
 					cls += ' line-clamp';
+				let clr = this.colorOf(itm);
+				if (clr)
+					cls += ' ' + clr;
 				return cls;
 			},
 			hit(itm) {
@@ -9158,9 +9179,46 @@ Vue.component('popover', {
 	});
 })();
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250913-7983
+// 20260911-7954
+// components/report.js
+
+(function () {
+
+
+	const url = require('std:url');
+	const utils = require('std:utils');
+
+	const locale = window.$$locale;
+
+	Vue.component('a2-pdfreport-viewer', {
+		template: `
+<div class="a2-pdfreport-viewer">
+	<object type="application/pdf" :data="source" width="100%" height="100%"/>
+</div>
+`,
+		props: {
+			url: String,
+			argument: Object,
+			report: String
+		},
+		computed: {
+			source: function () {
+				let root = window.$$rootUrl;
+				let arg = this.argument || 0;
+				if (utils.isObjectExact(this.argument)) {
+					arg = this.argument.$id || 0;
+				}
+				return url.combine(root, 'report/show', arg) + url.makeQueryString({ base: this.url, rep: this.report });
+			}
+		}
+	});
+
+})();
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
+
+// 20260920-7987
 // components/collectionview.js
 
 /*
@@ -9428,7 +9486,7 @@ TODO:
 				return getModelInfoProp(this.ItemsSource, 'Offset');
 			},
 			pages() {
-				cnt = this.sourceCount;
+				let cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			},
 			sourceCount() {
@@ -9607,7 +9665,7 @@ TODO:
 				return this;
 			},
 			pages() {
-				cnt = this.sourceCount;
+				let cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			},
 			Filter() {
@@ -11142,6 +11200,180 @@ TODO:
 		}
 	});
 })();
+// Copyright © 2026 Oleksandr Kukhtin. All rights reserved.
+
+// components/blobimage.js
+
+(function () {
+
+	const url = require('std:url');
+	const http = require('std:http');
+	const tools = require('std:tools');
+
+	const locale = window.$$locale;
+
+	Vue.component('a2-blob-image', {
+		template: `
+<div class="a2-image">
+	<img v-if="hasImage" :src="href" :style="cssStyle"/>
+	<a class="remove-image" v-if="hasImage" @click.prevent="removeImage">&#x2715;</a>
+	<label v-else :class="uploadClass" :style="uploadStyle"
+			@dragover.prevent="hover = true" @dragleave.prevent="hover = false">
+		<input type="file" accept="image/*" @change="uploadImage"/>
+		<i class="ico ico-image"></i>
+		<span class="upload-tip" v-text="tip"></span>
+	</label>
+</div>
+`,
+		props: {
+			url: String,
+			item: Object,
+			prop: String,
+			width: String,
+			height: String
+		},
+		data() {
+			return {
+				hover: false
+			};
+		},
+		computed: {
+			blob() {
+				// RefId: always an object; an empty reference has $id = 0
+				return this.item[this.prop];
+			},
+			href() {
+				let b = this.blob;
+				if (!b || !b.$id)
+					return undefined;
+				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+			},
+			hasImage() {
+				return !!this.href;
+			},
+			tip() {
+				return locale.$ClickToDownloadPicture;
+			},
+			cssStyle() {
+				return { maxWidth: this.width, maxHeight: this.height };
+			},
+			uploadStyle() {
+				let w = { width: this.width, height: this.height };
+				if (!w.width) w.width = w.height;
+				if (!w.height) w.height = w.width;
+				return w;
+			},
+			uploadClass() {
+				return 'file-upload' + (this.hover ? ' hover' : '');
+			}
+		},
+		methods: {
+			removeImage() {
+				this.blob.$empty();
+			},
+			uploadImage(ev) {
+				this.hover = false;
+				let file = ev.target.files[0];
+				if (!file)
+					return;
+				let fd = new FormData();
+				fd.append('file', file, file.name);
+				// the door: endpoint from Url, key = prop
+				let uploadUrl = url.combine(window.$$rootUrl, '_blob', this.url, this.prop);
+				http.upload(uploadUrl, fd).then(result => {
+					// result = { Id, Token, Name, Mime }
+					ev.target.value = '';
+					let b = this.blob;
+					b[b._meta_.$id] = result.Id;
+					b[b._meta_.$token] = result.Token;
+					if ('Name' in b) b.Name = result.Name;
+					if ('Mime' in b) b.Mime = result.Mime;
+				}).catch(msg => {
+					ev.target.value = '';
+					if (msg.indexOf('UI:') === 0)
+						tools.alert(msg.substring(3).replace('\\n', '\n'));
+					else
+						alert(msg);
+				});
+			}
+		}
+	});
+})();
+
+
+
+// Copyright © 2026 Oleksandr Kukhtin. All rights reserved.
+
+// components/blobpreview.js
+
+(function () {
+
+	const url = require('std:url');
+
+	const locale = window.$$locale;
+
+	Vue.component('a2-blob-preview', {
+		template: `<div class="a2-file-preview">
+	<img v-if="isImage" :src="href" :style="cssStyle"/>
+	<object v-else-if="isPdf" type="application/pdf" :data="href"
+		:width="pdfWidth" :height="height" :style="cssStyle"></object>
+	<div v-else-if="hasBlob" class="no-preview">
+		<span class="ico ico-file-preview"></span>
+		<a :href="href" v-text="name"></a>
+	</div>
+	<div v-else class="no-preview">
+		<span class="ico ico-file-preview"></span>
+		<span v-text="unavailable"></span>
+	</div>
+</div>`,
+		props: {
+			value: Object,
+			width: String,
+			height: String
+		},
+		computed: {
+			// RefId: an object; an empty reference has $id = 0
+			hasBlob() {
+				return !!(this.value && this.value.$id);
+			},
+			mime() {
+				return this.hasBlob ? (this.value.Mime || '') : '';
+			},
+			name() {
+				return this.hasBlob ? this.value.Name : '';
+			},
+			// svg too: <img> runs no script, and the server never serves it inline
+			isImage() {
+				return this.mime.startsWith('image/');
+			},
+			isPdf() {
+				return this.mime === 'application/pdf';
+			},
+			href() {
+				if (!this.hasBlob)
+					return undefined;
+				let b = this.value;
+				return url.combine(window.$$rootUrl, '_blob', b.$id) + url.makeQueryString({ token: b[b._meta_.$token] });
+			},
+			pdfWidth() {
+				return this.width || '100%';
+			},
+			unavailable() {
+				return locale.$PreviewIsUnavailable;
+			},
+			cssStyle() {
+				let r = {};
+				if (this.width)
+					r.maxWidth = this.width;
+				if (this.height)
+					r.maxHeight = this.height;
+				return r;
+			}
+		}
+	});
+})();
+
+
 // Copyright © 2015-2020 Oleksandr Kukhtin. All rights reserved.
 
 // 20200108-7609
@@ -11769,9 +12001,9 @@ Vue.component('a2-panel', {
 	});
 
 })();
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20210208-7745
+// 20260823-7985
 // components/graphics.js
 
 (function () {
@@ -11785,7 +12017,9 @@ Vue.component('a2-panel', {
 
 	Vue.component("a2-graphics", {
 		template:
-			`<div :id="id" class="a2-graphics" ref=canvas></div>`,
+			`<div :id="id" class="a2-graphics" ref=canvas >
+				<div v-if="d3error" class="app-exception"><div class="message">The d3 library is not loaded. Check that the d3.min.js script is included in _layout/_scripts.html.</div></div>
+			</div>`,
 		props: {
 			render: Function,
 			arg: [Object, String, Number, Array, Boolean, Date],
@@ -11800,10 +12034,14 @@ Vue.component('a2-panel', {
 		computed: {
 			controller() {
 				return this.$root;
+			},
+			d3error() {
+				return typeof (window.d3) == 'undefined';
 			}
 		},
 		methods: {
 			draw() {
+				if (this.d3error) return;
 				const domElem = this.$refs.canvas;
 				const chart = d3.select(domElem);
 				chart.selectAll('*').remove();
@@ -11819,8 +12057,10 @@ Vue.component('a2-panel', {
 		beforeDestroy() {
 			if (this.unwatch)
 				this.unwatch();
-			const chart = d3.select('#' + this.id);
-			chart.selectAll('*').remove();
+			if (!this.d3error) {
+				const chart = d3.select('#' + this.id);
+				chart.selectAll('*').remove();
+			}
 			this.$el.remove();
 		}
 	});
@@ -13013,9 +13253,9 @@ Vue.component('a2-panel', {
 		}
 	});
 })();
-// Copyright © 2019-2023 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20230903-7941
+// 20260828-7985
 // components/tagscontrol.js*/
 
 (function () {
@@ -13025,7 +13265,7 @@ Vue.component('a2-panel', {
 	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
 		<ul class="tags-items" v-if="hasItems">
 			<li v-for="(itm, ix) in value" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
-				<span v-text="tagName(itm)"/>
+				<span v-text="tagName(itm)" :title="tagTitle(itm)"/>
 				<button @click.stop.prevent="itm.$remove()" class="btn-close">×</button>
 			</li>
 		</ul>
@@ -13034,7 +13274,7 @@ Vue.component('a2-panel', {
 			<ul class="tags-pane-items">
 				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)"
 					@click.stop.prevent="addTag(itm)">
-					<span v-text="tagName(itm)"/>
+					<span v-text="tagName(itm)" :title="tagTitle(itm)"/>
 				</li>
 			</ul>
 			<div class="tags-settings" v-if="!disabled">
@@ -13049,7 +13289,7 @@ Vue.component('a2-panel', {
 
 	const templateList = `
 <div class="tags-list" :test-id="testId">
-	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tag-body tag-sm" :class="tagColor(itm)" v-text="tagName(itm)"/>
+	<span v-for="(itm, ix) in itemsSource" :key="ix" class="tag-body tag-sm" :class="tagColor(itm)" v-text="tagName(itm)" :title="tagTitle(itm)"/>
 </div>
 `;
 
@@ -13059,7 +13299,7 @@ Vue.component('a2-panel', {
 	<div class="input-group" :class="{focus: isOpen}" @click.stop.prevent="toggle">
 		<ul class="tags-items" v-if="hasItems">
 			<li v-for="(itm, ix) in valueList" :key="ix" class="tag-body tag-md-close" :class="tagColor(itm)">
-				<span v-text="tagName(itm)"/>
+				<span v-text="tagName(itm)" :title="tagTitle(itm)"/>
 				<button @click.stop.prevent="removeTag(itm)" class="btn-close">×</button>
 			</li>
 		</ul>
@@ -13068,7 +13308,7 @@ Vue.component('a2-panel', {
 			<ul class="tags-pane-items">
 				<li v-for="(itm, ix) in actualItemsSource" :key="ix" class="tag-body tag-md" :class="tagColor(itm)"
 						@click.stop.prevent="addTag(itm)">
-					<span v-text="tagName(itm)"/>
+					<span v-text="tagName(itm)" :title="tagTitle(itm)" />
 				</li>
 			</ul>
 		</div>
@@ -13093,10 +13333,12 @@ Vue.component('a2-panel', {
 			itemsSource: Array,
 			contentProp: { type: String, default: 'Name' },
 			colorProp: { type: String, default: 'Color' },
+			titleProp: { type: String, default: 'Memo'},
 			disabled: Boolean,
 			settingsText: { type: String, default: "Settings" },
 			placeholder: String,
-			settingsFunc: Function
+			settingsFunc: Function,
+			settingsCommand: Function
 		},
 		data() {
 			return {
@@ -13123,6 +13365,9 @@ Vue.component('a2-panel', {
 			tagColor(itm) {
 				return itm[this.colorProp];
 			},
+			tagTitle(itm) {
+				return itm[this.titleProp];
+			},
 			addTag(itm) {
 				if (this.disabled)
 					return;
@@ -13140,7 +13385,9 @@ Vue.component('a2-panel', {
 				this.isOpen = !this.isOpen;
 			},
 			doSettings() {
-				if (this.settingsFunc)
+				if (this.settingsCommand)
+					this.settingsCommand.call(this.item.$root);
+				else if (this.settingsFunc)
 					this.settingsFunc.call(this.item.$root, this.itemsSource);
 			},
 			__clickOutside() {
@@ -13163,6 +13410,7 @@ Vue.component('a2-panel', {
 			itemsSource: Array,
 			contentProp: { type: String, default: 'Name' },
 			colorProp: { type: String, default: 'Color' },
+			titleProp: { type: String, default: 'Memo' },
 		},
 		methods: {
 			tagName(itm) {
@@ -13170,6 +13418,9 @@ Vue.component('a2-panel', {
 			},
 			tagColor(itm) {
 				return itm[this.colorProp];
+			},
+			tagTitle(itm) {
+				return itm[this.titleProp];
 			}
 		}
 	});
@@ -13184,6 +13435,7 @@ Vue.component('a2-panel', {
 			itemsSource: Array,
 			contentProp: { type: String, default: 'Name' },
 			colorProp: { type: String, default: 'Color' },
+			titleProp: { type: String, default: 'Memo' },
 			placeholder: String
 		},
 		data() {
@@ -13218,6 +13470,9 @@ Vue.component('a2-panel', {
 			},
 			tagColor(itm) {
 				return itm[this.colorProp];
+			},
+			tagTitle(itm) {
+				return itm[this.titleProp];
 			},
 			addTag(itm) {
 				if (this.disabled)
@@ -13895,7 +14150,7 @@ Vue.directive('resize', {
 
 // Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20260225-7990*/
+/*20260902-7992*/
 // controllers/base.js
 
 (function () {
@@ -14482,14 +14737,21 @@ Vue.directive('resize', {
 			$navigate(url, data, newWindow, update, opts) {
 				if (this.$isReadOnly(opts)) return;
 				eventBus.$emit('closeAllPopups');
-				let urlToNavigate = urltools.createUrlForNavigate(url, data);
-				if (newWindow === true) {
-					let nwin = window.open(urlToNavigate, "_blank");
-					if (nwin)
-						nwin.$$token = { token: this.__currentToken__, update: update };
-				}
+
+				const doNavigate = () => {
+					let urlToNavigate = urltools.createUrlForNavigate(url, data);
+					if (newWindow === true) {
+						let nwin = window.open(urlToNavigate, "_blank");
+						if (nwin)
+							nwin.$$token = { token: this.__currentToken__, update: update };
+					}
+					else
+						this.$store.commit('navigate', { url: urlToNavigate });
+				};
+				if (opts && opts.saveRequired && this.$isDirty)
+					this.$save().then(() => doNavigate());
 				else
-					this.$store.commit('navigate', { url: urlToNavigate });
+					doNavigate();
 			},
 			$navigateSimple(url, newWindow, update) {
 				eventBus.$emit('closeAllPopups');
@@ -14517,7 +14779,28 @@ Vue.directive('resize', {
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
-
+			async $uploadBlob(url, accept, data, opts) {
+				eventBus.$emit('closeAllPopups');
+				const root = window.$$rootUrl;
+				try {
+					let file = await htmlTools.uploadFile(accept);
+					let dat = new FormData();
+					dat.append('file', file, file.name);
+					// an attachment: exactly Id and Base of data, nothing else reaches the query
+					let qry = data ? { base: data.Base, owner: data.Id } : null;
+					let uploadUrl = urltools.combine(root, '_blob', url) + urltools.makeQueryString(qry);
+					return await httpTools.upload(uploadUrl, dat);
+				} catch (err) {
+					err = err || 'unknown error';
+					if (opts && opts.catchError)
+						throw err;
+					else if (err.indexOf('UI:') === 0)
+						this.$alert(err.substring(3).replace('\\n', '\n'));
+					else
+						alert(err);
+					return false;
+				}
+			},
 			async $upload(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
@@ -15434,6 +15717,7 @@ Vue.directive('resize', {
 					$focus: this.$focus,
 					$report: this.$report,
 					$upload: this.$upload,
+					$uploadBlob: this.$uploadBlob,
 					$file: this.$file,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,

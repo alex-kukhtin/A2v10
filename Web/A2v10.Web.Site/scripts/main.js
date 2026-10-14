@@ -14779,21 +14779,15 @@ Vue.directive('resize', {
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
-			async $uploadBlob(url, accept, opts) {
+			async $uploadBlob(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
 				const root = window.$$rootUrl;
 				try {
 					let file = await htmlTools.uploadFile(accept);
 					let dat = new FormData();
 					dat.append('file', file, file.name);
-					// an attachment: the owner is this dialog's id, the base its own ?base=
-					let qry = {};
-					let own = urltools.parseUrlAndQuery(this.$baseUrl, this.$baseQuery);
-					if (own.query.base) {
-						let segs = own.url.split('/').filter(s => s);
-						qry.base = own.query.base;
-						qry.owner = segs[segs.length - 1];
-					}										
+					// an attachment: exactly Id and Base of data, nothing else reaches the query
+					let qry = data ? { base: data.Base, owner: data.Id } : null;
 					let uploadUrl = urltools.combine(root, '_blob', url) + urltools.makeQueryString(qry);
 					return await httpTools.upload(uploadUrl, dat);
 				} catch (err) {

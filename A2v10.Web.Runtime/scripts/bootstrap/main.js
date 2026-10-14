@@ -1423,9 +1423,9 @@ app.modules['std:period'] = function () {
 	}
 };
 
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20250913-7983*/
+/*20261012-7985*/
 /* services/url.js */
 
 app.modules['std:url'] = function () {
@@ -1611,6 +1611,8 @@ app.modules['std:url'] = function () {
 		}
 		if (url.endsWith('new') && urlId === 'new')
 			urlId = '';
+		if (url.indexOf('{0}') >= 0)
+			return url.replace('{0}', urlId);
 		// special behaviour for main menu urls
 		if (url.split('/').length === 3 && urlId === 'new')
 			urlId = '';
@@ -1635,8 +1637,12 @@ app.modules['std:url'] = function () {
 	}
 
 	function replaceSegment(url, id, action) {
-		let parts = url.split('/');
-		if (isDialogPath(url)) {
+		// only the path: a value in the query may hold '/' itself (?Base=/document/order)
+		let qpos = url.indexOf('?');
+		let path = qpos === -1 ? url : url.substring(0, qpos);
+		let query = qpos === -1 ? '' : url.substring(qpos);
+		let parts = path.split('/');
+		if (isDialogPath(path)) {
 			parts.pop();
 			if (id)
 				parts.push(id);
@@ -1646,7 +1652,7 @@ app.modules['std:url'] = function () {
 			if (action) parts.push(action);
 			if (id) parts.push(id);
 		}
-		return parts.join('/');
+		return parts.join('/') + query;
 	}
 
 	function isNewPath(url) {
@@ -2492,9 +2498,9 @@ app.modules['std:barcode'] = function () {
 		}
 	});
 })();
-// Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-// 20250913-7983
+// 20260920-7987
 // components/collectionview.js
 
 /*
@@ -2762,7 +2768,7 @@ TODO:
 				return getModelInfoProp(this.ItemsSource, 'Offset');
 			},
 			pages() {
-				cnt = this.sourceCount;
+				let cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			},
 			sourceCount() {
@@ -2941,7 +2947,7 @@ TODO:
 				return this;
 			},
 			pages() {
-				cnt = this.sourceCount;
+				let cnt = this.sourceCount;
 				return Math.ceil(cnt / this.pageSize);
 			},
 			Filter() {
@@ -3718,9 +3724,9 @@ function purgeTable(tbl) {
 
 
 
-// Copyright © 2015-2021 Oleksandr Kukhtin. All rights reserved.
+// Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20210223-7751*/
+/*20261010-7986*/
 /*validators.js*/
 
 app.modules['std:validators'] = function () {
@@ -3825,6 +3831,9 @@ app.modules['std:validators'] = function () {
 			const sev = rule.severity || ERROR;
 			if (utils.isFunction(rule.applyIf)) {
 				if (!rule.applyIf(item, val)) return;
+			}
+			if (utils.isFunction(rule.when)) {
+				if (!rule.when.call(item, val)) return;
 			}
 			if (utils.isString(rule)) {
 				if (!validateStd({ valid: 'notBlank' }, val))
@@ -5725,7 +5734,7 @@ app.modules['std:impl:array'] = function () {
 
 // Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.
 
-/*20260225-7990*/
+/*20260902-7992*/
 // controllers/base.js
 
 (function () {
@@ -6312,14 +6321,21 @@ app.modules['std:impl:array'] = function () {
 			$navigate(url, data, newWindow, update, opts) {
 				if (this.$isReadOnly(opts)) return;
 				eventBus.$emit('closeAllPopups');
-				let urlToNavigate = urltools.createUrlForNavigate(url, data);
-				if (newWindow === true) {
-					let nwin = window.open(urlToNavigate, "_blank");
-					if (nwin)
-						nwin.$$token = { token: this.__currentToken__, update: update };
-				}
+
+				const doNavigate = () => {
+					let urlToNavigate = urltools.createUrlForNavigate(url, data);
+					if (newWindow === true) {
+						let nwin = window.open(urlToNavigate, "_blank");
+						if (nwin)
+							nwin.$$token = { token: this.__currentToken__, update: update };
+					}
+					else
+						this.$store.commit('navigate', { url: urlToNavigate });
+				};
+				if (opts && opts.saveRequired && this.$isDirty)
+					this.$save().then(() => doNavigate());
 				else
-					this.$store.commit('navigate', { url: urlToNavigate });
+					doNavigate();
 			},
 			$navigateSimple(url, newWindow, update) {
 				eventBus.$emit('closeAllPopups');
@@ -6347,7 +6363,28 @@ app.modules['std:impl:array'] = function () {
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
 			},
-
+			async $uploadBlob(url, accept, data, opts) {
+				eventBus.$emit('closeAllPopups');
+				const root = window.$$rootUrl;
+				try {
+					let file = await htmlTools.uploadFile(accept);
+					let dat = new FormData();
+					dat.append('file', file, file.name);
+					// an attachment: exactly Id and Base of data, nothing else reaches the query
+					let qry = data ? { base: data.Base, owner: data.Id } : null;
+					let uploadUrl = urltools.combine(root, '_blob', url) + urltools.makeQueryString(qry);
+					return await httpTools.upload(uploadUrl, dat);
+				} catch (err) {
+					err = err || 'unknown error';
+					if (opts && opts.catchError)
+						throw err;
+					else if (err.indexOf('UI:') === 0)
+						this.$alert(err.substring(3).replace('\\n', '\n'));
+					else
+						alert(err);
+					return false;
+				}
+			},
 			async $upload(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
 				let root = window.$$rootUrl;
@@ -7264,6 +7301,7 @@ app.modules['std:impl:array'] = function () {
 					$focus: this.$focus,
 					$report: this.$report,
 					$upload: this.$upload,
+					$uploadBlob: this.$uploadBlob,
 					$file: this.$file,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,

@@ -1,7 +1,7 @@
 ﻿/* Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved. */
 
-/* Version 10.0.7994  */
-/* Date    2026.05.08 */
+/* Version 10.0.7999  */
+/* Date    2026.10.14 */
 
 declare function require(url: string): any;
 
@@ -231,7 +231,8 @@ interface templateValidatorObj {
 	msg?: string,
 	regExp?: RegExp,
 	severity?: Severity,
-	applyIf?: (elem: IElement, value?: any) => boolean
+	applyIf?(elem: IElement, value?: any): boolean,
+	when?(this: IElement, value?: any): boolean
 }
 
 declare type templateValidator = String | tempateValidatorFunc | templateValidatorObj | undefined;
@@ -318,6 +319,7 @@ interface IController {
 	$focus(htmlid: string): void;
 	$report(report: string, arg: object, opts?: { export?: Boolean, attach?: Boolean, print?: Boolean, format?: ReportFormat }, url?: string, data?: object): void;
 	$upload(url: string, accept?: string | AcceptFormat, data?: { Id?: any, Key?: any }, opts?: { catchError?: boolean }): Promise<any>;
+	$uploadBlob(url: string, accept?: string | AcceptFormat, opts?: { catchError?: boolean }): Promise<any>;
 	$file(url: string, arg: any, opts?: { action: FileActions }, data?: object): void;
 	$emitCaller(event: string, ...params: any[]): void;
 	$emitSaveEvent(): void;
