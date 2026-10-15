@@ -5490,7 +5490,7 @@ app.modules['std:impl:array'] = function () {
 			return;
 		if (isNoDirty(this.$root))
 			return;
-		if (path && path.toLowerCase().startsWith('query'))
+		if (path && prop && path.toLowerCase().startsWith('query'))
 			return;
 		if (path && isSkipDirty(this.$root, key))
 			return;
@@ -6402,10 +6402,8 @@ app.modules['std:impl:array'] = function () {
 					err = err || 'unknown error';
 					if (opts && opts.catchError)
 						throw err;
-					else if (err.indexOf('UI:') === 0)
-						this.$alert(err.substring(3).replace('\\n', '\n'));
-					else
-						alert(err);
+					else 					
+						this.$alertUi(err);
 					return false;
 				}
 			},
@@ -6423,10 +6421,8 @@ app.modules['std:impl:array'] = function () {
 					err = err || 'unknown error';
 					if (opts && opts.catchError)
 						throw err;
-					else if (err.indexOf('UI:') === 0)
-						this.$alert(err.substring(3).replace('\\n', '\n'));
-					else
-						alert(err);
+					else 					
+						this.$alertUi(err);
 					return false;
 				}
 			},

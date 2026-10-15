@@ -657,10 +657,8 @@
 					err = err || 'unknown error';
 					if (opts && opts.catchError)
 						throw err;
-					else if (err.indexOf('UI:') === 0)
-						this.$alert(err.substring(3).replace('\\n', '\n'));
-					else
-						alert(err);
+					else 					
+						this.$alertUi(err);
 					return false;
 				}
 			},
@@ -678,10 +676,8 @@
 					err = err || 'unknown error';
 					if (opts && opts.catchError)
 						throw err;
-					else if (err.indexOf('UI:') === 0)
-						this.$alert(err.substring(3).replace('\\n', '\n'));
-					else
-						alert(err);
+					else 					
+						this.$alertUi(err);
 					return false;
 				}
 			},

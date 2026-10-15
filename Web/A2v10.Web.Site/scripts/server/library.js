@@ -3250,7 +3250,7 @@ app.modules['std:impl:array'] = function () {
 			return;
 		if (isNoDirty(this.$root))
 			return;
-		if (path && path.toLowerCase().startsWith('query'))
+		if (path && prop && path.toLowerCase().startsWith('query'))
 			return;
 		if (path && isSkipDirty(this.$root, key))
 			return;
