@@ -392,6 +392,25 @@
 					});
 				});
 			},
+
+
+			async $ensureSaved() {
+				// as $save: the main object, else the first one of the model
+				const name = this.$data._meta_.$main || Object.keys(this.$data._meta_.props)[0];
+				const elem = this.$data[name];
+				if (!elem || Array.isArray(elem))
+					throw new Error(`$ensureSaved: '${name}' is not an object`);
+				if (!elem.$isNew)
+					return true;
+				if (!this.__ensureSaving__) {
+					this.$data.$setDirty(true);
+					this.__ensureSaving__ = Promise.resolve(this.$save()).finally(() => { this.__ensureSaving__ = null; });
+				}
+				await this.__ensureSaving__;
+				// $save merges into the root, and the root replaces an object property — read it again
+				return !this.$data[name].$isNew;
+			},
+
 			$notifyOwner(id, toast) {
 				if (!window.opener) return;
 				if (!window.$$token) return;
@@ -628,9 +647,6 @@
 				const root = window.$$rootUrl;
 				url = urltools.combine('/file', url.replace('.', '-'));
 				window.location = root + url;
-			},
-			$blobUrl(blob) {
-				return urltools.blobUrl(blob);
 			},
 			async $uploadBlob(url, accept, data, opts) {
 				eventBus.$emit('closeAllPopups');
@@ -1561,6 +1577,7 @@
 			__createController__() {
 				let ctrl = {
 					$save: this.$save,
+					$ensureSaved: this.$ensureSaved,
 					$savePart: this.$savePart,
 					$invoke: this.$invoke,
 					$close: this.$close,
@@ -1588,7 +1605,6 @@
 					$upload: this.$upload,
 					$uploadBlob: this.$uploadBlob,
 					$uploadBlobFile: this.$uploadBlobFile,
-					$blobUrl: this.$blobUrl,
 					$file: this.$file,
 					$emitCaller: this.$emitCaller,
 					$emitSaveEvent: this.$emitSaveEvent,

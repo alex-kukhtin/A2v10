@@ -1080,14 +1080,15 @@
 		if (val === this.$dirty) return;
 		if (this.$root.$readOnly)
 			return;
-		this.$root.$emit('Model.dirty.change', val, `${path}.${prop}`);
+		const key = prop ? `${path}.${prop}` : path;
+		this.$root.$emit('Model.dirty.change', val, key);
 		if (this.$vm && this.$vm.isIndex)
 			return;
 		if (isNoDirty(this.$root))
 			return;
 		if (path && path.toLowerCase().startsWith('query'))
 			return;
-		if (path && prop && isSkipDirty(this.$root, `${path}.${prop}`))
+		if (path && isSkipDirty(this.$root, key))
 			return;
 		this.$dirty = val;
 	}
