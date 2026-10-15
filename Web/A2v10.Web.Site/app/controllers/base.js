@@ -242,8 +242,11 @@
 				eventBus.$emit('modalSetBase', url);
 			},
 			$emitSaveEvent() {
-				if (this.__saveEvent__)
-					this.$caller.$data.$emit(this.__saveEvent__, this.$data);
+				if (!this.__saveEvent__)
+					return
+				const caller = this.__liveCaller__();
+				if (caller)
+					caller.$data.$emit(this.__saveEvent__, this.$data);
 			},
 			$emitGlobal(event, data) {
 				eventBus.$emit('globalAppEvent', { event, data });
@@ -252,10 +255,11 @@
 				eventBus.$emit('toParentTab', { event, source: this, data });
 			},
 			$emitCaller(event, ...arr) {
-				if (this.$caller)
-					this.$caller.$data.$emit(event, ...arr);
-				else
+				if (!this.$caller)
 					log.error('There is no caller here');
+				const caller = this.__liveCaller__();
+				if (caller)
+					caller.$data.$emit(event, ...arr);
 			},
 			$clearObject(obj) {
 				if (!obj) return;
@@ -297,14 +301,23 @@
 				this.$data.__baseUrl__ = urltools.replaceSegment(this.$data.__baseUrl__, id);
 				this.$requery();
 			},
+
+			// the caller page, or null when it is gone: a caller tab may be closed before this one,
+			// and its destroyed() nulls _data — $caller itself stays truthy
+			__liveCaller__() {
+				const c = this.$caller;
+				return c && !c.__destroyed__ ? c : null;
+			},
 			$saveCaller() {
-				if (this.$caller)
-					return this.$caller.$save();
+				const caller = this.__liveCaller__();
+				if (caller)
+					return caller.$save();
 				return null;
 			},
 			$dirtyCaller() {
-				if (this.$caller)
-					this.$caller.$data.$setDirty(true);
+				const caller = this.__liveCaller__();
+				if (caller)
+					caller.$data.$setDirty(true);
 			},
 			$shareUrl() {
 				let x = { url: ''};
@@ -344,8 +357,11 @@
 						if (self.__destroyed__) return;
 						self.$data.$merge(data, true, true /*only exists*/);
 						self.$data.$emit('Model.saved', self.$data);
-						if (self.__saveEvent__)
-							self.$caller.$data.$emit(self.__saveEvent__, self.$data);
+						if (self.__saveEvent__) {
+							const caller = self.__liveCaller__();
+							if (caller)
+								caller.$data.$emit(self.__saveEvent__, self.$data);
+						}
 						let globalSaveEvent = self.$data._globalSaveEvent_();
 						if (globalSaveEvent)
 							self.$emitGlobal(globalSaveEvent, self.$data);

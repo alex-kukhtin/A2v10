@@ -116,6 +116,17 @@ TODO:
 				localQuery: lq
 			};
 		},
+		watch: {
+			// a new filter starts at the first page, as collection-view-server does (filterChanged)
+			jsonFilter() {
+				this.localQuery.offset = 0;
+			},
+			// fewer rows than the offset (a row removed, a reload): the last page that exists, not an empty one
+			filteredCount(cnt) {
+				if (this.pageSize > 0 && cnt > 0 && this.localQuery.offset >= cnt)
+					this.localQuery.offset = Math.floor((cnt - 1) / this.pageSize) * this.pageSize;
+			}
+		},
 		computed: {
 			pageSize() {
 				if (this.initialPageSize > 0)
@@ -130,6 +141,9 @@ TODO:
 			},
 			order() {
 				return this.localQuery.order;
+			},
+			jsonFilter() {
+				return utils.toJson(this.filter);
 			},
 			pagedSource() {
 				let s = performance.now();

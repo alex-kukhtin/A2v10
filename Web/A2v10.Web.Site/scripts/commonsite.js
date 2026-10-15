@@ -1295,8 +1295,10 @@ app.modules['std:url'] = function () {
 			urlId = urlId.$id;
 		else if (utils.isObjectExact(urlId)) {
 			urlId = data.Id;
-			delete data['Id'];
-			qs = makeQueryString(data);
+			// a copy: data is often a bound object (a filter of $href), and a deleted Id is gone from the model
+			let rest = Object.assign({}, data);
+			delete rest['Id'];
+			qs = makeQueryString(rest);
 			if (!utils.isDefined(urlId))
 				urlId = 'new';
 		}
