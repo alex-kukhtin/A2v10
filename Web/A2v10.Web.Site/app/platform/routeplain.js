@@ -61,7 +61,6 @@
 		}
 
 		navigate(url) {
-			this.route = url;
 			eventBus.$emit('closeAllPopups');
 			eventBus.$emit('modalCloseAll');
 			eventBus.$emit('showSidePane', null);
