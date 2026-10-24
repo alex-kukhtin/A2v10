@@ -73,10 +73,11 @@ app.modules['std:impl:array'] = function () {
 				return this;
 			this.$empty();
 			if (utils.isArray(src)) {
-				for (let i = 0; i < src.length; i++) {
+				for (let i = 0; i < src.length; i++)
 					this.push(this.$new(src[i]));
-				}
 			}
+			if ('$RowCount' in this)
+				this.$RowCount = this.length;			
 			this.$renumberRows();
 			return this;
 		};
@@ -222,10 +223,8 @@ app.modules['std:impl:array'] = function () {
 				let eventName = that._path_ + '[].add';
 				that._root_.$setDirty(true, that._path_);
 				that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
-				if (select) {
+				if (select)
 					ne.$select();
-					emitSelect(that, ne);
-				}
 				// set RowNumber
 				if ('$rowNo' in newElem._meta_) {
 					let rowNoProp = newElem._meta_.$rowNo;

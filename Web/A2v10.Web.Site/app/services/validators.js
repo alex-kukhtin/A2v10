@@ -38,7 +38,7 @@ app.modules['std:validators'] = function () {
 				}
 				return val === '' || rule.regExp.test(val);
 		}
-		console.error(`invalid std rule: '${rule}'`);
+		console.error(`invalid std rule: '${rule.valid}'`);
 		return true;
 	}
 

@@ -28,5 +28,6 @@
 	};
 
 	app.modules['std:eventBus'] = {
+		$emit() {}
 	};
 })();

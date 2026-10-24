@@ -206,10 +206,6 @@ app.modules['std:url'] = function () {
 		return helpUrlElem.content + (path || '');
 	}
 
-	function replaceId(url, newId) {
-		alert('todo::replaceId');
-	}
-
 	function isDialogPath(url) {
 		return url.startsWith('/_dialog/');
 	}

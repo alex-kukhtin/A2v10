@@ -143,6 +143,11 @@
 				let eventWasFired = false;
 				let skipDirty = prop.startsWith('$$');
 				let ctor = this._meta_.props[prop];
+				if (ctor === TMarker) {
+					let mp = this._meta_.markerProps[prop];
+					if (utils.isDefined(mp.type) && utils.isDefined(mp.value))
+						ctor = mp.type;
+				}
 				let isjson = false;
 				if (ctor.type) {
 					isjson = !!ctor.json;
@@ -237,7 +242,7 @@
 						});
 					}
 				} else {
-					alert('todo: invalid property type');
+					console.error(`invalid template property: ${objname}.${p}`);
 				}
 			}
 		}
@@ -312,7 +317,7 @@
 			let exp = false;
 			let clps = false;
 			if (elem._meta_.$expanded) {
-				let val = source[elem._meta_.$expanded];
+				let val = source ? source[elem._meta_.$expanded] : false;
 				exp = !!val;
 				clps = !val;
 			}
@@ -400,7 +405,9 @@
 
 		if (elem._meta_.$itemType) {
 			elem.$setProperty = function (prop, src) {
-				let itmPath = path + '.' + prop;
+				if (Object.isSealed(this))
+					throw new Error(`$setProperty: the map '${this._path_ || 'Root'}' is sealed after load`);
+				let itmPath = elem._path_ ? `${elem._path_}.${prop}` : prop;
 				let ne = new elem._meta_.$itemType(src, itmPath, elem);
 				platform.set(this, prop, ne);
 				this._root_.$setDirty(true);
@@ -867,7 +874,7 @@
 					else if (utils.isFunction(cmdf.exec))
 						return cmdf.exec.call(that, arg);
 					else
-						console.error($`There is no method 'exec' in command '${cmd}'`);
+						console.error(`There is no method 'exec' in command '${cmd}'`);
 				};
 
 				if (optConfirm) {
@@ -1181,6 +1188,7 @@
 				if (prop.startsWith('$$')) continue; // always skip
 				if (checkBindOnce && isSkipMerge(this._root_, prop)) continue;
 				let ctor = this._meta_.props[prop];
+				if (ctor === TMarker) continue; // a marker is client state, not data
 				if (ctor.type) ctor = ctor.type;
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
@@ -1210,8 +1218,11 @@
 					} else {
 						if (existsOnly && !(prop in src))
 							continue; // no item in src
-						let newsrc = new ctor(src[prop], prop, this);
-						platform.set(this, prop, newsrc);
+
+						if (trg && trg.$merge)
+							trg.$merge(src[prop] || null);
+						else
+							platform.set(this, prop, new ctor(src[prop] || null, this._path_ ? `${this._path_}.${prop}` : prop, this));
 					}
 				}
 			}

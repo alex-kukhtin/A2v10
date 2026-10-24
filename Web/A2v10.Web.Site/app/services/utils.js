@@ -120,7 +120,11 @@ app.modules['std:utils'] = function () {
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
-	function isPromise(v) { return isDefined(v) && isFunction(v.then) && isFunction(v.catch); }
+
+	function isPromise(v) { 		
+		return v !== null && (typeof v === 'object' || typeof v === 'function')
+			&& isFunction(v.then) && isFunction(v.catch);
+	}
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === platform.File || ctor === Object;
@@ -368,7 +372,7 @@ app.modules['std:utils'] = function () {
 			return obj.Name;
 		else if (isDate(obj))
 			return formatDate(obj);
-		return '' + val;
+		return '' + obj;
 	}
 
 	function format(obj, dataType, opts) {
@@ -605,7 +609,7 @@ app.modules['std:utils'] = function () {
 
 	function dateHasTime(d1) {
 		if (!isDate(d1)) return false;
-		return d1.getHours() !== 0 || d1.getMinutes() !== 0 && d1.getSeconds() !== 0;
+		return d1.getHours() !== 0 || d1.getMinutes() !== 0 || d1.getSeconds() !== 0;
 	}
 
 	function endOfMonth(dt) {

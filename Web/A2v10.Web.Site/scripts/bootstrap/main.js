@@ -301,7 +301,11 @@ app.modules['std:utils'] = function () {
 	function isNumber(value) { return typeof value === 'number'; }
 	function isBoolean(value) { return typeof value === 'boolean'; }
 	function isObjectExact(value) { return isObject(value) && !Array.isArray(value); }
-	function isPromise(v) { return isDefined(v) && isFunction(v.then) && isFunction(v.catch); }
+
+	function isPromise(v) { 		
+		return v !== null && (typeof v === 'object' || typeof v === 'function')
+			&& isFunction(v.then) && isFunction(v.catch);
+	}
 
 	function isPrimitiveCtor(ctor) {
 		return ctor === String || ctor === Number || ctor === Boolean || ctor === Date || ctor === platform.File || ctor === Object;
@@ -549,7 +553,7 @@ app.modules['std:utils'] = function () {
 			return obj.Name;
 		else if (isDate(obj))
 			return formatDate(obj);
-		return '' + val;
+		return '' + obj;
 	}
 
 	function format(obj, dataType, opts) {
@@ -786,7 +790,7 @@ app.modules['std:utils'] = function () {
 
 	function dateHasTime(d1) {
 		if (!isDate(d1)) return false;
-		return d1.getHours() !== 0 || d1.getMinutes() !== 0 && d1.getSeconds() !== 0;
+		return d1.getHours() !== 0 || d1.getMinutes() !== 0 || d1.getSeconds() !== 0;
 	}
 
 	function endOfMonth(dt) {
@@ -1629,10 +1633,6 @@ app.modules['std:url'] = function () {
 			return '';
 		}
 		return helpUrlElem.content + (path || '');
-	}
-
-	function replaceId(url, newId) {
-		alert('todo::replaceId');
 	}
 
 	function isDialogPath(url) {
@@ -3790,7 +3790,7 @@ app.modules['std:validators'] = function () {
 				}
 				return val === '' || rule.regExp.test(val);
 		}
-		console.error(`invalid std rule: '${rule}'`);
+		console.error(`invalid std rule: '${rule.valid}'`);
 		return true;
 	}
 
@@ -4037,10 +4037,11 @@ app.modules['std:impl:array'] = function () {
 				return this;
 			this.$empty();
 			if (utils.isArray(src)) {
-				for (let i = 0; i < src.length; i++) {
+				for (let i = 0; i < src.length; i++)
 					this.push(this.$new(src[i]));
-				}
 			}
+			if ('$RowCount' in this)
+				this.$RowCount = this.length;			
 			this.$renumberRows();
 			return this;
 		};
@@ -4186,10 +4187,8 @@ app.modules['std:impl:array'] = function () {
 				let eventName = that._path_ + '[].add';
 				that._root_.$setDirty(true, that._path_);
 				that._root_.$emit(eventName, that /*array*/, ne /*elem*/, len - 1 /*index*/);
-				if (select) {
+				if (select)
 					ne.$select();
-					emitSelect(that, ne);
-				}
 				// set RowNumber
 				if ('$rowNo' in newElem._meta_) {
 					let rowNoProp = newElem._meta_.$rowNo;
@@ -4563,6 +4562,11 @@ app.modules['std:impl:array'] = function () {
 				let eventWasFired = false;
 				let skipDirty = prop.startsWith('$$');
 				let ctor = this._meta_.props[prop];
+				if (ctor === TMarker) {
+					let mp = this._meta_.markerProps[prop];
+					if (utils.isDefined(mp.type) && utils.isDefined(mp.value))
+						ctor = mp.type;
+				}
 				let isjson = false;
 				if (ctor.type) {
 					isjson = !!ctor.json;
@@ -4657,7 +4661,7 @@ app.modules['std:impl:array'] = function () {
 						});
 					}
 				} else {
-					alert('todo: invalid property type');
+					console.error(`invalid template property: ${objname}.${p}`);
 				}
 			}
 		}
@@ -4732,7 +4736,7 @@ app.modules['std:impl:array'] = function () {
 			let exp = false;
 			let clps = false;
 			if (elem._meta_.$expanded) {
-				let val = source[elem._meta_.$expanded];
+				let val = source ? source[elem._meta_.$expanded] : false;
 				exp = !!val;
 				clps = !val;
 			}
@@ -4820,7 +4824,9 @@ app.modules['std:impl:array'] = function () {
 
 		if (elem._meta_.$itemType) {
 			elem.$setProperty = function (prop, src) {
-				let itmPath = path + '.' + prop;
+				if (Object.isSealed(this))
+					throw new Error(`$setProperty: the map '${this._path_ || 'Root'}' is sealed after load`);
+				let itmPath = elem._path_ ? `${elem._path_}.${prop}` : prop;
 				let ne = new elem._meta_.$itemType(src, itmPath, elem);
 				platform.set(this, prop, ne);
 				this._root_.$setDirty(true);
@@ -5287,7 +5293,7 @@ app.modules['std:impl:array'] = function () {
 					else if (utils.isFunction(cmdf.exec))
 						return cmdf.exec.call(that, arg);
 					else
-						console.error($`There is no method 'exec' in command '${cmd}'`);
+						console.error(`There is no method 'exec' in command '${cmd}'`);
 				};
 
 				if (optConfirm) {
@@ -5601,6 +5607,7 @@ app.modules['std:impl:array'] = function () {
 				if (prop.startsWith('$$')) continue; // always skip
 				if (checkBindOnce && isSkipMerge(this._root_, prop)) continue;
 				let ctor = this._meta_.props[prop];
+				if (ctor === TMarker) continue; // a marker is client state, not data
 				if (ctor.type) ctor = ctor.type;
 				let trg = this[prop];
 				if (Array.isArray(trg)) {
@@ -5630,8 +5637,11 @@ app.modules['std:impl:array'] = function () {
 					} else {
 						if (existsOnly && !(prop in src))
 							continue; // no item in src
-						let newsrc = new ctor(src[prop], prop, this);
-						platform.set(this, prop, newsrc);
+
+						if (trg && trg.$merge)
+							trg.$merge(src[prop] || null);
+						else
+							platform.set(this, prop, new ctor(src[prop] || null, this._path_ ? `${this._path_}.${prop}` : prop, this));
 					}
 				}
 			}
