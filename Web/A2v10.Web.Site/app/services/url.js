@@ -30,7 +30,7 @@ app.modules['std:url'] = function () {
 	};
 
 	function normalize(elem) {
-		elem = '' + elem || '';
+		elem = elem == null ? '' : '' + elem;
 		elem = elem.replace(/\\/g, '/');
 		if (elem.startsWith('/'))
 			elem = elem.substring(1);

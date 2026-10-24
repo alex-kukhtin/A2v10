@@ -114,6 +114,8 @@ app.modules['std:http'] = function () {
 					if (ct.startsWith('text/'))
 						txt = await response.text();
 					throw txt;
+				default:
+					throw response.statusText;
 			}
 
 		} catch (err) {
@@ -161,7 +163,7 @@ app.modules['std:http'] = function () {
 					let rdoc = dp.parseFromString(html, 'text/html');
 					// first element from fragment body
 					let srcElem = rdoc.body.firstElementChild;
-					let elemId = srcElem.id || null;
+					let elemId = srcElem ? srcElem.id || null : null;
 					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
 					if (elemId && !document.getElementById(elemId)) {
 						selector.innerHTML = '';
@@ -242,7 +244,11 @@ app.modules['std:http'] = function () {
 		httpQueue.processing = true;
 		while (httpQueue.arr.length > 0) {
 			let el = httpQueue.arr.shift();
-			await load(el.url, el.selector, null);
+			try {
+				await load(el.url, el.selector, null);
+			} catch (err) {
+				console.error(err);
+			}
 		}
 		httpQueue.processing = false;
 	}

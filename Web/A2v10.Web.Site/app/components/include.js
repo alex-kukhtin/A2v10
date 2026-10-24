@@ -144,6 +144,7 @@
 			source: String,
 			arg: undefined,
 			dat: undefined,
+			hideIndicator: Boolean
 		},
 		data() {
 			return {

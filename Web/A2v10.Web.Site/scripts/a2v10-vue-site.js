@@ -1179,7 +1179,7 @@ app.modules['std:url'] = function () {
 	};
 
 	function normalize(elem) {
-		elem = '' + elem || '';
+		elem = elem == null ? '' : '' + elem;
 		elem = elem.replace(/\\/g, '/');
 		if (elem.startsWith('/'))
 			elem = elem.substring(1);
@@ -2492,6 +2492,8 @@ app.modules['std:http'] = function () {
 					if (ct.startsWith('text/'))
 						txt = await response.text();
 					throw txt;
+				default:
+					throw response.statusText;
 			}
 
 		} catch (err) {
@@ -2539,7 +2541,7 @@ app.modules['std:http'] = function () {
 					let rdoc = dp.parseFromString(html, 'text/html');
 					// first element from fragment body
 					let srcElem = rdoc.body.firstElementChild;
-					let elemId = srcElem.id || null;
+					let elemId = srcElem ? srcElem.id || null : null;
 					selector.innerHTML = srcElem ? srcElem.outerHTML : '';
 					if (elemId && !document.getElementById(elemId)) {
 						selector.innerHTML = '';
@@ -2620,7 +2622,11 @@ app.modules['std:http'] = function () {
 		httpQueue.processing = true;
 		while (httpQueue.arr.length > 0) {
 			let el = httpQueue.arr.shift();
-			await load(el.url, el.selector, null);
+			try {
+				await load(el.url, el.selector, null);
+			} catch (err) {
+				console.error(err);
+			}
 		}
 		httpQueue.processing = false;
 	}
@@ -5629,6 +5635,7 @@ TODO:
 			source: String,
 			arg: undefined,
 			dat: undefined,
+			hideIndicator: Boolean
 		},
 		data() {
 			return {
@@ -6474,10 +6481,8 @@ TODO:
 					err = err || 'unknown error';
 					if (opts && opts.catchError)
 						throw err;
-					else if (err.indexOf('UI:') === 0)
-						this.$alert(err.substring(3).replace('\\n', '\n'));
 					else
-						alert(err);
+						this.$alertUi(err);
 					return false;
 				}
 			},
@@ -6867,16 +6872,16 @@ TODO:
 					}
 				}
 
-				if (opts && opts.validRequired && root.$invalid) {
+				if (opts && opts.validRequired && this.$data.$invalid) {
 					this.$alert(locale.$MakeValidFirst);
 					return;
 				}
 
 				let mo = this.$data.$mainObject;
 				if (opts && opts.saveRequired && (this.$isDirty || mo && mo.$isNew)) {
-					let dlgResult = null;
-					this.$save().then(() => { dlgResult = doDialog(); });
-					return dlgResult;
+					this.$data.$setDirty(true);
+					const saving = this.$save();
+					return saving ? saving.then(() => doDialog()) : undefined;
 				}
 				return doDialog();
 			},
@@ -6986,7 +6991,7 @@ TODO:
 						window.open(url, '_blank');
 				};
 
-				if (opts && opts.validRequired && root.$invalid) {
+				if (opts && opts.validRequired && this.$data.$invalid) {
 					this.$alert(locale.$MakeValidFirst);
 					return;
 				}
@@ -7508,6 +7513,7 @@ TODO:
 			eventBus.$off('invokeTest', this.__invoke__test__);
 			eventBus.$off('globalPeriodChanged', this.__global_period_changed__);
 			eventBus.$off('globalAppEvent', this.__globalAppEvent__);
+			eventBus.$off('signalEvent', this.__signalAppEvent__);
 
 			this.$off('cwChange', this.__cwChange);
 			htmlTools.removePrintFrame();

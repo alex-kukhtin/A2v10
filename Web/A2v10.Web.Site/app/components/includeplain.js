@@ -146,7 +146,8 @@
 			complete: Function,
 			lock: Boolean,
 			reload: Number,
-			onError: Function
+			onError: Function,
+			hideIndicator: Boolean
 		},
 		data() {
 			return {
