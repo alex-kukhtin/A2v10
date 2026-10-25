@@ -1,4 +1,4 @@
-﻿// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+﻿// Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved.
 
 /*20200516-7660*/
 /* mobile/shell.js */
@@ -359,8 +359,8 @@
 					//console.dir(canResult);
 					if (canResult === true)
 						closeImpl(result);
-					else if (canResult.then) {
-						result.then(function (innerResult) {
+					else if (canResult && canResult.then) {
+						canResult.then(function (innerResult) {
 							if (innerResult === true)
 								closeImpl(result);
 							else if (innerResult) {

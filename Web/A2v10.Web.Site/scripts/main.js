@@ -2137,7 +2137,7 @@ app.modules['std:http'] = function () {
 		let urlArr = url.split('/');
 		if (urlArr.length === 5)
 			return urlArr.slice(0, 3).join('/');
-		else if (url.length === 4)
+		else if (urlArr.length === 4)
 			return urlArr.slice(0, 2).join('/');
 		return url;
 	}
@@ -16864,8 +16864,8 @@ Vue.directive('resize', {
 					if (canResult === true)
 						closeImpl(result);
 
-					else if (canResult.then) {
-						result.then(function (innerResult) {
+					else if (canResult && canResult.then) {
+						canResult.then(function (innerResult) {
 							if (innerResult === true)
 								closeImpl(result);
 							else if (innerResult) {

@@ -2137,7 +2137,7 @@ app.modules['std:http'] = function () {
 		let urlArr = url.split('/');
 		if (urlArr.length === 5)
 			return urlArr.slice(0, 3).join('/');
-		else if (url.length === 4)
+		else if (urlArr.length === 4)
 			return urlArr.slice(0, 2).join('/');
 		return url;
 	}
@@ -15692,8 +15692,8 @@ Vue.directive('resize', {
 					if (canResult === true)
 						closeImpl(result);
 
-					else if (canResult.then) {
-						result.then(function (innerResult) {
+					else if (canResult && canResult.then) {
+						canResult.then(function (innerResult) {
 							if (innerResult === true)
 								closeImpl(result);
 							else if (innerResult) {
@@ -15778,7 +15778,7 @@ Vue.directive('resize', {
 
 	app.components['std:mainView'] = a2MainView;
 })();	
-// Copyright © 2019-2020 Alex Kukhtin. All rights reserved.
+// Copyright © 2019-2026 Oleksandr Kukhtin. All rights reserved.
 
 /*20200516-7660*/
 /* mobile/shell.js */
@@ -16139,8 +16139,8 @@ Vue.directive('resize', {
 					//console.dir(canResult);
 					if (canResult === true)
 						closeImpl(result);
-					else if (canResult.then) {
-						result.then(function (innerResult) {
+					else if (canResult && canResult.then) {
+						canResult.then(function (innerResult) {
 							if (innerResult === true)
 								closeImpl(result);
 							else if (innerResult) {

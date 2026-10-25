@@ -2142,7 +2142,7 @@ app.modules['std:http'] = function () {
 		let urlArr = url.split('/');
 		if (urlArr.length === 5)
 			return urlArr.slice(0, 3).join('/');
-		else if (url.length === 4)
+		else if (urlArr.length === 4)
 			return urlArr.slice(0, 2).join('/');
 		return url;
 	}
