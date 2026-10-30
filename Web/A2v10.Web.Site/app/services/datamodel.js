@@ -1,6 +1,6 @@
-﻿/* Copyright © 2015-2025 Oleksandr Kukhtin. All rights reserved.*/
+﻿/* Copyright © 2015-2026 Oleksandr Kukhtin. All rights reserved.*/
 
-/*20250525-7986*/
+/*20261030-7986*/
 // services/datamodel.js
 
 /*
@@ -333,6 +333,15 @@
 
 		elem.$unlockEvents = function () {
 			this._lockEvents_ -= 1;
+		};
+
+		elem.$noChangeEvents = function (fn) {
+			this._lockEvents_ += 1;
+			try {
+				return fn.call(this, this);
+			} finally {
+				this._lockEvents_ -= 1;
+			}
 		};
 
 		defHiddenGet(elem, '$eventsLocked', function () {
